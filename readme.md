@@ -23,8 +23,7 @@
 
 Check these projects to get real-life examples of `extra-platforms` usage:
 
-- ![GitHub stars](https://img.shields.io/github/stars/kdeldycke/click-extra?label=%E2%AD%90&style=flat-square) [Click Extra](https://github.com/kdeldycke/click-extra#readme)
-  \- A ready-to-use wrapper for Click.
+- ![GitHub stars](https://img.shields.io/github/stars/kdeldycke/click-extra?label=%E2%AD%90&style=flat-square) [Click Extra](https://github.com/kdeldycke/click-extra#readme) - Drop-in replacement for Click to make user-friendly and colorful CLI.
 
 Feel free to send a PR to add your project in this list if you are relying on Click Extra in any way.
 
