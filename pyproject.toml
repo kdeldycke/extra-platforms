@@ -1,0 +1,141 @@
+[project]
+# Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+name = "extra-platforms"
+version = "1.0.0"
+# Python versions and their status: https://devguide.python.org/versions/
+requires-python = ">= 3.8"
+description = "Detect platforms and group them by family"
+authors = [{ name = "Kevin Deldycke", email = "kevin@deldycke.com" }]
+readme = "readme.md"
+keywords = ['multiplatform', 'pytest', 'python']
+classifiers = [
+    # See: https://pypi.org/pypi?%3Aaction=list_classifiers
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Console',
+    'Framework :: Pytest',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
+    'Operating System :: MacOS :: MacOS X',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX :: Linux',
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+    'Topic :: Utilities',
+    'Typing :: Typed',
+]
+dependencies = ["boltons ~= 24.0.0", "distro ~= 1.9.0"]
+
+[project.optional-dependencies]
+pytest = ["pytest >= 8"]
+test = [
+    "coverage [toml] ~= 7.6.0",
+    "pytest ~= 8.3.1",
+    # More pytest plugins at: https://docs.pytest.org/en/latest/reference/plugin_list.html
+    "pytest-cov ~= 5.0.0",
+    "pytest-github-actions-annotate-failures ~= 0.2.0",
+    "pytest-randomly ~= 3.15.0",
+]
+docs = [
+    "furo ~= 2024.8.6",
+    "myst-parser ~= 3.0.0",
+    # Sphinx 7.2.0 is the first version to drop Python 3.8.
+    "sphinx >= 7.2.0",
+    "sphinx-autodoc-typehints ~= 2.2.2",
+    "sphinx-copybutton ~= 0.5.2",
+    # sphinx-design 0.5.0 is the first to allow Sphinx 7.
+    "sphinx-design ~= 0.6.0",
+    "sphinx-issues ~= 4.1.0",
+    "sphinxcontrib-mermaid ~= 0.9.2",
+    "sphinxext-opengraph ~= 0.9.0",
+    "tomli ~= 2.0.1 ; python_version < '3.11'",
+]
+
+[project.urls]
+"Homepage" = 'https://github.com/kdeldycke/extra-platforms'
+"Documentation" = 'https://kdeldycke.github.io/extra-platforms'
+"Repository" = 'https://github.com/kdeldycke/extra-platforms'
+"Funding" = "https://github.com/sponsors/kdeldycke"
+"Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
+"Changelog" = "https://kdeldycke.github.io/extra-platforms/changelog.html"
+
+[project.entry-points.pytest11]
+# Make additional fixtures available to pytest.
+# See: https://docs.pytest.org/en/latest/how-to/writing_plugins.html#making-your-plugin-installable-by-others
+extra-platforms = "extra_platforms.pytest"
+
+[tool.mypy]
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+pretty = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = ["boltons.*", "furo"]
+
+[tool.pytest.ini_options]
+# https://docs.pytest.org/en/latest/customize.html#pyproject-toml
+addopts = ["--durations=10", "--cov-report=term", "--cov-report=xml"]
+# Make sure tests that are expected to fail do not resurect and start working all of a sudden.
+xfail_strict = true
+
+# https://coverage.readthedocs.io/en/latest/config.html
+[tool.coverage.run]
+branch = true
+[tool.coverage.report]
+precision = 2
+
+[tool.bumpversion]
+current_version = "1.0.0"
+allow_dirty = true
+
+# TODO: Reuse the same search and replace patterns available in the reused workflows' pyproject.toml.
+
+[[tool.bumpversion.files]]
+# Update Python package version in any __init__.py file.
+glob = "./**/__init__.py"
+ignore_missing_version = true
+
+[[tool.bumpversion.files]]
+# Update version in project section.
+filename = "./pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+# Update the version in standard Markdown changelog.
+filename = "./changelog.md"
+search = "## [{current_version} (unreleased)]("
+replace = "## [{new_version} (unreleased)]("
+
+[[tool.bumpversion.files]]
+# Update the version in the citation file.
+filename = "./citation.cff"
+search = "version: {current_version}"
+replace = "version: {new_version}"
+
+[[tool.bumpversion.files]]
+# Update the release date in the citation file.
+filename = "./citation.cff"
+regex = true
+search = "date-released: \\d{{4}}-\\d{{2}}-\\d{{2}}"
+replace = "date-released: {utcnow:%Y-%m-%d}"
+
+[tool.typos]
+default.extend-ignore-identifiers-re = [
+    # error: `PASE` should be `PASS`, `PACE`, `PARSE`
+    #   --> ./extra_platforms/platforms.py:416:8
+    #     |
+    # 416 |     - `PASE`
+    #     |        ^^^^
+    #     |
+    "PASE",
+]

@@ -1,0 +1,20 @@
+---
+name: Autofix
+"on":
+  push:
+    # Only targets main branch to avoid amplification effects of auto-fixing
+    # the exact same stuff in multiple non-rebased branches.
+    branches:
+      - main
+
+# XXX Concurrency detection sucks and jobs gets killed randonmly.
+# concurrency:
+#   # Group workflow jobs so new commits cancels in-progress execution triggered by previous commits.
+#   # Source: https://mail.python.org/archives/list/pypa-committers@python.org/thread/PCBCQMJF64JGRBOX7E2EE4YLKHT4DI55/
+#   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+#   cancel-in-progress: true
+
+jobs:
+
+  autofix:
+    uses: kdeldycke/workflows/.github/workflows/autofix.yaml@v4.4.3
