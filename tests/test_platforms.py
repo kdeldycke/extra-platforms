@@ -25,8 +25,8 @@ from string import ascii_lowercase, digits
 
 import pytest
 
-from click_extra import platforms as platforms_module
-from click_extra.platforms import (
+from extra_platforms import platforms as platforms_module
+from extra_platforms.platforms import (
     AIX,
     ALL_GROUPS,
     ALL_LINUX,
@@ -135,7 +135,7 @@ from click_extra.platforms import (
     is_xenserver,
     reduce,
 )
-from click_extra.pytest import (
+from extra_platforms.pytest import (
     skip_linux,
     skip_macos,
     skip_windows,
