@@ -26,6 +26,51 @@ from string import ascii_lowercase, digits
 import pytest
 
 from extra_platforms import platforms as platforms_module
+from extra_platforms.detection import (
+    is_aix,
+    is_altlinux,
+    is_amzn,
+    is_android,
+    is_arch,
+    is_buildroot,
+    is_centos,
+    is_cloudlinux,
+    is_cygwin,
+    is_debian,
+    is_exherbo,
+    is_fedora,
+    is_freebsd,
+    is_gentoo,
+    is_guix,
+    is_hurd,
+    is_ibm_powerkvm,
+    is_kvmibm,
+    is_linuxmint,
+    is_macos,
+    is_mageia,
+    is_mandriva,
+    is_midnightbsd,
+    is_netbsd,
+    is_openbsd,
+    is_opensuse,
+    is_oracle,
+    is_parallels,
+    is_pidora,
+    is_raspbian,
+    is_rhel,
+    is_rocky,
+    is_scientific,
+    is_slackware,
+    is_sles,
+    is_solaris,
+    is_sunos,
+    is_ubuntu,
+    is_unknown_linux,
+    is_windows,
+    is_wsl1,
+    is_wsl2,
+    is_xenserver,
+)
 from extra_platforms.platforms import (
     AIX,
     ALL_GROUPS,
@@ -89,50 +134,6 @@ from extra_platforms.platforms import (
     XENSERVER,
     Group,
     current_os,
-    is_aix,
-    is_altlinux,
-    is_amzn,
-    is_android,
-    is_arch,
-    is_buildroot,
-    is_centos,
-    is_cloudlinux,
-    is_cygwin,
-    is_debian,
-    is_exherbo,
-    is_fedora,
-    is_freebsd,
-    is_gentoo,
-    is_guix,
-    is_hurd,
-    is_ibm_powerkvm,
-    is_kvmibm,
-    is_linux,
-    is_linuxmint,
-    is_macos,
-    is_mageia,
-    is_mandriva,
-    is_midnightbsd,
-    is_netbsd,
-    is_openbsd,
-    is_opensuse,
-    is_oracle,
-    is_parallels,
-    is_pidora,
-    is_raspbian,
-    is_rhel,
-    is_rocky,
-    is_scientific,
-    is_slackware,
-    is_sles,
-    is_solaris,
-    is_sunos,
-    is_ubuntu,
-    is_unknown_linux,
-    is_windows,
-    is_wsl1,
-    is_wsl2,
-    is_xenserver,
     reduce,
 )
 from extra_platforms.pytest import (
@@ -148,42 +149,6 @@ from extra_platforms.pytest import (
 def test_mutual_exclusion():
     """Only directly tests OSes on which the test suite is running via GitHub
     actions."""
-    if is_linux():
-        assert CURRENT_OS_ID in ALL_LINUX.platform_ids
-        assert CURRENT_OS_LABEL in {p.name for p in ALL_LINUX.platforms}
-        assert (
-            is_altlinux()
-            or is_amzn()
-            or is_android()
-            or is_arch()
-            or is_buildroot()
-            or is_centos()
-            or is_cloudlinux()
-            or is_debian()
-            or is_exherbo()
-            or is_fedora()
-            or is_gentoo()
-            or is_guix()
-            or is_ibm_powerkvm()
-            or is_kvmibm()
-            or is_linuxmint()
-            or is_mageia()
-            or is_mandriva()
-            or is_opensuse()
-            or is_oracle()
-            or is_parallels()
-            or is_pidora()
-            or is_raspbian()
-            or is_rhel()
-            or is_rocky()
-            or is_scientific()
-            or is_slackware()
-            or is_sles()
-            or is_ubuntu()
-            or is_unknown_linux()
-            or is_xenserver()
-        )
-
     if is_ubuntu():
         assert CURRENT_OS_ID == UBUNTU.id
         assert CURRENT_OS_LABEL == UBUNTU.name
@@ -418,7 +383,7 @@ def test_code_sorting():
     # Check there is no extra "is_" function.
     assert {f"is_{p.id}" for p in ALL_PLATFORMS.platforms} == set(
         heuristic_instance_ids
-    ) - {"is_linux"}
+    )
 
     assert heuristic_instance_ids == sorted(heuristic_instance_ids)
     assert platform_instance_ids == sorted(platform_instance_ids)
