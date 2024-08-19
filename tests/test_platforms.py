@@ -25,6 +25,7 @@ from string import ascii_lowercase, digits
 
 import pytest
 
+from extra_platforms import detection as detection_module
 from extra_platforms import platforms as platforms_module
 from extra_platforms.detection import (
     is_aix,
@@ -359,17 +360,18 @@ def test_group_definitions():
 def test_code_sorting():
     """Implementation must have all its methods and objects sorted."""
     heuristic_instance_ids = []
-    platform_instance_ids = []
-    group_instance_ids = []
-
-    tree = ast.parse(Path(inspect.getfile(platforms_module)).read_bytes())
-
+    tree = ast.parse(Path(inspect.getfile(detection_module)).read_bytes())
     for node in tree.body:
         if isinstance(node, ast.FunctionDef) and node.name.startswith("is_"):
             func_id = node.name
             assert func_id.islower()
             heuristic_instance_ids.append(func_id)
-        elif isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+
+    platform_instance_ids = []
+    group_instance_ids = []
+    tree = ast.parse(Path(inspect.getfile(platforms_module)).read_bytes())
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             func_id = node.value.func.id
             if func_id in ("Platform", "Group"):
                 assert len(node.targets) == 1
