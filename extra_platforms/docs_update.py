@@ -32,7 +32,7 @@ from __future__ import annotations
 import html
 import sys
 from pathlib import Path
-from textwrap import indent
+from textwrap import dedent, indent
 
 from . import ALL_GROUPS, EXTRA_GROUPS, NON_OVERLAPPING_GROUPS, Group
 
@@ -70,13 +70,21 @@ def generate_platform_sankey() -> str:
         ALL_GROUPS, key=lambda g: (len(g.platform_ids), g.id), reverse=True
     ):
         for platform in group.platforms:
-            line = f"{group.id},{platform.id},1"
-            table.append(line)
-
-    output = "```mermaid\nsankey-beta\n\n"
-    output += "\n".join(table)
-    output += "\n```"
-    return output
+            table.append(
+                f'"{html.escape(group.icon)} {group.id}",'
+                f'"{html.escape(platform.icon)} {platform.id}",1'
+            )
+    return dedent(f"""\
+        ```mermaid
+        ---
+        config:
+          sankey:
+            showValues: false
+        ---
+        sankey-beta\n
+        {"\n".join(table)}
+        ```\
+        """)
 
 
 def generate_platforms_graph(
