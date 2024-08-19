@@ -47,20 +47,12 @@ jobs:
                   "windows-2019",
               },
               "python-version": {
+                  "3.8",
                   "3.9",
                   "3.10",
                   "3.11",
                   "3.12",
                   "3.13-dev",
-              },
-              "click-version": {
-                  "released",
-                  "8.1.x",
-                  "main",
-              },
-              "cloup-version": {
-                  "released",
-                  "master",
               }
           }
           # TODO: List of additional variants to include in the matrix.
@@ -70,34 +62,7 @@ jobs:
           exclude: list[dict[str, str]] = []
 
           # List of unstable criterions.
-          unstable: list[dict[str, str]] = [
-              # Ignore failing tests on Click development branch, because some top-level classes (BaseCommand,
-              # MultiCommand and OptionParser) have been removed. See:
-              # https://github.com/pallets/click/compare/8.1.x...main#diff-768bcdbbdaa3001d4905761c3eed38d5ce6a62b9127df80de90d9ca4e806cacc
-              {"click-version": "main"},
-          ]
-
-          # Removes from the matrix some combinations for development versions of Click and Cloup. This reduce the size
-          # of the matrix for tests on non-released versions. While keeping the full exhaustive tests on the released
-          # versions of Click and Cloup.
-          for dev_version in (
-              {"click-version": "8.1.x"},
-              {"click-version": "main"},
-              {"cloup-version": "master"},
-          ):
-              for criterion in (
-                  # Exclude old OSes. Only keeps the latest OSes of each family.
-                  {"os": "ubuntu-20.04"},
-                  {"os": "macos-13"},
-                  {"os": "windows-2019"},
-                  # Exclude Python's dev version.
-                  {"python-version": "3.13-dev"},
-                  # Exclude intermediate Python version. Only test on oldest and newest released Python versions.
-                  {"python-version": "3.9"},
-                  {"python-version": "3.10"},
-                  {"python-version": "3.11"},
-              ):
-                  exclude.append({**dev_version, **criterion})
+          unstable: list[dict[str, str]] = []
 
           # Build the job matrix.
           jobs: list[dict[str, str]] = []
@@ -138,12 +103,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.test-matrix.outputs.test_matrix) }}
-    name: |
-      [${{ matrix.state }}]
-      ${{ matrix.os }},
-      Python ${{ matrix.python-version }},
-      Click: ${{ matrix.click-version }},
-      Cloup: ${{ matrix.cloup-version }}
     runs-on: ${{ matrix.os }}
     # We keep going when a job flagged as not stable fails.
     continue-on-error: ${{ matrix.state == 'unstable' }}
@@ -164,14 +123,8 @@ jobs:
           uv --no-progress pip install --all-extras --requirement ./pyproject.toml .
 
       - name: Unittests
-        run: >
-          uv --no-progress run
-          ${{ matrix.click-version != 'released'
-          && format('--with "git+https://github.com/pallets/click.git@{0}"', matrix.click-version) || '' }}
-          ${{ matrix.cloup-version != 'released'
-          && format('--with "git+https://github.com/janluke/cloup.git@{0}"', matrix.cloup-version) || ''}}
-          --
-          pytest
+        run: |
+          uv --no-progress run -- pytest
 
       - name: Codecov upload
         uses: codecov/codecov-action@v4.5.0
