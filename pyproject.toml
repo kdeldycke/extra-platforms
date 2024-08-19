@@ -61,7 +61,7 @@ docs = [
 "Repository" = 'https://github.com/kdeldycke/extra-platforms'
 "Funding" = "https://github.com/sponsors/kdeldycke"
 "Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
-"Changelog" = "https://kdeldycke.github.io/extra-platforms/changelog.html"
+"Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
 
 [project.entry-points.pytest11]
 # Make additional fixtures available to pytest.
