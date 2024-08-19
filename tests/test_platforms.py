@@ -25,54 +25,7 @@ from string import ascii_lowercase, digits
 
 import pytest
 
-from extra_platforms import detection as detection_module
-from extra_platforms import platforms as platforms_module
-from extra_platforms.detection import (
-    is_aix,
-    is_altlinux,
-    is_amzn,
-    is_android,
-    is_arch,
-    is_buildroot,
-    is_centos,
-    is_cloudlinux,
-    is_cygwin,
-    is_debian,
-    is_exherbo,
-    is_fedora,
-    is_freebsd,
-    is_gentoo,
-    is_guix,
-    is_hurd,
-    is_ibm_powerkvm,
-    is_kvmibm,
-    is_linuxmint,
-    is_macos,
-    is_mageia,
-    is_mandriva,
-    is_midnightbsd,
-    is_netbsd,
-    is_openbsd,
-    is_opensuse,
-    is_oracle,
-    is_parallels,
-    is_pidora,
-    is_raspbian,
-    is_rhel,
-    is_rocky,
-    is_scientific,
-    is_slackware,
-    is_sles,
-    is_solaris,
-    is_sunos,
-    is_ubuntu,
-    is_unknown_linux,
-    is_windows,
-    is_wsl1,
-    is_wsl2,
-    is_xenserver,
-)
-from extra_platforms.platforms import (
+from extra_platforms import (
     AIX,
     ALL_GROUPS,
     ALL_LINUX,
@@ -135,8 +88,54 @@ from extra_platforms.platforms import (
     XENSERVER,
     Group,
     current_os,
+    is_aix,
+    is_altlinux,
+    is_amzn,
+    is_android,
+    is_arch,
+    is_buildroot,
+    is_centos,
+    is_cloudlinux,
+    is_cygwin,
+    is_debian,
+    is_exherbo,
+    is_fedora,
+    is_freebsd,
+    is_gentoo,
+    is_guix,
+    is_hurd,
+    is_ibm_powerkvm,
+    is_kvmibm,
+    is_linuxmint,
+    is_macos,
+    is_mageia,
+    is_mandriva,
+    is_midnightbsd,
+    is_netbsd,
+    is_openbsd,
+    is_opensuse,
+    is_oracle,
+    is_parallels,
+    is_pidora,
+    is_raspbian,
+    is_rhel,
+    is_rocky,
+    is_scientific,
+    is_slackware,
+    is_sles,
+    is_solaris,
+    is_sunos,
+    is_ubuntu,
+    is_unknown_linux,
+    is_windows,
+    is_wsl1,
+    is_wsl2,
+    is_xenserver,
     reduce,
 )
+from extra_platforms import detection as detection_module
+from extra_platforms import groups as groups_module
+from extra_platforms import platforms as platforms_module
 from extra_platforms.pytest import (
     skip_linux,
     skip_macos,
@@ -368,19 +367,30 @@ def test_code_sorting():
             heuristic_instance_ids.append(func_id)
 
     platform_instance_ids = []
-    group_instance_ids = []
     tree = ast.parse(Path(inspect.getfile(platforms_module)).read_bytes())
     for node in tree.body:
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            func_id = node.value.func.id
-            if func_id in ("Platform", "Group"):
-                assert len(node.targets) == 1
-                instance_id = node.targets[0].id
-                assert instance_id.isupper()
-                if func_id == "Platform":
-                    platform_instance_ids.append(instance_id)
-                elif func_id == "Group":
-                    group_instance_ids.append(instance_id)
+        if (
+            isinstance(node, ast.Assign)
+            and isinstance(node.value, ast.Call)
+            and node.value.func.id == "Platform"
+        ):
+            assert len(node.targets) == 1
+            instance_id = node.targets[0].id
+            assert instance_id.isupper()
+            platform_instance_ids.append(instance_id)
+
+    group_instance_ids = []
+    tree = ast.parse(Path(inspect.getfile(groups_module)).read_bytes())
+    for node in tree.body:
+        if (
+            isinstance(node, ast.Assign)
+            and isinstance(node.value, ast.Call)
+            and node.value.func.id == "Group"
+        ):
+            assert len(node.targets) == 1
+            instance_id = node.targets[0].id
+            assert instance_id.isupper()
+            group_instance_ids.append(instance_id)
 
     # Check there is no extra "is_" function.
     assert {f"is_{p.id}" for p in ALL_PLATFORMS.platforms} == set(
@@ -414,8 +424,8 @@ def test_group_constants():
     """Group constants and IDs must be aligned."""
     for group in ALL_GROUPS:
         group_constant = group.id.upper()
-        assert group_constant in platforms_module.__dict__
-        assert getattr(platforms_module, group_constant) is group
+        assert group_constant in groups_module.__dict__
+        assert getattr(groups_module, group_constant) is group
 
 
 def test_groups_content():

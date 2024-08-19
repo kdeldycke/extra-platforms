@@ -15,6 +15,36 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Expose package-wide elements."""
 
+import sys
+
+if sys.version_info >= (3, 9):
+    from functools import cache
+else:
+    from functools import lru_cache
+
+    def cache(user_function):
+        """Simple lightweight unbounded cache. Sometimes called "memoize".
+
+        .. important::
+
+            This is a straight `copy of the functools.cache implementation
+            <https://github.com/python/cpython/blob/55a26de/Lib/functools.py#L647-L653>`_,
+            which is only `available in the standard library starting with Python v3.9
+            <https://docs.python.org/3/library/functools.html?highlight=caching#functools.cache>`.
+        """
+        return lru_cache(maxsize=None)(user_function)
+
+
+# XXX Exposing everything at package level motivates platforms and groups to have a
+# unique and unambiguous ID. This constraint is enforced at the data-level and checked
+# in unittests.
+from .detection import *
+from .groups import *
+from .platforms import *
+
+# XXX Not imported at package level so dependency on Pytest can stay optional.
+# from .pytest import *
+
 __version__ = "1.0.3"
 """Examples of valid version strings according :pep:`440#version-scheme`:
 
@@ -27,3 +57,35 @@ __version__ = "1.0.3"
     __version__ = "1.2.3"  # Final Release
     __version__ = "1.2.3.post1"  # Post Release 1
 """
+
+
+ALL_OS_LABELS: frozenset[str] = frozenset(p.name for p in ALL_PLATFORMS.platforms)
+"""Sets of all recognized labels."""
+
+
+@cache
+def current_os() -> Platform:
+    """Return the current platform."""
+    matching = []
+    for p in ALL_PLATFORMS.platforms:
+        if p.current:
+            matching.append(p)
+
+    if len(matching) > 1:
+        msg = f"Multiple platforms match current OS: {matching}"
+        raise RuntimeError(msg)
+
+    if not matching:
+        msg = (
+            f"Unrecognized {sys.platform} / "
+            f"{platform.platform(aliased=True, terse=True)} platform."
+        )
+        raise SystemError(msg)
+
+    assert len(matching) == 1
+    return matching.pop()
+
+
+CURRENT_OS_ID: str = current_os().id
+CURRENT_OS_LABEL: str = current_os().name
+"""Constants about the current platform."""

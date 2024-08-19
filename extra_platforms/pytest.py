@@ -26,8 +26,7 @@ except ImportError:
     )
 
 
-from extra_platforms.detection import is_macos, is_windows
-from extra_platforms.platforms import ALL_LINUX, CURRENT_OS_ID
+from . import ALL_LINUX, CURRENT_OS_ID, is_macos, is_windows
 
 skip_linux = pytest.mark.skipif(
     CURRENT_OS_ID in ALL_LINUX.platform_ids, reason="Skip Linux"
