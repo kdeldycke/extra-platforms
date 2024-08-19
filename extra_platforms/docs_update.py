@@ -74,7 +74,7 @@ def generate_platform_sankey() -> str:
                 f'"{html.escape(group.icon)} {group.id}",'
                 f'"{html.escape(platform.icon)} {platform.id}",1'
             )
-    return dedent(f"""\
+    output = dedent("""\
         ```mermaid
         ---
         config:
@@ -82,9 +82,10 @@ def generate_platform_sankey() -> str:
             showValues: false
         ---
         sankey-beta\n
-        {"\n".join(table)}
-        ```\
         """)
+    output += "\n".join(table)
+    output += "\n```"
+    return output
 
 
 def generate_platforms_graph(
