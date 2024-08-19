@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.3 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.2...main)
+
+> \[!IMPORTANT\]
+> This version is not released yet and is under active development.
+
 ## [1.0.2 (2024-08-19)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.1...v1.0.2)
 
 - Re-release.
