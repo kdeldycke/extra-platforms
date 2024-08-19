@@ -10,14 +10,16 @@
 
 ## What is Extra Platforms?
 
-> [!NOTE]
+> [!WARNING]
 > TODO
+
+> [!TIP]
+> I wanted to call this package `platforms`, but it's already taken on PyPI. So I went with `extra-platforms` instead, to mark its affiliation with [Click Extra](https://github.com/kdeldycke/click-extra).
 
 ## Example
 
-> [!NOTE]
+> [!WARNING]
 > TODO
-
 
 ## Used in
 
