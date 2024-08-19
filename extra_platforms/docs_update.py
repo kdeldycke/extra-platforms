@@ -70,10 +70,13 @@ def generate_platform_sankey() -> str:
         ALL_GROUPS, key=lambda g: (len(g.platform_ids), g.id), reverse=True
     ):
         for platform in group.platforms:
-            table.append(
-                f'"{html.escape(group.icon)} {group.id}",'
-                f'"{html.escape(platform.icon)} {platform.id}",1'
-            )
+            # XXX Sankey diagrams do not support emoji icons yet.
+            # table.append(
+            #     f'"{html.escape(group.icon)} {group.id}",'
+            #     f'"{html.escape(platform.icon)} {platform.id}",1'
+            # )
+            table.append(f"{group.id},{platform.id},1")
+
     output = dedent("""\
         ```mermaid
         ---
