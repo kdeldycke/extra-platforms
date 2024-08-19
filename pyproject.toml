@@ -1,7 +1,7 @@
 [project]
 # Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 name = "extra-platforms"
-version = "1.0.1"
+version = "1.0.2"
 # Python versions and their status: https://devguide.python.org/versions/
 requires-python = ">= 3.8"
 description = "Detect platforms and group them by family"
@@ -93,7 +93,7 @@ branch = true
 precision = 2
 
 [tool.bumpversion]
-current_version = "1.0.1"
+current_version = "1.0.2"
 allow_dirty = true
 
 # TODO: Reuse the same search and replace patterns available in the reused workflows' pyproject.toml.
