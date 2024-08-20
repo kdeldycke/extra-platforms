@@ -18,8 +18,124 @@
 
 ## Example
 
-> [!WARNING]
-> TODO
+Get the current platform ID and name:
+
+```pycon
+>>> from extra_platforms import CURRENT_OS_ID, CURRENT_OS_LABEL
+
+>>> CURRENT_OS_ID
+'macos'
+
+>>> CURRENT_OS_LABEL
+'macOS'
+```
+
+Get the current platform object, from which you can access lots of metadata:
+
+```pycon
+>>> from extra_platforms import current_os
+
+>>> my_os = current_os()
+>>> my_os
+Platform(id='macos', name='macOS', current=True)
+
+>>> my_os.id
+'macos'
+>>> my_os.name
+'macOS'
+>>> my_os.icon
+'🍎'
+
+>>> my_os.info()
+{
+    "id": "macos",
+    "name": "macOS",
+    "icon": "🍎",
+    "current": True,
+    "distro_id": "darwin",
+    "version": "23.6.0",
+    "version_parts": {"major": "23", "minor": "6", "build_number": "0"},
+    "like": None,
+    "codename": None,
+}
+```
+
+Check if a platform is a specific system:
+
+```pycon
+>>> from extra_platforms import is_windows
+
+>>> is_windows()
+False
+```
+
+Use groups to check if the current platform is part of a specific family:
+
+```pycon
+>>> from extra_platforms import ALL_LINUX, current_os
+
+>>> current_os() in ALL_LINUX
+False
+```
+
+List all platforms of a family:
+
+```pycon
+>>> from extra_platforms import ALL_LINUX
+
+>>> ALL_LINUX
+Group(id='all_linux', name='Any Linux', platform_ids=frozenset({'ibm_powerkvm', 'rocky', 'debian', 'ubuntu', 'mageia', 'xenserver', 'opensuse', 'buildroot', 'rhel', 'parallels', 'pidora', 'sles', 'amzn', 'scientific', 'linuxmint', 'centos', 'android', 'gentoo', 'raspbian', 'unknown_linux', 'mandriva', 'exherbo', 'cloudlinux', 'fedora', 'guix', 'arch', 'altlinux', 'slackware', 'oracle', 'kvmibm'}))
+
+>>> print("\n".join([p.name for p in ALL_LINUX]))
+ALT Linux
+Amazon Linux
+Android
+Arch Linux
+Buildroot
+CentOS
+CloudLinux OS
+Debian
+Exherbo Linux
+Fedora
+Gentoo Linux
+Guix System
+IBM PowerKVM
+KVM for IBM z Systems
+Linux Mint
+Mageia
+Mandriva Linux
+openSUSE
+Oracle Linux
+Parallels
+Pidora
+Raspbian
+RedHat Enterprise Linux
+Rocky Linux
+Scientific Linux
+Slackware
+SUSE Linux Enterprise Server
+Ubuntu
+Unknown Linux
+XenServer
+```
+
+Reduce a disparate collection of groups and platforms into a minimal descriptive set, by grouping all platforms into families:
+
+```pycon
+>>> from extra_platforms import AIX, MACOS, SOLARIS, reduce
+
+>>> reduce([AIX, MACOS])
+{
+    Platform(id='aix', name='IBM AIX', current=False),
+    Platform(id='macos', name='macOS', current=True),
+}
+
+>>> reduce([AIX, MACOS, SOLARIS])
+{
+    Group(id='system_v', name='Any Unix derived from AT&T System Five', platform_ids=frozenset({'aix', 'solaris'})),
+    Platform(id='macos', name='macOS', current=True),
+}
+```
 
 ## Group → platforms mapping
 
