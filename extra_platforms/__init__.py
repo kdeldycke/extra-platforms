@@ -35,6 +35,8 @@ else:
         return lru_cache(maxsize=None)(user_function)
 
 
+from typing import FrozenSet
+
 # XXX Exposing everything at package level motivates platforms and groups to have a
 # unique and unambiguous ID. This constraint is enforced at the data-level and checked
 # in unittests.
@@ -59,7 +61,7 @@ __version__ = "1.0.3"
 """
 
 
-ALL_OS_LABELS: frozenset[str] = frozenset((p.name for p in ALL_PLATFORMS.platforms))
+ALL_OS_LABELS: FrozenSet[str] = frozenset((p.name for p in ALL_PLATFORMS.platforms))
 """Sets of all recognized labels."""
 
 
