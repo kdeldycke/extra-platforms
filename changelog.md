@@ -5,6 +5,10 @@
 > \[!IMPORTANT\]
 > This version is not released yet and is under active development.
 
+- Add documentation.
+- Expose all utilities at root level.
+- Split code.
+
 ## [1.0.2 (2024-08-19)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.1...v1.0.2)
 
 - Re-release.
