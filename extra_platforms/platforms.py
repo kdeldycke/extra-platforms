@@ -85,7 +85,7 @@ def _remove_blanks(
             return False
         return True
 
-    return remap(tree, visit=visit)
+    return remap(tree, visit=visit)  # type: ignore[no-any-return]
 
 
 @dataclass(frozen=True)
@@ -129,10 +129,10 @@ class Platform:
         }
         # Get extra info from distro.
         if self.current:
-            distro_info = distro.info()
+            d_info = dict(distro.info())
             # Rename distro ID to avoid conflict with our own ID.
-            distro_info["distro_id"] = distro_info.pop("id")
-            info = _recursive_update(info, _remove_blanks(distro_info))
+            d_info["distro_id"] = d_info.pop("id")
+            info = _recursive_update(info, _remove_blanks(d_info))
         return info
 
 
