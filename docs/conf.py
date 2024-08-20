@@ -102,7 +102,6 @@ autosectionlabel_prefix_document = True
 html_theme = "furo"
 html_title = project
 html_theme_options = {
-    "sidebar_hide_name": True,
     # Activates edit links.
     "source_repository": f"https://github.com/{issues_github_path}",
     "source_branch": "main",
