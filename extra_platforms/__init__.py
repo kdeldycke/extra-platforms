@@ -35,6 +35,7 @@ else:
         return lru_cache(maxsize=None)(user_function)
 
 
+from platform import platform
 from typing import FrozenSet
 
 # XXX Exposing everything at package level motivates platforms and groups to have a
@@ -80,7 +81,7 @@ def current_os() -> Platform:
     if not matching:
         msg = (
             f"Unrecognized {sys.platform} / "
-            f"{platform.platform(aliased=True, terse=True)} platform."
+            f"{platform(aliased=True, terse=True)} platform."
         )
         raise SystemError(msg)
 
