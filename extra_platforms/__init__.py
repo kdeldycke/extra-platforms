@@ -45,7 +45,7 @@ from .platforms import *
 # XXX Not imported at package level so dependency on Pytest can stay optional.
 # from .pytest import *
 
-__version__ = "1.0.3"
+__version__ = "1.1.0"
 """Examples of valid version strings according :pep:`440#version-scheme`:
 
 .. code-block:: python
