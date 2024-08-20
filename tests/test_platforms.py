@@ -155,9 +155,9 @@ def test_module_root_declarations():
         for node in tree.body:
             if isinstance(node, ast.Assign):
                 for target in node.targets:
-                    members.add(target.id)
+                    members.add(target.id)  # type: ignore[attr-defined]
             elif isinstance(node, ast.AnnAssign):
-                members.add(node.target.id)
+                members.add(node.target.id)  # type: ignore[union-attr]
             elif isinstance(node, ast.FunctionDef):
                 members.add(node.name)
             elif isinstance(node, ast.ClassDef):
