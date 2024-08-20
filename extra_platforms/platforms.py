@@ -133,7 +133,7 @@ class Platform:
             # Rename distro ID to avoid conflict with our own ID.
             d_info["distro_id"] = d_info.pop("id")
             info = _recursive_update(info, _remove_blanks(d_info))
-        return info
+        return info  # type: ignore[return-value]
 
 
 AIX = Platform("aix", "IBM AIX", "➿")
