@@ -347,14 +347,14 @@ wheels = [
 
 [[package]]
 name = "importlib-metadata"
-version = "8.3.0"
+version = "8.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "zipp" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2d/82/097d6c6917e4198f1456b8a02dd6fd03935b4eaf18dae6c0d4418dccb3bc/importlib_metadata-8.3.0.tar.gz", hash = "sha256:9c8fa6e8ea0f9516ad5c8db9246a731c948193c7754d3babb0114a05b27dd364", size = 54304 }
+sdist = { url = "https://files.pythonhosted.org/packages/c0/bd/fa8ce65b0a7d4b6d143ec23b0f5fd3f7ab80121078c465bc02baeaab22dc/importlib_metadata-8.4.0.tar.gz", hash = "sha256:9a547d3bc3608b025f93d403fdd1aae741c24fbb8314df4b155675742ce303c5", size = 54320 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/eb/e2/04e09bc7330ae906b8671bb7069e95eb7a84f14d30b25763b7acd6591ce8/importlib_metadata-8.3.0-py3-none-any.whl", hash = "sha256:42817a4a0be5845d22c6e212db66a94ad261e2318d80b3e0d363894a79df2b67", size = 26269 },
+    { url = "https://files.pythonhosted.org/packages/c0/14/362d31bf1076b21e1bcdcb0dc61944822ff263937b804a79231df2774d28/importlib_metadata-8.4.0-py3-none-any.whl", hash = "sha256:66f342cc6ac9818fc6ff340576acd24d65ba0b3efabb2b4ac08b598965a4a2f1", size = 26269 },
 ]
 
 [[package]]
