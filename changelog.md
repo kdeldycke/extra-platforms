@@ -1,9 +1,6 @@
 # Changelog
 
-## [1.1.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.2...main)
-
-> \[!IMPORTANT\]
-> This version is not released yet and is under active development.
+## [1.1.0 (2024-08-20)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.2...v1.1.0)
 
 - Add documentation.
 - Expose all utilities at root level.
