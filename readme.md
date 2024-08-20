@@ -10,15 +10,15 @@
 
 ## What is Extra Platforms?
 
-- Provides a list of all known platforms.
-- Detect the current platform, at the distribution level.
-- Gather current platform metadata (version, codename, etc.).
-- Group platforms into families.
-- Manage collection of platforms and groups.
-- Associate each platform and group to an emoji symbol.
-
-> [!TIP]
-> I wanted to call this package `platforms`, but it's already taken on PyPI. So I went with `extra-platforms` instead, to mark its affiliation with [Click Extra](https://github.com/kdeldycke/click-extra).
+- Provides a list of all known platforms
+- Detect the current platform, at the distribution level
+- Gather current platform metadata (version, codename, etc.)
+- Group platforms into families
+- Manage collection of platforms and groups
+- Associate each platform and group to an emoji symbol
+- New conditional markers for `pytest`:
+  - `@skip_linux`, `@skip_macos` and `@skip_windows`
+  - `@unless_linux`, `@unless_macos` and `@unless_windows`
 
 ## Examples
 
