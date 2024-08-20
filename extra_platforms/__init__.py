@@ -59,7 +59,7 @@ __version__ = "1.0.3"
 """
 
 
-ALL_OS_LABELS: frozenset[str] = frozenset(p.name for p in ALL_PLATFORMS.platforms)
+ALL_OS_LABELS: frozenset[str] = frozenset((p.name for p in ALL_PLATFORMS.platforms))
 """Sets of all recognized labels."""
 
 
