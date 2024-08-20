@@ -10,13 +10,17 @@
 
 ## What is Extra Platforms?
 
-> [!WARNING]
-> TODO
+- Provides a list of all known platforms.
+- Detect the current platform, at the distribution level.
+- Gather current platform metadata (version, codename, etc.).
+- Group platforms into families.
+- Manage collection of platforms and groups.
+- Associate each platform and group to an emoji symbol.
 
 > [!TIP]
 > I wanted to call this package `platforms`, but it's already taken on PyPI. So I went with `extra-platforms` instead, to mark its affiliation with [Click Extra](https://github.com/kdeldycke/click-extra).
 
-## Example
+## Examples
 
 Get the current platform ID and name:
 
