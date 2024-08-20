@@ -25,6 +25,7 @@ from string import ascii_lowercase, digits
 
 import pytest
 
+import extra_platforms
 from extra_platforms import (
     AIX,
     ALL_GROUPS,
@@ -144,6 +145,51 @@ from extra_platforms.pytest import (
     unless_macos,
     unless_windows,
 )
+
+
+def test_module_root_declarations():
+    def fetch_module_implements(module) -> set[str]:
+        """Fetch all methods, classes and constants implemented locally in a module's file."""
+        members = set()
+        tree = ast.parse(Path(inspect.getfile(module)).read_bytes())
+        for node in tree.body:
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    members.add(target.id)
+            elif isinstance(node, ast.AnnAssign):
+                members.add(node.target.id)
+            elif isinstance(node, ast.FunctionDef):
+                members.add(node.name)
+            elif isinstance(node, ast.ClassDef):
+                members.add(node.name)
+        return {m for m in members if not m.startswith("_")}
+
+    detection_members = fetch_module_implements(detection_module)
+    groups_members = fetch_module_implements(groups_module)
+    platforms_members = fetch_module_implements(platforms_module)
+    root_members = fetch_module_implements(extra_platforms)
+
+    # Check all members are exposed at the module root.
+    tree = ast.parse(Path(inspect.getfile(extra_platforms)).read_bytes())
+    extra_platforms_members = []
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if target.id == "__all__":
+                    for element in node.value.elts:
+                        extra_platforms_members.append(element.s)
+
+    assert detection_members <= set(extra_platforms_members)
+    assert groups_members <= set(extra_platforms_members)
+    assert platforms_members <= set(extra_platforms_members)
+
+    expected_members = sorted(
+        detection_members.union(groups_members)
+        .union(platforms_members)
+        .union(root_members),
+        key=lambda m: (m.lower(), m),
+    )
+    assert expected_members == extra_platforms_members
 
 
 def test_mutual_exclusion():
