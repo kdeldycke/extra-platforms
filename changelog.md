@@ -1,9 +1,6 @@
 # Changelog
 
-## [1.1.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v1.1.0...main)
-
-> \[!IMPORTANT\]
-> This version is not released yet and is under active development.
+## [1.1.1 (2024-08-21)](https://github.com/kdeldycke/extra-platforms/compare/v1.1.0...v1.1.1)
 
 - Run tests on `ubuntu-24.04` and `macos-12`.
 - Add missing typed marker.
