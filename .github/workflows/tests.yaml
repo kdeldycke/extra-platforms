@@ -39,10 +39,13 @@ jobs:
           variants: dict[str, set[str]] = {
               "os": {
                   # Available OSes: https://github.com/actions/runner-images#available-images
+                  # We test against all available variants because platforms is the main target of this project.
+                  "ubuntu-24.04",
                   "ubuntu-22.04",
                   "ubuntu-20.04",
                   "macos-14",
                   "macos-13",
+                  "macos-12",
                   "windows-2022",
                   "windows-2019",
               },
