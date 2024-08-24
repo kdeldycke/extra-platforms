@@ -281,6 +281,38 @@ unix_without_macos,unknown_linux,1
 unix_without_macos,wsl1,1
 unix_without_macos,wsl2,1
 unix_without_macos,xenserver,1
+linux_like,altlinux,1
+linux_like,amzn,1
+linux_like,android,1
+linux_like,arch,1
+linux_like,buildroot,1
+linux_like,centos,1
+linux_like,cloudlinux,1
+linux_like,debian,1
+linux_like,exherbo,1
+linux_like,fedora,1
+linux_like,gentoo,1
+linux_like,guix,1
+linux_like,ibm_powerkvm,1
+linux_like,kvmibm,1
+linux_like,linuxmint,1
+linux_like,mageia,1
+linux_like,mandriva,1
+linux_like,opensuse,1
+linux_like,oracle,1
+linux_like,parallels,1
+linux_like,pidora,1
+linux_like,raspbian,1
+linux_like,rhel,1
+linux_like,rocky,1
+linux_like,scientific,1
+linux_like,slackware,1
+linux_like,sles,1
+linux_like,ubuntu,1
+linux_like,unknown_linux,1
+linux_like,wsl1,1
+linux_like,wsl2,1
+linux_like,xenserver,1
 all_linux,altlinux,1
 all_linux,amzn,1
 all_linux,android,1
@@ -463,6 +495,40 @@ flowchart
         bsd_without_macos_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
         bsd_without_macos_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
         bsd_without_macos_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
+    end
+    subgraph "<code>click_extra.platforms.LINUX_LIKE</code><br/>🐧+ <em>Any Linux and compatibility layers</em>"
+        linux_like_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
+        linux_like_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
+        linux_like_android(<code>android</code><br/>🤖 <em>Android</em>)
+        linux_like_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
+        linux_like_buildroot(<code>buildroot</code><br/>❓ <em>Buildroot</em>)
+        linux_like_centos(<code>centos</code><br/>💠 <em>CentOS</em>)
+        linux_like_cloudlinux(<code>cloudlinux</code><br/>❓ <em>CloudLinux OS</em>)
+        linux_like_debian(<code>debian</code><br/>🌀 <em>Debian</em>)
+        linux_like_exherbo(<code>exherbo</code><br/>❓ <em>Exherbo Linux</em>)
+        linux_like_fedora(<code>fedora</code><br/>🎩 <em>Fedora</em>)
+        linux_like_gentoo(<code>gentoo</code><br/>🗜️ <em>Gentoo Linux</em>)
+        linux_like_guix(<code>guix</code><br/>❓ <em>Guix System</em>)
+        linux_like_ibm_powerkvm(<code>ibm_powerkvm</code><br/>❓ <em>IBM PowerKVM</em>)
+        linux_like_kvmibm(<code>kvmibm</code><br/>❓ <em>KVM for IBM z Systems</em>)
+        linux_like_linuxmint(<code>linuxmint</code><br/>🌿 <em>Linux Mint</em>)
+        linux_like_mageia(<code>mageia</code><br/>❓ <em>Mageia</em>)
+        linux_like_mandriva(<code>mandriva</code><br/>❓ <em>Mandriva Linux</em>)
+        linux_like_opensuse(<code>opensuse</code><br/>🦎 <em>openSUSE</em>)
+        linux_like_oracle(<code>oracle</code><br/>🦴 <em>Oracle Linux</em>)
+        linux_like_parallels(<code>parallels</code><br/>❓ <em>Parallels</em>)
+        linux_like_pidora(<code>pidora</code><br/>❓ <em>Pidora</em>)
+        linux_like_raspbian(<code>raspbian</code><br/>🍓 <em>Raspbian</em>)
+        linux_like_rhel(<code>rhel</code><br/>🎩 <em>RedHat Enterprise Linux</em>)
+        linux_like_rocky(<code>rocky</code><br/>💠 <em>Rocky Linux</em>)
+        linux_like_scientific(<code>scientific</code><br/>❓ <em>Scientific Linux</em>)
+        linux_like_slackware(<code>slackware</code><br/>❓ <em>Slackware</em>)
+        linux_like_sles(<code>sles</code><br/>🦎 <em>SUSE Linux Enterprise Server</em>)
+        linux_like_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
+        linux_like_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
+        linux_like_wsl1(<code>wsl1</code><br/>⊞ <em>Windows Subsystem for Linux v1</em>)
+        linux_like_wsl2(<code>wsl2</code><br/>⊞ <em>Windows Subsystem for Linux v2</em>)
+        linux_like_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
     end
     subgraph "<code>click_extra.platforms.UNIX</code><br/>⨷ <em>Any Unix</em>"
         unix_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
