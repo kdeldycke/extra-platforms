@@ -371,11 +371,11 @@ Each platform is assigned to a group of non-overlpaping families:
 
 <!-- NON_OVERLAPPING_GROUPS-graph-start -->
 
-{caption="`click_extra.platforms.NON_OVERLAPPING_GROUPS` - Non-overlapping groups."}
+#### `extra_platforms.NON_OVERLAPPING_GROUPS` - Non-overlapping groups.
 
 ```mermaid
 flowchart
-    subgraph "<code>click_extra.platforms.ALL_LINUX</code><br/>🐧 <em>Any Linux</em>"
+    subgraph "<code>extra_platforms.ALL_LINUX</code><br/>🐧 <em>Any Linux</em>"
         all_linux_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
         all_linux_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
         all_linux_android(<code>android</code><br/>🤖 <em>Android</em>)
@@ -407,10 +407,10 @@ flowchart
         all_linux_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
         all_linux_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
     end
-    subgraph "<code>click_extra.platforms.ALL_WINDOWS</code><br/>🪟 <em>Any Windows</em>"
+    subgraph "<code>extra_platforms.ALL_WINDOWS</code><br/>🪟 <em>Any Windows</em>"
         all_windows_windows(<code>windows</code><br/>🪟 <em>Windows</em>)
     end
-    subgraph "<code>click_extra.platforms.BSD</code><br/>🅱️ <em>Any BSD</em>"
+    subgraph "<code>extra_platforms.BSD</code><br/>🅱️ <em>Any BSD</em>"
         bsd_freebsd(<code>freebsd</code><br/>😈 <em>FreeBSD</em>)
         bsd_macos(<code>macos</code><br/>🍎 <em>macOS</em>)
         bsd_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
@@ -418,18 +418,18 @@ flowchart
         bsd_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
         bsd_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
     end
-    subgraph "<code>click_extra.platforms.LINUX_LAYERS</code><br/>≚ <em>Any Linux compatibility layers</em>"
+    subgraph "<code>extra_platforms.LINUX_LAYERS</code><br/>≚ <em>Any Linux compatibility layers</em>"
         linux_layers_wsl1(<code>wsl1</code><br/>⊞ <em>Windows Subsystem for Linux v1</em>)
         linux_layers_wsl2(<code>wsl2</code><br/>⊞ <em>Windows Subsystem for Linux v2</em>)
     end
-    subgraph "<code>click_extra.platforms.OTHER_UNIX</code><br/>⊎ <em>Any other Unix</em>"
+    subgraph "<code>extra_platforms.OTHER_UNIX</code><br/>⊎ <em>Any other Unix</em>"
         other_unix_hurd(<code>hurd</code><br/>🐃 <em>GNU/Hurd</em>)
     end
-    subgraph "<code>click_extra.platforms.SYSTEM_V</code><br/>Ⅴ <em>Any Unix derived from AT&amp;T System Five</em>"
+    subgraph "<code>extra_platforms.SYSTEM_V</code><br/>Ⅴ <em>Any Unix derived from AT&amp;T System Five</em>"
         system_v_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         system_v_solaris(<code>solaris</code><br/>🌞 <em>Solaris</em>)
     end
-    subgraph "<code>click_extra.platforms.UNIX_LAYERS</code><br/>≛ <em>Any Unix compatibility layers</em>"
+    subgraph "<code>extra_platforms.UNIX_LAYERS</code><br/>≛ <em>Any Unix compatibility layers</em>"
         unix_layers_cygwin(<code>cygwin</code><br/>Ͼ <em>Cygwin</em>)
     end
 ```
@@ -442,11 +442,11 @@ Other groups are available for convenience, but these overlaps:
 
 <!-- EXTRA_GROUPS-graph-start -->
 
-{caption="`click_extra.platforms.EXTRA_GROUPS` - Overlapping groups, defined for convenience."}
+#### `extra_platforms.EXTRA_GROUPS` - Overlapping groups, defined for convenience.
 
 ```mermaid
 flowchart
-    subgraph "<code>click_extra.platforms.ALL_PLATFORMS</code><br/>🖥️ <em>Any platforms</em>"
+    subgraph "<code>extra_platforms.ALL_PLATFORMS</code><br/>🖥️ <em>Any platforms</em>"
         all_platforms_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         all_platforms_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
         all_platforms_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
@@ -491,14 +491,14 @@ flowchart
         all_platforms_wsl2(<code>wsl2</code><br/>⊞ <em>Windows Subsystem for Linux v2</em>)
         all_platforms_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
     end
-    subgraph "<code>click_extra.platforms.BSD_WITHOUT_MACOS</code><br/>🅱️ <em>Any BSD but macOS</em>"
+    subgraph "<code>extra_platforms.BSD_WITHOUT_MACOS</code><br/>🅱️ <em>Any BSD but macOS</em>"
         bsd_without_macos_freebsd(<code>freebsd</code><br/>😈 <em>FreeBSD</em>)
         bsd_without_macos_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
         bsd_without_macos_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
         bsd_without_macos_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
         bsd_without_macos_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
     end
-    subgraph "<code>click_extra.platforms.LINUX_LIKE</code><br/>🐧+ <em>Any Linux and compatibility layers</em>"
+    subgraph "<code>extra_platforms.LINUX_LIKE</code><br/>🐧+ <em>Any Linux and compatibility layers</em>"
         linux_like_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
         linux_like_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
         linux_like_android(<code>android</code><br/>🤖 <em>Android</em>)
@@ -532,7 +532,7 @@ flowchart
         linux_like_wsl2(<code>wsl2</code><br/>⊞ <em>Windows Subsystem for Linux v2</em>)
         linux_like_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
     end
-    subgraph "<code>click_extra.platforms.UNIX</code><br/>⨷ <em>Any Unix</em>"
+    subgraph "<code>extra_platforms.UNIX</code><br/>⨷ <em>Any Unix</em>"
         unix_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         unix_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
         unix_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
@@ -576,7 +576,7 @@ flowchart
         unix_wsl2(<code>wsl2</code><br/>⊞ <em>Windows Subsystem for Linux v2</em>)
         unix_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
     end
-    subgraph "<code>click_extra.platforms.UNIX_WITHOUT_MACOS</code><br/>⨂ <em>Any Unix but macOS</em>"
+    subgraph "<code>extra_platforms.UNIX_WITHOUT_MACOS</code><br/>⨂ <em>Any Unix but macOS</em>"
         unix_without_macos_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         unix_without_macos_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
         unix_without_macos_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
