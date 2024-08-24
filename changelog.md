@@ -5,6 +5,8 @@
 > \[!IMPORTANT\]
 > This version is not released yet and is under active development.
 
+- Add new `LINUX_LIKE` family that merge `ALL_LINUX` and `LINUX_LAYERS` groups.
+
 ## [1.1.1 (2024-08-21)](https://github.com/kdeldycke/extra-platforms/compare/v1.1.0...v1.1.1)
 
 - Run tests on `ubuntu-24.04` and `macos-12`.

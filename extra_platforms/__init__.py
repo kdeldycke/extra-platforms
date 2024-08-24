@@ -95,6 +95,7 @@ from .groups import (  # noqa: E402
     BSD_WITHOUT_MACOS,
     EXTRA_GROUPS,
     LINUX_LAYERS,
+    LINUX_LIKE,
     NON_OVERLAPPING_GROUPS,
     OTHER_UNIX,
     SYSTEM_V,
@@ -275,6 +276,7 @@ __all__ = [
     "is_xenserver",  # noqa: F405
     "KVMIBM",  # noqa: F405
     "LINUX_LAYERS",  # noqa: F405
+    "LINUX_LIKE",  # noqa: F405
     "LINUXMINT",  # noqa: F405
     "MACOS",  # noqa: F405
     "MAGEIA",  # noqa: F405

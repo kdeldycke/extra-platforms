@@ -287,7 +287,7 @@ ALL_LINUX = Group(
         XENSERVER,
     ),
 )
-"""All Unix platforms based on a Linux kernel.
+"""All distributions based on a Linux kernel.
 
 .. note::
     Are considered of this family (`according Wikipedia
@@ -310,6 +310,15 @@ LINUX_LAYERS = Group(
 
     - `Windows Subsystem for Linux`
 """
+
+
+LINUX_LIKE = Group(
+    "linux_like",
+    "Any Linux and compatibility layers",
+    "🐧+",
+    (*ALL_LINUX.platforms, *LINUX_LAYERS.platforms),
+)
+"""Sum of all Linux distributions and Linux compatibility layers."""
 
 
 SYSTEM_V = Group(
@@ -419,6 +428,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_PLATFORMS,
+        LINUX_LIKE,
         UNIX,
         UNIX_WITHOUT_MACOS,
         BSD_WITHOUT_MACOS,
