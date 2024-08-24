@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Automation to keep click-extra documentation up-to-date.
+"""Automation to keep extra-platforms documentation up-to-date.
 
 .. tip::
 
@@ -21,10 +21,10 @@
 
     .. code-block:: shell-session
 
-        $ run python -m click_extra.docs_update
+        $ run python -m extra_platforms.docs_update
 
     See how it is `used in .github/workflows/docs.yaml workflow
-    <https://github.com/kdeldycke/click-extra/blob/a978bd0/.github/workflows/docs.yaml#L35-L37>`_.
+    <https://github.com/kdeldycke/extra-platforms/blob/main/.github/workflows/docs.yaml#L38-L39>`_.
 """
 
 from __future__ import annotations
@@ -119,7 +119,7 @@ def generate_platforms_graph(
                 f"{html.escape(platform.icon)} <em>{html.escape(platform.name)}</em>)",
             )
         subgraphs.add(
-            f'subgraph "<code>click_extra.platforms.{group.id.upper()}</code>'
+            f'subgraph "<code>extra_platforms.{group.id.upper()}</code>'
             "<br/>"
             f'{html.escape(group.icon)} <em>{html.escape(group.name)}</em>"'
             "\n" + indent("\n".join(sorted(nodes)), INDENT) + "\nend",
@@ -129,7 +129,7 @@ def generate_platforms_graph(
     return "\n".join(
         (
             # Use attributes blocks extension to add a title.
-            f'{{caption="`click_extra.platforms.{graph_id}` - {description}"}}',
+            f"#### `extra_platforms.{graph_id}` - {description}\n",
             "```mermaid",
             "flowchart",
             indent("\n".join(sorted(subgraphs)), INDENT),
