@@ -340,6 +340,7 @@ Each platform is assigned to a group of non-overlpaping families:
 <!-- NON_OVERLAPPING_GROUPS-graph-start -->
 
 {caption="`click_extra.platforms.NON_OVERLAPPING_GROUPS` - Non-overlapping groups."}
+
 ```mermaid
 flowchart
     subgraph "<code>click_extra.platforms.ALL_LINUX</code><br/>🐧 <em>Any Linux</em>"
@@ -410,6 +411,7 @@ Other groups are available for convenience, but these overlaps:
 <!-- EXTRA_GROUPS-graph-start -->
 
 {caption="`click_extra.platforms.EXTRA_GROUPS` - Overlapping groups, defined for convenience."}
+
 ```mermaid
 flowchart
     subgraph "<code>click_extra.platforms.ALL_PLATFORMS</code><br/>🖥️ <em>Any platforms</em>"
