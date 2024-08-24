@@ -2,7 +2,7 @@
 
 ## [1.2.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v1.1.1...main)
 
-> \[!IMPORTANT\]
+> [!IMPORTANT]
 > This version is not released yet and is under active development.
 
 - Add new `LINUX_LIKE` family that merge `ALL_LINUX` and `LINUX_LAYERS` groups.
