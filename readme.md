@@ -19,6 +19,7 @@
 - New conditional markers for `pytest`:
   - `@skip_linux`, `@skip_macos` and `@skip_windows`
   - `@unless_linux`, `@unless_macos` and `@unless_windows`
+- Address [`distro#177` issue (support for Windows and Mac OS)](https://github.com/python-distro/distro/issues/177)
 
 ## Examples
 
