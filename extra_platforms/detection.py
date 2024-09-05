@@ -19,7 +19,7 @@ All these heuristics can be hard-cached as the underlying system is not changing
 between code execution.
 
 We mostly rely on `distro <https://github.com/python-distro/distro>`_ to detect the
-Linux distribution, has it is the recommended replacement for Python's original
+Linux distribution, as it is the recommended replacement for Python's original
 ``platform.linux_distribution`` function (which was removed in Python 3.8).
 
 We then fill in the gaps with ``sys.platform`` and environment variables to detect
