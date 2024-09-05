@@ -455,6 +455,10 @@ def reduce(items: Iterable[Group | Platform]) -> set[Group | Platform]:
 
         This is being discussed upstream at `trouchet/eule#120
         <https://github.com/trouchet/eule/issues/120>`_.
+
+    .. todo::
+        Should we rename or alias this method to `collapse()`? Cannot decide if it is
+        more descriptive or not...
     """
     # Collect all platforms.
     platforms: set[Platform] = set()
