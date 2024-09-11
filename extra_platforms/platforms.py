@@ -27,6 +27,7 @@ platform-dependent values.
 
 from __future__ import annotations
 
+import platform
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -34,6 +35,52 @@ import distro
 from boltons.iterutils import remap
 
 from . import detection
+
+_MACOS_CODENAMES = {
+    ("10", "0"): "Cheetah",
+    ("10", "1"): "Puma",
+    ("10", "2"): "Jaguar",
+    ("10", "3"): "Panther",
+    ("10", "4"): "Tiger",
+    ("10", "5"): "Leopard",
+    ("10", "6"): "Snow Leopard",
+    ("10", "7"): "Lion",
+    ("10", "8"): "Mountain Lion",
+    ("10", "9"): "Mavericks",
+    ("10", "10"): "Yosemite",
+    ("10", "11"): "El Capitan",
+    ("10", "12"): "Sierra",
+    ("10", "13"): "High Sierra",
+    ("10", "14"): "Mojave",
+    ("10", "15"): "Catalina",
+    ("11", None): "Big Sur",
+    ("12", None): "Monterey",
+    ("13", None): "Ventura",
+    ("14", None): "Sonoma",
+    ("15", None): "Sequoia",
+}
+"""Maps macOS ``(major, minor)`` version parts to release code name.
+
+See:
+- https://en.wikipedia.org/wiki/Template:MacOS_versions
+- https://docs.python.org/3/library/platform.html#platform.mac_ver
+"""
+
+
+def _get_macos_codename(major: str, minor: str) -> str:
+    matches = set()
+    for (major_key, minor_key), codename in _MACOS_CODENAMES.items():
+        if minor_key is not None and minor_key != minor:
+            continue
+        if major_key == major:
+            matches.add(codename)
+    if not matches:
+        raise ValueError(f"No macOS codename match version {major}.{minor}")
+    if len(matches) != 1:
+        raise ValueError(
+            f"Version {major}.{minor} match multiple codenames: {matches!r}"
+        )
+    return matches.pop()
 
 
 def _recursive_update(
@@ -127,12 +174,28 @@ class Platform:
             "like": None,
             "codename": None,
         }
-        # Get extra info from distro.
         if self.current:
-            d_info = dict(distro.info())
+            # Get extra Linux distribution info from distro.
+            distro_info = dict(distro.info())
             # Rename distro ID to avoid conflict with our own ID.
-            d_info["distro_id"] = d_info.pop("id")
-            info = _recursive_update(info, _remove_blanks(d_info))
+            distro_info["distro_id"] = distro_info.pop("id")
+            info = _recursive_update(info, _remove_blanks(distro_info), strict=True)
+
+            # Add extra macOS infos.
+            if self.id == "macos":
+                release, _, _ = platform.mac_ver()
+                major, minor, build_number = release.split(".", 2)
+                mac_info = {
+                    "version": release,
+                    "version_parts": {
+                        "major": major,
+                        "minor": minor,
+                        "build_number": build_number,
+                    },
+                    "codename": _get_macos_codename(major, minor),
+                }
+                info = _recursive_update(info, mac_info, strict=True)
+
         return info  # type: ignore[return-value]
 
 
