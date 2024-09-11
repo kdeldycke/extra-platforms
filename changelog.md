@@ -5,7 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
-- Add detection of all versions of macOS. Closes #55.
+- Add detection of all versions of macOS and Windows. Closes #55.
 - Drop supports for Python 3.8.
 - Add `is_<group_id>` booleans to module root to test the membership of the current platform to that group.
 - Rename `ALL_LINUX` group to `LINUX`.
