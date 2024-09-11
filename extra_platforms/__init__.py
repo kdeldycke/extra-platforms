@@ -228,14 +228,14 @@ __all__ = [
     "HURD",  # noqa: F405
     "IBM_POWERKVM",  # noqa: F405
     "is_aix",  # noqa: F405
-    "is_all_platforms",  # noqa: F405
+    "is_all_platforms",  # noqa: F405, F822
     "is_altlinux",  # noqa: F405
     "is_amzn",  # noqa: F405
     "is_android",  # noqa: F405
-    "is_any_windows",  # noqa: F405
+    "is_any_windows",  # noqa: F405, F822
     "is_arch",  # noqa: F405
-    "is_bsd",  # noqa: F405
-    "is_bsd_without_macos",  # noqa: F405
+    "is_bsd",  # noqa: F405, F822
+    "is_bsd_without_macos",  # noqa: F405, F822
     "is_buildroot",  # noqa: F405
     "is_centos",  # noqa: F405
     "is_cloudlinux",  # noqa: F405
@@ -249,9 +249,9 @@ __all__ = [
     "is_hurd",  # noqa: F405
     "is_ibm_powerkvm",  # noqa: F405
     "is_kvmibm",  # noqa: F405
-    "is_linux",  # noqa: F405
-    "is_linux_layers",  # noqa: F405
-    "is_linux_like",  # noqa: F405
+    "is_linux",  # noqa: F405, F822
+    "is_linux_layers",  # noqa: F405, F822
+    "is_linux_like",  # noqa: F405, F822
     "is_linuxmint",  # noqa: F405
     "is_macos",  # noqa: F405
     "is_mageia",  # noqa: F405
@@ -261,7 +261,7 @@ __all__ = [
     "is_openbsd",  # noqa: F405
     "is_opensuse",  # noqa: F405
     "is_oracle",  # noqa: F405
-    "is_other_unix",  # noqa: F405
+    "is_other_unix",  # noqa: F405, F822
     "is_parallels",  # noqa: F405
     "is_pidora",  # noqa: F405
     "is_raspbian",  # noqa: F405
@@ -272,11 +272,11 @@ __all__ = [
     "is_sles",  # noqa: F405
     "is_solaris",  # noqa: F405
     "is_sunos",  # noqa: F405
-    "is_system_v",  # noqa: F405
+    "is_system_v",  # noqa: F405, F822
     "is_ubuntu",  # noqa: F405
-    "is_unix",  # noqa: F405
-    "is_unix_layers",  # noqa: F405
-    "is_unix_without_macos",  # noqa: F405
+    "is_unix",  # noqa: F405, F822
+    "is_unix_layers",  # noqa: F405, F822
+    "is_unix_without_macos",  # noqa: F405, F822
     "is_unknown_linux",  # noqa: F405
     "is_windows",  # noqa: F405
     "is_wsl1",  # noqa: F405
