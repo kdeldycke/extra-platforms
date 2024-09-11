@@ -348,6 +348,9 @@ def test_platform_definitions():
         assert platform.id[-1] in ascii_lowercase + digits
         assert set(platform.id).issubset(ascii_lowercase + digits + "_")
         assert platform.id.islower()
+        # Platforms are not allowed to starts with all_ or any_, which is reserved
+        # for groups. Use unknown_ prefix instead.
+        assert not platform.id.startswith(("all_", "any_"))
 
         # Name.
         assert platform.name
