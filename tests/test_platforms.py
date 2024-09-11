@@ -137,14 +137,6 @@ from extra_platforms import (
 from extra_platforms import detection as detection_module
 from extra_platforms import groups as groups_module
 from extra_platforms import platforms as platforms_module
-from extra_platforms.pytest import (
-    skip_linux,
-    skip_macos,
-    skip_windows,
-    unless_linux,
-    unless_macos,
-    unless_windows,
-)
 
 
 def test_module_root_declarations():
@@ -668,42 +660,3 @@ def test_current_os_func():
 
 def test_os_labels():
     assert len(ALL_OS_LABELS) == len(ALL_PLATFORMS)
-
-
-@skip_linux
-def test_skip_linux():
-    assert CURRENT_OS_ID not in LINUX.platform_ids
-    assert is_macos() or is_windows()
-
-
-@skip_macos
-def test_skip_macos():
-    assert not is_macos()
-    assert CURRENT_OS_ID in LINUX.platform_ids or is_windows()
-
-
-@skip_windows
-def test_skip_windows():
-    assert not is_windows()
-    assert CURRENT_OS_ID in LINUX.platform_ids or is_macos()
-
-
-@unless_linux
-def test_unless_linux():
-    assert CURRENT_OS_ID in LINUX.platform_ids
-    assert not is_macos()
-    assert not is_windows()
-
-
-@unless_macos
-def test_unless_macos():
-    assert CURRENT_OS_ID not in LINUX.platform_ids
-    assert is_macos()
-    assert not is_windows()
-
-
-@unless_windows
-def test_unless_windows():
-    assert CURRENT_OS_ID not in LINUX.platform_ids
-    assert not is_macos()
-    assert is_windows()
