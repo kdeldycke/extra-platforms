@@ -15,26 +15,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Expose package-wide elements."""
 
-import sys
-
-if sys.version_info >= (3, 9):
-    from functools import cache
-else:
-    from functools import lru_cache
-
-    def cache(user_function):
-        """Simple lightweight unbounded cache. Sometimes called "memoize".
-
-        .. important::
-
-            This is a straight `copy of the functools.cache implementation
-            <https://github.com/python/cpython/blob/55a26de/Lib/functools.py#L647-L653>`_,
-            which is only `available in the standard library starting with Python v3.9
-            <https://docs.python.org/3/library/functools.html?highlight=caching#functools.cache>`.
-        """
-        return lru_cache(maxsize=None)(user_function)
-
-
+from functools import cache
 from platform import platform
 from typing import FrozenSet
 
