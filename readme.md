@@ -385,7 +385,18 @@ Each platform is assigned to a group of non-overlpaping families:
 
 ```mermaid
 flowchart
-    subgraph "<code>extra_platforms.LINUX</code><br/>🐧 <em>Any Linux</em>"
+    subgraph "<code>extra_platforms.ANY_WINDOWS</code><br/>🪟 <em>Any Windows</em>"
+        any_windows_windows(<code>windows</code><br/>🪟 <em>Windows</em>)
+    end
+    subgraph "<code>extra_platforms.BSD</code><br/>🅱️ <em>Any BSD</em>"
+        bsd_freebsd(<code>freebsd</code><br/>😈 <em>FreeBSD</em>)
+        bsd_macos(<code>macos</code><br/>🍎 <em>macOS</em>)
+        bsd_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
+        bsd_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
+        bsd_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
+        bsd_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
+    end
+    subgraph "<code>extra_platforms.LINUX</code><br/>🐧 <em>Any Linux distribution</em>"
         linux_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
         linux_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
         linux_android(<code>android</code><br/>🤖 <em>Android</em>)
@@ -417,17 +428,6 @@ flowchart
         linux_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
         linux_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
     end
-    subgraph "<code>extra_platforms.ALL_WINDOWS</code><br/>🪟 <em>Any Windows</em>"
-        any_windows_windows(<code>windows</code><br/>🪟 <em>Windows</em>)
-    end
-    subgraph "<code>extra_platforms.BSD</code><br/>🅱️ <em>Any BSD</em>"
-        bsd_freebsd(<code>freebsd</code><br/>😈 <em>FreeBSD</em>)
-        bsd_macos(<code>macos</code><br/>🍎 <em>macOS</em>)
-        bsd_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
-        bsd_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
-        bsd_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
-        bsd_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
-    end
     subgraph "<code>extra_platforms.LINUX_LAYERS</code><br/>≚ <em>Any Linux compatibility layers</em>"
         linux_layers_wsl1(<code>wsl1</code><br/>⊞ <em>Windows Subsystem for Linux v1</em>)
         linux_layers_wsl2(<code>wsl2</code><br/>⊞ <em>Windows Subsystem for Linux v2</em>)
@@ -456,7 +456,7 @@ Other groups are available for convenience, but these overlaps:
 
 ```mermaid
 flowchart
-    subgraph "<code>extra_platforms.ALL_PLATFORMS</code><br/>🖥️ <em>Any platforms</em>"
+    subgraph "<code>extra_platforms.ALL_PLATFORMS</code><br/>🖥️ <em>All platforms</em>"
         all_platforms_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         all_platforms_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
         all_platforms_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
