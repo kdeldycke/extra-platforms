@@ -393,6 +393,9 @@ def test_group_definitions():
         assert group.id[-1] in ascii_lowercase + digits
         assert set(group.id).issubset(ascii_lowercase + digits + "_")
         assert group.id.islower()
+        # Only the group referencing all platforms is allowed to starts with "all_"
+        # prefix.
+        assert group.id == "all_platforms" or not group.id.startswith("all_")
 
         # Name.
         assert group.name
