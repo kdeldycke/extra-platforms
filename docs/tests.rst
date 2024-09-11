@@ -16,3 +16,11 @@ tests.test\_platforms module
    :members:
    :undoc-members:
    :show-inheritance:
+
+tests.test\_pytest module
+-------------------------
+
+.. automodule:: tests.test_pytest
+   :members:
+   :undoc-members:
+   :show-inheritance:
