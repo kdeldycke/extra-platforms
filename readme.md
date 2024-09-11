@@ -370,7 +370,7 @@ linux_layers,wsl1,1
 linux_layers,wsl2,1
 unix_layers,cygwin,1
 other_unix,hurd,1
-all_windows,windows,1
+any_windows,windows,1
 ```
 
 <!-- platform-sankey-end -->
@@ -418,7 +418,7 @@ flowchart
         linux_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
     end
     subgraph "<code>extra_platforms.ALL_WINDOWS</code><br/>🪟 <em>Any Windows</em>"
-        all_windows_windows(<code>windows</code><br/>🪟 <em>Windows</em>)
+        any_windows_windows(<code>windows</code><br/>🪟 <em>Windows</em>)
     end
     subgraph "<code>extra_platforms.BSD</code><br/>🅱️ <em>Any BSD</em>"
         bsd_freebsd(<code>freebsd</code><br/>😈 <em>FreeBSD</em>)

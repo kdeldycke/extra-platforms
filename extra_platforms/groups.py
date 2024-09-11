@@ -145,7 +145,7 @@ class Group:
 
 ALL_PLATFORMS: Group = Group(
     "all_platforms",
-    "Any platforms",
+    "All platforms",
     "🖥️",
     (
         AIX,
@@ -196,7 +196,7 @@ ALL_PLATFORMS: Group = Group(
 """All recognized platforms."""
 
 
-ALL_WINDOWS = Group("all_windows", "Any Windows", "🪟", (WINDOWS,))
+ANY_WINDOWS = Group("any_windows", "Any Windows", "🪟", (WINDOWS,))
 """All Windows operating systems."""
 
 
@@ -204,7 +204,7 @@ UNIX = Group(
     "unix",
     "Any Unix",
     "⨷",
-    tuple(p for p in ALL_PLATFORMS.platforms if p not in ALL_WINDOWS),
+    tuple(p for p in ALL_PLATFORMS.platforms if p not in ANY_WINDOWS),
 )
 """All Unix-like operating systems and compatibility layers."""
 
@@ -413,7 +413,7 @@ OTHER_UNIX = Group(
 
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
-        ALL_WINDOWS,
+        ANY_WINDOWS,
         BSD,
         LINUX,
         LINUX_LAYERS,

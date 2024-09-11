@@ -7,6 +7,7 @@
 
 - Add `is_<group_id>` booleans to module root to test the membership of the current platform to that group.
 - Rename `ALL_LINUX` group to `LINUX`.
+- Rename `ALL_WINDOWS` group to `ANY_WINDOWS`.
 
 ## [1.2.1 (2024-09-04)](https://github.com/kdeldycke/extra-platforms/compare/v1.2.0...v1.2.1)
 

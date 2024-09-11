@@ -31,10 +31,10 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_OS_LABELS,
     ALL_PLATFORMS,
-    ALL_WINDOWS,
     ALTLINUX,
     AMZN,
     ANDROID,
+    ANY_WINDOWS,
     ARCH,
     BSD,
     BSD_WITHOUT_MACOS,
@@ -540,7 +540,7 @@ def test_logical_grouping():
     assert BSD.issuperset(BSD_WITHOUT_MACOS)
 
     # All platforms are divided into Windows and Unix at the highest level.
-    assert {p.id for p in ALL_PLATFORMS} == ALL_WINDOWS.platform_ids | UNIX.platform_ids
+    assert {p.id for p in ALL_PLATFORMS} == ANY_WINDOWS.platform_ids | UNIX.platform_ids
 
     # All UNIX platforms are divided into BSD, Linux, and Unix families.
     assert UNIX.platform_ids == (
@@ -591,10 +591,10 @@ def test_overlapping_groups():
         ([UNIX], {UNIX}),
         ([UNIX, UNIX], {UNIX}),
         ([UNIX, AIX], {UNIX}),
-        ([WINDOWS], {ALL_WINDOWS}),
+        ([WINDOWS], {ANY_WINDOWS}),
         ([ALL_PLATFORMS, WINDOWS], {ALL_PLATFORMS}),
         ([UNIX, WINDOWS], {ALL_PLATFORMS}),
-        ([UNIX, ALL_WINDOWS], {ALL_PLATFORMS}),
+        ([UNIX, ANY_WINDOWS], {ALL_PLATFORMS}),
         ([BSD_WITHOUT_MACOS, UNIX], {UNIX}),
         ([BSD_WITHOUT_MACOS, MACOS], {BSD}),
         (

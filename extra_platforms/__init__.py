@@ -89,7 +89,7 @@ from .detection import (  # noqa: E402
 from .groups import (  # noqa: E402
     ALL_GROUPS,
     ALL_PLATFORMS,
-    ALL_WINDOWS,
+    ANY_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
     EXTRA_GROUPS,
@@ -221,10 +221,10 @@ __all__ = [
     "ALL_GROUPS",  # noqa: F405
     "ALL_OS_LABELS",  # noqa: F405
     "ALL_PLATFORMS",  # noqa: F405
-    "ALL_WINDOWS",  # noqa: F405
     "ALTLINUX",  # noqa: F405
     "AMZN",  # noqa: F405
     "ANDROID",  # noqa: F405
+    "ANY_WINDOWS",  # noqa: F405
     "ARCH",  # noqa: F405
     "BSD",  # noqa: F405
     "BSD_WITHOUT_MACOS",  # noqa: F405
@@ -247,10 +247,10 @@ __all__ = [
     "IBM_POWERKVM",  # noqa: F405
     "is_aix",  # noqa: F405
     "is_all_platforms",  # noqa: F405
-    "is_all_windows",  # noqa: F405
     "is_altlinux",  # noqa: F405
     "is_amzn",  # noqa: F405
     "is_android",  # noqa: F405
+    "is_any_windows",  # noqa: F405
     "is_arch",  # noqa: F405
     "is_bsd",  # noqa: F405
     "is_bsd_without_macos",  # noqa: F405
