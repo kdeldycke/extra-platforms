@@ -168,6 +168,8 @@ def test_module_root_declarations():
     groups_members = fetch_module_implements(groups_module)
     platforms_members = fetch_module_implements(platforms_module)
     root_members = fetch_module_implements(extra_platforms)
+    # Update root members with auto-generated ``is_<group.id>`` variables.
+    root_members.update((f"is_{group.id}" for group in ALL_GROUPS))
 
     # Check all members are exposed at the module root.
     tree = ast.parse(Path(inspect.getfile(extra_platforms)).read_bytes())

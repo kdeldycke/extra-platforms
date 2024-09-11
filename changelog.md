@@ -5,6 +5,8 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add `is_<group_id>` booleans to module root to test the membership of the current platform to that group.
+
 ## [1.2.1 (2024-09-04)](https://github.com/kdeldycke/extra-platforms/compare/v1.2.0...v1.2.1)
 
 - Fix changelog update.

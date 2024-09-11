@@ -68,18 +68,27 @@ Platform(id='macos', name='macOS', current=True)
 Check if a platform is a specific system:
 
 ```pycon
->>> from extra_platforms import is_windows
+>>> from extra_platforms import is_gentoo
 
->>> is_windows()
+>>> is_gentoo()
 False
 ```
 
 Use groups to check if the current platform is part of a specific family:
 
 ```pycon
->>> from extra_platforms import ALL_LINUX, current_os
+>>> from extra_platforms import UNIX, current_os
 
->>> current_os() in ALL_LINUX
+>>> current_os() in UNIX
+False
+```
+
+Or directly use the boolean variables available for each family:
+
+```pycon
+>>> from extra_platforms import is_unix
+
+>>> is_unix
 False
 ```
 

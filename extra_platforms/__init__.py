@@ -201,6 +201,21 @@ CURRENT_OS_LABEL: str = current_os().name
 """Constants about the current platform."""
 
 
+for group in ALL_GROUPS:
+    var_id = f"is_{group.id}"
+    var_value = current_os() in group
+    assert var_id not in locals()
+    # TODO: use a cached method instead of a hard-coded boolean variable and attach a
+    # docstring to that method with the groups' own docstring.
+    locals()[var_id] = var_value
+"""Generates a ``is_<group.id>`` local variable for each group.
+
+Since platforms and groups have unique, non-overlapping IDs, we can create a
+``is_<group.id>`` method for each group. The value of this boolean variable mark the
+membership of the current platform to that group.
+"""
+
+
 __all__ = [
     "AIX",  # noqa: F405
     "ALL_GROUPS",  # noqa: F405
@@ -232,10 +247,15 @@ __all__ = [
     "HURD",  # noqa: F405
     "IBM_POWERKVM",  # noqa: F405
     "is_aix",  # noqa: F405
+    "is_all_linux",  # noqa: F405
+    "is_all_platforms",  # noqa: F405
+    "is_all_windows",  # noqa: F405
     "is_altlinux",  # noqa: F405
     "is_amzn",  # noqa: F405
     "is_android",  # noqa: F405
     "is_arch",  # noqa: F405
+    "is_bsd",  # noqa: F405
+    "is_bsd_without_macos",  # noqa: F405
     "is_buildroot",  # noqa: F405
     "is_centos",  # noqa: F405
     "is_cloudlinux",  # noqa: F405
@@ -249,6 +269,8 @@ __all__ = [
     "is_hurd",  # noqa: F405
     "is_ibm_powerkvm",  # noqa: F405
     "is_kvmibm",  # noqa: F405
+    "is_linux_layers",  # noqa: F405
+    "is_linux_like",  # noqa: F405
     "is_linuxmint",  # noqa: F405
     "is_macos",  # noqa: F405
     "is_mageia",  # noqa: F405
@@ -258,6 +280,7 @@ __all__ = [
     "is_openbsd",  # noqa: F405
     "is_opensuse",  # noqa: F405
     "is_oracle",  # noqa: F405
+    "is_other_unix",  # noqa: F405
     "is_parallels",  # noqa: F405
     "is_pidora",  # noqa: F405
     "is_raspbian",  # noqa: F405
@@ -268,7 +291,11 @@ __all__ = [
     "is_sles",  # noqa: F405
     "is_solaris",  # noqa: F405
     "is_sunos",  # noqa: F405
+    "is_system_v",  # noqa: F405
     "is_ubuntu",  # noqa: F405
+    "is_unix",  # noqa: F405
+    "is_unix_layers",  # noqa: F405
+    "is_unix_without_macos",  # noqa: F405
     "is_unknown_linux",  # noqa: F405
     "is_windows",  # noqa: F405
     "is_wsl1",  # noqa: F405
@@ -317,6 +344,6 @@ __all__ = [
     The content of ``__all__`` is checked and enforced in unittests.
 
 .. todo::
-    Test ruff __all__ formatting capabilities. And if good enough, remove ``__all__``
-    checks in unittests.
+    Test Ruff's ``__all__`` formatting capabilities. And if good enough, remove
+    ``__all__`` checks in unittests.
 """
