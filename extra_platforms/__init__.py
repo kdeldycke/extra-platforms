@@ -15,6 +15,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Expose package-wide elements."""
 
+import sys
 from functools import cache
 from platform import platform
 from typing import FrozenSet
