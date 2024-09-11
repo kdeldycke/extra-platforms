@@ -88,12 +88,12 @@ from .detection import (  # noqa: E402
 )
 from .groups import (  # noqa: E402
     ALL_GROUPS,
-    ALL_LINUX,
     ALL_PLATFORMS,
     ALL_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
     EXTRA_GROUPS,
+    LINUX,
     LINUX_LAYERS,
     LINUX_LIKE,
     NON_OVERLAPPING_GROUPS,
@@ -219,7 +219,6 @@ membership of the current platform to that group.
 __all__ = [
     "AIX",  # noqa: F405
     "ALL_GROUPS",  # noqa: F405
-    "ALL_LINUX",  # noqa: F405
     "ALL_OS_LABELS",  # noqa: F405
     "ALL_PLATFORMS",  # noqa: F405
     "ALL_WINDOWS",  # noqa: F405
@@ -247,7 +246,6 @@ __all__ = [
     "HURD",  # noqa: F405
     "IBM_POWERKVM",  # noqa: F405
     "is_aix",  # noqa: F405
-    "is_all_linux",  # noqa: F405
     "is_all_platforms",  # noqa: F405
     "is_all_windows",  # noqa: F405
     "is_altlinux",  # noqa: F405
@@ -269,6 +267,7 @@ __all__ = [
     "is_hurd",  # noqa: F405
     "is_ibm_powerkvm",  # noqa: F405
     "is_kvmibm",  # noqa: F405
+    "is_linux",  # noqa: F405
     "is_linux_layers",  # noqa: F405
     "is_linux_like",  # noqa: F405
     "is_linuxmint",  # noqa: F405
@@ -302,6 +301,7 @@ __all__ = [
     "is_wsl2",  # noqa: F405
     "is_xenserver",  # noqa: F405
     "KVMIBM",  # noqa: F405
+    "LINUX",  # noqa: F405
     "LINUX_LAYERS",  # noqa: F405
     "LINUX_LIKE",  # noqa: F405
     "LINUXMINT",  # noqa: F405

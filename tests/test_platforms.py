@@ -29,7 +29,6 @@ import extra_platforms
 from extra_platforms import (
     AIX,
     ALL_GROUPS,
-    ALL_LINUX,
     ALL_OS_LABELS,
     ALL_PLATFORMS,
     ALL_WINDOWS,
@@ -55,6 +54,7 @@ from extra_platforms import (
     HURD,
     IBM_POWERKVM,
     KVMIBM,
+    LINUX,
     LINUX_LAYERS,
     LINUXMINT,
     MACOS,
@@ -527,7 +527,7 @@ def test_groups_content():
 
 def test_logical_grouping():
     """Test logical grouping of platforms."""
-    for group in BSD, ALL_LINUX, LINUX_LAYERS, SYSTEM_V, UNIX_LAYERS, OTHER_UNIX:
+    for group in BSD, LINUX, LINUX_LAYERS, SYSTEM_V, UNIX_LAYERS, OTHER_UNIX:
         assert group.issubset(UNIX)
         assert UNIX.issuperset(group)
 
@@ -545,7 +545,7 @@ def test_logical_grouping():
     # All UNIX platforms are divided into BSD, Linux, and Unix families.
     assert UNIX.platform_ids == (
         BSD.platform_ids
-        | ALL_LINUX.platform_ids
+        | LINUX.platform_ids
         | LINUX_LAYERS.platform_ids
         | SYSTEM_V.platform_ids
         | UNIX_LAYERS.platform_ids
@@ -666,38 +666,38 @@ def test_os_labels():
 
 @skip_linux
 def test_skip_linux():
-    assert CURRENT_OS_ID not in ALL_LINUX.platform_ids
+    assert CURRENT_OS_ID not in LINUX.platform_ids
     assert is_macos() or is_windows()
 
 
 @skip_macos
 def test_skip_macos():
     assert not is_macos()
-    assert CURRENT_OS_ID in ALL_LINUX.platform_ids or is_windows()
+    assert CURRENT_OS_ID in LINUX.platform_ids or is_windows()
 
 
 @skip_windows
 def test_skip_windows():
     assert not is_windows()
-    assert CURRENT_OS_ID in ALL_LINUX.platform_ids or is_macos()
+    assert CURRENT_OS_ID in LINUX.platform_ids or is_macos()
 
 
 @unless_linux
 def test_unless_linux():
-    assert CURRENT_OS_ID in ALL_LINUX.platform_ids
+    assert CURRENT_OS_ID in LINUX.platform_ids
     assert not is_macos()
     assert not is_windows()
 
 
 @unless_macos
 def test_unless_macos():
-    assert CURRENT_OS_ID not in ALL_LINUX.platform_ids
+    assert CURRENT_OS_ID not in LINUX.platform_ids
     assert is_macos()
     assert not is_windows()
 
 
 @unless_windows
 def test_unless_windows():
-    assert CURRENT_OS_ID not in ALL_LINUX.platform_ids
+    assert CURRENT_OS_ID not in LINUX.platform_ids
     assert not is_macos()
     assert is_windows()

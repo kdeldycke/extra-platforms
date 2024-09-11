@@ -95,12 +95,12 @@ False
 List all platforms of a family:
 
 ```pycon
->>> from extra_platforms import ALL_LINUX
+>>> from extra_platforms import LINUX
 
->>> ALL_LINUX
-Group(id='all_linux', name='Any Linux', platform_ids=frozenset({'ibm_powerkvm', 'rocky', 'debian', 'ubuntu', 'mageia', 'xenserver', 'opensuse', 'buildroot', 'rhel', 'parallels', 'pidora', 'sles', 'amzn', 'scientific', 'linuxmint', 'centos', 'android', 'gentoo', 'raspbian', 'unknown_linux', 'mandriva', 'exherbo', 'cloudlinux', 'fedora', 'guix', 'arch', 'altlinux', 'slackware', 'oracle', 'kvmibm'}))
+>>> LINUX
+Group(id='linux', name='Any Linux', platform_ids=frozenset({'ibm_powerkvm', 'rocky', 'debian', 'ubuntu', 'mageia', 'xenserver', 'opensuse', 'buildroot', 'rhel', 'parallels', 'pidora', 'sles', 'amzn', 'scientific', 'linuxmint', 'centos', 'android', 'gentoo', 'raspbian', 'unknown_linux', 'mandriva', 'exherbo', 'cloudlinux', 'fedora', 'guix', 'arch', 'altlinux', 'slackware', 'oracle', 'kvmibm'}))
 
->>> print("\n".join([p.name for p in ALL_LINUX]))
+>>> print("\n".join([p.name for p in LINUX]))
 ALT Linux
 Amazon Linux
 Android
@@ -323,36 +323,36 @@ linux_like,unknown_linux,1
 linux_like,wsl1,1
 linux_like,wsl2,1
 linux_like,xenserver,1
-all_linux,altlinux,1
-all_linux,amzn,1
-all_linux,android,1
-all_linux,arch,1
-all_linux,buildroot,1
-all_linux,centos,1
-all_linux,cloudlinux,1
-all_linux,debian,1
-all_linux,exherbo,1
-all_linux,fedora,1
-all_linux,gentoo,1
-all_linux,guix,1
-all_linux,ibm_powerkvm,1
-all_linux,kvmibm,1
-all_linux,linuxmint,1
-all_linux,mageia,1
-all_linux,mandriva,1
-all_linux,opensuse,1
-all_linux,oracle,1
-all_linux,parallels,1
-all_linux,pidora,1
-all_linux,raspbian,1
-all_linux,rhel,1
-all_linux,rocky,1
-all_linux,scientific,1
-all_linux,slackware,1
-all_linux,sles,1
-all_linux,ubuntu,1
-all_linux,unknown_linux,1
-all_linux,xenserver,1
+linux,altlinux,1
+linux,amzn,1
+linux,android,1
+linux,arch,1
+linux,buildroot,1
+linux,centos,1
+linux,cloudlinux,1
+linux,debian,1
+linux,exherbo,1
+linux,fedora,1
+linux,gentoo,1
+linux,guix,1
+linux,ibm_powerkvm,1
+linux,kvmibm,1
+linux,linuxmint,1
+linux,mageia,1
+linux,mandriva,1
+linux,opensuse,1
+linux,oracle,1
+linux,parallels,1
+linux,pidora,1
+linux,raspbian,1
+linux,rhel,1
+linux,rocky,1
+linux,scientific,1
+linux,slackware,1
+linux,sles,1
+linux,ubuntu,1
+linux,unknown_linux,1
+linux,xenserver,1
 bsd,freebsd,1
 bsd,macos,1
 bsd,midnightbsd,1
@@ -385,37 +385,37 @@ Each platform is assigned to a group of non-overlpaping families:
 
 ```mermaid
 flowchart
-    subgraph "<code>extra_platforms.ALL_LINUX</code><br/>🐧 <em>Any Linux</em>"
-        all_linux_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
-        all_linux_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
-        all_linux_android(<code>android</code><br/>🤖 <em>Android</em>)
-        all_linux_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
-        all_linux_buildroot(<code>buildroot</code><br/>❓ <em>Buildroot</em>)
-        all_linux_centos(<code>centos</code><br/>💠 <em>CentOS</em>)
-        all_linux_cloudlinux(<code>cloudlinux</code><br/>❓ <em>CloudLinux OS</em>)
-        all_linux_debian(<code>debian</code><br/>🌀 <em>Debian</em>)
-        all_linux_exherbo(<code>exherbo</code><br/>❓ <em>Exherbo Linux</em>)
-        all_linux_fedora(<code>fedora</code><br/>🎩 <em>Fedora</em>)
-        all_linux_gentoo(<code>gentoo</code><br/>🗜️ <em>Gentoo Linux</em>)
-        all_linux_guix(<code>guix</code><br/>❓ <em>Guix System</em>)
-        all_linux_ibm_powerkvm(<code>ibm_powerkvm</code><br/>❓ <em>IBM PowerKVM</em>)
-        all_linux_kvmibm(<code>kvmibm</code><br/>❓ <em>KVM for IBM z Systems</em>)
-        all_linux_linuxmint(<code>linuxmint</code><br/>🌿 <em>Linux Mint</em>)
-        all_linux_mageia(<code>mageia</code><br/>❓ <em>Mageia</em>)
-        all_linux_mandriva(<code>mandriva</code><br/>❓ <em>Mandriva Linux</em>)
-        all_linux_opensuse(<code>opensuse</code><br/>🦎 <em>openSUSE</em>)
-        all_linux_oracle(<code>oracle</code><br/>🦴 <em>Oracle Linux</em>)
-        all_linux_parallels(<code>parallels</code><br/>❓ <em>Parallels</em>)
-        all_linux_pidora(<code>pidora</code><br/>❓ <em>Pidora</em>)
-        all_linux_raspbian(<code>raspbian</code><br/>🍓 <em>Raspbian</em>)
-        all_linux_rhel(<code>rhel</code><br/>🎩 <em>RedHat Enterprise Linux</em>)
-        all_linux_rocky(<code>rocky</code><br/>💠 <em>Rocky Linux</em>)
-        all_linux_scientific(<code>scientific</code><br/>❓ <em>Scientific Linux</em>)
-        all_linux_slackware(<code>slackware</code><br/>❓ <em>Slackware</em>)
-        all_linux_sles(<code>sles</code><br/>🦎 <em>SUSE Linux Enterprise Server</em>)
-        all_linux_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
-        all_linux_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
-        all_linux_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
+    subgraph "<code>extra_platforms.LINUX</code><br/>🐧 <em>Any Linux</em>"
+        linux_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
+        linux_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
+        linux_android(<code>android</code><br/>🤖 <em>Android</em>)
+        linux_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
+        linux_buildroot(<code>buildroot</code><br/>❓ <em>Buildroot</em>)
+        linux_centos(<code>centos</code><br/>💠 <em>CentOS</em>)
+        linux_cloudlinux(<code>cloudlinux</code><br/>❓ <em>CloudLinux OS</em>)
+        linux_debian(<code>debian</code><br/>🌀 <em>Debian</em>)
+        linux_exherbo(<code>exherbo</code><br/>❓ <em>Exherbo Linux</em>)
+        linux_fedora(<code>fedora</code><br/>🎩 <em>Fedora</em>)
+        linux_gentoo(<code>gentoo</code><br/>🗜️ <em>Gentoo Linux</em>)
+        linux_guix(<code>guix</code><br/>❓ <em>Guix System</em>)
+        linux_ibm_powerkvm(<code>ibm_powerkvm</code><br/>❓ <em>IBM PowerKVM</em>)
+        linux_kvmibm(<code>kvmibm</code><br/>❓ <em>KVM for IBM z Systems</em>)
+        linux_linuxmint(<code>linuxmint</code><br/>🌿 <em>Linux Mint</em>)
+        linux_mageia(<code>mageia</code><br/>❓ <em>Mageia</em>)
+        linux_mandriva(<code>mandriva</code><br/>❓ <em>Mandriva Linux</em>)
+        linux_opensuse(<code>opensuse</code><br/>🦎 <em>openSUSE</em>)
+        linux_oracle(<code>oracle</code><br/>🦴 <em>Oracle Linux</em>)
+        linux_parallels(<code>parallels</code><br/>❓ <em>Parallels</em>)
+        linux_pidora(<code>pidora</code><br/>❓ <em>Pidora</em>)
+        linux_raspbian(<code>raspbian</code><br/>🍓 <em>Raspbian</em>)
+        linux_rhel(<code>rhel</code><br/>🎩 <em>RedHat Enterprise Linux</em>)
+        linux_rocky(<code>rocky</code><br/>💠 <em>Rocky Linux</em>)
+        linux_scientific(<code>scientific</code><br/>❓ <em>Scientific Linux</em>)
+        linux_slackware(<code>slackware</code><br/>❓ <em>Slackware</em>)
+        linux_sles(<code>sles</code><br/>🦎 <em>SUSE Linux Enterprise Server</em>)
+        linux_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
+        linux_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
+        linux_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
     end
     subgraph "<code>extra_platforms.ALL_WINDOWS</code><br/>🪟 <em>Any Windows</em>"
         all_windows_windows(<code>windows</code><br/>🪟 <em>Windows</em>)

@@ -26,10 +26,10 @@ except ImportError:
     )
 
 
-from . import ALL_LINUX, CURRENT_OS_ID, is_macos, is_windows
+from . import CURRENT_OS_ID, LINUX, is_macos, is_windows
 
 skip_linux = pytest.mark.skipif(
-    CURRENT_OS_ID in ALL_LINUX.platform_ids, reason="Skip Linux"
+    CURRENT_OS_ID in LINUX.platform_ids, reason="Skip Linux"
 )
 """Pytest mark to skip a test if run on a Linux system."""
 
@@ -41,7 +41,7 @@ skip_windows = pytest.mark.skipif(is_windows(), reason="Skip Windows")
 
 
 unless_linux = pytest.mark.skipif(
-    CURRENT_OS_ID not in ALL_LINUX.platform_ids, reason="Linux required"
+    CURRENT_OS_ID not in LINUX.platform_ids, reason="Linux required"
 )
 """Pytest mark to skip a test unless it is run on a Linux system."""
 

@@ -250,9 +250,9 @@ This is useful to avoid macOS-specific workarounds on BSD platforms.
 """
 
 
-ALL_LINUX = Group(
-    "all_linux",
-    "Any Linux",
+LINUX = Group(
+    "linux",
+    "Any Linux distribution",
     "🐧",
     (
         ALTLINUX,
@@ -316,7 +316,7 @@ LINUX_LIKE = Group(
     "linux_like",
     "Any Linux and compatibility layers",
     "🐧+",
-    (*ALL_LINUX.platforms, *LINUX_LAYERS.platforms),
+    (*LINUX.platforms, *LINUX_LAYERS.platforms),
 )
 """Sum of all Linux distributions and Linux compatibility layers."""
 
@@ -383,7 +383,7 @@ OTHER_UNIX = Group(
         if p
         not in (
             BSD.platforms
-            + ALL_LINUX.platforms
+            + LINUX.platforms
             + LINUX_LAYERS.platforms
             + SYSTEM_V.platforms
             + UNIX_LAYERS.platforms
@@ -415,7 +415,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_WINDOWS,
         BSD,
-        ALL_LINUX,
+        LINUX,
         LINUX_LAYERS,
         SYSTEM_V,
         UNIX_LAYERS,
