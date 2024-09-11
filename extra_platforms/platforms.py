@@ -179,3 +179,4 @@ WINDOWS = Platform("windows", "Windows", "🪟")
 WSL1 = Platform("wsl1", "Windows Subsystem for Linux v1", "⊞")
 WSL2 = Platform("wsl2", "Windows Subsystem for Linux v2", "⊞")
 XENSERVER = Platform("xenserver", "XenServer")
+"""All individual platforms."""
