@@ -285,7 +285,39 @@ def is_unknown_linux() -> bool:
     Excludes WSL1 and WSL2 from this check to
     `avoid false positives <https://github.com/kdeldycke/meta-package-manager/issues/944>`_.
     """
-    unknown_linux = sys.platform.startswith("linux") and not (is_wsl1() or is_wsl2())
+    unknown_linux = sys.platform.startswith("linux") and not (
+        is_altlinux()
+        or is_amzn()
+        or is_android()
+        or is_arch()
+        or is_buildroot()
+        or is_centos()
+        or is_cloudlinux()
+        or is_debian()
+        or is_exherbo()
+        or is_fedora()
+        or is_gentoo()
+        or is_guix()
+        or is_ibm_powerkvm()
+        or is_kvmibm()
+        or is_linuxmint()
+        or is_mageia()
+        or is_mandriva()
+        or is_opensuse()
+        or is_oracle()
+        or is_parallels()
+        or is_pidora()
+        or is_raspbian()
+        or is_rhel()
+        or is_rocky()
+        or is_scientific()
+        or is_slackware()
+        or is_sles()
+        or is_ubuntu()
+        or is_xenserver()
+        or is_wsl1()
+        or is_wsl2()
+    )
     if unknown_linux:
         logging.warning(
             f"Unknow Linux detected: {distro.info()!r}. You can report this warning to"
