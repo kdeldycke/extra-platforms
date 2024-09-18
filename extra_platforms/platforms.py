@@ -184,28 +184,34 @@ class Platform:
             # Add extra macOS infos.
             if self.id == "macos":
                 release, _versioninfo, _machine = platform.mac_ver()
-                major, minor, build_number = release.split(".", 2)
+                parts = dict(
+                    zip(("major", "minor", "build_number"), release.split(".", 2))
+                )
                 mac_info = {
                     "version": release,
                     "version_parts": {
-                        "major": major,
-                        "minor": minor,
-                        "build_number": build_number,
+                        "major": parts.get("major"),
+                        "minor": parts.get("minor"),
+                        "build_number": parts.get("build_number"),
                     },
-                    "codename": _get_macos_codename(major, minor),
+                    "codename": _get_macos_codename(
+                        parts.get("major"), parts.get("minor")
+                    ),
                 }
                 info = _recursive_update(info, mac_info, strict=True)
 
             # Add extra Windows infos.
             elif self.id == "windows":
                 release, version, _csd, _ptype = platform.win32_ver()
-                major, minor, build_number = version.split(".", 2)
+                parts = dict(
+                    zip(("major", "minor", "build_number"), version.split(".", 2))
+                )
                 win_info = {
                     "version": release,
                     "version_parts": {
-                        "major": major,
-                        "minor": minor,
-                        "build_number": build_number,
+                        "major": parts.get("major"),
+                        "minor": parts.get("minor"),
+                        "build_number": parts.get("build_number"),
                     },
                     "codename": " ".join((release, platform.win32_edition())),
                 }

@@ -6,6 +6,7 @@
 > This version is not released yet and is under active development.
 
 - Fix conflicting detection heuristics for Linux distributions. Closes #72.
+- Fix fetching of macOS version for releases without build number (like `15.0`).
 
 ## [1.3.0 (2024-09-11)](https://github.com/kdeldycke/extra-platforms/compare/v1.2.1...v1.3.0)
 
