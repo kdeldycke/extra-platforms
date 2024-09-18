@@ -37,6 +37,7 @@ heuristics are conflicting or matching multiple systems at the same time.
 
 from __future__ import annotations
 
+import logging
 import platform
 import sys
 from os import environ
@@ -284,9 +285,13 @@ def is_unknown_linux() -> bool:
     Excludes WSL1 and WSL2 from this check to
     `avoid false positives <https://github.com/kdeldycke/meta-package-manager/issues/944>`_.
     """
-    return sys.platform.startswith("linux") and not (
-        is_ubuntu() or is_wsl1() or is_wsl2()
-    )
+    unknown_linux = sys.platform.startswith("linux") and not (is_wsl1() or is_wsl2())
+    if unknown_linux:
+        logging.warning(
+            f"Unknow Linux detected: {distro.info()!r}. You can report this warning to"
+            " the extra-platforms project to improve detection heuristics."
+        )
+    return unknown_linux
 
 
 @cache
