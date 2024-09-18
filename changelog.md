@@ -5,12 +5,10 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
-- Drop support for Python 3.9.
-
 ## [1.3.0 (2024-09-11)](https://github.com/kdeldycke/extra-platforms/compare/v1.2.1...v1.3.0)
 
 - Add detection of all versions of macOS and Windows. Closes #55.
-- Drop support for Python 3.8.
+- Drop supports for Python 3.8.
 - Add `is_<group_id>` booleans to module root to test the membership of the current platform to that group.
 - Rename `ALL_LINUX` group to `LINUX`.
 - Rename `ALL_WINDOWS` group to `ANY_WINDOWS`.
