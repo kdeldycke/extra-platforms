@@ -18,6 +18,9 @@ This is a graph of the default, main dependencies of the Python package:
 :align: center
 ```
 
+> [!IMPORTANT]
+> Extra Platforms keep targeting Python 3.9 despite [back-pressure from underlying dependencies like `myst-reader`](https://github.com/kdeldycke/extra-platforms/pull/1), as [Python 3.9 will not be declared end-of-life until 2025-10](https://devguide.python.org/versions/).
+
 ## Extra dependencies
 
 To get additional utilities [for Pytest](pytest.md), you may need to install extra dependencies:
