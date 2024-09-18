@@ -67,7 +67,7 @@ See:
 """
 
 
-def _get_macos_codename(major: str, minor: str) -> str:
+def _get_macos_codename(major: str | None = None, minor: str | None = None) -> str:
     matches = set()
     for (major_key, minor_key), codename in _MACOS_CODENAMES.items():
         if minor_key is not None and minor_key != minor:
@@ -75,7 +75,7 @@ def _get_macos_codename(major: str, minor: str) -> str:
         if major_key == major:
             matches.add(codename)
     if not matches:
-        raise ValueError(f"No macOS codename match version {major}.{minor}")
+        raise ValueError(f"No macOS codename match version ({major!r}, {minor!r})")
     if len(matches) != 1:
         raise ValueError(
             f"Version {major}.{minor} match multiple codenames: {matches!r}"
