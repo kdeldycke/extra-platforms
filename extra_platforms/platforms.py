@@ -185,41 +185,59 @@ class Platform:
 
             # Add extra macOS infos.
             if self.id == "macos":
-                release, _versioninfo, _machine = platform.mac_ver()
-                parts = dict(
-                    zip(("major", "minor", "build_number"), release.split(".", 2))
-                )
-                mac_info = {
-                    "version": release,
-                    "version_parts": {
-                        "major": parts.get("major"),
-                        "minor": parts.get("minor"),
-                        "build_number": parts.get("build_number"),
-                    },
-                    "codename": _get_macos_codename(
-                        parts.get("major"), parts.get("minor")
-                    ),
-                }
-                info = _recursive_update(info, mac_info, strict=True)
+                info = _recursive_update(info, self._macos_infos(), strict=True)
 
             # Add extra Windows infos.
             elif self.id == "windows":
-                release, version, _csd, _ptype = platform.win32_ver()
-                parts = dict(
-                    zip(("major", "minor", "build_number"), version.split(".", 2))
-                )
-                win_info = {
-                    "version": release,
-                    "version_parts": {
-                        "major": parts.get("major"),
-                        "minor": parts.get("minor"),
-                        "build_number": parts.get("build_number"),
-                    },
-                    "codename": " ".join((release, platform.win32_edition())),
-                }
-                info = _recursive_update(info, win_info, strict=True)
+                info = _recursive_update(info, self._windows_infos(), strict=True)
 
         return info  # type: ignore[return-value]
+
+    @staticmethod
+    def _macos_infos() -> dict[str, Any]:
+        """Fetch extra macOS infos.
+
+        Returns the same dict structure as ``distro.info()``.
+        """
+        release, _versioninfo, _machine = platform.mac_ver()
+        parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
+        major = parts.get("major")
+        minor = parts.get("minor")
+        build_number = parts.get("build_number")
+        return {
+            "version": release,
+            "version_parts": {
+                "major": major,
+                "minor": minor,
+                "build_number": build_number,
+            },
+            "codename": _get_macos_codename(major, minor),
+        }
+
+    @staticmethod
+    def _windows_infos() -> dict[str, Any]:
+        """Fetch extra Windows infos.
+
+        Returns the same dict structure as ``distro.info()``.
+
+        .. todo:
+            Get even more details for windows version? See inspirations from:
+            https://github.com/saltstack/salt/blob/246d066/salt/grains/core.py#L1432-L1488
+        """
+        release, version, _csd, _ptype = platform.win32_ver()
+        parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
+        major = parts.get("major")
+        minor = parts.get("minor")
+        build_number = parts.get("build_number")
+        return {
+            "version": release,
+            "version_parts": {
+                "major": major,
+                "minor": minor,
+                "build_number": build_number,
+            },
+            "codename": " ".join((release, platform.win32_edition())),
+        }
 
 
 AIX = Platform("aix", "IBM AIX", "➿")
