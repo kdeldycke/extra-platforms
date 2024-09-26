@@ -32,6 +32,8 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import distro
+
+# TODO: eliminate boltons dependency
 from boltons.iterutils import remap
 
 from . import detection
