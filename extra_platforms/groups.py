@@ -118,17 +118,21 @@ class Group:
         return len(self.platforms)
 
     @staticmethod
-    def _extract_platform_ids(other: Group | Iterable[Platform]) -> frozenset[str]:
-        """Extract the platform IDs from ``other``."""
-        if isinstance(other, Group):
+    def _extract_platform_ids(
+        other: Group | Iterable[Platform] | Platform,
+    ) -> frozenset[str]:
+        """Returns all platform IDs found in ``other``."""
+        if isinstance(other, Platform):
+            return frozenset((other.id,))
+        elif isinstance(other, Group):
             return other.platform_ids
         return frozenset(p.id for p in other)
 
-    def isdisjoint(self, other: Group | Iterable[Platform]) -> bool:
+    def isdisjoint(self, other: Group | Iterable[Platform] | Platform) -> bool:
         """Return `True` if the group has no platforms in common with ``other``."""
         return self.platform_ids.isdisjoint(self._extract_platform_ids(other))
 
-    def fullyintersects(self, other: Group | Iterable[Platform]) -> bool:
+    def fullyintersects(self, other: Group | Iterable[Platform] | Platform) -> bool:
         """Return `True` if the group has all platforms in common with ``other``.
 
         We cannot just compare ``Groups`` with the ``==`` equality operator as the
@@ -136,10 +140,10 @@ class Group:
         """
         return self.platform_ids == self._extract_platform_ids(other)
 
-    def issubset(self, other: Group | Iterable[Platform]) -> bool:
+    def issubset(self, other: Group | Iterable[Platform] | Platform) -> bool:
         return self.platform_ids.issubset(self._extract_platform_ids(other))
 
-    def issuperset(self, other: Group | Iterable[Platform]) -> bool:
+    def issuperset(self, other: Group | Iterable[Platform] | Platform) -> bool:
         return self.platform_ids.issuperset(self._extract_platform_ids(other))
 
 
