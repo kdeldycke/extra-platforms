@@ -7,6 +7,7 @@
 
 - Allow set comparison between groups and single platform.
 - Run tests on `macos-15`.
+- Run tests on Python 3.14-dev.
 
 ## [1.3.1 (2024-09-18)](https://github.com/kdeldycke/extra-platforms/compare/v1.3.0...v1.3.1)
 
