@@ -66,9 +66,11 @@ jobs:
 
           # List of unstable criterions.
           unstable: list[dict[str, str]] = [
-              # XXX The version '3.14-dev' with architecture 'x64' was not found for Windows 2019/2022. The list of all
-              # available versions can be found here:
+              # XXX 3.14-dev is only available for Ubuntu right now. Check:
               # https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json
+              {"os": "macos-15", "python-version": "3.14-dev"},
+              {"os": "macos-14", "python-version": "3.14-dev"},
+              {"os": "macos-13", "python-version": "3.14-dev"},
               {"os": "windows-2022", "python-version": "3.14-dev"},
               {"os": "windows-2019", "python-version": "3.14-dev"},
           ]
