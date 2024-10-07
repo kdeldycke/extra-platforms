@@ -224,7 +224,7 @@ class Platform:
             Get even more details for windows version? See inspirations from:
             https://github.com/saltstack/salt/blob/246d066/salt/grains/core.py#L1432-L1488
         """
-        release, version, _csd, _ptype = platform.win32_ver()
+        release, _version, _csd, _ptype = platform.win32_ver()
         parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
         major = parts.get("major")
         minor = parts.get("minor")
