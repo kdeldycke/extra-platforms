@@ -171,7 +171,7 @@ def test_module_root_declarations():
             for target in node.targets:
                 if target.id == "__all__":
                     for element in node.value.elts:
-                        extra_platforms_members.append(element.s)
+                        extra_platforms_members.append(element.value)
 
     assert detection_members <= set(extra_platforms_members)
     assert groups_members <= set(extra_platforms_members)
