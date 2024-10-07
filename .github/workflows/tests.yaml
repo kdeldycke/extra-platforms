@@ -65,7 +65,13 @@ jobs:
           exclude: list[dict[str, str]] = []
 
           # List of unstable criterions.
-          unstable: list[dict[str, str]] = []
+          unstable: list[dict[str, str]] = [
+              # XXX The version '3.14-dev' with architecture 'x64' was not found for Windows 2019/2022. The list of all
+              # available versions can be found here:
+              # https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json
+              {"os": "windows-2022", "python-version": "3.14-dev"},
+              {"os": "windows-2019", "python-version": "3.14-dev"},
+          ]
 
           # Build the job matrix.
           jobs: list[dict[str, str]] = []
