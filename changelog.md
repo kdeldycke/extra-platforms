@@ -6,6 +6,7 @@
 > This version is not released yet and is under active development.
 
 - Allow set comparison between groups and single platform.
+- Add support for Python 3.13.
 - Run tests on `macos-15`. Remove tests on `macos-12`.
 - Run tests on Python 3.14-dev.
 
