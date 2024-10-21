@@ -78,6 +78,7 @@ from extra_platforms import (
     SOLARIS,
     SUNOS,
     SYSTEM_V,
+    TUXEDO,
     UBUNTU,
     UNIX,
     UNIX_LAYERS,
@@ -126,6 +127,7 @@ from extra_platforms import (
     is_sles,
     is_solaris,
     is_sunos,
+    is_tuxedo,
     is_ubuntu,
     is_unknown_linux,
     is_windows,
@@ -229,6 +231,7 @@ def test_mutual_exclusion():
         assert not is_sles()
         assert not is_solaris()
         assert not is_sunos()
+        assert not is_tuxedo()
         # assert not is_ubuntu()
         assert not is_unknown_linux()
         assert not is_windows()
@@ -276,6 +279,7 @@ def test_mutual_exclusion():
         assert not is_sles()
         assert not is_solaris()
         assert not is_sunos()
+        assert not is_tuxedo()
         assert not is_ubuntu()
         assert not is_unknown_linux()
         assert not is_windows()
@@ -323,6 +327,7 @@ def test_mutual_exclusion():
         assert not is_sles()
         assert not is_solaris()
         assert not is_sunos()
+        assert not is_tuxedo()
         assert not is_ubuntu()
         assert not is_unknown_linux()
         # assert not is_windows()
@@ -634,6 +639,7 @@ def test_overlapping_groups():
                 SLES,
                 SOLARIS,
                 SUNOS,
+                TUXEDO,
                 UBUNTU,
                 UNKNOWN_LINUX,
                 WINDOWS,

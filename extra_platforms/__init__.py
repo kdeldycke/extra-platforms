@@ -61,6 +61,7 @@ from .detection import (  # noqa: E402
     is_sles,
     is_solaris,
     is_sunos,
+    is_tuxedo,
     is_ubuntu,
     is_unknown_linux,
     is_windows,
@@ -125,6 +126,7 @@ from .platforms import (  # noqa: E402
     SLES,
     SOLARIS,
     SUNOS,
+    TUXEDO,
     UBUNTU,
     UNKNOWN_LINUX,
     WINDOWS,
@@ -273,6 +275,7 @@ __all__ = [
     "is_solaris",  # noqa: F405
     "is_sunos",  # noqa: F405
     "is_system_v",  # noqa: F405, F822
+    "is_tuxedo",  # noqa: F405, F822
     "is_ubuntu",  # noqa: F405
     "is_unix",  # noqa: F405, F822
     "is_unix_layers",  # noqa: F405, F822
@@ -310,6 +313,7 @@ __all__ = [
     "SOLARIS",  # noqa: F405
     "SUNOS",  # noqa: F405
     "SYSTEM_V",  # noqa: F405
+    "TUXEDO",  # noqa: F405
     "UBUNTU",  # noqa: F405
     "UNIX",  # noqa: F405
     "UNIX_LAYERS",  # noqa: F405
