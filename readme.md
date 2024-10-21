@@ -291,6 +291,7 @@ unix_without_macos,slackware,1
 unix_without_macos,sles,1
 unix_without_macos,solaris,1
 unix_without_macos,sunos,1
+unix_without_macos,tuxedo,1
 unix_without_macos,ubuntu,1
 unix_without_macos,unknown_linux,1
 unix_without_macos,wsl1,1
@@ -431,7 +432,7 @@ flowchart
         linux_scientific(<code>scientific</code><br/>❓ <em>Scientific Linux</em>)
         linux_slackware(<code>slackware</code><br/>❓ <em>Slackware</em>)
         linux_sles(<code>sles</code><br/>🦎 <em>SUSE Linux Enterprise Server</em>)
-        linux_tuxedo(<code>tuxedo</code><br/>❓ <em>Tuxedo OS</em>)
+        linux_tuxedo(<code>tuxedo</code><br/>🤵 <em>Tuxedo OS</em>)
         linux_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
         linux_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
         linux_xenserver(<code>xenserver</code><br/>❓ <em>XenServer</em>)
@@ -502,7 +503,7 @@ flowchart
         all_platforms_sles(<code>sles</code><br/>🦎 <em>SUSE Linux Enterprise Server</em>)
         all_platforms_solaris(<code>solaris</code><br/>🌞 <em>Solaris</em>)
         all_platforms_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
-        all_platforms_tuxedo(<code>tuxedo</code><br/>❓ <em>Tuxedo OS</em>)
+        all_platforms_tuxedo(<code>tuxedo</code><br/>🤵 <em>Tuxedo OS</em>)
         all_platforms_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
         all_platforms_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
         all_platforms_windows(<code>windows</code><br/>🪟 <em>Windows</em>)
@@ -545,7 +546,7 @@ flowchart
         linux_like_scientific(<code>scientific</code><br/>❓ <em>Scientific Linux</em>)
         linux_like_slackware(<code>slackware</code><br/>❓ <em>Slackware</em>)
         linux_like_sles(<code>sles</code><br/>🦎 <em>SUSE Linux Enterprise Server</em>)
-        linux_like_tuxedo(<code>tuxedo</code><br/>❓ <em>Tuxedo OS</em>)
+        linux_like_tuxedo(<code>tuxedo</code><br/>🤵 <em>Tuxedo OS</em>)
         linux_like_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
         linux_like_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
         linux_like_wsl1(<code>wsl1</code><br/>⊞ <em>Windows Subsystem for Linux v1</em>)
@@ -590,7 +591,7 @@ flowchart
         unix_sles(<code>sles</code><br/>🦎 <em>SUSE Linux Enterprise Server</em>)
         unix_solaris(<code>solaris</code><br/>🌞 <em>Solaris</em>)
         unix_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
-        unix_tuxedo(<code>tuxedo</code><br/>❓ <em>Tuxedo OS</em>)
+        unix_tuxedo(<code>tuxedo</code><br/>🤵 <em>Tuxedo OS</em>)
         unix_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
         unix_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
         unix_wsl1(<code>wsl1</code><br/>⊞ <em>Windows Subsystem for Linux v1</em>)
@@ -634,7 +635,7 @@ flowchart
         unix_without_macos_sles(<code>sles</code><br/>🦎 <em>SUSE Linux Enterprise Server</em>)
         unix_without_macos_solaris(<code>solaris</code><br/>🌞 <em>Solaris</em>)
         unix_without_macos_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
-        unix_without_macos_tuxedo(<code>tuxedo</code><br/>❓ <em>Tuxedo OS</em>)
+        unix_without_macos_tuxedo(<code>tuxedo</code><br/>🤵 <em>Tuxedo OS</em>)
         unix_without_macos_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
         unix_without_macos_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
         unix_without_macos_wsl1(<code>wsl1</code><br/>⊞ <em>Windows Subsystem for Linux v1</em>)
