@@ -83,6 +83,8 @@ def generate_platform_sankey() -> str:
         config:
           sankey:
             showValues: false
+            width: 800
+            height: 400
         ---
         sankey-beta\n
         """)

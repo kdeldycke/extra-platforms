@@ -162,6 +162,8 @@ Relationships between groups and platforms:
 config:
   sankey:
     showValues: false
+    width: 800
+    height: 400
 ---
 sankey-beta
 
