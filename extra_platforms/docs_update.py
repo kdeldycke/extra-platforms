@@ -126,10 +126,13 @@ def generate_platforms_graph(
     # Wrap the Mermaid code into a MyST block.
     return "\n".join(
         (
-            # Use attributes blocks extension to add a title.
-            f"#### `extra_platforms.{graph_id}` - {description}\n",
-            "```mermaid",
-            "flowchart",
+            dedent(f"""\
+                ```mermaid
+                ---
+                title: <code>extra_platforms.{graph_id}</code> - {description}
+                ---
+                flowchart
+                """),
             indent("\n".join(sorted(subgraphs)), INDENT),
             "```",
         ),

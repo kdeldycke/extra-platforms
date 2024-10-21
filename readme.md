@@ -385,10 +385,12 @@ Each platform is assigned to a group of non-overlpaping families:
 
 <!-- NON_OVERLAPPING_GROUPS-graph-start -->
 
-#### `extra_platforms.NON_OVERLAPPING_GROUPS` - Non-overlapping groups.
-
 ```mermaid
+---
+title: <code>extra_platforms.NON_OVERLAPPING_GROUPS</code> - Non-overlapping groups.
+---
 flowchart
+
     subgraph "<code>extra_platforms.ANY_WINDOWS</code><br/>🪟 <em>Any Windows</em>"
         any_windows_windows(<code>windows</code><br/>🪟 <em>Windows</em>)
     end
@@ -457,10 +459,12 @@ Other groups are available for convenience, but these overlaps:
 
 <!-- EXTRA_GROUPS-graph-start -->
 
-#### `extra_platforms.EXTRA_GROUPS` - Overlapping groups, defined for convenience.
-
 ```mermaid
+---
+title: <code>extra_platforms.EXTRA_GROUPS</code> - Overlapping groups, defined for convenience.
+---
 flowchart
+
     subgraph "<code>extra_platforms.ALL_PLATFORMS</code><br/>🖥️ <em>All platforms</em>"
         all_platforms_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         all_platforms_altlinux(<code>altlinux</code><br/>❓ <em>ALT Linux</em>)
