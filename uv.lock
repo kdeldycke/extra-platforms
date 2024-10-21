@@ -245,7 +245,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "1.3.2"
+version = "1.4.0"
 source = { editable = "." }
 dependencies = [
     { name = "boltons" },
@@ -292,7 +292,7 @@ requires-dist = [
     { name = "sphinx-autodoc-typehints", marker = "extra == 'docs'", specifier = ">=2" },
     { name = "sphinx-copybutton", marker = "extra == 'docs'", specifier = "~=0.5.2" },
     { name = "sphinx-design", marker = "extra == 'docs'", specifier = ">=0.5" },
-    { name = "sphinx-issues", marker = "extra == 'docs'", specifier = "~=4.1.0" },
+    { name = "sphinx-issues", marker = "extra == 'docs'", specifier = "~=5.0.0" },
     { name = "sphinxcontrib-mermaid", marker = "extra == 'docs'", specifier = "~=1.0.0" },
     { name = "sphinxext-opengraph", marker = "extra == 'docs'", specifier = "~=0.9.0" },
     { name = "tomli", marker = "python_full_version < '3.11' and extra == 'docs'", specifier = "~=2.0.1" },
@@ -729,14 +729,14 @@ wheels = [
 
 [[package]]
 name = "sphinx-issues"
-version = "4.1.0"
+version = "5.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "sphinx" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ba/fb/fa7829987e801056f16d8c63ace3f1d6f91e44940ad00f512450581ed63f/sphinx_issues-4.1.0.tar.gz", hash = "sha256:a67f7ef31d164b420b2f21b6c9b020baeb4a014afd4045f5be314c984e8ee520", size = 14148 }
+sdist = { url = "https://files.pythonhosted.org/packages/ab/2b/5bc6fac05eba113665f18d4ebe3c1180d1ce3e7b6fd6823835dbec48dd4e/sphinx_issues-5.0.0.tar.gz", hash = "sha256:192e43cf071ed7aead401cd14fd15076ecb0866238c095d672180618740c6bae", size = 14021 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d0/7c/0a7c1a38392f2922b4b693dd8acd6a4c7e662ee66db058bdf314bd22ce3f/sphinx_issues-4.1.0-py3-none-any.whl", hash = "sha256:d779dddff441175c9fddb7a4018eca38f9f6cdb1e0a2fe31d93b4f89587c7ba1", size = 8248 },
+    { url = "https://files.pythonhosted.org/packages/1d/14/a1b38212db8d327f53f2f56f0ed81c8b80ee2c2160e8819069c0d329d0a9/sphinx_issues-5.0.0-py3-none-any.whl", hash = "sha256:d80704a01c8af3d76586771a67a9e48f2d1a6091a0377458c49908460a6a31ea", size = 8063 },
 ]
 
 [[package]]
