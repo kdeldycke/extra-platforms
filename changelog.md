@@ -8,6 +8,8 @@
 - Allow set comparison between groups and single platform.
 - Add support for Tuxedo OS detection.
 - Add support for Python 3.13.
+- Drop supports for Python 3.9.
+- Run jobs on `ubuntu-24.04` instead of `ubuntu-22.04`.
 - Run tests on `macos-15`. Remove tests on `macos-12`.
 - Run tests on Python 3.14-dev.
 
