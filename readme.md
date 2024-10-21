@@ -160,11 +160,7 @@ Relationships between groups and platforms:
 
 ```mermaid
 ---
-config:
-  sankey:
-    showValues: false
-    width: 800
-    height: 400
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
 ---
 sankey-beta
 
