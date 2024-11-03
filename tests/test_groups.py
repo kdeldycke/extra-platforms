@@ -86,6 +86,11 @@ from extra_platforms import (
 from extra_platforms import groups as groups_module
 
 
+def test_platform_deduplication():
+    my_group = Group("my_group", "My Group", "✅", (AIX, AIX))
+    assert len(my_group) == 1
+
+
 def test_group_definitions():
     for group in ALL_GROUPS:
         # ID.

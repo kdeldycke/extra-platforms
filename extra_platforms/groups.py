@@ -96,19 +96,20 @@ class Group:
     """
 
     def __post_init__(self):
-        """Keep the platforms sorted by IDs."""
+        """Deduplicate platforms and sort them by IDs."""
         object.__setattr__(
             self,
             "platforms",
-            tuple(sorted(self.platforms, key=lambda p: p.id)),
+            tuple(sorted(set(self.platforms), key=lambda p: p.id)),
         )
         object.__setattr__(
             self,
             "platform_ids",
             frozenset({p.id for p in self.platforms}),
         )
-        # Double-check there is no duplicate platforms.
-        assert len(self.platforms) == len(self.platform_ids)
+        assert len(self.platforms) == len(
+            self.platform_ids
+        ), "The group contain platforms with duplicate IDs"
 
     def __iter__(self) -> Iterator[Platform]:
         """Iterate over the platforms of the group."""
