@@ -1,0 +1,230 @@
+# Copyright Kevin Deldycke <kevin@deldycke.com> and contributors.
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+from __future__ import annotations
+
+import functools
+
+from extra_platforms import (
+    ALL_PLATFORMS,
+    CURRENT_OS_ID,
+    CURRENT_OS_LABEL,
+    MACOS,
+    UBUNTU,
+    WINDOWS,
+    is_aix,
+    is_altlinux,
+    is_amzn,
+    is_android,
+    is_arch,
+    is_buildroot,
+    is_centos,
+    is_cloudlinux,
+    is_cygwin,
+    is_debian,
+    is_exherbo,
+    is_fedora,
+    is_freebsd,
+    is_gentoo,
+    is_guix,
+    is_hurd,
+    is_ibm_powerkvm,
+    is_kvmibm,
+    is_linuxmint,
+    is_macos,
+    is_mageia,
+    is_mandriva,
+    is_midnightbsd,
+    is_netbsd,
+    is_openbsd,
+    is_opensuse,
+    is_oracle,
+    is_parallels,
+    is_pidora,
+    is_raspbian,
+    is_rhel,
+    is_rocky,
+    is_scientific,
+    is_slackware,
+    is_sles,
+    is_solaris,
+    is_sunos,
+    is_tuxedo,
+    is_ubuntu,
+    is_unknown_linux,
+    is_windows,
+    is_wsl1,
+    is_wsl2,
+    is_xenserver,
+)
+
+
+def test_detection_functions():
+    for platform in ALL_PLATFORMS.platforms:
+        check_func_id = f"is_{platform.id}"
+        assert check_func_id in globals()
+        check_func = globals()[check_func_id]
+        assert isinstance(check_func, functools._lru_cache_wrapper)
+        assert isinstance(check_func(), bool)
+        assert check_func() == platform.current
+
+
+def test_mutual_exclusion():
+    """Only directly tests OSes on which the test suite is running via GitHub
+    actions."""
+    if is_ubuntu():
+        assert CURRENT_OS_ID == UBUNTU.id
+        assert CURRENT_OS_LABEL == UBUNTU.name
+        assert not is_aix()
+        assert not is_altlinux()
+        assert not is_amzn()
+        assert not is_android()
+        assert not is_arch()
+        assert not is_buildroot()
+        assert not is_centos()
+        assert not is_cloudlinux()
+        assert not is_cygwin()
+        assert not is_debian()
+        assert not is_exherbo()
+        assert not is_fedora()
+        assert not is_freebsd()
+        assert not is_gentoo()
+        assert not is_guix()
+        assert not is_hurd()
+        assert not is_ibm_powerkvm()
+        assert not is_kvmibm()
+        assert not is_linuxmint()
+        assert not is_macos()
+        assert not is_mageia()
+        assert not is_mandriva()
+        assert not is_midnightbsd()
+        assert not is_netbsd()
+        assert not is_openbsd()
+        assert not is_opensuse()
+        assert not is_oracle()
+        assert not is_parallels()
+        assert not is_pidora()
+        assert not is_raspbian()
+        assert not is_rhel()
+        assert not is_rocky()
+        assert not is_scientific()
+        assert not is_slackware()
+        assert not is_sles()
+        assert not is_solaris()
+        assert not is_sunos()
+        assert not is_tuxedo()
+        # assert not is_ubuntu()
+        assert not is_unknown_linux()
+        assert not is_windows()
+        assert not is_wsl1()
+        assert not is_wsl2()
+        assert not is_xenserver()
+
+    if is_macos():
+        assert CURRENT_OS_ID == MACOS.id
+        assert CURRENT_OS_LABEL == MACOS.name
+        assert not is_aix()
+        assert not is_altlinux()
+        assert not is_amzn()
+        assert not is_android()
+        assert not is_arch()
+        assert not is_buildroot()
+        assert not is_centos()
+        assert not is_cloudlinux()
+        assert not is_cygwin()
+        assert not is_debian()
+        assert not is_exherbo()
+        assert not is_fedora()
+        assert not is_freebsd()
+        assert not is_gentoo()
+        assert not is_guix()
+        assert not is_hurd()
+        assert not is_ibm_powerkvm()
+        assert not is_kvmibm()
+        assert not is_linuxmint()
+        # assert not is_macos()
+        assert not is_mageia()
+        assert not is_mandriva()
+        assert not is_midnightbsd()
+        assert not is_netbsd()
+        assert not is_openbsd()
+        assert not is_opensuse()
+        assert not is_oracle()
+        assert not is_parallels()
+        assert not is_pidora()
+        assert not is_raspbian()
+        assert not is_rhel()
+        assert not is_rocky()
+        assert not is_scientific()
+        assert not is_slackware()
+        assert not is_sles()
+        assert not is_solaris()
+        assert not is_sunos()
+        assert not is_tuxedo()
+        assert not is_ubuntu()
+        assert not is_unknown_linux()
+        assert not is_windows()
+        assert not is_wsl1()
+        assert not is_wsl2()
+        assert not is_xenserver()
+
+    if is_windows():
+        assert CURRENT_OS_ID == WINDOWS.id
+        assert CURRENT_OS_LABEL == WINDOWS.name
+        assert not is_aix()
+        assert not is_altlinux()
+        assert not is_amzn()
+        assert not is_android()
+        assert not is_arch()
+        assert not is_buildroot()
+        assert not is_centos()
+        assert not is_cloudlinux()
+        assert not is_cygwin()
+        assert not is_debian()
+        assert not is_exherbo()
+        assert not is_fedora()
+        assert not is_freebsd()
+        assert not is_gentoo()
+        assert not is_guix()
+        assert not is_hurd()
+        assert not is_ibm_powerkvm()
+        assert not is_kvmibm()
+        assert not is_linuxmint()
+        assert not is_macos()
+        assert not is_mageia()
+        assert not is_mandriva()
+        assert not is_midnightbsd()
+        assert not is_netbsd()
+        assert not is_openbsd()
+        assert not is_opensuse()
+        assert not is_oracle()
+        assert not is_parallels()
+        assert not is_pidora()
+        assert not is_raspbian()
+        assert not is_rhel()
+        assert not is_rocky()
+        assert not is_scientific()
+        assert not is_slackware()
+        assert not is_sles()
+        assert not is_solaris()
+        assert not is_sunos()
+        assert not is_tuxedo()
+        assert not is_ubuntu()
+        assert not is_unknown_linux()
+        # assert not is_windows()
+        assert not is_wsl1()
+        assert not is_wsl2()
+        assert not is_xenserver()
