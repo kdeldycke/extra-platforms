@@ -89,6 +89,11 @@ from extra_platforms import groups as groups_module
 def test_platform_deduplication():
     my_group = Group("my_group", "My Group", "✅", (AIX, AIX))
     assert len(my_group) == 1
+    assert len(my_group.platforms) == 1
+    assert len(my_group.platform_ids) == 1
+
+    assert my_group.platforms == (AIX,)
+    assert my_group.platform_ids == frozenset({"aix"})
 
 
 def test_simple_union():
