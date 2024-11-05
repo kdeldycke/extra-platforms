@@ -7,6 +7,7 @@
 
 - Allow union of `Group`.
 - Deduplicate platforms on `Group` instantiation.
+- Allow testing for membership of individual platform in `Group`.
 
 ## [1.4.0 (2024-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v1.3.1...v1.4.0)
 

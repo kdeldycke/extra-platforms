@@ -134,6 +134,10 @@ class Group:
         """Return the number of platforms in the group."""
         return len(self.platforms)
 
+    def __contains__(self, platform: Platform) -> bool:
+        """Test ``platform`` for membership in the group."""
+        return platform in self.platforms
+
     @staticmethod
     def _extract_platforms(other: TNestedSources) -> Iterator[Platform]:
         """Returns all platforms found in ``other``."""

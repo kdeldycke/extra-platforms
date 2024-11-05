@@ -96,6 +96,13 @@ def test_platform_deduplication():
     assert my_group.platform_ids == frozenset({"aix"})
 
 
+def test_platform_membership():
+    my_group = Group("my_group", "My Group", "✅", (AIX, PIDORA))
+    assert AIX in my_group
+    assert PIDORA in my_group
+    assert RHEL not in my_group
+
+
 def test_simple_union():
     new_group = ANY_WINDOWS.union(LINUX_LAYERS)
 
