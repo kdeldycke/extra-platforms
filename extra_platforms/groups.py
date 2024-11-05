@@ -76,8 +76,8 @@ from .platforms import (
     Platform,
 )
 
-TPlatformSources = Union[Platform, "Group"]
-TNestedSources = Iterable[Union[TPlatformSources, Iterable["TNestedSources"]]]
+_TPlatformSources = Union[Platform, "Group"]
+_TNestedSources = Iterable[Union[_TPlatformSources, Iterable["_TNestedSources"]]]
 """Types for arbitrary nested sources of ``Platforms``."""
 
 
@@ -139,7 +139,7 @@ class Group:
         return platform in self.platforms
 
     @staticmethod
-    def _extract_platforms(other: TNestedSources) -> Iterator[Platform]:
+    def _extract_platforms(other: _TNestedSources) -> Iterator[Platform]:
         """Returns all platforms found in ``other``."""
         if isinstance(other, Platform):
             yield other
@@ -152,11 +152,11 @@ class Group:
             raise ValueError
 
     @staticmethod
-    def _extract_platform_ids(other: TNestedSources) -> frozenset[str]:
+    def _extract_platform_ids(other: _TNestedSources) -> frozenset[str]:
         """Returns all platform IDs found in ``other``."""
         return frozenset(p.id for p in Group._extract_platforms(other))
 
-    def isdisjoint(self, other: TNestedSources) -> bool:
+    def isdisjoint(self, other: _TNestedSources) -> bool:
         """Return `True` if the group has no platforms in common with ``other``.
 
         Groups are disjoint if and only if their intersection is an empty set.
@@ -165,7 +165,7 @@ class Group:
         """
         return self.platform_ids.isdisjoint(self._extract_platform_ids(other))
 
-    def fullyintersects(self, other: TNestedSources) -> bool:
+    def fullyintersects(self, other: _TNestedSources) -> bool:
         """Return `True` if the group has all platforms in common with ``other``.
 
         ..hint::
@@ -175,15 +175,15 @@ class Group:
         """
         return self.platform_ids == self._extract_platform_ids(other)
 
-    def issubset(self, other: TNestedSources) -> bool:
+    def issubset(self, other: _TNestedSources) -> bool:
         """Test whether every platforms in the group is in other."""
         return self.platform_ids.issubset(self._extract_platform_ids(other))
 
-    def issuperset(self, other: TNestedSources) -> bool:
+    def issuperset(self, other: _TNestedSources) -> bool:
         """Test whether every platform in other is in the group."""
         return self.platform_ids.issuperset(self._extract_platform_ids(other))
 
-    def union(self, *others: TNestedSources) -> Group:
+    def union(self, *others: _TNestedSources) -> Group:
         """Return a new ``Group`` with platforms from the group and all others.
 
         ..caution::
