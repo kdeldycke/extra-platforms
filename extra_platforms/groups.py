@@ -17,6 +17,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import dataclass, field
 from itertools import combinations
 from typing import (
@@ -85,6 +86,9 @@ class Group:
     """A ``Group`` identify a collection of ``Platform``.
 
     Used to group platforms of the same family.
+
+    `set()`-like methods are available and performed on the platform objects the group
+    contain (in the ``self.platforms`` data field).
     """
 
     id: str
@@ -112,14 +116,15 @@ class Group:
             "platforms",
             tuple(sorted(set(self.platforms), key=lambda p: p.id)),
         )
-        object.__setattr__(
-            self,
-            "platform_ids",
-            frozenset({p.id for p in self.platforms}),
-        )
-        assert len(self.platforms) == len(
-            self.platform_ids
-        ), "The group contain platforms with duplicate IDs"
+        # Double check there are no Platform objects sharing the same IDs.
+        id_counter = Counter(p.id for p in self.platforms)
+        if len(set(id_counter)) != len(self.platforms):
+            duplicates = (k for k, v in dict(id_counter).items() if v > 1)
+            raise ValueError(
+                "The group is not allowed to have platforms with duplicate IDs: "
+                f"{', '.join(duplicates)}"
+            )
+        object.__setattr__(self, "platform_ids", frozenset(id_counter))
 
     def __iter__(self) -> Iterator[Platform]:
         """Iterate over the platforms of the group."""
