@@ -91,6 +91,58 @@ def test_platform_deduplication():
     assert len(my_group) == 1
 
 
+def test_simple_union():
+    new_group = ANY_WINDOWS.union(LINUX_LAYERS)
+
+    assert ANY_WINDOWS.issubset(new_group)
+    assert LINUX_LAYERS.issubset(new_group)
+    assert new_group.issuperset(ANY_WINDOWS)
+    assert new_group.issuperset(LINUX_LAYERS)
+
+    assert new_group.id == ANY_WINDOWS.id
+    assert new_group.id != LINUX_LAYERS.id
+    assert new_group.name == ANY_WINDOWS.name
+    assert new_group.name != LINUX_LAYERS.name
+    assert new_group.icon == ANY_WINDOWS.icon
+    assert new_group.icon != LINUX_LAYERS.icon
+
+    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms) | set(
+        LINUX_LAYERS.platforms
+    )
+    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids) | set(
+        LINUX_LAYERS.platform_ids
+    )
+
+
+def test_multiple_union():
+    new_group = ANY_WINDOWS.union(LINUX_LAYERS, UNIX_LAYERS)
+
+    assert ANY_WINDOWS.issubset(new_group)
+    assert LINUX_LAYERS.issubset(new_group)
+    assert UNIX_LAYERS.issubset(new_group)
+
+    assert new_group.issuperset(ANY_WINDOWS)
+    assert new_group.issuperset(LINUX_LAYERS)
+    assert new_group.issuperset(UNIX_LAYERS)
+
+    assert new_group.id == ANY_WINDOWS.id
+    assert new_group.id != LINUX_LAYERS.id
+    assert new_group.id != UNIX_LAYERS.id
+    assert new_group.name == ANY_WINDOWS.name
+    assert new_group.name != LINUX_LAYERS.name
+    assert new_group.name != UNIX_LAYERS.name
+    assert new_group.icon == ANY_WINDOWS.icon
+    assert new_group.icon != LINUX_LAYERS.icon
+    assert new_group.icon != UNIX_LAYERS.icon
+
+    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms) | set(
+        LINUX_LAYERS.platforms
+    ) | set(UNIX_LAYERS.platforms)
+    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids) | set(
+        LINUX_LAYERS.platform_ids
+    ) | set(UNIX_LAYERS.platform_ids)
+
+
 def test_group_definitions():
     for group in ALL_GROUPS:
         # ID.

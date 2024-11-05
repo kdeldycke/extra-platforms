@@ -19,7 +19,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from itertools import combinations
-from typing import Iterable, Iterator
+from typing import (
+    Iterable,
+    Iterator,
+    Union,
+)
+
+from boltons.iterutils import flatten_iter
 
 from .platforms import (
     AIX,
@@ -68,6 +74,10 @@ from .platforms import (
     XENSERVER,
     Platform,
 )
+
+TPlatformSources = Union[Platform, "Group"]
+TNestedSources = Iterable[Union[TPlatformSources, Iterable["TNestedSources"]]]
+"""Types for arbitrary nested sources of ``Platforms``."""
 
 
 @dataclass(frozen=True)
@@ -120,33 +130,63 @@ class Group:
         return len(self.platforms)
 
     @staticmethod
-    def _extract_platform_ids(
-        other: Group | Iterable[Platform] | Platform,
-    ) -> frozenset[str]:
-        """Returns all platform IDs found in ``other``."""
+    def _extract_platforms(other: TNestedSources) -> Iterator[Platform]:
+        """Returns all platforms found in ``other``."""
         if isinstance(other, Platform):
-            return frozenset((other.id,))
+            yield other
         elif isinstance(other, Group):
-            return other.platform_ids
-        return frozenset(p.id for p in other)
+            yield from other.platforms
+        elif isinstance(other, Iterable):
+            for item in flatten_iter(other):
+                yield from Group._extract_platforms(item)
+        else:
+            raise ValueError
 
-    def isdisjoint(self, other: Group | Iterable[Platform] | Platform) -> bool:
-        """Return `True` if the group has no platforms in common with ``other``."""
+    @staticmethod
+    def _extract_platform_ids(other: TNestedSources) -> frozenset[str]:
+        """Returns all platform IDs found in ``other``."""
+        return frozenset(p.id for p in Group._extract_platforms(other))
+
+    def isdisjoint(self, other: TNestedSources) -> bool:
+        """Return `True` if the group has no platforms in common with ``other``.
+
+        Groups are disjoint if and only if their intersection is an empty set.
+
+        ``other`` can be an arbitrarily nested ``Iterable`` of ``Group`` and ``Platform``.
+        """
         return self.platform_ids.isdisjoint(self._extract_platform_ids(other))
 
-    def fullyintersects(self, other: Group | Iterable[Platform] | Platform) -> bool:
+    def fullyintersects(self, other: TNestedSources) -> bool:
         """Return `True` if the group has all platforms in common with ``other``.
 
-        We cannot just compare ``Groups`` with the ``==`` equality operator as the
-        latter takes all attributes into account, as per ``dataclass`` default behavior.
+        ..hint::
+            We cannot just compare ``Groups`` with the ``==`` equality operator as the
+            latter takes all attributes into account, as per ``dataclass`` default
+            behavior.
         """
         return self.platform_ids == self._extract_platform_ids(other)
 
-    def issubset(self, other: Group | Iterable[Platform] | Platform) -> bool:
+    def issubset(self, other: TNestedSources) -> bool:
+        """Test whether every platforms in the group is in other."""
         return self.platform_ids.issubset(self._extract_platform_ids(other))
 
-    def issuperset(self, other: Group | Iterable[Platform] | Platform) -> bool:
+    def issuperset(self, other: TNestedSources) -> bool:
+        """Test whether every platform in other is in the group."""
         return self.platform_ids.issuperset(self._extract_platform_ids(other))
+
+    def union(self, *others: TNestedSources) -> Group:
+        """Return a new ``Group`` with platforms from the group and all others.
+
+        ..caution::
+            The new ``Group`` will inherits the metadata of the first one. All other
+            groups' metadata will be ignored.
+        """
+        return Group(
+            self.id,
+            self.name,
+            self.icon,
+            (*self.platforms, *self._extract_platforms(others)),
+        )
 
 
 ALL_PLATFORMS: Group = Group(
