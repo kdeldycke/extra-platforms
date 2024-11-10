@@ -25,18 +25,34 @@ extra\_platforms.docs\_update module
    :undoc-members:
    :show-inheritance:
 
-extra\_platforms.groups module
-------------------------------
+extra\_platforms.group module
+-----------------------------
 
-.. automodule:: extra_platforms.groups
+.. automodule:: extra_platforms.group
    :members:
    :undoc-members:
    :show-inheritance:
 
-extra\_platforms.platforms module
----------------------------------
+extra\_platforms.group\_data module
+-----------------------------------
 
-.. automodule:: extra_platforms.platforms
+.. automodule:: extra_platforms.group_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+extra\_platforms.platform module
+--------------------------------
+
+.. automodule:: extra_platforms.platform
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+extra\_platforms.platform\_data module
+--------------------------------------
+
+.. automodule:: extra_platforms.platform_data
    :members:
    :undoc-members:
    :show-inheritance:
