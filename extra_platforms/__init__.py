@@ -141,7 +141,7 @@ from .platform_data import (  # noqa: E402
 # XXX Not imported at package level so dependency on Pytest can stay optional.
 # from .pytest import *
 
-__version__ = "1.5.0"
+__version__ = "1.5.1"
 """Examples of valid version strings according :pep:`440#version-scheme`:
 
 .. code-block:: python
