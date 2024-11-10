@@ -5,7 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
-- Allow union, intersection and difference of `Group`.
+- Allow union, intersection, difference and symmetric difference of `Group`.
 - Deduplicate platforms on `Group` instantiation.
 - Allow testing for membership of individual platform in `Group`.
 

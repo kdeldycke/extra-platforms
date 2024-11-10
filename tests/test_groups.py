@@ -305,6 +305,42 @@ def test_multiple_difference():
     ).difference(UNIX.platform_ids)
 
 
+def test_symmetric_difference():
+    win_and_bsd = ANY_WINDOWS.union(BSD_WITHOUT_MACOS)
+    new_group = win_and_bsd.symmetric_difference(BSD)
+
+    assert new_group.platform_ids == frozenset((("macos", "windows")))
+
+    assert not win_and_bsd.issubset(new_group)
+    assert not win_and_bsd.issuperset(new_group)
+    assert not BSD.issubset(new_group)
+    assert not BSD.issuperset(new_group)
+
+    assert not new_group.issuperset(win_and_bsd)
+    assert not new_group.issuperset(BSD)
+    assert not new_group.issubset(win_and_bsd)
+    assert not new_group.issubset(BSD)
+
+    assert new_group.id == win_and_bsd.id
+    assert new_group.id != BSD.id
+    assert new_group.name == win_and_bsd.name
+    assert new_group.name != BSD.name
+    assert new_group.icon == win_and_bsd.icon
+    assert new_group.icon != BSD.icon
+
+    assert set(new_group.platforms) != set(BSD.platforms)
+    assert set(new_group.platform_ids) != set(BSD.platform_ids)
+    assert set(new_group.platforms) != set(win_and_bsd.platforms)
+    assert set(new_group.platform_ids) != set(win_and_bsd.platform_ids)
+
+    assert set(new_group.platforms) == set(win_and_bsd.platforms).symmetric_difference(
+        BSD.platforms
+    )
+    assert set(new_group.platform_ids) == set(
+        win_and_bsd.platform_ids
+    ).symmetric_difference(BSD.platform_ids)
+
+
 def test_group_definitions():
     for group in ALL_GROUPS:
         # ID.

@@ -225,6 +225,20 @@ class Group:
             ),
         )
 
+    def symmetric_difference(self, other: _TNestedSources) -> Group:
+        """Return a new ``Group`` with platforms in either the group or other but not both.
+
+        ..caution::
+            The new ``Group`` will inherits the metadata of the first one. All other
+            groups' metadata will be ignored.
+        """
+        return Group(
+            self.id,
+            self.name,
+            self.icon,
+            set(self.platforms).symmetric_difference(self._extract_platforms(other)),
+        )
+
 
 ALL_PLATFORMS: Group = Group(
     "all_platforms",
