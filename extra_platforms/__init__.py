@@ -69,7 +69,11 @@ from .detection import (  # noqa: E402
     is_wsl2,
     is_xenserver,
 )
-from .groups import (  # noqa: E402
+from .group import (  # noqa: E402
+    Group,
+    reduce,
+)
+from .group_data import (  # noqa: E402
     ALL_GROUPS,
     ALL_PLATFORMS,
     ANY_WINDOWS,
@@ -85,8 +89,6 @@ from .groups import (  # noqa: E402
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
-    Group,
-    reduce,
 )
 from .platforms import (  # noqa: E402
     AIX,
@@ -185,9 +187,9 @@ CURRENT_OS_LABEL: str = current_os().name
 """Constants about the current platform."""
 
 
-for group in ALL_GROUPS:
-    var_id = f"is_{group.id}"
-    var_value = current_os() in group
+for _group in ALL_GROUPS:
+    var_id = f"is_{_group.id}"
+    var_value = current_os() in _group
     assert var_id not in locals()
     # TODO: use a cached method instead of a hard-coded boolean variable and attach a
     # docstring to that method with the groups' own docstring.

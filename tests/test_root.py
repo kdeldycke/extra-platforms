@@ -29,7 +29,8 @@ from extra_platforms import (
     current_os,
 )
 from extra_platforms import detection as detection_module
-from extra_platforms import groups as groups_module
+from extra_platforms import group as group_module
+from extra_platforms import group_data as group_data_module
 from extra_platforms import platforms as platforms_module
 
 
@@ -51,11 +52,12 @@ def test_module_root_declarations():
         return {m for m in members if not m.startswith("_")}
 
     detection_members = fetch_module_implements(detection_module)
-    groups_members = fetch_module_implements(groups_module)
+    group_members = fetch_module_implements(group_module)
+    group_data_members = fetch_module_implements(group_data_module)
     platforms_members = fetch_module_implements(platforms_module)
     root_members = fetch_module_implements(extra_platforms)
     # Update root members with auto-generated ``is_<group.id>`` variables.
-    root_members.update((f"is_{group.id}" for group in ALL_GROUPS))
+    root_members.update((f"is_{g.id}" for g in ALL_GROUPS))
 
     # Check all members are exposed at the module root.
     tree = ast.parse(Path(inspect.getfile(extra_platforms)).read_bytes())
@@ -68,11 +70,13 @@ def test_module_root_declarations():
                         extra_platforms_members.append(element.value)
 
     assert detection_members <= set(extra_platforms_members)
-    assert groups_members <= set(extra_platforms_members)
+    assert group_members <= set(extra_platforms_members)
+    assert group_data_members <= set(extra_platforms_members)
     assert platforms_members <= set(extra_platforms_members)
 
     expected_members = sorted(
-        detection_members.union(groups_members)
+        detection_members.union(group_members)
+        .union(group_data_members)
         .union(platforms_members)
         .union(root_members),
         key=lambda m: (m.lower(), m),
@@ -104,7 +108,7 @@ def test_code_sorting():
             platform_instance_ids.append(instance_id)
 
     group_instance_ids = []
-    tree = ast.parse(Path(inspect.getfile(groups_module)).read_bytes())
+    tree = ast.parse(Path(inspect.getfile(group_data_module)).read_bytes())
     for node in tree.body:
         if (
             isinstance(node, ast.Assign)

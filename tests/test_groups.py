@@ -83,7 +83,7 @@ from extra_platforms import (
     Group,
     reduce,
 )
-from extra_platforms import groups as groups_module
+from extra_platforms import group_data as group_data_module
 
 
 def test_platform_deduplication():
@@ -368,8 +368,8 @@ def test_group_constants():
     """Group constants and IDs must be aligned."""
     for group in ALL_GROUPS:
         group_constant = group.id.upper()
-        assert group_constant in groups_module.__dict__
-        assert getattr(groups_module, group_constant) is group
+        assert group_constant in group_data_module.__dict__
+        assert getattr(group_data_module, group_constant) is group
 
 
 def test_groups_content():
