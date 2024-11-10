@@ -129,6 +129,8 @@ def test_simple_union():
 def test_multiple_union():
     new_group = ANY_WINDOWS.union(LINUX_LAYERS, UNIX_LAYERS)
 
+    assert new_group.platform_ids == frozenset(("windows", "wsl1", "wsl2", "cygwin"))
+
     assert ANY_WINDOWS.issubset(new_group)
     assert LINUX_LAYERS.issubset(new_group)
     assert UNIX_LAYERS.issubset(new_group)

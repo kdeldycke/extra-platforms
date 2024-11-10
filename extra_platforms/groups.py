@@ -163,25 +163,19 @@ class Group:
 
         ``other`` can be an arbitrarily nested ``Iterable`` of ``Group`` and ``Platform``.
         """
-        return self.platform_ids.isdisjoint(self._extract_platform_ids(other))
+        return set(self.platforms).isdisjoint(self._extract_platforms(other))
 
     def fullyintersects(self, other: _TNestedSources) -> bool:
-        """Return `True` if the group has all platforms in common with ``other``.
-
-        ..hint::
-            We cannot just compare ``Groups`` with the ``==`` equality operator as the
-            latter takes all attributes into account, as per ``dataclass`` default
-            behavior.
-        """
-        return self.platform_ids == self._extract_platform_ids(other)
+        """Return `True` if the group has all platforms in common with ``other``."""
+        return set(self.platforms) == set(self._extract_platforms(other))
 
     def issubset(self, other: _TNestedSources) -> bool:
         """Test whether every platforms in the group is in other."""
-        return self.platform_ids.issubset(self._extract_platform_ids(other))
+        return set(self.platforms).issubset(self._extract_platforms(other))
 
     def issuperset(self, other: _TNestedSources) -> bool:
         """Test whether every platform in other is in the group."""
-        return self.platform_ids.issuperset(self._extract_platform_ids(other))
+        return set(self.platforms).issuperset(self._extract_platforms(other))
 
     def union(self, *others: _TNestedSources) -> Group:
         """Return a new ``Group`` with platforms from the group and all others.
@@ -194,7 +188,9 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            (*self.platforms, *self._extract_platforms(others)),
+            set(self.platforms).union(
+                *(self._extract_platforms(other) for other in others)
+            ),
         )
 
 
