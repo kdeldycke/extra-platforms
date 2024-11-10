@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Group definitions. Also known as families or categories."""
+"""Group models collection of platforms. Also referred as families or categories."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ from typing import Iterable, Iterator, Union
 
 from boltons.iterutils import flatten_iter
 
-from .platforms import Platform
+from .platform import Platform
 
 _TPlatformSources = Union[Platform, "Group"]
 _TNestedSources = Iterable[Union[_TPlatformSources, Iterable["_TNestedSources"]]]

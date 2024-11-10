@@ -90,7 +90,8 @@ from .group_data import (  # noqa: E402
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
 )
-from .platforms import (  # noqa: E402
+from .platform import Platform  # noqa: E402
+from .platform_data import (  # noqa: E402
     AIX,
     ALTLINUX,
     AMZN,
@@ -135,7 +136,6 @@ from .platforms import (  # noqa: E402
     WSL1,
     WSL2,
     XENSERVER,
-    Platform,
 )
 
 # XXX Not imported at package level so dependency on Pytest can stay optional.

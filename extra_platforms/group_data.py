@@ -13,12 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Group definitions. Also known as families or categories."""
+"""Definitions of ready-to-use groups."""
 
 from __future__ import annotations
 
 from .group import Group
-from .platforms import (
+from .platform_data import (
     AIX,
     ALTLINUX,
     AMZN,
