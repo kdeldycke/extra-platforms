@@ -132,7 +132,7 @@ UNIX = Group(
     "unix",
     "Any Unix",
     "⨷",
-    ALL_PLATFORMS - ANY_WINDOWS,
+    tuple(ALL_PLATFORMS - ANY_WINDOWS),
 )
 """All Unix-like operating systems and compatibility layers."""
 
@@ -141,7 +141,7 @@ UNIX_WITHOUT_MACOS = Group(
     "unix_without_macos",
     "Any Unix but macOS",
     "⨂",
-    UNIX - MACOS,
+    tuple(UNIX - MACOS),
 )
 """All Unix platforms, without macOS.
 
@@ -173,7 +173,7 @@ BSD_WITHOUT_MACOS = Group(
     "bsd_without_macos",
     "Any BSD but macOS",
     "🅱️",
-    BSD - MACOS,
+    tuple(BSD - MACOS),
 )
 """All BSD platforms, without macOS.
 
@@ -251,7 +251,7 @@ LINUX_LIKE = Group(
     "linux_like",
     "Any Linux and compatibility layers",
     "🐧+",
-    LINUX | LINUX_LAYERS,
+    tuple(LINUX | LINUX_LAYERS),
 )
 """Sum of all Linux distributions and Linux compatibility layers."""
 
@@ -315,7 +315,7 @@ OTHER_UNIX = Group(
     "other_unix",
     "Any other Unix",
     "⊎",
-    UNIX - BSD - LINUX - LINUX_LAYERS - SYSTEM_V - UNIX_LAYERS,
+    tuple(UNIX - BSD - LINUX - LINUX_LAYERS - SYSTEM_V - UNIX_LAYERS),
 )
 """All other Unix platforms.
 

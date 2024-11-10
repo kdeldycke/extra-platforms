@@ -27,7 +27,9 @@ from boltons.iterutils import flatten_iter
 from .platform import Platform
 
 _TPlatformSources = Union[Platform, "Group"]
-_TNestedSources = Iterable[Union[_TPlatformSources, Iterable["_TNestedSources"]]]
+_TNestedSources = Union[
+    _TPlatformSources | Iterable[Union[_TPlatformSources, Iterable["_TNestedSources"]]]
+]
 """Types for arbitrary nested sources of ``Platforms``."""
 
 
@@ -154,8 +156,10 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            set(self.platforms).union(
-                *(self._extract_platforms(other) for other in others)
+            tuple(
+                set(self.platforms).union(
+                    *(self._extract_platforms(other) for other in others)
+                )
             ),
         )
 
@@ -172,8 +176,10 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            set(self.platforms).intersection(
-                *(self._extract_platforms(other) for other in others)
+            tuple(
+                set(self.platforms).intersection(
+                    *(self._extract_platforms(other) for other in others)
+                )
             ),
         )
 
@@ -190,8 +196,10 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            set(self.platforms).difference(
-                *(self._extract_platforms(other) for other in others)
+            tuple(
+                set(self.platforms).difference(
+                    *(self._extract_platforms(other) for other in others)
+                )
             ),
         )
 
@@ -208,7 +216,9 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            set(self.platforms).symmetric_difference(self._extract_platforms(other)),
+            tuple(
+                set(self.platforms).symmetric_difference(self._extract_platforms(other))
+            ),
         )
 
     __xor__ = symmetric_difference
