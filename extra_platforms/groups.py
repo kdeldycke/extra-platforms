@@ -20,11 +20,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass, field
 from itertools import combinations
-from typing import (
-    Iterable,
-    Iterator,
-    Union,
-)
+from typing import Iterable, Iterator, Union
 
 from boltons.iterutils import flatten_iter
 
