@@ -80,9 +80,15 @@ def test_groups_content():
             assert len(group.platforms) == len(group.platform_ids)
             assert group.platform_ids.issubset(ALL_PLATFORMS.platform_ids)
 
-            # Check general subset properties.
+            # Check general subset properties and operators.
             assert group.issubset(ALL_PLATFORMS)
+            assert group <= ALL_PLATFORMS
+            if group != ALL_PLATFORMS:
+                assert group < ALL_PLATFORMS
             assert ALL_PLATFORMS.issuperset(group)
+            assert ALL_PLATFORMS >= group
+            if group != ALL_PLATFORMS:
+                assert ALL_PLATFORMS > group
 
             # Each group is both a subset and a superset of itself.
             assert group.issubset(group)
@@ -118,6 +124,53 @@ def test_groups_content():
             assert group.fullyintersects(group)
             assert group.fullyintersects(group.platforms)
 
+            # Test union.
+            assert group.union() == group
+            assert group.union(()) == group
+            assert group.union([]) == group
+            assert group.union({}) == group
+            assert group.union(set()) == group
+            assert group.union(frozenset()) == group
+            assert group.union(group) == group
+            assert group.union(group, group) == group
+            assert group | group == group
+            assert group | group | group == group
+
+            empty_group = Group(group.id, group.name, group.icon)
+
+            # Test intersection.
+            assert group.intersection() == group
+            assert group.intersection(()) == empty_group
+            assert group.intersection([]) == empty_group
+            assert group.intersection({}) == empty_group
+            assert group.intersection(set()) == empty_group
+            assert group.intersection(frozenset()) == empty_group
+            assert group.intersection(group) == group
+            assert group.intersection(group, group) == group
+            assert group & group == group
+            assert group & group & group == group
+
+            # Test difference.
+            assert group.difference() == group
+            assert group.difference(()) == group
+            assert group.difference([]) == group
+            assert group.difference({}) == group
+            assert group.difference(set()) == group
+            assert group.difference(frozenset()) == group
+            assert group.difference(group) == empty_group
+            assert group.difference(group, group) == empty_group
+            assert group - group == empty_group
+            assert group - group - group == empty_group
+
+            # Test symmetric_difference.
+            assert group.symmetric_difference(()) == group
+            assert group.symmetric_difference([]) == group
+            assert group.symmetric_difference({}) == group
+            assert group.symmetric_difference(set()) == group
+            assert group.symmetric_difference(frozenset()) == group
+            assert group.symmetric_difference(group) == empty_group
+            assert group ^ group == empty_group
+
 
 def test_unique_icons():
     """Check all group icons are unique."""
@@ -140,16 +193,11 @@ def test_logical_grouping():
     assert BSD.issuperset(BSD_WITHOUT_MACOS)
 
     # All platforms are divided into Windows and Unix at the highest level.
-    assert {p.id for p in ALL_PLATFORMS} == ANY_WINDOWS.platform_ids | UNIX.platform_ids
+    assert ALL_PLATFORMS.fullyintersects(ANY_WINDOWS | UNIX)
 
     # All UNIX platforms are divided into BSD, Linux, and Unix families.
-    assert UNIX.platform_ids == (
-        BSD.platform_ids
-        | LINUX.platform_ids
-        | LINUX_LAYERS.platform_ids
-        | SYSTEM_V.platform_ids
-        | UNIX_LAYERS.platform_ids
-        | OTHER_UNIX.platform_ids
+    assert UNIX.fullyintersects(
+        BSD | LINUX | LINUX_LAYERS | SYSTEM_V | UNIX_LAYERS | OTHER_UNIX
     )
 
 
