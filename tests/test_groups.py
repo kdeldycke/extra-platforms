@@ -118,10 +118,15 @@ def test_simple_union():
     assert new_group.icon == ANY_WINDOWS.icon
     assert new_group.icon != LINUX_LAYERS.icon
 
-    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms) | set(
+    assert set(new_group.platforms) != set(ANY_WINDOWS.platforms)
+    assert set(new_group.platform_ids) != set(ANY_WINDOWS.platform_ids)
+    assert set(new_group.platforms) != set(LINUX_LAYERS.platforms)
+    assert set(new_group.platform_ids) != set(LINUX_LAYERS.platform_ids)
+
+    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms).union(
         LINUX_LAYERS.platforms
     )
-    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids) | set(
+    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids).union(
         LINUX_LAYERS.platform_ids
     )
 
@@ -149,12 +154,19 @@ def test_multiple_union():
     assert new_group.icon != LINUX_LAYERS.icon
     assert new_group.icon != UNIX_LAYERS.icon
 
-    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms) | set(
+    assert set(new_group.platforms) != set(ANY_WINDOWS.platforms)
+    assert set(new_group.platform_ids) != set(ANY_WINDOWS.platform_ids)
+    assert set(new_group.platforms) != set(LINUX_LAYERS.platforms)
+    assert set(new_group.platform_ids) != set(LINUX_LAYERS.platform_ids)
+    assert set(new_group.platforms) != set(UNIX_LAYERS.platforms)
+    assert set(new_group.platform_ids) != set(UNIX_LAYERS.platform_ids)
+
+    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms).union(
         LINUX_LAYERS.platforms
-    ) | set(UNIX_LAYERS.platforms)
-    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids) | set(
+    ).union(UNIX_LAYERS.platforms)
+    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids).union(
         LINUX_LAYERS.platform_ids
-    ) | set(UNIX_LAYERS.platform_ids)
+    ).union(UNIX_LAYERS.platform_ids)
 
 
 def test_group_definitions():
