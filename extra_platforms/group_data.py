@@ -119,7 +119,12 @@ ALL_PLATFORMS: Group = Group(
 """All recognized platforms."""
 
 
-ANY_WINDOWS = Group("any_windows", "Any Windows", "🪟", (WINDOWS,))
+ANY_WINDOWS = Group(
+    "any_windows",
+    "Any Windows",
+    "🪟",
+    (WINDOWS,),
+)
 """All Windows operating systems."""
 
 
@@ -127,7 +132,7 @@ UNIX = Group(
     "unix",
     "Any Unix",
     "⨷",
-    tuple(p for p in ALL_PLATFORMS.platforms if p not in ANY_WINDOWS),
+    ALL_PLATFORMS - ANY_WINDOWS,
 )
 """All Unix-like operating systems and compatibility layers."""
 
@@ -136,7 +141,7 @@ UNIX_WITHOUT_MACOS = Group(
     "unix_without_macos",
     "Any Unix but macOS",
     "⨂",
-    tuple(p for p in UNIX if p is not MACOS),
+    UNIX - MACOS,
 )
 """All Unix platforms, without macOS.
 
@@ -145,7 +150,10 @@ This is useful to avoid macOS-specific workarounds on Unix platforms.
 
 
 BSD = Group(
-    "bsd", "Any BSD", "🅱️+", (FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS)
+    "bsd",
+    "Any BSD",
+    "🅱️+",
+    (FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS),
 )
 """All BSD platforms.
 
@@ -165,7 +173,7 @@ BSD_WITHOUT_MACOS = Group(
     "bsd_without_macos",
     "Any BSD but macOS",
     "🅱️",
-    tuple(p for p in BSD if p is not MACOS),
+    BSD - MACOS,
 )
 """All BSD platforms, without macOS.
 
@@ -224,7 +232,10 @@ LINUX = Group(
 
 
 LINUX_LAYERS = Group(
-    "linux_layers", "Any Linux compatibility layers", "≚", (WSL1, WSL2)
+    "linux_layers",
+    "Any Linux compatibility layers",
+    "≚",
+    (WSL1, WSL2),
 )
 """Interfaces that allows Linux binaries to run on a different host system.
 
@@ -240,13 +251,16 @@ LINUX_LIKE = Group(
     "linux_like",
     "Any Linux and compatibility layers",
     "🐧+",
-    (*LINUX.platforms, *LINUX_LAYERS.platforms),
+    LINUX | LINUX_LAYERS,
 )
 """Sum of all Linux distributions and Linux compatibility layers."""
 
 
 SYSTEM_V = Group(
-    "system_v", "Any Unix derived from AT&T System Five", "Ⅴ", (AIX, SOLARIS)
+    "system_v",
+    "Any Unix derived from AT&T System Five",
+    "Ⅴ",
+    (AIX, SOLARIS),
 )
 """All Unix platforms derived from AT&T System Five.
 
@@ -301,18 +315,7 @@ OTHER_UNIX = Group(
     "other_unix",
     "Any other Unix",
     "⊎",
-    tuple(
-        p
-        for p in UNIX
-        if p
-        not in (
-            BSD.platforms
-            + LINUX.platforms
-            + LINUX_LAYERS.platforms
-            + SYSTEM_V.platforms
-            + UNIX_LAYERS.platforms
-        )
-    ),
+    UNIX - BSD - LINUX - LINUX_LAYERS - SYSTEM_V - UNIX_LAYERS,
 )
 """All other Unix platforms.
 
