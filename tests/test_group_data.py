@@ -119,6 +119,12 @@ def test_groups_content():
             assert group.fullyintersects(group.platforms)
 
 
+def test_unique_icons():
+    """Check all group icons are unique."""
+    icons = {group.icon for group in ALL_GROUPS}
+    assert len(icons) == len(ALL_GROUPS)
+
+
 def test_logical_grouping():
     """Test logical grouping of platforms."""
     for group in BSD, LINUX, LINUX_LAYERS, SYSTEM_V, UNIX_LAYERS, OTHER_UNIX:
