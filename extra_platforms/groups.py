@@ -193,6 +193,22 @@ class Group:
             ),
         )
 
+    def intersection(self, *others: _TNestedSources) -> Group:
+        """Return a new ``Group`` with platforms common to the group and all others.
+
+        ..caution::
+            The new ``Group`` will inherits the metadata of the first one. All other
+            groups' metadata will be ignored.
+        """
+        return Group(
+            self.id,
+            self.name,
+            self.icon,
+            set(self.platforms).intersection(
+                *(self._extract_platforms(other) for other in others)
+            ),
+        )
+
 
 ALL_PLATFORMS: Group = Group(
     "all_platforms",

@@ -5,7 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
-- Allow union of `Group`.
+- Allow union and intersection of `Group`.
 - Deduplicate platforms on `Group` instantiation.
 - Allow testing for membership of individual platform in `Group`.
 

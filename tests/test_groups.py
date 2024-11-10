@@ -169,6 +169,63 @@ def test_multiple_union():
     ).union(UNIX_LAYERS.platform_ids)
 
 
+def test_single_intersection():
+    new_group = ALL_PLATFORMS.intersection(ANY_WINDOWS)
+
+    assert new_group.platform_ids == frozenset(("windows",))
+
+    assert ANY_WINDOWS.issubset(new_group)
+    assert not ALL_PLATFORMS.issubset(new_group)
+    assert new_group.issuperset(ANY_WINDOWS)
+    assert not new_group.issuperset(ALL_PLATFORMS)
+
+    assert new_group.id == ALL_PLATFORMS.id
+    assert new_group.id != ANY_WINDOWS.id
+    assert new_group.name == ALL_PLATFORMS.name
+    assert new_group.name != ANY_WINDOWS.name
+    assert new_group.icon == ALL_PLATFORMS.icon
+    assert new_group.icon != ANY_WINDOWS.icon
+
+    assert set(new_group.platforms) != set(ALL_PLATFORMS.platforms)
+    assert set(new_group.platform_ids) != set(ALL_PLATFORMS.platform_ids)
+
+    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms)
+    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids)
+
+
+def test_multiple_intersection():
+    new_group = ALL_PLATFORMS.intersection(UNIX_WITHOUT_MACOS, BSD_WITHOUT_MACOS)
+
+    assert new_group.platform_ids == frozenset(
+        ("freebsd", "midnightbsd", "netbsd", "openbsd", "sunos")
+    )
+
+    assert new_group.issubset(ALL_PLATFORMS)
+    assert new_group.issubset(UNIX_WITHOUT_MACOS)
+    assert new_group.issubset(BSD_WITHOUT_MACOS)
+    assert ALL_PLATFORMS.issuperset(new_group)
+    assert UNIX_WITHOUT_MACOS.issuperset(new_group)
+    assert BSD_WITHOUT_MACOS.issuperset(new_group)
+
+    assert new_group.id == ALL_PLATFORMS.id
+    assert new_group.id != UNIX_WITHOUT_MACOS.id
+    assert new_group.id != BSD_WITHOUT_MACOS.id
+    assert new_group.name == ALL_PLATFORMS.name
+    assert new_group.name != UNIX_WITHOUT_MACOS.name
+    assert new_group.name != BSD_WITHOUT_MACOS.name
+    assert new_group.icon == ALL_PLATFORMS.icon
+    assert new_group.icon != UNIX_WITHOUT_MACOS.icon
+    assert new_group.icon != BSD_WITHOUT_MACOS.icon
+
+    assert set(new_group.platforms) != set(ALL_PLATFORMS.platforms)
+    assert set(new_group.platform_ids) != set(ALL_PLATFORMS.platform_ids)
+    assert set(new_group.platforms) != set(UNIX_WITHOUT_MACOS.platforms)
+    assert set(new_group.platform_ids) != set(UNIX_WITHOUT_MACOS.platform_ids)
+
+    assert set(new_group.platforms) == set(BSD_WITHOUT_MACOS.platforms)
+    assert set(new_group.platform_ids) == set(BSD_WITHOUT_MACOS.platform_ids)
+
+
 def test_group_definitions():
     for group in ALL_GROUPS:
         # ID.
