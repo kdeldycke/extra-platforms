@@ -209,6 +209,22 @@ class Group:
             ),
         )
 
+    def difference(self, *others: _TNestedSources) -> Group:
+        """Return a new ``Group`` with platforms in the group that are not in the others.
+
+        ..caution::
+            The new ``Group`` will inherits the metadata of the first one. All other
+            groups' metadata will be ignored.
+        """
+        return Group(
+            self.id,
+            self.name,
+            self.icon,
+            set(self.platforms).difference(
+                *(self._extract_platforms(other) for other in others)
+            ),
+        )
+
 
 ALL_PLATFORMS: Group = Group(
     "all_platforms",
@@ -290,7 +306,7 @@ This is useful to avoid macOS-specific workarounds on Unix platforms.
 
 
 BSD = Group(
-    "bsd", "Any BSD", "🅱️", (FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS)
+    "bsd", "Any BSD", "🅱️+", (FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS)
 )
 """All BSD platforms.
 

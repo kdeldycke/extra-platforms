@@ -226,6 +226,85 @@ def test_multiple_intersection():
     assert set(new_group.platform_ids) == set(BSD_WITHOUT_MACOS.platform_ids)
 
 
+def test_single_difference():
+    new_group = BSD.difference(BSD_WITHOUT_MACOS)
+
+    assert new_group.platform_ids == frozenset(("macos",))
+
+    assert not BSD.issubset(new_group)
+    assert BSD.issuperset(new_group)
+    assert not BSD_WITHOUT_MACOS.issubset(new_group)
+    assert not BSD_WITHOUT_MACOS.issuperset(new_group)
+
+    assert not new_group.issuperset(BSD)
+    assert not new_group.issuperset(BSD_WITHOUT_MACOS)
+    assert new_group.issubset(BSD)
+    assert not new_group.issubset(BSD_WITHOUT_MACOS)
+
+    assert new_group.id == BSD.id
+    assert new_group.id != BSD_WITHOUT_MACOS.id
+    assert new_group.name == BSD.name
+    assert new_group.name != BSD_WITHOUT_MACOS.name
+    assert new_group.icon == BSD.icon
+    assert new_group.icon != BSD_WITHOUT_MACOS.icon
+
+    assert set(new_group.platforms) != set(BSD.platforms)
+    assert set(new_group.platform_ids) != set(BSD.platform_ids)
+    assert set(new_group.platforms) != set(BSD_WITHOUT_MACOS.platforms)
+    assert set(new_group.platform_ids) != set(BSD_WITHOUT_MACOS.platform_ids)
+
+    assert set(new_group.platforms) == set(BSD.platforms).difference(
+        BSD_WITHOUT_MACOS.platforms
+    )
+    assert set(new_group.platform_ids) == set(BSD.platform_ids).difference(
+        BSD_WITHOUT_MACOS.platform_ids
+    )
+
+
+def test_multiple_difference():
+    new_group = ALL_PLATFORMS.difference(LINUX, UNIX)
+
+    assert new_group.platform_ids == frozenset(("windows",))
+
+    assert not ALL_PLATFORMS.issubset(new_group)
+    assert ALL_PLATFORMS.issuperset(new_group)
+    assert not LINUX.issubset(new_group)
+    assert not LINUX.issuperset(new_group)
+    assert not UNIX.issubset(new_group)
+    assert not UNIX.issuperset(new_group)
+
+    assert not new_group.issuperset(ALL_PLATFORMS)
+    assert not new_group.issuperset(LINUX)
+    assert not new_group.issuperset(UNIX)
+    assert new_group.issubset(ALL_PLATFORMS)
+    assert not new_group.issubset(LINUX)
+    assert not new_group.issubset(UNIX)
+
+    assert new_group.id == ALL_PLATFORMS.id
+    assert new_group.id != LINUX.id
+    assert new_group.id != UNIX.id
+    assert new_group.name == ALL_PLATFORMS.name
+    assert new_group.name != LINUX.name
+    assert new_group.name != UNIX.name
+    assert new_group.icon == ALL_PLATFORMS.icon
+    assert new_group.icon != LINUX.icon
+    assert new_group.icon != UNIX.icon
+
+    assert set(new_group.platforms) != set(ALL_PLATFORMS.platforms)
+    assert set(new_group.platform_ids) != set(ALL_PLATFORMS.platform_ids)
+    assert set(new_group.platforms) != set(LINUX.platforms)
+    assert set(new_group.platform_ids) != set(LINUX.platform_ids)
+    assert set(new_group.platforms) != set(UNIX.platforms)
+    assert set(new_group.platform_ids) != set(UNIX.platform_ids)
+
+    assert set(new_group.platforms) == set(ALL_PLATFORMS.platforms).difference(
+        LINUX.platforms
+    ).difference(UNIX.platforms)
+    assert set(new_group.platform_ids) == set(ALL_PLATFORMS.platform_ids).difference(
+        LINUX.platform_ids
+    ).difference(UNIX.platform_ids)
+
+
 def test_group_definitions():
     for group in ALL_GROUPS:
         # ID.
@@ -246,7 +325,7 @@ def test_group_definitions():
 
         # Icon.
         assert group.icon
-        assert 2 >= len(group.icon) >= 1
+        assert 3 >= len(group.icon) >= 1
 
 
 def test_group_constants():
