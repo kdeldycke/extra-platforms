@@ -187,9 +187,13 @@ def test_single_intersection():
 def test_multiple_intersection():
     new_group = ALL_PLATFORMS.intersection(UNIX_WITHOUT_MACOS, BSD_WITHOUT_MACOS)
 
-    assert new_group.platform_ids == frozenset(
-        ("freebsd", "midnightbsd", "netbsd", "openbsd", "sunos")
-    )
+    assert new_group.platform_ids == frozenset((
+        "freebsd",
+        "midnightbsd",
+        "netbsd",
+        "openbsd",
+        "sunos",
+    ))
 
     assert new_group.issubset(ALL_PLATFORMS)
     assert new_group.issubset(UNIX_WITHOUT_MACOS)
