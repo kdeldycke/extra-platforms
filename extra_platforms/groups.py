@@ -173,9 +173,25 @@ class Group:
         """Test whether every platforms in the group is in other."""
         return set(self.platforms).issubset(self._extract_platforms(other))
 
+    __le__ = issubset
+
+    def __lt__(self, other: _TNestedSources) -> bool:
+        """Test whether every platform in the group is in other, but not all."""
+        return self <= other and set(self.platforms) != set(
+            self._extract_platforms(other)
+        )
+
     def issuperset(self, other: _TNestedSources) -> bool:
         """Test whether every platform in other is in the group."""
         return set(self.platforms).issuperset(self._extract_platforms(other))
+
+    __ge__ = issuperset
+
+    def __gt__(self, other: _TNestedSources) -> bool:
+        """Test whether every platform in other is in the group, but not all."""
+        return self >= other and set(self.platforms) != set(
+            self._extract_platforms(other)
+        )
 
     def union(self, *others: _TNestedSources) -> Group:
         """Return a new ``Group`` with platforms from the group and all others.
@@ -193,6 +209,8 @@ class Group:
             ),
         )
 
+    __or__ = union
+
     def intersection(self, *others: _TNestedSources) -> Group:
         """Return a new ``Group`` with platforms common to the group and all others.
 
@@ -208,6 +226,8 @@ class Group:
                 *(self._extract_platforms(other) for other in others)
             ),
         )
+
+    __and__ = intersection
 
     def difference(self, *others: _TNestedSources) -> Group:
         """Return a new ``Group`` with platforms in the group that are not in the others.
@@ -225,6 +245,8 @@ class Group:
             ),
         )
 
+    __sub__ = difference
+
     def symmetric_difference(self, other: _TNestedSources) -> Group:
         """Return a new ``Group`` with platforms in either the group or other but not both.
 
@@ -238,6 +260,8 @@ class Group:
             self.icon,
             set(self.platforms).symmetric_difference(self._extract_platforms(other)),
         )
+
+    __xor__ = symmetric_difference
 
 
 ALL_PLATFORMS: Group = Group(
