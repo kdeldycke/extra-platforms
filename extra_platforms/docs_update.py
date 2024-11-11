@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import html
 import sys
+from operator import attrgetter
 from pathlib import Path
 from textwrap import dedent, indent
 
@@ -105,7 +106,7 @@ def generate_platforms_graph(
     subgraphs = set()
 
     # Create one subgraph per group.
-    for group in sorted(groups, key=lambda g: g.id):
+    for group in sorted(groups, key=attrgetter("id")):
         nodes = set()
         for platform in group:
             # Make the node ID unique for overlapping groups.
