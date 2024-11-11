@@ -336,6 +336,28 @@ def test_symmetric_difference():
     ).symmetric_difference(BSD.platform_ids)
 
 
+def test_copy():
+    my_group = Group("my_group", "My Group", "✅", (AIX, AIX))
+    my_group_copy1 = my_group.copy()
+    assert my_group == my_group_copy1
+    assert my_group is not my_group_copy1
+
+    my_group_copy2 = my_group.copy(
+        id="my_group_copy2", name="My Group Copy 2", icon="🚀"
+    )
+    assert my_group_copy2 != my_group
+    assert my_group_copy2 is not my_group
+    assert my_group_copy2 != my_group_copy1
+    assert my_group_copy2 is not my_group_copy1
+    assert my_group_copy2.id == "my_group_copy2"
+    assert my_group_copy2.name == "My Group Copy 2"
+    assert my_group_copy2.icon == "🚀"
+    assert my_group_copy2.platforms == my_group.platforms
+    assert my_group_copy2.platform_ids == my_group.platform_ids
+    assert my_group_copy2.platforms == my_group_copy1.platforms
+    assert my_group_copy2.platform_ids == my_group_copy1.platform_ids
+
+
 @pytest.mark.parametrize(
     ("items", "expected"),
     [

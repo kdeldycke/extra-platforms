@@ -18,7 +18,7 @@
 from __future__ import annotations
 
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from itertools import combinations
 from typing import Iterable, Iterator, Union
 
@@ -55,16 +55,25 @@ class Group:
     platforms: tuple[Platform, ...] = field(repr=False, default_factory=tuple)
     """Sorted list of platforms that belong to this group."""
 
-    platform_ids: frozenset[str] = field(default_factory=frozenset)
+    platform_ids: frozenset[str] = field(default_factory=frozenset, init=False)
     """Set of platform IDs that belong to this group."""
 
     def __post_init__(self):
-        """Deduplicate platforms and sort them by IDs."""
+        """Validate and normalize the group's fields:
+
+        - Ensure the group ID and name are not empty.
+        - Deduplicate platforms and sort them by IDs
+        - Populate the set of platform IDs and check for duplicates
+        """
+        assert self.id, "Group ID cannot be empty."
+        assert self.name, "Group name cannot be empty."
+
         object.__setattr__(
             self,
             "platforms",
             tuple(sorted(set(self.platforms), key=lambda p: p.id)),
         )
+
         # Double check there are no Platform objects sharing the same IDs.
         id_counter = Counter(p.id for p in self.platforms)
         if len(set(id_counter)) != len(self.platforms):
@@ -214,6 +223,20 @@ class Group:
         )
 
     __xor__ = symmetric_difference
+
+    def copy(
+        self,
+        id: str | None = None,
+        name: str | None = None,
+        icon: str | None = None,
+        platforms: tuple[Platform, ...] | None = None,
+    ) -> Group:
+        """Return a shallow copy of the group.
+
+        Fields can be overridden by passing new values as arguments.
+        """
+        kwargs = {k: v for k, v in locals().items() if k != "self" and v is not None}
+        return replace(self, **kwargs)
 
 
 def reduce(items: Iterable[Group | Platform]) -> set[Group | Platform]:
