@@ -39,8 +39,8 @@ class Group:
 
     Used to group platforms of the same family.
 
-    `set()`-like methods are available and performed on the platform objects the group
-    contain (in the ``self.platforms`` data field).
+    `set`-like methods are available and performed on the platform objects the group
+    contains (in the ``self.platforms`` data field).
     """
 
     id: str
@@ -56,10 +56,7 @@ class Group:
     """Sorted list of platforms that belong to this group."""
 
     platform_ids: frozenset[str] = field(default_factory=frozenset)
-    """Set of platform IDs that belong to this group.
-
-    Used to test platform overlaps between groups.
-    """
+    """Set of platform IDs that belong to this group."""
 
     def __post_init__(self):
         """Deduplicate platforms and sort them by IDs."""
@@ -102,11 +99,6 @@ class Group:
                 yield from Group._extract_platforms(item)
         else:
             raise ValueError
-
-    @staticmethod
-    def _extract_platform_ids(other: _TNestedSources) -> frozenset[str]:
-        """Returns all platform IDs found in ``other``."""
-        return frozenset(p.id for p in Group._extract_platforms(other))
 
     def isdisjoint(self, other: _TNestedSources) -> bool:
         """Return `True` if the group has no platforms in common with ``other``.
