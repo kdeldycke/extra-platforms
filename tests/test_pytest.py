@@ -17,8 +17,8 @@
 from __future__ import annotations
 
 from extra_platforms import (
-    CURRENT_OS_ID,
     LINUX,
+    current_os,
     is_macos,
     is_windows,
 )
@@ -34,38 +34,38 @@ from extra_platforms.pytest import (
 
 @skip_linux
 def test_skip_linux():
-    assert CURRENT_OS_ID not in LINUX.platform_ids
+    assert current_os() not in LINUX
     assert is_macos() or is_windows()
 
 
 @skip_macos
 def test_skip_macos():
     assert not is_macos()
-    assert CURRENT_OS_ID in LINUX.platform_ids or is_windows()
+    assert current_os() in LINUX or is_windows()
 
 
 @skip_windows
 def test_skip_windows():
     assert not is_windows()
-    assert CURRENT_OS_ID in LINUX.platform_ids or is_macos()
+    assert current_os() in LINUX or is_macos()
 
 
 @unless_linux
 def test_unless_linux():
-    assert CURRENT_OS_ID in LINUX.platform_ids
+    assert current_os() in LINUX
     assert not is_macos()
     assert not is_windows()
 
 
 @unless_macos
 def test_unless_macos():
-    assert CURRENT_OS_ID not in LINUX.platform_ids
+    assert current_os() not in LINUX
     assert is_macos()
     assert not is_windows()
 
 
 @unless_windows
 def test_unless_windows():
-    assert CURRENT_OS_ID not in LINUX.platform_ids
+    assert current_os() not in LINUX
     assert not is_macos()
     assert is_windows()

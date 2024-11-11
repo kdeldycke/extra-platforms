@@ -21,13 +21,7 @@ import inspect
 from pathlib import Path
 
 import extra_platforms
-from extra_platforms import (
-    ALL_GROUPS,
-    ALL_PLATFORMS,
-    CURRENT_OS_ID,
-    CURRENT_OS_LABEL,
-    current_os,
-)
+from extra_platforms import ALL_GROUPS, ALL_PLATFORMS, current_os
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
@@ -156,6 +150,3 @@ def test_current_os_func():
     # Function.
     current_platform = current_os()
     assert current_platform in ALL_PLATFORMS.platforms
-    # Constants.
-    assert current_platform.id == CURRENT_OS_ID
-    assert current_platform.name == CURRENT_OS_LABEL

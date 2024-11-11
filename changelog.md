@@ -5,6 +5,8 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Remove `CURRENT_OS_ID` and `CURRENT_OS_LABEL`.
+
 ## [1.5.0 (2024-11-10)](https://github.com/kdeldycke/extra-platforms/compare/v1.4.0...v1.5.0)
 
 - Allow union, intersection, difference and symmetric difference of `Group`.

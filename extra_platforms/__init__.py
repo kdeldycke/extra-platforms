@@ -182,11 +182,6 @@ def current_os() -> Platform:
     return matching.pop()
 
 
-CURRENT_OS_ID: str = current_os().id
-CURRENT_OS_LABEL: str = current_os().name
-"""Constants about the current platform."""
-
-
 for _group in ALL_GROUPS:
     var_id = f"is_{_group.id}"
     var_value = current_os() in _group
@@ -218,8 +213,6 @@ __all__ = [
     "CENTOS",  # noqa: F405
     "CLOUDLINUX",  # noqa: F405
     "current_os",  # noqa: F405
-    "CURRENT_OS_ID",  # noqa: F405
-    "CURRENT_OS_LABEL",  # noqa: F405
     "CYGWIN",  # noqa: F405
     "DEBIAN",  # noqa: F405
     "EXHERBO",  # noqa: F405

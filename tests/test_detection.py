@@ -20,11 +20,6 @@ import functools
 
 from extra_platforms import (
     ALL_PLATFORMS,
-    CURRENT_OS_ID,
-    CURRENT_OS_LABEL,
-    MACOS,
-    UBUNTU,
-    WINDOWS,
     is_aix,
     is_altlinux,
     is_amzn,
@@ -86,8 +81,6 @@ def test_mutual_exclusion():
     """Only directly tests OSes on which the test suite is running via GitHub
     actions."""
     if is_ubuntu():
-        assert CURRENT_OS_ID == UBUNTU.id
-        assert CURRENT_OS_LABEL == UBUNTU.name
         assert not is_aix()
         assert not is_altlinux()
         assert not is_amzn()
@@ -134,8 +127,6 @@ def test_mutual_exclusion():
         assert not is_xenserver()
 
     if is_macos():
-        assert CURRENT_OS_ID == MACOS.id
-        assert CURRENT_OS_LABEL == MACOS.name
         assert not is_aix()
         assert not is_altlinux()
         assert not is_amzn()
@@ -182,8 +173,6 @@ def test_mutual_exclusion():
         assert not is_xenserver()
 
     if is_windows():
-        assert CURRENT_OS_ID == WINDOWS.id
-        assert CURRENT_OS_LABEL == WINDOWS.name
         assert not is_aix()
         assert not is_altlinux()
         assert not is_amzn()

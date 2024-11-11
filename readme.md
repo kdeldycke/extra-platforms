@@ -23,19 +23,7 @@
 
 ## Examples
 
-Get the current platform ID and name:
-
-```pycon
->>> from extra_platforms import CURRENT_OS_ID, CURRENT_OS_LABEL
-
->>> CURRENT_OS_ID
-'macos'
-
->>> CURRENT_OS_LABEL
-'macOS'
-```
-
-Get the current platform object, from which you can access lots of metadata:
+Get the current platform, from which you can access lots of metadata:
 
 ```pycon
 >>> from extra_platforms import current_os
