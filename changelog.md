@@ -1,9 +1,6 @@
 # Changelog
 
-## [1.6.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v1.5.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [1.6.0 (2024-11-11)](https://github.com/kdeldycke/extra-platforms/compare/v1.5.0...v1.6.0)
 
 - Add a new `copy()` method to `Group`.
 - New `target_pool` parameter on `reduce` method let you specify the subset of groups to reduce platforms to.
