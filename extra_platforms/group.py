@@ -277,8 +277,8 @@ def reduce(
     )
 
     # Test all combination of groups to find the smallest set of groups + platforms.
-    min_items: int = 0
-    results: list[set[Group | Platform]] = []
+    min_items = 0
+    results: list[frozenset[Group | Platform]] = []
     # Serialize group sets for deterministic lookups. Sort them by platform count.
     groups = tuple(sorted(overlapping_groups, key=len, reverse=True))
     for subset_size in range(1, len(groups) + 1):
@@ -315,6 +315,6 @@ def reduce(
 
     # If no reduced solution was found, return the original platforms.
     if not results:
-        return platforms  # type: ignore[return-value]
+        return platforms
 
     return results.pop()
