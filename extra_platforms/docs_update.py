@@ -66,9 +66,7 @@ def generate_platform_sankey() -> str:
 
     # Display biggest groups first. Add ID in the sorting key to get stable sorting on
     # tie.
-    for group in sorted(
-        ALL_GROUPS, key=lambda g: (len(g.platform_ids), g.id), reverse=True
-    ):
+    for group in sorted(ALL_GROUPS, key=lambda g: (len(g), g.id), reverse=True):
         for platform in group.platforms:
             # XXX Sankey diagrams do not support emoji icons yet.
             # table.append(
