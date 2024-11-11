@@ -239,12 +239,17 @@ class Group:
         return replace(self, **kwargs)
 
 
-def reduce(items: Iterable[Group | Platform]) -> set[Group | Platform]:
-    """Reduce a collection of ``Group`` and ``Platform`` to a minimal set.
+def reduce(
+    items: _TNestedSources, target_pool: Iterable[Group | Platform] | None = None
+) -> frozenset[Group | Platform]:
+    """Reduce a collection of platforms to a minimal set.
 
     Returns a deduplicated set of ``Group`` and ``Platform`` that covers the same exact
     platforms as the original input, but group as much platforms as possible, to reduce
     the number of items.
+
+    Only the groups defined in the ``target_pool`` are considered for the reduction.
+    If no reference pool is provided, use all known groups.
 
     .. hint::
         Maybe this could be solved with some `Euler diagram
@@ -258,28 +263,24 @@ def reduce(items: Iterable[Group | Platform]) -> set[Group | Platform]:
         Should we rename or alias this method to `collapse()`? Cannot decide if it is
         more descriptive or not...
     """
-    # Prevent circular imports.
-    from .group_data import ALL_GROUPS
-
     # Collect all platforms.
-    platforms: set[Platform] = set()
-    for item in items:
-        if isinstance(item, Group):
-            platforms.update(item.platforms)
-        else:
-            platforms.add(item)
+    platforms = frozenset(Group._extract_platforms(items))
 
-    # List any group matching the platforms.
-    valid_groups: set[Group] = set()
-    for group in ALL_GROUPS:
-        if group.issubset(platforms):
-            valid_groups.add(group)
+    # List all groups overlapping the set of input platforms.
+    if target_pool is None:
+        # Prevent circular imports.
+        from .group_data import ALL_GROUPS
+
+        target_pool = ALL_GROUPS
+    overlapping_groups = frozenset(
+        g for g in target_pool if isinstance(g, Group) and g.issubset(platforms)
+    )
 
     # Test all combination of groups to find the smallest set of groups + platforms.
     min_items: int = 0
     results: list[set[Group | Platform]] = []
     # Serialize group sets for deterministic lookups. Sort them by platform count.
-    groups = tuple(sorted(valid_groups, key=len, reverse=True))
+    groups = tuple(sorted(overlapping_groups, key=len, reverse=True))
     for subset_size in range(1, len(groups) + 1):
         # If we already have a solution that involves less items than the current
         # subset of groups we're going to evaluates, there is no point in continuing.
@@ -292,12 +293,11 @@ def reduce(items: Iterable[Group | Platform]) -> set[Group | Platform]:
                 continue
 
             # Remove all platforms covered by the groups.
-            ungrouped_platforms = platforms.copy()
-            for group in group_subset:
-                ungrouped_platforms.difference_update(group.platforms)
+            ungrouped_platforms = set(platforms.copy())
+            ungrouped_platforms.difference_update(*group_subset)
 
             # Merge the groups and the remaining platforms.
-            reduction = ungrouped_platforms.union(group_subset)
+            reduction = frozenset(ungrouped_platforms.union(group_subset))
             reduction_size = len(reduction)
 
             # Reset the results if we have a new solution that is better than the

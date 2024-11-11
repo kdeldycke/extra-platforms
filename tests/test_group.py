@@ -43,6 +43,7 @@ from extra_platforms import (
     KVMIBM,
     LINUX,
     LINUX_LAYERS,
+    LINUX_LIKE,
     LINUXMINT,
     MACOS,
     MAGEIA,
@@ -361,9 +362,10 @@ def test_copy():
 @pytest.mark.parametrize(
     ("items", "expected"),
     [
-        ([], set()),
-        ((), set()),
-        (set(), set()),
+        ([], frozenset()),
+        ((), frozenset()),
+        (set(), frozenset()),
+        (frozenset(), frozenset()),
         ([AIX], {AIX}),
         ([AIX, AIX], {AIX}),
         ([UNIX], {UNIX}),
@@ -427,4 +429,40 @@ def test_copy():
     ],
 )
 def test_reduction(items, expected):
-    assert reduce(items) == expected
+    results = reduce(items)
+    assert results == expected
+    assert isinstance(results, frozenset)
+
+
+@pytest.mark.parametrize(
+    ("items", "expected"),
+    [
+        ([], frozenset()),
+        ((), frozenset()),
+        (set(), frozenset()),
+        (frozenset(), frozenset()),
+        ([AIX], {AIX}),
+        ([AIX, AIX], {AIX}),
+        ([WINDOWS], {ANY_WINDOWS}),
+        (
+            [BSD_WITHOUT_MACOS, MACOS],
+            {FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS},
+        ),
+        ([MACOS, WINDOWS, WSL1], {MACOS, ANY_WINDOWS, WSL1}),
+    ],
+)
+def test_reduce_custom_targets(items, expected):
+    target_pool = (
+        MACOS,
+        UNIX_WITHOUT_MACOS.copy(
+            id="unix",
+            name="Unix",
+            platforms=tuple(UNIX_WITHOUT_MACOS - BSD_WITHOUT_MACOS - LINUX_LIKE),
+        ),
+        ANY_WINDOWS,
+    )
+
+    results = reduce(items, target_pool=target_pool)
+    print(results)
+    assert results == expected
+    assert isinstance(results, frozenset)
