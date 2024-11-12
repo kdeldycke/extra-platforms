@@ -59,14 +59,15 @@ class Group:
     """Set of platform IDs that belong to this group."""
 
     def __post_init__(self):
-        """Validate and normalize the group's fields:
+        """Validate and normalize the group fields:
 
-        - Ensure the group ID and name are not empty.
+        - Ensure the group ID, name and icon are not empty.
         - Deduplicate platforms and sort them by IDs
         - Populate the set of platform IDs and check for duplicates
         """
         assert self.id, "Group ID cannot be empty."
         assert self.name, "Group name cannot be empty."
+        assert self.icon, "Group icon cannot be empty."
 
         object.__setattr__(
             self,

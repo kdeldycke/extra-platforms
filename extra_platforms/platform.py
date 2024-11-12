@@ -152,8 +152,18 @@ class Platform:
     """`True` if current environment runs on this platform."""
 
     def __post_init__(self):
-        """Set the ``current`` attribute to identifying the current platform."""
+        """Validate and normalize platform fields:
+
+        - Ensure the platform ID, name and icon are not empty.
+        - Set the ``current`` field.
+        - Populate the docstring.
+        """
+        assert self.id, "Platform ID cannot be empty."
+        assert self.name, "Platform name cannot be empty."
+        assert self.icon, "Platform icon cannot be empty."
+
         object.__setattr__(self, "current", detection.__dict__[f"is_{self.id}"]())
+
         object.__setattr__(self, "__doc__", f"Identify {self.name}.")
 
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
