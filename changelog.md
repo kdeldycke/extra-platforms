@@ -7,6 +7,7 @@
 
 - Add support for openSUSE Tumbleweed detection. Closes #133.
 - Do not allow icons on platforms and groups to be empty.
+- Run tests in parallel to speed up CI.
 
 ## [1.6.0 (2024-11-11)](https://github.com/kdeldycke/extra-platforms/compare/v1.5.0...v1.6.0)
 
