@@ -61,6 +61,7 @@ from .detection import (  # noqa: E402
     is_sles,
     is_solaris,
     is_sunos,
+    is_tumbleweed,
     is_tuxedo,
     is_ubuntu,
     is_unknown_linux,
@@ -129,6 +130,7 @@ from .platform_data import (  # noqa: E402
     SLES,
     SOLARIS,
     SUNOS,
+    TUMBLEWEED,
     TUXEDO,
     UBUNTU,
     UNKNOWN_LINUX,
@@ -270,6 +272,7 @@ __all__ = [
     "is_solaris",  # noqa: F405
     "is_sunos",  # noqa: F405
     "is_system_v",  # noqa: F405, F822
+    "is_tumbleweed",  # noqa: F405, F822
     "is_tuxedo",  # noqa: F405, F822
     "is_ubuntu",  # noqa: F405
     "is_unix",  # noqa: F405, F822
@@ -308,6 +311,7 @@ __all__ = [
     "SOLARIS",  # noqa: F405
     "SUNOS",  # noqa: F405
     "SYSTEM_V",  # noqa: F405
+    "TUMBLEWEED",  # noqa: F405
     "TUXEDO",  # noqa: F405
     "UBUNTU",  # noqa: F405
     "UNIX",  # noqa: F405

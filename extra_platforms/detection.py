@@ -273,6 +273,12 @@ def is_sunos() -> bool:
 
 
 @cache
+def is_tumbleweed() -> bool:
+    """Return `True` only if current platform is openSUSE Tumbleweed."""
+    return distro.id() == "opensuse-tumbleweed"
+
+
+@cache
 def is_tuxedo() -> bool:
     """Return `True` only if current platform is Tuxedo OS."""
     return distro.id() == "tuxedo"
@@ -319,6 +325,7 @@ def is_unknown_linux() -> bool:
         or is_scientific()
         or is_slackware()
         or is_sles()
+        or is_tumbleweed()
         or is_tuxedo()
         or is_ubuntu()
         or is_xenserver()

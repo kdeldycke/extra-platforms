@@ -57,6 +57,7 @@ from extra_platforms import (
     is_sles,
     is_solaris,
     is_sunos,
+    is_tumbleweed,
     is_tuxedo,
     is_ubuntu,
     is_unknown_linux,
@@ -118,6 +119,7 @@ def test_mutual_exclusion():
         assert not is_sles()
         assert not is_solaris()
         assert not is_sunos()
+        assert not is_tumbleweed()
         assert not is_tuxedo()
         # assert not is_ubuntu()
         assert not is_unknown_linux()
@@ -164,6 +166,7 @@ def test_mutual_exclusion():
         assert not is_sles()
         assert not is_solaris()
         assert not is_sunos()
+        assert not is_tumbleweed()
         assert not is_tuxedo()
         assert not is_ubuntu()
         assert not is_unknown_linux()
@@ -210,6 +213,7 @@ def test_mutual_exclusion():
         assert not is_sles()
         assert not is_solaris()
         assert not is_sunos()
+        assert not is_tumbleweed()
         assert not is_tuxedo()
         assert not is_ubuntu()
         assert not is_unknown_linux()
