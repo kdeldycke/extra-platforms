@@ -20,9 +20,14 @@ from string import ascii_lowercase, digits
 
 from extra_platforms import ALL_OS_LABELS, ALL_PLATFORMS
 
+import pytest
+import requests
 
-def test_platform_definitions():
-    for platform in ALL_PLATFORMS.platforms:
+@pytest.mark.parametrize("platform", ALL_PLATFORMS.platforms)
+def test_platform_definitions(platform):
+
+        assert platform
+
         # ID.
         assert platform.id
         assert platform.id.isascii()
@@ -43,6 +48,12 @@ def test_platform_definitions():
         # Icon.
         assert platform.icon
         assert 2 >= len(platform.icon) >= 1
+
+        # URL.
+        assert platform.url
+        assert platform.url.startswith("https://")
+        with requests.get(platform.url) as response:
+            assert response.ok, f"{platform.url} is not reachable: {response.status_code}"
 
         # Info.
         assert platform.info()

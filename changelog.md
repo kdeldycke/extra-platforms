@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add URL on all platforms.
 - Add support for openSUSE Tumbleweed detection. Closes #133.
 - Do not allow icons on platforms and groups to be empty.
 - Run tests in parallel to speed up CI.

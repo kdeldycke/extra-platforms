@@ -148,6 +148,9 @@ class Platform:
     icon: str = field(repr=False, default="❓")
     """Icon of the platform."""
 
+    url: str | None = field(repr=False, default=None)
+    """URL to the platform's official website."""
+
     current: bool = field(init=False)
     """`True` if current environment runs on this platform."""
 
@@ -162,6 +165,9 @@ class Platform:
         assert self.name, "Platform name cannot be empty."
         assert self.icon, "Platform icon cannot be empty."
 
+        if self.url:
+            assert self.url.startswith("https://"), "URL must start with https://."
+
         object.__setattr__(self, "current", detection.__dict__[f"is_{self.id}"]())
 
         object.__setattr__(self, "__doc__", f"Identify {self.name}.")
@@ -172,6 +178,7 @@ class Platform:
             "id": self.id,
             "name": self.name,
             "icon": self.icon,
+            "url": self.url,
             "current": self.current,
             # Extra fields from distro.info().
             "distro_id": None,
