@@ -52,6 +52,8 @@ def test_platform_definitions(platform):
         # URL.
         assert platform.url
         assert platform.url.startswith("https://")
+        if platform.id == "raspbian":
+            pytest.xfail("raspberrypi.com is blocking access from GitHub Actions")
         with requests.get(platform.url) as response:
             assert response.ok, f"{platform.url} is not reachable: {response}"
 
