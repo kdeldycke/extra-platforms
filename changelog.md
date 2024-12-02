@@ -23,7 +23,7 @@
 ## [1.4.0 (2024-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v1.3.1...v1.4.0)
 
 - Allow set comparison between groups and single platform.
-- Add support for Tuxedo OS detection.
+- Add support for Tuxedo OS detection. Closes #93.
 - Add support for Python 3.13.
 - Drop supports for Python 3.9.
 - Run jobs on `ubuntu-24.04` instead of `ubuntu-22.04`.
