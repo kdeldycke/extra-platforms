@@ -74,7 +74,7 @@ def generate_platform_sankey() -> str:
             #     f'"{html.escape(group.icon)} {group.id}",'
             #     f'"{html.escape(platform.icon)} {platform.id}",1'
             # )
-            table.append(f"{group.id},{platform.id},1")
+            table.append(f"{group.id.upper()},{platform.id},1")
 
     output = dedent("""\
         ```mermaid
