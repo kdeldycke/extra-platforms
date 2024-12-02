@@ -17,7 +17,7 @@
 ## [1.5.0 (2024-11-10)](https://github.com/kdeldycke/extra-platforms/compare/v1.4.0...v1.5.0)
 
 - Allow union, intersection, difference and symmetric difference of `Group`.
-- Implements `<=` , `<`, `>=`, `>`, `|`, `&`, `-` and `^`  operators for `Group`.
+- Implements `<=` , `<`, `>=`, `>`, `|`, `&`, `-` and `^` operators for `Group`.
 - Deduplicate platforms on `Group` instantiation.
 - Allow testing for membership of individual platform in `Group`.
 
