@@ -140,7 +140,7 @@ Reduce a disparate collection of groups and platforms into a minimal descriptive
 }
 ```
 
-## Group → platforms mapping
+## Groups → Platforms mapping
 
 Relationships between groups and platforms:
 
