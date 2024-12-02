@@ -70,5 +70,5 @@ UNKNOWN_LINUX = Platform("unknown_linux", "Unknown Linux", "🐧", "https://kern
 WINDOWS = Platform("windows", "Windows", "🪟", "https://windows.com")
 WSL1 = Platform("wsl1", "Windows Subsystem for Linux v1", "⊞", "https://learn.microsoft.com/windows/wsl")
 WSL2 = Platform("wsl2", "Windows Subsystem for Linux v2", "⊞", "https://learn.microsoft.com/windows/wsl")
-XENSERVER = Platform("xenserver", "XenServer", "𝙓", "https://xenproject.org")
+XENSERVER = Platform("xenserver", "XenServer", "Ⓧ", "https://xenproject.org")
 """All individual platforms."""
