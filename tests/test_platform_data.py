@@ -53,7 +53,7 @@ def test_platform_definitions(platform):
         assert platform.url
         assert platform.url.startswith("https://")
         with requests.get(platform.url) as response:
-            assert response.ok, f"{platform.url} is not reachable: {response.status_code}"
+            assert response.ok, f"{platform.url} is not reachable: {response}"
 
         # Info.
         assert platform.info()
