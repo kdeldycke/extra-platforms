@@ -79,12 +79,39 @@ def generate_platform_sankey() -> str:
     output = dedent("""\
         ```mermaid
         ---
-        config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+        config:
+            sankey:
+                showValues: false
+                width: 800
+                height: 400
         ---
         sankey-beta\n
         """)
     output += "\n".join(table)
     output += "\n```"
+    return output
+
+
+def generate_platform_hierarchy() -> str:
+    """Produce a mindmap hierarchy to show the non-overlapping groups."""
+    group_map = ""
+    for group in sorted(NON_OVERLAPPING_GROUPS, key=attrgetter("id"), reverse=True):
+        group_map += f"){group.icon} {group.id.upper()}(\n"
+        for platform in group.platforms:
+            group_map += f"    ({platform.icon} {platform.id})\n"
+
+    output = dedent("""\
+        ```mermaid
+        ---
+        config:
+            mindmap:
+                padding: 5
+        ---
+        mindmap
+            ((Extra Platforms))
+        """)
+    output += indent(group_map, " " * 8)
+    output += "```"
     return output
 
 
@@ -158,7 +185,7 @@ def update_docs() -> None:
     )
     assert frozenset(g for groups in all_groups for g in groups["groups"]) == ALL_GROUPS
 
-    # Update the platform diagrams in readme.
+    # Update the Sankey diagram mapping groups to platforms.
     replace_content(
         project_root.joinpath("readme.md"),
         "<!-- platform-sankey-start -->\n\n",
@@ -166,6 +193,15 @@ def update_docs() -> None:
         generate_platform_sankey(),
     )
 
+    # Update diagram showing the hierarchy of non-overlapping groups.
+    replace_content(
+        project_root.joinpath("readme.md"),
+        "<!-- platform-hierarchy-start -->\n\n",
+        "\n\n<!-- platform-hierarchy-end -->",
+        generate_platform_hierarchy(),
+    )
+
+    # Update grouping charts of all groups, including non-overlapping and extra groups.
     platform_doc = project_root.joinpath("readme.md")
     for top_groups in all_groups:
         replace_content(

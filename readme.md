@@ -148,7 +148,11 @@ Relationships between groups and platforms:
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config:
+    sankey:
+        showValues: false
+        width: 800
+        height: 400
 ---
 sankey-beta
 
@@ -375,6 +379,72 @@ any_windows,windows,1
 ## OS families
 
 Each platform is assigned to a group of non-overlpaping families:
+
+<!-- platform-hierarchy-start -->
+
+```mermaid
+---
+config:
+    mindmap:
+        padding: 5
+---
+mindmap
+    ((Extra Platforms))
+        )≛ UNIX_LAYERS(
+            (Ͼ cygwin)
+        )Ⅴ SYSTEM_V(
+            (➿ aix)
+            (🌞 solaris)
+        )⊎ OTHER_UNIX(
+            (🐃 hurd)
+        )≚ LINUX_LAYERS(
+            (⊞ wsl1)
+            (⊞ wsl2)
+        )🐧 LINUX(
+            (🐧 altlinux)
+            (🙂 amzn)
+            (🤖 android)
+            (🎗️ arch)
+            (⛑️ buildroot)
+            (💠 centos)
+            (꩜ cloudlinux)
+            (🌀 debian)
+            (🐽 exherbo)
+            (🎩 fedora)
+            (🗜️ gentoo)
+            (🐃 guix)
+            (🤹 ibm_powerkvm)
+            (🤹 kvmibm)
+            (🌿 linuxmint)
+            (⍥ mageia)
+            (💫 mandriva)
+            (🦎 opensuse)
+            (🦴 oracle)
+            (∥ parallels)
+            (🍓 pidora)
+            (🍓 raspbian)
+            (🎩 rhel)
+            (⛰️ rocky)
+            (⚛️ scientific)
+            (🚬 slackware)
+            (🦎 sles)
+            (↻ tumbleweed)
+            (🤵 tuxedo)
+            (🎯 ubuntu)
+            (🐧 unknown_linux)
+            (Ⓧ xenserver)
+        )🅱️+ BSD(
+            (😈 freebsd)
+            (🍎 macos)
+            (🌘 midnightbsd)
+            (🚩 netbsd)
+            (🐡 openbsd)
+            (☀️ sunos)
+        )🪟 ANY_WINDOWS(
+            (🪟 windows)
+```
+
+<!-- platform-hierarchy-end -->
 
 <!-- NON_OVERLAPPING_GROUPS-graph-start -->
 

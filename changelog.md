@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Display the hierarchy of non-overlapping groups as a mindmap.
 - Add URL on all platforms.
 - Add support for openSUSE Tumbleweed detection. Closes #133.
 - Do not allow icons on platforms and groups to be empty.
