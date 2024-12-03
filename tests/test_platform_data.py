@@ -16,15 +16,22 @@
 
 from __future__ import annotations
 
+from operator import attrgetter
 from string import ascii_lowercase, digits
-
-from extra_platforms import ALL_OS_LABELS, ALL_PLATFORMS
 
 import pytest
 import requests
 
+from extra_platforms import ALL_OS_LABELS, ALL_PLATFORMS
 
-@pytest.mark.parametrize("platform", ALL_PLATFORMS.platforms)
+flaky_websites = {"raspbian", "midnightbsd"}
+"""List of platforms whose websites are expected to not always respond.
+
+Because they block access from GitHub Actions, or can't take the load of requests.
+"""
+
+
+@pytest.mark.parametrize("platform", ALL_PLATFORMS.platforms, ids=attrgetter("id"))
 def test_platform_definitions(platform):
     assert platform
 
@@ -52,8 +59,8 @@ def test_platform_definitions(platform):
     # URL.
     assert platform.url
     assert platform.url.startswith("https://")
-    if platform.id == "raspbian":
-        pytest.xfail("raspberrypi.com is blocking access from GitHub Actions")
+    if platform.id in flaky_websites:
+        pytest.xfail(f"{platform.url} is known to be flaky and not responding")
     with requests.get(platform.url) as response:
         assert response.ok, f"{platform.url} is not reachable: {response}"
 
