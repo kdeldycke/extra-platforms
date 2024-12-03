@@ -20,9 +20,6 @@ from functools import cache
 from platform import platform
 from typing import FrozenSet
 
-# XXX Exposing everything at package level motivates platforms and groups to have a
-# unique and unambiguous ID. This constraint is enforced at the data-level and checked
-# in unittests.
 from .detection import (  # noqa: E402
     is_aix,
     is_altlinux,
@@ -140,8 +137,19 @@ from .platform_data import (  # noqa: E402
     XENSERVER,
 )
 
-# XXX Not imported at package level so dependency on Pytest can stay optional.
+"""
+.. important::
+    Exposing everything at package level here motivates platforms and groups to have a
+    unique and unambiguous ID. This constraint is enforced at the data-level and
+    checked in unittests.
+"""
+
 # from .pytest import *
+"""
+.. caution::
+    Content of ``pytest.py`` file is not imported here at package level, so
+    dependency on Pytest package can be optional.
+"""
 
 __version__ = "1.7.1"
 """Examples of valid version strings according :pep:`440#version-scheme`:
