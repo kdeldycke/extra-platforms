@@ -148,11 +148,7 @@ Relationships between groups and platforms:
 
 ```mermaid
 ---
-config:
-    sankey:
-        showValues: false
-        width: 800
-        height: 400
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
 ---
 sankey-beta
 
@@ -384,9 +380,7 @@ Each platform is assigned to a group of non-overlpaping families:
 
 ```mermaid
 ---
-config:
-    mindmap:
-        padding: 5
+config: {"mindmap": {"padding": 5}}
 ---
 mindmap
     ((Extra Platforms))

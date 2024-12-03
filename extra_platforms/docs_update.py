@@ -79,11 +79,7 @@ def generate_platform_sankey() -> str:
     output = dedent("""\
         ```mermaid
         ---
-        config:
-            sankey:
-                showValues: false
-                width: 800
-                height: 400
+        config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
         ---
         sankey-beta\n
         """)
@@ -103,9 +99,7 @@ def generate_platform_hierarchy() -> str:
     output = dedent("""\
         ```mermaid
         ---
-        config:
-            mindmap:
-                padding: 5
+        config: {"mindmap": {"padding": 5}}
         ---
         mindmap
             ((Extra Platforms))
