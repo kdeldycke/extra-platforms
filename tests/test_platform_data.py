@@ -24,14 +24,12 @@ import requests
 
 from extra_platforms import ALL_OS_LABELS, ALL_PLATFORMS
 
-flaky_websites = {"raspbian", "midnightbsd"}
-"""List of platforms whose websites are expected to not always respond.
-
-Because they block access from GitHub Actions, or can't take the load of requests.
-"""
+all_platforms_params = pytest.mark.parametrize(
+    "platform", ALL_PLATFORMS.platforms, ids=attrgetter("id")
+)
 
 
-@pytest.mark.parametrize("platform", ALL_PLATFORMS.platforms, ids=attrgetter("id"))
+@all_platforms_params
 def test_platform_definitions(platform):
     assert platform
 
@@ -59,10 +57,6 @@ def test_platform_definitions(platform):
     # URL.
     assert platform.url
     assert platform.url.startswith("https://")
-    if platform.id in flaky_websites:
-        pytest.xfail(f"{platform.url} is known to be flaky and not responding")
-    with requests.get(platform.url) as response:
-        assert response.ok, f"{platform.url} is not reachable: {response}"
 
     # Info.
     assert platform.info()
@@ -79,6 +73,24 @@ def test_platform_definitions(platform):
                     if v1 is not None:
                         assert v1
     assert platform.info()["id"] == platform.id
+
+
+@all_platforms_params
+def test_platform_website(platform):
+    """Test if platform website is reachable.
+
+    Place this test in a separate function so we can separate it from the platform data
+    tests, and allow this test to be skipped while requiring the test above to always
+    pass.
+
+    Some websites are known to be flaky, because they block access from GitHub Actions,
+    or can't take the load of requests from CI. We skip these platforms.
+    """
+    flaky_websites = {"midnightbsd", "raspbian"}
+    if platform.id in flaky_websites:
+        pytest.xfail(f"{platform.url} is known to be flaky and not always responding")
+    with requests.get(platform.url) as response:
+        assert response.ok, f"{platform.url} is not reachable: {response}"
 
 
 def test_os_labels():
