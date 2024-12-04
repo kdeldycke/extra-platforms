@@ -143,6 +143,7 @@ def test_unique_ids():
     all_group_ids = {g.id for g in ALL_GROUPS}
     assert len(all_group_ids) == len(ALL_GROUPS)
 
+    # Check there is no overlap between platform and group IDs.
     assert all_group_ids.isdisjoint(all_platform_ids)
 
 
