@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import platform
 from dataclasses import dataclass, field
+from functools import cached_property
 from typing import Any
 
 import distro
@@ -151,9 +152,6 @@ class Platform:
     url: str = field(repr=False, default=None)
     """URL to the platform's official website."""
 
-    current: bool = field(init=False)
-    """`True` if current environment runs on this platform."""
-
     def __post_init__(self):
         """Validate and normalize platform fields:
 
@@ -168,9 +166,16 @@ class Platform:
         assert self.url, "Platform URL cannot be empty."
         assert self.url.startswith("https://"), "URL must start with https://."
 
-        object.__setattr__(self, "current", detection.__dict__[f"is_{self.id}"]())
-
         object.__setattr__(self, "__doc__", f"Identify {self.name}.")
+
+    @cached_property
+    def current(self) -> bool:
+        """Returns whether the current platform is this one.
+
+        This is a property to avoid calling all platform detection heuristics on
+        ``Platform`` objects creation, which happens at module import time.
+        """
+        return detection.__dict__[f"is_{self.id}"]()
 
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
         """Returns all platform attributes we can gather."""
