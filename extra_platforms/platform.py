@@ -148,7 +148,7 @@ class Platform:
     icon: str = field(repr=False, default="❓")
     """Icon of the platform."""
 
-    url: str | None = field(repr=False, default=None)
+    url: str = field(repr=False, default=None)
     """URL to the platform's official website."""
 
     current: bool = field(init=False)
@@ -157,16 +157,16 @@ class Platform:
     def __post_init__(self):
         """Validate and normalize platform fields:
 
-        - Ensure the platform ID, name and icon are not empty.
+        - Ensure the platform ID, name, icon and URL are not empty.
+        - Ensure the URL starts with ``https://``.
         - Set the ``current`` field.
         - Populate the docstring.
         """
         assert self.id, "Platform ID cannot be empty."
         assert self.name, "Platform name cannot be empty."
         assert self.icon, "Platform icon cannot be empty."
-
-        if self.url:
-            assert self.url.startswith("https://"), "URL must start with https://."
+        assert self.url, "Platform URL cannot be empty."
+        assert self.url.startswith("https://"), "URL must start with https://."
 
         object.__setattr__(self, "current", detection.__dict__[f"is_{self.id}"]())
 
