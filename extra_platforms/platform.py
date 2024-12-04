@@ -175,7 +175,7 @@ class Platform:
         This is a property to avoid calling all platform detection heuristics on
         ``Platform`` objects creation, which happens at module import time.
         """
-        return getattr(detection, f"is_{self.id}")()
+        return getattr(detection, f"is_{self.id}")()  # type: ignore[no-any-return]
 
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
         """Returns all platform attributes we can gather."""
