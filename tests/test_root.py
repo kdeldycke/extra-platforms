@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import ast
 import inspect
+import types
 from pathlib import Path
 
 import extra_platforms
@@ -151,3 +152,18 @@ def test_current_os_func():
     # Function.
     current_platform = current_os()
     assert current_platform in ALL_PLATFORMS.platforms
+
+
+def test_group_membership_funcs():
+    for group in ALL_GROUPS:
+        func_id = f"is_{group.id}"
+        assert func_id in extra_platforms.__dict__
+
+        func = extra_platforms.__dict__[func_id]
+        assert isinstance(func, types.FunctionType)
+        assert getattr(extra_platforms, func_id) is func
+
+        assert isinstance(func(), bool)
+        assert func() == (current_os() in group)
+
+        assert group.name.lower() in func.__doc__.lower()

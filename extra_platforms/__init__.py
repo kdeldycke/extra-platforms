@@ -198,19 +198,40 @@ def current_os() -> Platform:
 
 
 for _group in ALL_GROUPS:
-    var_id = f"is_{_group.id}"
-    var_value = current_os() in _group
-    assert var_id not in locals()
-    # TODO: use a cached method instead of a hard-coded boolean variable and attach a
-    # docstring to that method with the groups' own docstring.
-    locals()[var_id] = var_value
-"""Generates a ``is_<group.id>`` local variable for each group.
+    func_id = f"is_{_group.id}"
+    assert func_id not in locals(), f"Function ID {func_id} already defined locally."
+
+    def generate_group_membership_func(_group: Group) -> callable:
+        """Factory to produce dynamiccaly a group membership test function."""
+
+        def group_membership_test() -> bool:
+            """Evaluates membership of the current platform to the group.
+
+            Returns ``True`` if the current platform is part of the group, ``False``
+            otherwise.
+            """
+            return current_os() in _group
+
+        # Use lower-cased group name as a short description for the function docstring.
+        short_desc = _group.name[0].lower() + _group.name[1:]
+        group_membership_test.__doc__ = (
+            "Returns ``True`` if the current platform is part of the group composed "
+            f"of {short_desc}, ``False`` otherwise."
+        )
+
+        # TODO: cache the function.
+        return group_membership_test
+
+    locals()[func_id] = generate_group_membership_func(_group)
+"""Generates a ``is_<group.id>()`` local function for each group.
+
+These functions return a boolean value indicating the membership of the current
+platform into that group.
 
 Since platforms and groups have unique, non-overlapping IDs, we can create a
 ``is_<group.id>`` method for each group. The value of this boolean variable mark the
 membership of the current platform to that group.
 """
-
 
 __all__ = [
     "AIX",  # noqa: F405

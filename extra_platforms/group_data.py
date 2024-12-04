@@ -141,7 +141,7 @@ UNIX = Group(
 
 UNIX_WITHOUT_MACOS = Group(
     "unix_without_macos",
-    "Any Unix but macOS",
+    "Any Unix excluding macOS",
     "⨂",
     tuple(UNIX - MACOS),
 )
@@ -173,7 +173,7 @@ BSD = Group(
 
 BSD_WITHOUT_MACOS = Group(
     "bsd_without_macos",
-    "Any BSD but macOS",
+    "Any BSD excluding macOS",
     "🅱️",
     tuple(BSD - MACOS),
 )
