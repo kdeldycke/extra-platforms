@@ -570,7 +570,7 @@ flowchart
         all_platforms_wsl2(<code>wsl2</code><br/>⊞ <em>Windows Subsystem for Linux v2</em>)
         all_platforms_xenserver(<code>xenserver</code><br/>Ⓧ <em>XenServer</em>)
     end
-    subgraph "<code>extra_platforms.BSD_WITHOUT_MACOS</code><br/>🅱️ <em>Any BSD but macOS</em>"
+    subgraph "<code>extra_platforms.BSD_WITHOUT_MACOS</code><br/>🅱️ <em>Any BSD excluding macOS</em>"
         bsd_without_macos_freebsd(<code>freebsd</code><br/>😈 <em>FreeBSD</em>)
         bsd_without_macos_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
         bsd_without_macos_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
@@ -659,7 +659,7 @@ flowchart
         unix_wsl2(<code>wsl2</code><br/>⊞ <em>Windows Subsystem for Linux v2</em>)
         unix_xenserver(<code>xenserver</code><br/>Ⓧ <em>XenServer</em>)
     end
-    subgraph "<code>extra_platforms.UNIX_WITHOUT_MACOS</code><br/>⨂ <em>Any Unix but macOS</em>"
+    subgraph "<code>extra_platforms.UNIX_WITHOUT_MACOS</code><br/>⨂ <em>Any Unix excluding macOS</em>"
         unix_without_macos_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         unix_without_macos_altlinux(<code>altlinux</code><br/>🐧 <em>ALT Linux</em>)
         unix_without_macos_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
