@@ -18,7 +18,7 @@
 import sys
 from functools import cache
 from platform import platform
-from typing import FrozenSet
+from typing import Callable, FrozenSet
 
 from .detection import (  # noqa: E402
     is_aix,
@@ -201,7 +201,7 @@ for _group in ALL_GROUPS:
     func_id = f"is_{_group.id}"
     assert func_id not in locals(), f"Function ID {func_id} already defined locally."
 
-    def generate_group_membership_func(_group: Group) -> callable:
+    def generate_group_membership_func(_group: Group) -> Callable:
         """Factory to produce dynamiccaly a group membership test function."""
 
         def group_membership_test() -> bool:

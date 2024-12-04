@@ -149,7 +149,7 @@ class Platform:
     icon: str = field(repr=False, default="❓")
     """Icon of the platform."""
 
-    url: str = field(repr=False, default=None)
+    url: str = field(repr=False, default="")
     """URL to the platform's official website."""
 
     def __post_init__(self):
@@ -175,7 +175,7 @@ class Platform:
         This is a property to avoid calling all platform detection heuristics on
         ``Platform`` objects creation, which happens at module import time.
         """
-        return detection.__dict__[f"is_{self.id}"]()
+        return getattr(detection, f"is_{self.id}")()
 
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
         """Returns all platform attributes we can gather."""
