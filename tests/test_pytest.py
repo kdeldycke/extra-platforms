@@ -34,38 +34,38 @@ from extra_platforms.pytest import (
 
 @skip_linux
 def test_skip_linux():
-    assert current_os() not in LINUX
+    assert current_os not in LINUX
     assert is_macos() or is_windows()
 
 
 @skip_macos
 def test_skip_macos():
     assert not is_macos()
-    assert current_os() in LINUX or is_windows()
+    assert current_os in LINUX or is_windows()
 
 
 @skip_windows
 def test_skip_windows():
     assert not is_windows()
-    assert current_os() in LINUX or is_macos()
+    assert current_os in LINUX or is_macos()
 
 
 @unless_linux
 def test_unless_linux():
-    assert current_os() in LINUX
+    assert current_os in LINUX
     assert not is_macos()
     assert not is_windows()
 
 
 @unless_macos
 def test_unless_macos():
-    assert current_os() not in LINUX
+    assert current_os not in LINUX
     assert is_macos()
     assert not is_windows()
 
 
 @unless_windows
 def test_unless_windows():
-    assert current_os() not in LINUX
+    assert current_os not in LINUX
     assert not is_macos()
     assert is_windows()

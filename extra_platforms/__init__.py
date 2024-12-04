@@ -170,8 +170,13 @@ ALL_OS_LABELS: FrozenSet[str] = frozenset((p.name for p in ALL_PLATFORMS.platfor
 
 
 @cache
-def current_os() -> Platform:
-    """Return the current platform."""
+def _current_os() -> Platform:
+    """Evaluates all platforms and returns the one matching the current OS.
+
+    Raises on multiple matches or unrecognized OS.
+
+    Returns the current ``Platform`` object.
+    """
     matching = []
     for p in ALL_PLATFORMS.platforms:
         if p.current:
@@ -192,9 +197,13 @@ def current_os() -> Platform:
     return matching.pop()
 
 
+current_os = _current_os()
+"""The current platform object."""
+
+
 for _group in ALL_GROUPS:
     var_id = f"is_{_group.id}"
-    var_value = current_os() in _group
+    var_value = current_os in _group
     assert var_id not in locals()
     # TODO: use a cached method instead of a hard-coded boolean variable and attach a
     # docstring to that method with the groups' own docstring.

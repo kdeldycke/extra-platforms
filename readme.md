@@ -28,7 +28,7 @@ Get the current platform, from which you can access lots of metadata:
 ```pycon
 >>> from extra_platforms import current_os
 
->>> my_os = current_os()
+>>> my_os = current_os
 >>> my_os
 Platform(id='macos', name='macOS', current=True)
 
@@ -67,7 +67,7 @@ Use groups to check if the current platform is part of a specific family:
 ```pycon
 >>> from extra_platforms import UNIX, current_os
 
->>> current_os() in UNIX
+>>> current_os in UNIX
 False
 ```
 

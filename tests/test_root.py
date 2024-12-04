@@ -148,5 +148,5 @@ def test_unique_ids():
 
 def test_current_os_func():
     # Function.
-    current_platform = current_os()
+    current_platform = current_os
     assert current_platform in ALL_PLATFORMS.platforms

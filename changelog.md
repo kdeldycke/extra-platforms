@@ -5,6 +5,8 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Change `current_os` from a method to a variable. You now have to call `current_os` instead of `current_os()`.
+
 ## [1.7.0 (2024-12-02)](https://github.com/kdeldycke/extra-platforms/compare/v1.6.0...v1.7.0)
 
 - Display the hierarchy of non-overlapping groups as a mindmap.
