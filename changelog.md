@@ -5,7 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
-- Generate a pair of Pytest ``@skip_<id>``/``@unless_<id>`` decorators for each platform and group.
+- Generate a pair of Pytest `@skip_<id>`/`@unless_<id>` decorators for each platform and group.
 - Change all group membership check utilities to be functions instead of variables. You now have to call `is_<group_id>()` instead of `is_<group_id>`.
 - Cache the result of `is_<group_id>()` group membership check utilities.
 - Do not call all detection heuristics on module import. Instead, call them lazily when needed.
