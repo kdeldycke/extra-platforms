@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass, field, replace
+from functools import cached_property
 from itertools import combinations
 from typing import Iterable, Iterator, Union
 
@@ -84,6 +85,16 @@ class Group:
                 f"{', '.join(duplicates)}"
             )
         object.__setattr__(self, "platform_ids", frozenset(id_counter))
+
+    @cached_property
+    def short_desc(self) -> str:
+        """Returns the group name with its first letter in lowercase to be used as a
+        short description.
+
+        Mainly used to produce docstrings for function dynamically generated for each
+        group.
+        """
+        return self.name[0].lower() + self.name[1:]
 
     def __iter__(self) -> Iterator[Platform]:
         """Iterate over the platforms of the group."""

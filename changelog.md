@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Generate a pair of Pytest ``@skip_<id>``/``@unless_<id>`` decorators for each platform and group.
 - Change all group membership check utilities to be functions instead of variables. You now have to call `is_<group_id>()` instead of `is_<group_id>`.
 - Cache the result of `is_<group_id>()` group membership check utilities.
 - Do not call all detection heuristics on module import. Instead, call them lazily when needed.
@@ -27,7 +28,7 @@
 ## [1.5.0 (2024-11-10)](https://github.com/kdeldycke/extra-platforms/compare/v1.4.0...v1.5.0)
 
 - Allow union, intersection, difference and symmetric difference of `Group`.
-- Implements `<=` , `<`, `>=`, `>`, `|`, `&`, `-` and `^` operators for `Group`.
+- Implements `<=`, `<`, `>=`, `>`, `|`, `&`, `-` and `^` operators for `Group`.
 - Deduplicate platforms on `Group` instantiation.
 - Allow testing for membership of individual platform in `Group`.
 

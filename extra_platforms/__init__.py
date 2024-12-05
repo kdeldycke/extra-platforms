@@ -197,32 +197,29 @@ def current_os() -> Platform:
     return matching.pop()
 
 
+def _generate_group_membership_func(_group: Group) -> Callable:
+    """Factory to produce dynamiccaly a group membership test function."""
+
+    def group_membership_check() -> bool:
+        """Evaluates membership of the current platform to the group.
+
+        Returns ``True`` if the current platform is part of the group, ``False``
+        otherwise.
+        """
+        return current_os() in _group
+
+    group_membership_check.__doc__ = (
+        "Returns ``True`` if the current platform is part of the group composed of "
+        f"{_group.short_desc}, ``False`` otherwise."
+    )
+    return cache(group_membership_check)
+
+
 for _group in ALL_GROUPS:
     func_id = f"is_{_group.id}"
     assert func_id not in locals(), f"Function ID {func_id} already defined locally."
-
-    def generate_group_membership_func(_group: Group) -> Callable:
-        """Factory to produce dynamiccaly a group membership test function."""
-
-        def group_membership_test() -> bool:
-            """Evaluates membership of the current platform to the group.
-
-            Returns ``True`` if the current platform is part of the group, ``False``
-            otherwise.
-            """
-            return current_os() in _group
-
-        # Use lower-cased group name as a short description for the function docstring.
-        short_desc = _group.name[0].lower() + _group.name[1:]
-        group_membership_test.__doc__ = (
-            "Returns ``True`` if the current platform is part of the group composed "
-            f"of {short_desc}, ``False`` otherwise."
-        )
-
-        return cache(group_membership_test)
-
-    locals()[func_id] = generate_group_membership_func(_group)
-"""Generates a ``is_<group.id>()`` local function for each group.
+    locals()[func_id] = _generate_group_membership_func(_group)
+"""Generates an ``is_<group.id>()`` local function for each group.
 
 These functions return a boolean value indicating the membership of the current
 platform into that group.
