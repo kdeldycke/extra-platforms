@@ -40,11 +40,10 @@ from __future__ import annotations
 import logging
 import platform
 import sys
+from functools import cache
 from os import environ
 
 import distro
-
-from . import cache
 
 
 @cache
