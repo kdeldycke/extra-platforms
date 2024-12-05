@@ -1,9 +1,6 @@
 # Changelog
 
-## [1.8.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [1.8.0 (2024-12-05)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v1.8.0)
 
 - Generate a pair of Pytest `@skip_<id>`/`@unless_<id>` decorators for each platform and group.
 - Change all group membership check utilities to be functions instead of variables. You now have to call `is_<group_id>()` instead of `is_<group_id>`.
