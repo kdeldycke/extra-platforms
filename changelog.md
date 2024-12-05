@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.8.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v1.8.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [1.8.0 (2024-12-05)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v1.8.0)
 
 - Generate a pair of Pytest `@skip_<id>`/`@unless_<id>` decorators for each platform and group.
