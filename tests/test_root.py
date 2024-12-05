@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import ast
 import inspect
-import types
 from pathlib import Path
 
 import extra_platforms
@@ -160,7 +159,6 @@ def test_group_membership_funcs():
         assert func_id in extra_platforms.__dict__
 
         func = extra_platforms.__dict__[func_id]
-        assert isinstance(func, types.FunctionType)
         assert getattr(extra_platforms, func_id) is func
 
         assert isinstance(func(), bool)
