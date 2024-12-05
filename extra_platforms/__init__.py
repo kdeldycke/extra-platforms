@@ -219,8 +219,7 @@ for _group in ALL_GROUPS:
             f"of {short_desc}, ``False`` otherwise."
         )
 
-        # TODO: cache the function.
-        return group_membership_test
+        return cache(group_membership_test)
 
     locals()[func_id] = generate_group_membership_func(_group)
 """Generates a ``is_<group.id>()`` local function for each group.
