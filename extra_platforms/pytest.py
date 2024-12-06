@@ -78,14 +78,14 @@ for obj in cast(Iterable[Platform | Group], chain(ALL_PLATFORMS, ALL_GROUPS)):
     # Generate @skip decorator.
     skip_id = f"skip_{obj.id}"
     locals()[skip_id] = pytest.mark.skipif(
-        DeferredCondition(func),
+        DeferredCondition(func),  # type: ignore[arg-type]
         reason=f"Skip {short_desc}",
     )
 
     # Generate @unless decorator.
     unless_id = f"unless_{obj.id}"
     locals()[unless_id] = pytest.mark.skipif(
-        DeferredCondition(func, invert=True),
+        DeferredCondition(func, invert=True),  # type: ignore[arg-type]
         reason=f"Requires {short_desc}",
     )
 
