@@ -28,14 +28,14 @@ from extra_platforms import (
 )
 from extra_platforms.group_data import ALL_GROUPS, ALL_PLATFORMS
 from extra_platforms.pytest import (
-    skip_linux,
-    skip_macos,
-    skip_ubuntu,
-    skip_windows,
-    unless_linux,
-    unless_macos,
-    unless_ubuntu,
-    unless_windows,
+    skip_linux,  # type: ignore[attr-defined]
+    skip_macos,  # type: ignore[attr-defined]
+    skip_ubuntu,  # type: ignore[attr-defined]
+    skip_windows,  # type: ignore[attr-defined]
+    unless_linux,  # type: ignore[attr-defined]
+    unless_macos,  # type: ignore[attr-defined]
+    unless_ubuntu,  # type: ignore[attr-defined]
+    unless_windows,  # type: ignore[attr-defined]
 )
 
 
