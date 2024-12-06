@@ -30,7 +30,7 @@ except ImportError:
     )
 
 from itertools import chain
-from typing import Callable
+from typing import Callable, Iterable, cast
 
 import extra_platforms
 
@@ -38,6 +38,7 @@ from .group import Group
 from .group_data import ALL_GROUPS, ALL_PLATFORMS
 
 __all__ = []
+from .platform import Platform
 
 
 class DeferredCondition:
@@ -69,22 +70,22 @@ class DeferredCondition:
 
 
 # Generate a pair of skip/unless decorators for each platform and group.
-for _obj in chain(ALL_PLATFORMS, ALL_GROUPS):
+for obj in cast(Iterable[Platform | Group], chain(ALL_PLATFORMS, ALL_GROUPS)):
     # Get the detection function for the current object.
-    func = getattr(extra_platforms, f"is_{_obj.id}")
+    func = getattr(extra_platforms, f"is_{obj.id}")
 
     # Short description of the object to be used in the reason.
-    short_desc = _obj.short_desc if isinstance(_obj, Group) else _obj.name
+    short_desc = obj.short_desc if isinstance(obj, Group) else obj.name
 
     # Generate @skip decorator.
-    skip_id = f"skip_{_obj.id}"
+    skip_id = f"skip_{obj.id}"
     locals()[skip_id] = pytest.mark.skipif(
         DeferredCondition(func),
         reason=f"Skip {short_desc}",
     )
 
     # Generate @unless decorator.
-    unless_id = f"unless_{_obj.id}"
+    unless_id = f"unless_{obj.id}"
     locals()[unless_id] = pytest.mark.skipif(
         DeferredCondition(func, invert=True),
         reason=f"Requires {short_desc}",
