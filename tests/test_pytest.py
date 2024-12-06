@@ -19,7 +19,7 @@ from __future__ import annotations
 from itertools import chain
 
 import extra_platforms
-from extra_platforms import (
+from extra_platforms import (  # type: ignore[attr-defined]
     is_any_windows,
     is_linux,
     is_macos,
