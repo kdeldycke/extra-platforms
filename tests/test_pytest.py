@@ -20,17 +20,21 @@ from itertools import chain
 
 import extra_platforms
 from extra_platforms import (
+    is_any_windows,
     is_linux,
     is_macos,
+    is_ubuntu,
     is_windows,
 )
 from extra_platforms.group_data import ALL_GROUPS, ALL_PLATFORMS
 from extra_platforms.pytest import (
     skip_linux,
     skip_macos,
+    skip_ubuntu,
     skip_windows,
     unless_linux,
     unless_macos,
+    unless_ubuntu,
     unless_windows,
 )
 
@@ -47,37 +51,60 @@ def test_all_definition():
 @skip_linux
 def test_skip_linux():
     assert not is_linux()
-    assert is_macos() or is_windows()
+    assert not is_ubuntu()
+    assert is_any_windows() or is_macos() or is_windows()
 
 
 @skip_macos
 def test_skip_macos():
     assert not is_macos()
-    assert is_linux() or is_windows()
+    assert is_any_windows() or is_linux() or is_ubuntu() or is_windows()
+
+
+@skip_ubuntu
+def test_skip_ubuntu():
+    assert not is_ubuntu()
+    assert is_any_windows() or is_linux() or is_macos() or is_windows()
 
 
 @skip_windows
 def test_skip_windows():
     assert not is_windows()
-    assert is_linux() or is_macos()
+    assert not is_any_windows()
+    assert is_linux() or is_macos() or is_ubuntu()
 
 
 @unless_linux
 def test_unless_linux():
+    assert not is_any_windows()
     assert is_linux()
     assert not is_macos()
+    # assert is_ubuntu()
     assert not is_windows()
 
 
 @unless_macos
 def test_unless_macos():
+    assert not is_any_windows()
     assert not is_linux()
     assert is_macos()
+    assert not is_ubuntu()
+    assert not is_windows()
+
+
+@unless_ubuntu
+def test_unless_ubuntu():
+    assert not is_any_windows()
+    assert is_linux()
+    assert not is_macos()
+    assert is_ubuntu()
     assert not is_windows()
 
 
 @unless_windows
 def test_unless_windows():
+    # assert is_any_windows()
     assert not is_linux()
     assert not is_macos()
+    assert not is_ubuntu()
     assert is_windows()
