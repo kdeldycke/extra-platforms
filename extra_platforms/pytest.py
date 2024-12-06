@@ -36,8 +36,6 @@ import extra_platforms
 
 from .group import Group
 from .group_data import ALL_GROUPS, ALL_PLATFORMS
-
-__all__ = []
 from .platform import Platform
 
 
@@ -91,5 +89,125 @@ for obj in cast(Iterable[Platform | Group], chain(ALL_PLATFORMS, ALL_GROUPS)):
         reason=f"Requires {short_desc}",
     )
 
-    # Add the generated decorators to the list of exported symbols.
-    __all__.extend([skip_id, unless_id])
+
+__all__ = (
+    "skip_aix",  # noqa: F405
+    "skip_all_platforms",  # noqa: F405
+    "skip_altlinux",  # noqa: F405
+    "skip_amzn",  # noqa: F405
+    "skip_android",  # noqa: F405
+    "skip_any_windows",  # noqa: F405
+    "skip_arch",  # noqa: F405
+    "skip_bsd",  # noqa: F405
+    "skip_bsd_without_macos",  # noqa: F405
+    "skip_buildroot",  # noqa: F405
+    "skip_centos",  # noqa: F405
+    "skip_cloudlinux",  # noqa: F405
+    "skip_cygwin",  # noqa: F405
+    "skip_debian",  # noqa: F405
+    "skip_exherbo",  # noqa: F405
+    "skip_fedora",  # noqa: F405
+    "skip_freebsd",  # noqa: F405
+    "skip_gentoo",  # noqa: F405
+    "skip_guix",  # noqa: F405
+    "skip_hurd",  # noqa: F405
+    "skip_ibm_powerkvm",  # noqa: F405
+    "skip_kvmibm",  # noqa: F405
+    "skip_linux",  # noqa: F405
+    "skip_linux_layers",  # noqa: F405
+    "skip_linux_like",  # noqa: F405
+    "skip_linuxmint",  # noqa: F405
+    "skip_macos",  # noqa: F405
+    "skip_mageia",  # noqa: F405
+    "skip_mandriva",  # noqa: F405
+    "skip_midnightbsd",  # noqa: F405
+    "skip_netbsd",  # noqa: F405
+    "skip_openbsd",  # noqa: F405
+    "skip_opensuse",  # noqa: F405
+    "skip_oracle",  # noqa: F405
+    "skip_other_unix",  # noqa: F405
+    "skip_parallels",  # noqa: F405
+    "skip_pidora",  # noqa: F405
+    "skip_raspbian",  # noqa: F405
+    "skip_rhel",  # noqa: F405
+    "skip_rocky",  # noqa: F405
+    "skip_scientific",  # noqa: F405
+    "skip_slackware",  # noqa: F405
+    "skip_sles",  # noqa: F405
+    "skip_solaris",  # noqa: F405
+    "skip_sunos",  # noqa: F405
+    "skip_system_v",  # noqa: F405
+    "skip_tumbleweed",  # noqa: F405
+    "skip_tuxedo",  # noqa: F405
+    "skip_ubuntu",  # noqa: F405
+    "skip_unix",  # noqa: F405
+    "skip_unix_layers",  # noqa: F405
+    "skip_unix_without_macos",  # noqa: F405
+    "skip_unknown_linux",  # noqa: F405
+    "skip_windows",  # noqa: F405
+    "skip_wsl1",  # noqa: F405
+    "skip_wsl2",  # noqa: F405
+    "skip_xenserver",  # noqa: F405
+    "unless_aix",  # noqa: F405
+    "unless_all_platforms",  # noqa: F405
+    "unless_altlinux",  # noqa: F405
+    "unless_amzn",  # noqa: F405
+    "unless_android",  # noqa: F405
+    "unless_any_windows",  # noqa: F405
+    "unless_arch",  # noqa: F405
+    "unless_bsd",  # noqa: F405
+    "unless_bsd_without_macos",  # noqa: F405
+    "unless_buildroot",  # noqa: F405
+    "unless_centos",  # noqa: F405
+    "unless_cloudlinux",  # noqa: F405
+    "unless_cygwin",  # noqa: F405
+    "unless_debian",  # noqa: F405
+    "unless_exherbo",  # noqa: F405
+    "unless_fedora",  # noqa: F405
+    "unless_freebsd",  # noqa: F405
+    "unless_gentoo",  # noqa: F405
+    "unless_guix",  # noqa: F405
+    "unless_hurd",  # noqa: F405
+    "unless_ibm_powerkvm",  # noqa: F405
+    "unless_kvmibm",  # noqa: F405
+    "unless_linux",  # noqa: F405
+    "unless_linux_layers",  # noqa: F405
+    "unless_linux_like",  # noqa: F405
+    "unless_linuxmint",  # noqa: F405
+    "unless_macos",  # noqa: F405
+    "unless_mageia",  # noqa: F405
+    "unless_mandriva",  # noqa: F405
+    "unless_midnightbsd",  # noqa: F405
+    "unless_netbsd",  # noqa: F405
+    "unless_openbsd",  # noqa: F405
+    "unless_opensuse",  # noqa: F405
+    "unless_oracle",  # noqa: F405
+    "unless_other_unix",  # noqa: F405
+    "unless_parallels",  # noqa: F405
+    "unless_pidora",  # noqa: F405
+    "unless_raspbian",  # noqa: F405
+    "unless_rhel",  # noqa: F405
+    "unless_rocky",  # noqa: F405
+    "unless_scientific",  # noqa: F405
+    "unless_slackware",  # noqa: F405
+    "unless_sles",  # noqa: F405
+    "unless_solaris",  # noqa: F405
+    "unless_sunos",  # noqa: F405
+    "unless_system_v",  # noqa: F405
+    "unless_tumbleweed",  # noqa: F405
+    "unless_tuxedo",  # noqa: F405
+    "unless_ubuntu",  # noqa: F405
+    "unless_unix",  # noqa: F405
+    "unless_unix_layers",  # noqa: F405
+    "unless_unix_without_macos",  # noqa: F405
+    "unless_unknown_linux",  # noqa: F405
+    "unless_windows",  # noqa: F405
+    "unless_wsl1",  # noqa: F405
+    "unless_wsl2",  # noqa: F405
+    "unless_xenserver",  # noqa: F405
+)
+"""Expose all generated decorators.
+
+.. note::
+    The content of ``__all__`` is checked and enforced in unittests.
+"""

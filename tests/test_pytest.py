@@ -16,11 +16,15 @@
 
 from __future__ import annotations
 
+from itertools import chain
+
+import extra_platforms
 from extra_platforms import (
     is_linux,
     is_macos,
     is_windows,
 )
+from extra_platforms.group_data import ALL_GROUPS, ALL_PLATFORMS
 from extra_platforms.pytest import (
     skip_linux,
     skip_macos,
@@ -29,6 +33,15 @@ from extra_platforms.pytest import (
     unless_macos,
     unless_windows,
 )
+
+
+def test_all_definition():
+    all_decorator_ids = []
+    for _obj in chain(ALL_PLATFORMS, ALL_GROUPS):
+        skip_id = f"skip_{_obj.id}"
+        unless_id = f"unless_{_obj.id}"
+        all_decorator_ids.extend([skip_id, unless_id])
+    assert extra_platforms.pytest.__all__ == tuple(sorted(all_decorator_ids))
 
 
 @skip_linux

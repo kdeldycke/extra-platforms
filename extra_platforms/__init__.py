@@ -229,7 +229,7 @@ Since platforms and groups have unique, non-overlapping IDs, we can create a
 membership of the current platform to that group.
 """
 
-__all__ = [
+__all__ = (
     "AIX",  # noqa: F405
     "ALL_GROUPS",  # noqa: F405
     "ALL_OS_LABELS",  # noqa: F405
@@ -352,7 +352,7 @@ __all__ = [
     "WSL1",  # noqa: F405
     "WSL2",  # noqa: F405
     "XENSERVER",  # noqa: F405
-]
+)
 """Expose all package-wide elements.
 
 .. note::
