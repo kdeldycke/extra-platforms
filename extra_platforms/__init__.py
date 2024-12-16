@@ -45,6 +45,7 @@ from .detection import (  # noqa: E402
     is_mandriva,
     is_midnightbsd,
     is_netbsd,
+    is_nobara,
     is_openbsd,
     is_opensuse,
     is_oracle,
@@ -114,6 +115,7 @@ from .platform_data import (  # noqa: E402
     MANDRIVA,
     MIDNIGHTBSD,
     NETBSD,
+    NOBARA,
     OPENBSD,
     OPENSUSE,
     ORACLE,
@@ -287,6 +289,7 @@ __all__ = (
     "is_mandriva",  # noqa: F405
     "is_midnightbsd",  # noqa: F405
     "is_netbsd",  # noqa: F405
+    "is_nobara",  # noqa: F405
     "is_openbsd",  # noqa: F405
     "is_opensuse",  # noqa: F405
     "is_oracle",  # noqa: F405
@@ -323,6 +326,7 @@ __all__ = (
     "MANDRIVA",  # noqa: F405
     "MIDNIGHTBSD",  # noqa: F405
     "NETBSD",  # noqa: F405
+    "NOBARA",  # noqa: F405
     "NON_OVERLAPPING_GROUPS",  # noqa: F405
     "OPENBSD",  # noqa: F405
     "OPENSUSE",  # noqa: F405
