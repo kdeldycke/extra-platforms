@@ -64,6 +64,7 @@ MANDRIVA = Platform(
 )
 MIDNIGHTBSD = Platform("midnightbsd", "MidnightBSD", "🌘", "https://midnightbsd.org")
 NETBSD = Platform("netbsd", "NetBSD", "🚩", "https://netbsd.org")
+NOBARA = Platform("nobara", "Nobara", "", "https://nobaraproject.org")
 OPENBSD = Platform("openbsd", "OpenBSD", "🐡", "https://openbsd.org")
 OPENSUSE = Platform("opensuse", "openSUSE", "🦎", "https://opensuse.org")
 ORACLE = Platform("oracle", "Oracle Linux", "🦴", "https://oracle.com/linux/")

@@ -44,6 +44,7 @@ from extra_platforms import (
     is_mandriva,
     is_midnightbsd,
     is_netbsd,
+    is_nobara,
     is_openbsd,
     is_opensuse,
     is_oracle,
@@ -106,6 +107,7 @@ def test_mutual_exclusion():
         assert not is_mandriva()
         assert not is_midnightbsd()
         assert not is_netbsd()
+        assert not is_nobara()
         assert not is_openbsd()
         assert not is_opensuse()
         assert not is_oracle()
@@ -153,6 +155,7 @@ def test_mutual_exclusion():
         assert not is_mandriva()
         assert not is_midnightbsd()
         assert not is_netbsd()
+        assert not is_nobara()
         assert not is_openbsd()
         assert not is_opensuse()
         assert not is_oracle()
@@ -200,6 +203,7 @@ def test_mutual_exclusion():
         assert not is_mandriva()
         assert not is_midnightbsd()
         assert not is_netbsd()
+        assert not is_nobara()
         assert not is_openbsd()
         assert not is_opensuse()
         assert not is_oracle()

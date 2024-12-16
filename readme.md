@@ -86,7 +86,7 @@ List all platforms of a family:
 >>> from extra_platforms import LINUX
 
 >>> LINUX
-Group(id='linux', name='Any Linux', platform_ids=frozenset({'ibm_powerkvm', 'rocky', 'debian', 'tuxedo', 'ubuntu', 'mageia', 'xenserver', 'opensuse', 'buildroot', 'rhel', 'parallels', 'pidora', 'sles', 'amzn', 'scientific', 'linuxmint', 'centos', 'android', 'gentoo', 'raspbian', 'unknown_linux', 'mandriva', 'exherbo', 'cloudlinux', 'fedora', 'guix', 'arch', 'altlinux', 'slackware', 'oracle', 'kvmibm'}))
+Group(id='linux', name='Any Linux', platform_ids=frozenset({'ibm_powerkvm', 'rocky', 'debian', 'tuxedo', 'ubuntu', 'mageia', 'xenserver', 'opensuse', 'nobara', 'buildroot', 'rhel', 'parallels', 'pidora', 'sles', 'amzn', 'scientific', 'linuxmint', 'centos', 'android', 'gentoo', 'raspbian', 'unknown_linux', 'mandriva', 'exherbo', 'cloudlinux', 'fedora', 'guix', 'arch', 'altlinux', 'slackware', 'oracle', 'kvmibm'}))
 
 >>> print("\n".join([p.name for p in LINUX]))
 ALT Linux
@@ -106,6 +106,7 @@ KVM for IBM z Systems
 Linux Mint
 Mageia
 Mandriva Linux
+Nobara
 openSUSE
 Oracle Linux
 Parallels
@@ -176,6 +177,7 @@ ALL_PLATFORMS,mageia,1
 ALL_PLATFORMS,mandriva,1
 ALL_PLATFORMS,midnightbsd,1
 ALL_PLATFORMS,netbsd,1
+ALL_PLATFORMS,nobara,1
 ALL_PLATFORMS,openbsd,1
 ALL_PLATFORMS,opensuse,1
 ALL_PLATFORMS,oracle,1
@@ -221,6 +223,7 @@ UNIX,mageia,1
 UNIX,mandriva,1
 UNIX,midnightbsd,1
 UNIX,netbsd,1
+UNIX,nobara,1
 UNIX,openbsd,1
 UNIX,opensuse,1
 UNIX,oracle,1
@@ -301,6 +304,7 @@ LINUX_LIKE,kvmibm,1
 LINUX_LIKE,linuxmint,1
 LINUX_LIKE,mageia,1
 LINUX_LIKE,mandriva,1
+LINUX_LIKE,nobara,1
 LINUX_LIKE,opensuse,1
 LINUX_LIKE,oracle,1
 LINUX_LIKE,parallels,1
@@ -335,6 +339,7 @@ LINUX,kvmibm,1
 LINUX,linuxmint,1
 LINUX,mageia,1
 LINUX,mandriva,1
+LINUX,nobara,1
 LINUX,opensuse,1
 LINUX,oracle,1
 LINUX,parallels,1
@@ -412,6 +417,7 @@ mindmap
             (🌿 linuxmint)
             (⍥ mageia)
             (💫 mandriva)
+            ( nobara)
             (🦎 opensuse)
             (🦴 oracle)
             (∥ parallels)
@@ -477,6 +483,7 @@ flowchart
         linux_linuxmint(<code>linuxmint</code><br/>🌿 <em>Linux Mint</em>)
         linux_mageia(<code>mageia</code><br/>⍥ <em>Mageia</em>)
         linux_mandriva(<code>mandriva</code><br/>💫 <em>Mandriva Linux</em>)
+        linux_nobara(<code>nobara</code><br/> <em>Nobara</em>)
         linux_opensuse(<code>opensuse</code><br/>🦎 <em>openSUSE</em>)
         linux_oracle(<code>oracle</code><br/>🦴 <em>Oracle Linux</em>)
         linux_parallels(<code>parallels</code><br/>∥ <em>Parallels</em>)
@@ -546,6 +553,7 @@ flowchart
         all_platforms_macos(<code>macos</code><br/>🍎 <em>macOS</em>)
         all_platforms_mageia(<code>mageia</code><br/>⍥ <em>Mageia</em>)
         all_platforms_mandriva(<code>mandriva</code><br/>💫 <em>Mandriva Linux</em>)
+        all_platforms_nobara(<code>nobara</code><br/> <em>Nobara</em>)
         all_platforms_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
         all_platforms_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
         all_platforms_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
@@ -595,6 +603,7 @@ flowchart
         linux_like_linuxmint(<code>linuxmint</code><br/>🌿 <em>Linux Mint</em>)
         linux_like_mageia(<code>mageia</code><br/>⍥ <em>Mageia</em>)
         linux_like_mandriva(<code>mandriva</code><br/>💫 <em>Mandriva Linux</em>)
+        linux_like_nobara(<code>nobara</code><br/> <em>Nobara</em>)
         linux_like_opensuse(<code>opensuse</code><br/>🦎 <em>openSUSE</em>)
         linux_like_oracle(<code>oracle</code><br/>🦴 <em>Oracle Linux</em>)
         linux_like_parallels(<code>parallels</code><br/>∥ <em>Parallels</em>)
@@ -638,6 +647,7 @@ flowchart
         unix_mandriva(<code>mandriva</code><br/>💫 <em>Mandriva Linux</em>)
         unix_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
         unix_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
+        unix_nobara(<code>nobara</code><br/> <em>Nobara</em>)
         unix_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
         unix_opensuse(<code>opensuse</code><br/>🦎 <em>openSUSE</em>)
         unix_oracle(<code>oracle</code><br/>🦴 <em>Oracle Linux</em>)
@@ -683,6 +693,7 @@ flowchart
         unix_without_macos_mandriva(<code>mandriva</code><br/>💫 <em>Mandriva Linux</em>)
         unix_without_macos_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
         unix_without_macos_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
+        unix_without_macos_nobara(<code>nobara</code><br/> <em>Nobara</em>)
         unix_without_macos_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
         unix_without_macos_opensuse(<code>opensuse</code><br/>🦎 <em>openSUSE</em>)
         unix_without_macos_oracle(<code>oracle</code><br/>🦴 <em>Oracle Linux</em>)
