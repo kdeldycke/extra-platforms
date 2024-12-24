@@ -122,6 +122,7 @@ __all__ = (
     "skip_mandriva",  # noqa: F405, F822
     "skip_midnightbsd",  # noqa: F405, F822
     "skip_netbsd",  # noqa: F405, F822
+    "skip_nobara",  # noqa: F405, F822
     "skip_openbsd",  # noqa: F405, F822
     "skip_opensuse",  # noqa: F405, F822
     "skip_oracle",  # noqa: F405, F822
@@ -179,6 +180,7 @@ __all__ = (
     "unless_mandriva",  # noqa: F405, F822
     "unless_midnightbsd",  # noqa: F405, F822
     "unless_netbsd",  # noqa: F405, F822
+    "unless_nobara",  # noqa: F405, F822
     "unless_openbsd",  # noqa: F405, F822
     "unless_opensuse",  # noqa: F405, F822
     "unless_oracle",  # noqa: F405, F822
