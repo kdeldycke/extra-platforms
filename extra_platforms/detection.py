@@ -186,15 +186,18 @@ def is_midnightbsd() -> bool:
     """Return `True` only if current platform is MidnightBSD."""
     return sys.platform.startswith("midnightbsd") or distro.id() == "midnightbsd"
 
+
 @cache
 def is_netbsd() -> bool:
     """Return `True` only if current platform is NetBSD."""
     return sys.platform.startswith("netbsd") or distro.id() == "netbsd"
 
+
 @cache
 def is_nobara() -> bool:
     """Return `True` only if current platform is Nobara Linux."""
     return distro.id() == "nobara"
+
 
 @cache
 def is_openbsd() -> bool:
