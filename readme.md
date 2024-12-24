@@ -267,6 +267,7 @@ UNIX_WITHOUT_MACOS,mageia,1
 UNIX_WITHOUT_MACOS,mandriva,1
 UNIX_WITHOUT_MACOS,midnightbsd,1
 UNIX_WITHOUT_MACOS,netbsd,1
+UNIX_WITHOUT_MACOS,nobara,1
 UNIX_WITHOUT_MACOS,openbsd,1
 UNIX_WITHOUT_MACOS,opensuse,1
 UNIX_WITHOUT_MACOS,oracle,1
@@ -553,9 +554,9 @@ flowchart
         all_platforms_macos(<code>macos</code><br/>🍎 <em>macOS</em>)
         all_platforms_mageia(<code>mageia</code><br/>⍥ <em>Mageia</em>)
         all_platforms_mandriva(<code>mandriva</code><br/>💫 <em>Mandriva Linux</em>)
-        all_platforms_nobara(<code>nobara</code><br/> <em>Nobara</em>)
         all_platforms_midnightbsd(<code>midnightbsd</code><br/>🌘 <em>MidnightBSD</em>)
         all_platforms_netbsd(<code>netbsd</code><br/>🚩 <em>NetBSD</em>)
+        all_platforms_nobara(<code>nobara</code><br/> <em>Nobara</em>)
         all_platforms_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
         all_platforms_opensuse(<code>opensuse</code><br/>🦎 <em>openSUSE</em>)
         all_platforms_oracle(<code>oracle</code><br/>🦴 <em>Oracle Linux</em>)
