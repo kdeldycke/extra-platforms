@@ -149,8 +149,8 @@ from .platform_data import (  # noqa: E402
 # from .pytest import *
 """
 .. caution::
-    Content of ``pytest.py`` file is not imported here at package level, so
-    dependency on Pytest package can be optional.
+    The content of ``pytest.py`` file is not imported here at package level, and on
+    purpose: to make dependency on Pytest optional.
 """
 
 __version__ = "1.8.0"
