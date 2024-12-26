@@ -15,6 +15,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Expose package-wide elements."""
 
+_report_msg = (
+    "Please report this at https://github.com/kdeldycke/extra-platforms/issues to "
+    "improve detection heuristics."
+)
+
+
 import sys
 from functools import cache
 from platform import platform
@@ -172,31 +178,65 @@ ALL_OS_LABELS: FrozenSet[str] = frozenset((p.name for p in ALL_PLATFORMS.platfor
 
 
 @cache
-def current_os() -> Platform:
-    """Evaluates all platforms and returns the one matching the current OS.
+def current_platforms() -> tuple[Platform]:
+    """Evaluates all heuristics and returns a list of ``Platform`` matching the current
+    environment.
 
-    Raises on multiple matches or unrecognized OS.
+    Always raises an error if the current environment is not recognized.
 
-    Returns the current ``Platform`` object.
+    ..attention::
+        At this point it is too late to worry about caching. This function has no
+        choice but to evaluate all platforms detection heuristics.
     """
     matching = []
     for p in ALL_PLATFORMS.platforms:
         if p.current:
             matching.append(p)
 
-    if len(matching) > 1:
-        msg = f"Multiple platforms match current OS: {matching}"
-        raise RuntimeError(msg)
-
     if not matching:
         msg = (
             f"Unrecognized {sys.platform} / "
-            f"{platform(aliased=True, terse=True)} platform."
+            f"{platform(aliased=True, terse=True)} platform. {_report_msg}"
         )
         raise SystemError(msg)
 
-    assert len(matching) == 1
-    return matching.pop()
+    return tuple(matching)
+
+
+@cache
+def current_os() -> Platform:
+    """Always returns the best matching platform for the current environment.
+
+    If multiple platforms match the current environment, this function will try to
+    select the best, informative one.
+
+    Raises an error if we can't decide on a single, appropriate platform.
+    """
+    matching = set(current_platforms())
+
+    # Return the only matching platform.
+    if len(matching) == 1:
+        return matching.pop()
+
+    # Remove unknown Linux, which is too generic to be useful.
+    if UNKNOWN_LINUX in matching:
+        matching.remove(UNKNOWN_LINUX)
+        if len(matching) == 1:
+            return matching.pop()
+
+    # Remove WSL1, then WSL2, until we have a single match. WSL is a generic platform,
+    # so we should prefer the other, more specific platform matches like Ubuntu. See:
+    # - https://github.com/kdeldycke/extra-platforms/issues/158
+    # - https://github.com/kdeldycke/meta-package-manager/issues/944
+    for wsl in (WSL1, WSL2):
+        if wsl in matching:
+            matching.remove(wsl)
+            if len(matching) == 1:
+                return matching.pop()
+
+    # Our meta-heuristics above failed to decide on a single, appropriate platform.
+    msg = f"Multiple platforms match current environment: {matching} . {_report_msg}"
+    raise RuntimeError(msg)
 
 
 def _generate_group_membership_func(_group: Group) -> Callable:
@@ -247,6 +287,7 @@ __all__ = (
     "CENTOS",  # noqa: F405
     "CLOUDLINUX",  # noqa: F405
     "current_os",  # noqa: F405
+    "current_platforms",  # noqa: F405
     "CYGWIN",  # noqa: F405
     "DEBIAN",  # noqa: F405
     "EXHERBO",  # noqa: F405

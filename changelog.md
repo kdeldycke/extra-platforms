@@ -6,11 +6,14 @@
 > This version is not released yet and is under active development.
 
 - Add support for Nobara detection.
+- Fix `current_os()` to always return a single platform. Closes #158.
+- Add new `current_platforms()` method to return all platforms matching the current environment.
 - Generate a pair of Pytest `@skip_<id>`/`@unless_<id>` decorators for each platform and group.
 - Change all group membership check utilities to be functions instead of variables. You now have to call `is_<group_id>()` instead of `is_<group_id>`.
 - Cache the result of `is_<group_id>()` group membership check utilities.
 - Do not call all detection heuristics on module import. Instead, call them lazily when needed.
 - Make URLs required on all platforms.
+- Invite users in error messages and logs to contribute back edge-cases to improve detection heuristics.
 
 ## [1.7.0 (2024-12-02)](https://github.com/kdeldycke/extra-platforms/compare/v1.6.0...v1.7.0)
 

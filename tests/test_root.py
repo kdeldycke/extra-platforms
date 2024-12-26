@@ -21,7 +21,7 @@ import inspect
 from pathlib import Path
 
 import extra_platforms
-from extra_platforms import ALL_GROUPS, ALL_PLATFORMS, current_os
+from extra_platforms import ALL_GROUPS, ALL_PLATFORMS, current_os, current_platforms
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
@@ -147,10 +147,14 @@ def test_unique_ids():
     assert all_group_ids.isdisjoint(all_platform_ids)
 
 
-def test_current_os_func():
-    # Function.
-    current_platform = current_os()
-    assert current_platform in ALL_PLATFORMS.platforms
+def test_current_funcs():
+    current_platforms_results = current_platforms()
+    assert ALL_PLATFORMS.issuperset(current_platforms_results)
+    assert len(current_platforms_results) == 1
+
+    current_os_result = current_os()
+    assert current_os_result in ALL_PLATFORMS
+    assert current_platforms_results[0] is current_os_result
 
 
 def test_group_membership_funcs():
