@@ -15,16 +15,17 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Expose package-wide elements."""
 
+import sys
+from functools import cache
+from platform import platform
+from typing import Callable, FrozenSet
+
+
 _report_msg = (
     "Please report this at https://github.com/kdeldycke/extra-platforms/issues to "
     "improve detection heuristics."
 )
 
-
-import sys
-from functools import cache
-from platform import platform
-from typing import Callable, FrozenSet
 
 from .detection import (  # noqa: E402
     is_aix,
