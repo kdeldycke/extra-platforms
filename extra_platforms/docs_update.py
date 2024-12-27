@@ -212,4 +212,5 @@ def update_docs() -> None:
 
 
 if __name__ == "__main__":
+    print("Updating documentation...")
     sys.exit(update_docs())  # type: ignore[func-returns-value]
