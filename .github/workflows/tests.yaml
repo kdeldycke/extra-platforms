@@ -128,7 +128,12 @@ jobs:
         run: |
           uv --no-progress run -- pytest
 
-      - name: Codecov upload
+      - name: Codecov - coverage
         uses: codecov/codecov-action@v5.1.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Codecov - test results
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

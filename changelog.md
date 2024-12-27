@@ -14,6 +14,7 @@
 - Do not call all detection heuristics on module import. Instead, call them lazily when needed.
 - Make URLs required on all platforms.
 - Invite users in error messages and logs to contribute back edge-cases to improve detection heuristics.
+- Upload test results to coverage.
 
 ## [1.7.0 (2024-12-02)](https://github.com/kdeldycke/extra-platforms/compare/v1.6.0...v1.7.0)
 
