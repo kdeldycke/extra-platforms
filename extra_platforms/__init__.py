@@ -178,7 +178,7 @@ ALL_OS_LABELS: FrozenSet[str] = frozenset((p.name for p in ALL_PLATFORMS.platfor
 
 
 @cache
-def current_platforms() -> tuple[Platform]:
+def current_platforms() -> tuple[Platform, ...]:
     """Evaluates all heuristics and returns a list of ``Platform`` matching the current
     environment.
 
