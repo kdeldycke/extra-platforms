@@ -1,9 +1,6 @@
 # Changelog
 
-## [2.0.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [2.0.0 (2024-12-27)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v2.0.0)
 
 - Add support for Nobara detection.
 - Fix `current_os()` to always return a single platform. Closes #158.
