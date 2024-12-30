@@ -64,7 +64,12 @@ jobs:
           exclude: list[dict[str, str]] = []
 
           # List of unstable criterions.
-          unstable: list[dict[str, str]] = []
+          unstable: list[dict[str, str]] = [
+              # XXX error: Python 3.14 is still not available through uv, which gets its standalone Python executables
+              # from the python-build-standalone project:
+              # https://github.com/astral-sh/python-build-standalone/releases
+              {"python-version": "3.14-dev"},
+          ]
 
           # Build the job matrix.
           jobs: list[dict[str, str]] = []
