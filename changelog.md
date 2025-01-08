@@ -1,9 +1,6 @@
 # Changelog
 
-## [2.0.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v2.0.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [2.0.1 (2025-01-08)](https://github.com/kdeldycke/extra-platforms/compare/v2.0.0...v2.0.1)
 
 ## [2.0.0 (2024-12-27)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v2.0.0)
 
