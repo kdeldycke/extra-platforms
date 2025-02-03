@@ -28,7 +28,7 @@ classifiers = [
     'Topic :: Utilities',
     'Typing :: Typed',
 ]
-dependencies = ["boltons ~= 24.1.0", "distro ~= 1.9.0"]
+dependencies = ["boltons ~= 25.0.0", "distro ~= 1.9.0"]
 
 [project.optional-dependencies]
 pytest = ["pytest >= 8"]
