@@ -159,7 +159,7 @@ from .platform_data import (  # noqa: E402
     purpose: to make dependency on Pytest optional.
 """
 
-__version__ = "2.0.1"
+__version__ = "2.1.0"
 """Examples of valid version strings according :pep:`440#version-scheme`:
 
 .. code-block:: python
