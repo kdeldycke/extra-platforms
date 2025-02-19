@@ -88,7 +88,7 @@ def test_platform_website(platform):
     Some websites are known to be flaky, because they block access from GitHub Actions,
     or can't take the load of requests from CI. We skip these platforms.
     """
-    flaky_websites = {"midnightbsd", "raspbian"}
+    flaky_websites = {"hurd", "midnightbsd", "raspbian"}
     if platform.id in flaky_websites:
         pytest.xfail(f"{platform.url} is known to be flaky and not always responding")
     with requests.get(platform.url) as response:
