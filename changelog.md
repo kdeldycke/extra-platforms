@@ -5,6 +5,11 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add new `platforms_from_ids` and `groups_from_ids` methods to retrieve platforms and groups from a collection of IDs.
+- Allow a platform to be fetched by its ID from a group with the `group[platform_id]` item getter syntax.
+- Add new `ALL_PLATFORM_IDS`, `ALL_GROUP_IDS` and `ALL_IDS` constants.
+- Removes `ALL_OS_LABELS`.
+
 ## [2.0.0 (2024-12-27)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v2.0.0)
 
 - Add support for Nobara detection.

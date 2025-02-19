@@ -22,7 +22,7 @@ from string import ascii_lowercase, digits
 import pytest
 import requests
 
-from extra_platforms import ALL_OS_LABELS, ALL_PLATFORMS
+from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_PLATFORM_IDS, ALL_PLATFORMS
 
 all_platforms_params = pytest.mark.parametrize(
     "platform", ALL_PLATFORMS.platforms, ids=attrgetter("id")
@@ -43,12 +43,14 @@ def test_platform_definitions(platform):
     # Platforms are not allowed to starts with all_ or any_, which is reserved
     # for groups. Use unknown_ prefix instead.
     assert not platform.id.startswith(("all_", "any_"))
+    assert platform.id in ALL_PLATFORM_IDS
+    assert platform.id not in ALL_GROUP_IDS
+    assert platform.id in ALL_IDS
 
     # Name.
     assert platform.name
     assert platform.name.isascii()
     assert platform.name.isprintable()
-    assert platform.name in ALL_OS_LABELS
 
     # Icon.
     assert platform.icon
@@ -91,7 +93,3 @@ def test_platform_website(platform):
         pytest.xfail(f"{platform.url} is known to be flaky and not always responding")
     with requests.get(platform.url) as response:
         assert response.ok, f"{platform.url} is not reachable: {response}"
-
-
-def test_os_labels():
-    assert len(ALL_OS_LABELS) == len(ALL_PLATFORMS)

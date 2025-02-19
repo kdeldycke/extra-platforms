@@ -20,7 +20,10 @@ from itertools import combinations
 from string import ascii_lowercase, digits
 
 from extra_platforms import (
+    ALL_GROUP_IDS,
     ALL_GROUPS,
+    ALL_IDS,
+    ALL_PLATFORM_IDS,
     ALL_PLATFORMS,
     ANY_WINDOWS,
     BSD,
@@ -51,6 +54,9 @@ def test_group_definitions():
         # Only the group referencing all platforms is allowed to starts with "all_"
         # prefix.
         assert group.id == "all_platforms" or not group.id.startswith("all_")
+        assert group.id not in ALL_PLATFORM_IDS
+        assert group.id in ALL_GROUP_IDS
+        assert group.id in ALL_IDS
 
         # Name.
         assert group.name

@@ -42,6 +42,12 @@ class Group:
 
     `set`-like methods are available and performed on the platform objects the group
     contains (in the ``self.platforms`` data field).
+
+    .. todo::
+        Replace the ``platforms``/``platform_ids`` combo fields with a single
+        ``platforms`` field that is a simple `dict` of platform ID to platform object.
+        But maybe that going to be too much of a hassle because a ``dict`` cannot be
+        frozen.
     """
 
     id: str
@@ -107,6 +113,13 @@ class Group:
     def __contains__(self, platform: Platform) -> bool:
         """Test ``platform`` for membership in the group."""
         return platform in self.platforms
+
+    def __getitem__(self, platform_id: str) -> Platform:
+        """Return the platform whose ID is ``platform_id``."""
+        for platform in self.platforms:
+            if platform.id == platform_id:
+                return platform
+        raise KeyError(f"No platform found whose ID is {platform_id}")
 
     @staticmethod
     def _extract_platforms(other: _TNestedSources) -> Iterator[Platform]:

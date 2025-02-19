@@ -21,7 +21,17 @@ import inspect
 from pathlib import Path
 
 import extra_platforms
-from extra_platforms import ALL_GROUPS, ALL_PLATFORMS, current_os, current_platforms
+from extra_platforms import (
+    ALL_GROUP_IDS,
+    ALL_GROUPS,
+    ALL_IDS,
+    ALL_PLATFORM_IDS,
+    ALL_PLATFORMS,
+    current_os,
+    current_platforms,
+    groups_from_ids,
+    platforms_from_ids,
+)
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
@@ -145,6 +155,42 @@ def test_unique_ids():
 
     # Check there is no overlap between platform and group IDs.
     assert all_group_ids.isdisjoint(all_platform_ids)
+
+    assert len(ALL_PLATFORM_IDS) == len(ALL_PLATFORMS)
+    assert ALL_PLATFORM_IDS.issubset(ALL_IDS)
+    assert ALL_PLATFORM_IDS.isdisjoint(ALL_GROUP_IDS)
+
+    assert len(ALL_GROUP_IDS) == len(ALL_GROUPS)
+    assert ALL_GROUP_IDS.issubset(ALL_IDS)
+    assert ALL_GROUP_IDS.isdisjoint(ALL_PLATFORM_IDS)
+
+
+def test_platforms_from_ids():
+    for platform_id in ALL_PLATFORM_IDS:
+        platforms = platforms_from_ids(platform_id)
+        assert platforms
+        assert len(platforms) == 1
+        platform = platforms.pop()
+        assert platform.id == platform_id
+        assert platform in ALL_PLATFORMS.platforms
+
+    for group_id in ALL_GROUP_IDS:
+        platforms = platforms_from_ids(group_id)
+        assert platforms
+        assert len(platforms) >= 1
+        groups = groups_from_ids(group_id)
+        assert len(groups) == 1
+        group = groups.pop()
+        assert platforms == set(group.platforms)
+
+
+def test_groups_from_ids():
+    for group_id in ALL_GROUP_IDS:
+        groups = groups_from_ids(group_id)
+        assert len(groups) == 1
+        group = groups.pop()
+        assert group.id == group_id
+        assert group in ALL_GROUPS
 
 
 def test_current_funcs():

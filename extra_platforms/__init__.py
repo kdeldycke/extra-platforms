@@ -20,7 +20,6 @@ from functools import cache
 from platform import platform
 from typing import Callable, FrozenSet
 
-
 _report_msg = (
     "Please report this at https://github.com/kdeldycke/extra-platforms/issues to "
     "improve detection heuristics."
@@ -174,8 +173,59 @@ __version__ = "2.0.1"
 """
 
 
-ALL_OS_LABELS: FrozenSet[str] = frozenset((p.name for p in ALL_PLATFORMS.platforms))
-"""Sets of all recognized labels."""
+ALL_PLATFORM_IDS: FrozenSet[str] = frozenset((p.id for p in ALL_PLATFORMS.platforms))
+"""Sets of all recognized platform IDs."""
+
+ALL_GROUP_IDS: FrozenSet[str] = frozenset((p.id for p in ALL_GROUPS))
+"""Sets of all recognized group IDs."""
+
+ALL_IDS: FrozenSet[str] = ALL_PLATFORM_IDS | ALL_GROUP_IDS
+"""Sets of all recognized platform and group IDs."""
+
+
+def platforms_from_ids(*platform_ids: str) -> set[Platform]:
+    """Returns a deduplicated set of platforms matching the provided IDs.
+
+    IDs can be either referring to platforms or groups. Matching groups will be
+    expanded to their respective platforms.
+
+    ..tip::
+        If you want to reduce the returned set and removes as much overlaps as
+        possible, you can use the ``extra_platforms.reduce()`` function on the results.
+    """
+    ids = frozenset(platform_ids)
+    unrecognized_ids = ids - ALL_IDS
+    if unrecognized_ids:
+        raise ValueError(f"Unrecognized IDs: {', '.join(sorted(unrecognized_ids))}")
+    platforms = set()
+    for platform_id in ids:
+        if platform_id in ALL_PLATFORM_IDS:
+            platforms.add(ALL_PLATFORMS[platform_id])
+        else:
+            groups = groups_from_ids(platform_id)
+            platforms.update(groups.pop().platforms)
+    return platforms
+
+
+def groups_from_ids(*group_ids: str) -> set[Group]:
+    """Returns a deduplicated set of groups matching the provided IDs.
+
+    ..tip::
+        If you want to reduce the returned set and removes as much overlaps as
+        possible, you can use the ``extra_platforms.reduce()`` function on the results.
+    """
+    ids = frozenset(group_ids)
+    unrecognized_ids = ids - ALL_GROUP_IDS
+    if unrecognized_ids:
+        raise ValueError(
+            f"Unrecognized group IDs: {', '.join(sorted(unrecognized_ids))}"
+        )
+    groups = set()
+    for group_id in ids:
+        for group in ALL_GROUPS:
+            if group.id == group_id:
+                groups.add(group)
+    return groups
 
 
 @cache
@@ -274,8 +324,10 @@ membership of the current platform to that group.
 
 __all__ = (
     "AIX",  # noqa: F405
+    "ALL_GROUP_IDS",  # noqa: F405
     "ALL_GROUPS",  # noqa: F405
-    "ALL_OS_LABELS",  # noqa: F405
+    "ALL_IDS",  # noqa: F405
+    "ALL_PLATFORM_IDS",  # noqa: F405
     "ALL_PLATFORMS",  # noqa: F405
     "ALTLINUX",  # noqa: F405
     "AMZN",  # noqa: F405
@@ -297,6 +349,7 @@ __all__ = (
     "FREEBSD",  # noqa: F405
     "GENTOO",  # noqa: F405
     "Group",  # noqa: F405
+    "groups_from_ids",  # noqa: F405
     "GUIX",  # noqa: F405
     "HURD",  # noqa: F405
     "IBM_POWERKVM",  # noqa: F405
@@ -377,6 +430,7 @@ __all__ = (
     "PARALLELS",  # noqa: F405
     "PIDORA",  # noqa: F405
     "Platform",  # noqa: F405
+    "platforms_from_ids",  # noqa: F405
     "RASPBIAN",  # noqa: F405
     "reduce",  # noqa: F405
     "RHEL",  # noqa: F405
