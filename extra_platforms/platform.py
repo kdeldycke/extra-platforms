@@ -169,6 +169,15 @@ class Platform:
         object.__setattr__(self, "__doc__", f"Identify {self.name}.")
 
     @cached_property
+    def short_desc(self) -> str:
+        """Returns a short description of the platform.
+
+        Mainly used to produce docstrings for function dynamically generated for each
+        group.
+        """
+        return self.name
+
+    @cached_property
     def current(self) -> bool:
         """Returns whether the current platform is this one.
 

@@ -72,21 +72,18 @@ for obj in cast(Iterable[Platform | Group], chain(ALL_PLATFORMS, ALL_GROUPS)):
     # Get the detection function for the current object.
     func = getattr(extra_platforms, f"is_{obj.id}")
 
-    # Short description of the object to be used in the reason.
-    short_desc = obj.short_desc if isinstance(obj, Group) else obj.name
-
     # Generate @skip decorator.
     skip_id = f"skip_{obj.id}"
     globals()[skip_id] = pytest.mark.skipif(
         DeferredCondition(func),  # type: ignore[arg-type]
-        reason=f"Skip {short_desc}",
+        reason=f"Skip {obj.short_desc}",
     )
 
     # Generate @unless decorator.
     unless_id = f"unless_{obj.id}"
     globals()[unless_id] = pytest.mark.skipif(
         DeferredCondition(func, invert=True),  # type: ignore[arg-type]
-        reason=f"Requires {short_desc}",
+        reason=f"Requires {obj.short_desc}",
     )
 
 
