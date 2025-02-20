@@ -9,6 +9,7 @@
 - Allow a platform to be fetched by its ID from a group with the `group[platform_id]` item getter syntax.
 - Add new `ALL_PLATFORM_IDS`, `ALL_GROUP_IDS` and `ALL_IDS` constants.
 - Removes `ALL_OS_LABELS`.
+- Add `windows-2025` to the test matrix.
 
 ## [2.0.0 (2024-12-27)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v2.0.0)
 
