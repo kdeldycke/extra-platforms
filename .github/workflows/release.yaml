@@ -17,6 +17,6 @@ concurrency:
 jobs:
 
   release:
-    uses: kdeldycke/workflows/.github/workflows/release.yaml@v4.9.0
+    uses: kdeldycke/workflows/.github/workflows/release.yaml@v4.14.2
     secrets:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}

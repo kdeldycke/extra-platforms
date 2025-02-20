@@ -15,4 +15,4 @@ concurrency:
 jobs:
 
   autolock:
-    uses: kdeldycke/workflows/.github/workflows/autolock.yaml@v4.9.0
+    uses: kdeldycke/workflows/.github/workflows/autolock.yaml@v4.14.2

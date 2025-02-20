@@ -18,4 +18,4 @@ concurrency:
 jobs:
 
   label-sponsors:
-    uses: kdeldycke/workflows/.github/workflows/label-sponsors.yaml@v4.9.0
+    uses: kdeldycke/workflows/.github/workflows/label-sponsors.yaml@v4.14.2

@@ -17,4 +17,4 @@ concurrency:
 jobs:
 
   autofix:
-    uses: kdeldycke/workflows/.github/workflows/autofix.yaml@v4.9.0
+    uses: kdeldycke/workflows/.github/workflows/autofix.yaml@v4.14.2

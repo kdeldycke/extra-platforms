@@ -6,9 +6,11 @@ name: Changelog & versions
       - main
     paths:
       - changelog.md
-      - pyproject.toml
-      - .github/workflows/changelog.yaml
-      - .github/workflows/release.yaml
+      - "**/pyproject.toml"
+      - "*requirements.txt"
+      - "requirements/*.txt"
+      # Trigger on any workflow change to make sure version gets hard-coded everywhere.
+      - .github/workflows/*.yaml
 
 concurrency:
   # Group workflow jobs so new commits cancels in-progress execution triggered by previous commits. Source:
@@ -20,4 +22,4 @@ concurrency:
 jobs:
 
   changelog:
-    uses: kdeldycke/workflows/.github/workflows/changelog.yaml@v4.9.0
+    uses: kdeldycke/workflows/.github/workflows/changelog.yaml@v4.14.2
