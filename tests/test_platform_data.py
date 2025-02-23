@@ -23,6 +23,7 @@ import pytest
 import requests
 
 from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_PLATFORM_IDS, ALL_PLATFORMS
+from extra_platforms.pytest import unless_linux  # type: ignore[attr-defined]
 
 all_platforms_params = pytest.mark.parametrize(
     "platform", ALL_PLATFORMS.platforms, ids=attrgetter("id")
@@ -77,6 +78,8 @@ def test_platform_definitions(platform):
     assert platform.info()["id"] == platform.id
 
 
+# Restrict tests to Linux to avoid DOSing websites.
+@unless_linux
 @all_platforms_params
 def test_platform_website(platform):
     """Test if platform website is reachable.
