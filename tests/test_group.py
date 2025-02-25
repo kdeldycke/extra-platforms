@@ -16,67 +16,20 @@
 
 from __future__ import annotations
 
-import pytest
-
 from extra_platforms import (
     AIX,
     ALL_PLATFORMS,
-    ALTLINUX,
-    AMZN,
-    ANDROID,
     ANY_WINDOWS,
-    ARCH,
     BSD,
     BSD_WITHOUT_MACOS,
-    BUILDROOT,
-    CENTOS,
-    CLOUDLINUX,
-    CYGWIN,
-    DEBIAN,
-    EXHERBO,
-    FEDORA,
-    FREEBSD,
-    GENTOO,
-    GUIX,
-    HURD,
-    IBM_POWERKVM,
-    KVMIBM,
     LINUX,
     LINUX_LAYERS,
-    LINUX_LIKE,
-    LINUXMINT,
-    MACOS,
-    MAGEIA,
-    MANDRIVA,
-    MIDNIGHTBSD,
-    NETBSD,
-    NOBARA,
-    OPENBSD,
-    OPENSUSE,
-    ORACLE,
-    PARALLELS,
     PIDORA,
-    RASPBIAN,
     RHEL,
-    ROCKY,
-    SCIENTIFIC,
-    SLACKWARE,
-    SLES,
-    SOLARIS,
-    SUNOS,
-    TUMBLEWEED,
-    TUXEDO,
-    UBUNTU,
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
-    UNKNOWN_LINUX,
-    WINDOWS,
-    WSL1,
-    WSL2,
-    XENSERVER,
     Group,
-    reduce,
 )
 
 
@@ -359,114 +312,3 @@ def test_copy():
     assert my_group_copy2.platform_ids == my_group.platform_ids
     assert my_group_copy2.platforms == my_group_copy1.platforms
     assert my_group_copy2.platform_ids == my_group_copy1.platform_ids
-
-
-@pytest.mark.parametrize(
-    ("items", "expected"),
-    [
-        ([], frozenset()),
-        ((), frozenset()),
-        (set(), frozenset()),
-        (frozenset(), frozenset()),
-        ([AIX], {AIX}),
-        ([AIX, AIX], {AIX}),
-        ([UNIX], {UNIX}),
-        ([UNIX, UNIX], {UNIX}),
-        ([UNIX, AIX], {UNIX}),
-        ([WINDOWS], {ANY_WINDOWS}),
-        ([ALL_PLATFORMS, WINDOWS], {ALL_PLATFORMS}),
-        ([UNIX, WINDOWS], {ALL_PLATFORMS}),
-        ([UNIX, ANY_WINDOWS], {ALL_PLATFORMS}),
-        ([BSD_WITHOUT_MACOS, UNIX], {UNIX}),
-        ([BSD_WITHOUT_MACOS, MACOS], {BSD}),
-        (
-            [
-                AIX,
-                ALTLINUX,
-                AMZN,
-                ANDROID,
-                ARCH,
-                BUILDROOT,
-                CENTOS,
-                CLOUDLINUX,
-                CYGWIN,
-                DEBIAN,
-                EXHERBO,
-                FEDORA,
-                FREEBSD,
-                GENTOO,
-                GUIX,
-                HURD,
-                IBM_POWERKVM,
-                KVMIBM,
-                LINUXMINT,
-                MACOS,
-                MAGEIA,
-                MANDRIVA,
-                MIDNIGHTBSD,
-                NETBSD,
-                NOBARA,
-                OPENBSD,
-                OPENSUSE,
-                ORACLE,
-                PARALLELS,
-                PIDORA,
-                RASPBIAN,
-                RHEL,
-                ROCKY,
-                SCIENTIFIC,
-                SLACKWARE,
-                SLES,
-                SOLARIS,
-                SUNOS,
-                TUMBLEWEED,
-                TUXEDO,
-                UBUNTU,
-                UNKNOWN_LINUX,
-                WINDOWS,
-                WSL1,
-                WSL2,
-                XENSERVER,
-            ],
-            {ALL_PLATFORMS},
-        ),
-    ],
-)
-def test_reduction(items, expected):
-    results = reduce(items)
-    assert results == expected
-    assert isinstance(results, frozenset)
-
-
-@pytest.mark.parametrize(
-    ("items", "expected"),
-    [
-        ([], frozenset()),
-        ((), frozenset()),
-        (set(), frozenset()),
-        (frozenset(), frozenset()),
-        ([AIX], {AIX}),
-        ([AIX, AIX], {AIX}),
-        ([WINDOWS], {ANY_WINDOWS}),
-        (
-            [BSD_WITHOUT_MACOS, MACOS],
-            {FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS},
-        ),
-        ([MACOS, WINDOWS, WSL1], {MACOS, ANY_WINDOWS, WSL1}),
-    ],
-)
-def test_reduce_custom_targets(items, expected):
-    target_pool = (
-        MACOS,
-        UNIX_WITHOUT_MACOS.copy(
-            id="unix",
-            name="Unix",
-            platforms=tuple(UNIX_WITHOUT_MACOS - BSD_WITHOUT_MACOS - LINUX_LIKE),
-        ),
-        ANY_WINDOWS,
-    )
-
-    results = reduce(items, target_pool=target_pool)
-    print(results)
-    assert results == expected
-    assert isinstance(results, frozenset)

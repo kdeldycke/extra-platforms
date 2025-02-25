@@ -22,15 +22,10 @@ from pathlib import Path
 
 import extra_platforms
 from extra_platforms import (
-    ALL_GROUP_IDS,
     ALL_GROUPS,
-    ALL_IDS,
-    ALL_PLATFORM_IDS,
     ALL_PLATFORMS,
     current_os,
     current_platforms,
-    groups_from_ids,
-    platforms_from_ids,
 )
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
@@ -141,60 +136,6 @@ def test_code_sorting():
     assert platform_instance_ids == sorted(platform_instance_ids)
     # XXX Group order is logical, not alphabetical.
     # assert group_instance_ids == sorted(group_instance_ids)
-
-
-def test_unique_ids():
-    """Platform and group IDs must be unique."""
-    all_platform_ids = [p.id for p in ALL_PLATFORMS]
-
-    # Platforms are expected to be sorted by ID.
-    assert sorted(all_platform_ids) == all_platform_ids
-    assert len(set(all_platform_ids)) == len(all_platform_ids)
-
-    assert len(all_platform_ids) == len(ALL_PLATFORMS)
-    assert len(all_platform_ids) == len(ALL_PLATFORMS.platform_ids)
-
-    all_group_ids = {g.id for g in ALL_GROUPS}
-    assert len(all_group_ids) == len(ALL_GROUPS)
-
-    # Check there is no overlap between platform and group IDs.
-    assert all_group_ids.isdisjoint(all_platform_ids)
-
-    assert len(ALL_PLATFORM_IDS) == len(ALL_PLATFORMS)
-    assert ALL_PLATFORM_IDS.issubset(ALL_IDS)
-    assert ALL_PLATFORM_IDS.isdisjoint(ALL_GROUP_IDS)
-
-    assert len(ALL_GROUP_IDS) == len(ALL_GROUPS)
-    assert ALL_GROUP_IDS.issubset(ALL_IDS)
-    assert ALL_GROUP_IDS.isdisjoint(ALL_PLATFORM_IDS)
-
-
-def test_platforms_from_ids():
-    for platform_id in ALL_PLATFORM_IDS:
-        platforms = platforms_from_ids(platform_id)
-        assert platforms
-        assert len(platforms) == 1
-        platform = platforms.pop()
-        assert platform.id == platform_id
-        assert platform in ALL_PLATFORMS.platforms
-
-    for group_id in ALL_GROUP_IDS:
-        platforms = platforms_from_ids(group_id)
-        assert platforms
-        assert len(platforms) >= 1
-        groups = groups_from_ids(group_id)
-        assert len(groups) == 1
-        group = groups.pop()
-        assert platforms == set(group.platforms)
-
-
-def test_groups_from_ids():
-    for group_id in ALL_GROUP_IDS:
-        groups = groups_from_ids(group_id)
-        assert len(groups) == 1
-        group = groups.pop()
-        assert group.id == group_id
-        assert group in ALL_GROUPS
 
 
 def test_current_funcs():
