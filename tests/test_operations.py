@@ -16,6 +16,9 @@
 
 from __future__ import annotations
 
+from random import choice
+from typing import Iterable
+
 import pytest
 
 from extra_platforms import (
@@ -108,32 +111,54 @@ def test_unique_ids():
     assert ALL_GROUP_IDS.isdisjoint(ALL_PLATFORM_IDS)
 
 
-def test_platforms_from_ids():
-    for platform_id in ALL_PLATFORM_IDS:
-        platforms = platforms_from_ids(platform_id)
-        assert platforms
-        assert len(platforms) == 1
-        platform = platforms.pop()
-        assert platform.id == platform_id
-        assert platform in ALL_PLATFORMS.platforms
+def randomize_case(strings: Iterable[str]) -> set[str]:
+    test_strings = set()
+    for string in strings:
+        test_strings.add(string)
+        for str_func in (
+            str.upper,
+            str.lower,
+            str.title,
+            str.capitalize,
+            str.casefold,
+            str.swapcase,
+        ):
+            test_strings.add(str_func(string))
+        test_strings.add(
+            "".join(choice((str.upper, str.lower))(char) for char in string)
+        )
+    return test_strings
 
-    for group_id in ALL_GROUP_IDS:
-        platforms = platforms_from_ids(group_id)
-        assert platforms
-        assert len(platforms) >= 1
-        groups = groups_from_ids(group_id)
-        assert len(groups) == 1
-        group = groups.pop()
-        assert platforms == set(group.platforms)
+
+@pytest.mark.parametrize("platform_id", randomize_case(ALL_PLATFORM_IDS))
+def test_platforms_from_ids(platform_id):
+    platforms = platforms_from_ids(platform_id)
+    assert platforms
+    assert len(platforms) == 1
+    platform = platforms.pop()
+    assert platform.id == platform_id.lower()
+    assert platform in ALL_PLATFORMS.platforms
 
 
-def test_groups_from_ids():
-    for group_id in ALL_GROUP_IDS:
-        groups = groups_from_ids(group_id)
-        assert len(groups) == 1
-        group = groups.pop()
-        assert group.id == group_id
-        assert group in ALL_GROUPS
+@pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
+def test_platforms_from_ids_group_resolve(group_id):
+    """platforms_from_ids() can also resolve group IDs."""
+    platforms = platforms_from_ids(group_id)
+    assert platforms
+    assert len(platforms) >= 1
+    groups = groups_from_ids(group_id)
+    assert len(groups) == 1
+    group = groups.pop()
+    assert platforms == set(group.platforms)
+
+
+@pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
+def test_groups_from_ids(group_id):
+    groups = groups_from_ids(group_id)
+    assert len(groups) == 1
+    group = groups.pop()
+    assert group.id == group_id.lower()
+    assert group in ALL_GROUPS
 
 
 @pytest.mark.parametrize(

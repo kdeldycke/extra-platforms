@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Make resolution of platform and group IDs case-insensitive.
 - Drop supports for Python 3.10.
 
 ## [2.1.0 (2025-02-20)](https://github.com/kdeldycke/extra-platforms/compare/v2.0.0...v2.1.0)

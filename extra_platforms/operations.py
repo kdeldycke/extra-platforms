@@ -48,7 +48,7 @@ def platforms_from_ids(*platform_ids: str) -> set[Platform]:
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """
-    ids = frozenset(platform_ids)
+    ids = frozenset((s.lower() for s in platform_ids))
     unrecognized_ids = ids - ALL_IDS
     if unrecognized_ids:
         raise ValueError(f"Unrecognized IDs: {', '.join(sorted(unrecognized_ids))}")
@@ -69,7 +69,7 @@ def groups_from_ids(*group_ids: str) -> set[Group]:
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """
-    ids = frozenset(group_ids)
+    ids = frozenset((s.lower() for s in group_ids))
     unrecognized_ids = ids - ALL_GROUP_IDS
     if unrecognized_ids:
         raise ValueError(
