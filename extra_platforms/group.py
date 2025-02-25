@@ -20,18 +20,14 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass, field, replace
 from functools import cached_property
-from itertools import combinations
-from typing import Iterable, Iterator, Union
+from typing import TYPE_CHECKING, Iterable, Iterator
 
 from boltons.iterutils import flatten_iter
 
 from .platform import Platform
 
-_TPlatformSources = Union[Platform, "Group"]
-_TNestedSources = Union[
-    _TPlatformSources | Iterable[Union[_TPlatformSources, Iterable["_TNestedSources"]]]
-]
-"""Types for arbitrary nested sources of ``Platforms``."""
+if TYPE_CHECKING:
+    from . import _TNestedSources
 
 
 @dataclass(frozen=True)
@@ -262,84 +258,3 @@ class Group:
         """
         kwargs = {k: v for k, v in locals().items() if k != "self" and v is not None}
         return replace(self, **kwargs)
-
-
-def reduce(
-    items: _TNestedSources, target_pool: Iterable[Group | Platform] | None = None
-) -> frozenset[Group | Platform]:
-    """Reduce a collection of platforms to a minimal set.
-
-    Returns a deduplicated set of ``Group`` and ``Platform`` that covers the same exact
-    platforms as the original input, but group as much platforms as possible, to reduce
-    the number of items.
-
-    Only the groups defined in the ``target_pool`` are considered for the reduction.
-    If no reference pool is provided, use all known groups.
-
-    .. hint::
-        Maybe this could be solved with some `Euler diagram
-        <https://en.wikipedia.org/wiki/Euler_diagram>`_ algorithms, like those
-        implemented in `eule <https://github.com/trouchet/eule>`_.
-
-        This is being discussed upstream at `trouchet/eule#120
-        <https://github.com/trouchet/eule/issues/120>`_.
-
-    .. todo::
-        Should we rename or alias this method to `collapse()`? Cannot decide if it is
-        more descriptive or not...
-    """
-    # Collect all platforms.
-    platforms = frozenset(Group._extract_platforms(items))
-
-    # List all groups overlapping the set of input platforms.
-    if target_pool is None:
-        # Prevent circular imports.
-        from .group_data import ALL_GROUPS
-
-        target_pool = ALL_GROUPS
-    overlapping_groups = frozenset(
-        g for g in target_pool if isinstance(g, Group) and g.issubset(platforms)
-    )
-
-    # Test all combination of groups to find the smallest set of groups + platforms.
-    min_items = 0
-    results: list[frozenset[Group | Platform]] = []
-    # Serialize group sets for deterministic lookups. Sort them by platform count.
-    groups = tuple(sorted(overlapping_groups, key=len, reverse=True))
-    for subset_size in range(1, len(groups) + 1):
-        # If we already have a solution that involves less items than the current
-        # subset of groups we're going to evaluates, there is no point in continuing.
-        if min_items and subset_size > min_items:
-            break
-
-        for group_subset in combinations(groups, subset_size):
-            # If any group overlaps another, there is no point in exploring this subset.
-            if not all(g[0].isdisjoint(g[1]) for g in combinations(group_subset, 2)):
-                continue
-
-            # Remove all platforms covered by the groups.
-            ungrouped_platforms = set(platforms.copy())
-            ungrouped_platforms.difference_update(*group_subset)
-
-            # Merge the groups and the remaining platforms.
-            reduction = frozenset(ungrouped_platforms.union(group_subset))
-            reduction_size = len(reduction)
-
-            # Reset the results if we have a new solution that is better than the
-            # previous ones.
-            if not results or reduction_size < min_items:
-                results = [reduction]
-                min_items = reduction_size
-            # If the solution is as good as the previous one, add it to the results.
-            elif reduction_size == min_items:
-                results.append(reduction)
-
-    if len(results) > 1:
-        msg = f"Multiple solutions found: {results}"
-        raise RuntimeError(msg)
-
-    # If no reduced solution was found, return the original platforms.
-    if not results:
-        return platforms
-
-    return results.pop()

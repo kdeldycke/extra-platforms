@@ -18,13 +18,13 @@
 import sys
 from functools import cache
 from platform import platform
-from typing import Callable, FrozenSet
+from typing import Callable, Iterable, Union
 
+# This message is put up there because it is used in multiple places in other files.
 _report_msg = (
     "Please report this at https://github.com/kdeldycke/extra-platforms/issues to "
     "improve detection heuristics."
 )
-
 
 from .detection import (  # noqa: E402
     is_aix,
@@ -74,10 +74,7 @@ from .detection import (  # noqa: E402
     is_wsl2,
     is_xenserver,
 )
-from .group import (  # noqa: E402
-    Group,
-    reduce,
-)
+from .group import Group  # noqa: E402
 from .group_data import (  # noqa: E402
     ALL_GROUPS,
     ALL_PLATFORMS,
@@ -150,14 +147,39 @@ from .platform_data import (  # noqa: E402
     Exposing everything at package level here motivates platforms and groups to have a
     unique and unambiguous ID. This constraint is enforced at the data-level and
     checked in unittests.
+
+.. caution::
+    The content of ``pytest.py`` file is not imported here at package level like this:
+
+    .. code-block:: python
+        from .pytest import *
+
+    That is to make dependency on Pytest optional.
 """
 
-# from .pytest import *
+
+_TPlatformSources = Union[Platform, Group, str]
+"""Platform sources can be:
+
+- a ``Platform`` object itself
+- a ``Group`` object representing a collection of platforms
+- a string representing a platform ID or a group ID
 """
-.. caution::
-    The content of ``pytest.py`` file is not imported here at package level, and on
-    purpose: to make dependency on Pytest optional.
-"""
+
+_TNestedSources = Union[
+    _TPlatformSources | Iterable[Union[_TPlatformSources, Iterable["_TNestedSources"]]]
+]
+"""Types for arbitrary nested sources of ``Platforms``."""
+
+
+from .operations import (  # noqa: E402
+    ALL_GROUP_IDS,
+    ALL_IDS,
+    ALL_PLATFORM_IDS,
+    groups_from_ids,
+    platforms_from_ids,
+    reduce,
+)
 
 __version__ = "3.0.0"
 """Examples of valid version strings according :pep:`440#version-scheme`:
@@ -171,61 +193,6 @@ __version__ = "3.0.0"
     __version__ = "1.2.3"  # Final Release
     __version__ = "1.2.3.post1"  # Post Release 1
 """
-
-
-ALL_PLATFORM_IDS: FrozenSet[str] = frozenset((p.id for p in ALL_PLATFORMS.platforms))
-"""Sets of all recognized platform IDs."""
-
-ALL_GROUP_IDS: FrozenSet[str] = frozenset((p.id for p in ALL_GROUPS))
-"""Sets of all recognized group IDs."""
-
-ALL_IDS: FrozenSet[str] = ALL_PLATFORM_IDS | ALL_GROUP_IDS
-"""Sets of all recognized platform and group IDs."""
-
-
-def platforms_from_ids(*platform_ids: str) -> set[Platform]:
-    """Returns a deduplicated set of platforms matching the provided IDs.
-
-    IDs can be either referring to platforms or groups. Matching groups will be
-    expanded to their respective platforms.
-
-    ..tip::
-        If you want to reduce the returned set and removes as much overlaps as
-        possible, you can use the ``extra_platforms.reduce()`` function on the results.
-    """
-    ids = frozenset(platform_ids)
-    unrecognized_ids = ids - ALL_IDS
-    if unrecognized_ids:
-        raise ValueError(f"Unrecognized IDs: {', '.join(sorted(unrecognized_ids))}")
-    platforms = set()
-    for platform_id in ids:
-        if platform_id in ALL_PLATFORM_IDS:
-            platforms.add(ALL_PLATFORMS[platform_id])
-        else:
-            groups = groups_from_ids(platform_id)
-            platforms.update(groups.pop().platforms)
-    return platforms
-
-
-def groups_from_ids(*group_ids: str) -> set[Group]:
-    """Returns a deduplicated set of groups matching the provided IDs.
-
-    ..tip::
-        If you want to reduce the returned set and removes as much overlaps as
-        possible, you can use the ``extra_platforms.reduce()`` function on the results.
-    """
-    ids = frozenset(group_ids)
-    unrecognized_ids = ids - ALL_GROUP_IDS
-    if unrecognized_ids:
-        raise ValueError(
-            f"Unrecognized group IDs: {', '.join(sorted(unrecognized_ids))}"
-        )
-    groups = set()
-    for group_id in ids:
-        for group in ALL_GROUPS:
-            if group.id == group_id:
-                groups.add(group)
-    return groups
 
 
 @cache
