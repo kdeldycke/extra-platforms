@@ -41,8 +41,8 @@ ALL_IDS: FrozenSet[str] = ALL_PLATFORM_IDS | ALL_GROUP_IDS
 def platforms_from_ids(*platform_ids: str) -> set[Platform]:
     """Returns a deduplicated set of platforms matching the provided IDs.
 
-    IDs can be either referring to platforms or groups. Matching groups will be
-    expanded to their respective platforms.
+    IDs are case-insensitive, and can refer to any platforms or groups. Matching groups
+    will be expanded to their respective platforms.
 
     ..tip::
         If you want to reduce the returned set and removes as much overlaps as
@@ -64,6 +64,8 @@ def platforms_from_ids(*platform_ids: str) -> set[Platform]:
 
 def groups_from_ids(*group_ids: str) -> set[Group]:
     """Returns a deduplicated set of groups matching the provided IDs.
+
+    IDs are case-insensitive.
 
     ..tip::
         If you want to reduce the returned set and removes as much overlaps as
