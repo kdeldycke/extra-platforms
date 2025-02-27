@@ -5,8 +5,11 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Allow set operations to resolve group and Platform IDs.
 - Make resolution of platform and group IDs case-insensitive.
+- Only runs website tests on Linux to prevent DOSing them.
 - Drop supports for Python 3.10.
+- Remove `tomli` dependency.
 
 ## [2.1.0 (2025-02-20)](https://github.com/kdeldycke/extra-platforms/compare/v2.0.0...v2.1.0)
 
