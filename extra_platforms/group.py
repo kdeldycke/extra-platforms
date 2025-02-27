@@ -128,7 +128,7 @@ class Group:
             # Prevent circular import.
             from .operations import platforms_from_ids
 
-            yield platforms_from_ids(other)
+            yield from platforms_from_ids(other)
         elif isinstance(other, Iterable):
             for item in flatten_iter(other):
                 yield from Group._extract_platforms(item)
