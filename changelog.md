@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.0.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v3.0.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [3.0.0 (2025-03-02)](https://github.com/kdeldycke/extra-platforms/compare/v2.1.0...v3.0.0)
 
 - Allow set operations to resolve group and Platform IDs.
