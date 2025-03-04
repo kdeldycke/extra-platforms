@@ -158,18 +158,19 @@ from .platform_data import (  # noqa: E402
 """
 
 
-_TPlatformSources = Union[Platform, Group, str]
-"""Platform sources can be:
+_TPlatformRef = Platform | Group | str | None
+"""All types that can be used to reference a platform or a group:
 
 - a ``Platform`` object itself
 - a ``Group`` object representing a collection of platforms
 - a string representing a platform ID or a group ID
+- ``None`` to represent an empty set of platforms
 """
 
-_TNestedSources = Union[
-    _TPlatformSources | Iterable[Union[_TPlatformSources, Iterable["_TNestedSources"]]]
+_TNestedReferences = Union[
+    _TPlatformRef | Iterable[_TPlatformRef | Iterable["_TNestedReferences"]]
 ]
-"""Types for arbitrary nested sources of ``Platforms``."""
+"""Type for arbitrary nested references to platforms and groups."""
 
 
 from .operations import (  # noqa: E402

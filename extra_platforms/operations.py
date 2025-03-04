@@ -25,7 +25,7 @@ from .group_data import ALL_GROUPS, ALL_PLATFORMS
 from .platform import Platform
 
 if TYPE_CHECKING:
-    from . import _TNestedSources
+    from . import _TNestedReferences
 
 
 ALL_PLATFORM_IDS: FrozenSet[str] = frozenset((p.id for p in ALL_PLATFORMS.platforms))
@@ -88,7 +88,7 @@ def groups_from_ids(*group_ids: str) -> set[Group]:
 
 
 def reduce(
-    items: _TNestedSources, target_pool: Iterable[Group | Platform] | None = None
+    items: _TNestedReferences, target_pool: Iterable[Group | Platform] | None = None
 ) -> frozenset[Group | Platform]:
     """Reduce a collection of platforms to a minimal set.
 

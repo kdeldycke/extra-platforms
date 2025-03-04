@@ -27,7 +27,7 @@ from boltons.iterutils import flatten_iter
 from .platform import Platform
 
 if TYPE_CHECKING:
-    from . import _TNestedSources
+    from . import _TNestedReferences
 
 
 @dataclass(frozen=True)
@@ -118,7 +118,7 @@ class Group:
         raise KeyError(f"No platform found whose ID is {platform_id}")
 
     @staticmethod
-    def _extract_platforms(*other: _TNestedSources) -> Iterator[Platform]:
+    def _extract_platforms(*other: _TNestedReferences) -> Iterator[Platform]:
         """Returns all platforms found in ``other``.
 
         ``other`` can be an arbitrarily nested ``Iterable`` of ``Group``, ``Platform``, or
@@ -145,7 +145,7 @@ class Group:
                 case _:
                     raise ValueError(f"Unsupported type: {type(item)}")
 
-    def isdisjoint(self, other: _TNestedSources) -> bool:
+    def isdisjoint(self, other: _TNestedReferences) -> bool:
         """Return `True` if the group has no platforms in common with ``other``.
 
         Groups are disjoint if and only if their intersection is an empty set.
@@ -154,35 +154,35 @@ class Group:
         """
         return set(self.platforms).isdisjoint(self._extract_platforms(other))
 
-    def fullyintersects(self, other: _TNestedSources) -> bool:
+    def fullyintersects(self, other: _TNestedReferences) -> bool:
         """Return `True` if the group has all platforms in common with ``other``."""
         return set(self.platforms) == set(self._extract_platforms(other))
 
-    def issubset(self, other: _TNestedSources) -> bool:
+    def issubset(self, other: _TNestedReferences) -> bool:
         """Test whether every platforms in the group is in other."""
         return set(self.platforms).issubset(self._extract_platforms(other))
 
     __le__ = issubset
 
-    def __lt__(self, other: _TNestedSources) -> bool:
+    def __lt__(self, other: _TNestedReferences) -> bool:
         """Test whether every platform in the group is in other, but not all."""
         return self <= other and set(self.platforms) != set(
             self._extract_platforms(other)
         )
 
-    def issuperset(self, other: _TNestedSources) -> bool:
+    def issuperset(self, other: _TNestedReferences) -> bool:
         """Test whether every platform in other is in the group."""
         return set(self.platforms).issuperset(self._extract_platforms(other))
 
     __ge__ = issuperset
 
-    def __gt__(self, other: _TNestedSources) -> bool:
+    def __gt__(self, other: _TNestedReferences) -> bool:
         """Test whether every platform in other is in the group, but not all."""
         return self >= other and set(self.platforms) != set(
             self._extract_platforms(other)
         )
 
-    def union(self, *others: _TNestedSources) -> Group:
+    def union(self, *others: _TNestedReferences) -> Group:
         """Return a new ``Group`` with platforms from the group and all others.
 
         ..caution::
@@ -202,7 +202,7 @@ class Group:
 
     __or__ = union
 
-    def intersection(self, *others: _TNestedSources) -> Group:
+    def intersection(self, *others: _TNestedReferences) -> Group:
         """Return a new ``Group`` with platforms common to the group and all others.
 
         ..caution::
@@ -222,7 +222,7 @@ class Group:
 
     __and__ = intersection
 
-    def difference(self, *others: _TNestedSources) -> Group:
+    def difference(self, *others: _TNestedReferences) -> Group:
         """Return a new ``Group`` with platforms in the group that are not in the others.
 
         ..caution::
@@ -242,7 +242,7 @@ class Group:
 
     __sub__ = difference
 
-    def symmetric_difference(self, other: _TNestedSources) -> Group:
+    def symmetric_difference(self, other: _TNestedReferences) -> Group:
         """Return a new ``Group`` with platforms in either the group or other but not both.
 
         ..caution::
