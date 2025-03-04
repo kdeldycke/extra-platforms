@@ -106,9 +106,13 @@ class Group:
         """Return the number of platforms in the group."""
         return len(self.platforms)
 
-    def __contains__(self, platform: Platform) -> bool:
-        """Test ``platform`` for membership in the group."""
-        return platform in self.platforms
+    def __contains__(self, platform: Platform | str) -> bool:
+        """Test if ``Platform`` object or its ID is part of the group."""
+        return (
+            (platform in self.platform_ids)
+            if isinstance(platform, str)
+            else (platform in self.platforms)
+        )
 
     def __getitem__(self, platform_id: str) -> Platform:
         """Return the platform whose ID is ``platform_id``."""
@@ -116,6 +120,10 @@ class Group:
             if platform.id == platform_id:
                 return platform
         raise KeyError(f"No platform found whose ID is {platform_id}")
+
+    def items(self) -> Iterator[tuple[str, Platform]]:
+        """Iterate over the platforms of the group as key-value pairs."""
+        yield from ((platform.id, platform) for platform in self.platforms)
 
     @staticmethod
     def _extract_platforms(*other: _TNestedReferences) -> Iterator[Platform]:

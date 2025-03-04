@@ -16,6 +16,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from extra_platforms import (
     AIX,
     ALL_PLATFORMS,
@@ -45,9 +47,30 @@ def test_platform_deduplication():
 
 def test_platform_membership():
     my_group = Group("my_group", "My Group", "✅", (AIX, PIDORA))
+
+    # Test iteration.
+    assert list(my_group) == [AIX, PIDORA]
+    assert tuple(my_group) == (AIX, PIDORA)
+    assert set(my_group) == {AIX, PIDORA}
+
+    # Test platform membership.
     assert AIX in my_group
     assert PIDORA in my_group
     assert RHEL not in my_group
+
+    # Test platform ID membership.
+    assert "aix" in my_group
+    assert "pidora" in my_group
+    assert "rhel" not in my_group
+
+    # Test platform ID getter.
+    assert my_group["aix"] == AIX
+    assert my_group["pidora"] == PIDORA
+    with pytest.raises(KeyError):
+        my_group["rhel"]
+
+    # Test platform items getter.
+    assert list(my_group.items()) == [("aix", AIX), ("pidora", PIDORA)]
 
 
 def test_simple_union():
