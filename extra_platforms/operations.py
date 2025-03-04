@@ -42,7 +42,7 @@ def platforms_from_ids(*platform_ids: str) -> set[Platform]:
     """Returns a deduplicated set of platforms matching the provided IDs.
 
     IDs are case-insensitive, and can refer to any platforms or groups. Matching groups
-    will be expanded to their respective platforms.
+    will be expanded to the platforms they contain.
 
     ..tip::
         If you want to reduce the returned set and removes as much overlaps as
@@ -51,7 +51,9 @@ def platforms_from_ids(*platform_ids: str) -> set[Platform]:
     ids = frozenset((s.lower() for s in platform_ids))
     unrecognized_ids = ids - ALL_IDS
     if unrecognized_ids:
-        raise ValueError(f"Unrecognized IDs: {', '.join(sorted(unrecognized_ids))}")
+        raise ValueError(
+            "Unrecognized group or platform IDs: " + ", ".join(sorted(unrecognized_ids))
+        )
     platforms = set()
     for platform_id in ids:
         if platform_id in ALL_PLATFORM_IDS:
@@ -75,7 +77,7 @@ def groups_from_ids(*group_ids: str) -> set[Group]:
     unrecognized_ids = ids - ALL_GROUP_IDS
     if unrecognized_ids:
         raise ValueError(
-            f"Unrecognized group IDs: {', '.join(sorted(unrecognized_ids))}"
+            "Unrecognized group IDs: " + ", ".join(sorted(unrecognized_ids))
         )
     groups = set()
     for group_id in ids:
