@@ -16,6 +16,7 @@
 
 from __future__ import annotations
 
+import sys
 from operator import attrgetter
 from string import ascii_lowercase, digits
 
@@ -78,8 +79,12 @@ def test_platform_definitions(platform):
     assert platform.info()["id"] == platform.id
 
 
-# Restrict tests to Linux to avoid DOSing websites.
+# Restrict tests to Linux on Python 3.13 to avoid DOSing websites.
 @unless_linux
+@pytest.mark.skipif(
+    (sys.version_info.major, sys.version_info.minor) == (3, 13),
+    reason="DOSing websites",
+)
 @all_platforms_params
 def test_platform_website(platform):
     """Test if platform website is reachable.
