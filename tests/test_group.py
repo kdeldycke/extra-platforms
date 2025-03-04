@@ -73,6 +73,44 @@ def test_platform_membership():
     assert list(my_group.items()) == [("aix", AIX), ("pidora", PIDORA)]
 
 
+@pytest.mark.parametrize(
+    ("items", "expected"),
+    [
+        ([], []),
+        (tuple(), tuple()),
+        (set(), set()),
+        (frozenset(), frozenset()),
+        (None, []),
+        ([None], []),
+        ([None, None, None], []),
+        ([None, (None, None, [])], []),
+        (AIX, [AIX]),
+        ("aix", [AIX]),
+        ([AIX], [AIX]),
+        ([AIX, AIX], [AIX, AIX]),
+        ([AIX, (AIX, AIX)], [AIX, AIX, AIX]),
+        ([AIX, ("aix", AIX)], [AIX, AIX, AIX]),
+        (LINUX_LAYERS, LINUX_LAYERS.platforms),
+        (LINUX_LAYERS, LINUX_LAYERS),
+        ("linux_layers", LINUX_LAYERS),
+        ([LINUX_LAYERS], LINUX_LAYERS),
+        ([LINUX_LAYERS, LINUX_LAYERS], LINUX_LAYERS.platforms * 2),
+        ([LINUX_LAYERS, (LINUX_LAYERS, LINUX_LAYERS)], LINUX_LAYERS.platforms * 3),
+        ([LINUX_LAYERS, ("linux_layers", LINUX_LAYERS)], LINUX_LAYERS.platforms * 3),
+    ],
+)
+def test_extract_platforms(items, expected):
+    assert tuple(Group._extract_platforms(items)) == tuple(expected)
+
+
+@pytest.mark.parametrize(
+    "item", (42, 42.0, object(), lambda: None, [42], [42, 42], [42, [42, 42]])
+)
+def test_extract_platforms_bad_type(item):
+    with pytest.raises(TypeError):
+        tuple(Group._extract_platforms(item))
+
+
 def test_simple_union():
     new_group = ANY_WINDOWS.union(LINUX_LAYERS)
 

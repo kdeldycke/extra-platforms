@@ -135,7 +135,7 @@ def test_platforms_from_ids(platform_id):
     platforms = platforms_from_ids(platform_id)
     assert platforms
     assert len(platforms) == 1
-    platform = platforms.pop()
+    platform = platforms[0]
     assert platform.id == platform_id.lower()
     assert platform in ALL_PLATFORMS.platforms
 
@@ -148,15 +148,15 @@ def test_platforms_from_ids_group_resolve(group_id):
     assert len(platforms) >= 1
     groups = groups_from_ids(group_id)
     assert len(groups) == 1
-    group = groups.pop()
-    assert platforms == set(group.platforms)
+    group = groups[0]
+    assert platforms == tuple(group.platforms)
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
 def test_groups_from_ids(group_id):
     groups = groups_from_ids(group_id)
     assert len(groups) == 1
-    group = groups.pop()
+    group = groups[0]
     assert group.id == group_id.lower()
     assert group in ALL_GROUPS
 

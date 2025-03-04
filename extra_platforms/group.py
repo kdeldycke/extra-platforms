@@ -20,7 +20,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass, field, replace
 from functools import cached_property
-from typing import TYPE_CHECKING, Iterable, Iterator
+from typing import TYPE_CHECKING, Iterator
 
 from boltons.iterutils import flatten_iter
 
@@ -148,10 +148,8 @@ class Group:
                     from .operations import platforms_from_ids
 
                     yield from platforms_from_ids(item)
-                case Iterable():
-                    yield from Group._extract_platforms(*item)
                 case _:
-                    raise ValueError(f"Unsupported type: {type(item)}")
+                    raise TypeError(f"Unsupported type: {type(item)}")
 
     def isdisjoint(self, other: _TNestedReferences) -> bool:
         """Return `True` if the group has no platforms in common with ``other``.

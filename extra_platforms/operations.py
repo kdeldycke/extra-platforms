@@ -20,6 +20,8 @@ from __future__ import annotations
 from itertools import combinations
 from typing import TYPE_CHECKING, FrozenSet, Iterable
 
+from boltons.iterutils import unique, unique_iter
+
 from .group import Group
 from .group_data import ALL_GROUPS, ALL_PLATFORMS
 from .platform import Platform
@@ -38,8 +40,8 @@ ALL_IDS: FrozenSet[str] = ALL_PLATFORM_IDS | ALL_GROUP_IDS
 """Set of all recognized platform and group IDs."""
 
 
-def platforms_from_ids(*platform_ids: str) -> set[Platform]:
-    """Returns a deduplicated set of platforms matching the provided IDs.
+def platforms_from_ids(*platform_ids: str) -> tuple[Platform]:
+    """Returns a deduplicated tuple of platforms matching the provided IDs.
 
     IDs are case-insensitive, and can refer to any platforms or groups. Matching groups
     will be expanded to the platforms they contain.
@@ -48,24 +50,25 @@ def platforms_from_ids(*platform_ids: str) -> set[Platform]:
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """
-    ids = frozenset((s.lower() for s in platform_ids))
-    unrecognized_ids = ids - ALL_IDS
+    ids = unique((s.lower() for s in platform_ids))
+    unrecognized_ids = set(ids) - ALL_IDS
     if unrecognized_ids:
         raise ValueError(
             "Unrecognized group or platform IDs: " + ", ".join(sorted(unrecognized_ids))
         )
-    platforms = set()
+    platforms = []
     for platform_id in ids:
         if platform_id in ALL_PLATFORM_IDS:
-            platforms.add(ALL_PLATFORMS[platform_id])
+            platforms.append(ALL_PLATFORMS[platform_id])
         else:
             groups = groups_from_ids(platform_id)
-            platforms.update(groups.pop().platforms)
-    return platforms
+            assert len(groups) == 1
+            platforms.extend(groups[0].platforms)
+    return tuple(unique_iter(platforms))
 
 
-def groups_from_ids(*group_ids: str) -> set[Group]:
-    """Returns a deduplicated set of groups matching the provided IDs.
+def groups_from_ids(*group_ids: str) -> tuple[Group]:
+    """Returns a deduplicated tuple of groups matching the provided IDs.
 
     IDs are case-insensitive.
 
@@ -73,18 +76,18 @@ def groups_from_ids(*group_ids: str) -> set[Group]:
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """
-    ids = frozenset((s.lower() for s in group_ids))
-    unrecognized_ids = ids - ALL_GROUP_IDS
+    ids = unique((s.lower() for s in group_ids))
+    unrecognized_ids = set(ids) - ALL_GROUP_IDS
     if unrecognized_ids:
         raise ValueError(
             "Unrecognized group IDs: " + ", ".join(sorted(unrecognized_ids))
         )
-    groups = set()
+    groups = []
     for group_id in ids:
         for group in ALL_GROUPS:
             if group.id == group_id:
-                groups.add(group)
-    return groups
+                groups.append(group)
+    return tuple(unique_iter(groups))
 
 
 def reduce(
