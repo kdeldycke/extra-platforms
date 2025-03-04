@@ -118,22 +118,32 @@ class Group:
         raise KeyError(f"No platform found whose ID is {platform_id}")
 
     @staticmethod
-    def _extract_platforms(other: _TNestedSources) -> Iterator[Platform]:
-        """Returns all platforms found in ``other``."""
-        if isinstance(other, Platform):
-            yield other
-        elif isinstance(other, Group):
-            yield from other.platforms
-        elif isinstance(other, str):
-            # Prevent circular import.
-            from .operations import platforms_from_ids
+    def _extract_platforms(*other: _TNestedSources) -> Iterator[Platform]:
+        """Returns all platforms found in ``other``.
 
-            yield from platforms_from_ids(other)
-        elif isinstance(other, Iterable):
-            for item in flatten_iter(other):
-                yield from Group._extract_platforms(item)
-        else:
-            raise ValueError
+        ``other`` can be an arbitrarily nested ``Iterable`` of ``Group``, ``Platform``, or
+        their IDs. ``None`` values and empty iterables are silently ignored.
+
+        ..caution::
+            Can returns duplicates.
+        """
+        for item in flatten_iter(other):
+            match item:
+                case None:
+                    continue
+                case Platform():
+                    yield item
+                case Group():
+                    yield from item.platforms
+                case str():
+                    # Prevent circular import.
+                    from .operations import platforms_from_ids
+
+                    yield from platforms_from_ids(item)
+                case Iterable():
+                    yield from Group._extract_platforms(*item)
+                case _:
+                    raise ValueError(f"Unsupported type: {type(item)}")
 
     def isdisjoint(self, other: _TNestedSources) -> bool:
         """Return `True` if the group has no platforms in common with ``other``.
