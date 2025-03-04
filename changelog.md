@@ -5,6 +5,12 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Allow platform ID membership test on groups.
+- Add `items()` method to `Group`.
+- Allow `None` values in nested references to platforms and groups.
+- Keep initial order of data from `platforms_from_ids()` and `groups_from_ids()` results.
+- Allow arbitrary arguments number in `Group._extract_platforms()`.
+
 ## [3.0.0 (2025-03-02)](https://github.com/kdeldycke/extra-platforms/compare/v2.1.0...v3.0.0)
 
 - Allow set operations to resolve group and Platform IDs.
