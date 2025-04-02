@@ -26,7 +26,7 @@ To get additional utilities [for Pytest](pytest.md), you may need to install ext
 $ pip install extra-platforms[pytest]
 ```
 
-## Namning
+## Naming
 
 > [!TIP]
 > I wanted to call this package `platforms`, but it's already taken on PyPI. So I went with `extra-platforms` instead, to mark its affiliation with [Click Extra](https://github.com/kdeldycke/click-extra).
