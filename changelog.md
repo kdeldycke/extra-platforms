@@ -1,9 +1,6 @@
 # Changelog
 
-## [3.1.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v3.1.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [3.1.1 (2025-04-02)](https://github.com/kdeldycke/extra-platforms/compare/v3.1.0...v3.1.1)
 
 - Move OS families diagrams to group documentation page.
 
