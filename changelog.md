@@ -32,7 +32,7 @@
 
 ## [2.0.0 (2024-12-27)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v2.0.0)
 
-- Add support for Nobara detection.
+- Add detection of Nobara.
 - Fix `current_os()` to always return a single platform. Closes #158.
 - Add new `current_platforms()` method to return all platforms matching the current environment.
 - Generate a pair of Pytest `@skip_<id>`/`@unless_<id>` decorators for each platform and group.
@@ -47,7 +47,7 @@
 
 - Display the hierarchy of non-overlapping groups as a mindmap.
 - Add URL on all platforms.
-- Add support for openSUSE Tumbleweed detection. Closes #133.
+- Add detection of openSUSE Tumbleweed. Closes #133.
 - Do not allow icons on platforms and groups to be empty.
 - Run tests in parallel to speed up CI.
 
@@ -67,7 +67,7 @@
 ## [1.4.0 (2024-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v1.3.1...v1.4.0)
 
 - Allow set comparison between groups and single platform.
-- Add support for Tuxedo OS detection. Closes #93.
+- Add detection of Tuxedo OS. Closes #93.
 - Add support for Python 3.13.
 - Drop supports for Python 3.9.
 - Run jobs on `ubuntu-24.04` instead of `ubuntu-22.04`.
