@@ -5,6 +5,8 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Move OS families diagrams to group documentation page.
+
 ## [3.1.0 (2025-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v3.0.0...v3.1.0)
 
 - Allow platform ID membership test on groups.

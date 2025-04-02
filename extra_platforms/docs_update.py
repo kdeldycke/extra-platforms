@@ -197,7 +197,7 @@ def update_docs() -> None:
     )
 
     # Update grouping charts of all groups, including non-overlapping and extra groups.
-    platform_doc = project_root.joinpath("readme.md")
+    platform_doc = project_root.joinpath("docs/groups.md")
     for top_groups in all_groups:
         replace_content(
             platform_doc,
