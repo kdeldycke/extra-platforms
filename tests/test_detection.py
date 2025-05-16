@@ -34,6 +34,8 @@ from extra_platforms import (
     is_fedora,
     is_freebsd,
     is_gentoo,
+    is_github_ci,
+    is_gitlab_ci,
     is_guix,
     is_hurd,
     is_ibm_powerkvm,
@@ -61,6 +63,7 @@ from extra_platforms import (
     is_tumbleweed,
     is_tuxedo,
     is_ubuntu,
+    is_unknown_ci,
     is_unknown_linux,
     is_windows,
     is_wsl1,
@@ -225,3 +228,8 @@ def test_mutual_exclusion():
         assert not is_wsl1()
         assert not is_wsl2()
         assert not is_xenserver()
+
+    if is_github_ci():
+        assert is_github_ci()
+        assert not is_gitlab_ci()
+        assert is_unknown_ci()

@@ -33,6 +33,8 @@ from .platform_data import (
     FEDORA,
     FREEBSD,
     GENTOO,
+    GITHUB_CI,
+    GITLAB_CI,
     GUIX,
     HURD,
     IBM_POWERKVM,
@@ -60,6 +62,7 @@ from .platform_data import (
     TUMBLEWEED,
     TUXEDO,
     UBUNTU,
+    UNKNOWN_CI,
     UNKNOWN_LINUX,
     WINDOWS,
     WSL1,
@@ -86,6 +89,8 @@ ALL_PLATFORMS: Group = Group(
         FEDORA,
         FREEBSD,
         GENTOO,
+        GITHUB_CI,
+        GITLAB_CI,
         GUIX,
         HURD,
         IBM_POWERKVM,
@@ -113,6 +118,7 @@ ALL_PLATFORMS: Group = Group(
         TUMBLEWEED,
         TUXEDO,
         UBUNTU,
+        UNKNOWN_CI,
         UNKNOWN_LINUX,
         WINDOWS,
         WSL1,
@@ -344,6 +350,20 @@ OTHER_UNIX = Group(
 """
 
 
+CI = Group(
+    "ci",
+    "CI systems",
+    "♺",
+    (GITHUB_CI, GITLAB_CI, UNKNOWN_CI),
+)
+"""All Continuous Integration systems.
+
+.. note::
+    `List of known CI systems
+    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
+"""
+
+
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
         ANY_WINDOWS,
@@ -365,6 +385,7 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         UNIX,
         UNIX_WITHOUT_MACOS,
         BSD_WITHOUT_MACOS,
+        CI,
     ),
 )
 """Overlapping groups, defined for convenience."""

@@ -5,6 +5,8 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add detection of CI systems: `GITHUB_CI`, `GITLAB_CI` and `UNKNOWN_CI`.
+- Add new `CI` group to group all CI platforms.
 - Move OS families diagrams to group documentation page.
 - Remove `ALL_PLATFORMS` from Sankey diagram.
 - Run tests on `windows-11-arm` runners.

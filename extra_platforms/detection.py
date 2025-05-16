@@ -167,6 +167,24 @@ def is_gentoo() -> bool:
 
 
 @cache
+def is_github_ci() -> bool:
+    """Return `True` if current platform is GitHub Actions runner.
+
+    https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
+    """
+    return "GITHUB_ACTIONS" in environ or "GITHUB_RUN_ID" in environ
+
+
+@cache
+def is_gitlab_ci() -> bool:
+    """Return `True` if current platform is GitLab CI.
+
+    https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables
+    """
+    return "GITLAB_CI" in environ
+
+
+@cache
 def is_guix() -> bool:
     """Return `True` if current platform is Guix System."""
     return distro.id() == "guix"
@@ -326,6 +344,19 @@ def is_tuxedo() -> bool:
 def is_ubuntu() -> bool:
     """Return `True` if current platform is Ubuntu."""
     return distro.id() == "ubuntu"
+
+
+@cache
+def is_unknown_ci() -> bool:
+    """Return `True` if current platform is an unknown CI."""
+    unknown_ci = (
+        "CI" in environ
+        or "BUILD_ID" in environ
+        and not (is_github_ci() or is_gitlab_ci())
+    )
+    if unknown_ci:
+        logging.warning(f"Unknow CI detected: {environ}. {_report_msg}")
+    return unknown_ci
 
 
 @cache

@@ -60,6 +60,17 @@ FREEBSD = Platform("freebsd", "FreeBSD", "😈", "https://freebsd.org")
 
 GENTOO = Platform("gentoo", "Gentoo Linux", "🗜️", "https://gentoo.org")
 
+GITHUB_CI = Platform(
+    "github_ci", "GitHub Actions runner", "🐙", "https://docs.github.com/en/actions"
+)
+
+GITLAB_CI = Platform(
+    "gitlab_ci",
+    "GitLab CI",
+    "🦊",
+    "https://docs.gitlab.com/topics/build_your_application/",
+)
+
 GUIX = Platform("guix", "Guix System", "🐃", "https://guix.gnu.org")
 
 HURD = Platform("hurd", "GNU/Hurd", "🐃", "https://gnu.org/software/hurd/")
@@ -151,6 +162,13 @@ TUMBLEWEED = Platform(
 TUXEDO = Platform("tuxedo", "Tuxedo OS", "🤵", "https://tuxedocomputers.com/os")
 
 UBUNTU = Platform("ubuntu", "Ubuntu", "🎯", "https://ubuntu.com")
+
+UNKNOWN_CI = Platform(
+    "unknown_ci",
+    "Unknown CI",
+    "♲",
+    "https://en.wikipedia.org/wiki/Continuous_integration",
+)
 
 UNKNOWN_LINUX = Platform("unknown_linux", "Unknown Linux", "🐧", "https://kernel.org")
 

@@ -41,6 +41,8 @@ from .detection import (  # noqa: E402
     is_fedora,
     is_freebsd,
     is_gentoo,
+    is_github_ci,
+    is_gitlab_ci,
     is_guix,
     is_hurd,
     is_ibm_powerkvm,
@@ -68,6 +70,7 @@ from .detection import (  # noqa: E402
     is_tumbleweed,
     is_tuxedo,
     is_ubuntu,
+    is_unknown_ci,
     is_unknown_linux,
     is_windows,
     is_wsl1,
@@ -81,6 +84,7 @@ from .group_data import (  # noqa: E402
     ANY_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
+    CI,
     EXTRA_GROUPS,
     LINUX,
     LINUX_LAYERS,
@@ -108,6 +112,8 @@ from .platform_data import (  # noqa: E402
     FEDORA,
     FREEBSD,
     GENTOO,
+    GITHUB_CI,
+    GITLAB_CI,
     GUIX,
     HURD,
     IBM_POWERKVM,
@@ -135,6 +141,7 @@ from .platform_data import (  # noqa: E402
     TUMBLEWEED,
     TUXEDO,
     UBUNTU,
+    UNKNOWN_CI,
     UNKNOWN_LINUX,
     WINDOWS,
     WSL1,
@@ -306,6 +313,7 @@ __all__ = (
     "BSD_WITHOUT_MACOS",  # noqa: F405
     "BUILDROOT",  # noqa: F405
     "CENTOS",  # noqa: F405
+    "CI",  # noqa: F405
     "CLOUDLINUX",  # noqa: F405
     "current_os",  # noqa: F405
     "current_platforms",  # noqa: F405
@@ -316,6 +324,8 @@ __all__ = (
     "FEDORA",  # noqa: F405
     "FREEBSD",  # noqa: F405
     "GENTOO",  # noqa: F405
+    "GITHUB_CI",  # noqa: F405
+    "GITLAB_CI",  # noqa: F405
     "Group",  # noqa: F405
     "groups_from_ids",  # noqa: F405
     "GUIX",  # noqa: F405
@@ -332,6 +342,7 @@ __all__ = (
     "is_bsd_without_macos",  # noqa: F405, F822
     "is_buildroot",  # noqa: F405
     "is_centos",  # noqa: F405
+    "is_ci",  # noqa: F405
     "is_cloudlinux",  # noqa: F405
     "is_cygwin",  # noqa: F405
     "is_debian",  # noqa: F405
@@ -339,6 +350,8 @@ __all__ = (
     "is_fedora",  # noqa: F405
     "is_freebsd",  # noqa: F405
     "is_gentoo",  # noqa: F405
+    "is_github_ci",  # noqa: F405
+    "is_gitlab_ci",  # noqa: F405
     "is_guix",  # noqa: F405
     "is_hurd",  # noqa: F405
     "is_ibm_powerkvm",  # noqa: F405
@@ -374,6 +387,7 @@ __all__ = (
     "is_unix",  # noqa: F405, F822
     "is_unix_layers",  # noqa: F405, F822
     "is_unix_without_macos",  # noqa: F405, F822
+    "is_unknown_ci",  # noqa: F405
     "is_unknown_linux",  # noqa: F405
     "is_windows",  # noqa: F405
     "is_wsl1",  # noqa: F405
@@ -415,6 +429,7 @@ __all__ = (
     "UNIX",  # noqa: F405
     "UNIX_LAYERS",  # noqa: F405
     "UNIX_WITHOUT_MACOS",  # noqa: F405
+    "UNKNOWN_CI",  # noqa: F405
     "UNKNOWN_LINUX",  # noqa: F405
     "WINDOWS",  # noqa: F405
     "WSL1",  # noqa: F405

@@ -99,6 +99,7 @@ __all__ = (
     "skip_bsd_without_macos",  # noqa: F405, F822
     "skip_buildroot",  # noqa: F405, F822
     "skip_centos",  # noqa: F405, F822
+    "skip_ci",  # noqa: F405, F822
     "skip_cloudlinux",  # noqa: F405, F822
     "skip_cygwin",  # noqa: F405, F822
     "skip_debian",  # noqa: F405, F822
@@ -106,6 +107,8 @@ __all__ = (
     "skip_fedora",  # noqa: F405, F822
     "skip_freebsd",  # noqa: F405, F822
     "skip_gentoo",  # noqa: F405, F822
+    "skip_github_ci",  # noqa: F405, F822
+    "skip_gitlab_ci",  # noqa: F405, F822
     "skip_guix",  # noqa: F405, F822
     "skip_hurd",  # noqa: F405, F822
     "skip_ibm_powerkvm",  # noqa: F405, F822
@@ -141,6 +144,7 @@ __all__ = (
     "skip_unix",  # noqa: F405, F822
     "skip_unix_layers",  # noqa: F405, F822
     "skip_unix_without_macos",  # noqa: F405, F822
+    "skip_unknown_ci",  # noqa: F405, F822
     "skip_unknown_linux",  # noqa: F405, F822
     "skip_windows",  # noqa: F405, F822
     "skip_wsl1",  # noqa: F405, F822
@@ -157,6 +161,7 @@ __all__ = (
     "unless_bsd_without_macos",  # noqa: F405, F822
     "unless_buildroot",  # noqa: F405, F822
     "unless_centos",  # noqa: F405, F822
+    "unless_ci",  # noqa: F405, F822
     "unless_cloudlinux",  # noqa: F405, F822
     "unless_cygwin",  # noqa: F405, F822
     "unless_debian",  # noqa: F405, F822
@@ -164,6 +169,8 @@ __all__ = (
     "unless_fedora",  # noqa: F405, F822
     "unless_freebsd",  # noqa: F405, F822
     "unless_gentoo",  # noqa: F405, F822
+    "unless_github_ci",  # noqa: F405, F822
+    "unless_gitlab_ci",  # noqa: F405, F822
     "unless_guix",  # noqa: F405, F822
     "unless_hurd",  # noqa: F405, F822
     "unless_ibm_powerkvm",  # noqa: F405, F822
@@ -199,6 +206,7 @@ __all__ = (
     "unless_unix",  # noqa: F405, F822
     "unless_unix_layers",  # noqa: F405, F822
     "unless_unix_without_macos",  # noqa: F405, F822
+    "unless_unknown_ci",  # noqa: F405, F822
     "unless_unknown_linux",  # noqa: F405, F822
     "unless_windows",  # noqa: F405, F822
     "unless_wsl1",  # noqa: F405, F822

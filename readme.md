@@ -12,13 +12,11 @@
 
 - Provides a list of all known platforms
 - Detect the current platform, at the distribution level
-- Gather current platform metadata (version, codename, etc.)
+- Platform metadata (version, codename, etc.)
 - Group platforms into families
 - Manage collection of platforms and groups
 - Associate each platform and group to an emoji symbol
-- New conditional markers for `pytest`:
-  - `@skip_linux`, `@skip_macos` and `@skip_windows`
-  - `@unless_linux`, `@unless_macos` and `@unless_windows`
+- Conditional markers decorators for `pytest`: `@skip_<id>`/`@unless_<id>` for each platform and group (`@skip_android`, `@skip_any_windows`, `@skip_github_ci`, …)
 - Address [`distro#177` issue (support for Windows and Mac OS)](https://github.com/python-distro/distro/issues/177)
 
 ## Examples
