@@ -467,7 +467,7 @@ def is_unknown_ci() -> bool:
         )
     )
     if unknown_ci:
-        logging.warning(f"Unknow CI detected: {environ}. {_report_msg}")
+        logging.warning(f"Unknown CI detected: {environ}. {_report_msg}")
     return unknown_ci
 
 
@@ -509,7 +509,7 @@ def is_unknown_linux() -> bool:
         or is_xenserver()
     )
     if unknown_linux:
-        logging.warning(f"Unknow Linux detected: {distro.info()!r}. {_report_msg}")
+        logging.warning(f"Unknown Linux detected: {distro.info()!r}. {_report_msg}")
     return unknown_linux
 
 
