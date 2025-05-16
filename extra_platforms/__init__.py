@@ -32,9 +32,15 @@ from .detection import (  # noqa: E402
     is_amzn,
     is_android,
     is_arch,
+    is_azure_pipelines,
+    is_bamboo,
+    is_buildkite,
     is_buildroot,
     is_centos,
+    is_circle_ci,
+    is_cirrus_ci,
     is_cloudlinux,
+    is_codebuild,
     is_cygwin,
     is_debian,
     is_exherbo,
@@ -44,6 +50,7 @@ from .detection import (  # noqa: E402
     is_github_ci,
     is_gitlab_ci,
     is_guix,
+    is_heroku_ci,
     is_hurd,
     is_ibm_powerkvm,
     is_kvmibm,
@@ -67,6 +74,8 @@ from .detection import (  # noqa: E402
     is_sles,
     is_solaris,
     is_sunos,
+    is_teamcity,
+    is_travis_ci,
     is_tumbleweed,
     is_tuxedo,
     is_ubuntu,
@@ -103,9 +112,15 @@ from .platform_data import (  # noqa: E402
     AMZN,
     ANDROID,
     ARCH,
+    AZURE_PIPELINES,
+    BAMBOO,
+    BUILDKITE,
     BUILDROOT,
     CENTOS,
+    CIRCLE_CI,
+    CIRRUS_CI,
     CLOUDLINUX,
+    CODEBUILD,
     CYGWIN,
     DEBIAN,
     EXHERBO,
@@ -115,6 +130,7 @@ from .platform_data import (  # noqa: E402
     GITHUB_CI,
     GITLAB_CI,
     GUIX,
+    HEROKU_CI,
     HURD,
     IBM_POWERKVM,
     KVMIBM,
@@ -138,6 +154,8 @@ from .platform_data import (  # noqa: E402
     SLES,
     SOLARIS,
     SUNOS,
+    TEAMCITY,
+    TRAVIS_CI,
     TUMBLEWEED,
     TUXEDO,
     UBUNTU,
@@ -309,12 +327,18 @@ __all__ = (
     "ANDROID",  # noqa: F405
     "ANY_WINDOWS",  # noqa: F405
     "ARCH",  # noqa: F405
+    "AZURE_PIPELINES",  # noqa: F405
+    "BAMBOO",  # noqa: F405
     "BSD",  # noqa: F405
     "BSD_WITHOUT_MACOS",  # noqa: F405
+    "BUILDKITE",  # noqa: F405
     "BUILDROOT",  # noqa: F405
     "CENTOS",  # noqa: F405
     "CI",  # noqa: F405
+    "CIRCLE_CI",  # noqa: F405
+    "CIRRUS_CI",  # noqa: F405
     "CLOUDLINUX",  # noqa: F405
+    "CODEBUILD",  # noqa: F405
     "current_os",  # noqa: F405
     "current_platforms",  # noqa: F405
     "CYGWIN",  # noqa: F405
@@ -329,6 +353,7 @@ __all__ = (
     "Group",  # noqa: F405
     "groups_from_ids",  # noqa: F405
     "GUIX",  # noqa: F405
+    "HEROKU_CI",  # noqa: F405
     "HURD",  # noqa: F405
     "IBM_POWERKVM",  # noqa: F405
     "is_aix",  # noqa: F405
@@ -338,12 +363,18 @@ __all__ = (
     "is_android",  # noqa: F405
     "is_any_windows",  # noqa: F405, F822
     "is_arch",  # noqa: F405
+    "is_azure_pipelines",  # noqa: F405
+    "is_bamboo",  # noqa: F405
     "is_bsd",  # noqa: F405, F822
     "is_bsd_without_macos",  # noqa: F405, F822
+    "is_buildkite",  # noqa: F405
     "is_buildroot",  # noqa: F405
     "is_centos",  # noqa: F405
     "is_ci",  # noqa: F405
+    "is_circle_ci",  # noqa: F405
+    "is_cirrus_ci",  # noqa: F405
     "is_cloudlinux",  # noqa: F405
+    "is_codebuild",  # noqa: F405
     "is_cygwin",  # noqa: F405
     "is_debian",  # noqa: F405
     "is_exherbo",  # noqa: F405
@@ -353,6 +384,7 @@ __all__ = (
     "is_github_ci",  # noqa: F405
     "is_gitlab_ci",  # noqa: F405
     "is_guix",  # noqa: F405
+    "is_heroku_ci",  # noqa: F405
     "is_hurd",  # noqa: F405
     "is_ibm_powerkvm",  # noqa: F405
     "is_kvmibm",  # noqa: F405
@@ -381,6 +413,8 @@ __all__ = (
     "is_solaris",  # noqa: F405
     "is_sunos",  # noqa: F405
     "is_system_v",  # noqa: F405, F822
+    "is_teamcity",  # noqa: F405
+    "is_travis_ci",  # noqa: F405
     "is_tumbleweed",  # noqa: F405, F822
     "is_tuxedo",  # noqa: F405, F822
     "is_ubuntu",  # noqa: F405
@@ -423,6 +457,8 @@ __all__ = (
     "SOLARIS",  # noqa: F405
     "SUNOS",  # noqa: F405
     "SYSTEM_V",  # noqa: F405
+    "TEAMCITY",  # noqa: F405
+    "TRAVIS_CI",  # noqa: F405
     "TUMBLEWEED",  # noqa: F405
     "TUXEDO",  # noqa: F405
     "UBUNTU",  # noqa: F405

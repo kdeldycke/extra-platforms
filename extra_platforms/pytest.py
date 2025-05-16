@@ -95,12 +95,18 @@ __all__ = (
     "skip_android",  # noqa: F405, F822
     "skip_any_windows",  # noqa: F405, F822
     "skip_arch",  # noqa: F405, F822
+    "skip_azure_pipelines",  # noqa: F405, F822
+    "skip_bamboo",  # noqa: F405, F822
     "skip_bsd",  # noqa: F405, F822
     "skip_bsd_without_macos",  # noqa: F405, F822
+    "skip_buildkite",  # noqa: F405, F822
     "skip_buildroot",  # noqa: F405, F822
     "skip_centos",  # noqa: F405, F822
     "skip_ci",  # noqa: F405, F822
+    "skip_circle_ci",  # noqa: F405, F822
+    "skip_cirrus_ci",  # noqa: F405, F822
     "skip_cloudlinux",  # noqa: F405, F822
+    "skip_codebuild",  # noqa: F405, F822
     "skip_cygwin",  # noqa: F405, F822
     "skip_debian",  # noqa: F405, F822
     "skip_exherbo",  # noqa: F405, F822
@@ -110,6 +116,7 @@ __all__ = (
     "skip_github_ci",  # noqa: F405, F822
     "skip_gitlab_ci",  # noqa: F405, F822
     "skip_guix",  # noqa: F405, F822
+    "skip_heroku_ci",  # noqa: F405, F822
     "skip_hurd",  # noqa: F405, F822
     "skip_ibm_powerkvm",  # noqa: F405, F822
     "skip_kvmibm",  # noqa: F405, F822
@@ -138,6 +145,8 @@ __all__ = (
     "skip_solaris",  # noqa: F405, F822
     "skip_sunos",  # noqa: F405, F822
     "skip_system_v",  # noqa: F405, F822
+    "skip_teamcity",  # noqa: F405, F822
+    "skip_travis_ci",  # noqa: F405, F822
     "skip_tumbleweed",  # noqa: F405, F822
     "skip_tuxedo",  # noqa: F405, F822
     "skip_ubuntu",  # noqa: F405, F822
@@ -157,12 +166,18 @@ __all__ = (
     "unless_android",  # noqa: F405, F822
     "unless_any_windows",  # noqa: F405, F822
     "unless_arch",  # noqa: F405, F822
+    "unless_azure_pipelines",  # noqa: F405, F822
+    "unless_bamboo",  # noqa: F405, F822
     "unless_bsd",  # noqa: F405, F822
     "unless_bsd_without_macos",  # noqa: F405, F822
+    "unless_buildkite",  # noqa: F405, F822
     "unless_buildroot",  # noqa: F405, F822
     "unless_centos",  # noqa: F405, F822
     "unless_ci",  # noqa: F405, F822
+    "unless_circle_ci",  # noqa: F405, F822
+    "unless_cirrus_ci",  # noqa: F405, F822
     "unless_cloudlinux",  # noqa: F405, F822
+    "unless_codebuild",  # noqa: F405, F822
     "unless_cygwin",  # noqa: F405, F822
     "unless_debian",  # noqa: F405, F822
     "unless_exherbo",  # noqa: F405, F822
@@ -172,6 +187,7 @@ __all__ = (
     "unless_github_ci",  # noqa: F405, F822
     "unless_gitlab_ci",  # noqa: F405, F822
     "unless_guix",  # noqa: F405, F822
+    "unless_heroku_ci",  # noqa: F405, F822
     "unless_hurd",  # noqa: F405, F822
     "unless_ibm_powerkvm",  # noqa: F405, F822
     "unless_kvmibm",  # noqa: F405, F822
@@ -200,6 +216,8 @@ __all__ = (
     "unless_solaris",  # noqa: F405, F822
     "unless_sunos",  # noqa: F405, F822
     "unless_system_v",  # noqa: F405, F822
+    "unless_teamcity",  # noqa: F405, F822
+    "unless_travis_ci",  # noqa: F405, F822
     "unless_tumbleweed",  # noqa: F405, F822
     "unless_tuxedo",  # noqa: F405, F822
     "unless_ubuntu",  # noqa: F405, F822

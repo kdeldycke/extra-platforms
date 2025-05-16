@@ -25,9 +25,15 @@ from extra_platforms import (
     is_amzn,
     is_android,
     is_arch,
+    is_azure_pipelines,
+    is_bamboo,
+    is_buildkite,
     is_buildroot,
     is_centos,
+    is_circle_ci,
+    is_cirrus_ci,
     is_cloudlinux,
+    is_codebuild,
     is_cygwin,
     is_debian,
     is_exherbo,
@@ -37,6 +43,7 @@ from extra_platforms import (
     is_github_ci,
     is_gitlab_ci,
     is_guix,
+    is_heroku_ci,
     is_hurd,
     is_ibm_powerkvm,
     is_kvmibm,
@@ -60,6 +67,8 @@ from extra_platforms import (
     is_sles,
     is_solaris,
     is_sunos,
+    is_teamcity,
+    is_travis_ci,
     is_tumbleweed,
     is_tuxedo,
     is_ubuntu,
@@ -230,6 +239,15 @@ def test_mutual_exclusion():
         assert not is_xenserver()
 
     if is_github_ci():
+        assert not is_azure_pipelines()
+        assert not is_bamboo()
+        assert not is_buildkite()
+        assert not is_circle_ci()
+        assert not is_cirrus_ci()
+        assert not is_codebuild()
         assert is_github_ci()
         assert not is_gitlab_ci()
+        assert not is_heroku_ci()
+        assert not is_teamcity()
+        assert not is_travis_ci()
         assert is_unknown_ci()

@@ -113,6 +113,36 @@ def is_arch() -> bool:
 
 
 @cache
+def is_azure_pipelines() -> bool:
+    """Return `True` if current platform is Azure Pipelines.
+
+    `Environment variables reference
+    <https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&viewFallbackFrom=vsts&tabs=yaml#system-variables>`_.
+    """
+    return "TF_BUILD" in environ
+
+
+@cache
+def is_bamboo() -> bool:
+    """Return `True` if current platform is Bamboo.
+
+    `Environment variables reference
+    <https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html#Bamboovariables-Build-specificvariables>`_.
+    """
+    return "bamboo.buildKey" in environ
+
+
+@cache
+def is_buildkite() -> bool:
+    """Return `True` if current platform is Buildkite.
+
+    `Environment variables reference
+    <https://buildkite.com/docs/pipelines/environment-variables>`_.
+    """
+    return "BUILDKITE" in environ
+
+
+@cache
 def is_buildroot() -> bool:
     """Return `True` if current platform is Buildroot."""
     return distro.id() == "buildroot"
@@ -125,9 +155,39 @@ def is_centos() -> bool:
 
 
 @cache
+def is_circle_ci() -> bool:
+    """Return `True` if current platform is Circle CI.
+
+    `Environment variables reference
+    <https://circleci.com/docs/2.0/env-vars/#built-in-environment-variables>`_.
+    """
+    return "CIRCLECI" in environ
+
+
+@cache
+def is_cirrus_ci() -> bool:
+    """Return `True` if current platform is Cirrus CI.
+
+    `Environment variables reference
+    <https://cirrus-ci.org/guide/writing-tasks/#environment-variables>`_.
+    """
+    return "CIRRUS_CI" in environ
+
+
+@cache
 def is_cloudlinux() -> bool:
     """Return `True` if current platform is CloudLinux OS."""
     return distro.id() == "cloudlinux"
+
+
+@cache
+def is_codebuild() -> bool:
+    """Return `True` if current platform is CodeBuild.
+
+    `Environment variables reference
+    <https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html>`_.
+    """
+    return "CODEBUILD_BUILD_ID" in environ
 
 
 @cache
@@ -170,7 +230,8 @@ def is_gentoo() -> bool:
 def is_github_ci() -> bool:
     """Return `True` if current platform is GitHub Actions runner.
 
-    https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables
+    `Environment variables reference
+    <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables>`_.
     """
     return "GITHUB_ACTIONS" in environ or "GITHUB_RUN_ID" in environ
 
@@ -179,7 +240,8 @@ def is_github_ci() -> bool:
 def is_gitlab_ci() -> bool:
     """Return `True` if current platform is GitLab CI.
 
-    https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables
+    `Environment variables reference
+    https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables>`_.
     """
     return "GITLAB_CI" in environ
 
@@ -188,6 +250,16 @@ def is_gitlab_ci() -> bool:
 def is_guix() -> bool:
     """Return `True` if current platform is Guix System."""
     return distro.id() == "guix"
+
+
+@cache
+def is_heroku_ci() -> bool:
+    """Return `True` if current platform is Heroku CI.
+
+    `Environment variables reference
+    <https://devcenter.heroku.com/articles/heroku-ci#immutable-environment-variables>`_.
+    """
+    return "HEROKU_TEST_RUN_ID" in environ
 
 
 @cache
@@ -329,6 +401,26 @@ def is_sunos() -> bool:
 
 
 @cache
+def is_teamcity() -> bool:
+    """Return `True` if current platform is TeamCity.
+
+    `Environment variables reference
+    <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#PredefinedBuildParameters-ServerBuildProperties>`_.
+    """
+    return "TEAMCITY_VERSION" in environ
+
+
+@cache
+def is_travis_ci() -> bool:
+    """Return `True` if current platform is Travis CI.
+
+    `Environment variables reference
+    <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>`_.
+    """
+    return "TRAVIS" in environ
+
+
+@cache
 def is_tumbleweed() -> bool:
     """Return `True` if current platform is openSUSE Tumbleweed."""
     return distro.id() == "opensuse-tumbleweed"
@@ -348,11 +440,31 @@ def is_ubuntu() -> bool:
 
 @cache
 def is_unknown_ci() -> bool:
-    """Return `True` if current platform is an unknown CI."""
+    """Return `True` if current platform is an unknown CI.
+
+    Some CI systems relies on `generic environment variables to identify themselves
+    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_:
+
+        - `CI`
+        - `BUILD_ID`
+
+    """
     unknown_ci = (
         "CI" in environ
         or "BUILD_ID" in environ
-        and not (is_github_ci() or is_gitlab_ci())
+        and not (
+            is_azure_pipelines()
+            or is_bamboo()
+            or is_buildkite()
+            or is_circle_ci()
+            or is_cirrus_ci()
+            or is_codebuild()
+            or is_github_ci()
+            or is_gitlab_ci()
+            or is_heroku_ci()
+            or is_teamcity()
+            or is_travis_ci()
+        )
     )
     if unknown_ci:
         logging.warning(f"Unknow CI detected: {environ}. {_report_msg}")
