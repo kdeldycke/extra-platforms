@@ -308,6 +308,18 @@ LINUX,tuxedo,1
 LINUX,ubuntu,1
 LINUX,unknown_linux,1
 LINUX,xenserver,1
+CI,azure_pipelines,1
+CI,bamboo,1
+CI,buildkite,1
+CI,circle_ci,1
+CI,cirrus_ci,1
+CI,codebuild,1
+CI,github_ci,1
+CI,gitlab_ci,1
+CI,heroku_ci,1
+CI,teamcity,1
+CI,travis_ci,1
+CI,unknown_ci,1
 BSD,freebsd,1
 BSD,macos,1
 BSD,midnightbsd,1
@@ -319,9 +331,6 @@ BSD_WITHOUT_MACOS,midnightbsd,1
 BSD_WITHOUT_MACOS,netbsd,1
 BSD_WITHOUT_MACOS,openbsd,1
 BSD_WITHOUT_MACOS,sunos,1
-CI,github_ci,1
-CI,gitlab_ci,1
-CI,unknown_ci,1
 SYSTEM_V,aix,1
 SYSTEM_V,solaris,1
 LINUX_LAYERS,wsl1,1
@@ -390,8 +399,17 @@ mindmap
             (🐧 unknown_linux)
             (Ⓧ xenserver)
         )♺ CI(
+            (═ azure_pipelines)
+            (⟲ bamboo)
+            (🪁 buildkite)
+            (⪾ circle_ci)
+            (≋ cirrus_ci)
+            (ᚙ codebuild)
             (🐙 github_ci)
             (🦊 gitlab_ci)
+            (⥁ heroku_ci)
+            (🏙️ teamcity)
+            (👷 travis_ci)
             (♲ unknown_ci)
         )🅱️+ BSD(
             (😈 freebsd)
