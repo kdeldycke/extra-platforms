@@ -20,8 +20,6 @@ import ast
 import inspect
 from pathlib import Path
 
-import pytest
-
 import extra_platforms
 from extra_platforms import (
     ALL_GROUPS,
@@ -153,13 +151,9 @@ def test_current_funcs():
     else:
         assert len(current_platforms_results) == 1
 
-    if is_github_ci():
-        with pytest.raises(RuntimeError):
-            current_os_result = current_os()
-    else:
-        current_os_result = current_os()
-        assert current_os_result in ALL_PLATFORMS
-        assert current_platforms_results[0] is current_os_result
+    current_os_result = current_os()
+    assert current_os_result in ALL_PLATFORMS
+    assert current_platforms_results[0] is current_os_result
 
 
 def test_group_membership_funcs():
