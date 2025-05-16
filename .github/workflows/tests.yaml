@@ -24,10 +24,10 @@ jobs:
       matrix:
         # Available OS: https://github.com/actions/runner-images#available-images
         os:
-          - ubuntu-24.04     # x86
           - ubuntu-24.04-arm # arm64
-          - ubuntu-22.04     # x86
+          - ubuntu-24.04     # x86
           - ubuntu-22.04-arm # arm64
+          - ubuntu-22.04     # x86
           - ubuntu-20.04     # x86
           - macos-15         # arm64
           - macos-14         # arm64
