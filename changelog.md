@@ -10,6 +10,7 @@
 - Move OS families diagrams to group documentation page.
 - Remove `ALL_PLATFORMS` from Sankey diagram.
 - Run tests on `windows-11-arm` runners.
+- Remove tests on EOL `ubuntu-20-04`.
 
 ## [3.1.0 (2025-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v3.0.0...v3.1.0)
 
