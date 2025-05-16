@@ -249,14 +249,15 @@ def current_platforms() -> tuple[Platform, ...]:
 
 @cache
 def current_os() -> Platform:
-    """Always returns the best matching platform for the current environment.
+    """Always returns the best matching platform for the current environment, excluding
+    CI systems.
 
     If multiple platforms match the current environment, this function will try to
     select the best, informative one.
 
     Raises an error if we can't decide on a single, appropriate platform.
     """
-    matching = set(current_platforms())
+    matching = set(current_platforms()).difference(CI.platforms)
 
     # Return the only matching platform.
     if len(matching) == 1:
