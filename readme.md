@@ -143,7 +143,7 @@ Reduce a disparate collection of groups and platforms into a minimal descriptive
 
 ## Groups → Platforms mapping
 
-Relationships between groups and platforms:
+Relationships between groups and platforms (excluding the all-encompassing `ALL_PLATFORMS` group), represented as a Sankey diagram.
 
 <!-- platform-sankey-start -->
 
@@ -153,52 +153,6 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,aix,1
-ALL_PLATFORMS,altlinux,1
-ALL_PLATFORMS,amzn,1
-ALL_PLATFORMS,android,1
-ALL_PLATFORMS,arch,1
-ALL_PLATFORMS,buildroot,1
-ALL_PLATFORMS,centos,1
-ALL_PLATFORMS,cloudlinux,1
-ALL_PLATFORMS,cygwin,1
-ALL_PLATFORMS,debian,1
-ALL_PLATFORMS,exherbo,1
-ALL_PLATFORMS,fedora,1
-ALL_PLATFORMS,freebsd,1
-ALL_PLATFORMS,gentoo,1
-ALL_PLATFORMS,guix,1
-ALL_PLATFORMS,hurd,1
-ALL_PLATFORMS,ibm_powerkvm,1
-ALL_PLATFORMS,kvmibm,1
-ALL_PLATFORMS,linuxmint,1
-ALL_PLATFORMS,macos,1
-ALL_PLATFORMS,mageia,1
-ALL_PLATFORMS,mandriva,1
-ALL_PLATFORMS,midnightbsd,1
-ALL_PLATFORMS,netbsd,1
-ALL_PLATFORMS,nobara,1
-ALL_PLATFORMS,openbsd,1
-ALL_PLATFORMS,opensuse,1
-ALL_PLATFORMS,oracle,1
-ALL_PLATFORMS,parallels,1
-ALL_PLATFORMS,pidora,1
-ALL_PLATFORMS,raspbian,1
-ALL_PLATFORMS,rhel,1
-ALL_PLATFORMS,rocky,1
-ALL_PLATFORMS,scientific,1
-ALL_PLATFORMS,slackware,1
-ALL_PLATFORMS,sles,1
-ALL_PLATFORMS,solaris,1
-ALL_PLATFORMS,sunos,1
-ALL_PLATFORMS,tumbleweed,1
-ALL_PLATFORMS,tuxedo,1
-ALL_PLATFORMS,ubuntu,1
-ALL_PLATFORMS,unknown_linux,1
-ALL_PLATFORMS,windows,1
-ALL_PLATFORMS,wsl1,1
-ALL_PLATFORMS,wsl2,1
-ALL_PLATFORMS,xenserver,1
 UNIX,aix,1
 UNIX,altlinux,1
 UNIX,amzn,1

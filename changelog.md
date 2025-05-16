@@ -6,6 +6,7 @@
 > This version is not released yet and is under active development.
 
 - Move OS families diagrams to group documentation page.
+- Remove `ALL_PLATFORMS` from Sankey diagram.
 
 ## [3.1.0 (2025-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v3.0.0...v3.1.0)
 

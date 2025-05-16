@@ -36,7 +36,7 @@ from pathlib import Path
 from textwrap import dedent, indent
 
 from .group import Group
-from .group_data import ALL_GROUPS, EXTRA_GROUPS, NON_OVERLAPPING_GROUPS
+from .group_data import ALL_GROUPS, ALL_PLATFORMS, EXTRA_GROUPS, NON_OVERLAPPING_GROUPS
 
 
 def replace_content(
@@ -63,12 +63,20 @@ def replace_content(
 
 
 def generate_platform_sankey() -> str:
-    """Produce a Sankey diagram to map all platforms to their platforms."""
+    """Produce a Sankey diagram to map all platforms to their platforms.
+
+    Excludes the ``ALL_PLATFORMS`` group which unnecessarily adds noise to the already
+    dense diagram.
+    """
     table = []
 
     # Display biggest groups first. Add ID in the sorting key to get stable sorting on
     # tie.
-    for group in sorted(ALL_GROUPS, key=lambda g: (len(g), g.id), reverse=True):
+    for group in sorted(
+        ALL_GROUPS.difference({ALL_PLATFORMS}),
+        key=lambda g: (len(g), g.id),
+        reverse=True,
+    ):
         for platform in group.platforms:
             # XXX Sankey diagrams do not support emoji icons yet.
             # table.append(
