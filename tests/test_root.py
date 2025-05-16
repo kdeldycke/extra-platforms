@@ -20,12 +20,17 @@ import ast
 import inspect
 from pathlib import Path
 
+import pytest
+
 import extra_platforms
 from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORMS,
+    GITHUB_CI,
+    UNKNOWN_CI,
     current_os,
     current_platforms,
+    is_github_ci,
 )
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
@@ -141,11 +146,20 @@ def test_code_sorting():
 def test_current_funcs():
     current_platforms_results = current_platforms()
     assert ALL_PLATFORMS.issuperset(current_platforms_results)
-    assert len(current_platforms_results) == 1
+    if is_github_ci():
+        assert len(current_platforms_results) == 3
+        assert GITHUB_CI in current_platforms_results
+        assert UNKNOWN_CI in current_platforms_results
+    else:
+        assert len(current_platforms_results) == 1
 
-    current_os_result = current_os()
-    assert current_os_result in ALL_PLATFORMS
-    assert current_platforms_results[0] is current_os_result
+    if is_github_ci():
+        with pytest.raises(RuntimeError):
+            current_os_result = current_os()
+    else:
+        current_os_result = current_os()
+        assert current_os_result in ALL_PLATFORMS
+        assert current_platforms_results[0] is current_os_result
 
 
 def test_group_membership_funcs():
