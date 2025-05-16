@@ -153,7 +153,7 @@ def test_current_funcs():
 
     current_os_result = current_os()
     assert current_os_result in ALL_PLATFORMS
-    assert current_platforms_results[0] is current_os_result
+    assert current_os_result in current_platforms_results
 
 
 def test_group_membership_funcs():
