@@ -23,6 +23,11 @@ flowchart
         bsd_openbsd(<code>openbsd</code><br/>🐡 <em>OpenBSD</em>)
         bsd_sunos(<code>sunos</code><br/>☀️ <em>SunOS</em>)
     end
+    subgraph "<code>extra_platforms.CI</code><br/>♺ <em>CI systems</em>"
+        ci_github_ci(<code>github_ci</code><br/>🐙 <em>GitHub Actions runner</em>)
+        ci_gitlab_ci(<code>gitlab_ci</code><br/>🦊 <em>GitLab CI</em>)
+        ci_unknown_ci(<code>unknown_ci</code><br/>♲ <em>Unknown CI</em>)
+    end
     subgraph "<code>extra_platforms.LINUX</code><br/>🐧 <em>Any Linux distribution</em>"
         linux_altlinux(<code>altlinux</code><br/>🐧 <em>ALT Linux</em>)
         linux_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
@@ -103,6 +108,8 @@ flowchart
         all_platforms_fedora(<code>fedora</code><br/>🎩 <em>Fedora</em>)
         all_platforms_freebsd(<code>freebsd</code><br/>😈 <em>FreeBSD</em>)
         all_platforms_gentoo(<code>gentoo</code><br/>🗜️ <em>Gentoo Linux</em>)
+        all_platforms_github_ci(<code>github_ci</code><br/>🐙 <em>GitHub Actions runner</em>)
+        all_platforms_gitlab_ci(<code>gitlab_ci</code><br/>🦊 <em>GitLab CI</em>)
         all_platforms_guix(<code>guix</code><br/>🐃 <em>Guix System</em>)
         all_platforms_hurd(<code>hurd</code><br/>🐃 <em>GNU/Hurd</em>)
         all_platforms_ibm_powerkvm(<code>ibm_powerkvm</code><br/>🤹 <em>IBM PowerKVM</em>)
@@ -130,6 +137,7 @@ flowchart
         all_platforms_tumbleweed(<code>tumbleweed</code><br/>↻ <em>openSUSE Tumbleweed</em>)
         all_platforms_tuxedo(<code>tuxedo</code><br/>🤵 <em>Tuxedo OS</em>)
         all_platforms_ubuntu(<code>ubuntu</code><br/>🎯 <em>Ubuntu</em>)
+        all_platforms_unknown_ci(<code>unknown_ci</code><br/>♲ <em>Unknown CI</em>)
         all_platforms_unknown_linux(<code>unknown_linux</code><br/>🐧 <em>Unknown Linux</em>)
         all_platforms_windows(<code>windows</code><br/>🪟 <em>Windows</em>)
         all_platforms_wsl1(<code>wsl1</code><br/>⊞ <em>Windows Subsystem for Linux v1</em>)

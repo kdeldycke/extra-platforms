@@ -37,6 +37,7 @@ from extra_platforms import (
     BSD_WITHOUT_MACOS,
     BUILDROOT,
     CENTOS,
+    CI,
     CLOUDLINUX,
     CYGWIN,
     DEBIAN,
@@ -178,8 +179,8 @@ def test_groups_from_ids(group_id):
         ([UNIX, AIX], {UNIX}),
         ([WINDOWS], {ANY_WINDOWS}),
         ([ALL_PLATFORMS, WINDOWS], {ALL_PLATFORMS}),
-        ([UNIX, WINDOWS], {ALL_PLATFORMS}),
-        ([UNIX, ANY_WINDOWS], {ALL_PLATFORMS}),
+        ([UNIX, WINDOWS, CI], {ALL_PLATFORMS}),
+        ([UNIX, ANY_WINDOWS, CI], {ALL_PLATFORMS}),
         ([BSD_WITHOUT_MACOS, UNIX], {UNIX}),
         ([BSD_WITHOUT_MACOS, MACOS], {BSD}),
         (

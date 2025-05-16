@@ -129,6 +129,20 @@ ALL_PLATFORMS: Group = Group(
 """All recognized platforms."""
 
 
+CI = Group(
+    "ci",
+    "CI systems",
+    "♺",
+    (GITHUB_CI, GITLAB_CI, UNKNOWN_CI),
+)
+"""All Continuous Integration systems.
+
+.. note::
+    `List of known CI systems
+    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
+"""
+
+
 ANY_WINDOWS = Group(
     "any_windows",
     "Any Windows",
@@ -142,7 +156,7 @@ UNIX = Group(
     "unix",
     "Any Unix",
     "⨷",
-    tuple(ALL_PLATFORMS - ANY_WINDOWS),
+    tuple(ALL_PLATFORMS - ANY_WINDOWS - CI),
 )
 """All Unix-like operating systems and compatibility layers."""
 
@@ -350,20 +364,6 @@ OTHER_UNIX = Group(
 """
 
 
-CI = Group(
-    "ci",
-    "CI systems",
-    "♺",
-    (GITHUB_CI, GITLAB_CI, UNKNOWN_CI),
-)
-"""All Continuous Integration systems.
-
-.. note::
-    `List of known CI systems
-    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
-"""
-
-
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
         ANY_WINDOWS,
@@ -373,6 +373,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         SYSTEM_V,
         UNIX_LAYERS,
         OTHER_UNIX,
+        CI,
     ),
 )
 """Non-overlapping groups."""
@@ -385,7 +386,6 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         UNIX,
         UNIX_WITHOUT_MACOS,
         BSD_WITHOUT_MACOS,
-        CI,
     ),
 )
 """Overlapping groups, defined for convenience."""

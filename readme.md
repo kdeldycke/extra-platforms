@@ -319,6 +319,9 @@ BSD_WITHOUT_MACOS,midnightbsd,1
 BSD_WITHOUT_MACOS,netbsd,1
 BSD_WITHOUT_MACOS,openbsd,1
 BSD_WITHOUT_MACOS,sunos,1
+CI,github_ci,1
+CI,gitlab_ci,1
+CI,unknown_ci,1
 SYSTEM_V,aix,1
 SYSTEM_V,solaris,1
 LINUX_LAYERS,wsl1,1
@@ -386,6 +389,10 @@ mindmap
             (🎯 ubuntu)
             (🐧 unknown_linux)
             (Ⓧ xenserver)
+        )♺ CI(
+            (🐙 github_ci)
+            (🦊 gitlab_ci)
+            (♲ unknown_ci)
         )🅱️+ BSD(
             (😈 freebsd)
             (🍎 macos)

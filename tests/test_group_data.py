@@ -28,6 +28,7 @@ from extra_platforms import (
     ANY_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
+    CI,
     EXTRA_GROUPS,
     LINUX,
     LINUX_LAYERS,
@@ -199,7 +200,7 @@ def test_logical_grouping():
     assert BSD.issuperset(BSD_WITHOUT_MACOS)
 
     # All platforms are divided into Windows and Unix at the highest level.
-    assert ALL_PLATFORMS.fullyintersects(ANY_WINDOWS | UNIX)
+    assert ALL_PLATFORMS.fullyintersects(ANY_WINDOWS | UNIX | CI)
 
     # All UNIX platforms are divided into BSD, Linux, and Unix families.
     assert UNIX.fullyintersects(
