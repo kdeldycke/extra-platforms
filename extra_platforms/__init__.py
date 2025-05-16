@@ -371,7 +371,7 @@ __all__ = (
     "is_buildkite",  # noqa: F405
     "is_buildroot",  # noqa: F405
     "is_centos",  # noqa: F405
-    "is_ci",  # noqa: F405
+    "is_ci",  # noqa: F405, F822
     "is_circle_ci",  # noqa: F405
     "is_cirrus_ci",  # noqa: F405
     "is_cloudlinux",  # noqa: F405
