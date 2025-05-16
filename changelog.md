@@ -1,9 +1,6 @@
 # Changelog
 
-## [3.2.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v3.1.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [3.2.0 (2025-05-16)](https://github.com/kdeldycke/extra-platforms/compare/v3.1.0...v3.2.0)
 
 - Add detection of CI systems: `GITHUB_CI`, `GITLAB_CI` and `UNKNOWN_CI`.
 - Add new `CI` group to group all CI platforms.
