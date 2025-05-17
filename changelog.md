@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.2.2 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.1...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [3.2.1 (2025-05-17)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.0...v3.2.1)
 
 - Add convenient `ALL_PLATFORMS_WITHOUT_CI` group to exclude all CI systems from `ALL_PLATFORMS`.
