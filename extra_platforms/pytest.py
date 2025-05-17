@@ -90,6 +90,7 @@ for obj in cast(Iterable[Platform | Group], chain(ALL_PLATFORMS, ALL_GROUPS)):
 __all__ = (
     "skip_aix",  # noqa: F405, F822
     "skip_all_platforms",  # noqa: F405, F822
+    "skip_all_platforms_without_ci",  # noqa: F405, F822
     "skip_altlinux",  # noqa: F405, F822
     "skip_amzn",  # noqa: F405, F822
     "skip_android",  # noqa: F405, F822
@@ -161,6 +162,7 @@ __all__ = (
     "skip_xenserver",  # noqa: F405, F822
     "unless_aix",  # noqa: F405, F822
     "unless_all_platforms",  # noqa: F405, F822
+    "unless_all_platforms_without_ci",  # noqa: F405, F822
     "unless_altlinux",  # noqa: F405, F822
     "unless_amzn",  # noqa: F405, F822
     "unless_android",  # noqa: F405, F822

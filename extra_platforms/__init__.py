@@ -90,6 +90,7 @@ from .group import Group  # noqa: E402
 from .group_data import (  # noqa: E402
     ALL_GROUPS,
     ALL_PLATFORMS,
+    ALL_PLATFORMS_WITHOUT_CI,
     ANY_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
@@ -323,6 +324,7 @@ __all__ = (
     "ALL_IDS",  # noqa: F405
     "ALL_PLATFORM_IDS",  # noqa: F405
     "ALL_PLATFORMS",  # noqa: F405
+    "ALL_PLATFORMS_WITHOUT_CI",  # noqa: F405
     "ALTLINUX",  # noqa: F405
     "AMZN",  # noqa: F405
     "ANDROID",  # noqa: F405
@@ -359,6 +361,7 @@ __all__ = (
     "IBM_POWERKVM",  # noqa: F405
     "is_aix",  # noqa: F405
     "is_all_platforms",  # noqa: F405, F822
+    "is_all_platforms_without_ci",  # noqa: F405, F822
     "is_altlinux",  # noqa: F405
     "is_amzn",  # noqa: F405
     "is_android",  # noqa: F405

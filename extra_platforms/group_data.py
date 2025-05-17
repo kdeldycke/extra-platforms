@@ -82,7 +82,7 @@ from .platform_data import (
 ALL_PLATFORMS: Group = Group(
     "all_platforms",
     "All platforms",
-    "🖥️",
+    "⚙️",
     (
         AIX,
         ALTLINUX,
@@ -172,6 +172,15 @@ CI = Group(
     `List of known CI systems
     <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
 """
+
+
+ALL_PLATFORMS_WITHOUT_CI = Group(
+    "all_platforms_without_ci",
+    "Any platforms excluding CI systems",
+    "🖥️",
+    tuple(ALL_PLATFORMS - CI),
+)
+"""All platforms, without CI systems."""
 
 
 ANY_WINDOWS = Group(
@@ -413,6 +422,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_PLATFORMS,
+        ALL_PLATFORMS_WITHOUT_CI,
         LINUX_LIKE,
         UNIX,
         UNIX_WITHOUT_MACOS,

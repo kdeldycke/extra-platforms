@@ -5,6 +5,8 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add convenient `ALL_PLATFORMS_WITHOUT_CI` group to exclude all CI systems from `ALL_PLATFORMS`.
+
 ## [3.2.0 (2025-05-16)](https://github.com/kdeldycke/extra-platforms/compare/v3.1.0...v3.2.0)
 
 - Add detection of CI systems: `GITHUB_CI`, `GITLAB_CI` and `UNKNOWN_CI`.
