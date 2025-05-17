@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.2.2 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.1...main)
+## [3.3.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.1...main)
 
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
