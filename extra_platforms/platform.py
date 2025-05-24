@@ -55,6 +55,7 @@ _MACOS_CODENAMES = {
     ("13", None): "Ventura",
     ("14", None): "Sonoma",
     ("15", None): "Sequoia",
+    ("16", None): "TBA",
 }
 """Maps macOS ``(major, minor)`` version parts to release code name.
 
