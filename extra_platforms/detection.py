@@ -74,9 +74,9 @@ import sys
 from functools import cache
 from os import environ
 
-from . import _report_msg
-
 import distro
+
+from . import _report_msg
 
 
 @cache
