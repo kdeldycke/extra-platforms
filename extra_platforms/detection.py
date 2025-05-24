@@ -511,7 +511,7 @@ def is_unknown_linux() -> bool:
     if sys.platform.startswith("linux"):
         logging.warning(f"Unknown Linux detected: {distro.info()!r}. {_report_msg}")
         return True
-    return False
+    return False  # type: ignore[unreachable,unused-ignore]
 
 
 @cache
