@@ -82,7 +82,7 @@ def test_platform_definitions(platform):
 # Restrict tests to Linux on Python 3.13 to avoid DOSing websites.
 @unless_linux
 @pytest.mark.skipif(
-    (sys.version_info.major, sys.version_info.minor) == (3, 13),
+    (sys.version_info.major, sys.version_info.minor) != (3, 13),
     reason="DOSing websites",
 )
 @all_platforms_params
