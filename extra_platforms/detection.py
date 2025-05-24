@@ -447,70 +447,71 @@ def is_unknown_ci() -> bool:
 
         - `CI`
         - `BUILD_ID`
-
     """
-    unknown_ci = (
-        "CI" in environ
-        or "BUILD_ID" in environ
-        and not (
-            is_azure_pipelines()
-            or is_bamboo()
-            or is_buildkite()
-            or is_circle_ci()
-            or is_cirrus_ci()
-            or is_codebuild()
-            or is_github_ci()
-            or is_gitlab_ci()
-            or is_heroku_ci()
-            or is_teamcity()
-            or is_travis_ci()
-        )
-    )
-    if unknown_ci:
+    if any((
+        is_azure_pipelines(),
+        is_bamboo(),
+        is_buildkite(),
+        is_circle_ci(),
+        is_cirrus_ci(),
+        is_codebuild(),
+        is_github_ci(),
+        is_gitlab_ci(),
+        is_heroku_ci(),
+        is_teamcity(),
+        is_travis_ci(),
+    )):
+        return False
+
+    if "CI" in environ or "BUILD_ID" in environ:
         logging.warning(f"Unknown CI detected: {environ}. {_report_msg}")
-    return unknown_ci
+        return True
+    return False
 
 
 @cache
 def is_unknown_linux() -> bool:
     """Return `True` if current platform is an unknown Linux."""
-    unknown_linux = sys.platform.startswith("linux") and not (
-        is_altlinux()
-        or is_amzn()
-        or is_android()
-        or is_arch()
-        or is_buildroot()
-        or is_centos()
-        or is_cloudlinux()
-        or is_debian()
-        or is_exherbo()
-        or is_fedora()
-        or is_gentoo()
-        or is_guix()
-        or is_ibm_powerkvm()
-        or is_kvmibm()
-        or is_linuxmint()
-        or is_mageia()
-        or is_mandriva()
-        or is_nobara()
-        or is_opensuse()
-        or is_oracle()
-        or is_parallels()
-        or is_pidora()
-        or is_raspbian()
-        or is_rhel()
-        or is_rocky()
-        or is_scientific()
-        or is_slackware()
-        or is_sles()
-        or is_tumbleweed()
-        or is_tuxedo()
-        or is_ubuntu()
-        or is_xenserver()
-    )
-    if unknown_linux:
+    if any((
+        is_altlinux(),
+        is_amzn(),
+        is_android(),
+        is_arch(),
+        is_buildroot(),
+        is_centos(),
+        is_cloudlinux(),
+        is_debian(),
+        is_exherbo(),
+        is_fedora(),
+        is_gentoo(),
+        is_guix(),
+        is_ibm_powerkvm(),
+        is_kvmibm(),
+        is_linuxmint(),
+        is_mageia(),
+        is_mandriva(),
+        is_nobara(),
+        is_opensuse(),
+        is_oracle(),
+        is_parallels(),
+        is_pidora(),
+        is_raspbian(),
+        is_rhel(),
+        is_rocky(),
+        is_scientific(),
+        is_slackware(),
+        is_sles(),
+        is_tumbleweed(),
+        is_tuxedo(),
+        is_ubuntu(),
+        is_xenserver(),
+    )):
+        return False
+
+    if sys.platform.startswith("linux"):
         logging.warning(f"Unknown Linux detected: {distro.info()!r}. {_report_msg}")
-    return unknown_linux
+        return True
+    return False
 
 
 @cache
