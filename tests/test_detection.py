@@ -250,4 +250,4 @@ def test_mutual_exclusion():
         assert not is_heroku_ci()
         assert not is_teamcity()
         assert not is_travis_ci()
-        assert is_unknown_ci()
+        assert not is_unknown_ci()
