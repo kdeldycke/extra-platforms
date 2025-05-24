@@ -25,7 +25,6 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORMS,
     GITHUB_CI,
-    UNKNOWN_CI,
     current_os,
     current_platforms,
     is_github_ci,
@@ -145,9 +144,8 @@ def test_current_funcs():
     current_platforms_results = current_platforms()
     assert ALL_PLATFORMS.issuperset(current_platforms_results)
     if is_github_ci():
-        assert len(current_platforms_results) == 3
+        assert len(current_platforms_results) == 2
         assert GITHUB_CI in current_platforms_results
-        assert UNKNOWN_CI in current_platforms_results
     else:
         assert len(current_platforms_results) == 1
 
