@@ -43,7 +43,7 @@ test = [
 ]
 typing = ["types-requests ~= 2.32.4.20250611"]
 docs = [
-    "furo ~= 2024.8.6",
+    "furo ~= 2025.7.19",
     "myst-parser ~= 4.0.0",
     # Sphinx 8 is the first version to drop Python 3.9.
     "sphinx ~= 8.2.0",
