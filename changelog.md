@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.2.4 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.3...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [3.2.3 (2025-08-05)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.2...v3.2.3)
 
 - Add detection of macOS Tahoe (v26.x).
