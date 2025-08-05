@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.11"
 
 [[package]]
@@ -229,7 +229,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "3.2.3"
+version = "3.2.4"
 source = { editable = "." }
 dependencies = [
     { name = "boltons" },
