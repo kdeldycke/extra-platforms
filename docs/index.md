@@ -31,6 +31,6 @@ todolist
 changelog
 code-of-conduct
 license
-GitHub Repository <https://github.com/kdeldycke/extra-platforms>
+GitHub repository <https://github.com/kdeldycke/extra-platforms>
 Funding <https://github.com/sponsors/kdeldycke>
 ```
