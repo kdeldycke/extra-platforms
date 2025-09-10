@@ -1,9 +1,6 @@
 # Changelog
 
-## [3.2.4 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.3...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [3.2.4 (2025-09-10)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.3...v3.2.4)
 
 - Remove tests on EOL `windows-2019`.
 
