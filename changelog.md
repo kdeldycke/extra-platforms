@@ -8,6 +8,7 @@
 - Fix detection of GNU/Hurd. Closes #308.
 - Add official support of Python 3.14.
 - Run tests on Python 3.15-dev.
+- Skip tests on Python 3.12 and 3.13 to reduce CI load.
 - Use `astral-sh/setup-uv` action to install `uv` instead of manually installing it with `pip`.
 - Run tests on `macos-26` and `macos-15-intel` runners.
 - Remove tests on EOL'ed `windows-2019` and `macos-13`.
