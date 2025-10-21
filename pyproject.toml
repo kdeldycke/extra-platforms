@@ -136,18 +136,22 @@ replace = "date-released: {utcnow:%Y-%m-%d}"
 
 [tool.typos]
 default.extend-ignore-identifiers-re = [
-    # error: `Sur` should be `Sure`
-    #   --> ./extra_platforms/platforms.py:56:24
-    #    |
-    # 56 |     ("11", None): "Big Sur",
-    #    |                        ^^^
-    #    |
-    "Sur",
-    # error: `PASE` should be `PASS`, `PACE`, `PARSE`
-    #   --> ./extra_platforms/platforms.py:416:8
-    #     |
-    # 416 |     - `PASE`
-    #     |        ^^^^
-    #     |
+    # error: `Tru` should be `Thru`, `True`
+    #     ╭▸ ./extra_platforms/group_data.py:345:8
+    #     │
+    # 345 │     - `Tru64`
+    #     ╰╴       ━━━
+    "Tru64",
+    # error: `PASE` should be `PASS`, `PACE`, `PARSE`, `PHASE`
+    #     ╭▸ ./extra_platforms/group_data.py:371:8
+    #     │
+    # 371 │     - `PASE`
+    #     ╰╴       ━━━━
     "PASE",
+    # error: `Sur` should be `Sure`
+    #    ╭▸ ./extra_platforms/platform.py:57:24
+    #    │
+    # 57 │     ("11", None): "Big Sur",
+    #    ╰╴                       ━━━
+    "Sur",
 ]
