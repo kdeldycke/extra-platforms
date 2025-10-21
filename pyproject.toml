@@ -28,13 +28,33 @@ classifiers = [
     'Topic :: Utilities',
     'Typing :: Typed',
 ]
-dependencies = ["boltons ~= 25.0.0", "distro ~= 1.9.0"]
+# Semantic versioning works in theory. In practice, it is hard to guarantee.
+# That's why we rely on >= specifier instead of ~= to relax constraints. This gives more freedom to packagers to
+# release hotfixes for security vulnerabilities in the future.
+# All minimal version choice are documented. Reasons to bump a minimal version are:
+# - bug fixes,
+# - security fixes,
+# - new code path we depends on,
+# - aligns minimal Python requirements to ours,
+# - adds new explicit support Python version.
+dependencies = [
+    # boltons 23.0.0 is the first version to support Python 3.11.
+    "boltons >= 23.0.0",
+    # distro 1.9.0 adds support for ALT Linux.
+    "distro >= 1.9.0",
+]
 
 [project.optional-dependencies]
-pytest = ["pytest >= 8"]
+pytest = [
+    # pytest 8.2.1 is the first version to support Python 3.13.
+    "pytest >= 8.2.1",
+]
+## Non-runtime dependencies, for development and CI, are using the ~= specifier to reduce randomness.
+## Unless the package has been referenced in sections above, in which case we align the version specifier.
 test = [
     "coverage [toml] ~= 7.10.0",
-    "pytest ~= 8.4.1",
+    # pytest 8.2.1 is the first version to support Python 3.13.
+    "pytest >= 8.2.1",
     # More pytest plugins at: https://docs.pytest.org/en/latest/reference/plugin_list.html
     "pytest-cov ~= 7.0.0",
     "pytest-github-actions-annotate-failures ~= 0.3.0",
@@ -49,7 +69,6 @@ typing = [
 docs = [
     "furo ~= 2025.7.19",
     "myst-parser ~= 4.0.0",
-    # Sphinx 8 is the first version to drop Python 3.9.
     "sphinx ~= 8.2.0",
     "sphinx-autodoc-typehints ~= 3.2.0",
     "sphinx-copybutton ~= 0.5.2",

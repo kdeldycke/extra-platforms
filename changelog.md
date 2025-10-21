@@ -7,6 +7,7 @@
 
 - Fix detection of GNU/Hurd. Closes #308.
 - Move all typing-related imports behind a hard-coded `TYPE_CHECKING` guard to avoid runtime imports.
+- Remove maximum capped version of all dependencies (relax all `~=` specifiers to `>=`). This gives more freedom to downstream and upstream packagers. Document each minimal version choice.
 - Add official support of Python 3.14.
 - Run tests on Python 3.15-dev.
 - Skip tests on Python 3.12 and 3.13 to reduce CI load.
