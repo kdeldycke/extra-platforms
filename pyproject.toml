@@ -67,7 +67,7 @@ typing = [
     "types-requests ~= 2.32.4.20250611",
 ]
 docs = [
-    "furo ~= 2025.7.19",
+    "furo ~= 2025.9.25",
     "myst-parser ~= 4.0.0",
     "sphinx ~= 8.2.0",
     "sphinx-autodoc-typehints ~= 3.2.0",
