@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.1.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [4.1.0 (2025-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v4.0.0...v4.1.0)
 
 - Add new `invalidate_caches()` method to invalidate internal caches used for platform detection.
