@@ -28,21 +28,25 @@ jobs:
           - ubuntu-24.04     # x86
           - ubuntu-22.04-arm # arm64
           - ubuntu-22.04     # x86
+          - macos-26         # arm64
           - macos-15         # arm64
+          - macos-15-intel   # x86
           - macos-14         # arm64
-          - macos-13         # x86
           - windows-11-arm   # arm64
           - windows-2025     # x86
           - windows-2022     # x86
-        # Available Python: https://github.com/actions/python-versions/blob/main/versions-manifest.json
         python-version:
           - "3.11"
           - "3.12"
           - "3.13"
           - "3.14"
+          - "3.15"
         include:
           # Default all jobs as stable, unless marked otherwise below.
           - state: stable
+          # XXX Python 3.15 is still in development.
+          - state: unstable
+            python-version: "3.15"
     name: "${{ matrix.state == 'stable' && '✅' || '⁉️' }} ${{ matrix.os }} / py${{ matrix.python-version }}"
     runs-on: ${{ matrix.os }}
     # We keep going when a job flagged as not stable fails.
@@ -50,9 +54,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5.0.0
       - uses: astral-sh/setup-uv@v7.0.0
+      - name: Install Python ${{ matrix.python-version }}
+        # If UV cannot find the requested Python version, it exits with code 2, which let the job pass unnoticed on
+        # Windows. So we force the shell to bash, even on Windows, and "set -e" to ensure any error in the install
+        # process is caught and fails the job. It works because Windows runners too Git Bash available).
+        shell: bash
+        run: |
+          set -e
+          uv --no-progress venv --python ${{ matrix.python-version }}
       - name: Install project
         run: |
-          uv --no-progress venv --python ${{ matrix.python-version }}
           uv --no-progress sync --frozen --extra test --extra pytest
       - name: Unittests
         run: |
