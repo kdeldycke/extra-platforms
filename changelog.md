@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Remove dependency on `boltons`.
 - Add all `Operating System ::` trove classifiers.
 - Add all platform names as package keywords.
 

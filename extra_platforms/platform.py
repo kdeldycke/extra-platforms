@@ -27,9 +27,6 @@ from functools import cached_property
 
 import distro
 
-# TODO: eliminate boltons dependency
-from boltons.iterutils import remap
-
 from . import detection
 
 TYPE_CHECKING = False
@@ -125,18 +122,26 @@ def _remove_blanks(
 
     Dictionarries are inspected recursively and their own blank values are removed.
     """
-
-    def visit(path, key, value) -> bool:
-        """Ignore some class of blank values depending on configuration."""
+    result = {}
+    for key, value in tree.items():
+        # Skip None values if configured
         if remove_none and value is None:
-            return False
-        if remove_dicts and isinstance(value, dict) and not len(value):
-            return False
-        if remove_str and isinstance(value, str) and not len(value):
-            return False
-        return True
+            continue
 
-    return remap(tree, visit=visit)  # type: ignore[no-any-return]
+        # Recursively process nested dicts
+        if isinstance(value, dict):
+            cleaned = _remove_blanks(value, remove_none, remove_dicts, remove_str)
+            # Skip empty dicts if configured
+            if remove_dicts and not cleaned:
+                continue
+            result[key] = cleaned
+        # Skip empty strings if configured
+        elif remove_str and isinstance(value, str) and not value:
+            continue
+        else:
+            result[key] = value
+
+    return result
 
 
 @dataclass(frozen=True)

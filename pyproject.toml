@@ -141,8 +141,6 @@ classifiers = [
 # - aligns minimal Python requirements to ours,
 # - adds new explicit support Python version.
 dependencies = [
-    # boltons 23.0.0 is the first version to support Python 3.11.
-    "boltons >= 23.0.0",
     # distro 1.9.0 adds support for ALT Linux.
     "distro >= 1.9.0",
 ]
@@ -165,10 +163,7 @@ test = [
     "pytest-xdist [psutil] ~= 3.8.0",
     "requests ~= 2.32.3",
 ]
-typing = [
-    "types-boltons ~= 25.0.0.20250822",
-    "types-requests ~= 2.32.4.20250611",
-]
+typing = ["types-requests ~= 2.32.4.20250611"]
 docs = [
     "furo ~= 2025.9.25",
     "myst-parser ~= 4.0.0",
