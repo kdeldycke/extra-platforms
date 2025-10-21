@@ -35,8 +35,13 @@ from operator import attrgetter
 from pathlib import Path
 from textwrap import dedent, indent
 
-from .group import Group
-from .group_data import ALL_GROUPS, ALL_PLATFORMS, EXTRA_GROUPS, NON_OVERLAPPING_GROUPS
+from extra_platforms import (
+    ALL_GROUPS,
+    ALL_PLATFORMS,
+    EXTRA_GROUPS,
+    NON_OVERLAPPING_GROUPS,
+    Group,
+)
 
 
 def replace_content(
