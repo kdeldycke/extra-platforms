@@ -214,7 +214,7 @@ def current_platforms() -> tuple[Platform, ...]:
 
     Always raises an error if the current environment is not recognized.
 
-    ..attention::
+    .. attention::
         At this point it is too late to worry about caching. This function has no
         choice but to evaluate all platforms detection heuristics.
     """

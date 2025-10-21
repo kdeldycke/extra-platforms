@@ -48,7 +48,7 @@ def platforms_from_ids(*platform_ids: str) -> tuple[Platform]:
     IDs are case-insensitive, and can refer to any platforms or groups. Matching groups
     will be expanded to the platforms they contain.
 
-    ..tip::
+    .. tip::
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """
@@ -74,7 +74,7 @@ def groups_from_ids(*group_ids: str) -> tuple[Group]:
 
     IDs are case-insensitive.
 
-    ..tip::
+    .. tip::
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """

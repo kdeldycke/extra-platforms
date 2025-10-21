@@ -134,7 +134,7 @@ class Group:
         ``other`` can be an arbitrarily nested ``Iterable`` of ``Group``, ``Platform``, or
         their IDs. ``None`` values and empty iterables are silently ignored.
 
-        ..caution::
+        .. caution::
             Can returns duplicates.
         """
         for item in flatten_iter(other):
@@ -193,7 +193,7 @@ class Group:
     def union(self, *others: _TNestedReferences) -> Group:
         """Return a new ``Group`` with platforms from the group and all others.
 
-        ..caution::
+        .. caution::
             The new ``Group`` will inherits the metadata of the first one. All other
             groups' metadata will be ignored.
         """
@@ -213,7 +213,7 @@ class Group:
     def intersection(self, *others: _TNestedReferences) -> Group:
         """Return a new ``Group`` with platforms common to the group and all others.
 
-        ..caution::
+        .. caution::
             The new ``Group`` will inherits the metadata of the first one. All other
             groups' metadata will be ignored.
         """
@@ -233,7 +233,7 @@ class Group:
     def difference(self, *others: _TNestedReferences) -> Group:
         """Return a new ``Group`` with platforms in the group that are not in the others.
 
-        ..caution::
+        .. caution::
             The new ``Group`` will inherits the metadata of the first one. All other
             groups' metadata will be ignored.
         """
@@ -253,7 +253,7 @@ class Group:
     def symmetric_difference(self, other: _TNestedReferences) -> Group:
         """Return a new ``Group`` with platforms in either the group or other but not both.
 
-        ..caution::
+        .. caution::
             The new ``Group`` will inherits the metadata of the first one. All other
             groups' metadata will be ignored.
         """

@@ -64,6 +64,7 @@ _MACOS_CODENAMES = {
 """Maps macOS ``(major, minor)`` version parts to release code name.
 
 See:
+
 - https://en.wikipedia.org/wiki/Template:MacOS_versions
 - https://docs.python.org/3/library/platform.html#platform.mac_ver
 """
@@ -91,7 +92,7 @@ def _recursive_update(
     """Like standard ``dict.update()``, but recursive so sub-dict gets updated.
 
     Ignore elements present in ``b`` but not in ``a``. Unless ``strict`` is set to
-    `True`, in which case a `ValueError` exception will be raised.
+    ``True``, in which case a ``ValueError`` exception will be raised.
     """
     for k, v in b.items():
         if isinstance(v, dict) and isinstance(a.get(k), dict):
@@ -114,9 +115,10 @@ def _remove_blanks(
     """Returns a copy of a dict without items whose values blanks.
 
     Are considered blanks:
-    - `None` values
+
+    - ``None`` values
     - empty strings
-    - empty `dict`
+    - empty ``dict``
 
     The removal of each of these class can be skipped by setting ``remove_*``
     parameters.
