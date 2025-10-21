@@ -66,9 +66,11 @@ jobs:
       - name: Install project
         run: |
           uv --no-progress sync --frozen --extra test --extra pytest
+
       - name: Unittests
         run: |
           uv --no-progress run --frozen -- pytest
+
       - name: Codecov - coverage
         uses: codecov/codecov-action@v5.5.1
         with:
