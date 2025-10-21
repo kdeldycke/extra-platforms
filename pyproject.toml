@@ -52,7 +52,7 @@ pytest = [
 ## Non-runtime dependencies, for development and CI, are using the ~= specifier to reduce randomness.
 ## Unless the package has been referenced in sections above, in which case we align the version specifier.
 test = [
-    "coverage [toml] ~= 7.10.0",
+    "coverage [toml] ~= 7.11.0",
     # pytest 8.2.1 is the first version to support Python 3.13.
     "pytest >= 8.2.1",
     # More pytest plugins at: https://docs.pytest.org/en/latest/reference/plugin_list.html
