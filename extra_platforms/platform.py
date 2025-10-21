@@ -124,18 +124,18 @@ def _remove_blanks(
     """
     result = {}
     for key, value in tree.items():
-        # Skip None values if configured
+        # Skip None values if configured.
         if remove_none and value is None:
             continue
 
-        # Recursively process nested dicts
+        # Recursively process nested dicts.
         if isinstance(value, dict):
             cleaned = _remove_blanks(value, remove_none, remove_dicts, remove_str)
-            # Skip empty dicts if configured
+            # Skip empty dicts if configured.
             if remove_dicts and not cleaned:
                 continue
             result[key] = cleaned
-        # Skip empty strings if configured
+        # Skip empty strings if configured.
         elif remove_str and isinstance(value, str) and not value:
             continue
         else:
