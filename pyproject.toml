@@ -42,7 +42,10 @@ test = [
     "pytest-xdist [psutil] ~= 3.8.0",
     "requests ~= 2.32.3",
 ]
-typing = ["types-requests ~= 2.32.4.20250611"]
+typing = [
+    "types-boltons ~= 25.0.0.20250822",
+    "types-requests ~= 2.32.4.20250611",
+]
 docs = [
     "furo ~= 2025.7.19",
     "myst-parser ~= 4.0.0",
@@ -82,7 +85,6 @@ pretty = true
 
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
-module = ["boltons.*", "furo"]
 
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
