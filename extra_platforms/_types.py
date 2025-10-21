@@ -39,9 +39,14 @@ Inspired by `how tomllib does it in the stdlib
 from __future__ import annotations
 
 from collections.abc import Iterable
+from typing import TypeVar
 
 from .group import Group
 from .platform import Platform
+
+_T = TypeVar("_T")
+"""Generic type variable."""
+
 
 _TPlatformRef = Platform | Group | str | None
 """All types that can be used to reference a platform or a group:

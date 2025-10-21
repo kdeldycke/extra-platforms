@@ -19,8 +19,6 @@ from __future__ import annotations
 
 from itertools import combinations
 
-from boltons.iterutils import unique, unique_iter
-
 from .group import Group
 from .group_data import ALL_GROUPS, ALL_PLATFORMS
 
@@ -28,7 +26,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from ._types import _TNestedReferences
+    from ._types import _T, _TNestedReferences
     from .platform import Platform
 
 
@@ -42,17 +40,30 @@ ALL_IDS: frozenset[str] = ALL_PLATFORM_IDS | ALL_GROUP_IDS
 """Set of all recognized platform and group IDs."""
 
 
-def platforms_from_ids(*platform_ids: str) -> tuple[Platform]:
+def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
+    """Return a tuple with duplicates removed, preserving order.
+
+    This uses ``dict.fromkeys()`` which:
+
+    - Preserves insertion order (guaranteed since Python 3.7)
+    - Removes duplicates (dict keys are unique)
+    """
+    return tuple(dict.fromkeys(items))
+
+
+def platforms_from_ids(*platform_and_group_ids: str) -> tuple[Platform, ...]:
     """Returns a deduplicated tuple of platforms matching the provided IDs.
 
     IDs are case-insensitive, and can refer to any platforms or groups. Matching groups
     will be expanded to the platforms they contain.
 
+    Order of the returned platforms matches the order of the provided IDs.
+
     .. tip::
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """
-    ids = unique((s.lower() for s in platform_ids))
+    ids = _unique((s.lower() for s in platform_and_group_ids))
     unrecognized_ids = set(ids) - ALL_IDS
     if unrecognized_ids:
         raise ValueError(
@@ -66,19 +77,21 @@ def platforms_from_ids(*platform_ids: str) -> tuple[Platform]:
             groups = groups_from_ids(platform_id)
             assert len(groups) == 1
             platforms.extend(groups[0].platforms)
-    return tuple(unique_iter(platforms))
+    return _unique(platforms)
 
 
-def groups_from_ids(*group_ids: str) -> tuple[Group]:
+def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
     """Returns a deduplicated tuple of groups matching the provided IDs.
 
     IDs are case-insensitive.
+
+    Order of the returned groups matches the order of the provided IDs.
 
     .. tip::
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """
-    ids = unique((s.lower() for s in group_ids))
+    ids = _unique((s.lower() for s in group_ids))
     unrecognized_ids = set(ids) - ALL_GROUP_IDS
     if unrecognized_ids:
         raise ValueError(
@@ -89,7 +102,7 @@ def groups_from_ids(*group_ids: str) -> tuple[Group]:
         for group in ALL_GROUPS:
             if group.id == group_id:
                 groups.append(group)
-    return tuple(unique_iter(groups))
+    return _unique(groups)
 
 
 def reduce(
