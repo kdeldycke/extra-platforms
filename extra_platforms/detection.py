@@ -51,6 +51,7 @@ And also because it is the recommended replacement for Python's original
 ``platform.linux_distribution`` function (which was removed in Python 3.8).
 
 For all other platforms, we either rely on:
+
 - `sys.platform
   <https://docs.python.org/3/library/sys.html#sys.platform>`_
 - `platform.platform
