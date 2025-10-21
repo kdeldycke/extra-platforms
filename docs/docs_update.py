@@ -49,6 +49,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 README_PATH = PROJECT_ROOT / "readme.md"
 """The path to the ``readme.md`` file."""
 
+
 def replace_content(
     filepath: Path,
     start_tag: str,
