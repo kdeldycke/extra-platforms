@@ -14,6 +14,7 @@
 - Use `astral-sh/setup-uv` action to install `uv` instead of manually installing it with `pip`.
 - Run tests on `macos-26` and `macos-15-intel` runners.
 - Remove tests on EOL'ed `windows-2019` and `macos-13`.
+- Support GitHub admonitions in Sphinx/MyST documentation.
 
 ## [3.2.3 (2025-08-05)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.2...v3.2.3)
 
