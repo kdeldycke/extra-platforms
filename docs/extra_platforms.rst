@@ -17,14 +17,6 @@ extra\_platforms.detection module
    :show-inheritance:
    :undoc-members:
 
-extra\_platforms.docs\_update module
-------------------------------------
-
-.. automodule:: extra_platforms.docs_update
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
 extra\_platforms.group module
 -----------------------------
 
