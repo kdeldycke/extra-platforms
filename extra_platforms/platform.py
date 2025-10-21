@@ -24,7 +24,6 @@ from __future__ import annotations
 import platform
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Any
 
 import distro
 
@@ -32,6 +31,11 @@ import distro
 from boltons.iterutils import remap
 
 from . import detection
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from typing import Any
+
 
 _MACOS_CODENAMES = {
     ("10", "0"): "Cheetah",

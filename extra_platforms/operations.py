@@ -18,25 +18,27 @@
 from __future__ import annotations
 
 from itertools import combinations
-from typing import TYPE_CHECKING, FrozenSet, Iterable
 
 from boltons.iterutils import unique, unique_iter
 
 from .group import Group
 from .group_data import ALL_GROUPS, ALL_PLATFORMS
-from .platform import Platform
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from . import _TNestedReferences
+    from collections.abc import Iterable
+
+    from ._types import _TNestedReferences
+    from .platform import Platform
 
 
-ALL_PLATFORM_IDS: FrozenSet[str] = frozenset((p.id for p in ALL_PLATFORMS.platforms))
+ALL_PLATFORM_IDS: frozenset[str] = frozenset((p.id for p in ALL_PLATFORMS.platforms))
 """Set of all recognized platform IDs."""
 
-ALL_GROUP_IDS: FrozenSet[str] = frozenset((p.id for p in ALL_GROUPS))
+ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS))
 """Set of all recognized group IDs."""
 
-ALL_IDS: FrozenSet[str] = ALL_PLATFORM_IDS | ALL_GROUP_IDS
+ALL_IDS: frozenset[str] = ALL_PLATFORM_IDS | ALL_GROUP_IDS
 """Set of all recognized platform and group IDs."""
 
 

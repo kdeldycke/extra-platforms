@@ -30,13 +30,16 @@ except ImportError:
     )
 
 from itertools import chain
-from typing import Callable, Iterable, cast
 
 import extra_platforms
 
 from .group import Group
 from .group_data import ALL_GROUPS, ALL_PLATFORMS
 from .platform import Platform
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class DeferredCondition:
@@ -68,7 +71,10 @@ class DeferredCondition:
 
 
 # Generate a pair of skip/unless decorators for each platform and group.
-for obj in cast(Iterable[Platform | Group], chain(ALL_PLATFORMS, ALL_GROUPS)):
+for obj in chain(ALL_PLATFORMS, ALL_GROUPS):
+    # Sanity check to please the type checker.
+    assert isinstance(obj, (Platform, Group))
+
     # Get the detection function for the current object.
     func = getattr(extra_platforms, f"is_{obj.id}")
 

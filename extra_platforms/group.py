@@ -20,14 +20,16 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass, field, replace
 from functools import cached_property
-from typing import TYPE_CHECKING, Iterator
 
 from boltons.iterutils import flatten_iter
 
 from .platform import Platform
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from . import _TNestedReferences
+    from collections.abc import Iterator
+
+    from ._types import _TNestedReferences
 
 
 @dataclass(frozen=True)

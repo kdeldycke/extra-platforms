@@ -45,6 +45,9 @@ def test_module_root_declarations():
         for node in tree.body:
             if isinstance(node, ast.Assign):
                 for target in node.targets:
+                    # Skip TYPE_CHECKING variable. See _types.py for more details.
+                    if target.id == "TYPE_CHECKING":  # type: ignore[attr-defined]
+                        continue
                     members.add(target.id)  # type: ignore[attr-defined]
             elif isinstance(node, ast.AnnAssign):
                 members.add(node.target.id)  # type: ignore[union-attr]

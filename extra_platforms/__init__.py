@@ -18,7 +18,11 @@
 import sys
 from functools import cache
 from platform import platform
-from typing import Callable, Iterable, Union
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
 
 # This message is put up there because it is used in multiple places in other files.
 _report_msg = (
@@ -182,21 +186,6 @@ from .platform_data import (  # noqa: E402
 
     That is to make dependency on Pytest optional.
 """
-
-
-_TPlatformRef = Platform | Group | str | None
-"""All types that can be used to reference a platform or a group:
-
-- a ``Platform`` object itself
-- a ``Group`` object representing a collection of platforms
-- a string representing a platform ID or a group ID
-- ``None`` to represent an empty set of platforms
-"""
-
-_TNestedReferences = Union[
-    _TPlatformRef | Iterable[_TPlatformRef | Iterable["_TNestedReferences"]]
-]
-"""Type for arbitrary nested references to platforms and groups."""
 
 
 from .operations import (  # noqa: E402
