@@ -9,7 +9,7 @@
 - Move all typing-related imports behind a hard-coded `TYPE_CHECKING` guard to avoid runtime imports.
 - Remove maximum capped version of all dependencies (relax all `~=` specifiers to `>=`). This gives more freedom to downstream and upstream packagers. Document each minimal version choice.
 - Add official support of Python 3.14.
-- Run tests on Python 3.15-dev.
+- Run tests on Python 3.15.
 - Skip tests on Python 3.12 and 3.13 to reduce CI load.
 - Use `astral-sh/setup-uv` action to install `uv` instead of manually installing it with `pip`.
 - Run tests on `macos-26` and `macos-15-intel` runners.
