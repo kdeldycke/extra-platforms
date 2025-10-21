@@ -16,13 +16,9 @@
 """Expose package-wide elements."""
 
 import sys
+from collections.abc import Callable
 from functools import cache
 from platform import platform
-
-TYPE_CHECKING = False
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
 
 # This message is put up there because it is used in multiple places in other files.
 _report_msg = (
