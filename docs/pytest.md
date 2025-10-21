@@ -1,4 +1,4 @@
-# Pytest utilities and fixtures
+# {octicon}`meter` Pytest
 
 ````{important}
 For these helpers to work, you need to install ``extra_platforms``'s additional dependencies from the ``pytest`` extra group:

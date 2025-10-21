@@ -1,4 +1,4 @@
-# Platforms
+# {octicon}`codespaces` Platforms
 
 To add a new Linux distribution, you can get inspiration from these pull requests:
 

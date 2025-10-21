@@ -1,4 +1,4 @@
-# Groups
+# {octicon}`apps` Groups
 
 ## OS families
 

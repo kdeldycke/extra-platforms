@@ -1,4 +1,4 @@
-# Detection
+# {octicon}`pulse` Detection
 
 ## `extra_platforms.detection` API
 

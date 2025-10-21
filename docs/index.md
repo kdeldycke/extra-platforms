@@ -27,8 +27,8 @@ API <extra_platforms>
 tests
 genindex
 modindex
-todolist
 changelog
+todolist
 code-of-conduct
 license
 GitHub repository <https://github.com/kdeldycke/extra-platforms>
