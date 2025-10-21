@@ -17,7 +17,7 @@
 - Manage collection of platforms and groups
 - Associate each platform and group to an emoji symbol
 - Conditional markers decorators for `pytest`: `@skip_<id>`/`@unless_<id>` for each platform and group (`@skip_android`, `@skip_any_windows`, `@skip_github_ci`, …)
-- Address [`distro#177` issue (support for Windows and Mac OS)](https://github.com/python-distro/distro/issues/177)
+- Fix [`distro#177` issue (support for Windows and Mac OS)](https://github.com/python-distro/distro/issues/177)
 
 ## Quick start
 
