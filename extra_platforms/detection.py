@@ -61,8 +61,8 @@ For all other platforms, we either rely on:
 - environment variables
 
 .. seealso::
-
     Other source of inspiration for platform detection:
+
     - `Rust's sysinfo crate
       <https://github.com/stanislav-tkach/os_info/tree/master/os_info/src>`_.
 """
