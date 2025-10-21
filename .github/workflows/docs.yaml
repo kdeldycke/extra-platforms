@@ -20,7 +20,7 @@ jobs:
       - uses: astral-sh/setup-uv@v7.1.1
       - name: Generate dynamic doc
         run: |
-          uv --no-progress run --frozen -m extra_platforms.docs_update
+          uv --no-progress run --frozen ./docs/docs_update.py
       - uses: peter-evans/create-pull-request@v7.0.8
         with:
           assignees: ${{ github.actor }}
