@@ -18,7 +18,10 @@ from __future__ import annotations
 
 import ast
 import inspect
+import tomllib
 from pathlib import Path
+
+import requests
 
 import extra_platforms
 from extra_platforms import (
@@ -35,6 +38,40 @@ from extra_platforms import group_data as group_data_module
 from extra_platforms import operations as operations_module
 from extra_platforms import platform as platform_module
 from extra_platforms import platform_data as platform_data_module
+
+
+def test_pypoject_metadata():
+    """Check that metadata in pyproject.toml is correct."""
+    # Fetch official trove classifiers from PyPI.
+    response = requests.get("https://pypi.org/pypi?%3Aaction=list_classifiers")
+    assert response.ok, f"{response.url} is not reachable: {response}"
+    official_classifiers = response.text.splitlines()
+
+    # Load our trove classifiers from pyproject.toml.
+    pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
+    pyproject = tomllib.loads(pyproject_path.read_text())
+    classifiers = pyproject["project"]["classifiers"]
+
+    for classifier in classifiers:
+        assert classifier in official_classifiers, (
+            f"Classifier '{classifier}' is not an official trove classifier."
+        )
+
+    assert len(classifiers) == len(set(classifiers)), (
+        "Classifiers must not contain duplicates."
+    )
+
+    sorted_classifiers = [c for c in official_classifiers if c in classifiers]
+    assert sorted_classifiers == classifiers, (
+        "Classifiers must be sorted in the same order as official trove classifiers."
+    )
+
+    os_classifiers = [
+        c for c in official_classifiers if c.startswith("Operating System :: ")
+    ]
+    assert set(c for c in classifiers if c.startswith("Operating System :: ")) == set(
+        os_classifiers
+    ), "All Operating System classifiers must be present in our metadata."
 
 
 def test_module_root_declarations():
