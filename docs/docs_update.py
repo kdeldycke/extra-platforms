@@ -43,6 +43,11 @@ from extra_platforms import (
     Group,
 )
 
+PROJECT_ROOT = Path(__file__).parent.parent
+"""The root path of the project."""
+
+README_PATH = PROJECT_ROOT / "readme.md"
+"""The path to the ``readme.md`` file."""
 
 def replace_content(
     filepath: Path,
@@ -175,8 +180,6 @@ def generate_platforms_graph(
 
 def update_docs() -> None:
     """Update documentation with dynamic content."""
-    project_root = Path(__file__).parent.parent
-
     # TODO: Replace this hard-coded dict by allowing Group dataclass to group
     # other groups.
     all_groups = (
@@ -195,7 +198,7 @@ def update_docs() -> None:
 
     # Update the Sankey diagram mapping groups to platforms.
     replace_content(
-        project_root / "readme.md",
+        README_PATH,
         "<!-- platform-sankey-start -->\n\n",
         "\n\n<!-- platform-sankey-end -->",
         generate_platform_sankey(),
@@ -203,14 +206,14 @@ def update_docs() -> None:
 
     # Update diagram showing the hierarchy of non-overlapping groups.
     replace_content(
-        project_root / "readme.md",
+        README_PATH,
         "<!-- platform-hierarchy-start -->\n\n",
         "\n\n<!-- platform-hierarchy-end -->",
         generate_platform_hierarchy(),
     )
 
     # Update grouping charts of all groups, including non-overlapping and extra groups.
-    platform_doc = project_root / "docs" / "groups.md"
+    platform_doc = PROJECT_ROOT / "docs" / "groups.md"
     for top_groups in all_groups:
         replace_content(
             platform_doc,
