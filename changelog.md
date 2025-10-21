@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add new `invalidate_caches()` method to invalidate internal caches used for platform detection.
 - Remove dependency on `boltons`.
 - Add all `Operating System ::` trove classifiers.
 - Add all platform names as package keywords.

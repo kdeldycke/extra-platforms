@@ -17,9 +17,9 @@
 
 from __future__ import annotations
 
+import platform as stdlib_platform
 import sys
-from functools import cache
-from platform import platform
+from functools import cache, cached_property
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -32,6 +32,7 @@ _report_msg = (
     "improve detection heuristics."
 )
 
+from . import detection  # noqa: E402
 from .detection import (  # noqa: E402
     is_aix,
     is_altlinux,
@@ -232,7 +233,8 @@ def current_platforms() -> tuple[Platform, ...]:
     if not matching:
         msg = (
             f"Unrecognized {sys.platform} / "
-            f"{platform(aliased=True, terse=True)} platform. {_report_msg}"
+            f"{stdlib_platform.platform(aliased=True, terse=True)} platform. "
+            f"{_report_msg}"
         )
         raise SystemError(msg)
 
@@ -294,9 +296,11 @@ def _generate_group_membership_func(_group: Group) -> Callable:
     return cache(group_membership_check)
 
 
+_group_membership_func_ids = []
 for _group in ALL_GROUPS:
     func_id = f"is_{_group.id}"
     assert func_id not in locals(), f"Function ID {func_id} already defined locally."
+    _group_membership_func_ids.append(func_id)
     globals()[func_id] = _generate_group_membership_func(_group)
 """Generates an ``is_<group.id>()`` local function for each group.
 
@@ -307,6 +311,39 @@ Since platforms and groups have unique, non-overlapping IDs, we can create a
 ``is_<group.id>`` method for each group. The value of this boolean variable mark the
 membership of the current platform to that group.
 """
+
+
+def invalidate_caches():
+    """Invalidate all cached properties.
+
+    Inspired by the new `platform.invalidate_caches() from Python 3.14
+    <https://docs.python.org/3.14/library/platform.html#platform.invalidate_caches>`_,
+    which is also called here when available.
+    """
+    # Invalidate platform module caches if available.
+    if sys.version_info >= (3, 14):
+        stdlib_platform.invalidate_caches()
+
+    # Invalidate Platform class cached properties.
+    for platform_obj in ALL_PLATFORMS.platforms:
+        if "current" in vars(platform_obj):
+            # Use object.__delattr__ to bypass frozen dataclass restriction.
+            object.__delattr__(platform_obj, "current")
+
+    # Invalidate detection module cached functions.
+    for func_id in dir(detection):
+        func = getattr(detection, func_id)
+        if callable(func) and hasattr(func, "cache_clear"):
+            func.cache_clear()
+
+    # Invalidate current_platforms and current_os caches.
+    current_platforms.cache_clear()
+    current_os.cache_clear()
+
+    # Invalidate dynamically generated group membership functions.
+    for func_id in _group_membership_func_ids:
+        globals()[func_id].cache_clear()
+
 
 __all__ = (
     "AIX",  # noqa: F405
@@ -350,6 +387,7 @@ __all__ = (
     "HEROKU_CI",  # noqa: F405
     "HURD",  # noqa: F405
     "IBM_POWERKVM",  # noqa: F405
+    "invalidate_caches",  # noqa: F405
     "is_aix",  # noqa: F405
     "is_all_platforms",  # noqa: F405, F822
     "is_all_platforms_without_ci",  # noqa: F405, F822

@@ -34,7 +34,11 @@ from extra_platforms import (
     WSL2,
     current_os,
     current_platforms,
+    invalidate_caches,
     is_github_ci,
+    is_macos,
+    is_ubuntu,
+    is_windows,
 )
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
@@ -255,3 +259,56 @@ def test_group_membership_funcs():
         assert func() == (current_os() in group)
 
         assert group.name.lower() in func.__doc__.lower()
+
+
+def test_invalidate_caches():
+    """Test that invalidate_caches() properly clears all caches."""
+
+    # Call detection functions to populate caches.
+    _ = is_ubuntu()
+    _ = is_macos()
+    # Call global functions.
+    _ = current_platforms()
+    _ = current_os()
+    # Call group membership functions.
+    _ = is_windows()
+
+    # Verify caches are populated.
+    assert hasattr(is_ubuntu, "__wrapped__")
+    assert hasattr(is_macos, "__wrapped__")
+    assert hasattr(current_platforms, "__wrapped__")
+    assert hasattr(current_os, "__wrapped__")
+    assert hasattr(is_windows, "__wrapped__")
+
+    # Access Platform.current to populate their caches.
+    for platform_obj in ALL_PLATFORMS.platforms:
+        _ = platform_obj.current
+        # For cached_property, the value is stored in the instance's __dict__.
+        assert "current" in vars(platform_obj), (
+            f"'current' not cached for {platform_obj.id}"
+        )
+
+    # Check that caches have hits (values are cached).
+    assert is_ubuntu.cache_info().hits > 0 or is_ubuntu.cache_info().currsize > 0
+    assert is_macos.cache_info().hits > 0 or is_macos.cache_info().currsize > 0
+    assert (
+        current_platforms.cache_info().hits > 0
+        or current_platforms.cache_info().currsize > 0
+    )
+    assert current_os.cache_info().hits > 0 or current_os.cache_info().currsize > 0
+    assert is_windows.cache_info().hits > 0 or is_windows.cache_info().currsize > 0
+
+    # Invalidate all caches.
+    invalidate_caches()
+
+    # Verify caches were cleared (currsize should be 0).
+    assert is_ubuntu.cache_info().currsize == 0
+    assert is_macos.cache_info().currsize == 0
+    assert current_platforms.cache_info().currsize == 0
+    assert current_os.cache_info().currsize == 0
+    assert is_windows.cache_info().currsize == 0
+
+    for platform_obj in ALL_PLATFORMS.platforms:
+        assert "current" not in vars(platform_obj), (
+            f"'current' cache not cleared for {platform_obj.id}"
+        )
