@@ -19,6 +19,20 @@
 - Conditional markers decorators for `pytest`: `@skip_<id>`/`@unless_<id>` for each platform and group (`@skip_android`, `@skip_any_windows`, `@skip_github_ci`, …)
 - Address [`distro#177` issue (support for Windows and Mac OS)](https://github.com/python-distro/distro/issues/177)
 
+## Quick start
+
+If you want to play with this library without contaminating your system, you can [use `uv`](https://docs.astral.sh/uv/guides/tools/#running-tools):
+
+```shell-session
+$ uvx --with extra-platforms python
+```
+```pycon
+>>> import extra_platforms
+
+>>> extra_platforms.__version__
+'3.2.3'
+```
+
 ## Examples
 
 Get the current platform, from which you can access lots of metadata:
