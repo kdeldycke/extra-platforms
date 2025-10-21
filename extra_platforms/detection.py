@@ -264,8 +264,12 @@ def is_heroku_ci() -> bool:
 
 @cache
 def is_hurd() -> bool:
-    """Return `True` if current platform is GNU/Hurd."""
-    return sys.platform.startswith("GNU")
+    """Return `True` if current platform is GNU/Hurd.
+
+    `sys.platform` can returns `GNU` or `gnu0`, see:
+    https://github.com/kdeldycke/extra-platforms/issues/308
+    """
+    return sys.platform.lower().startswith("gnu")
 
 
 @cache
