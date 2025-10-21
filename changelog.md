@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.0.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v4.0.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [4.0.0 (2025-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.3...v4.0.0)
 
 - Fix detection of GNU/Hurd. Closes #308.
