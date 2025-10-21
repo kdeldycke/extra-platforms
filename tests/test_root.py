@@ -28,6 +28,10 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORMS,
     GITHUB_CI,
+    UNKNOWN_CI,
+    UNKNOWN_LINUX,
+    WSL1,
+    WSL2,
     current_os,
     current_platforms,
     is_github_ci,
@@ -39,18 +43,63 @@ from extra_platforms import operations as operations_module
 from extra_platforms import platform as platform_module
 from extra_platforms import platform_data as platform_data_module
 
+PROJECT_ROOT = Path(__file__).parent.parent
+"""The root path of the project."""
 
-def test_pypoject_metadata():
-    """Check that metadata in pyproject.toml is correct."""
+PYPROJECT_PATH = PROJECT_ROOT / "pyproject.toml"
+"""The path to the ``pyproject.toml`` file."""
+
+PYPROJECT = tomllib.loads(PYPROJECT_PATH.read_text())
+"""The parsed content of the ``pyproject.toml`` file."""
+
+
+def test_pyproject_keywords():
+    """Check that keywords in ``pyproject.toml`` are correct."""
+    # Build our ideal keywords list.
+    ideal_keywords = [
+        p.name
+        for p in (
+            ALL_PLATFORMS
+            # Remove generic unknown platforms.
+            - UNKNOWN_LINUX
+            - UNKNOWN_CI
+            # Remove versioned WSL platforms.
+            - WSL1
+            - WSL2
+        )
+    ]
+    # Re-add un-versioned platform names.
+    ideal_keywords.append("Windows Subsystem for Linux")
+    # Manually add group names that are not platforms per se.
+    ideal_keywords.extend((
+        "Unix",
+        "AT&T System Five",
+    ))
+    # Manually add extra keywords.
+    ideal_keywords.extend((
+        "multiplatform",
+        "Pytest",
+        "OS detection",
+        "Platform detection",
+    ))
+    # Sort and deduplicate keywords (case-insensitive).
+    ideal_keywords = sorted(set(ideal_keywords), key=lambda k: k.lower())
+
+    # Load our keywords from pyproject.toml.
+    keywords = PYPROJECT["project"]["keywords"]
+
+    assert keywords == ideal_keywords
+
+
+def test_pypoject_classifiers():
+    """Check that Trove classifiers in ``pyproject.toml`` are correct."""
     # Fetch official trove classifiers from PyPI.
     response = requests.get("https://pypi.org/pypi?%3Aaction=list_classifiers")
     assert response.ok, f"{response.url} is not reachable: {response}"
     official_classifiers = response.text.splitlines()
 
     # Load our trove classifiers from pyproject.toml.
-    pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
-    pyproject = tomllib.loads(pyproject_path.read_text())
-    classifiers = pyproject["project"]["classifiers"]
+    classifiers = PYPROJECT["project"]["classifiers"]
 
     for classifier in classifiers:
         assert classifier in official_classifiers, (
