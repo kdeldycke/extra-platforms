@@ -18,10 +18,9 @@
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
 from functools import cached_property
-
-from boltons.iterutils import flatten_iter
 
 from .platform import Platform
 
@@ -30,6 +29,19 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
 
     from ._types import _TNestedReferences
+
+
+def _flatten(items: Iterable) -> Iterator:
+    """Recursively flatten nested iterables (except strings).
+
+    Yields items from nested iterables one at a time, preserving order.
+    Strings are treated as atomic values, not iterable containers.
+    """
+    for item in items:
+        if isinstance(item, Iterable) and not isinstance(item, (str, bytes)):
+            yield from _flatten(item)
+        else:
+            yield item
 
 
 @dataclass(frozen=True)
@@ -137,7 +149,7 @@ class Group:
         .. caution::
             Can returns duplicates.
         """
-        for item in flatten_iter(other):
+        for item in _flatten(other):
             match item:
                 case None:
                     continue
