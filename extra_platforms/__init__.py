@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import platform as stdlib_platform
 import sys
-from functools import cache, cached_property
+from functools import cache
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
