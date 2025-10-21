@@ -12,8 +12,8 @@ jobs:
   docs:
     uses: kdeldycke/workflows/.github/workflows/docs.yaml@v4.22.0
 
-  update-docs:
-    needs: docs
+  generate-docs:
+    name: Generate doc updates
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5.0.0
