@@ -190,7 +190,7 @@ def update_docs() -> None:
 
     # Update the Sankey diagram mapping groups to platforms.
     replace_content(
-        project_root.joinpath("readme.md"),
+        project_root / "readme.md",
         "<!-- platform-sankey-start -->\n\n",
         "\n\n<!-- platform-sankey-end -->",
         generate_platform_sankey(),
@@ -198,14 +198,14 @@ def update_docs() -> None:
 
     # Update diagram showing the hierarchy of non-overlapping groups.
     replace_content(
-        project_root.joinpath("readme.md"),
+        project_root / "readme.md",
         "<!-- platform-hierarchy-start -->\n\n",
         "\n\n<!-- platform-hierarchy-end -->",
         generate_platform_hierarchy(),
     )
 
     # Update grouping charts of all groups, including non-overlapping and extra groups.
-    platform_doc = project_root.joinpath("docs/groups.md")
+    platform_doc = project_root / "docs" / "groups.md"
     for top_groups in all_groups:
         replace_content(
             platform_doc,
