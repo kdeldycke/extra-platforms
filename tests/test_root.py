@@ -53,7 +53,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 PYPROJECT_PATH = PROJECT_ROOT / "pyproject.toml"
 """The path to the ``pyproject.toml`` file."""
 
-PYPROJECT = tomllib.loads(PYPROJECT_PATH.read_text())
+PYPROJECT = tomllib.loads(PYPROJECT_PATH.read_text(encoding="utf-8"))
 """The parsed content of the ``pyproject.toml`` file."""
 
 
