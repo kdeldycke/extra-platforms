@@ -79,7 +79,7 @@ flowchart
     subgraph "<code>extra_platforms.OTHER_UNIX</code><br/>⊎ <em>Any other Unix</em>"
         other_unix_hurd(<code>hurd</code><br/>🐃 <em>GNU/Hurd</em>)
     end
-    subgraph "<code>extra_platforms.SYSTEM_V</code><br/>Ⅴ <em>Any Unix derived from AT&amp;T System Five</em>"
+    subgraph "<code>extra_platforms.SYSTEM_V</code><br/>Ⅴ <em>AT&amp;T System Five</em>"
         system_v_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         system_v_solaris(<code>solaris</code><br/>🌞 <em>Solaris</em>)
     end
