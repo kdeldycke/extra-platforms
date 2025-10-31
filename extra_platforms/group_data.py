@@ -324,7 +324,7 @@ LINUX_LIKE = Group(
 
 SYSTEM_V = Group(
     "system_v",
-    "Any Unix derived from AT&T System Five",
+    "AT&T System Five",
     "Ⅴ",
     (AIX, SOLARIS),
 )

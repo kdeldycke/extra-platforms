@@ -28,6 +28,8 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORMS,
     GITHUB_CI,
+    SYSTEM_V,
+    UNIX,
     UNKNOWN_CI,
     UNKNOWN_LINUX,
     WSL1,
@@ -76,8 +78,8 @@ def test_pyproject_keywords():
     ideal_keywords.append("Windows Subsystem for Linux")
     # Manually add group names that are not platforms per se.
     ideal_keywords.extend((
-        "Unix",
-        "AT&T System Five",
+        UNIX.name.lstrip("Any "),
+        SYSTEM_V.name,
     ))
     # Manually add extra keywords.
     ideal_keywords.extend((
