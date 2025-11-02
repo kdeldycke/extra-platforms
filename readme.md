@@ -26,6 +26,7 @@ If you want to play with this library without contaminating your system, you can
 ```shell-session
 $ uvx --with extra-platforms python
 ```
+
 ```pycon
 >>> import extra_platforms
 
