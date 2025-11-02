@@ -1,9 +1,6 @@
 # Changelog
 
-## [4.1.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [4.1.1 (2025-11-02)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.0...v4.1.1)
 
 - Add detection of Ultramarine Linux. Closes #329.
 
