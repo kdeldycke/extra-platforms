@@ -444,6 +444,12 @@ def is_ubuntu() -> bool:
 
 
 @cache
+def is_ultramarine() -> bool:
+    """Return ``True`` if current platform is Ultramarine."""
+    return distro.id() == "ultramarine"
+
+
+@cache
 def is_unknown_ci() -> bool:
     """Return ``True`` if current platform is an unknown CI.
 
@@ -509,6 +515,7 @@ def is_unknown_linux() -> bool:
         is_tumbleweed(),
         is_tuxedo(),
         is_ubuntu(),
+        is_ultramarine(),
         is_xenserver(),
     )):
         return False

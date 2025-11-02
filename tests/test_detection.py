@@ -72,6 +72,7 @@ from extra_platforms import (
     is_tumbleweed,
     is_tuxedo,
     is_ubuntu,
+    is_ultramarine,
     is_unknown_ci,
     is_unknown_linux,
     is_windows,
@@ -136,6 +137,7 @@ def test_mutual_exclusion():
         assert not is_tumbleweed()
         assert not is_tuxedo()
         # assert not is_ubuntu()
+        assert not is_ultramarine()
         assert not is_unknown_linux()
         assert not is_windows()
         assert not is_wsl1()
@@ -184,6 +186,7 @@ def test_mutual_exclusion():
         assert not is_tumbleweed()
         assert not is_tuxedo()
         assert not is_ubuntu()
+        assert not is_ultramarine()
         assert not is_unknown_linux()
         assert not is_windows()
         assert not is_wsl1()
@@ -232,6 +235,7 @@ def test_mutual_exclusion():
         assert not is_tumbleweed()
         assert not is_tuxedo()
         assert not is_ubuntu()
+        assert not is_ultramarine()
         assert not is_unknown_linux()
         # assert not is_windows()
         assert not is_wsl1()

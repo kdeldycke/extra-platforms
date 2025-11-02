@@ -86,6 +86,7 @@ from .detection import (  # noqa: E402
     is_tumbleweed,
     is_tuxedo,
     is_ubuntu,
+    is_ultramarine,
     is_unknown_ci,
     is_unknown_linux,
     is_windows,
@@ -167,6 +168,7 @@ from .platform_data import (  # noqa: E402
     TUMBLEWEED,
     TUXEDO,
     UBUNTU,
+    ULTRAMARINE,
     UNKNOWN_CI,
     UNKNOWN_LINUX,
     WINDOWS,
@@ -451,6 +453,7 @@ __all__ = (
     "is_tumbleweed",  # noqa: F405, F822
     "is_tuxedo",  # noqa: F405, F822
     "is_ubuntu",  # noqa: F405
+    "is_ultramarine",  # noqa: F405
     "is_unix",  # noqa: F405, F822
     "is_unix_layers",  # noqa: F405, F822
     "is_unix_without_macos",  # noqa: F405, F822
@@ -495,6 +498,7 @@ __all__ = (
     "TUMBLEWEED",  # noqa: F405
     "TUXEDO",  # noqa: F405
     "UBUNTU",  # noqa: F405
+    "ULTRAMARINE",  # noqa: F405
     "UNIX",  # noqa: F405
     "UNIX_LAYERS",  # noqa: F405
     "UNIX_WITHOUT_MACOS",  # noqa: F405

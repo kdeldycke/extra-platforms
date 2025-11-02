@@ -188,6 +188,10 @@ TUXEDO = Platform("tuxedo", "Tuxedo OS", "🤵", "https://tuxedocomputers.com/os
 
 UBUNTU = Platform("ubuntu", "Ubuntu", "🎯", "https://ubuntu.com")
 
+ULTRAMARINE = Platform(
+    "ultramarine", "Ultramarine", "🌊", "https://ultramarine-linux.org"
+)
+
 UNKNOWN_CI = Platform(
     "unknown_ci",
     "Unknown CI",

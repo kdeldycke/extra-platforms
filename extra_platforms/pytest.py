@@ -157,6 +157,7 @@ __all__ = (
     "skip_tumbleweed",  # noqa: F405, F822
     "skip_tuxedo",  # noqa: F405, F822
     "skip_ubuntu",  # noqa: F405, F822
+    "skip_ultramarine",  # noqa: F405, F822
     "skip_unix",  # noqa: F405, F822
     "skip_unix_layers",  # noqa: F405, F822
     "skip_unix_without_macos",  # noqa: F405, F822
@@ -229,6 +230,7 @@ __all__ = (
     "unless_tumbleweed",  # noqa: F405, F822
     "unless_tuxedo",  # noqa: F405, F822
     "unless_ubuntu",  # noqa: F405, F822
+    "unless_ultramarine",  # noqa: F405, F822
     "unless_unix",  # noqa: F405, F822
     "unless_unix_layers",  # noqa: F405, F822
     "unless_unix_without_macos",  # noqa: F405, F822
