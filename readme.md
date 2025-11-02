@@ -206,6 +206,7 @@ ALL_PLATFORMS_WITHOUT_CI,sunos,1
 ALL_PLATFORMS_WITHOUT_CI,tumbleweed,1
 ALL_PLATFORMS_WITHOUT_CI,tuxedo,1
 ALL_PLATFORMS_WITHOUT_CI,ubuntu,1
+ALL_PLATFORMS_WITHOUT_CI,ultramarine,1
 ALL_PLATFORMS_WITHOUT_CI,unknown_linux,1
 ALL_PLATFORMS_WITHOUT_CI,windows,1
 ALL_PLATFORMS_WITHOUT_CI,wsl1,1
@@ -252,6 +253,7 @@ UNIX,sunos,1
 UNIX,tumbleweed,1
 UNIX,tuxedo,1
 UNIX,ubuntu,1
+UNIX,ultramarine,1
 UNIX,unknown_linux,1
 UNIX,wsl1,1
 UNIX,wsl2,1
@@ -296,6 +298,7 @@ UNIX_WITHOUT_MACOS,sunos,1
 UNIX_WITHOUT_MACOS,tumbleweed,1
 UNIX_WITHOUT_MACOS,tuxedo,1
 UNIX_WITHOUT_MACOS,ubuntu,1
+UNIX_WITHOUT_MACOS,ultramarine,1
 UNIX_WITHOUT_MACOS,unknown_linux,1
 UNIX_WITHOUT_MACOS,wsl1,1
 UNIX_WITHOUT_MACOS,wsl2,1
@@ -331,6 +334,7 @@ LINUX_LIKE,sles,1
 LINUX_LIKE,tumbleweed,1
 LINUX_LIKE,tuxedo,1
 LINUX_LIKE,ubuntu,1
+LINUX_LIKE,ultramarine,1
 LINUX_LIKE,unknown_linux,1
 LINUX_LIKE,wsl1,1
 LINUX_LIKE,wsl2,1
@@ -366,6 +370,7 @@ LINUX,sles,1
 LINUX,tumbleweed,1
 LINUX,tuxedo,1
 LINUX,ubuntu,1
+LINUX,ultramarine,1
 LINUX,unknown_linux,1
 LINUX,xenserver,1
 CI,azure_pipelines,1
@@ -456,6 +461,7 @@ mindmap
             (↻ tumbleweed)
             (🤵 tuxedo)
             (🎯 ubuntu)
+            (🌊 ultramarine)
             (🐧 unknown_linux)
             (Ⓧ xenserver)
         )♺ CI(
