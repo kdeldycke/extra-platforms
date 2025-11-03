@@ -5,6 +5,10 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Relax dependencies to support Python 3.10.
+- Re-introduce `tomli` dependency for Python 3.10 users.
+- Skip tests on intermediate Python versions (`3.11`, `3.12` and `3.13`) to reduce CI load.
+
 ## [4.1.1 (2025-11-02)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.0...v4.1.1)
 
 - Add detection of Ultramarine Linux. Closes #329.

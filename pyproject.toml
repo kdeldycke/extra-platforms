@@ -3,7 +3,7 @@
 name = "extra-platforms"
 version = "4.1.2"
 # Python versions and their status: https://devguide.python.org/versions/
-requires-python = ">= 3.11"
+requires-python = ">= 3.10"
 description = "Detect platforms and group them by family"
 authors = [{ name = "Kevin Deldycke", email = "kevin@deldycke.com" }]
 readme = "readme.md"
@@ -123,6 +123,7 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: iOS",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -157,24 +158,26 @@ test = [
     "coverage [toml] ~= 7.11.0",
     # pytest 8.2.1 is the first version to support Python 3.13.
     "pytest >= 8.2.1",
-    # More pytest plugins at: https://docs.pytest.org/en/latest/reference/plugin_list.html
     "pytest-cov ~= 7.0.0",
     "pytest-github-actions-annotate-failures ~= 0.3.0",
     "pytest-randomly ~= 4.0.1",
     "pytest-xdist [psutil] ~= 3.8.0",
-    "requests ~= 2.32.3",
+    "requests ~= 2.32.5",
 ]
 typing = ["types-requests ~= 2.32.4.20250611"]
 docs = [
     "furo ~= 2025.9.25",
     "myst-parser ~= 4.0.0",
-    "sphinx ~= 8.2.0",
-    "sphinx-autodoc-typehints ~= 3.5.2",
+    # Sphinx  8.0.0 is the first version to drop Python 3.9, like us.
+    "sphinx >= 8.0.0",
+    # sphinx-autodoc-typehints 2.4.0 is the first version that is aligned to our Python >= 3.10 requirement.
+    "sphinx-autodoc-typehints >= 2.4.0",
     "sphinx-copybutton ~= 0.5.2",
     "sphinx-design ~= 0.6.0",
     "sphinx-issues ~= 5.0.0",
     "sphinxcontrib-mermaid ~= 1.0.0",
     "sphinxext-opengraph ~= 0.13.0",
+    "tomli >= 2.3.0 ; python_version < '3.11'",
 ]
 
 [project.urls]
