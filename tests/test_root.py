@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import ast
 import inspect
-import tomllib
+import sys
 from pathlib import Path
 
 import requests
@@ -48,6 +48,12 @@ from extra_platforms import group_data as group_data_module
 from extra_platforms import operations as operations_module
 from extra_platforms import platform as platform_module
 from extra_platforms import platform_data as platform_data_module
+
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib  # type: ignore[import-not-found]
+
 
 PROJECT_ROOT = Path(__file__).parent.parent
 """The root path of the project."""

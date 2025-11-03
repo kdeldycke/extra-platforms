@@ -301,7 +301,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "4.1.2"
+version = "5.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "distro" },
@@ -333,6 +333,7 @@ test = [
     { name = "pytest-randomly" },
     { name = "pytest-xdist", extra = ["psutil"] },
     { name = "requests" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
 typing = [
     { name = "types-requests" },
@@ -359,6 +360,7 @@ requires-dist = [
     { name = "sphinxcontrib-mermaid", marker = "extra == 'docs'", specifier = "~=1.0.0" },
     { name = "sphinxext-opengraph", marker = "extra == 'docs'", specifier = "~=0.13.0" },
     { name = "tomli", marker = "python_full_version < '3.11' and extra == 'docs'", specifier = ">=2.3.0" },
+    { name = "tomli", marker = "python_full_version < '3.11' and extra == 'test'", specifier = ">=2.3.0" },
     { name = "types-requests", marker = "extra == 'typing'", specifier = "~=2.32.4.20250611" },
 ]
 provides-extras = ["pytest", "test", "typing", "docs"]
