@@ -1,9 +1,6 @@
 # Changelog
 
-## [5.0.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.1...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [5.0.0 (2025-11-03)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.1...v5.0.0)
 
 - Relax dependencies to support Python 3.10.
 - Re-introduce `tomli` dependency for Python 3.10 users.
