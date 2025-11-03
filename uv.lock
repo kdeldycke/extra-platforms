@@ -301,7 +301,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "4.1.2"
+version = "5.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "distro" },
