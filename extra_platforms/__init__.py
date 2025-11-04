@@ -347,167 +347,167 @@ def invalidate_caches():
         globals()[func_id].cache_clear()
 
 
-__all__ = (
-    "AIX",  # noqa: F405
-    "ALL_GROUP_IDS",  # noqa: F405
-    "ALL_GROUPS",  # noqa: F405
-    "ALL_IDS",  # noqa: F405
-    "ALL_PLATFORM_IDS",  # noqa: F405
-    "ALL_PLATFORMS",  # noqa: F405
-    "ALL_PLATFORMS_WITHOUT_CI",  # noqa: F405
-    "ALTLINUX",  # noqa: F405
-    "AMZN",  # noqa: F405
-    "ANDROID",  # noqa: F405
-    "ANY_WINDOWS",  # noqa: F405
-    "ARCH",  # noqa: F405
-    "AZURE_PIPELINES",  # noqa: F405
-    "BAMBOO",  # noqa: F405
-    "BSD",  # noqa: F405
-    "BSD_WITHOUT_MACOS",  # noqa: F405
-    "BUILDKITE",  # noqa: F405
-    "BUILDROOT",  # noqa: F405
-    "CENTOS",  # noqa: F405
-    "CI",  # noqa: F405
-    "CIRCLE_CI",  # noqa: F405
-    "CIRRUS_CI",  # noqa: F405
-    "CLOUDLINUX",  # noqa: F405
-    "CODEBUILD",  # noqa: F405
-    "current_os",  # noqa: F405
-    "current_platforms",  # noqa: F405
-    "CYGWIN",  # noqa: F405
-    "DEBIAN",  # noqa: F405
-    "EXHERBO",  # noqa: F405
-    "EXTRA_GROUPS",  # noqa: F405
-    "FEDORA",  # noqa: F405
-    "FREEBSD",  # noqa: F405
-    "GENTOO",  # noqa: F405
-    "GITHUB_CI",  # noqa: F405
-    "GITLAB_CI",  # noqa: F405
-    "Group",  # noqa: F405
-    "groups_from_ids",  # noqa: F405
-    "GUIX",  # noqa: F405
-    "HEROKU_CI",  # noqa: F405
-    "HURD",  # noqa: F405
-    "IBM_POWERKVM",  # noqa: F405
-    "invalidate_caches",  # noqa: F405
-    "is_aix",  # noqa: F405
-    "is_all_platforms",  # noqa: F405, F822
-    "is_all_platforms_without_ci",  # noqa: F405, F822
-    "is_altlinux",  # noqa: F405
-    "is_amzn",  # noqa: F405
-    "is_android",  # noqa: F405
-    "is_any_windows",  # noqa: F405, F822
-    "is_arch",  # noqa: F405
-    "is_azure_pipelines",  # noqa: F405
-    "is_bamboo",  # noqa: F405
-    "is_bsd",  # noqa: F405, F822
-    "is_bsd_without_macos",  # noqa: F405, F822
-    "is_buildkite",  # noqa: F405
-    "is_buildroot",  # noqa: F405
-    "is_centos",  # noqa: F405
-    "is_ci",  # noqa: F405, F822
-    "is_circle_ci",  # noqa: F405
-    "is_cirrus_ci",  # noqa: F405
-    "is_cloudlinux",  # noqa: F405
-    "is_codebuild",  # noqa: F405
-    "is_cygwin",  # noqa: F405
-    "is_debian",  # noqa: F405
-    "is_exherbo",  # noqa: F405
-    "is_fedora",  # noqa: F405
-    "is_freebsd",  # noqa: F405
-    "is_gentoo",  # noqa: F405
-    "is_github_ci",  # noqa: F405
-    "is_gitlab_ci",  # noqa: F405
-    "is_guix",  # noqa: F405
-    "is_heroku_ci",  # noqa: F405
-    "is_hurd",  # noqa: F405
-    "is_ibm_powerkvm",  # noqa: F405
-    "is_kvmibm",  # noqa: F405
-    "is_linux",  # noqa: F405, F822
-    "is_linux_layers",  # noqa: F405, F822
-    "is_linux_like",  # noqa: F405, F822
-    "is_linuxmint",  # noqa: F405
-    "is_macos",  # noqa: F405
-    "is_mageia",  # noqa: F405
-    "is_mandriva",  # noqa: F405
-    "is_midnightbsd",  # noqa: F405
-    "is_netbsd",  # noqa: F405
-    "is_nobara",  # noqa: F405
-    "is_openbsd",  # noqa: F405
-    "is_opensuse",  # noqa: F405
-    "is_oracle",  # noqa: F405
-    "is_other_unix",  # noqa: F405, F822
-    "is_parallels",  # noqa: F405
-    "is_pidora",  # noqa: F405
-    "is_raspbian",  # noqa: F405
-    "is_rhel",  # noqa: F405
-    "is_rocky",  # noqa: F405
-    "is_scientific",  # noqa: F405
-    "is_slackware",  # noqa: F405
-    "is_sles",  # noqa: F405
-    "is_solaris",  # noqa: F405
-    "is_sunos",  # noqa: F405
-    "is_system_v",  # noqa: F405, F822
-    "is_teamcity",  # noqa: F405
-    "is_travis_ci",  # noqa: F405
-    "is_tumbleweed",  # noqa: F405, F822
-    "is_tuxedo",  # noqa: F405, F822
-    "is_ubuntu",  # noqa: F405
-    "is_ultramarine",  # noqa: F405
-    "is_unix",  # noqa: F405, F822
-    "is_unix_layers",  # noqa: F405, F822
-    "is_unix_without_macos",  # noqa: F405, F822
-    "is_unknown_ci",  # noqa: F405
-    "is_unknown_linux",  # noqa: F405
-    "is_windows",  # noqa: F405
-    "is_wsl1",  # noqa: F405
-    "is_wsl2",  # noqa: F405
-    "is_xenserver",  # noqa: F405
-    "KVMIBM",  # noqa: F405
-    "LINUX",  # noqa: F405
-    "LINUX_LAYERS",  # noqa: F405
-    "LINUX_LIKE",  # noqa: F405
-    "LINUXMINT",  # noqa: F405
-    "MACOS",  # noqa: F405
-    "MAGEIA",  # noqa: F405
-    "MANDRIVA",  # noqa: F405
-    "MIDNIGHTBSD",  # noqa: F405
-    "NETBSD",  # noqa: F405
-    "NOBARA",  # noqa: F405
-    "NON_OVERLAPPING_GROUPS",  # noqa: F405
-    "OPENBSD",  # noqa: F405
-    "OPENSUSE",  # noqa: F405
-    "ORACLE",  # noqa: F405
-    "OTHER_UNIX",  # noqa: F405
-    "PARALLELS",  # noqa: F405
-    "PIDORA",  # noqa: F405
-    "Platform",  # noqa: F405
-    "platforms_from_ids",  # noqa: F405
-    "RASPBIAN",  # noqa: F405
-    "reduce",  # noqa: F405
-    "RHEL",  # noqa: F405
-    "ROCKY",  # noqa: F405
-    "SCIENTIFIC",  # noqa: F405
-    "SLACKWARE",  # noqa: F405
-    "SLES",  # noqa: F405
-    "SOLARIS",  # noqa: F405
-    "SUNOS",  # noqa: F405
-    "SYSTEM_V",  # noqa: F405
-    "TEAMCITY",  # noqa: F405
-    "TRAVIS_CI",  # noqa: F405
-    "TUMBLEWEED",  # noqa: F405
-    "TUXEDO",  # noqa: F405
-    "UBUNTU",  # noqa: F405
-    "ULTRAMARINE",  # noqa: F405
-    "UNIX",  # noqa: F405
-    "UNIX_LAYERS",  # noqa: F405
-    "UNIX_WITHOUT_MACOS",  # noqa: F405
-    "UNKNOWN_CI",  # noqa: F405
-    "UNKNOWN_LINUX",  # noqa: F405
-    "WINDOWS",  # noqa: F405
-    "WSL1",  # noqa: F405
-    "WSL2",  # noqa: F405
-    "XENSERVER",  # noqa: F405
+__all__ = (  # noqa: F405
+    "AIX",
+    "ALL_GROUP_IDS",
+    "ALL_GROUPS",
+    "ALL_IDS",
+    "ALL_PLATFORM_IDS",
+    "ALL_PLATFORMS",
+    "ALL_PLATFORMS_WITHOUT_CI",
+    "ALTLINUX",
+    "AMZN",
+    "ANDROID",
+    "ANY_WINDOWS",
+    "ARCH",
+    "AZURE_PIPELINES",
+    "BAMBOO",
+    "BSD",
+    "BSD_WITHOUT_MACOS",
+    "BUILDKITE",
+    "BUILDROOT",
+    "CENTOS",
+    "CI",
+    "CIRCLE_CI",
+    "CIRRUS_CI",
+    "CLOUDLINUX",
+    "CODEBUILD",
+    "current_os",
+    "current_platforms",
+    "CYGWIN",
+    "DEBIAN",
+    "EXHERBO",
+    "EXTRA_GROUPS",
+    "FEDORA",
+    "FREEBSD",
+    "GENTOO",
+    "GITHUB_CI",
+    "GITLAB_CI",
+    "Group",
+    "groups_from_ids",
+    "GUIX",
+    "HEROKU_CI",
+    "HURD",
+    "IBM_POWERKVM",
+    "invalidate_caches",
+    "is_aix",
+    "is_all_platforms",  # noqa: F822
+    "is_all_platforms_without_ci",  # noqa: F822
+    "is_altlinux",
+    "is_amzn",
+    "is_android",
+    "is_any_windows",  # noqa: F822
+    "is_arch",
+    "is_azure_pipelines",
+    "is_bamboo",
+    "is_bsd",  # noqa: F822
+    "is_bsd_without_macos",  # noqa: F822
+    "is_buildkite",
+    "is_buildroot",
+    "is_centos",
+    "is_ci",  # noqa: F822
+    "is_circle_ci",
+    "is_cirrus_ci",
+    "is_cloudlinux",
+    "is_codebuild",
+    "is_cygwin",
+    "is_debian",
+    "is_exherbo",
+    "is_fedora",
+    "is_freebsd",
+    "is_gentoo",
+    "is_github_ci",
+    "is_gitlab_ci",
+    "is_guix",
+    "is_heroku_ci",
+    "is_hurd",
+    "is_ibm_powerkvm",
+    "is_kvmibm",
+    "is_linux",  # noqa: F822
+    "is_linux_layers",  # noqa: F822
+    "is_linux_like",  # noqa: F822
+    "is_linuxmint",
+    "is_macos",
+    "is_mageia",
+    "is_mandriva",
+    "is_midnightbsd",
+    "is_netbsd",
+    "is_nobara",
+    "is_openbsd",
+    "is_opensuse",
+    "is_oracle",
+    "is_other_unix",  # noqa: F822
+    "is_parallels",
+    "is_pidora",
+    "is_raspbian",
+    "is_rhel",
+    "is_rocky",
+    "is_scientific",
+    "is_slackware",
+    "is_sles",
+    "is_solaris",
+    "is_sunos",
+    "is_system_v",  # noqa: F822
+    "is_teamcity",
+    "is_travis_ci",
+    "is_tumbleweed",  # noqa: F822
+    "is_tuxedo",  # noqa: F822
+    "is_ubuntu",
+    "is_ultramarine",
+    "is_unix",  # noqa: F822
+    "is_unix_layers",  # noqa: F822
+    "is_unix_without_macos",  # noqa: F822
+    "is_unknown_ci",
+    "is_unknown_linux",
+    "is_windows",
+    "is_wsl1",
+    "is_wsl2",
+    "is_xenserver",
+    "KVMIBM",
+    "LINUX",
+    "LINUX_LAYERS",
+    "LINUX_LIKE",
+    "LINUXMINT",
+    "MACOS",
+    "MAGEIA",
+    "MANDRIVA",
+    "MIDNIGHTBSD",
+    "NETBSD",
+    "NOBARA",
+    "NON_OVERLAPPING_GROUPS",
+    "OPENBSD",
+    "OPENSUSE",
+    "ORACLE",
+    "OTHER_UNIX",
+    "PARALLELS",
+    "PIDORA",
+    "Platform",
+    "platforms_from_ids",
+    "RASPBIAN",
+    "reduce",
+    "RHEL",
+    "ROCKY",
+    "SCIENTIFIC",
+    "SLACKWARE",
+    "SLES",
+    "SOLARIS",
+    "SUNOS",
+    "SYSTEM_V",
+    "TEAMCITY",
+    "TRAVIS_CI",
+    "TUMBLEWEED",
+    "TUXEDO",
+    "UBUNTU",
+    "ULTRAMARINE",
+    "UNIX",
+    "UNIX_LAYERS",
+    "UNIX_WITHOUT_MACOS",
+    "UNKNOWN_CI",
+    "UNKNOWN_LINUX",
+    "WINDOWS",
+    "WSL1",
+    "WSL2",
+    "XENSERVER",
 )
 """Expose all package-wide elements.
 
