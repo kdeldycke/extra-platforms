@@ -172,6 +172,7 @@ ALL_PLATFORMS_WITHOUT_CI,amzn,1
 ALL_PLATFORMS_WITHOUT_CI,android,1
 ALL_PLATFORMS_WITHOUT_CI,arch,1
 ALL_PLATFORMS_WITHOUT_CI,buildroot,1
+ALL_PLATFORMS_WITHOUT_CI,cachyos,1
 ALL_PLATFORMS_WITHOUT_CI,centos,1
 ALL_PLATFORMS_WITHOUT_CI,cloudlinux,1
 ALL_PLATFORMS_WITHOUT_CI,cygwin,1
@@ -219,6 +220,7 @@ UNIX,amzn,1
 UNIX,android,1
 UNIX,arch,1
 UNIX,buildroot,1
+UNIX,cachyos,1
 UNIX,centos,1
 UNIX,cloudlinux,1
 UNIX,cygwin,1
@@ -265,6 +267,7 @@ UNIX_WITHOUT_MACOS,amzn,1
 UNIX_WITHOUT_MACOS,android,1
 UNIX_WITHOUT_MACOS,arch,1
 UNIX_WITHOUT_MACOS,buildroot,1
+UNIX_WITHOUT_MACOS,cachyos,1
 UNIX_WITHOUT_MACOS,centos,1
 UNIX_WITHOUT_MACOS,cloudlinux,1
 UNIX_WITHOUT_MACOS,cygwin,1
@@ -309,6 +312,7 @@ LINUX_LIKE,amzn,1
 LINUX_LIKE,android,1
 LINUX_LIKE,arch,1
 LINUX_LIKE,buildroot,1
+LINUX_LIKE,cachyos,1
 LINUX_LIKE,centos,1
 LINUX_LIKE,cloudlinux,1
 LINUX_LIKE,debian,1
@@ -345,6 +349,7 @@ LINUX,amzn,1
 LINUX,android,1
 LINUX,arch,1
 LINUX,buildroot,1
+LINUX,cachyos,1
 LINUX,centos,1
 LINUX,cloudlinux,1
 LINUX,debian,1
@@ -436,6 +441,7 @@ mindmap
             (🤖 android)
             (🎗️ arch)
             (⛑️ buildroot)
+            (⌬ cachyos)
             (💠 centos)
             (꩜ cloudlinux)
             (🌀 debian)
