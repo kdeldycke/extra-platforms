@@ -43,6 +43,7 @@ from .detection import (  # noqa: E402
     is_bamboo,
     is_buildkite,
     is_buildroot,
+    is_cachyos,
     is_centos,
     is_circle_ci,
     is_cirrus_ci,
@@ -125,6 +126,7 @@ from .platform_data import (  # noqa: E402
     BAMBOO,
     BUILDKITE,
     BUILDROOT,
+    CACHYOS,
     CENTOS,
     CIRCLE_CI,
     CIRRUS_CI,
@@ -366,6 +368,7 @@ __all__ = (  # noqa: F405
     "BSD_WITHOUT_MACOS",
     "BUILDKITE",
     "BUILDROOT",
+    "CACHYOS",
     "CENTOS",
     "CI",
     "CIRCLE_CI",
@@ -404,6 +407,7 @@ __all__ = (  # noqa: F405
     "is_bsd_without_macos",  # noqa: F822
     "is_buildkite",
     "is_buildroot",
+    "is_cachyos",
     "is_centos",
     "is_ci",  # noqa: F822
     "is_circle_ci",

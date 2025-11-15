@@ -150,6 +150,12 @@ def is_buildroot() -> bool:
 
 
 @cache
+def is_cachyos() -> bool:
+    """Return ``True`` if current platform is CachyOS."""
+    return distro.id() == "cachyos"
+
+
+@cache
 def is_centos() -> bool:
     """Return ``True`` if current platform is CentOS."""
     return distro.id() == "centos"
@@ -489,6 +495,7 @@ def is_unknown_linux() -> bool:
         is_android(),
         is_arch(),
         is_buildroot(),
+        is_cachyos(),
         is_centos(),
         is_cloudlinux(),
         is_debian(),

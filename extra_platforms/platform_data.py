@@ -29,7 +29,6 @@ from __future__ import annotations
 
 from .platform import Platform
 
-
 AIX = Platform("aix", "IBM AIX", "➿", "https://ibm.com/products/aix/")
 
 ALTLINUX = Platform("altlinux", "ALT Linux", "🐧", "https://altlinux.org")
@@ -54,6 +53,8 @@ BAMBOO = Platform("bamboo", "Bamboo", "⟲", "https://www.atlassian.com/software
 BUILDKITE = Platform("buildkite", "Buildkite", "🪁", "https://buildkite.com")
 
 BUILDROOT = Platform("buildroot", "Buildroot", "⛑️", "https://buildroot.org")
+
+CACHYOS = Platform("cachyos", "CachyOS", "⌬", "https://cachyos.org")
 
 CENTOS = Platform("centos", "CentOS", "💠", "https://centos.org")
 

@@ -29,6 +29,7 @@ from extra_platforms import (
     is_bamboo,
     is_buildkite,
     is_buildroot,
+    is_cachyos,
     is_centos,
     is_circle_ci,
     is_cirrus_ci,
@@ -102,6 +103,7 @@ def test_mutual_exclusion():
         assert not is_android()
         assert not is_arch()
         assert not is_buildroot()
+        assert not is_cachyos()
         assert not is_centos()
         assert not is_cloudlinux()
         assert not is_cygwin()
@@ -151,6 +153,7 @@ def test_mutual_exclusion():
         assert not is_android()
         assert not is_arch()
         assert not is_buildroot()
+        assert not is_cachyos()
         assert not is_centos()
         assert not is_cloudlinux()
         assert not is_cygwin()
@@ -200,6 +203,7 @@ def test_mutual_exclusion():
         assert not is_android()
         assert not is_arch()
         assert not is_buildroot()
+        assert not is_cachyos()
         assert not is_centos()
         assert not is_cloudlinux()
         assert not is_cygwin()
