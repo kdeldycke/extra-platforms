@@ -204,7 +204,7 @@ from .operations import (  # noqa: E402
     reduce,
 )
 
-__version__ = "5.0.2"
+__version__ = "5.1.0"
 """Examples of valid version strings according :pep:`440#version-scheme`:
 
 .. code-block:: python
