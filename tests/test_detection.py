@@ -17,6 +17,8 @@
 from __future__ import annotations
 
 import functools
+import json
+import os
 
 from extra_platforms import (
     ALL_PLATFORMS,
@@ -96,6 +98,7 @@ def test_detection_functions():
 def test_mutual_exclusion():
     """Only directly tests OSes on which the test suite is running via GitHub
     actions."""
+
     if is_ubuntu():
         assert not is_aix()
         assert not is_altlinux()
@@ -259,3 +262,57 @@ def test_mutual_exclusion():
         assert not is_teamcity()
         assert not is_travis_ci()
         assert not is_unknown_ci()
+
+
+def github_runner_os() -> str | None:
+    """Returns the OS name as defined in the GitHub Actions matrix context.
+
+    .. caution::
+        This only works when running inside a GitHub Actions job that uses a ``matrix``
+        strategy with an ``os`` variant. Which is the case for the ``extra-platforms``
+        workflows.
+    """
+    matrix_context_str = os.environ.get("GHACTION_DCTX_MATRIX_CONTEXT", "{}")
+    matrix_context = json.loads(matrix_context_str)
+    return matrix_context.get("os")
+
+
+def test_github_runner_detection():
+    """Test GitHub runner OS detection helper.
+
+    List of available GitHub runner images:
+    https://github.com/actions/runner-images#available-images
+    """
+    runner_image = github_runner_os()
+    if runner_image in {
+        "ubuntu-latest",
+        "ubuntu-slim",
+        "ubuntu-24.04",
+        "ubuntu-24.04-arm",
+        "ubuntu-22.04",
+        "ubuntu-22.04-arm",
+    }:
+        assert is_ubuntu()
+    elif runner_image in {
+        "macos-latest",
+        "macos-latest-large",
+        "macos-26",
+        "macos-26-xlarge",
+        "macos-15",
+        "macos-15-intel",
+        "macos-15-large",
+        "macos-15-xlarge",
+        "macos-14",
+        "macos-14-large",
+        "macos-14-xlarge",
+    }:
+        assert is_macos()
+    elif runner_image in {
+        "windows-latest",
+        "windows-11-arm",
+        "windows-2025",
+        "windows-2022",
+    }:
+        assert is_windows()
+    else:
+        assert runner_image is None
