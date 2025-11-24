@@ -39,7 +39,7 @@ flowchart
     end
     subgraph "<code>extra_platforms.LINUX</code><br/>🐧 <em>Any Linux distribution</em>"
         linux_altlinux(<code>altlinux</code><br/>🐧 <em>ALT Linux</em>)
-        linux_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
+        linux_amzn(<code>amzn</code><br/>⤻ <em>Amazon Linux</em>)
         linux_android(<code>android</code><br/>🤖 <em>Android</em>)
         linux_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
         linux_buildroot(<code>buildroot</code><br/>⛑️ <em>Buildroot</em>)
@@ -107,7 +107,7 @@ flowchart
     subgraph "<code>extra_platforms.ALL_PLATFORMS</code><br/>⚙️ <em>All platforms</em>"
         all_platforms_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         all_platforms_altlinux(<code>altlinux</code><br/>🐧 <em>ALT Linux</em>)
-        all_platforms_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
+        all_platforms_amzn(<code>amzn</code><br/>⤻ <em>Amazon Linux</em>)
         all_platforms_android(<code>android</code><br/>🤖 <em>Android</em>)
         all_platforms_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
         all_platforms_azure_pipelines(<code>azure_pipelines</code><br/>═ <em>Azure Pipelines</em>)
@@ -169,7 +169,7 @@ flowchart
     subgraph "<code>extra_platforms.ALL_PLATFORMS_WITHOUT_CI</code><br/>🖥️ <em>Any platforms excluding CI systems</em>"
         all_platforms_without_ci_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         all_platforms_without_ci_altlinux(<code>altlinux</code><br/>🐧 <em>ALT Linux</em>)
-        all_platforms_without_ci_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
+        all_platforms_without_ci_amzn(<code>amzn</code><br/>⤻ <em>Amazon Linux</em>)
         all_platforms_without_ci_android(<code>android</code><br/>🤖 <em>Android</em>)
         all_platforms_without_ci_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
         all_platforms_without_ci_buildroot(<code>buildroot</code><br/>⛑️ <em>Buildroot</em>)
@@ -225,7 +225,7 @@ flowchart
     end
     subgraph "<code>extra_platforms.LINUX_LIKE</code><br/>🐧+ <em>Any Linux and compatibility layers</em>"
         linux_like_altlinux(<code>altlinux</code><br/>🐧 <em>ALT Linux</em>)
-        linux_like_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
+        linux_like_amzn(<code>amzn</code><br/>⤻ <em>Amazon Linux</em>)
         linux_like_android(<code>android</code><br/>🤖 <em>Android</em>)
         linux_like_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
         linux_like_buildroot(<code>buildroot</code><br/>⛑️ <em>Buildroot</em>)
@@ -265,7 +265,7 @@ flowchart
     subgraph "<code>extra_platforms.UNIX</code><br/>⨷ <em>Any Unix</em>"
         unix_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         unix_altlinux(<code>altlinux</code><br/>🐧 <em>ALT Linux</em>)
-        unix_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
+        unix_amzn(<code>amzn</code><br/>⤻ <em>Amazon Linux</em>)
         unix_android(<code>android</code><br/>🤖 <em>Android</em>)
         unix_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
         unix_buildroot(<code>buildroot</code><br/>⛑️ <em>Buildroot</em>)
@@ -314,7 +314,7 @@ flowchart
     subgraph "<code>extra_platforms.UNIX_WITHOUT_MACOS</code><br/>⨂ <em>Any Unix excluding macOS</em>"
         unix_without_macos_aix(<code>aix</code><br/>➿ <em>IBM AIX</em>)
         unix_without_macos_altlinux(<code>altlinux</code><br/>🐧 <em>ALT Linux</em>)
-        unix_without_macos_amzn(<code>amzn</code><br/>🙂 <em>Amazon Linux</em>)
+        unix_without_macos_amzn(<code>amzn</code><br/>⤻ <em>Amazon Linux</em>)
         unix_without_macos_android(<code>android</code><br/>🤖 <em>Android</em>)
         unix_without_macos_arch(<code>arch</code><br/>🎗️ <em>Arch Linux</em>)
         unix_without_macos_buildroot(<code>buildroot</code><br/>⛑️ <em>Buildroot</em>)
