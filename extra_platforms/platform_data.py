@@ -33,9 +33,7 @@ AIX = Platform("aix", "IBM AIX", "➿", "https://ibm.com/products/aix/")
 
 ALTLINUX = Platform("altlinux", "ALT Linux", "🐧", "https://altlinux.org")
 
-AMZN = Platform(
-    "amzn", "Amazon Linux", "🙂", "https://aws.amazon.com/amazon-linux-ami/"
-)
+AMZN = Platform("amzn", "Amazon Linux", "⤻", "https://aws.amazon.com/amazon-linux-ami/")
 
 ANDROID = Platform("android", "Android", "🤖", "https://android.com")
 
