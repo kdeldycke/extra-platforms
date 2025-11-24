@@ -115,6 +115,11 @@ copyright = f"{author} and contributors"
 html_show_copyright = True
 html_show_sphinx = False
 
+# Fix mermaid diagrams colors in dark mode.
+# Source: https://github.com/mgaitan/sphinxcontrib-mermaid/issues/205
+html_static_path = ["assets"]
+html_css_files = ["mermaid-dark-fixes.css"]
+
 
 # Issue https://github.com/executablebooks/MyST-Parser/issues/845
 # GitHub admonitions with Sphinx/MyST
