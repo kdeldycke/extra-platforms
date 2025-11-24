@@ -6,6 +6,8 @@
 > This version is not released yet and is under active development.
 
 - Change Amazon Linux icon.
+- Run tests on Python `3.14t` and `3.15t` free-threaded variants.
+
 ## [5.0.1 (2025-11-15)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.0...v5.0.1)
 
 - Add detection of CachyOS. Closes #341.
