@@ -226,7 +226,7 @@ def test_mutual_exclusion():
         assert not is_windows()
         assert not is_wsl1()
         # ubuntu-slim is a GitHub actions image running on WSL2.
-        if github_runner_os() == "ubuntu-slim":
+        if github_runner_os == "ubuntu-slim":
             assert is_wsl2()
         else:
             assert not is_wsl2()
