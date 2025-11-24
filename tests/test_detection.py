@@ -22,6 +22,7 @@ import os
 
 from extra_platforms import (
     ALL_PLATFORMS,
+    GITHUB_CI,
     MACOS,
     UBUNTU,
     WINDOWS,
@@ -140,10 +141,10 @@ def test_github_runner_detection():
         assert current_os() is UBUNTU
         if runner_image == "ubuntu-slim":
             assert is_wsl2()
-            assert current_platforms() == (UBUNTU, WSL2)
+            assert current_platforms() == (GITHUB_CI, UBUNTU, WSL2)
         else:
             assert not is_wsl2()
-            assert current_platforms() == (UBUNTU,)
+            assert current_platforms() == (GITHUB_CI, UBUNTU)
 
     if runner_image in {
         "macos-latest",
@@ -160,7 +161,7 @@ def test_github_runner_detection():
     }:
         assert is_macos()
         assert current_os() is MACOS
-        assert current_platforms() == (MACOS,)
+        assert current_platforms() == (GITHUB_CI, MACOS)
 
     if runner_image in {
         "windows-latest",
@@ -170,7 +171,7 @@ def test_github_runner_detection():
     }:
         assert is_windows()
         assert current_os() is WINDOWS
-        assert current_platforms() == (WINDOWS,)
+        assert current_platforms() == (GITHUB_CI, WINDOWS)
 
 
 def test_mutual_exclusion():
