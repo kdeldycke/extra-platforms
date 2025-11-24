@@ -49,6 +49,8 @@ from extra_platforms import operations as operations_module
 from extra_platforms import platform as platform_module
 from extra_platforms import platform_data as platform_data_module
 
+from .test_detection import github_runner_os
+
 if sys.version_info >= (3, 11):
     import tomllib
 else:
@@ -245,8 +247,11 @@ def test_current_funcs():
     current_platforms_results = current_platforms()
     assert ALL_PLATFORMS.issuperset(current_platforms_results)
     if is_github_ci():
-        assert len(current_platforms_results) == 2
         assert GITHUB_CI in current_platforms_results
+        if github_runner_os == "ubuntu-slim":
+            assert len(current_platforms_results) == 3
+        else:
+            assert len(current_platforms_results) == 2
     else:
         assert len(current_platforms_results) == 1
 
