@@ -437,7 +437,7 @@ mindmap
             (⊞ wsl2)
         )🐧 LINUX(
             (🐧 altlinux)
-            (🙂 amzn)
+            (⤻ amzn)
             (🤖 android)
             (🎗️ arch)
             (⛑️ buildroot)
