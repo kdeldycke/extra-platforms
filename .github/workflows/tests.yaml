@@ -71,6 +71,7 @@ jobs:
 
       - name: Unittests
         env:
+          # Used by github_runner_os() in tests/test_detection.py to extract the GitHub runner image ID.
           EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
         run: |
           uv --no-progress run --frozen -- pytest
