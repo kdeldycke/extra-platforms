@@ -25,6 +25,7 @@ jobs:
         # Available OS: https://github.com/actions/runner-images#available-images
         os:
           - ubuntu-24.04-arm # arm64
+          - ubuntu-slim      # x86
           - ubuntu-24.04     # x86
           - ubuntu-22.04-arm # arm64
           - ubuntu-22.04     # x86
