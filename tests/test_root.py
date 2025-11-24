@@ -248,7 +248,7 @@ def test_current_funcs():
     assert ALL_PLATFORMS.issuperset(current_platforms_results)
     if is_github_ci():
         assert GITHUB_CI in current_platforms_results
-        if github_runner_os == "ubuntu-slim":
+        if github_runner_os() == "ubuntu-slim":
             assert len(current_platforms_results) == 3
         else:
             assert len(current_platforms_results) == 2

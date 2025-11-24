@@ -103,7 +103,7 @@ def test_detection_functions():
         assert check_func() == platform.current
 
 
-@functools.cached_property
+@functools.cache
 def github_runner_os() -> str | None:
     """Returns the OS name as defined in the GitHub Actions matrix context.
 
@@ -124,12 +124,12 @@ def test_github_runner_detection():
     List of available GitHub runner images:
     https://github.com/actions/runner-images#available-images
     """
-    assert github_runner_os is not None, (
+    assert github_runner_os() is not None, (
         "The EXTRA_PLATFORMS_TEST_MATRIX environment variable is not set. "
         "This test must be run inside a GitHub Actions job using a matrix strategy."
     )
 
-    if github_runner_os in {
+    if github_runner_os() in {
         "ubuntu-latest",
         "ubuntu-slim",
         "ubuntu-24.04",
@@ -139,14 +139,14 @@ def test_github_runner_detection():
     }:
         assert is_ubuntu()
         assert current_os() is UBUNTU
-        if github_runner_os == "ubuntu-slim":
+        if github_runner_os() == "ubuntu-slim":
             assert is_wsl2()
             assert current_platforms() == (GITHUB_CI, UBUNTU, WSL2)
         else:
             assert not is_wsl2()
             assert current_platforms() == (GITHUB_CI, UBUNTU)
 
-    if github_runner_os in {
+    if github_runner_os() in {
         "macos-latest",
         "macos-latest-large",
         "macos-26",
@@ -163,7 +163,7 @@ def test_github_runner_detection():
         assert current_os() is MACOS
         assert current_platforms() == (GITHUB_CI, MACOS)
 
-    if github_runner_os in {
+    if github_runner_os() in {
         "windows-latest",
         "windows-11-arm",
         "windows-2025",
@@ -226,7 +226,7 @@ def test_mutual_exclusion():
         assert not is_windows()
         assert not is_wsl1()
         # ubuntu-slim is a GitHub actions image running on WSL2.
-        if github_runner_os == "ubuntu-slim":
+        if github_runner_os() == "ubuntu-slim":
             assert is_wsl2()
         else:
             assert not is_wsl2()
