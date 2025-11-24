@@ -22,6 +22,11 @@ import os
 
 from extra_platforms import (
     ALL_PLATFORMS,
+    MACOS,
+    UBUNTU,
+    WINDOWS,
+    current_os,
+    current_platforms,
     is_aix,
     is_altlinux,
     is_amzn,
@@ -83,6 +88,7 @@ from extra_platforms import (
     is_wsl2,
     is_xenserver,
 )
+from extra_platforms.platform_data import WSL2
 from extra_platforms.pytest import unless_github_ci
 
 
@@ -128,10 +134,13 @@ def test_github_runner_detection():
         "ubuntu-22.04-arm",
     }:
         assert is_ubuntu()
+        assert current_os() is UBUNTU
         if runner_image == "ubuntu-slim":
             assert is_wsl2()
+            assert current_platforms() == (UBUNTU, WSL2)
         else:
             assert not is_wsl2()
+            assert current_platforms() == (UBUNTU,)
 
     if runner_image in {
         "macos-latest",
@@ -147,6 +156,8 @@ def test_github_runner_detection():
         "macos-14-xlarge",
     }:
         assert is_macos()
+        assert current_os() is MACOS
+        assert current_platforms() == (MACOS,)
 
     if runner_image in {
         "windows-latest",
@@ -155,6 +166,8 @@ def test_github_runner_detection():
         "windows-2022",
     }:
         assert is_windows()
+        assert current_os() is WINDOWS
+        assert current_platforms() == (WINDOWS,)
 
 
 def test_mutual_exclusion():
