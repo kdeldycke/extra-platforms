@@ -83,6 +83,7 @@ from extra_platforms import (
     is_wsl2,
     is_xenserver,
 )
+from extra_platforms.pytest import unless_github_ci
 
 
 def test_detection_functions():
@@ -93,6 +94,67 @@ def test_detection_functions():
         assert isinstance(check_func, functools._lru_cache_wrapper)
         assert isinstance(check_func(), bool)
         assert check_func() == platform.current
+
+
+def github_runner_os() -> str | None:
+    """Returns the OS name as defined in the GitHub Actions matrix context.
+
+    .. caution::
+        This only works when running inside a GitHub Actions job that uses a ``matrix``
+        strategy with an ``os`` variant. Which is the case for the ``extra-platforms``
+        workflows.
+    """
+    matrix_context_str = os.environ.get("GHACTION_DCTX_MATRIX_CONTEXT", "{}")
+    matrix_context = json.loads(matrix_context_str)
+    return matrix_context.get("os")
+
+
+@unless_github_ci
+def test_github_runner_detection():
+    """Test GitHub runner OS.
+
+    List of available GitHub runner images:
+    https://github.com/actions/runner-images#available-images
+    """
+    runner_image = github_runner_os()
+    assert runner_image is not None
+
+    if runner_image in {
+        "ubuntu-latest",
+        "ubuntu-slim",
+        "ubuntu-24.04",
+        "ubuntu-24.04-arm",
+        "ubuntu-22.04",
+        "ubuntu-22.04-arm",
+    }:
+        assert is_ubuntu()
+        if runner_image == "ubuntu-slim":
+            assert is_wsl2()
+        else:
+            assert not is_wsl2()
+
+    if runner_image in {
+        "macos-latest",
+        "macos-latest-large",
+        "macos-26",
+        "macos-26-xlarge",
+        "macos-15",
+        "macos-15-intel",
+        "macos-15-large",
+        "macos-15-xlarge",
+        "macos-14",
+        "macos-14-large",
+        "macos-14-xlarge",
+    }:
+        assert is_macos()
+
+    if runner_image in {
+        "windows-latest",
+        "windows-11-arm",
+        "windows-2025",
+        "windows-2022",
+    }:
+        assert is_windows()
 
 
 def test_mutual_exclusion():
@@ -146,7 +208,11 @@ def test_mutual_exclusion():
         assert not is_unknown_linux()
         assert not is_windows()
         assert not is_wsl1()
-        assert not is_wsl2()
+        # ubuntu-slim is a GitHub actions image running on WSL2.
+        if github_runner_os() == "ubuntu-slim":
+            assert is_wsl2()
+        else:
+            assert not is_wsl2()
         assert not is_xenserver()
 
     if is_macos():
@@ -262,57 +328,3 @@ def test_mutual_exclusion():
         assert not is_teamcity()
         assert not is_travis_ci()
         assert not is_unknown_ci()
-
-
-def github_runner_os() -> str | None:
-    """Returns the OS name as defined in the GitHub Actions matrix context.
-
-    .. caution::
-        This only works when running inside a GitHub Actions job that uses a ``matrix``
-        strategy with an ``os`` variant. Which is the case for the ``extra-platforms``
-        workflows.
-    """
-    matrix_context_str = os.environ.get("GHACTION_DCTX_MATRIX_CONTEXT", "{}")
-    matrix_context = json.loads(matrix_context_str)
-    return matrix_context.get("os")
-
-
-def test_github_runner_detection():
-    """Test GitHub runner OS detection helper.
-
-    List of available GitHub runner images:
-    https://github.com/actions/runner-images#available-images
-    """
-    runner_image = github_runner_os()
-    if runner_image in {
-        "ubuntu-latest",
-        "ubuntu-slim",
-        "ubuntu-24.04",
-        "ubuntu-24.04-arm",
-        "ubuntu-22.04",
-        "ubuntu-22.04-arm",
-    }:
-        assert is_ubuntu()
-    elif runner_image in {
-        "macos-latest",
-        "macos-latest-large",
-        "macos-26",
-        "macos-26-xlarge",
-        "macos-15",
-        "macos-15-intel",
-        "macos-15-large",
-        "macos-15-xlarge",
-        "macos-14",
-        "macos-14-large",
-        "macos-14-xlarge",
-    }:
-        assert is_macos()
-    elif runner_image in {
-        "windows-latest",
-        "windows-11-arm",
-        "windows-2025",
-        "windows-2022",
-    }:
-        assert is_windows()
-    else:
-        assert runner_image is None
