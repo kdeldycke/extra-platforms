@@ -70,6 +70,8 @@ jobs:
           uv --no-progress sync --frozen --all-extras
 
       - name: Unittests
+        env:
+          EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
         run: |
           uv --no-progress run --frozen -- pytest
 

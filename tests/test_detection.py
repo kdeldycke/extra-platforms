@@ -110,7 +110,7 @@ def github_runner_os() -> str | None:
         strategy with an ``os`` variant. Which is the case for the ``extra-platforms``
         workflows.
     """
-    matrix_context_str = os.environ.get("GHACTION_DCTX_MATRIX_CONTEXT", "{}")
+    matrix_context_str = os.environ.get("EXTRA_PLATFORMS_TEST_MATRIX", "{}")
     matrix_context = json.loads(matrix_context_str)
     return matrix_context.get("os")
 
@@ -123,7 +123,10 @@ def test_github_runner_detection():
     https://github.com/actions/runner-images#available-images
     """
     runner_image = github_runner_os()
-    assert runner_image is not None
+    assert runner_image is not None, (
+        "The EXTRA_PLATFORMS_TEST_MATRIX environment variable is not set. "
+        "This test must be run inside a GitHub Actions job using a matrix strategy."
+    )
 
     if runner_image in {
         "ubuntu-latest",
