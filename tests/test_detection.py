@@ -114,7 +114,10 @@ def github_runner_os() -> str | None:
     """
     matrix_context_str = os.environ.get("EXTRA_PLATFORMS_TEST_MATRIX", "{}")
     matrix_context = json.loads(matrix_context_str)
-    return matrix_context.get("os")
+    os_value = matrix_context.get("os")
+    if isinstance(os_value, str):
+        return os_value
+    return None
 
 
 @unless_github_ci
