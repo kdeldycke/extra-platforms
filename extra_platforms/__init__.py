@@ -302,10 +302,10 @@ def _generate_group_membership_func(_group: Group) -> Callable:
 
 _group_membership_func_ids = []
 for _group in ALL_GROUPS:
-    func_id = f"is_{_group.id}"
-    assert func_id not in locals(), f"Function ID {func_id} already defined locally."
-    _group_membership_func_ids.append(func_id)
-    globals()[func_id] = _generate_group_membership_func(_group)
+    _func_id = f"is_{_group.id}"
+    assert _func_id not in locals(), f"Function ID {_func_id} already defined locally."
+    _group_membership_func_ids.append(_func_id)
+    globals()[_func_id] = _generate_group_membership_func(_group)
 """Generates an ``is_<group.id>()`` local function for each group.
 
 These functions return a boolean value indicating the membership of the current
