@@ -24,7 +24,7 @@ import pytest
 import requests
 
 from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_PLATFORM_IDS, ALL_PLATFORMS
-from extra_platforms.pytest import unless_linux  # type: ignore[attr-defined]
+from extra_platforms.pytest import unless_linux
 
 all_platforms_params = pytest.mark.parametrize(
     "platform", ALL_PLATFORMS.platforms, ids=attrgetter("id")

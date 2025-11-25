@@ -41,6 +41,8 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from _pytest.mark.structures import MarkDecorator
+
 
 class DeferredCondition:
     """Defer the evaluation of a condition.
@@ -71,180 +73,175 @@ class DeferredCondition:
 
 
 # Generate a pair of skip/unless decorators for each platform and group.
-for obj in chain(ALL_PLATFORMS, ALL_GROUPS):
+for _obj in chain(ALL_PLATFORMS, ALL_GROUPS):
     # Sanity check to please the type checker.
-    assert isinstance(obj, (Platform, Group))
+    assert isinstance(_obj, (Platform, Group))
 
     # Get the detection function for the current object.
-    func = getattr(extra_platforms, f"is_{obj.id}")
+    _func = getattr(extra_platforms, f"is_{_obj.id}")
 
     # Generate @skip decorator.
-    skip_id = f"skip_{obj.id}"
-    globals()[skip_id] = pytest.mark.skipif(
-        DeferredCondition(func),  # type: ignore[arg-type]
-        reason=f"Skip {obj.short_desc}",
+    globals()[f"skip_{_obj.id}"] = pytest.mark.skipif(
+        DeferredCondition(_func),  # type: ignore[arg-type]
+        reason=f"Skip {_obj.short_desc}",
     )
 
     # Generate @unless decorator.
-    unless_id = f"unless_{obj.id}"
-    globals()[unless_id] = pytest.mark.skipif(
-        DeferredCondition(func, invert=True),  # type: ignore[arg-type]
-        reason=f"Requires {obj.short_desc}",
+    globals()[f"unless_{_obj.id}"] = pytest.mark.skipif(
+        DeferredCondition(_func, invert=True),  # type: ignore[arg-type]
+        reason=f"Requires {_obj.short_desc}",
     )
 
 
-__all__ = (  # noqa: F405, F822
-    "skip_aix",
-    "skip_all_platforms",
-    "skip_all_platforms_without_ci",
-    "skip_altlinux",
-    "skip_amzn",
-    "skip_android",
-    "skip_any_windows",
-    "skip_arch",
-    "skip_azure_pipelines",
-    "skip_bamboo",
-    "skip_bsd",
-    "skip_bsd_without_macos",
-    "skip_buildkite",
-    "skip_buildroot",
-    "skip_cachyos",
-    "skip_centos",
-    "skip_ci",
-    "skip_circle_ci",
-    "skip_cirrus_ci",
-    "skip_cloudlinux",
-    "skip_codebuild",
-    "skip_cygwin",
-    "skip_debian",
-    "skip_exherbo",
-    "skip_fedora",
-    "skip_freebsd",
-    "skip_gentoo",
-    "skip_github_ci",
-    "skip_gitlab_ci",
-    "skip_guix",
-    "skip_heroku_ci",
-    "skip_hurd",
-    "skip_ibm_powerkvm",
-    "skip_kvmibm",
-    "skip_linux",
-    "skip_linux_layers",
-    "skip_linux_like",
-    "skip_linuxmint",
-    "skip_macos",
-    "skip_mageia",
-    "skip_mandriva",
-    "skip_midnightbsd",
-    "skip_netbsd",
-    "skip_nobara",
-    "skip_openbsd",
-    "skip_opensuse",
-    "skip_oracle",
-    "skip_other_unix",
-    "skip_parallels",
-    "skip_pidora",
-    "skip_raspbian",
-    "skip_rhel",
-    "skip_rocky",
-    "skip_scientific",
-    "skip_slackware",
-    "skip_sles",
-    "skip_solaris",
-    "skip_sunos",
-    "skip_system_v",
-    "skip_teamcity",
-    "skip_travis_ci",
-    "skip_tumbleweed",
-    "skip_tuxedo",
-    "skip_ubuntu",
-    "skip_ultramarine",
-    "skip_unix",
-    "skip_unix_layers",
-    "skip_unix_without_macos",
-    "skip_unknown_ci",
-    "skip_unknown_linux",
-    "skip_windows",
-    "skip_wsl1",
-    "skip_wsl2",
-    "skip_xenserver",
-    "unless_aix",
-    "unless_all_platforms",
-    "unless_all_platforms_without_ci",
-    "unless_altlinux",
-    "unless_amzn",
-    "unless_android",
-    "unless_any_windows",
-    "unless_arch",
-    "unless_azure_pipelines",
-    "unless_bamboo",
-    "unless_bsd",
-    "unless_bsd_without_macos",
-    "unless_buildkite",
-    "unless_buildroot",
-    "unless_cachyos",
-    "unless_centos",
-    "unless_ci",
-    "unless_circle_ci",
-    "unless_cirrus_ci",
-    "unless_cloudlinux",
-    "unless_codebuild",
-    "unless_cygwin",
-    "unless_debian",
-    "unless_exherbo",
-    "unless_fedora",
-    "unless_freebsd",
-    "unless_gentoo",
-    "unless_github_ci",
-    "unless_gitlab_ci",
-    "unless_guix",
-    "unless_heroku_ci",
-    "unless_hurd",
-    "unless_ibm_powerkvm",
-    "unless_kvmibm",
-    "unless_linux",
-    "unless_linux_layers",
-    "unless_linux_like",
-    "unless_linuxmint",
-    "unless_macos",
-    "unless_mageia",
-    "unless_mandriva",
-    "unless_midnightbsd",
-    "unless_netbsd",
-    "unless_nobara",
-    "unless_openbsd",
-    "unless_opensuse",
-    "unless_oracle",
-    "unless_other_unix",
-    "unless_parallels",
-    "unless_pidora",
-    "unless_raspbian",
-    "unless_rhel",
-    "unless_rocky",
-    "unless_scientific",
-    "unless_slackware",
-    "unless_sles",
-    "unless_solaris",
-    "unless_sunos",
-    "unless_system_v",
-    "unless_teamcity",
-    "unless_travis_ci",
-    "unless_tumbleweed",
-    "unless_tuxedo",
-    "unless_ubuntu",
-    "unless_ultramarine",
-    "unless_unix",
-    "unless_unix_layers",
-    "unless_unix_without_macos",
-    "unless_unknown_ci",
-    "unless_unknown_linux",
-    "unless_windows",
-    "unless_wsl1",
-    "unless_wsl2",
-    "unless_xenserver",
-)
-"""Expose all generated decorators.
-
-.. note::
-    The content of ``__all__`` is checked and enforced in unittests.
-"""
+# XXX Mypy doesn't understand dynamic type annotation, so we need to explicitly declare
+# all generated decorators after their generation.
+# These annotations are checked and enforced in unittests.
+if TYPE_CHECKING:
+    skip_aix: MarkDecorator
+    skip_all_platforms: MarkDecorator
+    skip_all_platforms_without_ci: MarkDecorator
+    skip_altlinux: MarkDecorator
+    skip_amzn: MarkDecorator
+    skip_android: MarkDecorator
+    skip_any_windows: MarkDecorator
+    skip_arch: MarkDecorator
+    skip_azure_pipelines: MarkDecorator
+    skip_bamboo: MarkDecorator
+    skip_bsd: MarkDecorator
+    skip_bsd_without_macos: MarkDecorator
+    skip_buildkite: MarkDecorator
+    skip_buildroot: MarkDecorator
+    skip_cachyos: MarkDecorator
+    skip_centos: MarkDecorator
+    skip_ci: MarkDecorator
+    skip_circle_ci: MarkDecorator
+    skip_cirrus_ci: MarkDecorator
+    skip_cloudlinux: MarkDecorator
+    skip_codebuild: MarkDecorator
+    skip_cygwin: MarkDecorator
+    skip_debian: MarkDecorator
+    skip_exherbo: MarkDecorator
+    skip_fedora: MarkDecorator
+    skip_freebsd: MarkDecorator
+    skip_gentoo: MarkDecorator
+    skip_github_ci: MarkDecorator
+    skip_gitlab_ci: MarkDecorator
+    skip_guix: MarkDecorator
+    skip_heroku_ci: MarkDecorator
+    skip_hurd: MarkDecorator
+    skip_ibm_powerkvm: MarkDecorator
+    skip_kvmibm: MarkDecorator
+    skip_linux: MarkDecorator
+    skip_linux_layers: MarkDecorator
+    skip_linux_like: MarkDecorator
+    skip_linuxmint: MarkDecorator
+    skip_macos: MarkDecorator
+    skip_mageia: MarkDecorator
+    skip_mandriva: MarkDecorator
+    skip_midnightbsd: MarkDecorator
+    skip_netbsd: MarkDecorator
+    skip_nobara: MarkDecorator
+    skip_openbsd: MarkDecorator
+    skip_opensuse: MarkDecorator
+    skip_oracle: MarkDecorator
+    skip_other_unix: MarkDecorator
+    skip_parallels: MarkDecorator
+    skip_pidora: MarkDecorator
+    skip_raspbian: MarkDecorator
+    skip_rhel: MarkDecorator
+    skip_rocky: MarkDecorator
+    skip_scientific: MarkDecorator
+    skip_slackware: MarkDecorator
+    skip_sles: MarkDecorator
+    skip_solaris: MarkDecorator
+    skip_sunos: MarkDecorator
+    skip_system_v: MarkDecorator
+    skip_teamcity: MarkDecorator
+    skip_travis_ci: MarkDecorator
+    skip_tumbleweed: MarkDecorator
+    skip_tuxedo: MarkDecorator
+    skip_ubuntu: MarkDecorator
+    skip_ultramarine: MarkDecorator
+    skip_unix: MarkDecorator
+    skip_unix_layers: MarkDecorator
+    skip_unix_without_macos: MarkDecorator
+    skip_unknown_ci: MarkDecorator
+    skip_unknown_linux: MarkDecorator
+    skip_windows: MarkDecorator
+    skip_wsl1: MarkDecorator
+    skip_wsl2: MarkDecorator
+    skip_xenserver: MarkDecorator
+    unless_aix: MarkDecorator
+    unless_all_platforms: MarkDecorator
+    unless_all_platforms_without_ci: MarkDecorator
+    unless_altlinux: MarkDecorator
+    unless_amzn: MarkDecorator
+    unless_android: MarkDecorator
+    unless_any_windows: MarkDecorator
+    unless_arch: MarkDecorator
+    unless_azure_pipelines: MarkDecorator
+    unless_bamboo: MarkDecorator
+    unless_bsd: MarkDecorator
+    unless_bsd_without_macos: MarkDecorator
+    unless_buildkite: MarkDecorator
+    unless_buildroot: MarkDecorator
+    unless_cachyos: MarkDecorator
+    unless_centos: MarkDecorator
+    unless_ci: MarkDecorator
+    unless_circle_ci: MarkDecorator
+    unless_cirrus_ci: MarkDecorator
+    unless_cloudlinux: MarkDecorator
+    unless_codebuild: MarkDecorator
+    unless_cygwin: MarkDecorator
+    unless_debian: MarkDecorator
+    unless_exherbo: MarkDecorator
+    unless_fedora: MarkDecorator
+    unless_freebsd: MarkDecorator
+    unless_gentoo: MarkDecorator
+    unless_github_ci: MarkDecorator
+    unless_gitlab_ci: MarkDecorator
+    unless_guix: MarkDecorator
+    unless_heroku_ci: MarkDecorator
+    unless_hurd: MarkDecorator
+    unless_ibm_powerkvm: MarkDecorator
+    unless_kvmibm: MarkDecorator
+    unless_linux: MarkDecorator
+    unless_linux_layers: MarkDecorator
+    unless_linux_like: MarkDecorator
+    unless_linuxmint: MarkDecorator
+    unless_macos: MarkDecorator
+    unless_mageia: MarkDecorator
+    unless_mandriva: MarkDecorator
+    unless_midnightbsd: MarkDecorator
+    unless_netbsd: MarkDecorator
+    unless_nobara: MarkDecorator
+    unless_openbsd: MarkDecorator
+    unless_opensuse: MarkDecorator
+    unless_oracle: MarkDecorator
+    unless_other_unix: MarkDecorator
+    unless_parallels: MarkDecorator
+    unless_pidora: MarkDecorator
+    unless_raspbian: MarkDecorator
+    unless_rhel: MarkDecorator
+    unless_rocky: MarkDecorator
+    unless_scientific: MarkDecorator
+    unless_slackware: MarkDecorator
+    unless_sles: MarkDecorator
+    unless_solaris: MarkDecorator
+    unless_sunos: MarkDecorator
+    unless_system_v: MarkDecorator
+    unless_teamcity: MarkDecorator
+    unless_travis_ci: MarkDecorator
+    unless_tumbleweed: MarkDecorator
+    unless_tuxedo: MarkDecorator
+    unless_ubuntu: MarkDecorator
+    unless_ultramarine: MarkDecorator
+    unless_unix: MarkDecorator
+    unless_unix_layers: MarkDecorator
+    unless_unix_without_macos: MarkDecorator
+    unless_unknown_ci: MarkDecorator
+    unless_unknown_linux: MarkDecorator
+    unless_windows: MarkDecorator
+    unless_wsl1: MarkDecorator
+    unless_wsl2: MarkDecorator
+    unless_xenserver: MarkDecorator

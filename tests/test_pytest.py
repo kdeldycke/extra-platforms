@@ -27,7 +27,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_windows,
 )
 from extra_platforms.group_data import ALL_GROUPS, ALL_PLATFORMS
-from extra_platforms.pytest import (  # type: ignore[attr-defined]
+from extra_platforms.pytest import (
     skip_linux,
     skip_macos,
     skip_ubuntu,
@@ -40,12 +40,22 @@ from extra_platforms.pytest import (  # type: ignore[attr-defined]
 
 
 def test_all_definition():
+    # Generate the list of decorators IDs we expect.
     all_decorator_ids = []
     for _obj in chain(ALL_PLATFORMS, ALL_GROUPS):
         skip_id = f"skip_{_obj.id}"
         unless_id = f"unless_{_obj.id}"
         all_decorator_ids.extend([skip_id, unless_id])
-    assert extra_platforms.pytest.__all__ == tuple(sorted(all_decorator_ids))
+
+    # Pick the actual list of decorators from the module.
+    collected_decorator_ids = [
+        name
+        for name in dir(extra_platforms.pytest)
+        if name.startswith(("skip_", "unless_"))
+    ]
+
+    # Ensure we collected them all and are naturally sorted.
+    assert collected_decorator_ids == sorted(all_decorator_ids)
 
 
 @skip_linux
