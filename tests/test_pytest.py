@@ -16,17 +16,22 @@
 
 from __future__ import annotations
 
+import ast
 from itertools import chain
+from pathlib import Path
 
 import extra_platforms
 from extra_platforms import (  # type: ignore[attr-defined]
+    ALL_GROUPS,
+    ALL_PLATFORMS,
+    Group,
+    Platform,
     is_any_windows,
     is_linux,
     is_macos,
     is_ubuntu,
     is_windows,
 )
-from extra_platforms.group_data import ALL_GROUPS, ALL_PLATFORMS
 from extra_platforms.pytest import (
     skip_linux,
     skip_macos,
@@ -39,14 +44,18 @@ from extra_platforms.pytest import (
 )
 
 
-def test_all_definition():
-    # Generate the list of decorators IDs we expect.
+def _all_decorator_ids() -> list[str]:
+    "Generate the list of decorators IDs we expect to find."
     all_decorator_ids = []
     for _obj in chain(ALL_PLATFORMS, ALL_GROUPS):
+        assert isinstance(_obj, (Platform, Group))
         skip_id = f"skip_{_obj.id}"
         unless_id = f"unless_{_obj.id}"
         all_decorator_ids.extend([skip_id, unless_id])
+    return sorted(all_decorator_ids)
 
+
+def test_all_definition():
     # Pick the actual list of decorators from the module.
     collected_decorator_ids = [
         name
@@ -54,8 +63,42 @@ def test_all_definition():
         if name.startswith(("skip_", "unless_"))
     ]
 
-    # Ensure we collected them all and are naturally sorted.
-    assert collected_decorator_ids == sorted(all_decorator_ids)
+    # Ensure we collected them all and they're naturally sorted.
+    assert collected_decorator_ids == _all_decorator_ids()
+
+
+def test_type_annotations():
+    """Check all @skip_*/@unless_* annotations are defined and sorted."""
+    pytest_file = Path(__file__).parent.parent / "extra_platforms" / "pytest.py"
+    tree = ast.parse(pytest_file.read_text())
+
+    # Collect all annotated assignments in the TYPE_CHECKING block.
+    decorator_annotations = []
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.If)
+            and isinstance(node.test, ast.Name)
+            and node.test.id == "TYPE_CHECKING"
+        ):
+            for line in node.body:
+                if (
+                    isinstance(line, ast.AnnAssign)
+                    and isinstance(line.target, ast.Name)
+                    and line.target.id.startswith(("skip_", "unless_"))
+                ):
+                    decorator_annotations.append(line.target.id)
+
+    assert len(decorator_annotations), "No @skip_*/@unless_* annotations found."
+    assert decorator_annotations == sorted(decorator_annotations), (
+        "@skip_*/@unless_* annotations not sorted alphabetically."
+    )
+
+    expected_annotations = _all_decorator_ids()
+    assert decorator_annotations == expected_annotations, (
+        f"@skip_*/@unless_* annotations don't match expectations:\n"
+        f"- Missing: {set(expected_annotations) - set(decorator_annotations)}\n"
+        f"- Extra: {set(decorator_annotations) - set(expected_annotations)}"
+    )
 
 
 @skip_linux

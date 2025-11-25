@@ -26,6 +26,7 @@ from extra_platforms import (
     MACOS,
     UBUNTU,
     WINDOWS,
+    WSL2,
     current_os,
     current_platforms,
     is_aix,
@@ -89,7 +90,6 @@ from extra_platforms import (
     is_wsl2,
     is_xenserver,
 )
-from extra_platforms.platform_data import WSL2
 from extra_platforms.pytest import unless_github_ci
 
 
