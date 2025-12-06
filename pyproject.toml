@@ -171,6 +171,7 @@ test = [
 ]
 typing = ["types-requests ~= 2.32.4.20250611"]
 docs = [
+    "click-extra [sphinx] ~= 7.3.0",
     "furo ~= 2025.9.25",
     "myst-parser ~= 4.0.0",
     "sphinx ~= 8.2.3",
