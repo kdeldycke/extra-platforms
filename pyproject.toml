@@ -150,38 +150,42 @@ dependencies = [
 # Package referenced above and also featured in [project.optional-dependencies] or [dependency-groups]
 # will be set without version specifier as they are already constrained.
 
-# Runtime extra dependency groups, also relying on >= specifiers as explained above.
 [project.optional-dependencies]
 pytest = [
     # pytest 8.2.1 is the first version to support Python 3.13.
     "pytest >= 8.2.1",
 ]
 
-# Non-runtime development dependency groups, using the ~= specifier to reduce randomness.
 [dependency-groups]
 test = [
-    "coverage [toml] ~= 7.12.0",
+    # coverage 7.11.0 is the first version to drop support for Python 3.9.
+    "coverage [toml] >= 7.11.0",
     "pytest",
-    "pytest-cov ~= 7.0.0",
-    "pytest-github-actions-annotate-failures ~= 0.3.0",
-    "pytest-randomly ~= 4.0.1",
-    "pytest-xdist [psutil] ~= 3.8.0",
-    "requests ~= 2.32.5",
+    # pytest-cov 7.0.0 is the first version to be repackaged with pyproject-metadata.
+    "pytest-cov >= 7.0.0",
+    # pytest-github-actions-annotate-failures 0.3.0 is the first version to support Python 3.13.
+    "pytest-github-actions-annotate-failures >= 0.3.0",
+    # pytest-randomly 4.0.0 is the first version to support Python 3.14.
+    "pytest-randomly >= 4.0.0",
+    # pytest-xdist 3.7.0 is the first version to support Python 3.13.
+    "pytest-xdist [psutil] >= 3.7.0",
+    # requests 2.32.5 is the first version to drop support for Python 3.8.
+    "requests >= 2.32.5",
     "tomli >= 2.3.0 ; python_version < '3.11'",
 ]
-typing = ["types-requests ~= 2.32.4.20250611"]
+typing = ["types-requests >= 2.32.4.20250611"]
 docs = [
-    "click-extra [sphinx] ~= 7.3.0",
-    "furo ~= 2025.9.25",
-    "myst-parser ~= 4.0.0",
-    "sphinx ~= 8.2.3",
-    # sphinx-autodoc-typehints 2.4.0 is the first version that is aligned to our Python >= 3.10 requirement.
+    "click-extra [sphinx] >= 7.3.0",
+    "furo >= 2025.9.25",
+    "myst-parser >= 4.0.0",
+    # Sphinx version is constrained by Click Extra.
+    "sphinx",
     "sphinx-autodoc-typehints >= 2.4.0",
-    "sphinx-copybutton ~= 0.5.2",
-    "sphinx-design ~= 0.6.0",
-    "sphinx-issues ~= 5.0.0",
-    "sphinxcontrib-mermaid ~= 1.2.2",
-    "sphinxext-opengraph ~= 0.13.0",
+    "sphinx-copybutton >= 0.5.2",
+    "sphinx-design >= 0.6.0",
+    "sphinx-issues >= 5.0.0",
+    "sphinxcontrib-mermaid >= 1.2.2",
+    "sphinxext-opengraph >= 0.13.0",
     "tomli >= 2.3.0 ; python_version < '3.11'",
 ]
 

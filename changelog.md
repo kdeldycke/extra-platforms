@@ -9,6 +9,7 @@
 - Add cooldown period for dependabot and `uv.lock` updates.
 - Merge all label syncing jobs into a single one.
 - Change the `test`, `typing` and `docs` extra dependency groups into development dependency groups.
+- Uncap all dependencies.
 - Run tests on Python `3.14t` and `3.15t` free-threaded variants.
 - Run tests on `ubuntu-slim` GitHub Actions runner.
 - Run docs update job on `ubuntu-slim` runner.
