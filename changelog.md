@@ -6,6 +6,7 @@
 > This version is not released yet and is under active development.
 
 - Change Amazon Linux icon.
+- Merge all label syncing jobs into a single one.
 - Run tests on Python `3.14t` and `3.15t` free-threaded variants.
 - Run tests on `ubuntu-slim` GitHub Actions runner.
 - Run docs update job on `ubuntu-slim` runner.
