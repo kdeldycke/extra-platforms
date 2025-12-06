@@ -37,15 +37,13 @@ You can do so easily [with `uvx`](https://docs.astral.sh/uv/guides/tools/#runnin
 
 ```shell-session
 $ uvx --with extra-platforms python
-
 Installed 3 packages in 5ms
 Python 3.11.11 (main, Mar 17 2025, 21:33:08) [Clang 20.1.0 ] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
-
 >>> import extra_platforms
-
 >>> extra_platforms.__version__
 '3.2.3'
+>>>
 ```
 
 ````{tip}
