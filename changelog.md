@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.1.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v5.1.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [5.1.0 (2025-12-06)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.1...v5.1.0)
 
 - Change Amazon Linux icon.
