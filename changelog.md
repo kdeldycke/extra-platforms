@@ -10,6 +10,7 @@
 - Run tests on Python `3.14t` and `3.15t` free-threaded variants.
 - Run tests on `ubuntu-slim` GitHub Actions runner.
 - Run docs update job on `ubuntu-slim` runner.
+- Unlock a CPU core stuck at 100% utilization on `macos-15-intel`.
 
 ## [5.0.1 (2025-11-15)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.0...v5.0.1)
 
