@@ -224,12 +224,12 @@ def current_platforms() -> tuple[Platform, ...]:
             matching.append(p)
 
     if not matching:
-        msg = (
-            f"Unrecognized {sys.platform} / "
-            f"{stdlib_platform.platform(aliased=True, terse=True)} platform. "
+        # Dump the raw data provided by all primitives used for detection.
+        raise SystemError(
+            f"Unrecognized {sys.platform!r} / "
+            f"{stdlib_platform.platform(aliased=True, terse=True)!r} platform. "
             f"{_report_msg}"
         )
-        raise SystemError(msg)
 
     return tuple(matching)
 
@@ -267,8 +267,9 @@ def current_os() -> Platform:
                 return matching.pop()
 
     # Our meta-heuristics above failed to decide on a single, appropriate platform.
-    msg = f"Multiple platforms match current environment: {matching} . {_report_msg}"
-    raise RuntimeError(msg)
+    raise RuntimeError(
+        f"Multiple platforms match current environment: {matching!r}. {_report_msg}"
+    )
 
 
 def _generate_group_membership_func(_group: Group) -> Callable:

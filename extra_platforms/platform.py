@@ -98,8 +98,7 @@ def _recursive_update(
         elif k in a:
             a[k] = b[k]
         elif strict:
-            msg = f"Parameter {k!r} found in second dict but not in first."
-            raise ValueError(msg)
+            raise ValueError(f"Parameter {k!r} found in second dict but not in first.")
     return a
 
 

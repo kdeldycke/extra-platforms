@@ -173,8 +173,7 @@ def reduce(
                 results.append(reduction)
 
     if len(results) > 1:
-        msg = f"Multiple solutions found: {results}"
-        raise RuntimeError(msg)
+        raise RuntimeError(f"Multiple solutions found: {results}")
 
     # If no reduced solution was found, return the original platforms.
     if not results:
