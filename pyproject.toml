@@ -76,6 +76,8 @@ keywords = [
 classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Environment :: Console',
+    "Environment :: MacOS X",
+    "Environment :: Win32 (MS Windows)",
     'Framework :: Pytest',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
@@ -131,6 +133,11 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     'Programming Language :: Python :: Implementation :: CPython',
     'Topic :: Software Development :: Libraries :: Python Modules',
+    "Topic :: System :: Operating System",
+    "Topic :: System :: Operating System Kernels",
+    "Topic :: System :: Operating System Kernels :: BSD",
+    "Topic :: System :: Operating System Kernels :: GNU Hurd",
+    "Topic :: System :: Operating System Kernels :: Linux",
     'Topic :: Utilities',
     'Typing :: Typed',
 ]
