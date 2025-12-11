@@ -10,10 +10,11 @@
 
 ## What is Extra Platforms?
 
-- Provides a list of all known platforms
+- Provides a list of all known platforms and architectures
 - Detect the current platform, at the distribution level
+- Detect the current architecture
 - Platform metadata (version, codename, etc.)
-- Group platforms into families
+- Group platforms and architectures into families
 - Manage collection of platforms and groups
 - Associate each platform and group to an emoji symbol
 - Conditional markers decorators for `pytest`: `@skip_<id>`/`@unless_<id>` for each platform and group (`@skip_android`, `@skip_any_windows`, `@skip_github_ci`, …)
@@ -29,7 +30,6 @@ $ uvx --with extra-platforms python
 
 ```pycon
 >>> import extra_platforms
-
 >>> extra_platforms.__version__
 '3.2.3'
 ```
@@ -40,18 +40,15 @@ Get the current platform, from which you can access lots of metadata:
 
 ```pycon
 >>> from extra_platforms import current_os
-
 >>> my_os = current_os()
 >>> my_os
 Platform(id='macos', name='macOS', current=True)
-
 >>> my_os.id
 'macos'
 >>> my_os.name
 'macOS'
 >>> my_os.icon
 '🍎'
-
 >>> my_os.info()
 {
     "id": "macos",
@@ -70,7 +67,6 @@ Check if a platform is a specific system:
 
 ```pycon
 >>> from extra_platforms import is_gentoo
-
 >>> is_gentoo()
 False
 ```
@@ -79,7 +75,6 @@ Use groups to check if the current platform is part of a specific family:
 
 ```pycon
 >>> from extra_platforms import UNIX, current_os
-
 >>> current_os() in UNIX
 False
 ```
@@ -88,7 +83,6 @@ Or directly use the boolean variables available for each family:
 
 ```pycon
 >>> from extra_platforms import is_unix
-
 >>> is_unix()
 False
 ```
@@ -97,7 +91,6 @@ List all platforms of a family:
 
 ```pycon
 >>> from extra_platforms import LINUX
-
 >>> LINUX
 Group(id='linux', name='Any Linux', platform_ids=frozenset({'ibm_powerkvm', 'rocky', 'debian', 'tuxedo', 'ubuntu', 'mageia', 'xenserver', 'opensuse', 'nobara', 'buildroot', 'rhel', 'parallels', 'pidora', 'sles', 'amzn', 'scientific', 'linuxmint', 'centos', 'android', 'gentoo', 'raspbian', 'unknown_linux', 'mandriva', 'exherbo', 'cloudlinux', 'fedora', 'guix', 'arch', 'altlinux', 'slackware', 'oracle', 'kvmibm'}))
 
@@ -140,13 +133,11 @@ Reduce a disparate collection of groups and platforms into a minimal descriptive
 
 ```pycon
 >>> from extra_platforms import AIX, MACOS, SOLARIS, reduce
-
 >>> reduce([AIX, MACOS])
 {
     Platform(id='aix', name='IBM AIX', current=False),
     Platform(id='macos', name='macOS', current=True),
 }
-
 >>> reduce([AIX, MACOS, SOLARIS])
 {
     Group(id='system_v', name='Any Unix derived from AT&T System Five', platform_ids=frozenset({'aix', 'solaris'})),
