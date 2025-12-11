@@ -25,15 +25,19 @@ import requests
 
 import extra_platforms
 from extra_platforms import (
+    ALL_ARCHITECTURES,
     ALL_GROUPS,
+    ALL_MEMBERS,
     ALL_PLATFORMS,
     GITHUB_CI,
     SYSTEM_V,
     UNIX,
+    UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
     UNKNOWN_LINUX,
     WSL1,
     WSL2,
+    current_architecture,
     current_os,
     current_platforms,
     invalidate_caches,
@@ -42,6 +46,8 @@ from extra_platforms import (
     is_ubuntu,
     is_windows,
 )
+from extra_platforms import architecture as architecture_module
+from extra_platforms import architecture_data as architecture_data_module
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
@@ -69,12 +75,13 @@ PYPROJECT = tomllib.loads(PYPROJECT_PATH.read_text(encoding="utf-8"))
 
 def test_pyproject_keywords():
     """Check that keywords in ``pyproject.toml`` are correct."""
-    # Build our ideal keywords list.
+    # Add all platforms and architectures.
     ideal_keywords = [
         p.name
         for p in (
-            ALL_PLATFORMS
+            ALL_MEMBERS
             # Remove generic unknown platforms.
+            - UNKNOWN_ARCHITECTURE
             - UNKNOWN_LINUX
             - UNKNOWN_CI
             # Remove versioned WSL platforms.
@@ -95,6 +102,7 @@ def test_pyproject_keywords():
         "Pytest",
         "OS detection",
         "Platform detection",
+        "Architecture detection",
     ))
     # Sort and deduplicate keywords (case-insensitive).
     ideal_keywords = sorted(set(ideal_keywords), key=lambda k: k.lower())
@@ -158,6 +166,8 @@ def test_module_root_declarations():
         return {m for m in members if not m.startswith("_")}
 
     detection_members = fetch_module_implements(detection_module)
+    architecture_members = fetch_module_implements(architecture_module)
+    architecture_data_members = fetch_module_implements(architecture_data_module)
     group_members = fetch_module_implements(group_module)
     group_data_members = fetch_module_implements(group_data_module)
     platform_members = fetch_module_implements(platform_module)
@@ -178,6 +188,8 @@ def test_module_root_declarations():
                         extra_platforms_members.append(element.value)
 
     assert detection_members <= set(extra_platforms_members)
+    assert architecture_members <= set(extra_platforms_members)
+    assert architecture_data_members <= set(extra_platforms_members)
     assert group_members <= set(extra_platforms_members)
     assert group_data_members <= set(extra_platforms_members)
     assert platform_members <= set(extra_platforms_members)
@@ -186,6 +198,8 @@ def test_module_root_declarations():
 
     expected_members = sorted(
         detection_members.union(group_members)
+        .union(architecture_members)
+        .union(architecture_data_members)
         .union(group_data_members)
         .union(platform_members)
         .union(platform_data_members)
@@ -196,56 +210,10 @@ def test_module_root_declarations():
     assert expected_members == extra_platforms_members
 
 
-def test_code_sorting():
-    """Implementation must have all its methods and objects sorted."""
-    heuristic_instance_ids = []
-    tree = ast.parse(Path(inspect.getfile(detection_module)).read_bytes())
-    for node in tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name.startswith("is_"):
-            func_id = node.name
-            assert func_id.islower()
-            heuristic_instance_ids.append(func_id)
-
-    platform_instance_ids = []
-    tree = ast.parse(Path(inspect.getfile(platform_data_module)).read_bytes())
-    for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and isinstance(node.value, ast.Call)
-            and node.value.func.id == "Platform"
-        ):
-            assert len(node.targets) == 1
-            instance_id = node.targets[0].id
-            assert instance_id.isupper()
-            platform_instance_ids.append(instance_id)
-
-    group_instance_ids = []
-    tree = ast.parse(Path(inspect.getfile(group_data_module)).read_bytes())
-    for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and isinstance(node.value, ast.Call)
-            and node.value.func.id == "Group"
-        ):
-            assert len(node.targets) == 1
-            instance_id = node.targets[0].id
-            assert instance_id.isupper()
-            group_instance_ids.append(instance_id)
-
-    # Check there is no extra "is_" function.
-    assert {f"is_{p.id}" for p in ALL_PLATFORMS.platforms} == set(
-        heuristic_instance_ids
-    )
-
-    assert heuristic_instance_ids == sorted(heuristic_instance_ids)
-    assert platform_instance_ids == sorted(platform_instance_ids)
-    # XXX Group order is logical, not alphabetical.
-    # assert group_instance_ids == sorted(group_instance_ids)
-
-
 def test_current_funcs():
     current_platforms_results = current_platforms()
     assert ALL_PLATFORMS.issuperset(current_platforms_results)
+
     if is_github_ci():
         assert GITHUB_CI in current_platforms_results
         if github_runner_os() == "ubuntu-slim":
@@ -258,6 +226,9 @@ def test_current_funcs():
     current_os_result = current_os()
     assert current_os_result in ALL_PLATFORMS
     assert current_os_result in current_platforms_results
+
+    current_architecture_result = current_architecture()
+    assert current_architecture_result in ALL_ARCHITECTURES
 
 
 def test_group_membership_funcs():

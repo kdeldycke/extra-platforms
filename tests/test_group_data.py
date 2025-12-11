@@ -16,14 +16,18 @@
 
 from __future__ import annotations
 
+import ast
+import inspect
 from itertools import combinations
+from pathlib import Path
 from string import ascii_lowercase, digits
 
 from extra_platforms import (
     ALL_GROUP_IDS,
     ALL_GROUPS,
     ALL_IDS,
-    ALL_PLATFORM_IDS,
+    ALL_MEMBER_IDS,
+    ALL_MEMBERS,
     ALL_PLATFORMS,
     ANY_WINDOWS,
     BSD,
@@ -38,9 +42,30 @@ from extra_platforms import (
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
+    Architecture,
     Group,
+    Platform,
 )
 from extra_platforms import group_data as group_data_module
+
+
+def test_group_data_ordering():
+    """Group instances follow logical order, not alphabetical."""
+    group_instance_ids = []
+    tree = ast.parse(Path(inspect.getfile(group_data_module)).read_bytes())
+    for node in tree.body:
+        if (
+            isinstance(node, ast.Assign)
+            and isinstance(node.value, ast.Call)
+            and node.value.func.id == "Group"
+        ):
+            assert len(node.targets) == 1
+            instance_id = node.targets[0].id
+            assert instance_id.isupper()
+            group_instance_ids.append(instance_id)
+
+    # Group order is logical, not alphabetical.
+    assert group_instance_ids != sorted(group_instance_ids)
 
 
 def test_group_definitions():
@@ -55,10 +80,12 @@ def test_group_definitions():
         # Only the group referencing all platforms and its derivate are allowed to
         # starts with "all_" prefix.
         assert group.id in (
+            "all_architectures",
+            "all_members",
             "all_platforms",
             "all_platforms_without_ci",
         ) or not group.id.startswith("all_")
-        assert group.id not in ALL_PLATFORM_IDS
+        assert group.id not in ALL_MEMBER_IDS
         assert group.id in ALL_GROUP_IDS
         assert group.id in ALL_IDS
 
@@ -88,17 +115,17 @@ def test_groups_content():
 
             assert len(group) > 0
             assert len(group.platforms) == len(group.platform_ids)
-            assert group.platform_ids.issubset(ALL_PLATFORMS.platform_ids)
+            assert group.platform_ids.issubset(ALL_MEMBERS.platform_ids)
 
             # Check general subset properties and operators.
-            assert group.issubset(ALL_PLATFORMS)
-            assert group <= ALL_PLATFORMS
-            if group != ALL_PLATFORMS:
-                assert group < ALL_PLATFORMS
-            assert ALL_PLATFORMS.issuperset(group)
-            assert ALL_PLATFORMS >= group
-            if group != ALL_PLATFORMS:
-                assert ALL_PLATFORMS > group
+            assert group.issubset(ALL_MEMBERS)
+            assert group <= ALL_MEMBERS
+            if group != ALL_MEMBERS:
+                assert group < ALL_MEMBERS
+            assert ALL_MEMBERS.issuperset(group)
+            assert ALL_MEMBERS >= group
+            if group != ALL_MEMBERS:
+                assert ALL_MEMBERS > group
 
             # Each group is both a subset and a superset of itself.
             assert group.issubset(group)
@@ -118,15 +145,16 @@ def test_groups_content():
             assert not group.issubset(set())
             assert not group.issubset(frozenset())
 
-            for platform in group.platforms:
-                assert platform in group
-                assert platform in ALL_PLATFORMS
-                assert platform.id in group.platform_ids
-                assert group.issuperset([platform])
+            for member in group.platforms:
+                assert member in group
+                assert member in ALL_MEMBERS
+                assert isinstance(member, (Platform, Architecture))
+                assert member.id in group.platform_ids
+                assert group.issuperset([member])
                 if len(group) == 1:
-                    assert group.issubset([platform])
+                    assert group.issubset([member])
                 else:
-                    assert not group.issubset([platform])
+                    assert not group.issubset([member])
 
             # A group cannot be disjoint from itself.
             assert not group.isdisjoint(group)
@@ -216,7 +244,7 @@ def test_group_no_missing_platform():
     grouped_platforms = set()
     for group in ALL_GROUPS:
         grouped_platforms |= group.platform_ids
-    assert grouped_platforms == ALL_PLATFORMS.platform_ids
+    assert grouped_platforms == ALL_MEMBERS.platform_ids
 
 
 def test_non_overlapping_groups():

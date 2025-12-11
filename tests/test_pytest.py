@@ -23,7 +23,8 @@ from pathlib import Path
 import extra_platforms
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_GROUPS,
-    ALL_PLATFORMS,
+    ALL_MEMBERS,
+    Architecture,
     Group,
     Platform,
     is_any_windows,
@@ -33,10 +34,14 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_windows,
 )
 from extra_platforms.pytest import (
+    skip_all_architectures,
+    skip_all_platforms,
     skip_linux,
     skip_macos,
     skip_ubuntu,
     skip_windows,
+    unless_all_architectures,
+    unless_all_platforms,
     unless_linux,
     unless_macos,
     unless_ubuntu,
@@ -47,8 +52,8 @@ from extra_platforms.pytest import (
 def _all_decorator_ids() -> list[str]:
     "Generate the list of decorators IDs we expect to find."
     all_decorator_ids = []
-    for _obj in chain(ALL_PLATFORMS, ALL_GROUPS):
-        assert isinstance(_obj, (Platform, Group))
+    for _obj in chain(ALL_MEMBERS, ALL_GROUPS):
+        assert isinstance(_obj, (Platform, Architecture, Group))
         skip_id = f"skip_{_obj.id}"
         unless_id = f"unless_{_obj.id}"
         all_decorator_ids.extend([skip_id, unless_id])
@@ -99,6 +104,26 @@ def test_type_annotations():
         f"- Missing: {set(expected_annotations) - set(decorator_annotations)}\n"
         f"- Extra: {set(decorator_annotations) - set(expected_annotations)}"
     )
+
+
+@skip_all_architectures
+def test_skip_all_architectures():
+    assert False, "This test should be skipped on all architectures."
+
+
+@skip_all_platforms
+def test_skip_all_platforms():
+    assert False, "This test should be skipped on all platforms."
+
+
+@unless_all_architectures
+def test_unless_all_architectures():
+    assert True, "This test should be run on all architectures."
+
+
+@unless_all_platforms
+def test_unless_all_platforms():
+    assert True, "This test should be run on all platforms."
 
 
 @skip_linux

@@ -26,7 +26,8 @@ from extra_platforms import (
     ALL_GROUP_IDS,
     ALL_GROUPS,
     ALL_IDS,
-    ALL_PLATFORM_IDS,
+    ALL_MEMBER_IDS,
+    ALL_MEMBERS,
     ALL_PLATFORMS,
     ALTLINUX,
     AMZN,
@@ -117,13 +118,13 @@ def test_unique_ids():
     # Check there is no overlap between platform and group IDs.
     assert all_group_ids.isdisjoint(all_platform_ids)
 
-    assert len(ALL_PLATFORM_IDS) == len(ALL_PLATFORMS)
-    assert ALL_PLATFORM_IDS.issubset(ALL_IDS)
-    assert ALL_PLATFORM_IDS.isdisjoint(ALL_GROUP_IDS)
+    assert len(ALL_MEMBER_IDS) == len(ALL_MEMBERS)
+    assert ALL_MEMBER_IDS.issubset(ALL_IDS)
+    assert ALL_MEMBER_IDS.isdisjoint(ALL_GROUP_IDS)
 
     assert len(ALL_GROUP_IDS) == len(ALL_GROUPS)
     assert ALL_GROUP_IDS.issubset(ALL_IDS)
-    assert ALL_GROUP_IDS.isdisjoint(ALL_PLATFORM_IDS)
+    assert ALL_GROUP_IDS.isdisjoint(ALL_MEMBER_IDS)
 
 
 def randomize_case(strings: Iterable[str]) -> set[str]:
@@ -145,14 +146,14 @@ def randomize_case(strings: Iterable[str]) -> set[str]:
     return test_strings
 
 
-@pytest.mark.parametrize("platform_id", randomize_case(ALL_PLATFORM_IDS))
+@pytest.mark.parametrize("platform_id", randomize_case(ALL_MEMBER_IDS))
 def test_platforms_from_ids(platform_id):
     platforms = platforms_from_ids(platform_id)
     assert platforms
     assert len(platforms) == 1
     platform = platforms[0]
     assert platform.id == platform_id.lower()
-    assert platform in ALL_PLATFORMS.platforms
+    assert platform in ALL_MEMBERS.platforms
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))

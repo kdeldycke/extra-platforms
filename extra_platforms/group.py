@@ -22,6 +22,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
 from functools import cached_property
 
+from .architecture import Architecture
 from .platform import Platform
 
 TYPE_CHECKING = False
@@ -154,6 +155,8 @@ class Group:
                 case None:
                     continue
                 case Platform():
+                    yield item
+                case Architecture():
                     yield item
                 case Group():
                     yield from item.platforms

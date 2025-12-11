@@ -17,6 +17,33 @@
 
 from __future__ import annotations
 
+from .architecture_data import (
+    AARCH64,
+    ARM,
+    ARMV6L,
+    ARMV7L,
+    ARMV8L,
+    I386,
+    I586,
+    I686,
+    LOONGARCH64,
+    MIPS,
+    MIPS64,
+    MIPS64EL,
+    MIPSEL,
+    PPC,
+    PPC64,
+    PPC64LE,
+    RISCV32,
+    RISCV64,
+    S390X,
+    SPARC,
+    SPARC64,
+    UNKNOWN_ARCHITECTURE,
+    WASM32,
+    WASM64,
+    X86_64,
+)
 from .group import Group
 from .platform_data import (
     AIX,
@@ -80,6 +107,41 @@ from .platform_data import (
     WSL2,
     XENSERVER,
 )
+
+ALL_ARCHITECTURES: Group = Group(
+    "all_architectures",
+    "All architectures",
+    "🏛️",
+    (
+        AARCH64,
+        ARM,
+        ARMV6L,
+        ARMV7L,
+        ARMV8L,
+        I386,
+        I586,
+        I686,
+        LOONGARCH64,
+        MIPS,
+        MIPS64,
+        MIPS64EL,
+        MIPSEL,
+        PPC,
+        PPC64,
+        PPC64LE,
+        RISCV32,
+        RISCV64,
+        S390X,
+        SPARC,
+        SPARC64,
+        UNKNOWN_ARCHITECTURE,
+        WASM32,
+        WASM64,
+        X86_64,
+    ),
+)
+"""All supported architectures."""
+
 
 ALL_PLATFORMS: Group = Group(
     "all_platforms",
@@ -149,6 +211,15 @@ ALL_PLATFORMS: Group = Group(
     ),
 )
 """All recognized platforms."""
+
+
+ALL_MEMBERS = Group(
+    "all_members",
+    "Any platforms and architectures",
+    "⁕",
+    tuple(ALL_PLATFORMS | ALL_ARCHITECTURES),
+)
+"""All supported platforms and architectures."""
 
 
 CI = Group(
@@ -420,6 +491,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         UNIX_LAYERS,
         OTHER_UNIX,
         CI,
+        ALL_ARCHITECTURES,
     ),
 )
 """Non-overlapping groups."""
@@ -427,6 +499,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
+        ALL_MEMBERS,
         ALL_PLATFORMS,
         ALL_PLATFORMS_WITHOUT_CI,
         LINUX_LIKE,

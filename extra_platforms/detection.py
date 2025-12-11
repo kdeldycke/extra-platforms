@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Heuristics to detect platforms.
+"""Heuristics to detect platforms and architectures.
 
 This collection of heuristics is designed as a set of separate function with minimal
 logic and dependencies.
@@ -79,6 +79,219 @@ import distro
 
 from . import _report_msg
 
+# =============================================================================
+# Architecture detection heuristics
+# =============================================================================
+
+
+@cache
+def is_aarch64() -> bool:
+    """Return ``True`` if current architecture is ARM64 (AArch64)."""
+    return platform.machine() in ("aarch64", "arm64")
+
+
+@cache
+def is_arm() -> bool:
+    """Return ``True`` if current architecture is generic ARM (32-bit).
+
+    This matches ARM architectures not covered by more specific variants.
+    """
+    if platform.machine().startswith("arm") and not any((
+        is_armv6l(),
+        is_armv7l(),
+        is_armv8l(),
+        is_aarch64(),
+    )):
+        return True
+    return False
+
+
+@cache
+def is_armv6l() -> bool:
+    """Return ``True`` if current architecture is ARMv6 (little-endian)."""
+    return platform.machine() == "armv6l"
+
+
+@cache
+def is_armv7l() -> bool:
+    """Return ``True`` if current architecture is ARMv7 (little-endian)."""
+    return platform.machine() == "armv7l"
+
+
+@cache
+def is_armv8l() -> bool:
+    """Return ``True`` if current architecture is ARMv8 (32-bit, little-endian)."""
+    return platform.machine() == "armv8l"
+
+
+@cache
+def is_i386() -> bool:
+    """Return ``True`` if current architecture is Intel 80386 (i386)."""
+    return platform.machine() in ("i386", "i486")
+
+
+@cache
+def is_i586() -> bool:
+    """Return ``True`` if current architecture is Intel Pentium (i586)."""
+    return platform.machine() == "i586"
+
+
+@cache
+def is_i686() -> bool:
+    """Return ``True`` if current architecture is Intel Pentium Pro (i686)."""
+    return platform.machine() == "i686"
+
+
+@cache
+def is_x86_64() -> bool:
+    """Return ``True`` if current architecture is x86-64 (AMD64).
+
+    .. note::
+        Windows returns ``AMD64`` in uppercase, so we normalize to lowercase.
+    """
+    return platform.machine().lower() in ("x86_64", "amd64")
+
+
+@cache
+def is_mips() -> bool:
+    """Return ``True`` if current architecture is MIPS (32-bit, big-endian)."""
+    return platform.machine() == "mips"
+
+
+@cache
+def is_mipsel() -> bool:
+    """Return ``True`` if current architecture is MIPS (32-bit, little-endian)."""
+    return platform.machine() == "mipsel"
+
+
+@cache
+def is_mips64() -> bool:
+    """Return ``True`` if current architecture is MIPS64 (big-endian)."""
+    return platform.machine() == "mips64"
+
+
+@cache
+def is_mips64el() -> bool:
+    """Return ``True`` if current architecture is MIPS64 (little-endian)."""
+    return platform.machine() == "mips64el"
+
+
+@cache
+def is_ppc() -> bool:
+    """Return ``True`` if current architecture is PowerPC (32-bit)."""
+    return platform.machine() in ("ppc", "powerpc")
+
+
+@cache
+def is_ppc64() -> bool:
+    """Return ``True`` if current architecture is PowerPC 64-bit (big-endian)."""
+    return platform.machine() == "ppc64"
+
+
+@cache
+def is_ppc64le() -> bool:
+    """Return ``True`` if current architecture is PowerPC 64-bit (little-endian)."""
+    return platform.machine() == "ppc64le"
+
+
+@cache
+def is_riscv32() -> bool:
+    """Return ``True`` if current architecture is RISC-V (32-bit)."""
+    return platform.machine() == "riscv32"
+
+
+@cache
+def is_riscv64() -> bool:
+    """Return ``True`` if current architecture is RISC-V (64-bit)."""
+    return platform.machine() == "riscv64"
+
+
+@cache
+def is_sparc() -> bool:
+    """Return ``True`` if current architecture is SPARC (32-bit)."""
+    return platform.machine() == "sparc"
+
+
+@cache
+def is_sparc64() -> bool:
+    """Return ``True`` if current architecture is SPARC (64-bit)."""
+    return platform.machine() in ("sparc64", "sun4u", "sun4v")
+
+
+@cache
+def is_s390x() -> bool:
+    """Return ``True`` if current architecture is IBM z/Architecture (s390x)."""
+    return platform.machine() == "s390x"
+
+
+@cache
+def is_loongarch64() -> bool:
+    """Return ``True`` if current architecture is LoongArch (64-bit)."""
+    return platform.machine() == "loongarch64"
+
+
+@cache
+def is_wasm32() -> bool:
+    """Return ``True`` if current architecture is WebAssembly (32-bit).
+
+    .. note::
+        WebAssembly detection is based on Emscripten's platform identifier.
+    """
+    return sys.platform == "emscripten" and platform.architecture()[0] == "32bit"
+
+
+@cache
+def is_wasm64() -> bool:
+    """Return ``True`` if current architecture is WebAssembly (64-bit).
+
+    .. note::
+        WebAssembly 64-bit (memory64) is still experimental.
+    """
+    return sys.platform == "emscripten" and platform.architecture()[0] == "64bit"
+
+
+@cache
+def is_unknown_architecture() -> bool:
+    """Return ``True`` if current architecture is unknown."""
+    if any((
+        is_i386(),
+        is_i586(),
+        is_i686(),
+        is_x86_64(),
+        is_arm(),
+        is_armv6l(),
+        is_armv7l(),
+        is_armv8l(),
+        is_aarch64(),
+        is_mips(),
+        is_mipsel(),
+        is_mips64(),
+        is_mips64el(),
+        is_ppc(),
+        is_ppc64(),
+        is_ppc64le(),
+        is_riscv32(),
+        is_riscv64(),
+        is_sparc(),
+        is_sparc64(),
+        is_s390x(),
+        is_loongarch64(),
+        is_wasm32(),
+        is_wasm64(),
+    )):
+        return False
+
+    machine = platform.machine()
+    if machine:
+        logging.warning(f"Unknown architecture detected: {machine!r}. {_report_msg}")
+        return True
+    return False
+
+
+# =============================================================================
+# Platform detection heuristics
+# =============================================================================
+
 
 @cache
 def is_aix() -> bool:
@@ -114,36 +327,6 @@ def is_arch() -> bool:
 
 
 @cache
-def is_azure_pipelines() -> bool:
-    """Return ``True`` if current platform is Azure Pipelines.
-
-    `Environment variables reference
-    <https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&viewFallbackFrom=vsts&tabs=yaml#system-variables>`_.
-    """
-    return "TF_BUILD" in environ
-
-
-@cache
-def is_bamboo() -> bool:
-    """Return ``True`` if current platform is Bamboo.
-
-    `Environment variables reference
-    <https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html#Bamboovariables-Build-specificvariables>`_.
-    """
-    return "bamboo.buildKey" in environ
-
-
-@cache
-def is_buildkite() -> bool:
-    """Return ``True`` if current platform is Buildkite.
-
-    `Environment variables reference
-    <https://buildkite.com/docs/pipelines/environment-variables>`_.
-    """
-    return "BUILDKITE" in environ
-
-
-@cache
 def is_buildroot() -> bool:
     """Return ``True`` if current platform is Buildroot."""
     return distro.id() == "buildroot"
@@ -162,39 +345,9 @@ def is_centos() -> bool:
 
 
 @cache
-def is_circle_ci() -> bool:
-    """Return ``True`` if current platform is Circle CI.
-
-    `Environment variables reference
-    <https://circleci.com/docs/2.0/env-vars/#built-in-environment-variables>`_.
-    """
-    return "CIRCLECI" in environ
-
-
-@cache
-def is_cirrus_ci() -> bool:
-    """Return ``True`` if current platform is Cirrus CI.
-
-    `Environment variables reference
-    <https://cirrus-ci.org/guide/writing-tasks/#environment-variables>`_.
-    """
-    return "CIRRUS_CI" in environ
-
-
-@cache
 def is_cloudlinux() -> bool:
     """Return ``True`` if current platform is CloudLinux OS."""
     return distro.id() == "cloudlinux"
-
-
-@cache
-def is_codebuild() -> bool:
-    """Return ``True`` if current platform is CodeBuild.
-
-    `Environment variables reference
-    <https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html>`_.
-    """
-    return "CODEBUILD_BUILD_ID" in environ
 
 
 @cache
@@ -234,39 +387,9 @@ def is_gentoo() -> bool:
 
 
 @cache
-def is_github_ci() -> bool:
-    """Return ``True`` if current platform is GitHub Actions runner.
-
-    `Environment variables reference
-    <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables>`_.
-    """
-    return "GITHUB_ACTIONS" in environ or "GITHUB_RUN_ID" in environ
-
-
-@cache
-def is_gitlab_ci() -> bool:
-    """Return ``True`` if current platform is GitLab CI.
-
-    `Environment variables reference
-    <https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables>`_.
-    """
-    return "GITLAB_CI" in environ
-
-
-@cache
 def is_guix() -> bool:
     """Return ``True`` if current platform is Guix System."""
     return distro.id() == "guix"
-
-
-@cache
-def is_heroku_ci() -> bool:
-    """Return ``True`` if current platform is Heroku CI.
-
-    `Environment variables reference
-    <https://devcenter.heroku.com/articles/heroku-ci#immutable-environment-variables>`_.
-    """
-    return "HEROKU_TEST_RUN_ID" in environ
 
 
 @cache
@@ -412,26 +535,6 @@ def is_sunos() -> bool:
 
 
 @cache
-def is_teamcity() -> bool:
-    """Return ``True`` if current platform is TeamCity.
-
-    `Environment variables reference
-    <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#PredefinedBuildParameters-ServerBuildProperties>`_.
-    """
-    return "TEAMCITY_VERSION" in environ
-
-
-@cache
-def is_travis_ci() -> bool:
-    """Return ``True`` if current platform is Travis CI.
-
-    `Environment variables reference
-    <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>`_.
-    """
-    return "TRAVIS" in environ
-
-
-@cache
 def is_tumbleweed() -> bool:
     """Return ``True`` if current platform is openSUSE Tumbleweed."""
     return distro.id() == "opensuse-tumbleweed"
@@ -453,37 +556,6 @@ def is_ubuntu() -> bool:
 def is_ultramarine() -> bool:
     """Return ``True`` if current platform is Ultramarine."""
     return distro.id() == "ultramarine"
-
-
-@cache
-def is_unknown_ci() -> bool:
-    """Return ``True`` if current platform is an unknown CI.
-
-    Some CI systems relies on `generic environment variables to identify themselves
-    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_:
-
-    - ``CI``
-    - ``BUILD_ID``
-    """
-    if any((
-        is_azure_pipelines(),
-        is_bamboo(),
-        is_buildkite(),
-        is_circle_ci(),
-        is_cirrus_ci(),
-        is_codebuild(),
-        is_github_ci(),
-        is_gitlab_ci(),
-        is_heroku_ci(),
-        is_teamcity(),
-        is_travis_ci(),
-    )):
-        return False
-
-    if "CI" in environ or "BUILD_ID" in environ:
-        logging.warning(f"Unknown CI detected: {environ}. {_report_msg}")
-        return True
-    return False
 
 
 @cache
@@ -574,3 +646,149 @@ def is_wsl2() -> bool:
 def is_xenserver() -> bool:
     """Return ``True`` if current platform is XenServer."""
     return distro.id() == "xenserver"
+
+
+# =============================================================================
+# CI/CD detection heuristics
+# =============================================================================
+
+
+@cache
+def is_azure_pipelines() -> bool:
+    """Return ``True`` if current platform is Azure Pipelines.
+
+    `Environment variables reference
+    <https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&viewFallbackFrom=vsts&tabs=yaml#system-variables>`_.
+    """
+    return "TF_BUILD" in environ
+
+
+@cache
+def is_bamboo() -> bool:
+    """Return ``True`` if current platform is Bamboo.
+
+    `Environment variables reference
+    <https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html#Bamboovariables-Build-specificvariables>`_.
+    """
+    return "bamboo.buildKey" in environ
+
+
+@cache
+def is_buildkite() -> bool:
+    """Return ``True`` if current platform is Buildkite.
+
+    `Environment variables reference
+    <https://buildkite.com/docs/pipelines/environment-variables>`_.
+    """
+    return "BUILDKITE" in environ
+
+
+@cache
+def is_circle_ci() -> bool:
+    """Return ``True`` if current platform is Circle CI.
+
+    `Environment variables reference
+    <https://circleci.com/docs/2.0/env-vars/#built-in-environment-variables>`_.
+    """
+    return "CIRCLECI" in environ
+
+
+@cache
+def is_cirrus_ci() -> bool:
+    """Return ``True`` if current platform is Cirrus CI.
+
+    `Environment variables reference
+    <https://cirrus-ci.org/guide/writing-tasks/#environment-variables>`_.
+    """
+    return "CIRRUS_CI" in environ
+
+
+@cache
+def is_codebuild() -> bool:
+    """Return ``True`` if current platform is CodeBuild.
+
+    `Environment variables reference
+    <https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html>`_.
+    """
+    return "CODEBUILD_BUILD_ID" in environ
+
+
+@cache
+def is_github_ci() -> bool:
+    """Return ``True`` if current platform is GitHub Actions runner.
+
+    `Environment variables reference
+    <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables>`_.
+    """
+    return "GITHUB_ACTIONS" in environ or "GITHUB_RUN_ID" in environ
+
+
+@cache
+def is_gitlab_ci() -> bool:
+    """Return ``True`` if current platform is GitLab CI.
+
+    `Environment variables reference
+    <https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables>`_.
+    """
+    return "GITLAB_CI" in environ
+
+
+@cache
+def is_heroku_ci() -> bool:
+    """Return ``True`` if current platform is Heroku CI.
+
+    `Environment variables reference
+    <https://devcenter.heroku.com/articles/heroku-ci#immutable-environment-variables>`_.
+    """
+    return "HEROKU_TEST_RUN_ID" in environ
+
+
+@cache
+def is_teamcity() -> bool:
+    """Return ``True`` if current platform is TeamCity.
+
+    `Environment variables reference
+    <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#PredefinedBuildParameters-ServerBuildProperties>`_.
+    """
+    return "TEAMCITY_VERSION" in environ
+
+
+@cache
+def is_travis_ci() -> bool:
+    """Return ``True`` if current platform is Travis CI.
+
+    `Environment variables reference
+    <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>`_.
+    """
+    return "TRAVIS" in environ
+
+
+@cache
+def is_unknown_ci() -> bool:
+    """Return ``True`` if current platform is an unknown CI.
+
+    Some CI systems relies on `generic environment variables to identify themselves
+    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_:
+
+    - ``CI``
+    - ``BUILD_ID``
+    """
+    if any((
+        is_azure_pipelines(),
+        is_bamboo(),
+        is_buildkite(),
+        is_circle_ci(),
+        is_cirrus_ci(),
+        is_codebuild(),
+        is_github_ci(),
+        is_gitlab_ci(),
+        is_heroku_ci(),
+        is_teamcity(),
+        is_travis_ci(),
+    )):
+        return False
+
+    if "CI" in environ or "BUILD_ID" in environ:
+        logging.warning(f"Unknown CI detected: {environ}. {_report_msg}")
+        return True
+    return False

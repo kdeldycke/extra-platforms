@@ -17,18 +17,40 @@
 from __future__ import annotations
 
 import sys
+import ast
+import inspect
 from operator import attrgetter
+from pathlib import Path
 from string import ascii_lowercase, digits
 
 import pytest
 import requests
 
-from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_PLATFORM_IDS, ALL_PLATFORMS
 from extra_platforms.pytest import unless_linux
+from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_MEMBER_IDS, ALL_PLATFORMS
+from extra_platforms import platform_data as platform_data_module
 
 all_platforms_params = pytest.mark.parametrize(
     "platform", ALL_PLATFORMS.platforms, ids=attrgetter("id")
 )
+
+
+def test_platform_data_sorting():
+    """Platform instances must be sorted alphabetically."""
+    platform_instance_ids = []
+    tree = ast.parse(Path(inspect.getfile(platform_data_module)).read_bytes())
+    for node in tree.body:
+        if (
+            isinstance(node, ast.Assign)
+            and isinstance(node.value, ast.Call)
+            and node.value.func.id == "Platform"
+        ):
+            assert len(node.targets) == 1
+            instance_id = node.targets[0].id
+            assert instance_id.isupper()
+            platform_instance_ids.append(instance_id)
+
+    assert platform_instance_ids == sorted(platform_instance_ids)
 
 
 @all_platforms_params
@@ -45,7 +67,7 @@ def test_platform_definitions(platform):
     # Platforms are not allowed to starts with all_ or any_, which is reserved
     # for groups. Use unknown_ prefix instead.
     assert not platform.id.startswith(("all_", "any_"))
-    assert platform.id in ALL_PLATFORM_IDS
+    assert platform.id in ALL_MEMBER_IDS
     assert platform.id not in ALL_GROUP_IDS
     assert platform.id in ALL_IDS
 

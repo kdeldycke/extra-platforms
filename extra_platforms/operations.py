@@ -20,23 +20,24 @@ from __future__ import annotations
 from itertools import combinations
 
 from .group import Group
-from .group_data import ALL_GROUPS, ALL_PLATFORMS
+from .group_data import ALL_GROUPS, ALL_MEMBERS
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from ._types import _T, _TNestedReferences
+    from .architecture import Architecture
     from .platform import Platform
 
 
-ALL_PLATFORM_IDS: frozenset[str] = frozenset((p.id for p in ALL_PLATFORMS.platforms))
-"""Set of all recognized platform IDs."""
+ALL_MEMBER_IDS: frozenset[str] = frozenset((p.id for p in ALL_MEMBERS.platforms))
+"""Set of all recognized member IDs."""
 
 ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS))
 """Set of all recognized group IDs."""
 
-ALL_IDS: frozenset[str] = ALL_PLATFORM_IDS | ALL_GROUP_IDS
+ALL_IDS: frozenset[str] = ALL_MEMBER_IDS | ALL_GROUP_IDS
 """Set of all recognized platform and group IDs."""
 
 
@@ -51,7 +52,9 @@ def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
     return tuple(dict.fromkeys(items))
 
 
-def platforms_from_ids(*platform_and_group_ids: str) -> tuple[Platform, ...]:
+def platforms_from_ids(
+    *platform_and_group_ids: str,
+) -> tuple[Platform | Architecture, ...]:
     """Returns a deduplicated tuple of platforms matching the provided IDs.
 
     IDs are case-insensitive, and can refer to any platforms or groups. Matching groups
@@ -71,8 +74,8 @@ def platforms_from_ids(*platform_and_group_ids: str) -> tuple[Platform, ...]:
         )
     platforms = []
     for platform_id in ids:
-        if platform_id in ALL_PLATFORM_IDS:
-            platforms.append(ALL_PLATFORMS[platform_id])
+        if platform_id in ALL_MEMBER_IDS:
+            platforms.append(ALL_MEMBERS[platform_id])
         else:
             groups = groups_from_ids(platform_id)
             assert len(groups) == 1

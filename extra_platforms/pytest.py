@@ -33,8 +33,9 @@ from itertools import chain
 
 import extra_platforms
 
+from .architecture import Architecture
 from .group import Group
-from .group_data import ALL_GROUPS, ALL_PLATFORMS
+from .group_data import ALL_GROUPS, ALL_MEMBERS
 from .platform import Platform
 
 TYPE_CHECKING = False
@@ -73,9 +74,9 @@ class DeferredCondition:
 
 
 # Generate a pair of skip/unless decorators for each platform and group.
-for _obj in chain(ALL_PLATFORMS, ALL_GROUPS):
+for _obj in chain(ALL_MEMBERS, ALL_GROUPS):
     # Sanity check to please the type checker.
-    assert isinstance(_obj, (Platform, Group))
+    assert isinstance(_obj, (Platform, Architecture, Group))
 
     # Get the detection function for the current object.
     _func = getattr(extra_platforms, f"is_{_obj.id}")
@@ -97,7 +98,10 @@ for _obj in chain(ALL_PLATFORMS, ALL_GROUPS):
 # all generated decorators after their generation.
 # These annotations are checked and enforced in unittests.
 if TYPE_CHECKING:
+    skip_aarch64: MarkDecorator
     skip_aix: MarkDecorator
+    skip_all_architectures: MarkDecorator
+    skip_all_members: MarkDecorator
     skip_all_platforms: MarkDecorator
     skip_all_platforms_without_ci: MarkDecorator
     skip_altlinux: MarkDecorator
@@ -105,6 +109,10 @@ if TYPE_CHECKING:
     skip_android: MarkDecorator
     skip_any_windows: MarkDecorator
     skip_arch: MarkDecorator
+    skip_arm: MarkDecorator
+    skip_armv6l: MarkDecorator
+    skip_armv7l: MarkDecorator
+    skip_armv8l: MarkDecorator
     skip_azure_pipelines: MarkDecorator
     skip_bamboo: MarkDecorator
     skip_bsd: MarkDecorator
@@ -129,16 +137,24 @@ if TYPE_CHECKING:
     skip_guix: MarkDecorator
     skip_heroku_ci: MarkDecorator
     skip_hurd: MarkDecorator
+    skip_i386: MarkDecorator
+    skip_i586: MarkDecorator
+    skip_i686: MarkDecorator
     skip_ibm_powerkvm: MarkDecorator
     skip_kvmibm: MarkDecorator
     skip_linux: MarkDecorator
     skip_linux_layers: MarkDecorator
     skip_linux_like: MarkDecorator
     skip_linuxmint: MarkDecorator
+    skip_loongarch64: MarkDecorator
     skip_macos: MarkDecorator
     skip_mageia: MarkDecorator
     skip_mandriva: MarkDecorator
     skip_midnightbsd: MarkDecorator
+    skip_mips: MarkDecorator
+    skip_mips64: MarkDecorator
+    skip_mips64el: MarkDecorator
+    skip_mipsel: MarkDecorator
     skip_netbsd: MarkDecorator
     skip_nobara: MarkDecorator
     skip_openbsd: MarkDecorator
@@ -147,13 +163,21 @@ if TYPE_CHECKING:
     skip_other_unix: MarkDecorator
     skip_parallels: MarkDecorator
     skip_pidora: MarkDecorator
+    skip_ppc: MarkDecorator
+    skip_ppc64: MarkDecorator
+    skip_ppc64le: MarkDecorator
     skip_raspbian: MarkDecorator
     skip_rhel: MarkDecorator
+    skip_riscv32: MarkDecorator
+    skip_riscv64: MarkDecorator
     skip_rocky: MarkDecorator
+    skip_s390x: MarkDecorator
     skip_scientific: MarkDecorator
     skip_slackware: MarkDecorator
     skip_sles: MarkDecorator
     skip_solaris: MarkDecorator
+    skip_sparc: MarkDecorator
+    skip_sparc64: MarkDecorator
     skip_sunos: MarkDecorator
     skip_system_v: MarkDecorator
     skip_teamcity: MarkDecorator
@@ -165,13 +189,20 @@ if TYPE_CHECKING:
     skip_unix: MarkDecorator
     skip_unix_layers: MarkDecorator
     skip_unix_without_macos: MarkDecorator
+    skip_unknown_architecture: MarkDecorator
     skip_unknown_ci: MarkDecorator
     skip_unknown_linux: MarkDecorator
+    skip_wasm32: MarkDecorator
+    skip_wasm64: MarkDecorator
     skip_windows: MarkDecorator
     skip_wsl1: MarkDecorator
     skip_wsl2: MarkDecorator
+    skip_x86_64: MarkDecorator
     skip_xenserver: MarkDecorator
+    unless_aarch64: MarkDecorator
     unless_aix: MarkDecorator
+    unless_all_architectures: MarkDecorator
+    unless_all_members: MarkDecorator
     unless_all_platforms: MarkDecorator
     unless_all_platforms_without_ci: MarkDecorator
     unless_altlinux: MarkDecorator
@@ -179,6 +210,10 @@ if TYPE_CHECKING:
     unless_android: MarkDecorator
     unless_any_windows: MarkDecorator
     unless_arch: MarkDecorator
+    unless_arm: MarkDecorator
+    unless_armv6l: MarkDecorator
+    unless_armv7l: MarkDecorator
+    unless_armv8l: MarkDecorator
     unless_azure_pipelines: MarkDecorator
     unless_bamboo: MarkDecorator
     unless_bsd: MarkDecorator
@@ -203,16 +238,24 @@ if TYPE_CHECKING:
     unless_guix: MarkDecorator
     unless_heroku_ci: MarkDecorator
     unless_hurd: MarkDecorator
+    unless_i386: MarkDecorator
+    unless_i586: MarkDecorator
+    unless_i686: MarkDecorator
     unless_ibm_powerkvm: MarkDecorator
     unless_kvmibm: MarkDecorator
     unless_linux: MarkDecorator
     unless_linux_layers: MarkDecorator
     unless_linux_like: MarkDecorator
     unless_linuxmint: MarkDecorator
+    unless_loongarch64: MarkDecorator
     unless_macos: MarkDecorator
     unless_mageia: MarkDecorator
     unless_mandriva: MarkDecorator
     unless_midnightbsd: MarkDecorator
+    unless_mips: MarkDecorator
+    unless_mips64: MarkDecorator
+    unless_mips64el: MarkDecorator
+    unless_mipsel: MarkDecorator
     unless_netbsd: MarkDecorator
     unless_nobara: MarkDecorator
     unless_openbsd: MarkDecorator
@@ -221,13 +264,21 @@ if TYPE_CHECKING:
     unless_other_unix: MarkDecorator
     unless_parallels: MarkDecorator
     unless_pidora: MarkDecorator
+    unless_ppc: MarkDecorator
+    unless_ppc64: MarkDecorator
+    unless_ppc64le: MarkDecorator
     unless_raspbian: MarkDecorator
     unless_rhel: MarkDecorator
+    unless_riscv32: MarkDecorator
+    unless_riscv64: MarkDecorator
     unless_rocky: MarkDecorator
+    unless_s390x: MarkDecorator
     unless_scientific: MarkDecorator
     unless_slackware: MarkDecorator
     unless_sles: MarkDecorator
     unless_solaris: MarkDecorator
+    unless_sparc: MarkDecorator
+    unless_sparc64: MarkDecorator
     unless_sunos: MarkDecorator
     unless_system_v: MarkDecorator
     unless_teamcity: MarkDecorator
@@ -239,9 +290,13 @@ if TYPE_CHECKING:
     unless_unix: MarkDecorator
     unless_unix_layers: MarkDecorator
     unless_unix_without_macos: MarkDecorator
+    unless_unknown_architecture: MarkDecorator
     unless_unknown_ci: MarkDecorator
     unless_unknown_linux: MarkDecorator
+    unless_wasm32: MarkDecorator
+    unless_wasm64: MarkDecorator
     unless_windows: MarkDecorator
     unless_wsl1: MarkDecorator
     unless_wsl2: MarkDecorator
+    unless_x86_64: MarkDecorator
     unless_xenserver: MarkDecorator
