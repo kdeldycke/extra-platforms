@@ -263,7 +263,7 @@ from .operations import (  # noqa: E402
     reduce,
 )
 
-__version__ = "5.1.1"
+__version__ = "6.0.0"
 
 
 def _unrecognized_env_error(kind: str) -> SystemError:
