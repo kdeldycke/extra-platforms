@@ -13,14 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Trait base class for platforms, architectures, and CI systems.
+"""Trait base class for architectures, platforms, CI systems, and more.
 
 A trait represents a distinguishing characteristic of a runtime environment.
 Each trait has a unique ID, a human-readable name, an icon, and the ability
 to detect if it matches the current environment.
 
-Everything here can be aggressively cached and frozen, as traits only compute
-environment-dependent values.
+Data associated with traits can be aggressively cached and frozen, as they're only
+computed based on environment-dependent values.
 """
 
 from __future__ import annotations
