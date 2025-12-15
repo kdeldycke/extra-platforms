@@ -33,10 +33,9 @@ from itertools import chain
 
 import extra_platforms
 
-from .architecture import Architecture
 from .group import Group
-from .group_data import ALL_GROUPS, ALL_MEMBERS
-from .platform import Platform
+from .group_data import ALL_GROUPS, ALL_TRAITS
+from .trait import Trait
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -74,9 +73,9 @@ class DeferredCondition:
 
 
 # Generate a pair of skip/unless decorators for each platform and group.
-for _obj in chain(ALL_MEMBERS, ALL_GROUPS):
+for _obj in chain(ALL_TRAITS, ALL_GROUPS):
     # Sanity check to please the type checker.
-    assert isinstance(_obj, (Platform, Architecture, Group))
+    assert isinstance(_obj, (Trait, Group))
 
     # Get the detection function for the current object.
     _func = getattr(extra_platforms, f"is_{_obj.id}")
@@ -101,9 +100,9 @@ if TYPE_CHECKING:
     skip_aarch64: MarkDecorator
     skip_aix: MarkDecorator
     skip_all_architectures: MarkDecorator
-    skip_all_members: MarkDecorator
+    skip_all_ci: MarkDecorator
     skip_all_platforms: MarkDecorator
-    skip_all_platforms_without_ci: MarkDecorator
+    skip_all_traits: MarkDecorator
     skip_altlinux: MarkDecorator
     skip_amzn: MarkDecorator
     skip_android: MarkDecorator
@@ -121,7 +120,6 @@ if TYPE_CHECKING:
     skip_buildroot: MarkDecorator
     skip_cachyos: MarkDecorator
     skip_centos: MarkDecorator
-    skip_ci: MarkDecorator
     skip_circle_ci: MarkDecorator
     skip_cirrus_ci: MarkDecorator
     skip_cloudlinux: MarkDecorator
@@ -202,9 +200,9 @@ if TYPE_CHECKING:
     unless_aarch64: MarkDecorator
     unless_aix: MarkDecorator
     unless_all_architectures: MarkDecorator
-    unless_all_members: MarkDecorator
+    unless_all_ci: MarkDecorator
     unless_all_platforms: MarkDecorator
-    unless_all_platforms_without_ci: MarkDecorator
+    unless_all_traits: MarkDecorator
     unless_altlinux: MarkDecorator
     unless_amzn: MarkDecorator
     unless_android: MarkDecorator
@@ -222,7 +220,6 @@ if TYPE_CHECKING:
     unless_buildroot: MarkDecorator
     unless_cachyos: MarkDecorator
     unless_centos: MarkDecorator
-    unless_ci: MarkDecorator
     unless_circle_ci: MarkDecorator
     unless_cirrus_ci: MarkDecorator
     unless_cloudlinux: MarkDecorator

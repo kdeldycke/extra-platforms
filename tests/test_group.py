@@ -20,11 +20,11 @@ import pytest
 
 from extra_platforms import (
     AIX,
+    ALL_CI,
     ALL_PLATFORMS,
     ANY_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
-    CI,
     LINUX,
     LINUX_LAYERS,
     PIDORA,
@@ -275,7 +275,7 @@ def test_single_difference():
 
 
 def test_multiple_difference():
-    new_group = ALL_PLATFORMS.difference(LINUX, UNIX, CI)
+    new_group = ALL_PLATFORMS.difference(LINUX, UNIX, ALL_CI)
 
     assert new_group.platform_ids == frozenset(("windows",))
 
@@ -312,10 +312,10 @@ def test_multiple_difference():
 
     assert set(new_group.platforms) == set(ALL_PLATFORMS.platforms).difference(
         LINUX.platforms
-    ).difference(UNIX.platforms).difference(CI.platforms)
+    ).difference(UNIX.platforms).difference(ALL_CI.platforms)
     assert set(new_group.platform_ids) == set(ALL_PLATFORMS.platform_ids).difference(
         LINUX.platform_ids
-    ).difference(UNIX.platform_ids).difference(CI.platform_ids)
+    ).difference(UNIX.platform_ids).difference(ALL_CI.platform_ids)
 
 
 def test_symmetric_difference():

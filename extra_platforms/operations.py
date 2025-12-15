@@ -20,7 +20,7 @@ from __future__ import annotations
 from itertools import combinations
 
 from .group import Group
-from .group_data import ALL_GROUPS, ALL_MEMBERS
+from .group_data import ALL_GROUPS, ALL_TRAITS
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -31,14 +31,14 @@ if TYPE_CHECKING:
     from .platform import Platform
 
 
-ALL_MEMBER_IDS: frozenset[str] = frozenset((p.id for p in ALL_MEMBERS.platforms))
-"""Set of all recognized member IDs."""
+ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS.platforms))
+"""Set of all recognized traits IDs."""
 
 ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS))
 """Set of all recognized group IDs."""
 
-ALL_IDS: frozenset[str] = ALL_MEMBER_IDS | ALL_GROUP_IDS
-"""Set of all recognized platform and group IDs."""
+ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
+"""Set of all recognized traits and group IDs."""
 
 
 def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
@@ -74,8 +74,8 @@ def platforms_from_ids(
         )
     platforms = []
     for platform_id in ids:
-        if platform_id in ALL_MEMBER_IDS:
-            platforms.append(ALL_MEMBERS[platform_id])
+        if platform_id in ALL_TRAIT_IDS:
+            platforms.append(ALL_TRAITS[platform_id])
         else:
             groups = groups_from_ids(platform_id)
             assert len(groups) == 1

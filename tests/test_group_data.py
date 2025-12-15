@@ -26,13 +26,12 @@ from extra_platforms import (
     ALL_GROUP_IDS,
     ALL_GROUPS,
     ALL_IDS,
-    ALL_MEMBER_IDS,
-    ALL_MEMBERS,
+    ALL_TRAIT_IDS,
     ALL_PLATFORMS,
+    ALL_TRAITS,
     ANY_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
-    CI,
     EXTRA_GROUPS,
     LINUX,
     LINUX_LAYERS,
@@ -42,9 +41,8 @@ from extra_platforms import (
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
-    Architecture,
     Group,
-    Platform,
+    Trait,
 )
 from extra_platforms import group_data as group_data_module
 
@@ -81,11 +79,13 @@ def test_group_definitions():
         # starts with "all_" prefix.
         assert group.id in (
             "all_architectures",
+            "all_ci",
             "all_members",
             "all_platforms",
             "all_platforms_without_ci",
+            "all_traits",
         ) or not group.id.startswith("all_")
-        assert group.id not in ALL_MEMBER_IDS
+        assert group.id not in ALL_TRAIT_IDS
         assert group.id in ALL_GROUP_IDS
         assert group.id in ALL_IDS
 
@@ -115,17 +115,17 @@ def test_groups_content():
 
             assert len(group) > 0
             assert len(group.platforms) == len(group.platform_ids)
-            assert group.platform_ids.issubset(ALL_MEMBERS.platform_ids)
+            assert group.platform_ids.issubset(ALL_TRAITS.platform_ids)
 
             # Check general subset properties and operators.
-            assert group.issubset(ALL_MEMBERS)
-            assert group <= ALL_MEMBERS
-            if group != ALL_MEMBERS:
-                assert group < ALL_MEMBERS
-            assert ALL_MEMBERS.issuperset(group)
-            assert ALL_MEMBERS >= group
-            if group != ALL_MEMBERS:
-                assert ALL_MEMBERS > group
+            assert group.issubset(ALL_TRAITS)
+            assert group <= ALL_TRAITS
+            if group != ALL_TRAITS:
+                assert group < ALL_TRAITS
+            assert ALL_TRAITS.issuperset(group)
+            assert ALL_TRAITS >= group
+            if group != ALL_TRAITS:
+                assert ALL_TRAITS > group
 
             # Each group is both a subset and a superset of itself.
             assert group.issubset(group)
@@ -147,8 +147,8 @@ def test_groups_content():
 
             for member in group.platforms:
                 assert member in group
-                assert member in ALL_MEMBERS
-                assert isinstance(member, (Platform, Architecture))
+                assert member in ALL_TRAITS
+                assert isinstance(member, Trait)
                 assert member.id in group.platform_ids
                 assert group.issuperset([member])
                 if len(group) == 1:
@@ -231,7 +231,7 @@ def test_logical_grouping():
     assert BSD.issuperset(BSD_WITHOUT_MACOS)
 
     # All platforms are divided into Windows and Unix at the highest level.
-    assert ALL_PLATFORMS.fullyintersects(ANY_WINDOWS | UNIX | CI)
+    assert ALL_PLATFORMS.fullyintersects(ANY_WINDOWS | UNIX)
 
     # All UNIX platforms are divided into BSD, Linux, and Unix families.
     assert UNIX.fullyintersects(
@@ -244,7 +244,7 @@ def test_group_no_missing_platform():
     grouped_platforms = set()
     for group in ALL_GROUPS:
         grouped_platforms |= group.platform_ids
-    assert grouped_platforms == ALL_MEMBERS.platform_ids
+    assert grouped_platforms == ALL_TRAITS.platform_ids
 
 
 def test_non_overlapping_groups():

@@ -27,8 +27,8 @@ import extra_platforms
 from extra_platforms import (
     ALL_ARCHITECTURES,
     ALL_GROUPS,
-    ALL_MEMBERS,
     ALL_PLATFORMS,
+    ALL_TRAITS,
     GITHUB_CI,
     SYSTEM_V,
     UNIX,
@@ -40,6 +40,7 @@ from extra_platforms import (
     current_architecture,
     current_os,
     current_platforms,
+    current_traits,
     invalidate_caches,
     is_github_ci,
     is_macos,
@@ -48,12 +49,15 @@ from extra_platforms import (
 )
 from extra_platforms import architecture as architecture_module
 from extra_platforms import architecture_data as architecture_data_module
+from extra_platforms import ci as ci_module
+from extra_platforms import ci_data as ci_data_module
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
 from extra_platforms import operations as operations_module
 from extra_platforms import platform as platform_module
 from extra_platforms import platform_data as platform_data_module
+from extra_platforms import trait as trait_module
 
 from .test_detection import github_runner_os
 
@@ -79,7 +83,7 @@ def test_pyproject_keywords():
     ideal_keywords = [
         p.name
         for p in (
-            ALL_MEMBERS
+            ALL_TRAITS
             # Remove generic unknown platforms.
             - UNKNOWN_ARCHITECTURE
             - UNKNOWN_LINUX
@@ -168,11 +172,14 @@ def test_module_root_declarations():
     detection_members = fetch_module_implements(detection_module)
     architecture_members = fetch_module_implements(architecture_module)
     architecture_data_members = fetch_module_implements(architecture_data_module)
+    ci_members = fetch_module_implements(ci_module)
+    ci_data_members = fetch_module_implements(ci_data_module)
     group_members = fetch_module_implements(group_module)
     group_data_members = fetch_module_implements(group_data_module)
     platform_members = fetch_module_implements(platform_module)
     platform_data_members = fetch_module_implements(platform_data_module)
     operations_members = fetch_module_implements(operations_module)
+    trait_members = fetch_module_implements(trait_module)
     root_members = fetch_module_implements(extra_platforms)
     # Update root members with auto-generated ``is_<group.id>`` variables.
     root_members.update((f"is_{g.id}" for g in ALL_GROUPS))
@@ -190,20 +197,26 @@ def test_module_root_declarations():
     assert detection_members <= set(extra_platforms_members)
     assert architecture_members <= set(extra_platforms_members)
     assert architecture_data_members <= set(extra_platforms_members)
+    assert ci_members <= set(extra_platforms_members)
+    assert ci_data_members <= set(extra_platforms_members)
     assert group_members <= set(extra_platforms_members)
     assert group_data_members <= set(extra_platforms_members)
     assert platform_members <= set(extra_platforms_members)
     assert platform_data_members <= set(extra_platforms_members)
     assert operations_members <= set(extra_platforms_members)
+    assert trait_members <= set(extra_platforms_members)
 
     expected_members = sorted(
         detection_members.union(group_members)
         .union(architecture_members)
         .union(architecture_data_members)
+        .union(ci_members)
+        .union(ci_data_members)
         .union(group_data_members)
         .union(platform_members)
         .union(platform_data_members)
         .union(operations_members)
+        .union(trait_members)
         .union(root_members),
         key=lambda m: (m.lower(), m),
     )
@@ -240,7 +253,7 @@ def test_group_membership_funcs():
         assert getattr(extra_platforms, func_id) is func
 
         assert isinstance(func(), bool)
-        assert func() == (current_os() in group)
+        assert func() == any(t in group for t in current_traits())
 
         assert group.name.lower() in func.__doc__.lower()
 

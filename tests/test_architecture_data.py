@@ -24,7 +24,7 @@ from string import ascii_lowercase, digits
 
 import pytest
 
-from extra_platforms import ALL_ARCHITECTURES, ALL_GROUP_IDS, ALL_IDS, ALL_MEMBER_IDS
+from extra_platforms import ALL_ARCHITECTURES, ALL_GROUP_IDS, ALL_IDS, ALL_TRAIT_IDS
 from extra_platforms import architecture_data as architecture_data_module
 
 all_architectures_params = pytest.mark.parametrize(
@@ -64,7 +64,7 @@ def test_architecture_definitions(architecture):
     # Platforms are not allowed to starts with all_ or any_, which is reserved
     # for groups. Use unknown_ prefix instead.
     assert not architecture.id.startswith(("all_", "any_"))
-    assert architecture.id in ALL_MEMBER_IDS
+    assert architecture.id in ALL_TRAIT_IDS
     assert architecture.id not in ALL_GROUP_IDS
     assert architecture.id in ALL_IDS
 

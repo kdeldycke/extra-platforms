@@ -23,12 +23,13 @@ import pytest
 
 from extra_platforms import (
     AIX,
+    ALL_CI,
     ALL_GROUP_IDS,
     ALL_GROUPS,
     ALL_IDS,
-    ALL_MEMBER_IDS,
-    ALL_MEMBERS,
+    ALL_TRAIT_IDS,
     ALL_PLATFORMS,
+    ALL_TRAITS,
     ALTLINUX,
     AMZN,
     ANDROID,
@@ -42,7 +43,6 @@ from extra_platforms import (
     BUILDROOT,
     CACHYOS,
     CENTOS,
-    CI,
     CIRCLE_CI,
     CIRRUS_CI,
     CLOUDLINUX,
@@ -118,13 +118,13 @@ def test_unique_ids():
     # Check there is no overlap between platform and group IDs.
     assert all_group_ids.isdisjoint(all_platform_ids)
 
-    assert len(ALL_MEMBER_IDS) == len(ALL_MEMBERS)
-    assert ALL_MEMBER_IDS.issubset(ALL_IDS)
-    assert ALL_MEMBER_IDS.isdisjoint(ALL_GROUP_IDS)
+    assert len(ALL_TRAIT_IDS) == len(ALL_TRAITS)
+    assert ALL_TRAIT_IDS.issubset(ALL_IDS)
+    assert ALL_TRAIT_IDS.isdisjoint(ALL_GROUP_IDS)
 
     assert len(ALL_GROUP_IDS) == len(ALL_GROUPS)
     assert ALL_GROUP_IDS.issubset(ALL_IDS)
-    assert ALL_GROUP_IDS.isdisjoint(ALL_MEMBER_IDS)
+    assert ALL_GROUP_IDS.isdisjoint(ALL_TRAIT_IDS)
 
 
 def randomize_case(strings: Iterable[str]) -> set[str]:
@@ -146,14 +146,14 @@ def randomize_case(strings: Iterable[str]) -> set[str]:
     return test_strings
 
 
-@pytest.mark.parametrize("platform_id", randomize_case(ALL_MEMBER_IDS))
+@pytest.mark.parametrize("platform_id", randomize_case(ALL_TRAIT_IDS))
 def test_platforms_from_ids(platform_id):
     platforms = platforms_from_ids(platform_id)
     assert platforms
     assert len(platforms) == 1
     platform = platforms[0]
     assert platform.id == platform_id.lower()
-    assert platform in ALL_MEMBERS.platforms
+    assert platform in ALL_TRAITS.platforms
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
@@ -191,8 +191,8 @@ def test_groups_from_ids(group_id):
         ([UNIX, AIX], {UNIX}),
         ([WINDOWS], {ANY_WINDOWS}),
         ([ALL_PLATFORMS, WINDOWS], {ALL_PLATFORMS}),
-        ([UNIX, WINDOWS, CI], {ALL_PLATFORMS}),
-        ([UNIX, ANY_WINDOWS, CI], {ALL_PLATFORMS}),
+        ([UNIX, WINDOWS, ALL_CI], {ALL_PLATFORMS, ALL_CI}),
+        ([UNIX, ANY_WINDOWS, ALL_CI], {ALL_PLATFORMS, ALL_CI}),
         ([BSD_WITHOUT_MACOS, UNIX], {UNIX}),
         ([BSD_WITHOUT_MACOS, MACOS], {BSD}),
         (
@@ -208,7 +208,7 @@ def test_groups_from_ids(group_id):
                 BUILDROOT,
                 CACHYOS,
                 CENTOS,
-                CI,
+                ALL_CI,
                 CIRCLE_CI,
                 CIRRUS_CI,
                 CLOUDLINUX,
@@ -259,7 +259,7 @@ def test_groups_from_ids(group_id):
                 WSL2,
                 XENSERVER,
             ],
-            {ALL_PLATFORMS},
+            {ALL_PLATFORMS, ALL_CI},
         ),
     ],
 )

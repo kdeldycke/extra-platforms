@@ -27,7 +27,7 @@ import pytest
 import requests
 
 from extra_platforms.pytest import unless_linux
-from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_MEMBER_IDS, ALL_PLATFORMS
+from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_TRAIT_IDS, ALL_PLATFORMS
 from extra_platforms import platform_data as platform_data_module
 
 all_platforms_params = pytest.mark.parametrize(
@@ -67,7 +67,7 @@ def test_platform_definitions(platform):
     # Platforms are not allowed to starts with all_ or any_, which is reserved
     # for groups. Use unknown_ prefix instead.
     assert not platform.id.startswith(("all_", "any_"))
-    assert platform.id in ALL_MEMBER_IDS
+    assert platform.id in ALL_TRAIT_IDS
     assert platform.id not in ALL_GROUP_IDS
     assert platform.id in ALL_IDS
 

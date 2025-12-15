@@ -23,10 +23,9 @@ from pathlib import Path
 import extra_platforms
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_GROUPS,
-    ALL_MEMBERS,
-    Architecture,
+    ALL_TRAITS,
     Group,
-    Platform,
+    Trait,
     is_any_windows,
     is_linux,
     is_macos,
@@ -52,8 +51,8 @@ from extra_platforms.pytest import (
 def _all_decorator_ids() -> list[str]:
     "Generate the list of decorators IDs we expect to find."
     all_decorator_ids = []
-    for _obj in chain(ALL_MEMBERS, ALL_GROUPS):
-        assert isinstance(_obj, (Platform, Architecture, Group))
+    for _obj in chain(ALL_TRAITS, ALL_GROUPS):
+        assert isinstance(_obj, (Trait, Group))
         skip_id = f"skip_{_obj.id}"
         unless_id = f"unless_{_obj.id}"
         all_decorator_ids.extend([skip_id, unless_id])

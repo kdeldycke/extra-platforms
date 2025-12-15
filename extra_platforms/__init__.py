@@ -61,6 +61,21 @@ from .architecture_data import (  # noqa: E402
     WASM64,
     X86_64,
 )
+from .ci import CI  # noqa: E402
+from .ci_data import (  # noqa: E402
+    AZURE_PIPELINES,
+    BAMBOO,
+    BUILDKITE,
+    CIRCLE_CI,
+    CIRRUS_CI,
+    CODEBUILD,
+    GITHUB_CI,
+    GITLAB_CI,
+    HEROKU_CI,
+    TEAMCITY,
+    TRAVIS_CI,
+    UNKNOWN_CI,
+)
 from .detection import (  # noqa: E402
     is_aarch64,
     is_aix,
@@ -151,14 +166,14 @@ from .detection import (  # noqa: E402
 from .group import Group  # noqa: E402
 from .group_data import (  # noqa: E402
     ALL_ARCHITECTURES,
+    ALL_CI,
     ALL_GROUPS,
-    ALL_MEMBERS,
     ALL_PLATFORMS,
     ALL_PLATFORMS_WITHOUT_CI,
+    ALL_TRAITS,
     ANY_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
-    CI,
     EXTRA_GROUPS,
     LINUX,
     LINUX_LAYERS,
@@ -177,26 +192,17 @@ from .platform_data import (  # noqa: E402
     AMZN,
     ANDROID,
     ARCH,
-    AZURE_PIPELINES,
-    BAMBOO,
-    BUILDKITE,
     BUILDROOT,
     CACHYOS,
     CENTOS,
-    CIRCLE_CI,
-    CIRRUS_CI,
     CLOUDLINUX,
-    CODEBUILD,
     CYGWIN,
     DEBIAN,
     EXHERBO,
     FEDORA,
     FREEBSD,
     GENTOO,
-    GITHUB_CI,
-    GITLAB_CI,
     GUIX,
-    HEROKU_CI,
     HURD,
     IBM_POWERKVM,
     KVMIBM,
@@ -220,19 +226,17 @@ from .platform_data import (  # noqa: E402
     SLES,
     SOLARIS,
     SUNOS,
-    TEAMCITY,
-    TRAVIS_CI,
     TUMBLEWEED,
     TUXEDO,
     UBUNTU,
     ULTRAMARINE,
-    UNKNOWN_CI,
     UNKNOWN_LINUX,
     WINDOWS,
     WSL1,
     WSL2,
     XENSERVER,
 )
+from .trait import Trait  # noqa: E402
 
 """
 .. important::
@@ -253,7 +257,7 @@ from .platform_data import (  # noqa: E402
 from .operations import (  # noqa: E402
     ALL_GROUP_IDS,
     ALL_IDS,
-    ALL_MEMBER_IDS,
+    ALL_TRAIT_IDS,
     groups_from_ids,
     platforms_from_ids,
     reduce,
@@ -326,7 +330,7 @@ def current_os() -> Platform:
 
     Raises an error if we can't decide on a single, appropriate platform.
     """
-    matching = set(current_platforms()).difference(CI.platforms)
+    matching = set(current_platforms()).difference(ALL_CI.platforms)
 
     # Return the only matching platform.
     if len(matching) == 1:
@@ -354,19 +358,35 @@ def current_os() -> Platform:
     )
 
 
+def current_traits() -> set[Trait]:
+    """Returns all traits matching the current environment.
+
+    This includes platforms, architectures, and CI systems.
+    """
+    traits = set()
+    for trait in ALL_TRAITS.platforms:
+        if trait.current:
+            traits.add(trait)
+
+    if len(traits) == 0:
+        raise SystemError(f"Unrecognized system. {_report_msg}")
+
+    return traits
+
+
 def _generate_group_membership_func(_group: Group) -> Callable:
-    """Factory to produce dynamiccaly a group membership test function."""
+    """Factory to dynamiccaly produce a group membership test function."""
 
     def group_membership_check() -> bool:
-        """Evaluates membership of the current platform to the group.
+        """Compares all the current traits to the ``_group``.
 
-        Returns ``True`` if the current platform is part of the group, ``False``
+        Returns ``True`` if at least one trait is part of the group, ``False``
         otherwise.
         """
-        return current_os() in _group
+        return any(t in _group for t in current_traits())
 
     group_membership_check.__doc__ = (
-        "Returns ``True`` if the current platform is part of the group composed of "
+        "Returns ``True`` if at least one trait is part of the group composed of "
         f"{_group.short_desc}, ``False`` otherwise."
     )
     return cache(group_membership_check)
@@ -381,11 +401,11 @@ for _group in ALL_GROUPS:
 """Generates an ``is_<group.id>()`` local function for each group.
 
 These functions return a boolean value indicating the membership of the current
-platform into that group.
+system into that group.
 
-Since platforms and groups have unique, non-overlapping IDs, we can create a
+Since traits and groups have unique, non-overlapping IDs, we can create a
 ``is_<group.id>`` method for each group. The value of this boolean variable mark the
-membership of the current platform to that group.
+membership of the current system to that group.
 """
 
 
@@ -401,7 +421,7 @@ def invalidate_caches():
         stdlib_platform.invalidate_caches()
 
     # Invalidate cached properties of the Platform and Architecture classes.
-    for member in ALL_MEMBERS.platforms:
+    for member in ALL_TRAITS.platforms:
         if "current" in vars(member):
             # Use object.__delattr__ to bypass frozen dataclass restriction.
             object.__delattr__(member, "current")
@@ -426,13 +446,14 @@ __all__ = (  # noqa: F405
     "AARCH64",
     "AIX",
     "ALL_ARCHITECTURES",
+    "ALL_CI",
     "ALL_GROUP_IDS",
     "ALL_GROUPS",
     "ALL_IDS",
-    "ALL_MEMBER_IDS",
-    "ALL_MEMBERS",
     "ALL_PLATFORMS",
     "ALL_PLATFORMS_WITHOUT_CI",
+    "ALL_TRAIT_IDS",
+    "ALL_TRAITS",
     "ALTLINUX",
     "AMZN",
     "ANDROID",
@@ -459,6 +480,7 @@ __all__ = (  # noqa: F405
     "current_architecture",
     "current_os",
     "current_platforms",
+    "current_traits",
     "CYGWIN",
     "DEBIAN",
     "EXHERBO",
@@ -481,9 +503,9 @@ __all__ = (  # noqa: F405
     "is_aarch64",
     "is_aix",
     "is_all_architectures",  # noqa: F822
-    "is_all_members",  # noqa: F822
+    "is_all_ci",  # noqa: F822
     "is_all_platforms",  # noqa: F822
-    "is_all_platforms_without_ci",  # noqa: F822
+    "is_all_traits",  # noqa: F822
     "is_altlinux",
     "is_amzn",
     "is_android",
@@ -501,7 +523,6 @@ __all__ = (  # noqa: F405
     "is_buildroot",
     "is_cachyos",
     "is_centos",
-    "is_ci",  # noqa: F822
     "is_circle_ci",
     "is_cirrus_ci",
     "is_cloudlinux",
@@ -623,6 +644,7 @@ __all__ = (  # noqa: F405
     "SUNOS",
     "SYSTEM_V",
     "TEAMCITY",
+    "Trait",
     "TRAVIS_CI",
     "TUMBLEWEED",
     "TUXEDO",

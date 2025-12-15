@@ -23,11 +23,10 @@ from __future__ import annotations
 
 import platform
 from dataclasses import dataclass, field
-from functools import cached_property
 
 import distro
 
-from . import detection
+from .trait import Trait
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -144,67 +143,24 @@ def _remove_blanks(
 
 
 @dataclass(frozen=True)
-class Platform:
+class Platform(Trait):
     """A platform can identify multiple distributions or OSes with the same
     characteristics.
 
     It has a unique ID, a human-readable name, and boolean to flag current platform.
     """
 
-    id: str
-    """Unique ID of the platform."""
-
-    name: str
-    """User-friendly name of the platform."""
-
     icon: str = field(repr=False, default="❓")
     """Icon of the platform."""
 
-    url: str = field(repr=False, default="")
-    """URL to the platform's official website."""
-
-    def __post_init__(self):
-        """Validate and normalize platform fields:
-
-        - Ensure the platform ID, name, icon and URL are not empty.
-        - Ensure the URL starts with ``https://``.
-        - Set the ``current`` field.
-        - Populate the docstring.
-        """
-        assert self.id, "Platform ID cannot be empty."
-        assert self.name, "Platform name cannot be empty."
-        assert self.icon, "Platform icon cannot be empty."
-        assert self.url, "Platform URL cannot be empty."
-        assert self.url.startswith("https://"), "URL must start with https://."
-
-        object.__setattr__(self, "__doc__", f"Identify {self.name}.")
-
-    @cached_property
-    def short_desc(self) -> str:
-        """Returns a short description of the platform.
-
-        Mainly used to produce docstrings for function dynamically generated for each
-        group.
-        """
-        return self.name
-
-    @cached_property
-    def current(self) -> bool:
-        """Returns whether the current platform is this one.
-
-        This is a property to avoid calling all platform detection heuristics on
-        ``Platform`` objects creation, which happens at module import time.
-        """
-        return getattr(detection, f"is_{self.id}")()  # type: ignore[no-any-return]
+    def __post_init__(self) -> None:
+        """Validate and normalize platform fields."""
+        super().__post_init__()
 
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
         """Returns all platform attributes we can gather."""
-        info = {
-            "id": self.id,
-            "name": self.name,
-            "icon": self.icon,
-            "url": self.url,
-            "current": self.current,
+        info: dict[str, str | bool | None | dict[str, str | None]] = {
+            **self._base_info(),
             # Extra fields from distro.info().
             "distro_id": None,
             "version": None,

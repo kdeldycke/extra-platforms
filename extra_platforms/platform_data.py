@@ -39,30 +39,13 @@ ANDROID = Platform("android", "Android", "🤖", "https://android.com")
 
 ARCH = Platform("arch", "Arch Linux", "🎗️", "https://archlinux.org")
 
-AZURE_PIPELINES = Platform(
-    "azure_pipelines",
-    "Azure Pipelines",
-    "═",
-    "https://azure.microsoft.com/en-us/products/devops/pipelines/",
-)
-
-BAMBOO = Platform("bamboo", "Bamboo", "⟲", "https://www.atlassian.com/software/bamboo")
-
-BUILDKITE = Platform("buildkite", "Buildkite", "🪁", "https://buildkite.com")
-
 BUILDROOT = Platform("buildroot", "Buildroot", "⛑️", "https://buildroot.org")
 
 CACHYOS = Platform("cachyos", "CachyOS", "⌬", "https://cachyos.org")
 
 CENTOS = Platform("centos", "CentOS", "💠", "https://centos.org")
 
-CIRCLE_CI = Platform("circle_ci", "Circle CI", "⪾", "https://circleci.com")
-
-CIRRUS_CI = Platform("cirrus_ci", "Cirrus CI", "≋", "https://cirrus-ci.org")
-
 CLOUDLINUX = Platform("cloudlinux", "CloudLinux OS", "꩜", "https://cloudlinux.com")
-
-CODEBUILD = Platform("codebuild", "CodeBuild", "ᚙ", "https://aws.amazon.com/codebuild/")
 
 CYGWIN = Platform("cygwin", "Cygwin", "Ͼ", "https://cygwin.com")
 
@@ -76,22 +59,7 @@ FREEBSD = Platform("freebsd", "FreeBSD", "😈", "https://freebsd.org")
 
 GENTOO = Platform("gentoo", "Gentoo Linux", "🗜️", "https://gentoo.org")
 
-GITHUB_CI = Platform(
-    "github_ci", "GitHub Actions runner", "🐙", "https://docs.github.com/en/actions"
-)
-
-GITLAB_CI = Platform(
-    "gitlab_ci",
-    "GitLab CI",
-    "🦊",
-    "https://docs.gitlab.com/topics/build_your_application/",
-)
-
 GUIX = Platform("guix", "Guix System", "🐃", "https://guix.gnu.org")
-
-HEROKU_CI = Platform(
-    "heroku_ci", "Heroku CI", "⥁", "https://www.heroku.com/continuous-integration/"
-)
 
 HURD = Platform("hurd", "GNU/Hurd", "🐃", "https://gnu.org/software/hurd/")
 
@@ -175,10 +143,6 @@ SOLARIS = Platform("solaris", "Solaris", "🌞", "https://oracle.com/solaris")
 
 SUNOS = Platform("sunos", "SunOS", "☀️", "https://wikipedia.org/wiki/SunOS")
 
-TEAMCITY = Platform("teamcity", "TeamCity", "🏙️", "https://www.jetbrains.com/teamcity/")
-
-TRAVIS_CI = Platform("travis_ci", "Travis CI", "👷", "https://www.travis-ci.com")
-
 TUMBLEWEED = Platform(
     "tumbleweed", "openSUSE Tumbleweed", "↻", "https://get.opensuse.org/tumbleweed/"
 )
@@ -189,13 +153,6 @@ UBUNTU = Platform("ubuntu", "Ubuntu", "🎯", "https://ubuntu.com")
 
 ULTRAMARINE = Platform(
     "ultramarine", "Ultramarine", "🌊", "https://ultramarine-linux.org"
-)
-
-UNKNOWN_CI = Platform(
-    "unknown_ci",
-    "Unknown CI",
-    "♲",
-    "https://en.wikipedia.org/wiki/Continuous_integration",
 )
 
 UNKNOWN_LINUX = Platform("unknown_linux", "Unknown Linux", "🐧", "https://kernel.org")

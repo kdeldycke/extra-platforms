@@ -44,6 +44,20 @@ from .architecture_data import (
     WASM64,
     X86_64,
 )
+from .ci_data import (
+    AZURE_PIPELINES,
+    BAMBOO,
+    BUILDKITE,
+    CIRCLE_CI,
+    CIRRUS_CI,
+    CODEBUILD,
+    GITHUB_CI,
+    GITLAB_CI,
+    HEROKU_CI,
+    TEAMCITY,
+    TRAVIS_CI,
+    UNKNOWN_CI,
+)
 from .group import Group
 from .platform_data import (
     AIX,
@@ -51,26 +65,17 @@ from .platform_data import (
     AMZN,
     ANDROID,
     ARCH,
-    AZURE_PIPELINES,
-    BAMBOO,
-    BUILDKITE,
     BUILDROOT,
     CACHYOS,
     CENTOS,
-    CIRCLE_CI,
-    CIRRUS_CI,
     CLOUDLINUX,
-    CODEBUILD,
     CYGWIN,
     DEBIAN,
     EXHERBO,
     FEDORA,
     FREEBSD,
     GENTOO,
-    GITHUB_CI,
-    GITLAB_CI,
     GUIX,
-    HEROKU_CI,
     HURD,
     IBM_POWERKVM,
     KVMIBM,
@@ -94,13 +99,10 @@ from .platform_data import (
     SLES,
     SOLARIS,
     SUNOS,
-    TEAMCITY,
-    TRAVIS_CI,
     TUMBLEWEED,
     TUXEDO,
     UBUNTU,
     ULTRAMARINE,
-    UNKNOWN_CI,
     UNKNOWN_LINUX,
     WINDOWS,
     WSL1,
@@ -153,26 +155,17 @@ ALL_PLATFORMS: Group = Group(
         AMZN,
         ANDROID,
         ARCH,
-        AZURE_PIPELINES,
-        BAMBOO,
-        BUILDKITE,
         BUILDROOT,
         CACHYOS,
         CENTOS,
-        CIRCLE_CI,
-        CIRRUS_CI,
         CLOUDLINUX,
-        CODEBUILD,
         CYGWIN,
         DEBIAN,
         EXHERBO,
         FEDORA,
         FREEBSD,
         GENTOO,
-        GITHUB_CI,
-        GITLAB_CI,
         GUIX,
-        HEROKU_CI,
         HURD,
         IBM_POWERKVM,
         KVMIBM,
@@ -196,13 +189,10 @@ ALL_PLATFORMS: Group = Group(
         SLES,
         SOLARIS,
         SUNOS,
-        TEAMCITY,
-        TRAVIS_CI,
         TUMBLEWEED,
         TUXEDO,
         UBUNTU,
         ULTRAMARINE,
-        UNKNOWN_CI,
         UNKNOWN_LINUX,
         WINDOWS,
         WSL1,
@@ -210,31 +200,23 @@ ALL_PLATFORMS: Group = Group(
         XENSERVER,
     ),
 )
+ALL_PLATFORMS_WITHOUT_CI = ALL_PLATFORMS
 """All recognized platforms."""
 
 
-ALL_MEMBERS = Group(
-    "all_members",
-    "Any platforms and architectures",
-    "⁕",
-    tuple(ALL_PLATFORMS | ALL_ARCHITECTURES),
-)
-"""All supported platforms and architectures."""
-
-
-CI = Group(
-    "ci",
-    "CI systems",
+ALL_CI = Group(
+    "all_ci",
+    "All CI systems",
     "♺",
     (
         AZURE_PIPELINES,
         BAMBOO,
         BUILDKITE,
-        GITHUB_CI,
-        GITLAB_CI,
         CIRCLE_CI,
         CIRRUS_CI,
         CODEBUILD,
+        GITHUB_CI,
+        GITLAB_CI,
         HEROKU_CI,
         TEAMCITY,
         TRAVIS_CI,
@@ -249,13 +231,13 @@ CI = Group(
 """
 
 
-ALL_PLATFORMS_WITHOUT_CI = Group(
-    "all_platforms_without_ci",
-    "Any platforms excluding CI systems",
-    "🖥️",
-    tuple(ALL_PLATFORMS - CI),
+ALL_TRAITS = Group(
+    "all_traits",
+    "Any architectures, platforms and CI systems",
+    "⁕",
+    tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_CI),
 )
-"""All platforms, without CI systems."""
+"""All supported architectures, platforms and CI systems."""
 
 
 ANY_WINDOWS = Group(
@@ -271,7 +253,7 @@ UNIX = Group(
     "unix",
     "Any Unix",
     "⨷",
-    tuple(ALL_PLATFORMS - ANY_WINDOWS - CI),
+    tuple(ALL_PLATFORMS - ANY_WINDOWS - ALL_CI),
 )
 """All Unix-like operating systems and compatibility layers."""
 
@@ -490,7 +472,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         SYSTEM_V,
         UNIX_LAYERS,
         OTHER_UNIX,
-        CI,
+        ALL_CI,
         ALL_ARCHITECTURES,
     ),
 )
@@ -499,9 +481,8 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
-        ALL_MEMBERS,
+        ALL_TRAITS,
         ALL_PLATFORMS,
-        ALL_PLATFORMS_WITHOUT_CI,
         LINUX_LIKE,
         UNIX,
         UNIX_WITHOUT_MACOS,

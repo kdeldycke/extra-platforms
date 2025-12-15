@@ -13,46 +13,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""CPU architectures.
+"""CI/CD environments.
 
 Everything here can be aggressively cached and frozen, as it's only compute
-architecture-dependent values.
+CI-dependent values.
 """
 
 from __future__ import annotations
 
-import platform
 from dataclasses import dataclass, field
 
 from .trait import Trait
 
 
 @dataclass(frozen=True)
-class Architecture(Trait):
-    """A CPU architecture identifies a `processor instruction set
-    <https://en.wikipedia.org/wiki/Instruction_set_architecture>`_.
+class CI(Trait):
+    """A CI/CD environment identifies a continuous integration platform.
 
-    It has a unique ID, a human-readable name, and boolean to flag current architecture.
+    It has a unique ID, a human-readable name, and boolean to flag current CI.
     """
 
-    icon: str = field(repr=False, default="▣")
-    """Icon of the architecture."""
+    icon: str = field(repr=False, default="♲")
+    """Icon of the CI environment."""
 
     def __post_init__(self) -> None:
-        """Validate and normalize architecture fields."""
+        """Validate and normalize CI fields."""
         super().__post_init__()
-        # Customize the docstring for architectures.
-        object.__setattr__(self, "__doc__", f"Identify {self.name} architecture.")
+        # Customize the docstring for CI environments.
+        object.__setattr__(self, "__doc__", f"Identify {self.name} CI environment.")
 
     def info(self) -> dict[str, str | bool | None]:
-        """Returns all architecture attributes we can gather."""
-        info: dict[str, str | bool | None] = {
+        """Returns all CI attributes we can gather."""
+        return {
             **self._base_info(),
-            "machine": None,
-            "processor": None,
         }
-        if self.current:
-            info["machine"] = platform.machine() or None
-            info["processor"] = platform.processor() or None
-
-        return info
