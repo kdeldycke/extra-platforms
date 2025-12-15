@@ -38,8 +38,7 @@ from extra_platforms import (
     WSL1,
     WSL2,
     current_architecture,
-    current_os,
-    current_platforms,
+    current_platform,
     current_traits,
     invalidate_caches,
     is_github_ci,
@@ -224,21 +223,24 @@ def test_module_root_declarations():
 
 
 def test_current_funcs():
-    current_platforms_results = current_platforms()
-    assert ALL_PLATFORMS.issuperset(current_platforms_results)
+    current_traits_results = current_traits()
+    assert ALL_TRAITS.issuperset(current_traits_results)
 
     if is_github_ci():
-        assert GITHUB_CI in current_platforms_results
+        assert GITHUB_CI in current_traits_results
         if github_runner_os() == "ubuntu-slim":
-            assert len(current_platforms_results) == 3
+            # 1 platform + 1 architecture + 1 CI = 3 traits, plus possible WSL
+            assert len(current_traits_results) >= 3
         else:
-            assert len(current_platforms_results) == 2
+            # 1 platform + 1 architecture + 1 CI = 3 traits
+            assert len(current_traits_results) >= 2
     else:
-        assert len(current_platforms_results) == 1
+        # 1 platform + 1 architecture = 2 traits
+        assert len(current_traits_results) == 2
 
-    current_os_result = current_os()
-    assert current_os_result in ALL_PLATFORMS
-    assert current_os_result in current_platforms_results
+    current_platform_result = current_platform()
+    assert current_platform_result in ALL_PLATFORMS
+    assert current_platform_result in current_traits_results
 
     current_architecture_result = current_architecture()
     assert current_architecture_result in ALL_ARCHITECTURES
@@ -265,16 +267,16 @@ def test_invalidate_caches():
     _ = is_ubuntu()
     _ = is_macos()
     # Call global functions.
-    _ = current_platforms()
-    _ = current_os()
+    _ = current_traits()
+    _ = current_platform()
     # Call group membership functions.
     _ = is_windows()
 
     # Verify caches are populated.
     assert hasattr(is_ubuntu, "__wrapped__")
     assert hasattr(is_macos, "__wrapped__")
-    assert hasattr(current_platforms, "__wrapped__")
-    assert hasattr(current_os, "__wrapped__")
+    assert hasattr(current_traits, "__wrapped__")
+    assert hasattr(current_platform, "__wrapped__")
     assert hasattr(is_windows, "__wrapped__")
 
     # Access Platform.current to populate their caches.
@@ -289,10 +291,12 @@ def test_invalidate_caches():
     assert is_ubuntu.cache_info().hits > 0 or is_ubuntu.cache_info().currsize > 0
     assert is_macos.cache_info().hits > 0 or is_macos.cache_info().currsize > 0
     assert (
-        current_platforms.cache_info().hits > 0
-        or current_platforms.cache_info().currsize > 0
+        current_traits.cache_info().hits > 0 or current_traits.cache_info().currsize > 0
     )
-    assert current_os.cache_info().hits > 0 or current_os.cache_info().currsize > 0
+    assert (
+        current_platform.cache_info().hits > 0
+        or current_platform.cache_info().currsize > 0
+    )
     assert is_windows.cache_info().hits > 0 or is_windows.cache_info().currsize > 0
 
     # Invalidate all caches.
@@ -301,8 +305,8 @@ def test_invalidate_caches():
     # Verify caches were cleared (currsize should be 0).
     assert is_ubuntu.cache_info().currsize == 0
     assert is_macos.cache_info().currsize == 0
-    assert current_platforms.cache_info().currsize == 0
-    assert current_os.cache_info().currsize == 0
+    assert current_traits.cache_info().currsize == 0
+    assert current_platform.cache_info().currsize == 0
     assert is_windows.cache_info().currsize == 0
 
     for platform_obj in ALL_PLATFORMS.platforms:

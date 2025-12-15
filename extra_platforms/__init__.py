@@ -266,11 +266,22 @@ from .operations import (  # noqa: E402
 __version__ = "5.1.1"
 
 
+def _unrecognized_env_error(kind: str) -> SystemError:
+    """Generate a consistent SystemError for unrecognized environments."""
+    return SystemError(
+        f"Unrecognized {kind}: {sys.platform!r} / "
+        f"{stdlib_platform.platform(aliased=True, terse=True)!r} / "
+        f"{stdlib_platform.machine()!r} / {stdlib_platform.architecture()!r}. "
+        f"{_report_msg}"
+    )
+
+
 @cache
 def current_architecture() -> Architecture:
     """Returns the ``Architecture`` matching the current environment.
 
-    Always raises an error if the current environment is not recognized.
+    Always raises an error if the current environment is not recognized, or if
+    multiple architectures match.
     """
     matching = []
     for arch in ALL_ARCHITECTURES.platforms:
@@ -282,11 +293,7 @@ def current_architecture() -> Architecture:
         return matching.pop()
 
     if not matching:
-        # Dump the raw data provided by all primitives used for detection.
-        raise SystemError(
-            f"Unrecognized {stdlib_platform.machine()!r} / {sys.platform!r} / "
-            f"{stdlib_platform.architecture()!r} architecture. {_report_msg}"
-        )
+        raise _unrecognized_env_error("architecture")
 
     raise RuntimeError(
         f"Multiple architectures match current environment: {matching!r}. {_report_msg}"
@@ -294,47 +301,25 @@ def current_architecture() -> Architecture:
 
 
 @cache
-def current_platforms() -> tuple[Platform, ...]:
-    """Evaluates all heuristics and returns a list of ``Platform`` matching the current
-    environment.
-
-    Always raises an error if the current environment is not recognized.
-
-    .. attention::
-        At this point it is too late to worry about caching. This function has no
-        choice but to evaluate all platforms detection heuristics.
-    """
-    matching = []
-    for p in ALL_PLATFORMS.platforms:
-        if p.current:
-            matching.append(p)
-
-    if not matching:
-        # Dump the raw data provided by all primitives used for detection.
-        raise SystemError(
-            f"Unrecognized {sys.platform!r} / "
-            f"{stdlib_platform.platform(aliased=True, terse=True)!r} platform. "
-            f"{_report_msg}"
-        )
-
-    return tuple(matching)
-
-
-@cache
-def current_os() -> Platform:
-    """Always returns the best matching platform for the current environment, excluding
-    CI systems.
+def current_platform() -> Platform:
+    """Always returns the best matching platform for the current environment.
 
     If multiple platforms match the current environment, this function will try to
     select the best, informative one.
 
     Raises an error if we can't decide on a single, appropriate platform.
     """
-    matching = set(current_platforms()).difference(ALL_CI.platforms)
+    matching = set()
+    for platform in ALL_PLATFORMS.platforms:
+        if platform.current:
+            matching.add(platform)
 
     # Return the only matching platform.
     if len(matching) == 1:
         return matching.pop()
+
+    if not matching:
+        raise _unrecognized_env_error("platform")
 
     # Remove unknown Linux, which is too generic to be useful.
     if UNKNOWN_LINUX in matching:
@@ -358,20 +343,52 @@ def current_os() -> Platform:
     )
 
 
+@cache
+def current_ci() -> CI | None:
+    """Returns the ``CI`` system matching the current environment.
+
+    Returns ``None`` if not running inside a recognized CI system.
+
+    Always raises an error if multiple CI systems match.
+    """
+    matching = set()
+    for ci in ALL_CI.platforms:
+        if ci.current:
+            matching.add(ci)
+
+    # Return the only matching CI system.
+    if len(matching) == 1:
+        return matching.pop()
+
+    if not matching:
+        return None
+
+    raise RuntimeError(
+        f"Multiple CI systems match current environment: {matching!r}. {_report_msg}"
+    )
+
+
+@cache
 def current_traits() -> set[Trait]:
     """Returns all traits matching the current environment.
 
     This includes platforms, architectures, and CI systems.
+
+    Always raises an error if the current environment is not recognized.
+
+    .. attention::
+        At this point it is too late to worry about caching. This function has no
+        choice but to evaluate all detection heuristics.
     """
-    traits = set()
+    matching = set()
     for trait in ALL_TRAITS.platforms:
         if trait.current:
-            traits.add(trait)
+            matching.add(trait)
 
-    if len(traits) == 0:
-        raise SystemError(f"Unrecognized system. {_report_msg}")
+    if not matching:
+        raise _unrecognized_env_error("environment")
 
-    return traits
+    return matching
 
 
 def _generate_group_membership_func(_group: Group) -> Callable:
@@ -432,14 +449,42 @@ def invalidate_caches():
         if callable(func) and hasattr(func, "cache_clear"):
             func.cache_clear()
 
-    # Invalidate current_architecture, current_platforms and current_os caches.
+    # Invalidate package-level cached functions.
     current_architecture.cache_clear()
-    current_platforms.cache_clear()
-    current_os.cache_clear()
+    current_platform.cache_clear()
+    current_ci.cache_clear()
+    current_traits.cache_clear()
 
     # Invalidate dynamically generated group membership functions.
     for func_id in _group_membership_func_ids:
         globals()[func_id].cache_clear()
+
+
+# Deprecated aliases.
+
+
+def current_os() -> Platform:
+    """Deprecated alias for :func:`current_platform`."""
+    import warnings
+
+    warnings.warn(
+        "current_os() is deprecated, use current_platform() instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return current_platform()
+
+
+def current_platforms() -> tuple[Platform, ...]:
+    """Deprecated alias for :func:`current_traits`."""
+    import warnings
+
+    warnings.warn(
+        "current_platforms() is deprecated, use current_traits() instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return tuple(t for t in current_traits() if isinstance(t, Platform))
 
 
 __all__ = (  # noqa: F405
@@ -478,7 +523,9 @@ __all__ = (  # noqa: F405
     "CLOUDLINUX",
     "CODEBUILD",
     "current_architecture",
+    "current_ci",
     "current_os",
+    "current_platform",
     "current_platforms",
     "current_traits",
     "CYGWIN",
