@@ -179,7 +179,7 @@ class Platform(Trait):
             elif self.id == "windows":
                 info = _recursive_update(info, self._windows_infos(), strict=True)
 
-        return info  # type: ignore[return-value]
+        return info
 
     @staticmethod
     def _macos_infos() -> dict[str, Any]:

@@ -27,7 +27,6 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from ._types import _T, _TNestedReferences
-    from .platform import Platform
     from .trait import Trait
 
 
@@ -109,12 +108,12 @@ def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
 
 
 def reduce(
-    items: _TNestedReferences, target_pool: Iterable[Group | Platform] | None = None
-) -> frozenset[Group | Platform]:
-    """Reduce a collection of platforms to a minimal set.
+    items: _TNestedReferences, target_pool: Iterable[Group | Trait] | None = None
+) -> frozenset[Group | Trait]:
+    """Reduce a collection of traits to a minimal set.
 
-    Returns a deduplicated set of ``Group`` and ``Platform`` that covers the same exact
-    platforms as the original input, but group as much platforms as possible, to reduce
+    Returns a deduplicated set of ``Group`` and ``Trait`` that covers the same exact
+    traits as the original input, but group as much traits as possible, to reduce
     the number of items.
 
     Only the groups defined in the ``target_pool`` are considered for the reduction.
@@ -132,20 +131,20 @@ def reduce(
         Should we rename or alias this method to `collapse()`? Cannot decide if it is
         more descriptive or not...
     """
-    # Collect all platforms.
-    platforms = frozenset(Group._extract_platforms(items))
+    # Collect all traits.
+    traits = frozenset(Group._extract_platforms(items))
 
-    # List all groups overlapping the set of input platforms.
+    # List all groups overlapping the set of input traits.
     if target_pool is None:
         target_pool = ALL_GROUPS
     overlapping_groups = frozenset(
-        g for g in target_pool if isinstance(g, Group) and g.issubset(platforms)
+        g for g in target_pool if isinstance(g, Group) and g.issubset(traits)
     )
 
-    # Test all combination of groups to find the smallest set of groups + platforms.
+    # Test all combination of groups to find the smallest set of groups + traits.
     min_items = 0
-    results: list[frozenset[Group | Platform]] = []
-    # Serialize group sets for deterministic lookups. Sort them by platform count.
+    results: list[frozenset[Group | Trait]] = []
+    # Serialize group sets for deterministic lookups. Sort them by trait count.
     groups = tuple(sorted(overlapping_groups, key=len, reverse=True))
     for subset_size in range(1, len(groups) + 1):
         # If we already have a solution that involves less items than the current
@@ -158,12 +157,12 @@ def reduce(
             if not all(g[0].isdisjoint(g[1]) for g in combinations(group_subset, 2)):
                 continue
 
-            # Remove all platforms covered by the groups.
-            ungrouped_platforms = set(platforms.copy())
-            ungrouped_platforms.difference_update(*group_subset)
+            # Remove all traits covered by the groups.
+            ungrouped_traits = set(traits.copy())
+            ungrouped_traits.difference_update(*group_subset)
 
-            # Merge the groups and the remaining platforms.
-            reduction = frozenset(ungrouped_platforms.union(group_subset))
+            # Merge the groups and the remaining traits.
+            reduction = frozenset(ungrouped_traits.union(group_subset))
             reduction_size = len(reduction)
 
             # Reset the results if we have a new solution that is better than the
@@ -178,8 +177,8 @@ def reduce(
     if len(results) > 1:
         raise RuntimeError(f"Multiple solutions found: {results}")
 
-    # If no reduced solution was found, return the original platforms.
+    # If no reduced solution was found, return the original traits.
     if not results:
-        return platforms
+        return traits
 
     return results.pop()

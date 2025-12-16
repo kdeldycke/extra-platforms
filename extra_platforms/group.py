@@ -69,8 +69,8 @@ class Group:
     icon: str = field(repr=False, default="❓")
     """Icon of the group."""
 
-    platforms: tuple[Platform, ...] = field(repr=False, default_factory=tuple)
-    """Sorted list of platforms that belong to this group."""
+    platforms: tuple[Trait, ...] = field(repr=False, default_factory=tuple)
+    """Sorted list of traits that belong to this group."""
 
     platform_ids: frozenset[str] = field(default_factory=frozenset, init=False)
     """Set of platform IDs that belong to this group."""
@@ -112,7 +112,7 @@ class Group:
         """
         return self.name[0].lower() + self.name[1:]
 
-    def __iter__(self) -> Iterator[Platform]:
+    def __iter__(self) -> Iterator[Trait]:
         """Iterate over the platforms of the group."""
         yield from self.platforms
 
@@ -120,30 +120,30 @@ class Group:
         """Return the number of platforms in the group."""
         return len(self.platforms)
 
-    def __contains__(self, platform: Platform | str) -> bool:
-        """Test if ``Platform`` object or its ID is part of the group."""
+    def __contains__(self, platform: Trait | str) -> bool:
+        """Test if ``Trait`` object or its ID is part of the group."""
         return (
             (platform in self.platform_ids)
             if isinstance(platform, str)
             else (platform in self.platforms)
         )
 
-    def __getitem__(self, platform_id: str) -> Platform:
-        """Return the platform whose ID is ``platform_id``."""
+    def __getitem__(self, platform_id: str) -> Trait:
+        """Return the trait whose ID is ``platform_id``."""
         for platform in self.platforms:
             if platform.id == platform_id:
                 return platform
-        raise KeyError(f"No platform found whose ID is {platform_id}")
+        raise KeyError(f"No trait found whose ID is {platform_id}")
 
-    def items(self) -> Iterator[tuple[str, Platform]]:
-        """Iterate over the platforms of the group as key-value pairs."""
+    def items(self) -> Iterator[tuple[str, Trait]]:
+        """Iterate over the traits of the group as key-value pairs."""
         yield from ((platform.id, platform) for platform in self.platforms)
 
     @staticmethod
-    def _extract_platforms(*other: _TNestedReferences) -> Iterator[Platform]:
-        """Returns all platforms found in ``other``.
+    def _extract_platforms(*other: _TNestedReferences) -> Iterator[Trait]:
+        """Returns all traits found in ``other``.
 
-        ``other`` can be an arbitrarily nested ``Iterable`` of ``Group``, ``Platform``, or
+        ``other`` can be an arbitrarily nested ``Iterable`` of ``Group``, ``Trait``, or
         their IDs. ``None`` values and empty iterables are silently ignored.
 
         .. caution::
@@ -285,7 +285,7 @@ class Group:
         id: str | None = None,
         name: str | None = None,
         icon: str | None = None,
-        platforms: tuple[Platform, ...] | None = None,
+        platforms: tuple[Trait, ...] | None = None,
     ) -> Group:
         """Return a shallow copy of the group.
 

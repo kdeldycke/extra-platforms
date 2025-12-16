@@ -283,10 +283,12 @@ def current_architecture() -> Architecture:
     Always raises an error if the current environment is not recognized, or if
     multiple architectures match.
     """
-    matching = []
+    matching = set()
     for arch in ALL_ARCHITECTURES.platforms:
         if arch.current:
-            matching.append(arch)
+            # Assert to please type checkers.
+            assert isinstance(arch, Architecture)
+            matching.add(arch)
 
     # Return the only matching architecture.
     if len(matching) == 1:
@@ -312,6 +314,8 @@ def current_platform() -> Platform:
     matching = set()
     for platform in ALL_PLATFORMS.platforms:
         if platform.current:
+            # Assert to please type checkers.
+            assert isinstance(platform, Platform)
             matching.add(platform)
 
     # Return the only matching platform.
@@ -354,6 +358,8 @@ def current_ci() -> CI | None:
     matching = set()
     for ci in ALL_CI.platforms:
         if ci.current:
+            # Assert to please type checkers.
+            assert isinstance(ci, CI)
             matching.add(ci)
 
     # Return the only matching CI system.
