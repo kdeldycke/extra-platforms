@@ -27,7 +27,7 @@ Inspired by `how tomllib does it in the stdlib
         if TYPE_CHECKING:
             from typing import Sequence, ...
 
-            from ._types import _TPlatformRef, _TNestedReferences, ...
+            from ._types import _TRef, _TNestedReferences, ...
 
     `Mypy is able to pick them up correctly
     <https://mypy.readthedocs.io/en/stable/common_issues.html#python-version-and-system-platform-checks>`_
@@ -42,22 +42,20 @@ from collections.abc import Iterable
 from typing import TypeVar
 
 from .group import Group
-from .platform import Platform
+from .trait import Trait
 
 _T = TypeVar("_T")
 """Generic type variable."""
 
 
-_TPlatformRef = Platform | Group | str | None
-"""All types that can be used to reference a platform or a group:
+_TRef = Trait | Group | str | None
+"""All types that can be used to reference a trait or a group:
 
-- a ``Platform`` object itself
-- a ``Group`` object representing a collection of platforms
-- a string representing a platform ID or a group ID
-- ``None`` to represent an empty set of platforms
+- a ``Trait`` object itself
+- a ``Group`` object representing a collection of traits
+- a string representing a trait ID or a group ID
+- ``None`` to represent an empty set of traits
 """
 
-_TNestedReferences = (
-    _TPlatformRef | Iterable[_TPlatformRef | Iterable["_TNestedReferences"]]
-)
-"""Type for arbitrary nested references to platforms and groups."""
+_TNestedReferences = _TRef | Iterable[_TRef | Iterable["_TNestedReferences"]]
+"""Type for arbitrary nested references to traits and groups."""

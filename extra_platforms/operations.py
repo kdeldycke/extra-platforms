@@ -27,8 +27,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from ._types import _T, _TNestedReferences
-    from .architecture import Architecture
     from .platform import Platform
+    from .trait import Trait
 
 
 ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS.platforms))
@@ -52,35 +52,35 @@ def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
     return tuple(dict.fromkeys(items))
 
 
-def platforms_from_ids(
-    *platform_and_group_ids: str,
-) -> tuple[Platform | Architecture, ...]:
-    """Returns a deduplicated tuple of platforms matching the provided IDs.
+def traits_from_ids(
+    *trait_and_group_ids: str,
+) -> tuple[Trait, ...]:
+    """Returns a deduplicated tuple of traits matching the provided IDs.
 
-    IDs are case-insensitive, and can refer to any platforms or groups. Matching groups
-    will be expanded to the platforms they contain.
+    IDs are case-insensitive, and can refer to any traits or groups. Matching groups
+    will be expanded to the traits they contain.
 
-    Order of the returned platforms matches the order of the provided IDs.
+    Order of the returned traits matches the order of the provided IDs.
 
     .. tip::
         If you want to reduce the returned set and removes as much overlaps as
         possible, you can use the ``extra_platforms.reduce()`` function on the results.
     """
-    ids = _unique((s.lower() for s in platform_and_group_ids))
+    ids = _unique((s.lower() for s in trait_and_group_ids))
     unrecognized_ids = set(ids) - ALL_IDS
     if unrecognized_ids:
         raise ValueError(
-            "Unrecognized group or platform IDs: " + ", ".join(sorted(unrecognized_ids))
+            "Unrecognized group or trait IDs: " + ", ".join(sorted(unrecognized_ids))
         )
-    platforms = []
-    for platform_id in ids:
-        if platform_id in ALL_TRAIT_IDS:
-            platforms.append(ALL_TRAITS[platform_id])
+    traits = []
+    for trait_id in ids:
+        if trait_id in ALL_TRAIT_IDS:
+            traits.append(ALL_TRAITS[trait_id])
         else:
-            groups = groups_from_ids(platform_id)
+            groups = groups_from_ids(trait_id)
             assert len(groups) == 1
-            platforms.extend(groups[0].platforms)
-    return _unique(platforms)
+            traits.extend(groups[0].platforms)
+    return _unique(traits)
 
 
 def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:

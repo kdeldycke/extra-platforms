@@ -159,9 +159,9 @@ class Group:
                     yield from item.platforms
                 case str():
                     # Prevent circular import.
-                    from .operations import platforms_from_ids
+                    from .operations import traits_from_ids
 
-                    yield from platforms_from_ids(item)
+                    yield from traits_from_ids(item)
                 case _:
                     raise TypeError(f"Unsupported type: {type(item)}")
 

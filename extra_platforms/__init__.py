@@ -259,8 +259,8 @@ from .operations import (  # noqa: E402
     ALL_IDS,
     ALL_TRAIT_IDS,
     groups_from_ids,
-    platforms_from_ids,
     reduce,
+    traits_from_ids,
 )
 
 __version__ = "6.0.0"
@@ -671,7 +671,6 @@ __all__ = (  # noqa: F405
     "PARALLELS",
     "PIDORA",
     "Platform",
-    "platforms_from_ids",
     "PPC",
     "PPC64",
     "PPC64LE",
@@ -692,6 +691,7 @@ __all__ = (  # noqa: F405
     "SYSTEM_V",
     "TEAMCITY",
     "Trait",
+    "traits_from_ids",
     "TRAVIS_CI",
     "TUMBLEWEED",
     "TUXEDO",

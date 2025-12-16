@@ -27,8 +27,8 @@ from extra_platforms import (
     ALL_GROUP_IDS,
     ALL_GROUPS,
     ALL_IDS,
-    ALL_TRAIT_IDS,
     ALL_PLATFORMS,
+    ALL_TRAIT_IDS,
     ALL_TRAITS,
     ALTLINUX,
     AMZN,
@@ -96,8 +96,8 @@ from extra_platforms import (
     WSL2,
     XENSERVER,
     groups_from_ids,
-    platforms_from_ids,
     reduce,
+    traits_from_ids,
 )
 
 
@@ -146,26 +146,26 @@ def randomize_case(strings: Iterable[str]) -> set[str]:
     return test_strings
 
 
-@pytest.mark.parametrize("platform_id", randomize_case(ALL_TRAIT_IDS))
-def test_platforms_from_ids(platform_id):
-    platforms = platforms_from_ids(platform_id)
-    assert platforms
-    assert len(platforms) == 1
-    platform = platforms[0]
-    assert platform.id == platform_id.lower()
-    assert platform in ALL_TRAITS.platforms
+@pytest.mark.parametrize("trait_id", randomize_case(ALL_TRAIT_IDS))
+def test_traits_from_ids(trait_id):
+    traits = traits_from_ids(trait_id)
+    assert traits
+    assert len(traits) == 1
+    trait = traits[0]
+    assert trait.id == trait_id.lower()
+    assert trait in ALL_TRAITS.platforms
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
-def test_platforms_from_ids_group_resolve(group_id):
-    """platforms_from_ids() can also resolve group IDs."""
-    platforms = platforms_from_ids(group_id)
-    assert platforms
-    assert len(platforms) >= 1
+def test_traits_from_ids_group_resolve(group_id):
+    """traits_from_ids() can also resolve group IDs."""
+    traits = traits_from_ids(group_id)
+    assert traits
+    assert len(traits) >= 1
     groups = groups_from_ids(group_id)
     assert len(groups) == 1
     group = groups[0]
-    assert platforms == tuple(group.platforms)
+    assert traits == tuple(group.platforms)
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))

@@ -13,17 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Heuristics to detect platforms and architectures.
+"""Heuristics to detect all traits of the current environment.
 
 This collection of heuristics is designed as a set of separate function with minimal
-logic and dependencies.
+logic and dependencies. They're the building blocks to detect the current platform,
+and are the first functions called when trying to detect the current environment.
 
 All these heuristics can be hard-cached as the underlying system is not changing
 between code execution. They are still allowed to depends on each others, as long as
 you're careful of not implementing circular dependencies.
 
 .. warning::
-
     Even if highly unlikely, it is possible to have multiple platforms detected for the
     same environment.
 
@@ -50,7 +50,7 @@ Detection of Linux distribution rely on `distro
 And also because it is the recommended replacement for Python's original
 ``platform.linux_distribution`` function (which was removed in Python 3.8).
 
-For all other platforms, we either rely on:
+For all other traits, we either rely on:
 
 - `sys.platform
   <https://docs.python.org/3/library/sys.html#sys.platform>`_
