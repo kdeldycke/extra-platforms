@@ -31,7 +31,7 @@ from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_PLATFORMS, ALL_TRAIT_IDS
 from extra_platforms import platform_data as platform_data_module
 
 all_platforms_params = pytest.mark.parametrize(
-    "platform", ALL_PLATFORMS.members.values(), ids=attrgetter("id")
+    "platform", list(ALL_PLATFORMS), ids=attrgetter("id")
 )
 
 

@@ -28,7 +28,7 @@ from extra_platforms import ALL_ARCHITECTURES, ALL_GROUP_IDS, ALL_IDS, ALL_TRAIT
 from extra_platforms import architecture_data as architecture_data_module
 
 all_architectures_params = pytest.mark.parametrize(
-    "architecture", ALL_ARCHITECTURES.members.values(), ids=attrgetter("id")
+    "architecture", list(ALL_ARCHITECTURES), ids=attrgetter("id")
 )
 
 

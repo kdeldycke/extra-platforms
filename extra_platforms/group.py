@@ -21,6 +21,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
 from functools import cached_property
 from types import MappingProxyType
+from typing import cast
 
 from .trait import Trait
 
@@ -29,6 +30,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
 
     from ._types import _TNestedReferences
+
+_MembersMapping = MappingProxyType[str, Trait]
 
 
 def _flatten(items: Iterable) -> Iterator:
@@ -46,14 +49,9 @@ def _flatten(items: Iterable) -> Iterator:
 
 @dataclass(frozen=True)
 class Group:
-    """A ``Group`` identify a collection of members.
+    """A ``Group`` identifies a collection of ``Trait`` members.
 
-    Members can be ``Trait`` instances: ``Platform``, ``Architecture``, or ``CI``.
-
-    `set`-like methods are available and performed on the members of the group.
-
-    The ``members`` field is an immutable mapping (``MappingProxyType``) from member
-    ID to ``Trait`` object, providing O(1) lookup by ID.
+    Supports `set`-like operations (union, intersection, difference, etc.).
     """
 
     id: str
@@ -65,24 +63,26 @@ class Group:
     icon: str = field(repr=False, default="❓")
     """Icon of the group."""
 
-    members: MappingProxyType[str, Trait] = field(
-        repr=False, default_factory=lambda: MappingProxyType({})
-    )
-    """Immutable mapping of member ID to ``Trait`` object.
+    members: Iterable[Trait] = field(repr=False, default_factory=tuple)
+    """Traits in this group.
 
-    Accepts an iterable of ``Trait`` objects during construction, which gets
-    normalized to an immutable ``MappingProxyType[str, Trait]`` in ``__post_init__``.
-
-    After initialization, this is always a ``MappingProxyType[str, Trait]``.
+    Normalized to ``MappingProxyType[str, Trait]`` at init, providing O(1) lookup by ID.
     """
 
-    def __post_init__(self):
-        """Validate and normalize the group fields:
+    @property
+    def _members(self) -> _MembersMapping:
+        """Typed access to members as ``MappingProxyType[str, Trait]``.
 
-        - Ensure the group ID, name and icon are not empty.
-        - Deduplicate members and sort them by IDs
-        - Convert input to immutable MappingProxyType
+        .. warning::
+            The ``members`` field is typed as ``Iterable[Trait]`` to accept any
+            iterable at construction time. After ``__post_init__``, it is always a
+            ``MappingProxyType[str, Trait]``. This property provides a ``cast()`` to
+            that type, avoiding ``# type: ignore`` comments throughout the class.
         """
+        return cast(_MembersMapping, self.members)
+
+    def __post_init__(self):
+        """Validate fields and normalize members to a sorted, deduplicated mapping."""
         assert self.id, "Group ID cannot be empty."
         assert self.name, "Group name cannot be empty."
         assert self.icon, "Group icon cannot be empty."
@@ -106,14 +106,10 @@ class Group:
     @property
     def member_ids(self) -> frozenset[str]:
         """Set of member IDs that belong to this group."""
-        return frozenset(self.members.keys())
+        return frozenset(self._members.keys())
 
     def __hash__(self) -> int:
-        """Return a hash based on the group's immutable identity.
-
-        The hash is computed from the group ID and the frozenset of member IDs,
-        both of which are immutable.
-        """
+        """Hash based on group ID and member IDs."""
         return hash((self.id, self.member_ids))
 
     @cached_property
@@ -128,28 +124,28 @@ class Group:
 
     def __iter__(self) -> Iterator[Trait]:
         """Iterate over the members of the group."""
-        yield from self.members.values()
+        yield from self._members.values()
 
     def __len__(self) -> int:
         """Return the number of members in the group."""
-        return len(self.members)
+        return len(self._members)
 
     def __contains__(self, item: Trait | str) -> bool:
         """Test if ``Trait`` object or its ID is part of the group."""
         if isinstance(item, str):
-            return item in self.members
-        return item.id in self.members and self.members[item.id] == item
+            return item in self._members
+        return item.id in self._members and self._members[item.id] == item
 
     def __getitem__(self, member_id: str) -> Trait:
         """Return the trait whose ID is ``member_id``."""
         try:
-            return self.members[member_id]
+            return self._members[member_id]
         except KeyError:
             raise KeyError(f"No trait found whose ID is {member_id}") from None
 
     def items(self) -> Iterator[tuple[str, Trait]]:
         """Iterate over the traits of the group as key-value pairs."""
-        yield from self.members.items()
+        yield from self._members.items()
 
     @staticmethod
     def _extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
@@ -168,7 +164,7 @@ class Group:
                 case Trait():
                     yield item
                 case Group():
-                    yield from item.members.values()
+                    yield from item._members.values()
                 case str():
                     # Prevent circular import.
                     from .operations import traits_from_ids
@@ -184,33 +180,33 @@ class Group:
 
         ``other`` can be an arbitrarily nested ``Iterable`` of ``Group`` and ``Trait``.
         """
-        return set(self.members.values()).isdisjoint(self._extract_members(other))
+        return set(self._members.values()).isdisjoint(self._extract_members(other))
 
     def fullyintersects(self, other: _TNestedReferences) -> bool:
         """Return `True` if the group has all members in common with ``other``."""
-        return set(self.members.values()) == set(self._extract_members(other))
+        return set(self._members.values()) == set(self._extract_members(other))
 
     def issubset(self, other: _TNestedReferences) -> bool:
         """Test whether every member in the group is in other."""
-        return set(self.members.values()).issubset(self._extract_members(other))
+        return set(self._members.values()).issubset(self._extract_members(other))
 
     __le__ = issubset
 
     def __lt__(self, other: _TNestedReferences) -> bool:
         """Test whether every member in the group is in other, but not all."""
-        return self <= other and set(self.members.values()) != set(
+        return self <= other and set(self._members.values()) != set(
             self._extract_members(other)
         )
 
     def issuperset(self, other: _TNestedReferences) -> bool:
         """Test whether every member in other is in the group."""
-        return set(self.members.values()).issuperset(self._extract_members(other))
+        return set(self._members.values()).issuperset(self._extract_members(other))
 
     __ge__ = issuperset
 
     def __gt__(self, other: _TNestedReferences) -> bool:
         """Test whether every member in other is in the group, but not all."""
-        return self >= other and set(self.members.values()) != set(
+        return self >= other and set(self._members.values()) != set(
             self._extract_members(other)
         )
 
@@ -226,7 +222,7 @@ class Group:
             self.name,
             self.icon,
             tuple(
-                set(self.members.values()).union(
+                set(self._members.values()).union(
                     *(self._extract_members(other) for other in others)
                 )
             ),
@@ -245,8 +241,8 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            tuple(  # type: ignore[arg-type]
-                set(self.members.values()).intersection(
+            tuple(
+                set(self._members.values()).intersection(
                     *(self._extract_members(other) for other in others)
                 )
             ),
@@ -265,8 +261,8 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            tuple(  # type: ignore[arg-type]
-                set(self.members.values()).difference(
+            tuple(
+                set(self._members.values()).difference(
                     *(self._extract_members(other) for other in others)
                 )
             ),
@@ -285,8 +281,8 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            tuple(  # type: ignore[arg-type]
-                set(self.members.values()).symmetric_difference(
+            tuple(
+                set(self._members.values()).symmetric_difference(
                     self._extract_members(other)
                 )
             ),
