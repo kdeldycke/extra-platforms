@@ -126,7 +126,7 @@ from extra_platforms.pytest import unless_github_ci
 
 
 def test_detection_functions():
-    for platform in ALL_TRAITS.members:
+    for platform in ALL_TRAITS:
         check_func_id = f"is_{platform.id}"
         assert check_func_id in globals()
         check_func = globals()[check_func_id]
@@ -182,7 +182,7 @@ def test_detection_heuristics_sorting():
                 ci_heuristics.append(func_id)
 
     # Check there is no extra "is_" function.
-    assert {f"is_{p.id}" for p in ALL_TRAITS.members} == set(all_heuristic_ids)
+    assert {f"is_{p.id}" for p in ALL_TRAITS} == set(all_heuristic_ids)
 
     # We only allow one generic "is_unknown*()" detection heuristics per category.
     for heuristics in [arch_heuristics, platform_heuristics, ci_heuristics]:

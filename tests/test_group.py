@@ -42,7 +42,7 @@ def test_platform_deduplication():
     assert len(my_group.members) == 1
     assert len(my_group.member_ids) == 1
 
-    assert my_group.members == (AIX,)
+    assert tuple(my_group) == (AIX,)
     assert my_group.member_ids == frozenset({"aix"})
 
 
@@ -91,13 +91,13 @@ def test_platform_membership():
         ([AIX, AIX], [AIX, AIX]),
         ([AIX, (AIX, AIX)], [AIX, AIX, AIX]),
         ([AIX, ("aix", AIX)], [AIX, AIX, AIX]),
-        (LINUX_LAYERS, LINUX_LAYERS.members),
+        (LINUX_LAYERS, tuple(LINUX_LAYERS)),
         (LINUX_LAYERS, LINUX_LAYERS),
         ("linux_layers", LINUX_LAYERS),
         ([LINUX_LAYERS], LINUX_LAYERS),
-        ([LINUX_LAYERS, LINUX_LAYERS], LINUX_LAYERS.members * 2),
-        ([LINUX_LAYERS, (LINUX_LAYERS, LINUX_LAYERS)], LINUX_LAYERS.members * 3),
-        ([LINUX_LAYERS, ("linux_layers", LINUX_LAYERS)], LINUX_LAYERS.members * 3),
+        ([LINUX_LAYERS, LINUX_LAYERS], tuple(LINUX_LAYERS) * 2),
+        ([LINUX_LAYERS, (LINUX_LAYERS, LINUX_LAYERS)], tuple(LINUX_LAYERS) * 3),
+        ([LINUX_LAYERS, ("linux_layers", LINUX_LAYERS)], tuple(LINUX_LAYERS) * 3),
     ],
 )
 def test_extract_members(items, expected):

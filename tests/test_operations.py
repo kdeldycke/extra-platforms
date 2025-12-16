@@ -153,7 +153,7 @@ def test_traits_from_ids(trait_id):
     assert len(traits) == 1
     trait = traits[0]
     assert trait.id == trait_id.lower()
-    assert trait in ALL_TRAITS.members
+    assert trait in ALL_TRAITS
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
@@ -165,7 +165,7 @@ def test_traits_from_ids_group_resolve(group_id):
     groups = groups_from_ids(group_id)
     assert len(groups) == 1
     group = groups[0]
-    assert traits == tuple(group.members)
+    assert traits == tuple(group)
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))

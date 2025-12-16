@@ -30,7 +30,7 @@ if TYPE_CHECKING:
     from .trait import Trait
 
 
-ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS.members))
+ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS))
 """Set of all recognized traits IDs."""
 
 ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS))
@@ -78,7 +78,7 @@ def traits_from_ids(
         else:
             groups = groups_from_ids(trait_id)
             assert len(groups) == 1
-            traits.extend(groups[0].members)
+            traits.extend(groups[0])
     return _unique(traits)
 
 

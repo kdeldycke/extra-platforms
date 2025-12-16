@@ -280,7 +280,7 @@ def test_invalidate_caches():
     assert hasattr(is_windows, "__wrapped__")
 
     # Access Platform.current to populate their caches.
-    for platform_obj in ALL_PLATFORMS.members:
+    for platform_obj in ALL_PLATFORMS:
         _ = platform_obj.current
         # For cached_property, the value is stored in the instance's __dict__.
         assert "current" in vars(platform_obj), (
@@ -309,7 +309,7 @@ def test_invalidate_caches():
     assert current_platform.cache_info().currsize == 0
     assert is_windows.cache_info().currsize == 0
 
-    for platform_obj in ALL_PLATFORMS.members:
+    for platform_obj in ALL_PLATFORMS:
         assert "current" not in vars(platform_obj), (
             f"'current' cache not cleared for {platform_obj.id}"
         )

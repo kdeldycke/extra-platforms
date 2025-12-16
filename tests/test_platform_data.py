@@ -27,11 +27,11 @@ import pytest
 import requests
 
 from extra_platforms.pytest import unless_linux
-from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_TRAIT_IDS, ALL_PLATFORMS
+from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_PLATFORMS, ALL_TRAIT_IDS
 from extra_platforms import platform_data as platform_data_module
 
 all_platforms_params = pytest.mark.parametrize(
-    "platform", ALL_PLATFORMS.members, ids=attrgetter("id")
+    "platform", ALL_PLATFORMS.members.values(), ids=attrgetter("id")
 )
 
 

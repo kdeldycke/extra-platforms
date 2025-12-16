@@ -284,7 +284,7 @@ def current_architecture() -> Architecture:
     multiple architectures match.
     """
     matching = set()
-    for arch in ALL_ARCHITECTURES.members:
+    for arch in ALL_ARCHITECTURES:
         if arch.current:
             # Assert to please type checkers.
             assert isinstance(arch, Architecture)
@@ -312,7 +312,7 @@ def current_platform() -> Platform:
     Raises an error if we can't decide on a single, appropriate platform.
     """
     matching = set()
-    for platform in ALL_PLATFORMS.members:
+    for platform in ALL_PLATFORMS:
         if platform.current:
             # Assert to please type checkers.
             assert isinstance(platform, Platform)
@@ -356,7 +356,7 @@ def current_ci() -> CI | None:
     Always raises an error if multiple CI systems match.
     """
     matching = set()
-    for ci in ALL_CI.members:
+    for ci in ALL_CI:
         if ci.current:
             # Assert to please type checkers.
             assert isinstance(ci, CI)
@@ -387,7 +387,7 @@ def current_traits() -> set[Trait]:
         choice but to evaluate all detection heuristics.
     """
     matching = set()
-    for trait in ALL_TRAITS.members:
+    for trait in ALL_TRAITS:
         if trait.current:
             matching.add(trait)
 
@@ -444,7 +444,7 @@ def invalidate_caches():
         stdlib_platform.invalidate_caches()
 
     # Invalidate cached properties of the Platform and Architecture classes.
-    for member in ALL_TRAITS.members:
+    for member in ALL_TRAITS:
         if "current" in vars(member):
             # Use object.__delattr__ to bypass frozen dataclass restriction.
             object.__delattr__(member, "current")

@@ -130,8 +130,8 @@ def test_groups_content():
             # Each group is both a subset and a superset of itself.
             assert group.issubset(group)
             assert group.issuperset(group)
-            assert group.issubset(group.members)
-            assert group.issuperset(group.members)
+            assert group.issubset(group.members.values())
+            assert group.issuperset(group.members.values())
 
             # Test against empty iterables.
             assert group.issuperset(())
@@ -145,7 +145,7 @@ def test_groups_content():
             assert not group.issubset(set())
             assert not group.issubset(frozenset())
 
-            for member in group.members:
+            for member in group:
                 assert member in group
                 assert member in ALL_TRAITS
                 assert isinstance(member, Trait)
@@ -158,9 +158,9 @@ def test_groups_content():
 
             # A group cannot be disjoint from itself.
             assert not group.isdisjoint(group)
-            assert not group.isdisjoint(group.members)
+            assert not group.isdisjoint(group.members.values())
             assert group.fullyintersects(group)
-            assert group.fullyintersects(group.members)
+            assert group.fullyintersects(group.members.values())
 
             # Test union.
             assert group.union() == group
