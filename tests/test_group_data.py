@@ -26,8 +26,8 @@ from extra_platforms import (
     ALL_GROUP_IDS,
     ALL_GROUPS,
     ALL_IDS,
-    ALL_TRAIT_IDS,
     ALL_PLATFORMS,
+    ALL_TRAIT_IDS,
     ALL_TRAITS,
     ANY_WINDOWS,
     BSD,
@@ -114,8 +114,8 @@ def test_groups_content():
             assert isinstance(group, Group)
 
             assert len(group) > 0
-            assert len(group.platforms) == len(group.platform_ids)
-            assert group.platform_ids.issubset(ALL_TRAITS.platform_ids)
+            assert len(group.members) == len(group.member_ids)
+            assert group.member_ids.issubset(ALL_TRAITS.member_ids)
 
             # Check general subset properties and operators.
             assert group.issubset(ALL_TRAITS)
@@ -130,8 +130,8 @@ def test_groups_content():
             # Each group is both a subset and a superset of itself.
             assert group.issubset(group)
             assert group.issuperset(group)
-            assert group.issubset(group.platforms)
-            assert group.issuperset(group.platforms)
+            assert group.issubset(group.members)
+            assert group.issuperset(group.members)
 
             # Test against empty iterables.
             assert group.issuperset(())
@@ -145,11 +145,11 @@ def test_groups_content():
             assert not group.issubset(set())
             assert not group.issubset(frozenset())
 
-            for member in group.platforms:
+            for member in group.members:
                 assert member in group
                 assert member in ALL_TRAITS
                 assert isinstance(member, Trait)
-                assert member.id in group.platform_ids
+                assert member.id in group.member_ids
                 assert group.issuperset([member])
                 if len(group) == 1:
                     assert group.issubset([member])
@@ -158,9 +158,9 @@ def test_groups_content():
 
             # A group cannot be disjoint from itself.
             assert not group.isdisjoint(group)
-            assert not group.isdisjoint(group.platforms)
+            assert not group.isdisjoint(group.members)
             assert group.fullyintersects(group)
-            assert group.fullyintersects(group.platforms)
+            assert group.fullyintersects(group.members)
 
             # Test union.
             assert group.union() == group
@@ -243,8 +243,8 @@ def test_group_no_missing_platform():
     """Check all platform are attached to at least one group."""
     grouped_platforms = set()
     for group in ALL_GROUPS:
-        grouped_platforms |= group.platform_ids
-    assert grouped_platforms == ALL_TRAITS.platform_ids
+        grouped_platforms |= group.member_ids
+    assert grouped_platforms == ALL_TRAITS.member_ids
 
 
 def test_non_overlapping_groups():

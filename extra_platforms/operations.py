@@ -30,7 +30,7 @@ if TYPE_CHECKING:
     from .trait import Trait
 
 
-ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS.platforms))
+ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS.members))
 """Set of all recognized traits IDs."""
 
 ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS))
@@ -78,7 +78,7 @@ def traits_from_ids(
         else:
             groups = groups_from_ids(trait_id)
             assert len(groups) == 1
-            traits.extend(groups[0].platforms)
+            traits.extend(groups[0].members)
     return _unique(traits)
 
 
@@ -132,7 +132,7 @@ def reduce(
         more descriptive or not...
     """
     # Collect all traits.
-    traits = frozenset(Group._extract_platforms(items))
+    traits = frozenset(Group._extract_members(items))
 
     # List all groups overlapping the set of input traits.
     if target_pool is None:

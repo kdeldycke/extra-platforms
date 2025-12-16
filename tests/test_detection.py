@@ -34,7 +34,7 @@ from extra_platforms import (
     X86_64,
     current_architecture,
     current_os,
-    current_platforms,
+    current_traits,
     is_aarch64,
     is_aix,
     is_altlinux,
@@ -126,7 +126,7 @@ from extra_platforms.pytest import unless_github_ci
 
 
 def test_detection_functions():
-    for platform in ALL_TRAITS.platforms:
+    for platform in ALL_TRAITS.members:
         check_func_id = f"is_{platform.id}"
         assert check_func_id in globals()
         check_func = globals()[check_func_id]
@@ -182,7 +182,7 @@ def test_detection_heuristics_sorting():
                 ci_heuristics.append(func_id)
 
     # Check there is no extra "is_" function.
-    assert {f"is_{p.id}" for p in ALL_TRAITS.platforms} == set(all_heuristic_ids)
+    assert {f"is_{p.id}" for p in ALL_TRAITS.members} == set(all_heuristic_ids)
 
     # We only allow one generic "is_unknown*()" detection heuristics per category.
     for heuristics in [arch_heuristics, platform_heuristics, ci_heuristics]:
@@ -266,10 +266,10 @@ def test_github_runner_detection():
         assert current_os() is UBUNTU
         if github_runner_os() == "ubuntu-slim":
             assert is_wsl2()
-            assert current_platforms() == (GITHUB_CI, UBUNTU, WSL2)
+            assert current_traits() == (GITHUB_CI, UBUNTU, WSL2)
         else:
             assert not is_wsl2()
-            assert current_platforms() == (GITHUB_CI, UBUNTU)
+            assert current_traits() == (GITHUB_CI, UBUNTU)
 
     if github_runner_os() in {
         "macos-latest",
@@ -286,7 +286,7 @@ def test_github_runner_detection():
     }:
         assert is_macos()
         assert current_os() is MACOS
-        assert current_platforms() == (GITHUB_CI, MACOS)
+        assert current_traits() == (GITHUB_CI, MACOS)
 
     if github_runner_os() in {
         "windows-latest",
@@ -296,7 +296,7 @@ def test_github_runner_detection():
     }:
         assert is_windows()
         assert current_os() is WINDOWS
-        assert current_platforms() == (GITHUB_CI, WINDOWS)
+        assert current_traits() == (GITHUB_CI, WINDOWS)
 
 
 def test_mutual_exclusion():

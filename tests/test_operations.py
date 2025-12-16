@@ -110,7 +110,7 @@ def test_unique_ids():
     assert len(set(all_platform_ids)) == len(all_platform_ids)
 
     assert len(all_platform_ids) == len(ALL_PLATFORMS)
-    assert len(all_platform_ids) == len(ALL_PLATFORMS.platform_ids)
+    assert len(all_platform_ids) == len(ALL_PLATFORMS.member_ids)
 
     all_group_ids = {g.id for g in ALL_GROUPS}
     assert len(all_group_ids) == len(ALL_GROUPS)
@@ -153,7 +153,7 @@ def test_traits_from_ids(trait_id):
     assert len(traits) == 1
     trait = traits[0]
     assert trait.id == trait_id.lower()
-    assert trait in ALL_TRAITS.platforms
+    assert trait in ALL_TRAITS.members
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
@@ -165,7 +165,7 @@ def test_traits_from_ids_group_resolve(group_id):
     groups = groups_from_ids(group_id)
     assert len(groups) == 1
     group = groups[0]
-    assert traits == tuple(group.platforms)
+    assert traits == tuple(group.members)
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
@@ -292,7 +292,7 @@ def test_reduce_custom_targets(items, expected):
         UNIX_WITHOUT_MACOS.copy(
             id="unix",
             name="Unix",
-            platforms=tuple(UNIX_WITHOUT_MACOS - BSD_WITHOUT_MACOS - LINUX_LIKE),
+            members=tuple(UNIX_WITHOUT_MACOS - BSD_WITHOUT_MACOS - LINUX_LIKE),
         ),
         ANY_WINDOWS,
     )

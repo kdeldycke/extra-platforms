@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Group models collection of platforms. Also referred as families or categories."""
+"""Group a collection of traits. Also referred as families."""
 
 from __future__ import annotations
 
@@ -46,16 +46,15 @@ def _flatten(items: Iterable) -> Iterator:
 
 @dataclass(frozen=True)
 class Group:
-    """A ``Group`` identify a collection of ``Platform``.
+    """A ``Group`` identify a collection of members.
 
-    Used to group platforms of the same family.
+    Members can be ``Trait`` instances: ``Platform``, ``Architecture``, or ``CI``.
 
-    `set`-like methods are available and performed on the platform objects the group
-    contains (in the ``self.platforms`` data field).
+    `set`-like methods are available and performed on the members of the group.
 
     .. todo::
-        Replace the ``platforms``/``platform_ids`` combo fields with a single
-        ``platforms`` field that is a simple `dict` of platform ID to platform object.
+        Replace the ``members``/``member_ids`` combo fields with a single
+        ``members`` field that is a simple `dict` of member ID to trait object.
         But maybe that going to be too much of a hassle because a ``dict`` cannot be
         frozen.
     """
@@ -69,18 +68,18 @@ class Group:
     icon: str = field(repr=False, default="❓")
     """Icon of the group."""
 
-    platforms: tuple[Trait, ...] = field(repr=False, default_factory=tuple)
-    """Sorted list of traits that belong to this group."""
+    members: tuple[Trait, ...] = field(repr=False, default_factory=tuple)
+    """Sorted tuple of traits that belong to this group."""
 
-    platform_ids: frozenset[str] = field(default_factory=frozenset, init=False)
-    """Set of platform IDs that belong to this group."""
+    member_ids: frozenset[str] = field(default_factory=frozenset, init=False)
+    """Set of member IDs that belong to this group."""
 
     def __post_init__(self):
         """Validate and normalize the group fields:
 
         - Ensure the group ID, name and icon are not empty.
-        - Deduplicate platforms and sort them by IDs
-        - Populate the set of platform IDs and check for duplicates
+        - Deduplicate members and sort them by IDs
+        - Populate the set of member IDs and check for duplicates
         """
         assert self.id, "Group ID cannot be empty."
         assert self.name, "Group name cannot be empty."
@@ -88,19 +87,19 @@ class Group:
 
         object.__setattr__(
             self,
-            "platforms",
-            tuple(sorted(set(self.platforms), key=lambda p: p.id)),
+            "members",
+            tuple(sorted(set(self.members), key=lambda p: p.id)),
         )
 
-        # Double check there are no Platform objects sharing the same IDs.
-        id_counter = Counter(p.id for p in self.platforms)
-        if len(set(id_counter)) != len(self.platforms):
+        # Double check there are no Trait objects sharing the same IDs.
+        id_counter = Counter(p.id for p in self.members)
+        if len(set(id_counter)) != len(self.members):
             duplicates = (k for k, v in dict(id_counter).items() if v > 1)
             raise ValueError(
-                "The group is not allowed to have platforms with duplicate IDs: "
+                "The group is not allowed to have members with duplicate IDs: "
                 f"{', '.join(duplicates)}"
             )
-        object.__setattr__(self, "platform_ids", frozenset(id_counter))
+        object.__setattr__(self, "member_ids", frozenset(id_counter))
 
     @cached_property
     def short_desc(self) -> str:
@@ -113,34 +112,34 @@ class Group:
         return self.name[0].lower() + self.name[1:]
 
     def __iter__(self) -> Iterator[Trait]:
-        """Iterate over the platforms of the group."""
-        yield from self.platforms
+        """Iterate over the members of the group."""
+        yield from self.members
 
     def __len__(self) -> int:
-        """Return the number of platforms in the group."""
-        return len(self.platforms)
+        """Return the number of members in the group."""
+        return len(self.members)
 
     def __contains__(self, platform: Trait | str) -> bool:
         """Test if ``Trait`` object or its ID is part of the group."""
         return (
-            (platform in self.platform_ids)
+            (platform in self.member_ids)
             if isinstance(platform, str)
-            else (platform in self.platforms)
+            else (platform in self.members)
         )
 
     def __getitem__(self, platform_id: str) -> Trait:
         """Return the trait whose ID is ``platform_id``."""
-        for platform in self.platforms:
+        for platform in self.members:
             if platform.id == platform_id:
                 return platform
         raise KeyError(f"No trait found whose ID is {platform_id}")
 
     def items(self) -> Iterator[tuple[str, Trait]]:
         """Iterate over the traits of the group as key-value pairs."""
-        yield from ((platform.id, platform) for platform in self.platforms)
+        yield from ((platform.id, platform) for platform in self.members)
 
     @staticmethod
-    def _extract_platforms(*other: _TNestedReferences) -> Iterator[Trait]:
+    def _extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
         """Returns all traits found in ``other``.
 
         ``other`` can be an arbitrarily nested ``Iterable`` of ``Group``, ``Trait``, or
@@ -156,7 +155,7 @@ class Group:
                 case Trait():
                     yield item
                 case Group():
-                    yield from item.platforms
+                    yield from item.members
                 case str():
                     # Prevent circular import.
                     from .operations import traits_from_ids
@@ -166,44 +165,40 @@ class Group:
                     raise TypeError(f"Unsupported type: {type(item)}")
 
     def isdisjoint(self, other: _TNestedReferences) -> bool:
-        """Return `True` if the group has no platforms in common with ``other``.
+        """Return `True` if the group has no members in common with ``other``.
 
         Groups are disjoint if and only if their intersection is an empty set.
 
-        ``other`` can be an arbitrarily nested ``Iterable`` of ``Group`` and ``Platform``.
+        ``other`` can be an arbitrarily nested ``Iterable`` of ``Group`` and ``Trait``.
         """
-        return set(self.platforms).isdisjoint(self._extract_platforms(other))
+        return set(self.members).isdisjoint(self._extract_members(other))
 
     def fullyintersects(self, other: _TNestedReferences) -> bool:
-        """Return `True` if the group has all platforms in common with ``other``."""
-        return set(self.platforms) == set(self._extract_platforms(other))
+        """Return `True` if the group has all members in common with ``other``."""
+        return set(self.members) == set(self._extract_members(other))
 
     def issubset(self, other: _TNestedReferences) -> bool:
-        """Test whether every platforms in the group is in other."""
-        return set(self.platforms).issubset(self._extract_platforms(other))
+        """Test whether every member in the group is in other."""
+        return set(self.members).issubset(self._extract_members(other))
 
     __le__ = issubset
 
     def __lt__(self, other: _TNestedReferences) -> bool:
-        """Test whether every platform in the group is in other, but not all."""
-        return self <= other and set(self.platforms) != set(
-            self._extract_platforms(other)
-        )
+        """Test whether every member in the group is in other, but not all."""
+        return self <= other and set(self.members) != set(self._extract_members(other))
 
     def issuperset(self, other: _TNestedReferences) -> bool:
-        """Test whether every platform in other is in the group."""
-        return set(self.platforms).issuperset(self._extract_platforms(other))
+        """Test whether every member in other is in the group."""
+        return set(self.members).issuperset(self._extract_members(other))
 
     __ge__ = issuperset
 
     def __gt__(self, other: _TNestedReferences) -> bool:
-        """Test whether every platform in other is in the group, but not all."""
-        return self >= other and set(self.platforms) != set(
-            self._extract_platforms(other)
-        )
+        """Test whether every member in other is in the group, but not all."""
+        return self >= other and set(self.members) != set(self._extract_members(other))
 
     def union(self, *others: _TNestedReferences) -> Group:
-        """Return a new ``Group`` with platforms from the group and all others.
+        """Return a new ``Group`` with members from the group and all others.
 
         .. caution::
             The new ``Group`` will inherits the metadata of the first one. All other
@@ -214,8 +209,8 @@ class Group:
             self.name,
             self.icon,
             tuple(
-                set(self.platforms).union(
-                    *(self._extract_platforms(other) for other in others)
+                set(self.members).union(
+                    *(self._extract_members(other) for other in others)
                 )
             ),
         )
@@ -223,7 +218,7 @@ class Group:
     __or__ = union
 
     def intersection(self, *others: _TNestedReferences) -> Group:
-        """Return a new ``Group`` with platforms common to the group and all others.
+        """Return a new ``Group`` with members common to the group and all others.
 
         .. caution::
             The new ``Group`` will inherits the metadata of the first one. All other
@@ -234,8 +229,8 @@ class Group:
             self.name,
             self.icon,
             tuple(
-                set(self.platforms).intersection(
-                    *(self._extract_platforms(other) for other in others)
+                set(self.members).intersection(
+                    *(self._extract_members(other) for other in others)
                 )
             ),
         )
@@ -243,7 +238,7 @@ class Group:
     __and__ = intersection
 
     def difference(self, *others: _TNestedReferences) -> Group:
-        """Return a new ``Group`` with platforms in the group that are not in the others.
+        """Return a new ``Group`` with members in the group that are not in the others.
 
         .. caution::
             The new ``Group`` will inherits the metadata of the first one. All other
@@ -254,8 +249,8 @@ class Group:
             self.name,
             self.icon,
             tuple(
-                set(self.platforms).difference(
-                    *(self._extract_platforms(other) for other in others)
+                set(self.members).difference(
+                    *(self._extract_members(other) for other in others)
                 )
             ),
         )
@@ -263,7 +258,7 @@ class Group:
     __sub__ = difference
 
     def symmetric_difference(self, other: _TNestedReferences) -> Group:
-        """Return a new ``Group`` with platforms in either the group or other but not both.
+        """Return a new ``Group`` with members in either the group or other but not both.
 
         .. caution::
             The new ``Group`` will inherits the metadata of the first one. All other
@@ -273,9 +268,7 @@ class Group:
             self.id,
             self.name,
             self.icon,
-            tuple(
-                set(self.platforms).symmetric_difference(self._extract_platforms(other))
-            ),
+            tuple(set(self.members).symmetric_difference(self._extract_members(other))),
         )
 
     __xor__ = symmetric_difference
@@ -285,7 +278,7 @@ class Group:
         id: str | None = None,
         name: str | None = None,
         icon: str | None = None,
-        platforms: tuple[Trait, ...] | None = None,
+        members: tuple[Trait, ...] | None = None,
     ) -> Group:
         """Return a shallow copy of the group.
 

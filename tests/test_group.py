@@ -39,11 +39,11 @@ from extra_platforms import (
 def test_platform_deduplication():
     my_group = Group("my_group", "My Group", "✅", (AIX, AIX))
     assert len(my_group) == 1
-    assert len(my_group.platforms) == 1
-    assert len(my_group.platform_ids) == 1
+    assert len(my_group.members) == 1
+    assert len(my_group.member_ids) == 1
 
-    assert my_group.platforms == (AIX,)
-    assert my_group.platform_ids == frozenset({"aix"})
+    assert my_group.members == (AIX,)
+    assert my_group.member_ids == frozenset({"aix"})
 
 
 def test_platform_membership():
@@ -91,25 +91,25 @@ def test_platform_membership():
         ([AIX, AIX], [AIX, AIX]),
         ([AIX, (AIX, AIX)], [AIX, AIX, AIX]),
         ([AIX, ("aix", AIX)], [AIX, AIX, AIX]),
-        (LINUX_LAYERS, LINUX_LAYERS.platforms),
+        (LINUX_LAYERS, LINUX_LAYERS.members),
         (LINUX_LAYERS, LINUX_LAYERS),
         ("linux_layers", LINUX_LAYERS),
         ([LINUX_LAYERS], LINUX_LAYERS),
-        ([LINUX_LAYERS, LINUX_LAYERS], LINUX_LAYERS.platforms * 2),
-        ([LINUX_LAYERS, (LINUX_LAYERS, LINUX_LAYERS)], LINUX_LAYERS.platforms * 3),
-        ([LINUX_LAYERS, ("linux_layers", LINUX_LAYERS)], LINUX_LAYERS.platforms * 3),
+        ([LINUX_LAYERS, LINUX_LAYERS], LINUX_LAYERS.members * 2),
+        ([LINUX_LAYERS, (LINUX_LAYERS, LINUX_LAYERS)], LINUX_LAYERS.members * 3),
+        ([LINUX_LAYERS, ("linux_layers", LINUX_LAYERS)], LINUX_LAYERS.members * 3),
     ],
 )
-def test_extract_platforms(items, expected):
-    assert tuple(Group._extract_platforms(items)) == tuple(expected)
+def test_extract_members(items, expected):
+    assert tuple(Group._extract_members(items)) == tuple(expected)
 
 
 @pytest.mark.parametrize(
     "item", (42, 42.0, object(), lambda: None, [42], [42, 42], [42, [42, 42]])
 )
-def test_extract_platforms_bad_type(item):
+def test_extract_members_bad_type(item):
     with pytest.raises(TypeError):
-        tuple(Group._extract_platforms(item))
+        tuple(Group._extract_members(item))
 
 
 def test_simple_union():
@@ -127,23 +127,23 @@ def test_simple_union():
     assert new_group.icon == ANY_WINDOWS.icon
     assert new_group.icon != LINUX_LAYERS.icon
 
-    assert set(new_group.platforms) != set(ANY_WINDOWS.platforms)
-    assert set(new_group.platform_ids) != set(ANY_WINDOWS.platform_ids)
-    assert set(new_group.platforms) != set(LINUX_LAYERS.platforms)
-    assert set(new_group.platform_ids) != set(LINUX_LAYERS.platform_ids)
+    assert set(new_group.members) != set(ANY_WINDOWS.members)
+    assert set(new_group.member_ids) != set(ANY_WINDOWS.member_ids)
+    assert set(new_group.members) != set(LINUX_LAYERS.members)
+    assert set(new_group.member_ids) != set(LINUX_LAYERS.member_ids)
 
-    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms).union(
-        LINUX_LAYERS.platforms
+    assert set(new_group.members) == set(ANY_WINDOWS.members).union(
+        LINUX_LAYERS.members
     )
-    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids).union(
-        LINUX_LAYERS.platform_ids
+    assert set(new_group.member_ids) == set(ANY_WINDOWS.member_ids).union(
+        LINUX_LAYERS.member_ids
     )
 
 
 def test_multiple_union():
     new_group = ANY_WINDOWS.union(LINUX_LAYERS, UNIX_LAYERS)
 
-    assert new_group.platform_ids == frozenset(("windows", "wsl1", "wsl2", "cygwin"))
+    assert new_group.member_ids == frozenset(("windows", "wsl1", "wsl2", "cygwin"))
 
     assert ANY_WINDOWS.issubset(new_group)
     assert LINUX_LAYERS.issubset(new_group)
@@ -163,25 +163,25 @@ def test_multiple_union():
     assert new_group.icon != LINUX_LAYERS.icon
     assert new_group.icon != UNIX_LAYERS.icon
 
-    assert set(new_group.platforms) != set(ANY_WINDOWS.platforms)
-    assert set(new_group.platform_ids) != set(ANY_WINDOWS.platform_ids)
-    assert set(new_group.platforms) != set(LINUX_LAYERS.platforms)
-    assert set(new_group.platform_ids) != set(LINUX_LAYERS.platform_ids)
-    assert set(new_group.platforms) != set(UNIX_LAYERS.platforms)
-    assert set(new_group.platform_ids) != set(UNIX_LAYERS.platform_ids)
+    assert set(new_group.members) != set(ANY_WINDOWS.members)
+    assert set(new_group.member_ids) != set(ANY_WINDOWS.member_ids)
+    assert set(new_group.members) != set(LINUX_LAYERS.members)
+    assert set(new_group.member_ids) != set(LINUX_LAYERS.member_ids)
+    assert set(new_group.members) != set(UNIX_LAYERS.members)
+    assert set(new_group.member_ids) != set(UNIX_LAYERS.member_ids)
 
-    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms).union(
-        LINUX_LAYERS.platforms
-    ).union(UNIX_LAYERS.platforms)
-    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids).union(
-        LINUX_LAYERS.platform_ids
-    ).union(UNIX_LAYERS.platform_ids)
+    assert set(new_group.members) == set(ANY_WINDOWS.members).union(
+        LINUX_LAYERS.members
+    ).union(UNIX_LAYERS.members)
+    assert set(new_group.member_ids) == set(ANY_WINDOWS.member_ids).union(
+        LINUX_LAYERS.member_ids
+    ).union(UNIX_LAYERS.member_ids)
 
 
 def test_single_intersection():
     new_group = ALL_PLATFORMS.intersection(ANY_WINDOWS)
 
-    assert new_group.platform_ids == frozenset(("windows",))
+    assert new_group.member_ids == frozenset(("windows",))
 
     assert ANY_WINDOWS.issubset(new_group)
     assert not ALL_PLATFORMS.issubset(new_group)
@@ -195,17 +195,17 @@ def test_single_intersection():
     assert new_group.icon == ALL_PLATFORMS.icon
     assert new_group.icon != ANY_WINDOWS.icon
 
-    assert set(new_group.platforms) != set(ALL_PLATFORMS.platforms)
-    assert set(new_group.platform_ids) != set(ALL_PLATFORMS.platform_ids)
+    assert set(new_group.members) != set(ALL_PLATFORMS.members)
+    assert set(new_group.member_ids) != set(ALL_PLATFORMS.member_ids)
 
-    assert set(new_group.platforms) == set(ANY_WINDOWS.platforms)
-    assert set(new_group.platform_ids) == set(ANY_WINDOWS.platform_ids)
+    assert set(new_group.members) == set(ANY_WINDOWS.members)
+    assert set(new_group.member_ids) == set(ANY_WINDOWS.member_ids)
 
 
 def test_multiple_intersection():
     new_group = ALL_PLATFORMS.intersection(UNIX_WITHOUT_MACOS, BSD_WITHOUT_MACOS)
 
-    assert new_group.platform_ids == frozenset((
+    assert new_group.member_ids == frozenset((
         "freebsd",
         "midnightbsd",
         "netbsd",
@@ -230,19 +230,19 @@ def test_multiple_intersection():
     assert new_group.icon != UNIX_WITHOUT_MACOS.icon
     assert new_group.icon != BSD_WITHOUT_MACOS.icon
 
-    assert set(new_group.platforms) != set(ALL_PLATFORMS.platforms)
-    assert set(new_group.platform_ids) != set(ALL_PLATFORMS.platform_ids)
-    assert set(new_group.platforms) != set(UNIX_WITHOUT_MACOS.platforms)
-    assert set(new_group.platform_ids) != set(UNIX_WITHOUT_MACOS.platform_ids)
+    assert set(new_group.members) != set(ALL_PLATFORMS.members)
+    assert set(new_group.member_ids) != set(ALL_PLATFORMS.member_ids)
+    assert set(new_group.members) != set(UNIX_WITHOUT_MACOS.members)
+    assert set(new_group.member_ids) != set(UNIX_WITHOUT_MACOS.member_ids)
 
-    assert set(new_group.platforms) == set(BSD_WITHOUT_MACOS.platforms)
-    assert set(new_group.platform_ids) == set(BSD_WITHOUT_MACOS.platform_ids)
+    assert set(new_group.members) == set(BSD_WITHOUT_MACOS.members)
+    assert set(new_group.member_ids) == set(BSD_WITHOUT_MACOS.member_ids)
 
 
 def test_single_difference():
     new_group = BSD.difference(BSD_WITHOUT_MACOS)
 
-    assert new_group.platform_ids == frozenset(("macos",))
+    assert new_group.member_ids == frozenset(("macos",))
 
     assert not BSD.issubset(new_group)
     assert BSD.issuperset(new_group)
@@ -261,23 +261,23 @@ def test_single_difference():
     assert new_group.icon == BSD.icon
     assert new_group.icon != BSD_WITHOUT_MACOS.icon
 
-    assert set(new_group.platforms) != set(BSD.platforms)
-    assert set(new_group.platform_ids) != set(BSD.platform_ids)
-    assert set(new_group.platforms) != set(BSD_WITHOUT_MACOS.platforms)
-    assert set(new_group.platform_ids) != set(BSD_WITHOUT_MACOS.platform_ids)
+    assert set(new_group.members) != set(BSD.members)
+    assert set(new_group.member_ids) != set(BSD.member_ids)
+    assert set(new_group.members) != set(BSD_WITHOUT_MACOS.members)
+    assert set(new_group.member_ids) != set(BSD_WITHOUT_MACOS.member_ids)
 
-    assert set(new_group.platforms) == set(BSD.platforms).difference(
-        BSD_WITHOUT_MACOS.platforms
+    assert set(new_group.members) == set(BSD.members).difference(
+        BSD_WITHOUT_MACOS.members
     )
-    assert set(new_group.platform_ids) == set(BSD.platform_ids).difference(
-        BSD_WITHOUT_MACOS.platform_ids
+    assert set(new_group.member_ids) == set(BSD.member_ids).difference(
+        BSD_WITHOUT_MACOS.member_ids
     )
 
 
 def test_multiple_difference():
     new_group = ALL_PLATFORMS.difference(LINUX, UNIX, ALL_CI)
 
-    assert new_group.platform_ids == frozenset(("windows",))
+    assert new_group.member_ids == frozenset(("windows",))
 
     assert not ALL_PLATFORMS.issubset(new_group)
     assert ALL_PLATFORMS.issuperset(new_group)
@@ -303,26 +303,26 @@ def test_multiple_difference():
     assert new_group.icon != LINUX.icon
     assert new_group.icon != UNIX.icon
 
-    assert set(new_group.platforms) != set(ALL_PLATFORMS.platforms)
-    assert set(new_group.platform_ids) != set(ALL_PLATFORMS.platform_ids)
-    assert set(new_group.platforms) != set(LINUX.platforms)
-    assert set(new_group.platform_ids) != set(LINUX.platform_ids)
-    assert set(new_group.platforms) != set(UNIX.platforms)
-    assert set(new_group.platform_ids) != set(UNIX.platform_ids)
+    assert set(new_group.members) != set(ALL_PLATFORMS.members)
+    assert set(new_group.member_ids) != set(ALL_PLATFORMS.member_ids)
+    assert set(new_group.members) != set(LINUX.members)
+    assert set(new_group.member_ids) != set(LINUX.member_ids)
+    assert set(new_group.members) != set(UNIX.members)
+    assert set(new_group.member_ids) != set(UNIX.member_ids)
 
-    assert set(new_group.platforms) == set(ALL_PLATFORMS.platforms).difference(
-        LINUX.platforms
-    ).difference(UNIX.platforms).difference(ALL_CI.platforms)
-    assert set(new_group.platform_ids) == set(ALL_PLATFORMS.platform_ids).difference(
-        LINUX.platform_ids
-    ).difference(UNIX.platform_ids).difference(ALL_CI.platform_ids)
+    assert set(new_group.members) == set(ALL_PLATFORMS.members).difference(
+        LINUX.members
+    ).difference(UNIX.members).difference(ALL_CI.members)
+    assert set(new_group.member_ids) == set(ALL_PLATFORMS.member_ids).difference(
+        LINUX.member_ids
+    ).difference(UNIX.member_ids).difference(ALL_CI.member_ids)
 
 
 def test_symmetric_difference():
     win_and_bsd = ANY_WINDOWS.union(BSD_WITHOUT_MACOS)
     new_group = win_and_bsd.symmetric_difference(BSD)
 
-    assert new_group.platform_ids == frozenset((("macos", "windows")))
+    assert new_group.member_ids == frozenset((("macos", "windows")))
 
     assert not win_and_bsd.issubset(new_group)
     assert not win_and_bsd.issuperset(new_group)
@@ -341,17 +341,17 @@ def test_symmetric_difference():
     assert new_group.icon == win_and_bsd.icon
     assert new_group.icon != BSD.icon
 
-    assert set(new_group.platforms) != set(BSD.platforms)
-    assert set(new_group.platform_ids) != set(BSD.platform_ids)
-    assert set(new_group.platforms) != set(win_and_bsd.platforms)
-    assert set(new_group.platform_ids) != set(win_and_bsd.platform_ids)
+    assert set(new_group.members) != set(BSD.members)
+    assert set(new_group.member_ids) != set(BSD.member_ids)
+    assert set(new_group.members) != set(win_and_bsd.members)
+    assert set(new_group.member_ids) != set(win_and_bsd.member_ids)
 
-    assert set(new_group.platforms) == set(win_and_bsd.platforms).symmetric_difference(
-        BSD.platforms
+    assert set(new_group.members) == set(win_and_bsd.members).symmetric_difference(
+        BSD.members
     )
-    assert set(new_group.platform_ids) == set(
-        win_and_bsd.platform_ids
-    ).symmetric_difference(BSD.platform_ids)
+    assert set(new_group.member_ids) == set(
+        win_and_bsd.member_ids
+    ).symmetric_difference(BSD.member_ids)
 
 
 def test_copy():
@@ -370,7 +370,7 @@ def test_copy():
     assert my_group_copy2.id == "my_group_copy2"
     assert my_group_copy2.name == "My Group Copy 2"
     assert my_group_copy2.icon == "🚀"
-    assert my_group_copy2.platforms == my_group.platforms
-    assert my_group_copy2.platform_ids == my_group.platform_ids
-    assert my_group_copy2.platforms == my_group_copy1.platforms
-    assert my_group_copy2.platform_ids == my_group_copy1.platform_ids
+    assert my_group_copy2.members == my_group.members
+    assert my_group_copy2.member_ids == my_group.member_ids
+    assert my_group_copy2.members == my_group_copy1.members
+    assert my_group_copy2.member_ids == my_group_copy1.member_ids

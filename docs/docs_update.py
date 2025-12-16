@@ -88,7 +88,7 @@ def generate_platform_sankey() -> str:
         key=lambda g: (len(g), g.id),
         reverse=True,
     ):
-        for platform in group.platforms:
+        for platform in group.members:
             # XXX Sankey diagrams do not support emoji icons yet.
             # table.append(
             #     f'"{html.escape(group.icon)} {group.id}",'
@@ -113,7 +113,7 @@ def generate_platform_hierarchy() -> str:
     group_map = ""
     for group in sorted(NON_OVERLAPPING_GROUPS, key=attrgetter("id"), reverse=True):
         group_map += f"){group.icon} {group.id.upper()}(\n"
-        for platform in group.platforms:
+        for platform in group.members:
             group_map += f"    ({platform.icon} {platform.id})\n"
 
     output = dedent("""\
