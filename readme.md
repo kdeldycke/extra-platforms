@@ -10,9 +10,8 @@
 
 ## What is Extra Platforms?
 
-- Provides a list of all known platforms and architectures
-- Detect the current platform, at the distribution level
-- Detect the current architecture
+- Inventory of all known architectures, platforms and CI systems
+- Detect the current architecture platform, at the distribution level
 - Platform metadata (version, codename, etc.)
 - Group platforms and architectures into families
 - Manage collection of platforms and groups

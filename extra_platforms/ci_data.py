@@ -13,17 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""CI definitions and metadata.
-
-.. note::
-
-    Default icons are inspired from Starship project:
-    - https://starship.rs/config/#os
-    - https://github.com/davidkna/starship/blob/e9faf17/.github/config-schema.json#L1221-L1269
-
-    Some icons, especially Linux distributions, have their own dedicated `codepoints in
-    NerdFonts <https://www.nerdfonts.com/cheat-sheet>`_.
-"""
+"""CI definitions and metadata."""
 
 from __future__ import annotations
 
