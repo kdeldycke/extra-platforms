@@ -156,54 +156,91 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
 ---
 sankey-beta
 
-ALL_PLATFORMS_WITHOUT_CI,aix,1
-ALL_PLATFORMS_WITHOUT_CI,altlinux,1
-ALL_PLATFORMS_WITHOUT_CI,amzn,1
-ALL_PLATFORMS_WITHOUT_CI,android,1
-ALL_PLATFORMS_WITHOUT_CI,arch,1
-ALL_PLATFORMS_WITHOUT_CI,buildroot,1
-ALL_PLATFORMS_WITHOUT_CI,cachyos,1
-ALL_PLATFORMS_WITHOUT_CI,centos,1
-ALL_PLATFORMS_WITHOUT_CI,cloudlinux,1
-ALL_PLATFORMS_WITHOUT_CI,cygwin,1
-ALL_PLATFORMS_WITHOUT_CI,debian,1
-ALL_PLATFORMS_WITHOUT_CI,exherbo,1
-ALL_PLATFORMS_WITHOUT_CI,fedora,1
-ALL_PLATFORMS_WITHOUT_CI,freebsd,1
-ALL_PLATFORMS_WITHOUT_CI,gentoo,1
-ALL_PLATFORMS_WITHOUT_CI,guix,1
-ALL_PLATFORMS_WITHOUT_CI,hurd,1
-ALL_PLATFORMS_WITHOUT_CI,ibm_powerkvm,1
-ALL_PLATFORMS_WITHOUT_CI,kvmibm,1
-ALL_PLATFORMS_WITHOUT_CI,linuxmint,1
-ALL_PLATFORMS_WITHOUT_CI,macos,1
-ALL_PLATFORMS_WITHOUT_CI,mageia,1
-ALL_PLATFORMS_WITHOUT_CI,mandriva,1
-ALL_PLATFORMS_WITHOUT_CI,midnightbsd,1
-ALL_PLATFORMS_WITHOUT_CI,netbsd,1
-ALL_PLATFORMS_WITHOUT_CI,nobara,1
-ALL_PLATFORMS_WITHOUT_CI,openbsd,1
-ALL_PLATFORMS_WITHOUT_CI,opensuse,1
-ALL_PLATFORMS_WITHOUT_CI,oracle,1
-ALL_PLATFORMS_WITHOUT_CI,parallels,1
-ALL_PLATFORMS_WITHOUT_CI,pidora,1
-ALL_PLATFORMS_WITHOUT_CI,raspbian,1
-ALL_PLATFORMS_WITHOUT_CI,rhel,1
-ALL_PLATFORMS_WITHOUT_CI,rocky,1
-ALL_PLATFORMS_WITHOUT_CI,scientific,1
-ALL_PLATFORMS_WITHOUT_CI,slackware,1
-ALL_PLATFORMS_WITHOUT_CI,sles,1
-ALL_PLATFORMS_WITHOUT_CI,solaris,1
-ALL_PLATFORMS_WITHOUT_CI,sunos,1
-ALL_PLATFORMS_WITHOUT_CI,tumbleweed,1
-ALL_PLATFORMS_WITHOUT_CI,tuxedo,1
-ALL_PLATFORMS_WITHOUT_CI,ubuntu,1
-ALL_PLATFORMS_WITHOUT_CI,ultramarine,1
-ALL_PLATFORMS_WITHOUT_CI,unknown_linux,1
-ALL_PLATFORMS_WITHOUT_CI,windows,1
-ALL_PLATFORMS_WITHOUT_CI,wsl1,1
-ALL_PLATFORMS_WITHOUT_CI,wsl2,1
-ALL_PLATFORMS_WITHOUT_CI,xenserver,1
+ALL_TRAITS,aarch64,1
+ALL_TRAITS,aix,1
+ALL_TRAITS,altlinux,1
+ALL_TRAITS,amzn,1
+ALL_TRAITS,android,1
+ALL_TRAITS,arch,1
+ALL_TRAITS,arm,1
+ALL_TRAITS,armv6l,1
+ALL_TRAITS,armv7l,1
+ALL_TRAITS,armv8l,1
+ALL_TRAITS,azure_pipelines,1
+ALL_TRAITS,bamboo,1
+ALL_TRAITS,buildkite,1
+ALL_TRAITS,buildroot,1
+ALL_TRAITS,cachyos,1
+ALL_TRAITS,centos,1
+ALL_TRAITS,circle_ci,1
+ALL_TRAITS,cirrus_ci,1
+ALL_TRAITS,cloudlinux,1
+ALL_TRAITS,codebuild,1
+ALL_TRAITS,cygwin,1
+ALL_TRAITS,debian,1
+ALL_TRAITS,exherbo,1
+ALL_TRAITS,fedora,1
+ALL_TRAITS,freebsd,1
+ALL_TRAITS,gentoo,1
+ALL_TRAITS,github_ci,1
+ALL_TRAITS,gitlab_ci,1
+ALL_TRAITS,guix,1
+ALL_TRAITS,heroku_ci,1
+ALL_TRAITS,hurd,1
+ALL_TRAITS,i386,1
+ALL_TRAITS,i586,1
+ALL_TRAITS,i686,1
+ALL_TRAITS,ibm_powerkvm,1
+ALL_TRAITS,kvmibm,1
+ALL_TRAITS,linuxmint,1
+ALL_TRAITS,loongarch64,1
+ALL_TRAITS,macos,1
+ALL_TRAITS,mageia,1
+ALL_TRAITS,mandriva,1
+ALL_TRAITS,midnightbsd,1
+ALL_TRAITS,mips,1
+ALL_TRAITS,mips64,1
+ALL_TRAITS,mips64el,1
+ALL_TRAITS,mipsel,1
+ALL_TRAITS,netbsd,1
+ALL_TRAITS,nobara,1
+ALL_TRAITS,openbsd,1
+ALL_TRAITS,opensuse,1
+ALL_TRAITS,oracle,1
+ALL_TRAITS,parallels,1
+ALL_TRAITS,pidora,1
+ALL_TRAITS,ppc,1
+ALL_TRAITS,ppc64,1
+ALL_TRAITS,ppc64le,1
+ALL_TRAITS,raspbian,1
+ALL_TRAITS,rhel,1
+ALL_TRAITS,riscv32,1
+ALL_TRAITS,riscv64,1
+ALL_TRAITS,rocky,1
+ALL_TRAITS,s390x,1
+ALL_TRAITS,scientific,1
+ALL_TRAITS,slackware,1
+ALL_TRAITS,sles,1
+ALL_TRAITS,solaris,1
+ALL_TRAITS,sparc,1
+ALL_TRAITS,sparc64,1
+ALL_TRAITS,sunos,1
+ALL_TRAITS,teamcity,1
+ALL_TRAITS,travis_ci,1
+ALL_TRAITS,tumbleweed,1
+ALL_TRAITS,tuxedo,1
+ALL_TRAITS,ubuntu,1
+ALL_TRAITS,ultramarine,1
+ALL_TRAITS,unknown_architecture,1
+ALL_TRAITS,unknown_ci,1
+ALL_TRAITS,unknown_linux,1
+ALL_TRAITS,wasm32,1
+ALL_TRAITS,wasm64,1
+ALL_TRAITS,windows,1
+ALL_TRAITS,wsl1,1
+ALL_TRAITS,wsl2,1
+ALL_TRAITS,x86_64,1
+ALL_TRAITS,xenserver,1
 UNIX,aix,1
 UNIX,altlinux,1
 UNIX,amzn,1
@@ -369,18 +406,43 @@ LINUX,ubuntu,1
 LINUX,ultramarine,1
 LINUX,unknown_linux,1
 LINUX,xenserver,1
-CI,azure_pipelines,1
-CI,bamboo,1
-CI,buildkite,1
-CI,circle_ci,1
-CI,cirrus_ci,1
-CI,codebuild,1
-CI,github_ci,1
-CI,gitlab_ci,1
-CI,heroku_ci,1
-CI,teamcity,1
-CI,travis_ci,1
-CI,unknown_ci,1
+ALL_ARCHITECTURES,aarch64,1
+ALL_ARCHITECTURES,arm,1
+ALL_ARCHITECTURES,armv6l,1
+ALL_ARCHITECTURES,armv7l,1
+ALL_ARCHITECTURES,armv8l,1
+ALL_ARCHITECTURES,i386,1
+ALL_ARCHITECTURES,i586,1
+ALL_ARCHITECTURES,i686,1
+ALL_ARCHITECTURES,loongarch64,1
+ALL_ARCHITECTURES,mips,1
+ALL_ARCHITECTURES,mips64,1
+ALL_ARCHITECTURES,mips64el,1
+ALL_ARCHITECTURES,mipsel,1
+ALL_ARCHITECTURES,ppc,1
+ALL_ARCHITECTURES,ppc64,1
+ALL_ARCHITECTURES,ppc64le,1
+ALL_ARCHITECTURES,riscv32,1
+ALL_ARCHITECTURES,riscv64,1
+ALL_ARCHITECTURES,s390x,1
+ALL_ARCHITECTURES,sparc,1
+ALL_ARCHITECTURES,sparc64,1
+ALL_ARCHITECTURES,unknown_architecture,1
+ALL_ARCHITECTURES,wasm32,1
+ALL_ARCHITECTURES,wasm64,1
+ALL_ARCHITECTURES,x86_64,1
+ALL_CI,azure_pipelines,1
+ALL_CI,bamboo,1
+ALL_CI,buildkite,1
+ALL_CI,circle_ci,1
+ALL_CI,cirrus_ci,1
+ALL_CI,codebuild,1
+ALL_CI,github_ci,1
+ALL_CI,gitlab_ci,1
+ALL_CI,heroku_ci,1
+ALL_CI,teamcity,1
+ALL_CI,travis_ci,1
+ALL_CI,unknown_ci,1
 BSD,freebsd,1
 BSD,macos,1
 BSD,midnightbsd,1
@@ -461,7 +523,16 @@ mindmap
             (🌊 ultramarine)
             (🐧 unknown_linux)
             (Ⓧ xenserver)
-        )♺ CI(
+        )🅱️+ BSD(
+            (😈 freebsd)
+            (🍎 macos)
+            (🌘 midnightbsd)
+            (🚩 netbsd)
+            (🐡 openbsd)
+            (☀️ sunos)
+        )🪟 ANY_WINDOWS(
+            (🪟 windows)
+        )♺ ALL_CI(
             (═ azure_pipelines)
             (⟲ bamboo)
             (🪁 buildkite)
@@ -474,15 +545,32 @@ mindmap
             (🏙️ teamcity)
             (👷 travis_ci)
             (♲ unknown_ci)
-        )🅱️+ BSD(
-            (😈 freebsd)
-            (🍎 macos)
-            (🌘 midnightbsd)
-            (🚩 netbsd)
-            (🐡 openbsd)
-            (☀️ sunos)
-        )🪟 ANY_WINDOWS(
-            (🪟 windows)
+        )🏛️ ALL_ARCHITECTURES(
+            (🔋 aarch64)
+            (📱 arm)
+            (📱 armv6l)
+            (📱 armv7l)
+            (📱 armv8l)
+            (🔲 i386)
+            (🔲 i586)
+            (🔲 i686)
+            (🐉 loongarch64)
+            (🔧 mips)
+            (🔧 mips64)
+            (🔧 mips64el)
+            (🔧 mipsel)
+            (⚡ ppc)
+            (⚡ ppc64)
+            (⚡ ppc64le)
+            (🌱 riscv32)
+            (🌱 riscv64)
+            (🏢 s390x)
+            (☀️ sparc)
+            (☀️ sparc64)
+            (❓ unknown_architecture)
+            (🌐 wasm32)
+            (🌐 wasm64)
+            (💻 x86_64)
 ```
 
 <!-- platform-hierarchy-end -->
