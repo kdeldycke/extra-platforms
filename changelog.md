@@ -5,7 +5,25 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
-- Add architecture detection.
+### Traits: Architecture, Platform & CI Detection
+
+- Add architecture detection: `aarch64`, `arm`, `armv6l`, `armv7l`, `armv8l`, `i386`, `i586`, `i686`, `loongarch64`, `mips`, `mips64`, `mips64el`, `mipsel`, `ppc`, `ppc64`, `ppc64le`, `riscv32`, `riscv64`, `s390x`, `sparc`, `sparc64`, `unknown_architecture`, `wasm32`, `wasm64`, `x86_64`.
+- Architectures, platforms and CI systems are now known as *traits*.
+- Add new `current_architecture()` and `current_ci()` methods to return the current architecture and CI system.
+- Add new `current_traits()` method to return all traits matching the current environment: architecture, platforms and CI systems. Deprecate `current_platforms()` in favor of `current_traits()`.
+- Rename `current_os()` to `current_platform()` and deprecate `current_os()`.
+
+### Group & Collections API
+
+- Rename `Group.platforms` to `Group.members` and `Group.platform_ids` to `Group.member_ids`.
+- Rename `Group._extract_platforms()` to `Group._extract_members()`.
+- `Group.members` is now an immutable `MappingProxyType[str, Trait]` for O(1) lookup by ID.
+- Add more in-place operators (`|=`, `&=`, `-=`, `^=`) and set-like behavior to `Group`.
+- Add new `ALL_ARCHITECTURES` and `ALL_TRAITS` groups.
+- Rename `CI` group to `ALL_CI`.
+- Add new `ALL_TRAIT_IDS` constant.
+- Remove `ALL_PLATFORM_IDS` constant.
+- `ALL_PLATFORMS_WITHOUT_CI` group is now an alias to `ALL_PLATFORMS`.
 
 ## [5.1.0 (2025-12-06)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.1...v5.1.0)
 
