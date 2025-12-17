@@ -229,13 +229,13 @@ def test_current_funcs():
     if is_github_ci():
         assert GITHUB_CI in current_traits_results
         if github_runner_os() == "ubuntu-slim":
-            # 1 platform + 1 architecture + 1 CI = 3 traits, plus possible WSL
+            # 1 platform + 1 architecture + 1 CI = 3 traits, plus possible WSL.
             assert len(current_traits_results) >= 3
         else:
-            # 1 platform + 1 architecture + 1 CI = 3 traits
+            # 1 platform + 1 architecture + 1 CI = 3 traits.
             assert len(current_traits_results) >= 2
     else:
-        # 1 platform + 1 architecture = 2 traits
+        # 1 platform + 1 architecture = 2 traits.
         assert len(current_traits_results) == 2
 
     current_platform_result = current_platform()

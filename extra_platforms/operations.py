@@ -165,8 +165,7 @@ def reduce(
             reduction = frozenset(ungrouped_traits.union(group_subset))
             reduction_size = len(reduction)
 
-            # Reset the results if we have a new solution that is better than the
-            # previous ones.
+            # Reset the results if we have a new solution that is better than the previous ones.
             if not results or reduction_size < min_items:
                 results = [reduction]
                 min_items = reduction_size

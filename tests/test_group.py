@@ -374,3 +374,237 @@ def test_copy():
     assert my_group_copy2.member_ids == my_group.member_ids
     assert my_group_copy2.members == my_group_copy1.members
     assert my_group_copy2.member_ids == my_group_copy1.member_ids
+
+
+def test_bool():
+    """Test __bool__() method for truth value testing."""
+    # Empty group should be falsy.
+    empty_group = Group("empty", "Empty Group", "❌", tuple())
+    assert not empty_group
+    assert bool(empty_group) is False
+
+    # Non-empty group should be truthy.
+    non_empty_group = Group("non_empty", "Non-Empty Group", "✅", (AIX, PIDORA))
+    assert non_empty_group
+    assert bool(non_empty_group) is True
+
+    # Group with one member should be truthy.
+    single_member = Group("single", "Single Member", "✅", (AIX,))
+    assert single_member
+    assert bool(single_member) is True
+
+
+def test_add():
+    """Test add() method for adding a single trait."""
+    my_group = Group("my_group", "My Group", "✅", (AIX,))
+
+    # Add a new trait.
+    new_group = my_group.add(PIDORA)
+    assert PIDORA in new_group
+    assert AIX in new_group
+    assert len(new_group) == 2
+    assert new_group.member_ids == frozenset({"aix", "pidora"})
+
+    # Original group should be unchanged.
+    assert len(my_group) == 1
+    assert PIDORA not in my_group
+
+    # Add a trait that already exists (should return unchanged copy).
+    same_group = new_group.add(AIX)
+    assert len(same_group) == 2
+    assert same_group.member_ids == new_group.member_ids
+
+    # Add by trait ID string.
+    with_rhel = my_group.add("rhel")
+    assert RHEL in with_rhel
+    assert "rhel" in with_rhel
+    assert len(with_rhel) == 2
+
+    # Add invalid trait ID should raise ValueError.
+    with pytest.raises(ValueError, match="Unrecognized group or trait IDs"):
+        my_group.add("invalid_trait_id")
+
+
+def test_remove():
+    """Test remove() method for removing a trait with error checking."""
+    my_group = Group("my_group", "My Group", "✅", (AIX, PIDORA, RHEL))
+
+    # Remove a trait by object.
+    new_group = my_group.remove(PIDORA)
+    assert PIDORA not in new_group
+    assert AIX in new_group
+    assert RHEL in new_group
+    assert len(new_group) == 2
+    assert new_group.member_ids == frozenset({"aix", "rhel"})
+
+    # Original group should be unchanged.
+    assert len(my_group) == 3
+    assert PIDORA in my_group
+
+    # Remove by trait ID string.
+    without_aix = my_group.remove("aix")
+    assert AIX not in without_aix
+    assert "aix" not in without_aix
+    assert len(without_aix) == 2
+
+    # Remove non-existent trait should raise KeyError.
+    with pytest.raises(KeyError, match="Trait 'invalid' is not in the group"):
+        my_group.remove("invalid")
+
+    with pytest.raises(KeyError, match="is not in the group"):
+        new_group.remove(PIDORA)
+
+
+def test_discard():
+    """Test discard() method for removing a trait without error."""
+    my_group = Group("my_group", "My Group", "✅", (AIX, PIDORA, RHEL))
+
+    # Discard a trait by object.
+    new_group = my_group.discard(PIDORA)
+    assert PIDORA not in new_group
+    assert AIX in new_group
+    assert RHEL in new_group
+    assert len(new_group) == 2
+
+    # Original group should be unchanged.
+    assert len(my_group) == 3
+    assert PIDORA in my_group
+
+    # Discard by trait ID string.
+    without_aix = my_group.discard("aix")
+    assert AIX not in without_aix
+    assert len(without_aix) == 2
+
+    # Discard non-existent trait should NOT raise error.
+    same_group = my_group.discard("invalid")
+    assert len(same_group) == 3
+    assert same_group.member_ids == my_group.member_ids
+
+    # Discard already removed trait should NOT raise error.
+    still_same = new_group.discard(PIDORA)
+    assert len(still_same) == 2
+
+
+def test_pop():
+    """Test pop() method for removing and returning a trait."""
+    my_group = Group("my_group", "My Group", "✅", (AIX, PIDORA, RHEL))
+
+    # Pop a specific trait by ID.
+    popped_trait, new_group = my_group.pop("pidora")
+    assert popped_trait == PIDORA
+    assert PIDORA not in new_group
+    assert AIX in new_group
+    assert RHEL in new_group
+    assert len(new_group) == 2
+
+    # Original group should be unchanged.
+    assert len(my_group) == 3
+    assert PIDORA in my_group
+
+    # Pop arbitrary trait (first in iteration order).
+    trait, smaller_group = new_group.pop()
+    assert trait in {AIX, RHEL}
+    assert trait not in smaller_group
+    assert len(smaller_group) == 1
+
+    # Pop from empty group should raise KeyError.
+    empty_group = Group("empty", "Empty", "❌", tuple())
+    with pytest.raises(KeyError, match="pop from an empty group"):
+        empty_group.pop()
+
+    # Pop non-existent trait ID should raise KeyError.
+    with pytest.raises(KeyError, match="Trait 'invalid' is not in the group"):
+        my_group.pop("invalid")
+
+
+def test_clear():
+    """Test clear() method for emptying a group."""
+    my_group = Group("my_group", "My Group", "✅", (AIX, PIDORA, RHEL))
+
+    # Clear the group.
+    empty_group = my_group.clear()
+    assert len(empty_group) == 0
+    assert not empty_group
+    assert empty_group.member_ids == frozenset()
+
+    # Metadata should be preserved.
+    assert empty_group.id == my_group.id
+    assert empty_group.name == my_group.name
+    assert empty_group.icon == my_group.icon
+
+    # Original group should be unchanged.
+    assert len(my_group) == 3
+
+    # Clear an already empty group.
+    still_empty = empty_group.clear()
+    assert len(still_empty) == 0
+    assert still_empty.id == empty_group.id
+
+
+def test_in_place_operators():
+    """Test in-place operators that return new instances."""
+    group_a = Group("group_a", "Group A", "🅰️", (AIX, PIDORA))
+    group_b = Group("group_b", "Group B", "🅱️", (RHEL, PIDORA))
+
+    # Test |= (union).
+    result = group_a | group_b
+    result_inplace = group_a.copy()
+    result_inplace |= group_b
+    assert result.member_ids == result_inplace.member_ids
+    assert result.member_ids == frozenset({"aix", "pidora", "rhel"})
+
+    # Test &= (intersection).
+    result = group_a & group_b
+    result_inplace = group_a.copy()
+    result_inplace &= group_b
+    assert result.member_ids == result_inplace.member_ids
+    assert result.member_ids == frozenset({"pidora"})
+
+    # Test -= (difference).
+    result = group_a - group_b
+    result_inplace = group_a.copy()
+    result_inplace -= group_b
+    assert result.member_ids == result_inplace.member_ids
+    assert result.member_ids == frozenset({"aix"})
+
+    # Test ^= (symmetric difference).
+    result = group_a ^ group_b
+    result_inplace = group_a.copy()
+    result_inplace ^= group_b
+    assert result.member_ids == result_inplace.member_ids
+    assert result.member_ids == frozenset({"aix", "rhel"})
+
+    # Verify original groups are unchanged.
+    assert group_a.member_ids == frozenset({"aix", "pidora"})
+    assert group_b.member_ids == frozenset({"rhel", "pidora"})
+
+
+def test_set_operations_with_new_methods():
+    """Test combining new methods with existing set operations."""
+    base_group = Group("base", "Base Group", "🔵", (AIX, PIDORA))
+
+    # Add, then union.
+    with_rhel = base_group.add(RHEL)
+    union_result = with_rhel.union(BSD_WITHOUT_MACOS)
+    assert RHEL in union_result
+    assert AIX in union_result
+    assert PIDORA in union_result
+    assert len(union_result) > 3
+
+    # Remove, then intersection.
+    without_aix = base_group.remove(AIX)
+    intersection_result = without_aix.intersection(ALL_PLATFORMS)
+    assert AIX not in intersection_result
+    assert PIDORA in intersection_result
+
+    # Clear, then add.
+    empty = base_group.clear()
+    with_one = empty.add(RHEL)
+    assert len(with_one) == 1
+    assert RHEL in with_one
+
+    # Pop, then discard.
+    popped_trait, remaining = base_group.pop("aix")
+    assert popped_trait == AIX
+    after_discard = remaining.discard("pidora")
+    assert len(after_discard) == 0

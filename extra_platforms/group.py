@@ -130,6 +130,10 @@ class Group:
         """Return the number of members in the group."""
         return len(self._members)
 
+    def __bool__(self) -> bool:
+        """Return `True` if the group has members, `False` otherwise."""
+        return len(self._members) > 0
+
     def __contains__(self, item: Trait | str) -> bool:
         """Test if ``Trait`` object or its ID is part of the group."""
         if isinstance(item, str):
@@ -229,6 +233,7 @@ class Group:
         )
 
     __or__ = union
+    __ior__ = union
 
     def intersection(self, *others: _TNestedReferences) -> Group:
         """Return a new ``Group`` with members common to the group and all others.
@@ -249,6 +254,7 @@ class Group:
         )
 
     __and__ = intersection
+    __iand__ = intersection
 
     def difference(self, *others: _TNestedReferences) -> Group:
         """Return a new ``Group`` with members in the group that are not in the others.
@@ -269,6 +275,7 @@ class Group:
         )
 
     __sub__ = difference
+    __isub__ = difference
 
     def symmetric_difference(self, other: _TNestedReferences) -> Group:
         """Return a new ``Group`` with members in either the group or other but not both.
@@ -289,6 +296,7 @@ class Group:
         )
 
     __xor__ = symmetric_difference
+    __ixor__ = symmetric_difference
 
     def copy(
         self,
@@ -303,3 +311,142 @@ class Group:
         """
         kwargs = {k: v for k, v in locals().items() if k != "self" and v is not None}
         return replace(self, **kwargs)
+
+    def add(self, member: Trait | str) -> Group:
+        """Return a new ``Group`` with the specified trait added.
+
+        If the trait is already in the group, returns a copy unchanged.
+
+        Args:
+            member: A ``Trait`` object or trait ID string to add.
+
+        Returns:
+            A new ``Group`` instance with the trait added.
+
+        Raises:
+            ValueError: If the trait ID is not recognized.
+        """
+        if isinstance(member, str):
+            # Prevent circular import.
+            from .operations import traits_from_ids
+
+            traits = traits_from_ids(member)
+            member = traits[0]
+
+        if member in self:
+            return self.copy()
+
+        return Group(
+            self.id,
+            self.name,
+            self.icon,
+            tuple(set(self._members.values()) | {member}),
+        )
+
+    def remove(self, member: Trait | str) -> Group:
+        """Return a new ``Group`` with the specified trait removed.
+
+        Raises ``KeyError`` if the trait is not in the group.
+
+        Args:
+            member: A ``Trait`` object or trait ID string to remove.
+
+        Returns:
+            A new ``Group`` instance with the trait removed.
+
+        Raises:
+            KeyError: If the trait is not in the group.
+        """
+        member_id = member.id if isinstance(member, Trait) else member
+
+        if member_id not in self._members:
+            raise KeyError(f"Trait '{member_id}' is not in the group")
+
+        new_members = {
+            tid: trait for tid, trait in self._members.items() if tid != member_id
+        }
+
+        return Group(
+            self.id,
+            self.name,
+            self.icon,
+            tuple(new_members.values()),
+        )
+
+    def discard(self, member: Trait | str) -> Group:
+        """Return a new ``Group`` with the specified trait removed if present.
+
+        Unlike ``remove()``, this does not raise an error if the trait is not found.
+
+        Args:
+            member: A ``Trait`` object or trait ID string to remove.
+
+        Returns:
+            A new ``Group`` instance with the trait removed, or a copy if not present.
+        """
+        member_id = member.id if isinstance(member, Trait) else member
+
+        if member_id not in self._members:
+            return self.copy()
+
+        new_members = {
+            tid: trait for tid, trait in self._members.items() if tid != member_id
+        }
+
+        return Group(
+            self.id,
+            self.name,
+            self.icon,
+            tuple(new_members.values()),
+        )
+
+    def pop(self, member_id: str | None = None) -> tuple[Trait, Group]:
+        """Remove and return a trait from the group.
+
+        Args:
+            member_id: Optional trait ID to remove. If not provided, removes an arbitrary
+                trait (specifically, the first one in iteration order).
+
+        Returns:
+            A tuple of (removed_trait, new_group).
+
+        Raises:
+            KeyError: If ``member_id`` is provided but not found in the group.
+            KeyError: If the group is empty.
+        """
+        if not self._members:
+            raise KeyError("pop from an empty group")
+
+        if member_id is None:
+            # Pop arbitrary (first) member.
+            member_id = next(iter(self._members))
+
+        if member_id not in self._members:
+            raise KeyError(f"Trait '{member_id}' is not in the group")
+
+        popped_trait = self._members[member_id]
+        new_members = {
+            tid: trait for tid, trait in self._members.items() if tid != member_id
+        }
+
+        new_group = Group(
+            self.id,
+            self.name,
+            self.icon,
+            tuple(new_members.values()),
+        )
+
+        return popped_trait, new_group
+
+    def clear(self) -> Group:
+        """Return a new empty ``Group`` with the same metadata.
+
+        Returns:
+            A new ``Group`` instance with no members but same id, name, and icon.
+        """
+        return Group(
+            self.id,
+            self.name,
+            self.icon,
+            tuple(),
+        )
