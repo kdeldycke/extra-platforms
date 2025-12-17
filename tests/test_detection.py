@@ -33,10 +33,13 @@ from extra_platforms import (
     WSL2,
     X86_64,
     current_architecture,
+    current_ci,
     current_os,
+    current_platform,
     current_traits,
     is_aarch64,
     is_aix,
+    is_all_ci,
     is_altlinux,
     is_amzn,
     is_android,
@@ -227,6 +230,15 @@ def test_github_runner_detection():
     List of available GitHub runner images:
     https://github.com/actions/runner-images#available-images
     """
+    assert is_all_ci()
+    assert is_github_ci()
+    assert current_ci() is GITHUB_CI
+    assert GITHUB_CI in current_traits()
+    assert current_architecture() in current_traits()
+    assert current_platform() in current_traits()
+    assert current_os() in current_traits()
+    assert current_ci() in current_traits()
+
     assert github_runner_os() is not None, (
         "The EXTRA_PLATFORMS_TEST_MATRIX environment variable is not set. "
         "This test must be run inside a GitHub Actions job using a matrix strategy."
@@ -242,17 +254,11 @@ def test_github_runner_detection():
     }:
         assert is_x86_64()
         assert current_architecture() is X86_64
-
-    if github_runner_os() in {
-        "ubuntu-24.04-arm",
-        "ubuntu-22.04-arm",
-        "macos-26",
-        "macos-15",
-        "macos-14",
-        "windows-11-arm",
-    }:
+        assert X86_64 in current_traits()
+    else:
         assert is_aarch64()
         assert current_architecture() is AARCH64
+        assert AARCH64 in current_traits()
 
     if github_runner_os() in {
         "ubuntu-latest",
@@ -263,13 +269,14 @@ def test_github_runner_detection():
         "ubuntu-22.04-arm",
     }:
         assert is_ubuntu()
+        assert current_platform() is UBUNTU
         assert current_os() is UBUNTU
         if github_runner_os() == "ubuntu-slim":
             assert is_wsl2()
-            assert current_traits() == (GITHUB_CI, UBUNTU, WSL2)
+            assert current_traits() == {GITHUB_CI, UBUNTU, WSL2, current_architecture()}
         else:
             assert not is_wsl2()
-            assert current_traits() == (GITHUB_CI, UBUNTU)
+            assert current_traits() == {GITHUB_CI, UBUNTU, current_architecture()}
 
     if github_runner_os() in {
         "macos-latest",
@@ -285,8 +292,9 @@ def test_github_runner_detection():
         "macos-14-xlarge",
     }:
         assert is_macos()
+        assert current_platform() is MACOS
         assert current_os() is MACOS
-        assert current_traits() == (GITHUB_CI, MACOS)
+        assert current_traits() == {GITHUB_CI, MACOS, current_architecture()}
 
     if github_runner_os() in {
         "windows-latest",
@@ -295,8 +303,9 @@ def test_github_runner_detection():
         "windows-2022",
     }:
         assert is_windows()
+        assert current_platform() is WINDOWS
         assert current_os() is WINDOWS
-        assert current_traits() == (GITHUB_CI, WINDOWS)
+        assert current_traits() == {GITHUB_CI, WINDOWS, current_architecture()}
 
 
 def test_mutual_exclusion():
