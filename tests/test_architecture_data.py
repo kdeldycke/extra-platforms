@@ -61,7 +61,8 @@ def test_architecture_definitions(architecture):
     assert architecture.id[-1] in ascii_lowercase + digits
     assert set(architecture.id).issubset(ascii_lowercase + digits + "_")
     assert architecture.id.islower()
-    # Architectures are not allowed to start with all_ or any_, which is reserved for groups. Use unknown_ prefix instead.
+    # Architectures are not allowed to start with all_ or any_, which is
+    # reserved for groups. Use unknown_ prefix instead.
     assert not architecture.id.startswith(("all_", "any_"))
     assert architecture.id in ALL_TRAIT_IDS
     assert architecture.id not in ALL_GROUP_IDS
