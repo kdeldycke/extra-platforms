@@ -51,9 +51,7 @@ def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
     return tuple(dict.fromkeys(items))
 
 
-def traits_from_ids(
-    *trait_and_group_ids: str,
-) -> tuple[Trait, ...]:
+def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
     """Returns a deduplicated tuple of traits matching the provided IDs.
 
     IDs are case-insensitive, and can refer to any traits or groups. Matching groups
@@ -108,7 +106,8 @@ def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
 
 
 def reduce(
-    items: _TNestedReferences, target_pool: Iterable[Group | Trait] | None = None
+    items: _TNestedReferences,
+    target_pool: Iterable[Group | Trait] | None = None,
 ) -> frozenset[Group | Trait]:
     """Reduce a collection of traits to a minimal set.
 
