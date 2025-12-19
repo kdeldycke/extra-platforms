@@ -9,6 +9,38 @@ extra\_platforms package
 Submodules
 ----------
 
+extra\_platforms.architecture module
+------------------------------------
+
+.. automodule:: extra_platforms.architecture
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+extra\_platforms.architecture\_data module
+------------------------------------------
+
+.. automodule:: extra_platforms.architecture_data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+extra\_platforms.ci module
+--------------------------
+
+.. automodule:: extra_platforms.ci
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+extra\_platforms.ci\_data module
+--------------------------------
+
+.. automodule:: extra_platforms.ci_data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 extra\_platforms.detection module
 ---------------------------------
 
@@ -61,6 +93,14 @@ extra\_platforms.pytest module
 ------------------------------
 
 .. automodule:: extra_platforms.pytest
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+extra\_platforms.trait module
+-----------------------------
+
+.. automodule:: extra_platforms.trait
    :members:
    :show-inheritance:
    :undoc-members:
