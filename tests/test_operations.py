@@ -102,21 +102,20 @@ from extra_platforms import (
 
 
 def test_unique_ids():
-    """Platform and group IDs must be unique."""
-    all_platform_ids = [p.id for p in ALL_PLATFORMS]
+    """Traits and group IDs must be unique."""
+    all_trait_ids = [p.id for p in ALL_TRAITS]
 
-    # Platforms are expected to be sorted by ID.
-    assert sorted(all_platform_ids) == all_platform_ids
-    assert len(set(all_platform_ids)) == len(all_platform_ids)
-
-    assert len(all_platform_ids) == len(ALL_PLATFORMS)
-    assert len(all_platform_ids) == len(ALL_PLATFORMS.member_ids)
+    # Traits are expected to be sorted by ID.
+    assert sorted(all_trait_ids) == all_trait_ids
+    assert len(set(all_trait_ids)) == len(all_trait_ids)
+    assert len(all_trait_ids) == len(ALL_TRAITS)
+    assert len(all_trait_ids) == len(ALL_TRAITS.member_ids)
 
     all_group_ids = {g.id for g in ALL_GROUPS}
     assert len(all_group_ids) == len(ALL_GROUPS)
 
-    # Check there is no overlap between platform and group IDs.
-    assert all_group_ids.isdisjoint(all_platform_ids)
+    # Check there is no overlap between trait and group IDs.
+    assert all_group_ids.isdisjoint(all_trait_ids)
 
     assert len(ALL_TRAIT_IDS) == len(ALL_TRAITS)
     assert ALL_TRAIT_IDS.issubset(ALL_IDS)

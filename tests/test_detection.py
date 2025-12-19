@@ -34,7 +34,6 @@ from extra_platforms import (
     X86_64,
     current_architecture,
     current_ci,
-    current_os,
     current_platform,
     current_traits,
     is_aarch64,
@@ -236,7 +235,7 @@ def test_github_runner_detection():
     assert GITHUB_CI in current_traits()
     assert current_architecture() in current_traits()
     assert current_platform() in current_traits()
-    assert current_os() in current_traits()
+    assert current_platform() in current_traits()
     assert current_ci() in current_traits()
 
     assert github_runner_os() is not None, (
@@ -270,7 +269,7 @@ def test_github_runner_detection():
     }:
         assert is_ubuntu()
         assert current_platform() is UBUNTU
-        assert current_os() is UBUNTU
+        assert current_platform() is UBUNTU
         if github_runner_os() == "ubuntu-slim":
             assert is_wsl2()
             assert current_traits() == {GITHUB_CI, UBUNTU, WSL2, current_architecture()}
@@ -293,7 +292,7 @@ def test_github_runner_detection():
     }:
         assert is_macos()
         assert current_platform() is MACOS
-        assert current_os() is MACOS
+        assert current_platform() is MACOS
         assert current_traits() == {GITHUB_CI, MACOS, current_architecture()}
 
     if github_runner_os() in {
@@ -304,7 +303,7 @@ def test_github_runner_detection():
     }:
         assert is_windows()
         assert current_platform() is WINDOWS
-        assert current_os() is WINDOWS
+        assert current_platform() is WINDOWS
         assert current_traits() == {GITHUB_CI, WINDOWS, current_architecture()}
 
 

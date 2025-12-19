@@ -87,14 +87,10 @@ def test_group_definitions():
         assert group.id.islower()
         # Only the group referencing all platforms and its derivate are allowed to
         # start with "all_" prefix.
-        assert group.id in (
-            "all_architectures",
-            "all_ci",
-            "all_members",
-            "all_platforms",
-            "all_platforms_without_ci",
-            "all_traits",
-        ) or not group.id.startswith("all_")
+        if group in (ALL_ARCHITECTURES, ALL_PLATFORMS, ALL_CI, ALL_TRAITS):
+            assert group.id.startswith("all_")
+        else:
+            assert not group.id.startswith("all_")
         assert group.id not in ALL_TRAIT_IDS
         assert group.id in ALL_GROUP_IDS
         assert group.id in ALL_IDS
