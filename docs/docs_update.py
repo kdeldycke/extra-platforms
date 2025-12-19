@@ -37,6 +37,7 @@ from textwrap import dedent, indent
 
 from extra_platforms import (
     ALL_GROUPS,
+    ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
     EXTRA_GROUPS,
     NON_OVERLAPPING_GROUPS,
@@ -74,7 +75,7 @@ def replace_content(
 
 
 def generate_platform_sankey() -> str:
-    """Produce a Sankey diagram to map all platforms to their platforms.
+    """Produce a Sankey diagram to map all platforms to their groups.
 
     Excludes the ``ALL_PLATFORMS`` group which unnecessarily adds noise to the already
     dense diagram.
@@ -84,7 +85,7 @@ def generate_platform_sankey() -> str:
     # Display biggest groups first. Add ID in the sorting key to get stable sorting on
     # tie.
     for group in sorted(
-        ALL_GROUPS.difference({ALL_PLATFORMS}),
+        ALL_PLATFORM_GROUPS.difference({ALL_PLATFORMS}),
         key=lambda g: (len(g), g.id),
         reverse=True,
     ):
@@ -109,9 +110,11 @@ def generate_platform_sankey() -> str:
 
 
 def generate_platform_hierarchy() -> str:
-    """Produce a mindmap hierarchy to show the non-overlapping groups."""
+    """Produce a mindmap hierarchy to show the non-overlapping groups of platforms."""
     group_map = ""
-    for group in sorted(NON_OVERLAPPING_GROUPS, key=attrgetter("id"), reverse=True):
+    for group in sorted(
+        NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS, key=attrgetter("id"), reverse=True
+    ):
         group_map += f"){group.icon} {group.id.upper()}(\n"
         for platform_id, platform in group.members.items():
             group_map += f"    ({platform.icon} {platform_id})\n"
