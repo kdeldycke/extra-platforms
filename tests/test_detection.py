@@ -29,6 +29,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     GITHUB_CI,
     MACOS,
     UBUNTU,
+    UNKNOWN_ARCHITECTURE,
     WINDOWS,
     WSL2,
     X86_64,
@@ -255,6 +256,10 @@ def test_github_runner_detection():
         assert current_architecture() is X86_64
         assert X86_64 in current_traits()
         assert is_x86_64()
+    elif github_runner_os() == "windows-11-arm":
+        assert current_architecture() is UNKNOWN_ARCHITECTURE
+        assert UNKNOWN_ARCHITECTURE in current_traits()
+        assert is_unknown_architecture()
     else:
         assert current_architecture() is AARCH64
         assert AARCH64 in current_traits()
