@@ -9,6 +9,14 @@ tests package
 Submodules
 ----------
 
+tests.test\_architecture\_data module
+-------------------------------------
+
+.. automodule:: tests.test_architecture_data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 tests.test\_detection module
 ----------------------------
 
