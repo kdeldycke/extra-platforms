@@ -23,7 +23,7 @@ import json
 import os
 from pathlib import Path
 
-from extra_platforms import (
+from extra_platforms import (  # type: ignore[attr-defined]
     AARCH64,
     ALL_TRAITS,
     GITHUB_CI,
