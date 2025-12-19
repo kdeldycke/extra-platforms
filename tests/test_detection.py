@@ -229,9 +229,10 @@ def test_github_runner_detection():
     List of available GitHub runner images:
     https://github.com/actions/runner-images#available-images
     """
+    assert current_ci() is GITHUB_CI
     assert is_all_ci()
     assert is_github_ci()
-    assert current_ci() is GITHUB_CI
+
     assert GITHUB_CI in current_traits()
     assert current_architecture() in current_traits()
     assert current_platform() in current_traits()
@@ -251,13 +252,13 @@ def test_github_runner_detection():
         "windows-2025",
         "windows-2022",
     }:
-        assert is_x86_64()
         assert current_architecture() is X86_64
         assert X86_64 in current_traits()
+        assert is_x86_64()
     else:
-        assert is_aarch64()
         assert current_architecture() is AARCH64
         assert AARCH64 in current_traits()
+        assert is_aarch64()
 
     if github_runner_os() in {
         "ubuntu-latest",
@@ -267,15 +268,14 @@ def test_github_runner_detection():
         "ubuntu-22.04",
         "ubuntu-22.04-arm",
     }:
+        assert current_platform() is UBUNTU
         assert is_ubuntu()
-        assert current_platform() is UBUNTU
-        assert current_platform() is UBUNTU
         if github_runner_os() == "ubuntu-slim":
-            assert is_wsl2()
             assert current_traits() == {GITHUB_CI, UBUNTU, WSL2, current_architecture()}
+            assert is_wsl2()
         else:
-            assert not is_wsl2()
             assert current_traits() == {GITHUB_CI, UBUNTU, current_architecture()}
+            assert not is_wsl2()
 
     if github_runner_os() in {
         "macos-latest",
@@ -290,10 +290,9 @@ def test_github_runner_detection():
         "macos-14-large",
         "macos-14-xlarge",
     }:
-        assert is_macos()
-        assert current_platform() is MACOS
         assert current_platform() is MACOS
         assert current_traits() == {GITHUB_CI, MACOS, current_architecture()}
+        assert is_macos()
 
     if github_runner_os() in {
         "windows-latest",
@@ -301,10 +300,9 @@ def test_github_runner_detection():
         "windows-2025",
         "windows-2022",
     }:
-        assert is_windows()
-        assert current_platform() is WINDOWS
         assert current_platform() is WINDOWS
         assert current_traits() == {GITHUB_CI, WINDOWS, current_architecture()}
+        assert is_windows()
 
 
 def test_mutual_exclusion():
