@@ -172,7 +172,6 @@ from .group_data import (  # noqa: E402
     ALL_GROUPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
-    ALL_PLATFORMS_WITHOUT_CI,
     ALL_TRAITS,
     ANY_WINDOWS,
     BSD,
@@ -469,44 +468,26 @@ def invalidate_caches():
         globals()[func_id].cache_clear()
 
 
-# Deprecated aliases.
-
-
-def current_os() -> Platform:
-    """Deprecated alias for :func:`current_platform`."""
-    import warnings
-
-    warnings.warn(
-        "current_os() is deprecated, use current_platform() instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return current_platform()
-
-
-def current_platforms() -> tuple[Platform, ...]:
-    """Deprecated alias for :func:`current_traits`."""
-    import warnings
-
-    warnings.warn(
-        "current_platforms() is deprecated, use current_traits() instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-    return tuple(t for t in current_traits() if isinstance(t, Platform))
-
+from ._deprecated import (  # noqa: E402
+    ALL_PLATFORM_IDS,
+    ALL_PLATFORMS_WITHOUT_CI,
+    current_os,
+    current_platforms,
+    platforms_from_ids,
+)
 
 __all__ = (  # noqa: F405
     "AARCH64",
     "AIX",
     "ALL_ARCHITECTURE_GROUPS",
     "ALL_ARCHITECTURES",
-    "ALL_CI_GROUPS",
     "ALL_CI",
+    "ALL_CI_GROUPS",
     "ALL_GROUP_IDS",
     "ALL_GROUPS",
     "ALL_IDS",
     "ALL_PLATFORM_GROUPS",
+    "ALL_PLATFORM_IDS",
     "ALL_PLATFORMS",
     "ALL_PLATFORMS_WITHOUT_CI",
     "ALL_TRAIT_IDS",
@@ -683,6 +664,7 @@ __all__ = (  # noqa: F405
     "PARALLELS",
     "PIDORA",
     "Platform",
+    "platforms_from_ids",
     "PPC",
     "PPC64",
     "PPC64LE",

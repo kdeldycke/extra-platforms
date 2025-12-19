@@ -200,8 +200,6 @@ ALL_PLATFORMS: Group = Group(
         XENSERVER,
     ),
 )
-ALL_PLATFORMS_WITHOUT_CI = ALL_PLATFORMS
-"""All recognized platforms."""
 
 
 ALL_CI = Group(

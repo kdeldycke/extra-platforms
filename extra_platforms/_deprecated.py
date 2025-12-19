@@ -1,0 +1,168 @@
+# Copyright Kevin Deldycke <kevin@deldycke.com> and contributors.
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+"""Deprecated utilities shared by package-level aliases."""
+
+from __future__ import annotations
+
+import warnings
+from typing import TYPE_CHECKING
+
+from .group_data import ALL_PLATFORMS
+from .operations import ALL_TRAIT_IDS, traits_from_ids
+
+if TYPE_CHECKING:
+    from .platform import Platform
+
+
+def _warn_deprecated(name: str, replacement: str) -> None:
+    """Issue a deprecation warning for a name pointing to a replacement.
+
+    Args:
+        name: Deprecated name.
+        replacement: Suggested replacement.
+    """
+    warnings.warn(
+        f"{name} is deprecated, use {replacement} instead.",
+        DeprecationWarning,
+        stacklevel=3,
+    )
+
+
+class _DeprecatedProxy:
+    """Generic deprecated proxy that delegates to a target and warns on use.
+
+    This proxy attempts to be transparent: attribute access, iteration,
+    membership, length, item access and call are delegated to the underlying
+    target after emitting a deprecation warning.
+    """
+
+    def __init__(self, target, name: str, replacement: str):
+        self._target = target
+        self._name = name
+        self._replacement = replacement
+
+    def _warn(self) -> None:
+        _warn_deprecated(self._name, self._replacement)
+
+    def __getattr__(self, attr):
+        self._warn()
+        return getattr(self._target, attr)
+
+    def __iter__(self):
+        self._warn()
+        return iter(self._target)
+
+    def __len__(self):
+        self._warn()
+        return len(self._target)
+
+    def __contains__(self, item):
+        self._warn()
+        return item in self._target
+
+    def __call__(self, *args, **kwargs):
+        self._warn()
+        return self._target(*args, **kwargs)
+
+    def __getitem__(self, item):
+        self._warn()
+        return self._target[item]
+
+    def __repr__(self):
+        return repr(self._target)
+
+
+def _make_deprecated_proxy(target, name: str, replacement: str):
+    """Convenience factory returning a deprecated proxy for `target`.
+
+    Keeps call-sites concise and avoids repeating the proxy class.
+    """
+    return _DeprecatedProxy(target, name, replacement)
+
+
+def _make_deprecated_callable(name: str, replacement: str, func):
+    """Return a function wrapping `func` that emits a deprecation warning.
+
+    The returned callable preserves the wrapped function metadata.
+    """
+    from functools import wraps
+
+    @wraps(func)
+    def _wrapper(*args, **kwargs):
+        _warn_deprecated(name, replacement)
+        return func(*args, **kwargs)
+
+    return _wrapper
+
+
+# Backward-compatible deprecated aliases.
+ALL_PLATFORM_IDS = _make_deprecated_proxy(
+    ALL_TRAIT_IDS, "ALL_PLATFORM_IDS", "ALL_TRAIT_IDS"
+)
+"""
+Deprecated alias for `ALL_TRAIT_IDS`.
+
+.. deprecated:: 6.0.0
+   Use `ALL_TRAIT_IDS` instead.
+"""
+
+
+ALL_PLATFORMS_WITHOUT_CI = _make_deprecated_proxy(
+    ALL_PLATFORMS, "ALL_PLATFORMS_WITHOUT_CI", "ALL_PLATFORMS"
+)
+"""
+All recognized platforms.
+
+.. deprecated:: 6.0.0
+   Use ALL_PLATFORMS instead.
+"""
+
+
+def _current_os_impl() -> Platform:
+    # Import lazily to avoid circular import when this module is imported
+    # from the package top-level `__init__.py`.
+    from . import current_platform
+
+    return current_platform()
+
+
+def _current_platforms_impl() -> tuple[Platform, ...]:
+    # Import lazily to avoid circular import when this module is imported
+    # from the package top-level `__init__.py`.
+    from . import current_traits
+    from .platform import Platform
+
+    return tuple(t for t in current_traits() if isinstance(t, Platform))
+
+
+current_os = _make_deprecated_callable(
+    "current_os()", "current_platform()", _current_os_impl
+)
+
+current_platforms = _make_deprecated_callable(
+    "current_platforms()", "current_traits()", _current_platforms_impl
+)
+
+
+platforms_from_ids = _make_deprecated_callable(
+    "platforms_from_ids", "traits_from_ids", traits_from_ids
+)
+"""
+Deprecated alias for `traits_from_ids`.
+
+.. deprecated:: 6.0.0
+   Use `traits_from_ids` instead.
+"""

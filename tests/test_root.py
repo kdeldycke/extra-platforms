@@ -46,6 +46,7 @@ from extra_platforms import (
     is_ubuntu,
     is_windows,
 )
+from extra_platforms import _deprecated as deprecated_module
 from extra_platforms import architecture as architecture_module
 from extra_platforms import architecture_data as architecture_data_module
 from extra_platforms import ci as ci_module
@@ -179,6 +180,7 @@ def test_module_root_declarations():
     platform_data_members = fetch_module_implements(platform_data_module)
     operations_members = fetch_module_implements(operations_module)
     trait_members = fetch_module_implements(trait_module)
+    deprecated_members = fetch_module_implements(deprecated_module)
     root_members = fetch_module_implements(extra_platforms)
     # Update root members with auto-generated ``is_<group.id>`` variables.
     root_members.update((f"is_{g.id}" for g in ALL_GROUPS))
@@ -204,6 +206,7 @@ def test_module_root_declarations():
     assert platform_data_members <= set(extra_platforms_members)
     assert operations_members <= set(extra_platforms_members)
     assert trait_members <= set(extra_platforms_members)
+    assert deprecated_members <= set(extra_platforms_members)
 
     expected_members = sorted(
         detection_members.union(group_members)
@@ -216,6 +219,7 @@ def test_module_root_declarations():
         .union(platform_data_members)
         .union(operations_members)
         .union(trait_members)
+        .union(deprecated_members)
         .union(root_members),
         key=lambda m: (m.lower(), m),
     )
