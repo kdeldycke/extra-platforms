@@ -463,8 +463,37 @@ OTHER_UNIX = Group(
 """
 
 
+ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset((ALL_ARCHITECTURES,))
+"""All groups whose members are architectures."""
+
+
+ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
+    (
+        ALL_PLATFORMS,
+        ANY_WINDOWS,
+        UNIX,
+        UNIX_WITHOUT_MACOS,
+        BSD,
+        BSD_WITHOUT_MACOS,
+        LINUX,
+        LINUX_LAYERS,
+        LINUX_LIKE,
+        SYSTEM_V,
+        UNIX_LAYERS,
+        OTHER_UNIX,
+    ),
+)
+"""All groups whose members are platforms."""
+
+
+ALL_CI_GROUPS: frozenset[Group] = frozenset((ALL_CI,))
+"""All groups whose members are CI systems."""
+
+
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
+        ALL_CI,
+        ALL_ARCHITECTURES,
         ANY_WINDOWS,
         BSD,
         LINUX,
@@ -472,8 +501,6 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         SYSTEM_V,
         UNIX_LAYERS,
         OTHER_UNIX,
-        ALL_CI,
-        ALL_ARCHITECTURES,
     ),
 )
 """Non-overlapping groups."""
@@ -481,12 +508,12 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
-        ALL_TRAITS,
         ALL_PLATFORMS,
-        LINUX_LIKE,
+        ALL_TRAITS,
         UNIX,
         UNIX_WITHOUT_MACOS,
         BSD_WITHOUT_MACOS,
+        LINUX_LIKE,
     ),
 )
 """Overlapping groups, defined for convenience."""

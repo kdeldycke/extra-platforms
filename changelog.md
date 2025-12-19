@@ -20,10 +20,10 @@
 - `Group.members` is now an immutable `MappingProxyType[str, Trait]` for O(1) lookup by ID.
 - Add more in-place operators (`|=`, `&=`, `-=`, `^=`) and set-like behavior to `Group`.
 - Add new `ALL_ARCHITECTURES` and `ALL_TRAITS` groups.
-- Rename `CI` group to `ALL_CI`.
-- Add new `ALL_TRAIT_IDS` constant.
-- Remove `ALL_PLATFORM_IDS` constant.
-- `ALL_PLATFORMS_WITHOUT_CI` group is now an alias to `ALL_PLATFORMS`.
+- Rename `CI` group to `ALL_CI`. `CI` now refers to the `CI` trait.
+- Deprecate `ALL_PLATFORMS_WITHOUT_CI` group is favor of `ALL_PLATFORMS`.
+- Add new `ALL_ARCHITECTURE_GROUPS`, `ALL_PLATFORM_GROUPS` and `ALL_CI_GROUPS` collections of groups.
+- Rename `ALL_PLATFORM_IDS` constant to `ALL_TRAIT_IDS`.
 
 ## [5.1.0 (2025-12-06)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.1...v5.1.0)
 

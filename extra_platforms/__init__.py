@@ -165,9 +165,12 @@ from .detection import (  # noqa: E402
 )
 from .group import Group  # noqa: E402
 from .group_data import (  # noqa: E402
+    ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
     ALL_CI,
+    ALL_CI_GROUPS,
     ALL_GROUPS,
+    ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
     ALL_PLATFORMS_WITHOUT_CI,
     ALL_TRAITS,
@@ -496,11 +499,14 @@ def current_platforms() -> tuple[Platform, ...]:
 __all__ = (  # noqa: F405
     "AARCH64",
     "AIX",
+    "ALL_ARCHITECTURE_GROUPS",
     "ALL_ARCHITECTURES",
+    "ALL_CI_GROUPS",
     "ALL_CI",
     "ALL_GROUP_IDS",
     "ALL_GROUPS",
     "ALL_IDS",
+    "ALL_PLATFORM_GROUPS",
     "ALL_PLATFORMS",
     "ALL_PLATFORMS_WITHOUT_CI",
     "ALL_TRAIT_IDS",
