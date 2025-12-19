@@ -10,13 +10,13 @@
 - Add new `current_traits()` method to return all traits matching the current environment: architecture, platforms and CI systems. Deprecate `current_platforms()` in favor of `current_traits()`.
 - Add new `current_architecture()` and `current_ci()` methods to return the current architecture and CI system.
 - Rename:
-    - `current_os()` to `current_platform()`.
-    - `platforms_from_ids()` to `traits_from_ids()`.
-    - `CI` group to `ALL_CI`. `CI` now refers to the `CI` trait.
-    - `ALL_PLATFORM_IDS` constant to `ALL_TRAIT_IDS`.
-    - `Group.platforms` to `Group.members`.
-    - `Group.platform_ids` to `Group.member_ids`.
-    - `Group._extract_platforms()` to `Group._extract_members()`
+  - `current_os()` to `current_platform()`.
+  - `platforms_from_ids()` to `traits_from_ids()`.
+  - `CI` group to `ALL_CI`. `CI` now refers to the `CI` trait.
+  - `ALL_PLATFORM_IDS` constant to `ALL_TRAIT_IDS`.
+  - `Group.platforms` to `Group.members`.
+  - `Group.platform_ids` to `Group.member_ids`.
+  - `Group._extract_platforms()` to `Group._extract_members()`
 - `Group.members` is now an immutable `MappingProxyType[str, Trait]` for O(1) lookup by ID.
 - Add more in-place operators (`|=`, `&=`, `-=`, `^=`) and set-like behavior to `Group`.
 - Add new `ALL_ARCHITECTURES` and `ALL_TRAITS` groups.
