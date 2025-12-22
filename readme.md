@@ -148,14 +148,14 @@ Reduce a disparate collection of groups and platforms into a minimal descriptive
 
 All recognized platforms and how they're grouped:
 
-<!-- platform-hierarchy-start -->
+<!-- platform-mindmap-start -->
 
 ```mermaid
 ---
 config: {"mindmap": {"padding": 5}}
 ---
 mindmap
-    ((Extra Platforms))
+    ((ALL_PLATFORMS))
         )≛ UNIX_LAYERS(
             (Ͼ cygwin)
         )Ⅴ SYSTEM_V(
@@ -213,7 +213,10 @@ mindmap
             (🪟 windows)
 ```
 
-<!-- platform-hierarchy-end -->
+<!-- platform-mindmap-end -->
+
+> [!NOTE]
+> More groups exist beyond those shown in the diagram, and more utilities are available for each platform. See the [platform documentation](https://kdeldycke.github.io/extra-platforms/platforms.html#groups-of-platforms) for details.
 
 ## Used in
 

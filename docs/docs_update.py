@@ -130,23 +130,21 @@ def generate_groups_sankey(groups: frozenset[Group]) -> str:
     return output
 
 
-def generate_platform_hierarchy() -> str:
-    """Produce a mindmap hierarchy to show the non-overlapping groups of platforms."""
+def generate_traits_mindmap(name: str, groups: frozenset[Group]) -> str:
+    """Produce a mindmap hierarchy to show the non-overlapping groups of traits."""
     group_map = ""
-    for group in sorted(
-        NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS, key=attrgetter("id"), reverse=True
-    ):
+    for group in sorted(groups, key=attrgetter("id"), reverse=True):
         group_map += f"){group.icon} {group.id.upper()}(\n"
         for platform_id, platform in group.members.items():
             group_map += f"    ({platform.icon} {platform_id})\n"
 
-    output = dedent("""\
+    output = dedent(f"""\
         ```mermaid
         ---
-        config: {"mindmap": {"padding": 5}}
+        config: {{"mindmap": {{"padding": 5}}}}
         ---
         mindmap
-            ((Extra Platforms))
+            (({name}))
         """)
     output += indent(group_map, " " * 8)
     output += "```"
@@ -248,9 +246,11 @@ def update_docs() -> None:
     # Update diagram showing the hierarchy of non-overlapping groups.
     replace_content(
         README_PATH,
-        "<!-- platform-hierarchy-start -->\n\n",
-        "\n\n<!-- platform-hierarchy-end -->",
-        generate_platform_hierarchy(),
+        "<!-- platform-mindmap-start -->\n\n",
+        "\n\n<!-- platform-mindmap-end -->",
+        generate_traits_mindmap(
+            "ALL_PLATFORMS", NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS
+        ),
     )
 
     # Update grouping charts of all groups, including non-overlapping and extra groups.
