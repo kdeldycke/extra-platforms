@@ -243,7 +243,15 @@ def update_docs() -> None:
         generate_groups_sankey(ALL_CI_GROUPS),
     )
 
-    # Update diagram showing the hierarchy of non-overlapping groups.
+    # Update mindmap diagrams showing the hierarchy of non-overlapping groups.
+    replace_content(
+        README_PATH,
+        "<!-- architecture-mindmap-start -->\n\n",
+        "\n\n<!-- architecture-mindmap-end -->",
+        generate_traits_mindmap(
+            "ALL_ARCHITECTURES", NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS
+        ),
+    )
     replace_content(
         README_PATH,
         "<!-- platform-mindmap-start -->\n\n",
@@ -251,6 +259,12 @@ def update_docs() -> None:
         generate_traits_mindmap(
             "ALL_PLATFORMS", NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS
         ),
+    )
+    replace_content(
+        README_PATH,
+        "<!-- ci-mindmap-start -->\n\n",
+        "\n\n<!-- ci-mindmap-end -->",
+        generate_traits_mindmap("ALL_CI", NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS),
     )
 
     # Update grouping charts of all groups, including non-overlapping and extra groups.

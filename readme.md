@@ -144,6 +144,48 @@ Reduce a disparate collection of groups and platforms into a minimal descriptive
 }
 ```
 
+## Architectures
+
+All recognized architectures:
+
+<!-- architecture-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((ALL_ARCHITECTURES))
+        )🏛️ ALL_ARCHITECTURES(
+            (🔋 aarch64)
+            (📱 arm)
+            (📱 armv6l)
+            (📱 armv7l)
+            (📱 armv8l)
+            (🔲 i386)
+            (🔲 i586)
+            (🔲 i686)
+            (🐉 loongarch64)
+            (🔧 mips)
+            (🔧 mips64)
+            (🔧 mips64el)
+            (🔧 mipsel)
+            (⚡ ppc)
+            (⚡ ppc64)
+            (⚡ ppc64le)
+            (🌱 riscv32)
+            (🌱 riscv64)
+            (🏢 s390x)
+            (☀️ sparc)
+            (☀️ sparc64)
+            (❓ unknown_architecture)
+            (🌐 wasm32)
+            (🌐 wasm64)
+            (💻 x86_64)
+```
+
+<!-- architecture-mindmap-end -->
+
 ## Platforms
 
 All recognized platforms and how they're grouped:
@@ -217,6 +259,35 @@ mindmap
 
 > [!NOTE]
 > More groups exist beyond those shown in the diagram, and more utilities are available for each platform. See the [platform documentation](https://kdeldycke.github.io/extra-platforms/platforms.html#groups-of-platforms) for details.
+
+## CI systems
+
+All recognized CI systems:
+
+<!-- ci-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((ALL_CI))
+        )♺ ALL_CI(
+            (═ azure_pipelines)
+            (⟲ bamboo)
+            (🪁 buildkite)
+            (⪾ circle_ci)
+            (≋ cirrus_ci)
+            (ᚙ codebuild)
+            (🐙 github_ci)
+            (🦊 gitlab_ci)
+            (⥁ heroku_ci)
+            (🏙️ teamcity)
+            (👷 travis_ci)
+            (♲ unknown_ci)
+```
+
+<!-- ci-mindmap-end -->
 
 ## Used in
 
