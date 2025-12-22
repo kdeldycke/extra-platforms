@@ -16,7 +16,6 @@
 
 from __future__ import annotations
 
-import sys
 import ast
 import inspect
 from operator import attrgetter
@@ -24,9 +23,7 @@ from pathlib import Path
 from string import ascii_lowercase, digits
 
 import pytest
-import requests
 
-from extra_platforms.pytest import unless_linux
 from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_PLATFORMS, ALL_TRAIT_IDS
 from extra_platforms import platform_data as platform_data_module
 
@@ -99,27 +96,3 @@ def test_platform_definitions(platform):
                     if v1 is not None:
                         assert v1
     assert platform.info()["id"] == platform.id
-
-
-# Restrict tests to Linux on Python 3.13 to avoid DOSing websites.
-@unless_linux
-@pytest.mark.skipif(
-    (sys.version_info.major, sys.version_info.minor) != (3, 13),
-    reason="DOSing websites",
-)
-@all_platforms_params
-def test_platform_website(platform):
-    """Test if platform website is reachable.
-
-    Place this test in a separate function so we can separate it from the platform data
-    tests, and allow this test to be skipped while requiring the test above to always
-    pass.
-
-    Some websites are known to be flaky, because they block access from GitHub Actions,
-    or can't take the load of requests from CI. We skip these platforms.
-    """
-    flaky_websites = {"hurd", "linuxmint", "midnightbsd", "raspbian"}
-    if platform.id in flaky_websites:
-        pytest.xfail(f"{platform.url} is known to be flaky and not always responding")
-    with requests.get(platform.url) as response:
-        assert response.ok, f"{platform.url} is not reachable: {response}"

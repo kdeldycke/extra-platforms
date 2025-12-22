@@ -11,7 +11,9 @@ maxdepth: 2
 hidden:
 ---
 install
+architectures
 platforms
+ci
 groups
 detection
 pytest

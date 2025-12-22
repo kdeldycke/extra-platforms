@@ -36,6 +36,10 @@ from pathlib import Path
 from textwrap import dedent, indent
 
 from extra_platforms import (
+    ALL_ARCHITECTURE_GROUPS,
+    ALL_ARCHITECTURES,
+    ALL_CI,
+    ALL_CI_GROUPS,
     ALL_GROUPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
@@ -44,7 +48,10 @@ from extra_platforms import (
     Group,
 )
 
-PROJECT_ROOT = Path(__file__).parent.parent
+DOCS_ROOT = Path(__file__).parent
+"""The root path of Sphinx documentation."""
+
+PROJECT_ROOT = DOCS_ROOT.parent
 """The root path of the project."""
 
 README_PATH = PROJECT_ROOT / "readme.md"
@@ -74,7 +81,25 @@ def replace_content(
     )
 
 
-def generate_platform_sankey() -> str:
+def generate_trait_table(traits, column_name: str) -> str:
+    """Produce a Markdown table for a collection of traits.
+
+    The table contains the icon, a linked name and the quoted ID for each trait.
+    """
+    lines: list[str] = []
+    lines.append(f"| Icon | Name | {column_name} |")
+    lines.append("|:----:|:------|:-------------|")
+
+    for trait in sorted(traits, key=attrgetter("id")):
+        icon = html.escape(trait.icon)
+        name = html.escape(trait.name)
+        url = trait.url
+        lines.append(f"| {icon} | [{name}]({url}) | `{trait.id}` |")
+
+    return "\n".join(lines)
+
+
+def generate_groups_sankey(groups: frozenset[Group]) -> str:
     """Produce a Sankey diagram to map all platforms to their groups.
 
     Excludes the ``ALL_PLATFORMS`` group which unnecessarily adds noise to the already
@@ -84,18 +109,14 @@ def generate_platform_sankey() -> str:
 
     # Display biggest groups first. Add ID in the sorting key to get stable sorting on
     # tie.
-    for group in sorted(
-        ALL_PLATFORM_GROUPS.difference({ALL_PLATFORMS}),
-        key=lambda g: (len(g), g.id),
-        reverse=True,
-    ):
-        for platform_id in group.members:
+    for group in sorted(groups, key=lambda g: (len(g), g.id), reverse=True):
+        for member_id in group.members:
             # XXX Sankey diagrams do not support emoji icons yet.
             # table.append(
             #     f'"{html.escape(group.icon)} {group.id}",'
-            #     f'"{html.escape(platform.icon)} {platform.id}",1'
+            #     f'"{html.escape(member.icon)} {member_id}",1'
             # )
-            table.append(f"{group.id.upper()},{platform_id},1")
+            table.append(f"{group.id.upper()},{member_id},1")
 
     output = dedent("""\
         ```mermaid
@@ -184,6 +205,56 @@ def generate_platforms_graph(
 
 def update_docs() -> None:
     """Update documentation with dynamic content."""
+    # Update trait tables.
+    replace_content(
+        DOCS_ROOT / "architectures.md",
+        "<!-- architecture-table-start -->\n\n",
+        "\n\n<!-- architecture-table-end -->",
+        generate_trait_table(ALL_ARCHITECTURES, "Architecture ID"),
+    )
+    replace_content(
+        DOCS_ROOT / "platforms.md",
+        "<!-- platform-table-start -->\n\n",
+        "\n\n<!-- platform-table-end -->",
+        generate_trait_table(ALL_PLATFORMS, "Platform ID"),
+    )
+    replace_content(
+        DOCS_ROOT / "ci.md",
+        "<!-- ci-table-start -->\n\n",
+        "\n\n<!-- ci-table-end -->",
+        generate_trait_table(ALL_CI, "CI ID"),
+    )
+
+    # Update Sankey diagrams.
+    replace_content(
+        DOCS_ROOT / "architectures.md",
+        "<!-- architecture-sankey-start -->\n\n",
+        "\n\n<!-- architecture-sankey-end -->",
+        generate_groups_sankey(ALL_ARCHITECTURE_GROUPS),
+    )
+    replace_content(
+        DOCS_ROOT / "platforms.md",
+        "<!-- platform-sankey-start -->\n\n",
+        "\n\n<!-- platform-sankey-end -->",
+        generate_groups_sankey(ALL_PLATFORM_GROUPS.difference({ALL_PLATFORMS})),
+    )
+    replace_content(
+        DOCS_ROOT / "ci.md",
+        "<!-- ci-sankey-start -->\n\n",
+        "\n\n<!-- ci-sankey-end -->",
+        generate_groups_sankey(ALL_CI_GROUPS),
+    )
+
+    # Update diagram showing the hierarchy of non-overlapping groups.
+    replace_content(
+        README_PATH,
+        "<!-- platform-hierarchy-start -->\n\n",
+        "\n\n<!-- platform-hierarchy-end -->",
+        generate_platform_hierarchy(),
+    )
+
+    # Update grouping charts of all groups, including non-overlapping and extra groups.
+    platform_doc = PROJECT_ROOT / "docs" / "groups.md"
     # TODO: Replace this hard-coded dict by allowing Group dataclass to group
     # other groups.
     all_groups = (
@@ -199,25 +270,6 @@ def update_docs() -> None:
         },
     )
     assert frozenset(g for groups in all_groups for g in groups["groups"]) == ALL_GROUPS
-
-    # Update the Sankey diagram mapping groups to platforms.
-    replace_content(
-        README_PATH,
-        "<!-- platform-sankey-start -->\n\n",
-        "\n\n<!-- platform-sankey-end -->",
-        generate_platform_sankey(),
-    )
-
-    # Update diagram showing the hierarchy of non-overlapping groups.
-    replace_content(
-        README_PATH,
-        "<!-- platform-hierarchy-start -->\n\n",
-        "\n\n<!-- platform-hierarchy-end -->",
-        generate_platform_hierarchy(),
-    )
-
-    # Update grouping charts of all groups, including non-overlapping and extra groups.
-    platform_doc = PROJECT_ROOT / "docs" / "groups.md"
     for top_groups in all_groups:
         replace_content(
             platform_doc,
