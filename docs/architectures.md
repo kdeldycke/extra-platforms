@@ -179,7 +179,7 @@ Each family can also be viewed separately:
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -192,7 +192,7 @@ ANY_ARM,armv8l,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -204,7 +204,7 @@ ANY_MIPS,mipsel,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -214,7 +214,7 @@ ANY_SPARC,sparc64,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -223,7 +223,7 @@ IBM_MAINFRAME,s390x,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -232,7 +232,7 @@ LOONGARCH,loongarch64,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -243,7 +243,7 @@ POWERPC,ppc64le,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -253,7 +253,7 @@ RISCV,riscv64,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -263,7 +263,7 @@ WEBASSEMBLY,wasm64,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 

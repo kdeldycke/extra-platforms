@@ -248,7 +248,7 @@ For convenience, other groups are defined, but without guarantee of non-overlapp
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -304,7 +304,7 @@ ALL_PLATFORMS,xenserver,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -317,7 +317,7 @@ BSD_WITHOUT_MACOS,sunos,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -362,7 +362,7 @@ LINUX_LIKE,xenserver,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
@@ -417,7 +417,7 @@ UNIX,xenserver,1
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 

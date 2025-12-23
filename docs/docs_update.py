@@ -109,37 +109,6 @@ def generate_trait_table(traits, column_name: str) -> str:
     return "\n".join(lines)
 
 
-def generate_groups_sankey(groups: frozenset[Group]) -> str:
-    """Produce a Sankey diagram to map all platforms to their groups.
-
-    Excludes the ``ALL_PLATFORMS`` group which unnecessarily adds noise to the already
-    dense diagram.
-    """
-    table = []
-
-    # Display biggest groups first. Add ID in the sorting key to get stable sorting on
-    # tie.
-    for group in sorted(groups, key=lambda g: (len(g), g.id), reverse=True):
-        for member_id in group.members:
-            # XXX Sankey diagrams do not support emoji icons yet.
-            # table.append(
-            #     f'"{html.escape(group.icon)} {group.id}",'
-            #     f'"{html.escape(member.icon)} {member_id}",1'
-            # )
-            table.append(f"{group.id.upper()},{member_id},1")
-
-    output = dedent("""\
-        ```mermaid
-        ---
-        config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
-        ---
-        sankey-beta\n
-        """)
-    output += "\n".join(table)
-    output += "\n```"
-    return output
-
-
 def _analyze_group_hierarchy(
     groups: Iterable[Group],
 ) -> tuple[Group, list[Group], list]:
@@ -194,7 +163,7 @@ def _analyze_group_hierarchy(
     return superset, intermediate_groups, missing_traits
 
 
-def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
+def generate_sankey(groups: Iterable[Group]) -> str:
     """Produce a Sankey diagram showing trait hierarchy.
 
     The diagram shows connections from a top-level (superset) group to intermediate
@@ -227,6 +196,11 @@ def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
         intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
     ):
         for member_id in group.members:
+            # XXX Sankey diagrams do not support emoji icons yet.
+            # table.append(
+            #     f'"{html.escape(group.icon)} {group.id}",'
+            #     f'"{html.escape(member.icon)} {member_id}",1'
+            # )
             table.append(f"{group.id.upper()},{member_id},1")
 
     # Third layer: superset -> missing traits (weight = 1 each), placed at the end.
@@ -362,7 +336,7 @@ def update_docs() -> None:
         DOCS_ROOT / "architectures.md",
         "<!-- architecture-multi-level-sankey-start -->\n\n",
         "\n\n<!-- architecture-multi-level-sankey-end -->",
-        generate_multi_level_sankey(
+        generate_sankey(
             list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
         ),
     )
@@ -370,7 +344,7 @@ def update_docs() -> None:
         DOCS_ROOT / "platforms.md",
         "<!-- platform-multi-level-sankey-start -->\n\n",
         "\n\n<!-- platform-multi-level-sankey-end -->",
-        generate_multi_level_sankey(
+        generate_sankey(
             list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
         ),
     )
@@ -382,7 +356,7 @@ def update_docs() -> None:
         "\n\n<!-- architecture-sankey-end -->",
         "\n\n".join(
             (
-                generate_groups_sankey({group})
+                generate_sankey({group})
                 for group in sorted(
                     NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS,
                     key=attrgetter("id"),
@@ -396,7 +370,7 @@ def update_docs() -> None:
         "\n\n<!-- extra-platform-groups-sankey-end -->",
         "\n\n".join(
             (
-                generate_groups_sankey({group})
+                generate_sankey({group})
                 for group in sorted(
                     EXTRA_GROUPS & ALL_PLATFORM_GROUPS, key=attrgetter("id")
                 )
@@ -407,7 +381,7 @@ def update_docs() -> None:
         DOCS_ROOT / "ci.md",
         "<!-- ci-sankey-start -->\n\n",
         "\n\n<!-- ci-sankey-end -->",
-        generate_groups_sankey(ALL_CI_GROUPS),
+        generate_sankey(ALL_CI_GROUPS),
     )
 
     # Update mindmap diagrams showing the hierarchy of non-overlapping groups.

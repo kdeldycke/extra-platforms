@@ -66,7 +66,7 @@ There is only one group defined for CI systems: `ALL_CI`, which includes all rec
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
