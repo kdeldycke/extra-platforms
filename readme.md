@@ -240,6 +240,7 @@ mindmap
             (📱 armv6l)
             (📱 armv7l)
             (📱 armv8l)
+        (❓ unknown_architecture)
 ```
 
 <!-- architecture-mindmap-end -->

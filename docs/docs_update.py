@@ -44,17 +44,8 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
-    ARM,
     EXTRA_GROUPS,
-    IBM_MAINFRAME,
-    LOONGARCH,
-    MIPS,
     NON_OVERLAPPING_GROUPS,
-    POWERPC,
-    RISCV,
-    SPARC,
-    WEBASSEMBLY,
-    X86,
     Group,
 )
 
@@ -110,7 +101,9 @@ def generate_trait_table(traits, column_name: str) -> str:
         icon = html.escape(trait.icon)
         name = html.escape(trait.name)
         url = trait.url
-        detection_func = f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})"
+        detection_func = (
+            f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})"
+        )
         lines.append(f"| {icon} | [{name}]({url}) | `{trait.id}` | {detection_func} |")
 
     return "\n".join(lines)
@@ -168,7 +161,8 @@ def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
 
     # Find the superset group (the one that contains all others as subsets).
     supersets = [
-        g for g in groups_list
+        g
+        for g in groups_list
         if all(g >= other for other in groups_list if other.id != g.id)
     ]
 
@@ -199,12 +193,16 @@ def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
     table = []
 
     # First layer: superset -> intermediate groups (weight = number of members in group).
-    for group in sorted(intermediate_groups, key=lambda g: (len(g), g.id), reverse=True):
+    for group in sorted(
+        intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
+    ):
         member_count = len(group.members)
         table.append(f"{superset.id.upper()},{group.id.upper()},{member_count}")
 
     # Second layer: intermediate groups -> their members (weight = 1 each).
-    for group in sorted(intermediate_groups, key=lambda g: (len(g), g.id), reverse=True):
+    for group in sorted(
+        intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
+    ):
         for member_id in group.members:
             table.append(f"{group.id.upper()},{member_id},1")
 
@@ -225,12 +223,32 @@ def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
 
 
 def generate_traits_mindmap(top_group: Group, groups: frozenset[Group]) -> str:
-    """Produce a mindmap hierarchy to show the non-overlapping groups of traits."""
+    """Produce a mindmap hierarchy to show the non-overlapping groups of traits.
+
+    Includes missing traits (present in the top group but not in any of the groups)
+    as direct children of the top group.
+    """
+    # Compute union of all groups to find missing traits.
+    union_of_groups = set()
+    for group in groups:
+        union_of_groups.update(group.member_ids)
+
+    # Find traits in the top group that aren't covered by any group.
+    missing_trait_ids = top_group.member_ids - union_of_groups
+    missing_traits = sorted(
+        [top_group[tid] for tid in missing_trait_ids],
+        key=lambda t: t.id,
+    )
+
     group_map = ""
     for group in sorted(groups, key=attrgetter("id"), reverse=True):
         group_map += f"){group.icon} {group.id.upper()}(\n"
         for platform_id, platform in group.members.items():
             group_map += f"    ({platform.icon} {platform_id})\n"
+
+    # Add missing traits as direct children of the top group.
+    for trait in missing_traits:
+        group_map += f"({html.escape(trait.icon)} {trait.id})\n"
 
     name = f"{html.escape(top_group.icon)} {top_group.id}"
     output = dedent(f"""\
