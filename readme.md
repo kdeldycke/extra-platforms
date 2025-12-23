@@ -155,7 +155,7 @@ All recognized architectures:
 config: {"mindmap": {"padding": 5}}
 ---
 mindmap
-    ((ALL_ARCHITECTURES))
+    ((🏛️ all_architectures))
         )🏛️ ALL_ARCHITECTURES(
             (🔋 aarch64)
             (📱 arm)
@@ -197,7 +197,7 @@ All recognized platforms and how they're grouped:
 config: {"mindmap": {"padding": 5}}
 ---
 mindmap
-    ((ALL_PLATFORMS))
+    ((⚙️ all_platforms))
         )≛ UNIX_LAYERS(
             (Ͼ cygwin)
         )Ⅴ SYSTEM_V(
@@ -271,7 +271,7 @@ All recognized CI systems:
 config: {"mindmap": {"padding": 5}}
 ---
 mindmap
-    ((ALL_CI))
+    ((♺ all_ci))
         )♺ ALL_CI(
             (═ azure_pipelines)
             (⟲ bamboo)

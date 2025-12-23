@@ -130,7 +130,42 @@ def generate_groups_sankey(groups: frozenset[Group]) -> str:
     return output
 
 
-def generate_traits_mindmap(name: str, groups: frozenset[Group]) -> str:
+def generate_multi_level_sankey(top_group: Group, groups: frozenset[Group]) -> str:
+    """Produce a 3-layer Sankey diagram showing trait hierarchy.
+
+    The diagram shows connections from a top-level group to intermediate groups
+    to their individual members. The weights of the first layer reflect the number
+    of members in each intermediate group.
+
+    Args:
+        top_group: The top-level group (e.g., ALL_PLATFORMS).
+        groups: The intermediate groups to display (e.g., NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS).
+    """
+    table = []
+
+    # First layer: top group -> intermediate groups (weight = number of members in group)
+    for group in sorted(groups, key=lambda g: (len(g), g.id), reverse=True):
+        member_count = len(group.members)
+        table.append(f"{top_group.id.upper()},{group.id.upper()},{member_count}")
+
+    # Second layer: intermediate groups -> their members (weight = 1 each)
+    for group in sorted(groups, key=lambda g: (len(g), g.id), reverse=True):
+        for member_id in group.members:
+            table.append(f"{group.id.upper()},{member_id},1")
+
+    output = dedent("""\
+        ```mermaid
+        ---
+        config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
+        ---
+        sankey-beta\n
+        """)
+    output += "\n".join(table)
+    output += "\n```"
+    return output
+
+
+def generate_traits_mindmap(top_group: Group, groups: frozenset[Group]) -> str:
     """Produce a mindmap hierarchy to show the non-overlapping groups of traits."""
     group_map = ""
     for group in sorted(groups, key=attrgetter("id"), reverse=True):
@@ -138,6 +173,7 @@ def generate_traits_mindmap(name: str, groups: frozenset[Group]) -> str:
         for platform_id, platform in group.members.items():
             group_map += f"    ({platform.icon} {platform_id})\n"
 
+    name = f"{html.escape(top_group.icon)} {top_group.id}"
     output = dedent(f"""\
         ```mermaid
         ---
@@ -223,6 +259,16 @@ def update_docs() -> None:
         generate_trait_table(ALL_CI, "CI ID"),
     )
 
+    # Update multi-level Sankey diagrams.
+    replace_content(
+        DOCS_ROOT / "platforms.md",
+        "<!-- platform-multi-level-sankey-start -->\n\n",
+        "\n\n<!-- platform-multi-level-sankey-end -->",
+        generate_multi_level_sankey(
+            ALL_PLATFORMS, NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS
+        ),
+    )
+
     # Update Sankey diagrams.
     replace_content(
         DOCS_ROOT / "architectures.md",
@@ -232,9 +278,14 @@ def update_docs() -> None:
     )
     replace_content(
         DOCS_ROOT / "platforms.md",
-        "<!-- platform-sankey-start -->\n\n",
-        "\n\n<!-- platform-sankey-end -->",
-        generate_groups_sankey(ALL_PLATFORM_GROUPS.difference({ALL_PLATFORMS})),
+        "<!-- extra-platform-groups-sankey-start -->\n\n",
+        "\n\n<!-- extra-platform-groups-sankey-end -->",
+        "\n\n".join(
+            (
+                generate_groups_sankey({group})
+                for group in EXTRA_GROUPS & ALL_PLATFORM_GROUPS
+            ),
+        ),
     )
     replace_content(
         DOCS_ROOT / "ci.md",
@@ -249,7 +300,7 @@ def update_docs() -> None:
         "<!-- architecture-mindmap-start -->\n\n",
         "\n\n<!-- architecture-mindmap-end -->",
         generate_traits_mindmap(
-            "ALL_ARCHITECTURES", NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS
+            ALL_ARCHITECTURES, NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS
         ),
     )
     replace_content(
@@ -257,14 +308,14 @@ def update_docs() -> None:
         "<!-- platform-mindmap-start -->\n\n",
         "\n\n<!-- platform-mindmap-end -->",
         generate_traits_mindmap(
-            "ALL_PLATFORMS", NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS
+            ALL_PLATFORMS, NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS
         ),
     )
     replace_content(
         README_PATH,
         "<!-- ci-mindmap-start -->\n\n",
         "\n\n<!-- ci-mindmap-end -->",
-        generate_traits_mindmap("ALL_CI", NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS),
+        generate_traits_mindmap(ALL_CI, NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS),
     )
 
     # Update grouping charts of all groups, including non-overlapping and extra groups.

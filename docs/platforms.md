@@ -64,11 +64,144 @@ To add a new Linux distribution, you can get inspiration from these pull request
 
 ## Groups of platforms
 
-All recognized platforms are grouped in overlapping families, to reduce complexity when targeting multiple platforms at once.
+All recognized platforms are grouped in families.
 
-Here is their relationship visualized as a Sankey diagram (excluding the all-encompassing `ALL_PLATFORMS` group):
+### Non-overlapping groups
 
-<!-- platform-sankey-start -->
+All platforms are distributed in groups that are guaranteed to be non-overlapping.
+
+Here is the list of non-overlapping groups that encompass all recognized platforms, visualized as a Sankey diagram:
+
+<!-- platform-multi-level-sankey-start -->
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
+---
+sankey-beta
+
+ALL_PLATFORMS,LINUX,35
+ALL_PLATFORMS,BSD,6
+ALL_PLATFORMS,SYSTEM_V,2
+ALL_PLATFORMS,LINUX_LAYERS,2
+ALL_PLATFORMS,UNIX_LAYERS,1
+ALL_PLATFORMS,OTHER_UNIX,1
+ALL_PLATFORMS,ANY_WINDOWS,1
+LINUX,altlinux,1
+LINUX,amzn,1
+LINUX,android,1
+LINUX,arch,1
+LINUX,buildroot,1
+LINUX,cachyos,1
+LINUX,centos,1
+LINUX,cloudlinux,1
+LINUX,debian,1
+LINUX,exherbo,1
+LINUX,fedora,1
+LINUX,gentoo,1
+LINUX,guix,1
+LINUX,ibm_powerkvm,1
+LINUX,kvmibm,1
+LINUX,linuxmint,1
+LINUX,mageia,1
+LINUX,mandriva,1
+LINUX,nobara,1
+LINUX,opensuse,1
+LINUX,oracle,1
+LINUX,parallels,1
+LINUX,pidora,1
+LINUX,raspbian,1
+LINUX,rhel,1
+LINUX,rocky,1
+LINUX,scientific,1
+LINUX,slackware,1
+LINUX,sles,1
+LINUX,tumbleweed,1
+LINUX,tuxedo,1
+LINUX,ubuntu,1
+LINUX,ultramarine,1
+LINUX,unknown_linux,1
+LINUX,xenserver,1
+BSD,freebsd,1
+BSD,macos,1
+BSD,midnightbsd,1
+BSD,netbsd,1
+BSD,openbsd,1
+BSD,sunos,1
+SYSTEM_V,aix,1
+SYSTEM_V,solaris,1
+LINUX_LAYERS,wsl1,1
+LINUX_LAYERS,wsl2,1
+UNIX_LAYERS,cygwin,1
+OTHER_UNIX,hurd,1
+ANY_WINDOWS,windows,1
+```
+
+<!-- platform-multi-level-sankey-end -->
+
+### Overlapping groups
+
+For convenience, other groups are defined, but without guarantee of non-overlapping platforms:
+
+<!-- extra-platform-groups-sankey-start -->
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+LINUX_LIKE,altlinux,1
+LINUX_LIKE,amzn,1
+LINUX_LIKE,android,1
+LINUX_LIKE,arch,1
+LINUX_LIKE,buildroot,1
+LINUX_LIKE,cachyos,1
+LINUX_LIKE,centos,1
+LINUX_LIKE,cloudlinux,1
+LINUX_LIKE,debian,1
+LINUX_LIKE,exherbo,1
+LINUX_LIKE,fedora,1
+LINUX_LIKE,gentoo,1
+LINUX_LIKE,guix,1
+LINUX_LIKE,ibm_powerkvm,1
+LINUX_LIKE,kvmibm,1
+LINUX_LIKE,linuxmint,1
+LINUX_LIKE,mageia,1
+LINUX_LIKE,mandriva,1
+LINUX_LIKE,nobara,1
+LINUX_LIKE,opensuse,1
+LINUX_LIKE,oracle,1
+LINUX_LIKE,parallels,1
+LINUX_LIKE,pidora,1
+LINUX_LIKE,raspbian,1
+LINUX_LIKE,rhel,1
+LINUX_LIKE,rocky,1
+LINUX_LIKE,scientific,1
+LINUX_LIKE,slackware,1
+LINUX_LIKE,sles,1
+LINUX_LIKE,tumbleweed,1
+LINUX_LIKE,tuxedo,1
+LINUX_LIKE,ubuntu,1
+LINUX_LIKE,ultramarine,1
+LINUX_LIKE,unknown_linux,1
+LINUX_LIKE,wsl1,1
+LINUX_LIKE,wsl2,1
+LINUX_LIKE,xenserver,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+BSD_WITHOUT_MACOS,freebsd,1
+BSD_WITHOUT_MACOS,midnightbsd,1
+BSD_WITHOUT_MACOS,netbsd,1
+BSD_WITHOUT_MACOS,openbsd,1
+BSD_WITHOUT_MACOS,sunos,1
+```
 
 ```mermaid
 ---
@@ -123,6 +256,14 @@ UNIX,unknown_linux,1
 UNIX,wsl1,1
 UNIX,wsl2,1
 UNIX,xenserver,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
 UNIX_WITHOUT_MACOS,aix,1
 UNIX_WITHOUT_MACOS,altlinux,1
 UNIX_WITHOUT_MACOS,amzn,1
@@ -169,99 +310,65 @@ UNIX_WITHOUT_MACOS,unknown_linux,1
 UNIX_WITHOUT_MACOS,wsl1,1
 UNIX_WITHOUT_MACOS,wsl2,1
 UNIX_WITHOUT_MACOS,xenserver,1
-LINUX_LIKE,altlinux,1
-LINUX_LIKE,amzn,1
-LINUX_LIKE,android,1
-LINUX_LIKE,arch,1
-LINUX_LIKE,buildroot,1
-LINUX_LIKE,cachyos,1
-LINUX_LIKE,centos,1
-LINUX_LIKE,cloudlinux,1
-LINUX_LIKE,debian,1
-LINUX_LIKE,exherbo,1
-LINUX_LIKE,fedora,1
-LINUX_LIKE,gentoo,1
-LINUX_LIKE,guix,1
-LINUX_LIKE,ibm_powerkvm,1
-LINUX_LIKE,kvmibm,1
-LINUX_LIKE,linuxmint,1
-LINUX_LIKE,mageia,1
-LINUX_LIKE,mandriva,1
-LINUX_LIKE,nobara,1
-LINUX_LIKE,opensuse,1
-LINUX_LIKE,oracle,1
-LINUX_LIKE,parallels,1
-LINUX_LIKE,pidora,1
-LINUX_LIKE,raspbian,1
-LINUX_LIKE,rhel,1
-LINUX_LIKE,rocky,1
-LINUX_LIKE,scientific,1
-LINUX_LIKE,slackware,1
-LINUX_LIKE,sles,1
-LINUX_LIKE,tumbleweed,1
-LINUX_LIKE,tuxedo,1
-LINUX_LIKE,ubuntu,1
-LINUX_LIKE,ultramarine,1
-LINUX_LIKE,unknown_linux,1
-LINUX_LIKE,wsl1,1
-LINUX_LIKE,wsl2,1
-LINUX_LIKE,xenserver,1
-LINUX,altlinux,1
-LINUX,amzn,1
-LINUX,android,1
-LINUX,arch,1
-LINUX,buildroot,1
-LINUX,cachyos,1
-LINUX,centos,1
-LINUX,cloudlinux,1
-LINUX,debian,1
-LINUX,exherbo,1
-LINUX,fedora,1
-LINUX,gentoo,1
-LINUX,guix,1
-LINUX,ibm_powerkvm,1
-LINUX,kvmibm,1
-LINUX,linuxmint,1
-LINUX,mageia,1
-LINUX,mandriva,1
-LINUX,nobara,1
-LINUX,opensuse,1
-LINUX,oracle,1
-LINUX,parallels,1
-LINUX,pidora,1
-LINUX,raspbian,1
-LINUX,rhel,1
-LINUX,rocky,1
-LINUX,scientific,1
-LINUX,slackware,1
-LINUX,sles,1
-LINUX,tumbleweed,1
-LINUX,tuxedo,1
-LINUX,ubuntu,1
-LINUX,ultramarine,1
-LINUX,unknown_linux,1
-LINUX,xenserver,1
-BSD,freebsd,1
-BSD,macos,1
-BSD,midnightbsd,1
-BSD,netbsd,1
-BSD,openbsd,1
-BSD,sunos,1
-BSD_WITHOUT_MACOS,freebsd,1
-BSD_WITHOUT_MACOS,midnightbsd,1
-BSD_WITHOUT_MACOS,netbsd,1
-BSD_WITHOUT_MACOS,openbsd,1
-BSD_WITHOUT_MACOS,sunos,1
-SYSTEM_V,aix,1
-SYSTEM_V,solaris,1
-LINUX_LAYERS,wsl1,1
-LINUX_LAYERS,wsl2,1
-UNIX_LAYERS,cygwin,1
-OTHER_UNIX,hurd,1
-ANY_WINDOWS,windows,1
 ```
 
-<!-- platform-sankey-end -->
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+ALL_PLATFORMS,aix,1
+ALL_PLATFORMS,altlinux,1
+ALL_PLATFORMS,amzn,1
+ALL_PLATFORMS,android,1
+ALL_PLATFORMS,arch,1
+ALL_PLATFORMS,buildroot,1
+ALL_PLATFORMS,cachyos,1
+ALL_PLATFORMS,centos,1
+ALL_PLATFORMS,cloudlinux,1
+ALL_PLATFORMS,cygwin,1
+ALL_PLATFORMS,debian,1
+ALL_PLATFORMS,exherbo,1
+ALL_PLATFORMS,fedora,1
+ALL_PLATFORMS,freebsd,1
+ALL_PLATFORMS,gentoo,1
+ALL_PLATFORMS,guix,1
+ALL_PLATFORMS,hurd,1
+ALL_PLATFORMS,ibm_powerkvm,1
+ALL_PLATFORMS,kvmibm,1
+ALL_PLATFORMS,linuxmint,1
+ALL_PLATFORMS,macos,1
+ALL_PLATFORMS,mageia,1
+ALL_PLATFORMS,mandriva,1
+ALL_PLATFORMS,midnightbsd,1
+ALL_PLATFORMS,netbsd,1
+ALL_PLATFORMS,nobara,1
+ALL_PLATFORMS,openbsd,1
+ALL_PLATFORMS,opensuse,1
+ALL_PLATFORMS,oracle,1
+ALL_PLATFORMS,parallels,1
+ALL_PLATFORMS,pidora,1
+ALL_PLATFORMS,raspbian,1
+ALL_PLATFORMS,rhel,1
+ALL_PLATFORMS,rocky,1
+ALL_PLATFORMS,scientific,1
+ALL_PLATFORMS,slackware,1
+ALL_PLATFORMS,sles,1
+ALL_PLATFORMS,solaris,1
+ALL_PLATFORMS,sunos,1
+ALL_PLATFORMS,tumbleweed,1
+ALL_PLATFORMS,tuxedo,1
+ALL_PLATFORMS,ubuntu,1
+ALL_PLATFORMS,ultramarine,1
+ALL_PLATFORMS,unknown_linux,1
+ALL_PLATFORMS,windows,1
+ALL_PLATFORMS,wsl1,1
+ALL_PLATFORMS,wsl2,1
+ALL_PLATFORMS,xenserver,1
+```
+
+<!-- extra-platform-groups-sankey-end -->
 
 ## `extra_platforms.platform` API
 
