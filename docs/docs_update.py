@@ -91,17 +91,18 @@ def replace_content(
 def generate_trait_table(traits, column_name: str) -> str:
     """Produce a Markdown table for a collection of traits.
 
-    The table contains the icon, a linked name and the quoted ID for each trait.
+    The table contains the icon, a linked name, the quoted ID, and a linked detection function for each trait.
     """
     lines: list[str] = []
-    lines.append(f"| Icon | Name | {column_name} |")
-    lines.append("|:----:|:------|:-------------|")
+    lines.append(f"| Icon | Name | {column_name} | Detection function |")
+    lines.append("|:----:|:------|:-------------|:-------------------|")
 
     for trait in sorted(traits, key=attrgetter("id")):
         icon = html.escape(trait.icon)
         name = html.escape(trait.name)
         url = trait.url
-        lines.append(f"| {icon} | [{name}]({url}) | `{trait.id}` |")
+        detection_func = f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})"
+        lines.append(f"| {icon} | [{name}]({url}) | `{trait.id}` | {detection_func} |")
 
     return "\n".join(lines)
 
@@ -305,7 +306,7 @@ def update_docs() -> None:
 
     # Update mindmap diagrams showing the hierarchy of non-overlapping groups.
     replace_content(
-        README_PATH,
+        (README_PATH, DOCS_ROOT / "architectures.md"),
         "<!-- architecture-mindmap-start -->\n\n",
         "\n\n<!-- architecture-mindmap-end -->",
         generate_traits_mindmap(
