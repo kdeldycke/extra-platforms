@@ -34,6 +34,7 @@ import sys
 from operator import attrgetter
 from pathlib import Path
 from textwrap import dedent, indent
+from typing import Iterable
 
 from extra_platforms import (
     ALL_ARCHITECTURE_GROUPS,
@@ -59,26 +60,32 @@ README_PATH = PROJECT_ROOT / "readme.md"
 
 
 def replace_content(
-    filepath: Path,
+    filepath: Path | Iterable[Path],
     start_tag: str,
     end_tag: str,
     new_content: str,
 ) -> None:
-    """Replace in the provided file the content surrounded by the provided tags."""
-    filepath = filepath.resolve()
-    assert filepath.exists(), f"File {filepath} does not exist."
-    assert filepath.is_file(), f"File {filepath} is not a file."
+    """Replace in the provided files the content surrounded by the provided tags."""
+    if isinstance(filepath, Path):
+        path_list = [filepath]
+    else:
+        path_list = filepath
 
-    orig_content = filepath.read_text()
+    for filepath in path_list:
+        filepath = filepath.resolve()
+        assert filepath.exists(), f"File {filepath} does not exist."
+        assert filepath.is_file(), f"File {filepath} is not a file."
 
-    # Extract pre- and post-content surrounding the tags.
-    pre_content, table_start = orig_content.split(start_tag, 1)
-    _, post_content = table_start.split(end_tag, 1)
+        orig_content = filepath.read_text()
 
-    # Reconstruct the content with our updated table.
-    filepath.write_text(
-        f"{pre_content}{start_tag}{new_content}{end_tag}{post_content}",
-    )
+        # Extract pre- and post-content surrounding the tags.
+        pre_content, table_start = orig_content.split(start_tag, 1)
+        _, post_content = table_start.split(end_tag, 1)
+
+        # Reconstruct the content with our updated table.
+        filepath.write_text(
+            f"{pre_content}{start_tag}{new_content}{end_tag}{post_content}",
+        )
 
 
 def generate_trait_table(traits, column_name: str) -> str:
@@ -283,7 +290,9 @@ def update_docs() -> None:
         "\n\n".join(
             (
                 generate_groups_sankey({group})
-                for group in EXTRA_GROUPS & ALL_PLATFORM_GROUPS
+                for group in sorted(
+                    EXTRA_GROUPS & ALL_PLATFORM_GROUPS, key=attrgetter("id")
+                )
             ),
         ),
     )
@@ -304,7 +313,7 @@ def update_docs() -> None:
         ),
     )
     replace_content(
-        README_PATH,
+        (README_PATH, DOCS_ROOT / "platforms.md"),
         "<!-- platform-mindmap-start -->\n\n",
         "\n\n<!-- platform-mindmap-end -->",
         generate_traits_mindmap(
