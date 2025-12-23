@@ -44,8 +44,17 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
+    ARM,
     EXTRA_GROUPS,
+    IBM_MAINFRAME,
+    LOONGARCH,
+    MIPS,
     NON_OVERLAPPING_GROUPS,
+    POWERPC,
+    RISCV,
+    SPARC,
+    WEBASSEMBLY,
+    X86,
     Group,
 )
 
@@ -269,6 +278,14 @@ def update_docs() -> None:
 
     # Update multi-level Sankey diagrams.
     replace_content(
+        DOCS_ROOT / "architectures.md",
+        "<!-- architecture-multi-level-sankey-start -->\n\n",
+        "\n\n<!-- architecture-multi-level-sankey-end -->",
+        generate_multi_level_sankey(
+            ALL_ARCHITECTURES, NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS
+        ),
+    )
+    replace_content(
         DOCS_ROOT / "platforms.md",
         "<!-- platform-multi-level-sankey-start -->\n\n",
         "\n\n<!-- platform-multi-level-sankey-end -->",
@@ -282,7 +299,15 @@ def update_docs() -> None:
         DOCS_ROOT / "architectures.md",
         "<!-- architecture-sankey-start -->\n\n",
         "\n\n<!-- architecture-sankey-end -->",
-        generate_groups_sankey(ALL_ARCHITECTURE_GROUPS),
+        "\n\n".join(
+            (
+                generate_groups_sankey({group})
+                for group in sorted(
+                    NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS,
+                    key=attrgetter("id"),
+                )
+            ),
+        ),
     )
     replace_content(
         DOCS_ROOT / "platforms.md",

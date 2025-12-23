@@ -106,6 +106,9 @@ if TYPE_CHECKING:
     skip_altlinux: MarkDecorator
     skip_amzn: MarkDecorator
     skip_android: MarkDecorator
+    skip_any_arm: MarkDecorator
+    skip_any_mips: MarkDecorator
+    skip_any_sparc: MarkDecorator
     skip_any_windows: MarkDecorator
     skip_arch: MarkDecorator
     skip_arm: MarkDecorator
@@ -138,12 +141,14 @@ if TYPE_CHECKING:
     skip_i386: MarkDecorator
     skip_i586: MarkDecorator
     skip_i686: MarkDecorator
+    skip_ibm_mainframe: MarkDecorator
     skip_ibm_powerkvm: MarkDecorator
     skip_kvmibm: MarkDecorator
     skip_linux: MarkDecorator
     skip_linux_layers: MarkDecorator
     skip_linux_like: MarkDecorator
     skip_linuxmint: MarkDecorator
+    skip_loongarch: MarkDecorator
     skip_loongarch64: MarkDecorator
     skip_macos: MarkDecorator
     skip_mageia: MarkDecorator
@@ -161,11 +166,13 @@ if TYPE_CHECKING:
     skip_other_unix: MarkDecorator
     skip_parallels: MarkDecorator
     skip_pidora: MarkDecorator
+    skip_powerpc: MarkDecorator
     skip_ppc: MarkDecorator
     skip_ppc64: MarkDecorator
     skip_ppc64le: MarkDecorator
     skip_raspbian: MarkDecorator
     skip_rhel: MarkDecorator
+    skip_riscv: MarkDecorator
     skip_riscv32: MarkDecorator
     skip_riscv64: MarkDecorator
     skip_rocky: MarkDecorator
@@ -192,9 +199,11 @@ if TYPE_CHECKING:
     skip_unknown_linux: MarkDecorator
     skip_wasm32: MarkDecorator
     skip_wasm64: MarkDecorator
+    skip_webassembly: MarkDecorator
     skip_windows: MarkDecorator
     skip_wsl1: MarkDecorator
     skip_wsl2: MarkDecorator
+    skip_x86: MarkDecorator
     skip_x86_64: MarkDecorator
     skip_xenserver: MarkDecorator
     unless_aarch64: MarkDecorator
@@ -206,6 +215,9 @@ if TYPE_CHECKING:
     unless_altlinux: MarkDecorator
     unless_amzn: MarkDecorator
     unless_android: MarkDecorator
+    unless_any_arm: MarkDecorator
+    unless_any_mips: MarkDecorator
+    unless_any_sparc: MarkDecorator
     unless_any_windows: MarkDecorator
     unless_arch: MarkDecorator
     unless_arm: MarkDecorator
@@ -238,12 +250,14 @@ if TYPE_CHECKING:
     unless_i386: MarkDecorator
     unless_i586: MarkDecorator
     unless_i686: MarkDecorator
+    unless_ibm_mainframe: MarkDecorator
     unless_ibm_powerkvm: MarkDecorator
     unless_kvmibm: MarkDecorator
     unless_linux: MarkDecorator
     unless_linux_layers: MarkDecorator
     unless_linux_like: MarkDecorator
     unless_linuxmint: MarkDecorator
+    unless_loongarch: MarkDecorator
     unless_loongarch64: MarkDecorator
     unless_macos: MarkDecorator
     unless_mageia: MarkDecorator
@@ -261,11 +275,13 @@ if TYPE_CHECKING:
     unless_other_unix: MarkDecorator
     unless_parallels: MarkDecorator
     unless_pidora: MarkDecorator
+    unless_powerpc: MarkDecorator
     unless_ppc: MarkDecorator
     unless_ppc64: MarkDecorator
     unless_ppc64le: MarkDecorator
     unless_raspbian: MarkDecorator
     unless_rhel: MarkDecorator
+    unless_riscv: MarkDecorator
     unless_riscv32: MarkDecorator
     unless_riscv64: MarkDecorator
     unless_rocky: MarkDecorator
@@ -292,8 +308,10 @@ if TYPE_CHECKING:
     unless_unknown_linux: MarkDecorator
     unless_wasm32: MarkDecorator
     unless_wasm64: MarkDecorator
+    unless_webassembly: MarkDecorator
     unless_windows: MarkDecorator
     unless_wsl1: MarkDecorator
     unless_wsl2: MarkDecorator
+    unless_x86: MarkDecorator
     unless_x86_64: MarkDecorator
     unless_xenserver: MarkDecorator

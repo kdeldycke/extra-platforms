@@ -173,19 +173,28 @@ from .group_data import (  # noqa: E402
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
     ALL_TRAITS,
+    ANY_ARM,
+    ANY_MIPS,
+    ANY_SPARC,
     ANY_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
     EXTRA_GROUPS,
+    IBM_MAINFRAME,
     LINUX,
     LINUX_LAYERS,
     LINUX_LIKE,
+    LOONGARCH,
     NON_OVERLAPPING_GROUPS,
     OTHER_UNIX,
+    POWERPC,
+    RISCV,
     SYSTEM_V,
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
+    WEBASSEMBLY,
+    X86,
 )
 from .platform import Platform  # noqa: E402
 from .platform_data import (  # noqa: E402
@@ -495,6 +504,9 @@ __all__ = (  # noqa: F405
     "ALTLINUX",
     "AMZN",
     "ANDROID",
+    "ANY_ARM",
+    "ANY_MIPS",
+    "ANY_SPARC",
     "ANY_WINDOWS",
     "ARCH",
     "Architecture",
@@ -538,6 +550,7 @@ __all__ = (  # noqa: F405
     "I386",
     "I586",
     "I686",
+    "IBM_MAINFRAME",
     "IBM_POWERKVM",
     "invalidate_caches",
     "is_aarch64",
@@ -549,6 +562,9 @@ __all__ = (  # noqa: F405
     "is_altlinux",
     "is_amzn",
     "is_android",
+    "is_any_arm",  # noqa: F822
+    "is_any_mips",  # noqa: F822
+    "is_any_sparc",  # noqa: F822
     "is_any_windows",  # noqa: F822
     "is_arch",
     "is_arm",
@@ -581,12 +597,14 @@ __all__ = (  # noqa: F405
     "is_i386",
     "is_i586",
     "is_i686",
+    "is_ibm_mainframe",  # noqa: F822
     "is_ibm_powerkvm",
     "is_kvmibm",
     "is_linux",  # noqa: F822
     "is_linux_layers",  # noqa: F822
     "is_linux_like",  # noqa: F822
     "is_linuxmint",
+    "is_loongarch",  # noqa: F822
     "is_loongarch64",
     "is_macos",
     "is_mageia",
@@ -604,11 +622,13 @@ __all__ = (  # noqa: F405
     "is_other_unix",  # noqa: F822
     "is_parallels",
     "is_pidora",
+    "is_powerpc",  # noqa: F822
     "is_ppc",
     "is_ppc64",
     "is_ppc64le",
     "is_raspbian",
     "is_rhel",
+    "is_riscv",  # noqa: F822
     "is_riscv32",
     "is_riscv64",
     "is_rocky",
@@ -635,9 +655,11 @@ __all__ = (  # noqa: F405
     "is_unknown_linux",
     "is_wasm32",
     "is_wasm64",
+    "is_webassembly",  # noqa: F822
     "is_windows",
     "is_wsl1",
     "is_wsl2",
+    "is_x86",  # noqa: F822
     "is_x86_64",
     "is_xenserver",
     "KVMIBM",
@@ -645,6 +667,7 @@ __all__ = (  # noqa: F405
     "LINUX_LAYERS",
     "LINUX_LIKE",
     "LINUXMINT",
+    "LOONGARCH",
     "LOONGARCH64",
     "MACOS",
     "MAGEIA",
@@ -665,12 +688,14 @@ __all__ = (  # noqa: F405
     "PIDORA",
     "Platform",
     "platforms_from_ids",
+    "POWERPC",
     "PPC",
     "PPC64",
     "PPC64LE",
     "RASPBIAN",
     "reduce",
     "RHEL",
+    "RISCV",
     "RISCV32",
     "RISCV64",
     "ROCKY",
@@ -699,9 +724,11 @@ __all__ = (  # noqa: F405
     "UNKNOWN_LINUX",
     "WASM32",
     "WASM64",
+    "WEBASSEMBLY",
     "WINDOWS",
     "WSL1",
     "WSL2",
+    "X86",
     "X86_64",
     "XENSERVER",
 )

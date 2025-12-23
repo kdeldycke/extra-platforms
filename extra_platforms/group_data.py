@@ -145,6 +145,87 @@ ALL_ARCHITECTURES: Group = Group(
 """All supported architectures."""
 
 
+ANY_ARM = Group(
+    "any_arm",
+    "Any ARM architecture",
+    "📱",
+    (AARCH64, ARM, ARMV6L, ARMV7L, ARMV8L),
+)
+"""All ARM-based architectures."""
+
+
+X86 = Group(
+    "x86",
+    "x86 family",
+    "🔲",
+    (I386, I586, I686, X86_64),
+)
+"""All x86-based architectures (Intel-compatible)."""
+
+
+LOONGARCH = Group(
+    "loongarch",
+    "LoongArch",
+    "🐉",
+    (LOONGARCH64,),
+)
+"""LoongArch architecture."""
+
+
+ANY_MIPS = Group(
+    "any_mips",
+    "Any MIPS architecture",
+    "🔧",
+    (MIPS, MIPS64, MIPS64EL, MIPSEL),
+)
+"""All MIPS-based architectures."""
+
+
+POWERPC = Group(
+    "powerpc",
+    "PowerPC family",
+    "⚡",
+    (PPC, PPC64, PPC64LE),
+)
+"""All PowerPC-based architectures."""
+
+
+RISCV = Group(
+    "riscv",
+    "RISC-V family",
+    "🌱",
+    (RISCV32, RISCV64),
+)
+"""All RISC-V-based architectures."""
+
+
+ANY_SPARC = Group(
+    "any_sparc",
+    "Any SPARC architecture",
+    "☀️",
+    (SPARC, SPARC64),
+)
+"""All SPARC-based architectures."""
+
+
+IBM_MAINFRAME = Group(
+    "ibm_mainframe",
+    "IBM mainframe",
+    "🏢",
+    (S390X,),
+)
+"""IBM mainframe architectures."""
+
+
+WEBASSEMBLY = Group(
+    "webassembly",
+    "WebAssembly",
+    "🌐",
+    (WASM32, WASM64),
+)
+"""WebAssembly architectures."""
+
+
 ALL_PLATFORMS: Group = Group(
     "all_platforms",
     "All platforms",
@@ -461,7 +542,20 @@ OTHER_UNIX = Group(
 """
 
 
-ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset((ALL_ARCHITECTURES,))
+ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
+    (
+        ALL_ARCHITECTURES,
+        ANY_ARM,
+        X86,
+        LOONGARCH,
+        ANY_MIPS,
+        POWERPC,
+        RISCV,
+        ANY_SPARC,
+        IBM_MAINFRAME,
+        WEBASSEMBLY,
+    ),
+)
 """All groups whose members are architectures."""
 
 
@@ -490,8 +584,17 @@ ALL_CI_GROUPS: frozenset[Group] = frozenset((ALL_CI,))
 
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
-        ALL_CI,
-        ALL_ARCHITECTURES,
+        # Architecture groups.
+        ANY_ARM,
+        X86,
+        LOONGARCH,
+        ANY_MIPS,
+        POWERPC,
+        RISCV,
+        ANY_SPARC,
+        IBM_MAINFRAME,
+        WEBASSEMBLY,
+        # Platform groups.
         ANY_WINDOWS,
         BSD,
         LINUX,
@@ -499,6 +602,8 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         SYSTEM_V,
         UNIX_LAYERS,
         OTHER_UNIX,
+        # CI groups.
+        ALL_CI,
     ),
 )
 """Non-overlapping groups."""
@@ -506,8 +611,11 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
-        ALL_PLATFORMS,
         ALL_TRAITS,
+        # Architecture groups.
+        ALL_ARCHITECTURES,
+        # Platform groups.
+        ALL_PLATFORMS,
         UNIX,
         UNIX_WITHOUT_MACOS,
         BSD_WITHOUT_MACOS,

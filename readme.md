@@ -30,7 +30,7 @@ $ uvx --with extra-platforms python
 ```pycon
 >>> import extra_platforms
 >>> extra_platforms.__version__
-'3.2.3'
+'6.0.0'
 ```
 
 ## Examples
@@ -38,10 +38,10 @@ $ uvx --with extra-platforms python
 Get the current platform, from which you can access lots of metadata:
 
 ```pycon
->>> from extra_platforms import current_os
->>> my_os = current_os()
+>>> from extra_platforms import current_platform
+>>> my_os = current_platform()
 >>> my_os
-Platform(id='macos', name='macOS', current=True)
+Platform(id='macos', name='macOS')
 >>> my_os.id
 'macos'
 >>> my_os.name
@@ -50,15 +50,16 @@ Platform(id='macos', name='macOS', current=True)
 '🍎'
 >>> my_os.info()
 {
-    "id": "macos",
-    "name": "macOS",
-    "icon": "🍎",
-    "current": True,
-    "distro_id": "darwin",
-    "version": "23.6.0",
-    "version_parts": {"major": "23", "minor": "6", "build_number": "0"},
-    "like": None,
-    "codename": None,
+    'id': 'macos',
+    'name': 'macOS',
+    'icon': '🍎',
+    'url': 'https://apple.com/macos/',
+    'current': True,
+    'distro_id': 'darwin',
+    'version': '26.2',
+    'version_parts': {'major': '26', 'minor': '2', 'build_number': None},
+    'like': None,
+    'codename': 'Tahoe',
 }
 ```
 
@@ -73,16 +74,26 @@ False
 Use groups to check if the current platform is part of a specific family:
 
 ```pycon
->>> from extra_platforms import UNIX, current_os
->>> current_os() in UNIX
+>>> from extra_platforms import current_platform, BSD, UNIX, LINUX
+>>> current_platform()
+Platform(id='macos', name='macOS')
+>>> current_platform() in BSD
+True
+>>> current_platform() in UNIX
+True
+>>> current_platform() in LINUX
 False
 ```
 
-Or directly use the boolean variables available for each family:
+Or directly use the detection functions returning a boolean that is associated with each group:
 
 ```pycon
->>> from extra_platforms import is_unix
+>>> from extra_platforms import is_bsd, is_unix, is_linux
+>>> is_bsd()
+True
 >>> is_unix()
+True
+>>> is_linux()
 False
 ```
 
@@ -90,15 +101,53 @@ List all platforms of a family:
 
 ```pycon
 >>> from extra_platforms import LINUX
->>> LINUX
-Group(id='linux', name='Any Linux', platform_ids=frozenset({'ibm_powerkvm', 'rocky', 'debian', 'tuxedo', 'ubuntu', 'mageia', 'xenserver', 'opensuse', 'nobara', 'buildroot', 'rhel', 'parallels', 'pidora', 'sles', 'amzn', 'scientific', 'linuxmint', 'centos', 'android', 'gentoo', 'raspbian', 'unknown_linux', 'mandriva', 'exherbo', 'cloudlinux', 'fedora', 'guix', 'arch', 'altlinux', 'slackware', 'oracle', 'kvmibm'}))
-
+>>> LINUX.members
+mappingproxy({
+    'altlinux': Platform(id='altlinux', name='ALT Linux'),
+    'amzn': Platform(id='amzn', name='Amazon Linux'),
+    'android': Platform(id='android', name='Android'),
+    'arch': Platform(id='arch', name='Arch Linux'),
+    'buildroot': Platform(id='buildroot', name='Buildroot'),
+    'cachyos': Platform(id='cachyos', name='CachyOS'),
+    'centos': Platform(id='centos', name='CentOS'),
+    'cloudlinux': Platform(id='cloudlinux', name='CloudLinux OS'),
+    'debian': Platform(id='debian', name='Debian'),
+    'exherbo': Platform(id='exherbo', name='Exherbo Linux'),
+    'fedora': Platform(id='fedora', name='Fedora'),
+    'gentoo': Platform(id='gentoo', name='Gentoo Linux'),
+    'guix': Platform(id='guix', name='Guix System'),
+    'ibm_powerkvm': Platform(id='ibm_powerkvm', name='IBM PowerKVM'),
+    'kvmibm': Platform(id='kvmibm', name='KVM for IBM z Systems'),
+    'linuxmint': Platform(id='linuxmint', name='Linux Mint'),
+    'mageia': Platform(id='mageia', name='Mageia'),
+    'mandriva': Platform(id='mandriva', name='Mandriva Linux'),
+    'nobara': Platform(id='nobara', name='Nobara'),
+    'opensuse': Platform(id='opensuse', name='openSUSE'),
+    'oracle': Platform(id='oracle', name='Oracle Linux'),
+    'parallels': Platform(id='parallels', name='Parallels'),
+    'pidora': Platform(id='pidora', name='Pidora'),
+    'raspbian': Platform(id='raspbian', name='Raspbian'),
+    'rhel': Platform(id='rhel', name='RedHat Enterprise Linux'),
+    'rocky': Platform(id='rocky', name='Rocky Linux'),
+    'scientific': Platform(id='scientific', name='Scientific Linux'),
+    'slackware': Platform(id='slackware', name='Slackware'),
+    'sles': Platform(id='sles', name='SUSE Linux Enterprise Server'),
+    'tumbleweed': Platform(id='tumbleweed', name='openSUSE Tumbleweed'),
+    'tuxedo': Platform(id='tuxedo', name='Tuxedo OS'),
+    'ubuntu': Platform(id='ubuntu', name='Ubuntu'),
+    'ultramarine': Platform(id='ultramarine', name='Ultramarine'),
+    'unknown_linux': Platform(id='unknown_linux', name='Unknown Linux'),
+    'xenserver': Platform(id='xenserver', name='XenServer'),
+})
+>>> LINUX.member_ids
+frozenset({'centos', 'mageia', 'unknown_linux', 'ultramarine', 'tuxedo', 'arch', 'buildroot', 'android', 'exherbo', 'mandriva', 'fedora', 'slackware', 'parallels', 'xenserver', 'kvmibm', 'nobara', 'amzn', 'guix', 'debian', 'oracle', 'cachyos', 'altlinux', 'rhel', 'ibm_powerkvm', 'rocky', 'scientific', 'sles', 'linuxmint', 'tumbleweed', 'ubuntu', 'pidora', 'cloudlinux', 'gentoo', 'raspbian', 'opensuse'})
 >>> print("\n".join([p.name for p in LINUX]))
 ALT Linux
 Amazon Linux
 Android
 Arch Linux
 Buildroot
+CachyOS
 CentOS
 CloudLinux OS
 Debian
@@ -122,8 +171,10 @@ Rocky Linux
 Scientific Linux
 Slackware
 SUSE Linux Enterprise Server
+openSUSE Tumbleweed
 Tuxedo OS
 Ubuntu
+Ultramarine
 Unknown Linux
 XenServer
 ```
@@ -133,22 +184,22 @@ Reduce a disparate collection of groups and platforms into a minimal descriptive
 ```pycon
 >>> from extra_platforms import AIX, MACOS, SOLARIS, reduce
 >>> reduce([AIX, MACOS])
-{
-    Platform(id='aix', name='IBM AIX', current=False),
-    Platform(id='macos', name='macOS', current=True),
-}
+frozenset({
+    Platform(id='macos', name='macOS'),
+    Platform(id='aix', name='IBM AIX'),
+})
 >>> reduce([AIX, MACOS, SOLARIS])
-{
-    Group(id='system_v', name='Any Unix derived from AT&T System Five', platform_ids=frozenset({'aix', 'solaris'})),
-    Platform(id='macos', name='macOS', current=True),
-}
+frozenset({
+    Group(id='system_v', name='AT&T System Five'),
+    Platform(id='macos', name='macOS'),
+})
 ```
 
 ## Architectures
 
-All recognized architectures:
+All recognized architectures and how they're grouped:
 
-<!-- architecture-mindmap-start -->
+<!-- architecture-multi-level-sankey-start -->
 
 ```mermaid
 ---
@@ -156,32 +207,39 @@ config: {"mindmap": {"padding": 5}}
 ---
 mindmap
     ((🏛️ all_architectures))
-        )🏛️ ALL_ARCHITECTURES(
+        )🔲 X86(
+            (🔲 i386)
+            (🔲 i586)
+            (🔲 i686)
+            (💻 x86_64)
+        )🌐 WEBASSEMBLY(
+            (🌐 wasm32)
+            (🌐 wasm64)
+        )🌱 RISCV(
+            (🌱 riscv32)
+            (🌱 riscv64)
+        )⚡ POWERPC(
+            (⚡ ppc)
+            (⚡ ppc64)
+            (⚡ ppc64le)
+        )🐉 LOONGARCH(
+            (🐉 loongarch64)
+        )🏢 IBM_MAINFRAME(
+            (🏢 s390x)
+        )☀️ ANY_SPARC(
+            (☀️ sparc)
+            (☀️ sparc64)
+        )🔧 ANY_MIPS(
+            (🔧 mips)
+            (🔧 mips64)
+            (🔧 mips64el)
+            (🔧 mipsel)
+        )📱 ANY_ARM(
             (🔋 aarch64)
             (📱 arm)
             (📱 armv6l)
             (📱 armv7l)
             (📱 armv8l)
-            (🔲 i386)
-            (🔲 i586)
-            (🔲 i686)
-            (🐉 loongarch64)
-            (🔧 mips)
-            (🔧 mips64)
-            (🔧 mips64el)
-            (🔧 mipsel)
-            (⚡ ppc)
-            (⚡ ppc64)
-            (⚡ ppc64le)
-            (🌱 riscv32)
-            (🌱 riscv64)
-            (🏢 s390x)
-            (☀️ sparc)
-            (☀️ sparc64)
-            (❓ unknown_architecture)
-            (🌐 wasm32)
-            (🌐 wasm64)
-            (💻 x86_64)
 ```
 
 <!-- architecture-mindmap-end -->
@@ -257,7 +315,7 @@ mindmap
 
 <!-- platform-mindmap-end -->
 
-> [!NOTE]
+> [!TIP]
 > More groups exist beyond those shown in the diagram, and more utilities are available for each platform. See the [platform documentation](https://kdeldycke.github.io/extra-platforms/platforms.html#groups-of-platforms) for details.
 
 ## CI systems

@@ -73,9 +73,106 @@ Architecture(id='x86_64', name='x86-64 (AMD64)')
 
 ## Groups of architectures
 
-All recognized architectures are grouped in non-overlapping families.
+All recognized architectures are grouped in families, with each architecture belonging to exactly one family.
 
-Here is their relationship visualized as a Sankey diagram:
+Here are the non-overlapping families that encompass all recognized architectures, visualized as a Sankey diagram:
+
+<!-- architecture-multi-level-sankey-start -->
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
+---
+sankey-beta
+
+ALL_ARCHITECTURES,ANY_ARM,5
+ALL_ARCHITECTURES,X86,4
+ALL_ARCHITECTURES,ANY_MIPS,4
+ALL_ARCHITECTURES,POWERPC,3
+ALL_ARCHITECTURES,WEBASSEMBLY,2
+ALL_ARCHITECTURES,RISCV,2
+ALL_ARCHITECTURES,ANY_SPARC,2
+ALL_ARCHITECTURES,LOONGARCH,1
+ALL_ARCHITECTURES,IBM_MAINFRAME,1
+ANY_ARM,aarch64,1
+ANY_ARM,arm,1
+ANY_ARM,armv6l,1
+ANY_ARM,armv7l,1
+ANY_ARM,armv8l,1
+X86,i386,1
+X86,i586,1
+X86,i686,1
+X86,x86_64,1
+ANY_MIPS,mips,1
+ANY_MIPS,mips64,1
+ANY_MIPS,mips64el,1
+ANY_MIPS,mipsel,1
+POWERPC,ppc,1
+POWERPC,ppc64,1
+POWERPC,ppc64le,1
+WEBASSEMBLY,wasm32,1
+WEBASSEMBLY,wasm64,1
+RISCV,riscv32,1
+RISCV,riscv64,1
+ANY_SPARC,sparc,1
+ANY_SPARC,sparc64,1
+LOONGARCH,loongarch64,1
+IBM_MAINFRAME,s390x,1
+ALL_ARCHITECTURES,unknown_architecture,1
+```
+
+<!-- architecture-multi-level-sankey-end -->
+
+And the same families visualized as a mindmap:
+
+<!-- architecture-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((🏛️ all_architectures))
+        )🔲 X86(
+            (🔲 i386)
+            (🔲 i586)
+            (🔲 i686)
+            (💻 x86_64)
+        )🌐 WEBASSEMBLY(
+            (🌐 wasm32)
+            (🌐 wasm64)
+        )🌱 RISCV(
+            (🌱 riscv32)
+            (🌱 riscv64)
+        )⚡ POWERPC(
+            (⚡ ppc)
+            (⚡ ppc64)
+            (⚡ ppc64le)
+        )🐉 LOONGARCH(
+            (🐉 loongarch64)
+        )🏢 IBM_MAINFRAME(
+            (🏢 s390x)
+        )☀️ ANY_SPARC(
+            (☀️ sparc)
+            (☀️ sparc64)
+        )🔧 ANY_MIPS(
+            (🔧 mips)
+            (🔧 mips64)
+            (🔧 mips64el)
+            (🔧 mipsel)
+        )📱 ANY_ARM(
+            (🔋 aarch64)
+            (📱 arm)
+            (📱 armv6l)
+            (📱 armv7l)
+            (📱 armv8l)
+```
+
+<!-- architecture-mindmap-end -->
+
+### Individual architecture families
+
+Each family can also be viewed separately:
 
 <!-- architecture-sankey-start -->
 
@@ -85,31 +182,94 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
 ---
 sankey-beta
 
-ALL_ARCHITECTURES,aarch64,1
-ALL_ARCHITECTURES,arm,1
-ALL_ARCHITECTURES,armv6l,1
-ALL_ARCHITECTURES,armv7l,1
-ALL_ARCHITECTURES,armv8l,1
-ALL_ARCHITECTURES,i386,1
-ALL_ARCHITECTURES,i586,1
-ALL_ARCHITECTURES,i686,1
-ALL_ARCHITECTURES,loongarch64,1
-ALL_ARCHITECTURES,mips,1
-ALL_ARCHITECTURES,mips64,1
-ALL_ARCHITECTURES,mips64el,1
-ALL_ARCHITECTURES,mipsel,1
-ALL_ARCHITECTURES,ppc,1
-ALL_ARCHITECTURES,ppc64,1
-ALL_ARCHITECTURES,ppc64le,1
-ALL_ARCHITECTURES,riscv32,1
-ALL_ARCHITECTURES,riscv64,1
-ALL_ARCHITECTURES,s390x,1
-ALL_ARCHITECTURES,sparc,1
-ALL_ARCHITECTURES,sparc64,1
-ALL_ARCHITECTURES,unknown_architecture,1
-ALL_ARCHITECTURES,wasm32,1
-ALL_ARCHITECTURES,wasm64,1
-ALL_ARCHITECTURES,x86_64,1
+ANY_ARM,aarch64,1
+ANY_ARM,arm,1
+ANY_ARM,armv6l,1
+ANY_ARM,armv7l,1
+ANY_ARM,armv8l,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+ANY_MIPS,mips,1
+ANY_MIPS,mips64,1
+ANY_MIPS,mips64el,1
+ANY_MIPS,mipsel,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+ANY_SPARC,sparc,1
+ANY_SPARC,sparc64,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+IBM_MAINFRAME,s390x,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+LOONGARCH,loongarch64,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+POWERPC,ppc,1
+POWERPC,ppc64,1
+POWERPC,ppc64le,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+RISCV,riscv32,1
+RISCV,riscv64,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+WEBASSEMBLY,wasm32,1
+WEBASSEMBLY,wasm64,1
+```
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+---
+sankey-beta
+
+X86,i386,1
+X86,i586,1
+X86,i686,1
+X86,x86_64,1
 ```
 
 <!-- architecture-sankey-end -->
