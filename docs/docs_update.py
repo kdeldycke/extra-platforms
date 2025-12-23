@@ -147,28 +147,70 @@ def generate_groups_sankey(groups: frozenset[Group]) -> str:
     return output
 
 
-def generate_multi_level_sankey(top_group: Group, groups: frozenset[Group]) -> str:
-    """Produce a 3-layer Sankey diagram showing trait hierarchy.
+def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
+    """Produce a Sankey diagram showing trait hierarchy.
 
-    The diagram shows connections from a top-level group to intermediate groups
-    to their individual members. The weights of the first layer reflect the number
-    of members in each intermediate group.
+    The diagram shows connections from a top-level (superset) group to intermediate
+    groups to their individual members. The weights of the first layer reflect the
+    number of members in each intermediate group. Missing traits (present in the
+    superset but not in any intermediate group) are shown as direct children of
+    the superset, placed at the end of the diagram specification.
 
     Args:
-        top_group: The top-level group (e.g., ALL_PLATFORMS).
-        groups: The intermediate groups to display (e.g., NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS).
+        groups: An iterable of groups including both the superset group (e.g.,
+                ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
+                display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
+
+    Raises:
+        ValueError: If no superset group is found among the inputs.
     """
+    groups_list = list(groups)
+
+    # Find the superset group (the one that contains all others as subsets).
+    supersets = [
+        g for g in groups_list
+        if all(g >= other for other in groups_list if other.id != g.id)
+    ]
+
+    if not supersets:
+        raise ValueError(
+            "No superset group found. The input must include a group that "
+            "contains all members of other groups (e.g., ALL_ARCHITECTURES, "
+            "ALL_PLATFORMS)."
+        )
+
+    superset = supersets[0]
+
+    # Separate intermediate groups from the superset.
+    intermediate_groups = [g for g in groups_list if g.id != superset.id]
+
+    # Compute the union of all intermediate groups to find missing traits.
+    union_of_intermediate = set()
+    for group in intermediate_groups:
+        union_of_intermediate.update(group.member_ids)
+
+    # Find traits in the superset that aren't covered by any intermediate group.
+    missing_trait_ids = superset.member_ids - union_of_intermediate
+    missing_traits = sorted(
+        [superset[tid] for tid in missing_trait_ids],
+        key=lambda t: t.id,
+    )
+
     table = []
 
-    # First layer: top group -> intermediate groups (weight = number of members in group)
-    for group in sorted(groups, key=lambda g: (len(g), g.id), reverse=True):
+    # First layer: superset -> intermediate groups (weight = number of members in group).
+    for group in sorted(intermediate_groups, key=lambda g: (len(g), g.id), reverse=True):
         member_count = len(group.members)
-        table.append(f"{top_group.id.upper()},{group.id.upper()},{member_count}")
+        table.append(f"{superset.id.upper()},{group.id.upper()},{member_count}")
 
-    # Second layer: intermediate groups -> their members (weight = 1 each)
-    for group in sorted(groups, key=lambda g: (len(g), g.id), reverse=True):
+    # Second layer: intermediate groups -> their members (weight = 1 each).
+    for group in sorted(intermediate_groups, key=lambda g: (len(g), g.id), reverse=True):
         for member_id in group.members:
             table.append(f"{group.id.upper()},{member_id},1")
+
+    # Third layer: superset -> missing traits (weight = 1 each), placed at the end.
+    for trait in missing_traits:
+        table.append(f"{superset.id.upper()},{trait.id},1")
 
     output = dedent("""\
         ```mermaid
@@ -282,7 +324,7 @@ def update_docs() -> None:
         "<!-- architecture-multi-level-sankey-start -->\n\n",
         "\n\n<!-- architecture-multi-level-sankey-end -->",
         generate_multi_level_sankey(
-            ALL_ARCHITECTURES, NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS
+            list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
         ),
     )
     replace_content(
@@ -290,7 +332,7 @@ def update_docs() -> None:
         "<!-- platform-multi-level-sankey-start -->\n\n",
         "\n\n<!-- platform-multi-level-sankey-end -->",
         generate_multi_level_sankey(
-            ALL_PLATFORMS, NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS
+            list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
         ),
     )
 

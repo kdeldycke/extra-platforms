@@ -199,7 +199,7 @@ frozenset({
 
 All recognized architectures and how they're grouped:
 
-<!-- architecture-multi-level-sankey-start -->
+<!-- architecture-mindmap-start -->
 
 ```mermaid
 ---
