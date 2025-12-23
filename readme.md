@@ -331,19 +331,18 @@ config: {"mindmap": {"padding": 5}}
 ---
 mindmap
     ((♺ all_ci))
-        )♺ ALL_CI(
-            (═ azure_pipelines)
-            (⟲ bamboo)
-            (🪁 buildkite)
-            (⪾ circle_ci)
-            (≋ cirrus_ci)
-            (ᚙ codebuild)
-            (🐙 github_ci)
-            (🦊 gitlab_ci)
-            (⥁ heroku_ci)
-            (🏙️ teamcity)
-            (👷 travis_ci)
-            (♲ unknown_ci)
+        (═ azure_pipelines)
+        (⟲ bamboo)
+        (🪁 buildkite)
+        (⪾ circle_ci)
+        (≋ cirrus_ci)
+        (ᚙ codebuild)
+        (🐙 github_ci)
+        (🦊 gitlab_ci)
+        (⥁ heroku_ci)
+        (🏙️ teamcity)
+        (👷 travis_ci)
+        (♲ unknown_ci)
 ```
 
 <!-- ci-mindmap-end -->

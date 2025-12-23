@@ -86,6 +86,30 @@ ALL_CI,unknown_ci,1
 
 <!-- ci-sankey-end -->
 
+<!-- ci-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((♺ all_ci))
+        (═ azure_pipelines)
+        (⟲ bamboo)
+        (🪁 buildkite)
+        (⪾ circle_ci)
+        (≋ cirrus_ci)
+        (ᚙ codebuild)
+        (🐙 github_ci)
+        (🦊 gitlab_ci)
+        (⥁ heroku_ci)
+        (🏙️ teamcity)
+        (👷 travis_ci)
+        (♲ unknown_ci)
+```
+
+<!-- ci-mindmap-end -->
+
 ## `extra_platforms.ci` API
 
 ```{eval-rst}

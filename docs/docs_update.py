@@ -140,19 +140,20 @@ def generate_groups_sankey(groups: frozenset[Group]) -> str:
     return output
 
 
-def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
-    """Produce a Sankey diagram showing trait hierarchy.
-
-    The diagram shows connections from a top-level (superset) group to intermediate
-    groups to their individual members. The weights of the first layer reflect the
-    number of members in each intermediate group. Missing traits (present in the
-    superset but not in any intermediate group) are shown as direct children of
-    the superset, placed at the end of the diagram specification.
+def _analyze_group_hierarchy(
+    groups: Iterable[Group],
+) -> tuple[Group, list[Group], list]:
+    """Analyze a collection of groups to identify the superset and missing traits.
 
     Args:
         groups: An iterable of groups including both the superset group (e.g.,
-                ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-                display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
+                ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups.
+
+    Returns:
+        A tuple of (superset, intermediate_groups, missing_traits) where:
+        - superset: The group that contains all others as subsets
+        - intermediate_groups: All groups except the superset, sorted by size (descending)
+        - missing_traits: Traits in the superset not covered by any intermediate group
 
     Raises:
         ValueError: If no superset group is found among the inputs.
@@ -190,6 +191,28 @@ def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
         key=lambda t: t.id,
     )
 
+    return superset, intermediate_groups, missing_traits
+
+
+def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
+    """Produce a Sankey diagram showing trait hierarchy.
+
+    The diagram shows connections from a top-level (superset) group to intermediate
+    groups to their individual members. The weights of the first layer reflect the
+    number of members in each intermediate group. Missing traits (present in the
+    superset but not in any intermediate group) are shown as direct children of
+    the superset, placed at the end of the diagram specification.
+
+    Args:
+        groups: An iterable of groups including both the superset group (e.g.,
+                ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
+                display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
+
+    Raises:
+        ValueError: If no superset group is found among the inputs.
+    """
+    superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
+
     table = []
 
     # First layer: superset -> intermediate groups (weight = number of members in group).
@@ -222,35 +245,33 @@ def generate_multi_level_sankey(groups: Iterable[Group]) -> str:
     return output
 
 
-def generate_traits_mindmap(top_group: Group, groups: frozenset[Group]) -> str:
-    """Produce a mindmap hierarchy to show the non-overlapping groups of traits.
+def generate_traits_mindmap(groups: Iterable[Group]) -> str:
+    """Produce a mindmap hierarchy to show the hierarchy of groups and their traits.
 
-    Includes missing traits (present in the top group but not in any of the groups)
-    as direct children of the top group.
+    Includes missing traits (present in the superset but not in any intermediate group)
+    as direct children of the superset.
+
+    Args:
+        groups: An iterable of groups including both the superset group (e.g.,
+                ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
+                display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
+
+    Raises:
+        ValueError: If no superset group is found among the inputs.
     """
-    # Compute union of all groups to find missing traits.
-    union_of_groups = set()
-    for group in groups:
-        union_of_groups.update(group.member_ids)
-
-    # Find traits in the top group that aren't covered by any group.
-    missing_trait_ids = top_group.member_ids - union_of_groups
-    missing_traits = sorted(
-        [top_group[tid] for tid in missing_trait_ids],
-        key=lambda t: t.id,
-    )
+    superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
 
     group_map = ""
-    for group in sorted(groups, key=attrgetter("id"), reverse=True):
+    for group in sorted(intermediate_groups, key=attrgetter("id"), reverse=True):
         group_map += f"){group.icon} {group.id.upper()}(\n"
         for platform_id, platform in group.members.items():
             group_map += f"    ({platform.icon} {platform_id})\n"
 
-    # Add missing traits as direct children of the top group.
+    # Add missing traits as direct children of the superset.
     for trait in missing_traits:
         group_map += f"({html.escape(trait.icon)} {trait.id})\n"
 
-    name = f"{html.escape(top_group.icon)} {top_group.id}"
+    name = f"{html.escape(superset.icon)} {superset.id}"
     output = dedent(f"""\
         ```mermaid
         ---
@@ -395,7 +416,7 @@ def update_docs() -> None:
         "<!-- architecture-mindmap-start -->\n\n",
         "\n\n<!-- architecture-mindmap-end -->",
         generate_traits_mindmap(
-            ALL_ARCHITECTURES, NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS
+            list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
         ),
     )
     replace_content(
@@ -403,14 +424,16 @@ def update_docs() -> None:
         "<!-- platform-mindmap-start -->\n\n",
         "\n\n<!-- platform-mindmap-end -->",
         generate_traits_mindmap(
-            ALL_PLATFORMS, NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS
+            list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
         ),
     )
     replace_content(
-        README_PATH,
+        (README_PATH, DOCS_ROOT / "ci.md"),
         "<!-- ci-mindmap-start -->\n\n",
         "\n\n<!-- ci-mindmap-end -->",
-        generate_traits_mindmap(ALL_CI, NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS),
+        generate_traits_mindmap(
+            list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
+        ),
     )
 
     # Update grouping charts of all groups, including non-overlapping and extra groups.
