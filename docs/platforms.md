@@ -41,7 +41,7 @@ Platform(id='macos', name='macOS')
 
 <!-- platform-table-start -->
 
-|  Icon  | Name                                                                                      | Platform ID     | Detection function                                                              |
+|  Icon  | Name                                                                                      | ID              | Detection function                                                              |
 | :--: | :---------------------------------------------------------------------------------------- | :-------------- | :------------------------------------------------------------------------------ |
 |   ➿   | [IBM AIX](https://ibm.com/products/aix/)                                                  | `aix`           | [`is_aix()`](detection.md#extra_platforms.detection.is_aix)                     |
 |   🐧   | [ALT Linux](https://altlinux.org)                                                         | `altlinux`      | [`is_altlinux()`](detection.md#extra_platforms.detection.is_altlinux)           |
