@@ -41,20 +41,20 @@ CI(id='unknown_ci', name='Unknown CI')
 
 <!-- ci-table-start -->
 
-| Icon | Name | CI ID | Detection function |
-|:----:|:------|:-------------|:-------------------|
-| ═ | [Azure Pipelines](https://azure.microsoft.com/en-us/products/devops/pipelines/) | `azure_pipelines` | [`is_azure_pipelines()`](detection.md#extra_platforms.detection.is_azure_pipelines) |
-| ⟲ | [Bamboo](https://www.atlassian.com/software/bamboo) | `bamboo` | [`is_bamboo()`](detection.md#extra_platforms.detection.is_bamboo) |
-| 🪁 | [Buildkite](https://buildkite.com) | `buildkite` | [`is_buildkite()`](detection.md#extra_platforms.detection.is_buildkite) |
-| ⪾ | [Circle CI](https://circleci.com) | `circle_ci` | [`is_circle_ci()`](detection.md#extra_platforms.detection.is_circle_ci) |
-| ≋ | [Cirrus CI](https://cirrus-ci.org) | `cirrus_ci` | [`is_cirrus_ci()`](detection.md#extra_platforms.detection.is_cirrus_ci) |
-| ᚙ | [CodeBuild](https://aws.amazon.com/codebuild/) | `codebuild` | [`is_codebuild()`](detection.md#extra_platforms.detection.is_codebuild) |
-| 🐙 | [GitHub Actions runner](https://docs.github.com/en/actions) | `github_ci` | [`is_github_ci()`](detection.md#extra_platforms.detection.is_github_ci) |
-| 🦊 | [GitLab CI](https://docs.gitlab.com/topics/build_your_application/) | `gitlab_ci` | [`is_gitlab_ci()`](detection.md#extra_platforms.detection.is_gitlab_ci) |
-| ⥁ | [Heroku CI](https://www.heroku.com/continuous-integration/) | `heroku_ci` | [`is_heroku_ci()`](detection.md#extra_platforms.detection.is_heroku_ci) |
-| 🏙️ | [TeamCity](https://www.jetbrains.com/teamcity/) | `teamcity` | [`is_teamcity()`](detection.md#extra_platforms.detection.is_teamcity) |
-| 👷 | [Travis CI](https://www.travis-ci.com) | `travis_ci` | [`is_travis_ci()`](detection.md#extra_platforms.detection.is_travis_ci) |
-| ♲ | [Unknown CI](https://en.wikipedia.org/wiki/Continuous_integration) | `unknown_ci` | [`is_unknown_ci()`](detection.md#extra_platforms.detection.is_unknown_ci) |
+|  Icon  | Name                                                                            | CI ID             | Detection function                                                                  |
+| :--: | :------------------------------------------------------------------------------ | :---------------- | :---------------------------------------------------------------------------------- |
+|   ═    | [Azure Pipelines](https://azure.microsoft.com/en-us/products/devops/pipelines/) | `azure_pipelines` | [`is_azure_pipelines()`](detection.md#extra_platforms.detection.is_azure_pipelines) |
+|   ⟲    | [Bamboo](https://www.atlassian.com/software/bamboo)                             | `bamboo`          | [`is_bamboo()`](detection.md#extra_platforms.detection.is_bamboo)                   |
+|   🪁   | [Buildkite](https://buildkite.com)                                              | `buildkite`       | [`is_buildkite()`](detection.md#extra_platforms.detection.is_buildkite)             |
+|   ⪾    | [Circle CI](https://circleci.com)                                               | `circle_ci`       | [`is_circle_ci()`](detection.md#extra_platforms.detection.is_circle_ci)             |
+|   ≋    | [Cirrus CI](https://cirrus-ci.org)                                              | `cirrus_ci`       | [`is_cirrus_ci()`](detection.md#extra_platforms.detection.is_cirrus_ci)             |
+|   ᚙ    | [CodeBuild](https://aws.amazon.com/codebuild/)                                  | `codebuild`       | [`is_codebuild()`](detection.md#extra_platforms.detection.is_codebuild)             |
+|   🐙   | [GitHub Actions runner](https://docs.github.com/en/actions)                     | `github_ci`       | [`is_github_ci()`](detection.md#extra_platforms.detection.is_github_ci)             |
+|   🦊   | [GitLab CI](https://docs.gitlab.com/topics/build_your_application/)             | `gitlab_ci`       | [`is_gitlab_ci()`](detection.md#extra_platforms.detection.is_gitlab_ci)             |
+|   ⥁    | [Heroku CI](https://www.heroku.com/continuous-integration/)                     | `heroku_ci`       | [`is_heroku_ci()`](detection.md#extra_platforms.detection.is_heroku_ci)             |
+|   🏙️   | [TeamCity](https://www.jetbrains.com/teamcity/)                                 | `teamcity`        | [`is_teamcity()`](detection.md#extra_platforms.detection.is_teamcity)               |
+|   👷   | [Travis CI](https://www.travis-ci.com)                                          | `travis_ci`       | [`is_travis_ci()`](detection.md#extra_platforms.detection.is_travis_ci)             |
+|   ♲    | [Unknown CI](https://en.wikipedia.org/wiki/Continuous_integration)              | `unknown_ci`      | [`is_unknown_ci()`](detection.md#extra_platforms.detection.is_unknown_ci)           |
 
 <!-- ci-table-end -->
 
