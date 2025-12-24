@@ -41,7 +41,7 @@ Architecture(id='x86_64', name='x86-64 (AMD64)')
 
 <!-- architecture-table-start -->
 
-|  Icon  | Name                                                                               | Architecture ID        | Detection function                                                                            |
+|  Icon  | Name                                                                               | ID                     | Detection function                                                                            |
 | :--: | :--------------------------------------------------------------------------------- | :--------------------- | :-------------------------------------------------------------------------------------------- |
 |   🔋   | [ARM64 (AArch64)](https://en.wikipedia.org/wiki/AArch64)                           | `aarch64`              | [`is_aarch64()`](detection.md#extra_platforms.detection.is_aarch64)                           |
 |   📱   | [ARM (32-bit)](https://en.wikipedia.org/wiki/ARM_architecture_family)              | `arm`                  | [`is_arm()`](detection.md#extra_platforms.detection.is_arm)                                   |

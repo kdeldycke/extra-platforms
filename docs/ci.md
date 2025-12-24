@@ -41,7 +41,7 @@ CI(id='unknown_ci', name='Unknown CI')
 
 <!-- ci-table-start -->
 
-|  Icon  | Name                                                                            | CI ID             | Detection function                                                                  |
+|  Icon  | Name                                                                            | ID                | Detection function                                                                  |
 | :--: | :------------------------------------------------------------------------------ | :---------------- | :---------------------------------------------------------------------------------- |
 |   ═    | [Azure Pipelines](https://azure.microsoft.com/en-us/products/devops/pipelines/) | `azure_pipelines` | [`is_azure_pipelines()`](detection.md#extra_platforms.detection.is_azure_pipelines) |
 |   ⟲    | [Bamboo](https://www.atlassian.com/software/bamboo)                             | `bamboo`          | [`is_bamboo()`](detection.md#extra_platforms.detection.is_bamboo)                   |

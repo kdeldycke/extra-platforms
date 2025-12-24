@@ -143,13 +143,13 @@ def _generate_markdown_table(
     return "\n".join(lines)
 
 
-def generate_trait_table(traits, column_name: str) -> str:
+def generate_trait_table(traits) -> str:
     """Produce a Markdown table for a collection of traits.
 
     The table contains the icon, a linked name, the quoted ID, and a linked detection function for each trait.
     """
     table_data = []
-    headers = ["Icon", "Name", column_name, "Detection function"]
+    headers = ["Icon", "Name", "ID", "Detection function"]
     alignments = ["center", "left", "left", "left"]
 
     for trait in sorted(traits, key=attrgetter("id")):
@@ -413,17 +413,17 @@ def update_docs() -> None:
         (
             "<!-- architecture-table-start -->\n\n",
             "\n\n<!-- architecture-table-end -->",
-            generate_trait_table(ALL_ARCHITECTURES, "Architecture ID"),
+            generate_trait_table(ALL_ARCHITECTURES),
         ),
         (
             "<!-- platform-table-start -->\n\n",
             "\n\n<!-- platform-table-end -->",
-            generate_trait_table(ALL_PLATFORMS, "Platform ID"),
+            generate_trait_table(ALL_PLATFORMS),
         ),
         (
             "<!-- ci-table-start -->\n\n",
             "\n\n<!-- ci-table-end -->",
-            generate_trait_table(ALL_CI, "CI ID"),
+            generate_trait_table(ALL_CI),
         ),
         # Multi-level Sankey diagrams
         (
