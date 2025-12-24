@@ -274,7 +274,7 @@ from .operations import (  # noqa: E402
     traits_from_ids,
 )
 
-__version__ = "6.0.0"
+__version__ = "6.0.1"
 
 
 def _unrecognized_env_error(kind: str) -> SystemError:
