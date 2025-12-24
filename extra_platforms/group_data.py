@@ -110,6 +110,10 @@ from .platform_data import (
     XENSERVER,
 )
 
+# =============================================================================
+# Architecture groups
+# =============================================================================
+
 ALL_ARCHITECTURES: Group = Group(
     "all_architectures",
     "All architectures",
@@ -226,6 +230,10 @@ WEBASSEMBLY = Group(
 """WebAssembly architectures."""
 
 
+# =============================================================================
+# Platform groups
+# =============================================================================
+
 ALL_PLATFORMS: Group = Group(
     "all_platforms",
     "All platforms",
@@ -283,42 +291,6 @@ ALL_PLATFORMS: Group = Group(
 )
 
 
-ALL_CI = Group(
-    "all_ci",
-    "All CI systems",
-    "♺",
-    (
-        AZURE_PIPELINES,
-        BAMBOO,
-        BUILDKITE,
-        CIRCLE_CI,
-        CIRRUS_CI,
-        CODEBUILD,
-        GITHUB_CI,
-        GITLAB_CI,
-        HEROKU_CI,
-        TEAMCITY,
-        TRAVIS_CI,
-        UNKNOWN_CI,
-    ),
-)
-"""All Continuous Integration systems.
-
-.. note::
-    `List of known CI systems
-    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
-"""
-
-
-ALL_TRAITS = Group(
-    "all_traits",
-    "Any architectures, platforms and CI systems",
-    "⁕",
-    tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_CI),
-)
-"""All supported architectures, platforms and CI systems."""
-
-
 ANY_WINDOWS = Group(
     "any_windows",
     "Any Windows",
@@ -332,7 +304,7 @@ UNIX = Group(
     "unix",
     "Any Unix",
     "⨷",
-    tuple(ALL_PLATFORMS - ANY_WINDOWS - ALL_CI),
+    tuple(ALL_PLATFORMS - ANY_WINDOWS),
 )
 """All Unix-like operating systems and compatibility layers."""
 
@@ -541,6 +513,54 @@ OTHER_UNIX = Group(
     - `SerenityOS`
 """
 
+
+# =============================================================================
+# CI groups
+# =============================================================================
+
+ALL_CI = Group(
+    "all_ci",
+    "All CI systems",
+    "♺",
+    (
+        AZURE_PIPELINES,
+        BAMBOO,
+        BUILDKITE,
+        CIRCLE_CI,
+        CIRRUS_CI,
+        CODEBUILD,
+        GITHUB_CI,
+        GITLAB_CI,
+        HEROKU_CI,
+        TEAMCITY,
+        TRAVIS_CI,
+        UNKNOWN_CI,
+    ),
+)
+"""All Continuous Integration systems.
+
+.. note::
+    `List of known CI systems
+    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
+"""
+
+
+# =============================================================================
+# Mixed groups
+# =============================================================================
+
+ALL_TRAITS = Group(
+    "all_traits",
+    "Any architectures, platforms and CI systems",
+    "⁕",
+    tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_CI),
+)
+"""All supported architectures, platforms and CI systems."""
+
+
+# =============================================================================
+# Collections of groups
+# =============================================================================
 
 ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
     (
