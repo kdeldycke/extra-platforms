@@ -37,6 +37,7 @@ from textwrap import dedent, indent
 from typing import Iterable
 
 from tabulate import tabulate
+from wcmatch import glob as wcglob
 
 from extra_platforms import (
     ALL_ARCHITECTURE_GROUPS,
@@ -400,66 +401,62 @@ def generate_platforms_graph(
 
 
 def update_docs() -> None:
-    """Update documentation with dynamic content."""
-    # Update trait tables.
-    replace_content(
-        DOCS_ROOT / "architectures.md",
-        "<!-- architecture-table-start -->\n\n",
-        "\n\n<!-- architecture-table-end -->",
-        generate_trait_table(ALL_ARCHITECTURES, "Architecture ID"),
-    )
-    replace_content(
-        DOCS_ROOT / "platforms.md",
-        "<!-- platform-table-start -->\n\n",
-        "\n\n<!-- platform-table-end -->",
-        generate_trait_table(ALL_PLATFORMS, "Platform ID"),
-    )
-    replace_content(
-        DOCS_ROOT / "ci.md",
-        "<!-- ci-table-start -->\n\n",
-        "\n\n<!-- ci-table-end -->",
-        generate_trait_table(ALL_CI, "CI ID"),
-    )
+    """Update documentation with dynamic content.
 
-    # Update Sankey diagrams.
-    replace_content(
-        DOCS_ROOT / "architectures.md",
-        "<!-- architecture-multi-level-sankey-start -->\n\n",
-        "\n\n<!-- architecture-multi-level-sankey-end -->",
-        generate_sankey(
-            list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
+    Dynamically discovers all markdown files in the documentation root
+    and applies content replacements based on HTML comment tags found
+    in each file.
+    """
+    # Define all replacement rules as (start_tag, end_tag, content) tuples.
+    replacement_rules = [
+        # Trait tables
+        (
+            "<!-- architecture-table-start -->\n\n",
+            "\n\n<!-- architecture-table-end -->",
+            generate_trait_table(ALL_ARCHITECTURES, "Architecture ID"),
         ),
-    )
-    replace_content(
-        DOCS_ROOT / "platforms.md",
-        "<!-- platform-multi-level-sankey-start -->\n\n",
-        "\n\n<!-- platform-multi-level-sankey-end -->",
-        generate_sankey(
-            list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
+        (
+            "<!-- platform-table-start -->\n\n",
+            "\n\n<!-- platform-table-end -->",
+            generate_trait_table(ALL_PLATFORMS, "Platform ID"),
         ),
-    )
-
-    # Update group tables.
-    replace_content(
-        DOCS_ROOT / "architectures.md",
-        "<!-- architecture-groups-table-start -->\n\n",
-        "\n\n<!-- architecture-groups-table-end -->",
-        generate_group_table(ALL_ARCHITECTURE_GROUPS, NON_OVERLAPPING_GROUPS),
-    )
-    replace_content(
-        DOCS_ROOT / "platforms.md",
-        "<!-- platform-groups-table-start -->\n\n",
-        "\n\n<!-- platform-groups-table-end -->",
-        generate_group_table(ALL_PLATFORM_GROUPS, NON_OVERLAPPING_GROUPS),
-    )
-
-    # Update Sankey diagrams.
-    replace_content(
-        DOCS_ROOT / "architectures.md",
-        "<!-- architecture-sankey-start -->\n\n",
-        "\n\n<!-- architecture-sankey-end -->",
-        "\n\n".join(
-            (
+        (
+            "<!-- ci-table-start -->\n\n",
+            "\n\n<!-- ci-table-end -->",
+            generate_trait_table(ALL_CI, "CI ID"),
+        ),
+        # Multi-level Sankey diagrams
+        (
+            "<!-- architecture-multi-level-sankey-start -->\n\n",
+            "\n\n<!-- architecture-multi-level-sankey-end -->",
+            generate_sankey(
+                list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
+                + [ALL_ARCHITECTURES]
+            ),
+        ),
+        (
+            "<!-- platform-multi-level-sankey-start -->\n\n",
+            "\n\n<!-- platform-multi-level-sankey-end -->",
+            generate_sankey(
+                list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
+            ),
+        ),
+        # Group tables
+        (
+            "<!-- architecture-groups-table-start -->\n\n",
+            "\n\n<!-- architecture-groups-table-end -->",
+            generate_group_table(ALL_ARCHITECTURE_GROUPS, NON_OVERLAPPING_GROUPS),
+        ),
+        (
+            "<!-- platform-groups-table-start -->\n\n",
+            "\n\n<!-- platform-groups-table-end -->",
+            generate_group_table(ALL_PLATFORM_GROUPS, NON_OVERLAPPING_GROUPS),
+        ),
+        # Individual group Sankey diagrams
+        (
+            "<!-- architecture-sankey-start -->\n\n",
+            "\n\n<!-- architecture-sankey-end -->",
+            "\n\n".join(
                 generate_sankey({group})
                 for group in sorted(
                     NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS,
@@ -467,52 +464,66 @@ def update_docs() -> None:
                 )
             ),
         ),
-    )
-    replace_content(
-        DOCS_ROOT / "platforms.md",
-        "<!-- extra-platform-groups-sankey-start -->\n\n",
-        "\n\n<!-- extra-platform-groups-sankey-end -->",
-        "\n\n".join(
-            (
+        (
+            "<!-- extra-platform-groups-sankey-start -->\n\n",
+            "\n\n<!-- extra-platform-groups-sankey-end -->",
+            "\n\n".join(
                 generate_sankey({group})
                 for group in sorted(
                     EXTRA_GROUPS & ALL_PLATFORM_GROUPS, key=attrgetter("id")
                 )
             ),
         ),
-    )
-    replace_content(
-        DOCS_ROOT / "ci.md",
-        "<!-- ci-sankey-start -->\n\n",
-        "\n\n<!-- ci-sankey-end -->",
-        generate_sankey(ALL_CI_GROUPS),
-    )
+        (
+            "<!-- ci-sankey-start -->\n\n",
+            "\n\n<!-- ci-sankey-end -->",
+            generate_sankey(ALL_CI_GROUPS),
+        ),
+        # Mindmap diagrams
+        (
+            "<!-- architecture-mindmap-start -->\n\n",
+            "\n\n<!-- architecture-mindmap-end -->",
+            generate_traits_mindmap(
+                list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
+                + [ALL_ARCHITECTURES]
+            ),
+        ),
+        (
+            "<!-- platform-mindmap-start -->\n\n",
+            "\n\n<!-- platform-mindmap-end -->",
+            generate_traits_mindmap(
+                list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
+            ),
+        ),
+        (
+            "<!-- ci-mindmap-start -->\n\n",
+            "\n\n<!-- ci-mindmap-end -->",
+            generate_traits_mindmap(
+                list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
+            ),
+        ),
+    ]
 
-    # Update mindmap diagrams showing the hierarchy of non-overlapping groups.
-    replace_content(
-        (README_PATH, DOCS_ROOT / "architectures.md"),
-        "<!-- architecture-mindmap-start -->\n\n",
-        "\n\n<!-- architecture-mindmap-end -->",
-        generate_traits_mindmap(
-            list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
-        ),
-    )
-    replace_content(
-        (README_PATH, DOCS_ROOT / "platforms.md"),
-        "<!-- platform-mindmap-start -->\n\n",
-        "\n\n<!-- platform-mindmap-end -->",
-        generate_traits_mindmap(
-            list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
-        ),
-    )
-    replace_content(
-        (README_PATH, DOCS_ROOT / "ci.md"),
-        "<!-- ci-mindmap-start -->\n\n",
-        "\n\n<!-- ci-mindmap-end -->",
-        generate_traits_mindmap(
-            list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
-        ),
-    )
+    # Collect all markdown files from docs directory and project root.
+    all_md_files = set()
+
+    # Add markdown files from docs directory using wcmatch glob.
+    for md_file in wcglob.iglob(str(DOCS_ROOT / "**/*.md"), flags=wcglob.GLOBSTAR):
+        all_md_files.add(Path(md_file).resolve())
+
+    # Add readme.md from project root.
+    if README_PATH.exists():
+        all_md_files.add(README_PATH.resolve())
+
+    # Apply each replacement rule to all matching files.
+    for start_tag, end_tag, content in replacement_rules:
+        matching_files = []
+        for md_file in all_md_files:
+            file_content = md_file.read_text()
+            if start_tag in file_content and end_tag in file_content:
+                matching_files.append(md_file)
+        if matching_files:
+            replace_content(matching_files, start_tag, end_tag, content)
 
     # Update grouping charts of all groups, including non-overlapping and extra groups.
     platform_doc = PROJECT_ROOT / "docs" / "groups.md"
