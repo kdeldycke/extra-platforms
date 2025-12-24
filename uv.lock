@@ -410,6 +410,7 @@ docs = [
     { name = "sphinx-issues" },
     { name = "sphinxcontrib-mermaid" },
     { name = "sphinxext-opengraph" },
+    { name = "tabulate", extra = ["widechars"] },
     { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
 test = [
@@ -445,6 +446,7 @@ docs = [
     { name = "sphinx-issues", specifier = ">=5.0.0" },
     { name = "sphinxcontrib-mermaid", specifier = ">=1.2.2" },
     { name = "sphinxext-opengraph", specifier = ">=0.13.0" },
+    { name = "tabulate", extras = ["widechars"], specifier = ">=0.9" },
     { name = "tomli", marker = "python_full_version < '3.11'", specifier = ">=2.3.0" },
 ]
 test = [

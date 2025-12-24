@@ -173,7 +173,23 @@ mindmap
 
 ### Individual architecture families
 
-Each family can also be viewed separately:
+<!-- architecture-groups-table-start -->
+
+|  Icon  | Group ID            | Description            |   Member count |  Non-overlapping  |
+| :--: | :------------------ | :--------------------- | -----------: | :-------------: |
+|   🏛️   | `all_architectures` | All architectures      |             25 |        ⚠️         |
+|   📱   | `any_arm`           | Any ARM architecture   |              5 |        ✅         |
+|   🔧   | `any_mips`          | Any MIPS architecture  |              4 |        ✅         |
+|   ☀️   | `any_sparc`         | Any SPARC architecture |              2 |        ✅         |
+|   🏢   | `ibm_mainframe`     | IBM mainframe          |              1 |        ✅         |
+|   🐉   | `loongarch`         | LoongArch              |              1 |        ✅         |
+|   ⚡   | `powerpc`           | PowerPC family         |              3 |        ✅         |
+|   🌱   | `riscv`             | RISC-V family          |              2 |        ✅         |
+|   🌐   | `webassembly`       | WebAssembly            |              2 |        ✅         |
+|   🔲   | `x86`               | x86 family             |              4 |        ✅         |
+
+<!-- architecture-groups-table-end -->
+
 
 <!-- architecture-sankey-start -->
 

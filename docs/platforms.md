@@ -240,9 +240,30 @@ mindmap
 
 <!-- platform-mindmap-end -->
 
-### Overlapping groups
+### All groups
 
-For convenience, other groups are defined, but without guarantee of non-overlapping platforms:
+For convenience a multitude of groups are defined, some of which may overlap. Here is a table listing all defined platform groups:
+
+<!-- platform-groups-table-start -->
+
+|  Icon  | Group ID             | Description                        |   Member count |  Non-overlapping  |
+| :--: | :------------------- | :--------------------------------- | -----------: | :-------------: |
+|   ⚙️   | `all_platforms`      | All platforms                      |             48 |        ⚠️         |
+|   🪟   | `any_windows`        | Any Windows                        |              1 |        ✅         |
+|  🅱️+   | `bsd`                | Any BSD                            |              6 |        ✅         |
+|   🅱️   | `bsd_without_macos`  | Any BSD excluding macOS            |              5 |        ⚠️         |
+|   🐧   | `linux`              | Any Linux distribution             |             35 |        ✅         |
+|   ≚    | `linux_layers`       | Any Linux compatibility layers     |              2 |        ✅         |
+|  🐧+   | `linux_like`         | Any Linux and compatibility layers |             37 |        ⚠️         |
+|   ⊎    | `other_unix`         | Any other Unix                     |              1 |        ✅         |
+|   Ⅴ    | `system_v`           | AT&T System Five                   |              2 |        ✅         |
+|   ⨷    | `unix`               | Any Unix                           |             47 |        ⚠️         |
+|   ≛    | `unix_layers`        | Any Unix compatibility layers      |              1 |        ✅         |
+|   ⨂    | `unix_without_macos` | Any Unix excluding macOS           |             46 |        ⚠️         |
+
+<!-- platform-groups-table-end -->
+
+
 
 <!-- extra-platform-groups-sankey-start -->
 

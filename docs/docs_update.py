@@ -36,6 +36,8 @@ from pathlib import Path
 from textwrap import dedent, indent
 from typing import Iterable
 
+from tabulate import tabulate
+
 from extra_platforms import (
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
@@ -105,6 +107,73 @@ def generate_trait_table(traits, column_name: str) -> str:
             f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})"
         )
         lines.append(f"| {icon} | [{name}]({url}) | `{trait.id}` | {detection_func} |")
+
+    return "\n".join(lines)
+
+
+def generate_group_table(
+    groups: Iterable[Group], non_overlapping_groups: frozenset[Group] | None = None
+) -> str:
+    """Produce a Markdown table for a collection of groups.
+
+    The table contains the icon, ID, description, member count, and non-overlapping
+    status for each group.
+
+    Args:
+        groups: The groups to include in the table.
+        non_overlapping_groups: Optional set of non-overlapping groups. If provided, a
+                                column will be added indicating whether each group is
+                                non-overlapping.
+    """
+    table_data = []
+    headers = ["Icon", "Group ID", "Description", "Member count"]
+    alignments = ["center", "left", "left", "right"]
+
+    if non_overlapping_groups:
+        headers.append("Non-overlapping")
+        alignments.append("center")
+
+    for group in sorted(groups, key=attrgetter("id")):
+        line: list[str] = [
+            html.escape(group.icon),
+            f"`{group.id}`",
+            group.name,
+            str(len(group.members)),
+        ]
+        if non_overlapping_groups:
+            line.append("✅" if group in non_overlapping_groups else "⚠️")
+        table_data.append(line)
+
+    rendered_table = tabulate(
+        table_data,
+        headers=headers,
+        tablefmt="github",
+        colalign=alignments,
+        disable_numparse=True,
+    )
+
+    # Manually produce Markdown alignment hints. This has been proposed upstream at:
+    # https://github.com/astanin/python-tabulate/pull/261
+    # https://github.com/astanin/python-tabulate/issues/53
+    # Copy of: https://github.com/kdeldycke/meta-package-manager/blob/6d250993edf22ba7456ad0f105d8937f7e650ccd/meta_package_manager/inventory.py#L139C1-L160C1
+    separators = []
+    for col_index, header in enumerate(headers):
+        cells = [line[col_index] for line in table_data] + [header]
+        max_len = max(len(c) for c in cells)
+        align = alignments[col_index]
+        if align == "left":
+            sep = f":{'-' * (max_len - 1)}"
+        elif align == "center":
+            sep = f":{'-' * (max_len - 2)}:"
+        elif align == "right":
+            sep = f"{'-' * (max_len - 1)}:"
+        else:
+            sep = "-" * max_len
+        separators.append(sep)
+    header_separator = f"| {' | '.join(separators)} |"
+
+    lines = rendered_table.splitlines()
+    lines[1] = header_separator
 
     return "\n".join(lines)
 
@@ -331,7 +400,7 @@ def update_docs() -> None:
         generate_trait_table(ALL_CI, "CI ID"),
     )
 
-    # Update multi-level Sankey diagrams.
+    # Update Sankey diagrams.
     replace_content(
         DOCS_ROOT / "architectures.md",
         "<!-- architecture-multi-level-sankey-start -->\n\n",
@@ -347,6 +416,20 @@ def update_docs() -> None:
         generate_sankey(
             list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
         ),
+    )
+
+    # Update group tables.
+    replace_content(
+        DOCS_ROOT / "architectures.md",
+        "<!-- architecture-groups-table-start -->\n\n",
+        "\n\n<!-- architecture-groups-table-end -->",
+        generate_group_table(ALL_ARCHITECTURE_GROUPS, NON_OVERLAPPING_GROUPS),
+    )
+    replace_content(
+        DOCS_ROOT / "platforms.md",
+        "<!-- platform-groups-table-start -->\n\n",
+        "\n\n<!-- platform-groups-table-end -->",
+        generate_group_table(ALL_PLATFORM_GROUPS, NON_OVERLAPPING_GROUPS),
     )
 
     # Update Sankey diagrams.
