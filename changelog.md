@@ -7,7 +7,7 @@
 
 - Add architecture detection: `aarch64`, `arm`, `armv6l`, `armv7l`, `armv8l`, `i386`, `i586`, `i686`, `loongarch64`, `mips`, `mips64`, `mips64el`, `mipsel`, `ppc`, `ppc64`, `ppc64le`, `riscv32`, `riscv64`, `s390x`, `sparc`, `sparc64`, `unknown_architecture`, `wasm32`, `wasm64`, `x86_64`.
 - Architectures, platforms and CI systems are now known as *traits*.
-- Add new `current_traits()` method to return all traits matching the current environment: architecture, platforms and CI systems. Deprecate `current_platforms()` in favor of `current_traits()`.
+- Add new `current_traits()` method to return all traits matching the current environment: architecture, platforms and CI systems. Deprecate `current_platforms()` in favor of it.
 - Add new `current_architecture()` and `current_ci()` methods to return the current architecture and CI system.
 - Rename:
   - `current_os()` to `current_platform()`.
@@ -17,11 +17,11 @@
   - `Group.platforms` to `Group.members`.
   - `Group.platform_ids` to `Group.member_ids`.
   - `Group._extract_platforms()` to `Group._extract_members()`
-- `Group.members` is now an immutable `MappingProxyType[str, Trait]` for O(1) lookup by ID.
+- `Group.members` is now an immutable `MappingProxyType`.
 - Add more in-place operators (`|=`, `&=`, `-=`, `^=`) and set-like behavior to `Group`.
-- Add new `ALL_ARCHITECTURES` and `ALL_TRAITS` groups.
-- Add new `ALL_ARCHITECTURE_GROUPS`, `ALL_PLATFORM_GROUPS` and `ALL_CI_GROUPS` collections of groups.
+- Add new `ALL_ARCHITECTURES`, `ANY_ARM`, `X86`, `LOONGARCH`, `ANY_MIPS`, `POWERPC`, `RISCV`, `ANY_SPARC`, `IBM_MAINFRAME`, `WEBASSEMBLY` and `ALL_TRAITS` groups.
 - Deprecate `ALL_PLATFORMS_WITHOUT_CI` group is favor of `ALL_PLATFORMS`.
+- Add new `ALL_ARCHITECTURE_GROUPS`, `ALL_PLATFORM_GROUPS` and `ALL_CI_GROUPS` collections of groups.
 - Remove utilization workaround for `macos-15-intel`.
 - Replace deprecated `codecov/test-results-action` by `codecov/codecov-action`.
 
