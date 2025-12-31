@@ -260,7 +260,7 @@ def test_github_runner_detection():
         assert is_x86_64()
     # XXX Windows ARM runners report unknown architecture.
     elif github_runner_os() == "windows-11-arm":
-        if sys.version_info > (3, 10):
+        if sys.version_info >= (3, 11):
             assert current_architecture() is UNKNOWN_ARCHITECTURE
             assert UNKNOWN_ARCHITECTURE in current_traits()
             assert is_unknown_architecture()
