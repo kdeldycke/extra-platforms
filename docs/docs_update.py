@@ -71,7 +71,7 @@ def replace_content(
     if isinstance(filepath, Path):
         path_list = [filepath]
     else:
-        path_list = filepath
+        path_list = list(filepath)
 
     for filepath in path_list:
         filepath = filepath.resolve()
@@ -185,7 +185,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
             f"`{group.id}`",
             group.name,
             "✅" if group.canonical else "",
-            str(len(group.members)),
+            str(len(group)),
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)
@@ -231,7 +231,7 @@ def _analyze_group_hierarchy(
     intermediate_groups = [g for g in groups_list if g.id != superset.id]
 
     # Compute the union of all intermediate groups to find missing traits.
-    union_of_intermediate = set()
+    union_of_intermediate: set[str] = set()
     for group in intermediate_groups:
         union_of_intermediate.update(group.member_ids)
 
@@ -270,7 +270,7 @@ def generate_sankey(groups: Iterable[Group]) -> str:
     for group in sorted(
         intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
     ):
-        member_count = len(group.members)
+        member_count = len(group)
         table.append(f"{superset.id.upper()},{group.id.upper()},{member_count}")
 
     # Second layer: intermediate groups -> their members (weight = 1 each).
@@ -320,7 +320,7 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     group_map = ""
     for group in sorted(intermediate_groups, key=attrgetter("id"), reverse=True):
         group_map += f"){group.icon} {group.id.upper()}(\n"
-        for platform_id, platform in group.members.items():
+        for platform_id, platform in group.items():
             group_map += f"    ({platform.icon} {platform_id})\n"
 
     # Add missing traits as direct children of the superset.
@@ -448,11 +448,11 @@ def update_docs() -> None:
 
     # Apply each replacement rule to all matching files.
     for start_tag, end_tag, content in replacement_rules:
-        matching_files = []
-        for md_file in all_md_files:
-            file_content = md_file.read_text()
+        matching_files: list[Path] = []
+        for filepath in all_md_files:
+            file_content = filepath.read_text()
             if start_tag in file_content and end_tag in file_content:
-                matching_files.append(md_file)
+                matching_files.append(filepath)
         if matching_files:
             replace_content(matching_files, start_tag, end_tag, content)
 
