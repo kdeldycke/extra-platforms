@@ -599,7 +599,12 @@ ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
 
 
 ALL_CI_GROUPS: frozenset[Group] = frozenset((ALL_CI,))
-"""All groups whose members are CI systems."""
+"""All groups whose members are CI systems.
+
+.. note::
+    Not that useful currently, but provided for symmetry with architecture and platform
+    groups.
+"""
 
 
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
@@ -626,7 +631,12 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         ALL_CI,
     ),
 )
-"""Non-overlapping groups."""
+"""Non-overlapping groups.
+
+.. hint::
+    These groups together cover all recognized architectures, platforms, and CI systems.
+    They are all marked as canonical.
+"""
 
 
 EXTRA_GROUPS: frozenset[Group] = frozenset(
@@ -642,7 +652,11 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         LINUX_LIKE,
     ),
 )
-"""Overlapping groups, defined for convenience."""
+"""Overlapping groups, defined for convenience.
+
+.. hint::
+    None of these groups are marked as canonical.
+"""
 
 
 ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)

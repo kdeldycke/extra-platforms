@@ -116,6 +116,9 @@ def test_group_definitions():
         assert all(isinstance(m_id, str) for m_id in group.members.keys())
         assert all(isinstance(m, Trait) for m in group.members.values())
 
+        # Canonical groups are self-canonical.
+        assert group.canonical is (group in NON_OVERLAPPING_GROUPS)
+
         # Check general subset properties and operators.
         assert group.issubset(ALL_TRAITS)
         assert group <= ALL_TRAITS
@@ -239,11 +242,19 @@ def test_platform_logical_grouping():
 
     # All platforms are divided into Windows and Unix at the highest level.
     assert ALL_PLATFORMS.fullyintersects(ANY_WINDOWS | UNIX)
+    assert ANY_WINDOWS.canonical
+    assert not UNIX.canonical
 
     # All UNIX platforms are divided into BSD, Linux, and Unix families.
     assert UNIX.fullyintersects(
         BSD | LINUX | LINUX_LAYERS | SYSTEM_V | UNIX_LAYERS | OTHER_UNIX
     )
+    assert BSD.canonical
+    assert LINUX.canonical
+    assert LINUX_LAYERS.canonical
+    assert SYSTEM_V.canonical
+    assert UNIX_LAYERS.canonical
+    assert OTHER_UNIX.canonical
 
 
 def test_sets_of_groups():
@@ -294,6 +305,8 @@ def test_non_overlapping_groups():
         group1, group2 = combination
         assert group1.isdisjoint(group2)
         assert group2.isdisjoint(group1)
+        assert group1.canonical
+        assert group2.canonical
 
 
 def test_overlapping_groups():
@@ -305,3 +318,4 @@ def test_overlapping_groups():
                 overlap = True
                 break
         assert overlap is True
+        assert not extra_group.canonical

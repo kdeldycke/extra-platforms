@@ -112,6 +112,26 @@ def test_extract_members_bad_type(item):
         tuple(Group._extract_members(item))
 
 
+def test_canonical_property():
+    # A random group is not canonical by default.
+    my_group = Group("my_group", "My Group", "✅", (AIX, PIDORA))
+    assert not my_group.canonical
+
+    # An empty group is not canonical.
+    empty_group = Group("empty", "Empty Group")
+    assert not empty_group.canonical
+
+    # A copied canonical group stays canonical.
+    assert ANY_WINDOWS.canonical
+    copied_windows = ANY_WINDOWS.copy()
+    assert copied_windows.canonical
+
+    # A modified canonical group is not canonical.
+    assert LINUX.canonical
+    modified_linux = LINUX.add(AIX)
+    assert not modified_linux.canonical
+
+
 def test_simple_union():
     new_group = ANY_WINDOWS.union(LINUX_LAYERS)
 

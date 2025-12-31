@@ -12,13 +12,14 @@
 - Rename:
   - `current_os()` to `current_platform()`.
   - `platforms_from_ids()` to `traits_from_ids()`.
-  - `CI` group to `ALL_CI`. `CI` now refers to the `CI` trait.
+  - `CI` group to `ALL_CI`. `CI` now refers to the `CI(Trait)` class.
   - `ALL_PLATFORM_IDS` constant to `ALL_TRAIT_IDS`.
   - `Group.platforms` to `Group.members`.
   - `Group.platform_ids` to `Group.member_ids`.
   - `Group._extract_platforms()` to `Group._extract_members()`
 - `Group.members` is now an immutable `MappingProxyType`.
 - Add more in-place operators (`|=`, `&=`, `-=`, `^=`) and set-like behavior to `Group`.
+- Add `canonical` attribute to `Group`.
 - Add new `ALL_ARCHITECTURES`, `ANY_ARM`, `X86`, `LOONGARCH`, `ANY_MIPS`, `POWERPC`, `RISCV`, `ANY_SPARC`, `IBM_MAINFRAME`, `WEBASSEMBLY` and `ALL_TRAITS` groups.
 - Deprecate `ALL_PLATFORMS_WITHOUT_CI` group is favor of `ALL_PLATFORMS`.
 - Add new `ALL_ARCHITECTURE_GROUPS`, `ALL_PLATFORM_GROUPS` and `ALL_CI_GROUPS` collections of groups.

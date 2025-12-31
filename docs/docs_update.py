@@ -47,7 +47,6 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
-    EXTRA_GROUPS,
     NON_OVERLAPPING_GROUPS,
     Group,
 )
@@ -164,9 +163,7 @@ def generate_trait_table(traits) -> str:
     return _generate_markdown_table(table_data, headers, alignments)
 
 
-def generate_group_table(
-    groups: Iterable[Group], non_overlapping_groups: frozenset[Group] | None = None
-) -> str:
+def generate_group_table(groups: Iterable[Group]) -> str:
     """Produce a Markdown table for a collection of groups.
 
     The table contains the icon, ID, description, member count, and non-overlapping
@@ -179,23 +176,17 @@ def generate_group_table(
                                 non-overlapping.
     """
     table_data = []
-    headers = ["Icon", "Group ID", "Description", "Member count"]
-    alignments = ["center", "left", "left", "right"]
-
-    if non_overlapping_groups:
-        headers.append("Non-overlapping")
-        alignments.append("center")
+    headers = ["Icon", "Group ID", "Description", "Canonical", "Member count"]
+    alignments = ["center", "left", "left", "center", "right"]
 
     for group in sorted(groups, key=attrgetter("id")):
-        line: list[str] = [
+        table_data.append([
             html.escape(group.icon),
             f"`{group.id}`",
             group.name,
+            "✅" if group.canonical else "",
             str(len(group.members)),
-        ]
-        if non_overlapping_groups:
-            line.append("✅" if group in non_overlapping_groups else "⚠️")
-        table_data.append(line)
+        ])
 
     return _generate_markdown_table(table_data, headers, alignments)
 
@@ -350,62 +341,19 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     return output
 
 
-def generate_platforms_graph(
-    graph_id: str,
-    description: str,
-    groups: frozenset[Group],
-) -> str:
-    """Generates an `Euler diagram <https://xkcd.com/2721/>`_ of platform and their
-    grouping.
-
-    Euler diagrams are `not supported by mermaid yet
-    <https://github.com/mermaid-js/mermaid/issues/2583>`_ so we fallback on a flowchart
-    without arrows.
-
-    Returns a ready to use and properly indented MyST block.
-    """
-    INDENT = " " * 4
-    subgraphs = set()
-
-    # Create one subgraph per group.
-    for group in sorted(groups, key=attrgetter("id")):
-        nodes = set()
-        for platform in group:
-            # Make the node ID unique for overlapping groups.
-            nodes.add(
-                f"{group.id}_{platform.id}"
-                f"(<code>{platform.id}</code><br/>"
-                f"{html.escape(platform.icon)} <em>{html.escape(platform.name)}</em>)",
-            )
-        subgraphs.add(
-            f'subgraph "<code>extra_platforms.{group.id.upper()}</code>'
-            "<br/>"
-            f'{html.escape(group.icon)} <em>{html.escape(group.name)}</em>"'
-            "\n" + indent("\n".join(sorted(nodes)), INDENT) + "\nend",
-        )
-
-    # Wrap the Mermaid code into a MyST block.
-    return "\n".join(
-        (
-            dedent(f"""\
-                ```mermaid
-                ---
-                title: <code>extra_platforms.{graph_id}</code> - {description}
-                ---
-                flowchart
-                """),
-            indent("\n".join(sorted(subgraphs)), INDENT),
-            "```",
-        ),
-    )
-
-
 def update_docs() -> None:
     """Update documentation with dynamic content.
 
     Dynamically discovers all markdown files in the documentation root
     and applies content replacements based on HTML comment tags found
     in each file.
+
+    .. todo::
+        Maybe one day we'll be able to generate [Euler diagrams](https://xkcd.com/2721/)
+        instead of Sankey diagrams for the group visualizations.
+
+        There's still a chance to [have them supported by
+        Mermaid](https://github.com/mermaid-js/mermaid/issues/2583).
     """
     # Define all replacement rules as (start_tag, end_tag, content) tuples.
     replacement_rules = [
@@ -425,7 +373,7 @@ def update_docs() -> None:
             "\n\n<!-- ci-table-end -->",
             generate_trait_table(ALL_CI),
         ),
-        # Multi-level Sankey diagrams
+        # Sankey diagrams.
         (
             "<!-- architecture-multi-level-sankey-start -->\n\n",
             "\n\n<!-- architecture-multi-level-sankey-end -->",
@@ -439,39 +387,6 @@ def update_docs() -> None:
             "\n\n<!-- platform-multi-level-sankey-end -->",
             generate_sankey(
                 list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
-            ),
-        ),
-        # Group tables
-        (
-            "<!-- architecture-groups-table-start -->\n\n",
-            "\n\n<!-- architecture-groups-table-end -->",
-            generate_group_table(ALL_ARCHITECTURE_GROUPS, NON_OVERLAPPING_GROUPS),
-        ),
-        (
-            "<!-- platform-groups-table-start -->\n\n",
-            "\n\n<!-- platform-groups-table-end -->",
-            generate_group_table(ALL_PLATFORM_GROUPS, NON_OVERLAPPING_GROUPS),
-        ),
-        # Individual group Sankey diagrams
-        (
-            "<!-- architecture-sankey-start -->\n\n",
-            "\n\n<!-- architecture-sankey-end -->",
-            "\n\n".join(
-                generate_sankey({group})
-                for group in sorted(
-                    NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS,
-                    key=attrgetter("id"),
-                )
-            ),
-        ),
-        (
-            "<!-- extra-platform-groups-sankey-start -->\n\n",
-            "\n\n<!-- extra-platform-groups-sankey-end -->",
-            "\n\n".join(
-                generate_sankey({group})
-                for group in sorted(
-                    EXTRA_GROUPS & ALL_PLATFORM_GROUPS, key=attrgetter("id")
-                )
             ),
         ),
         (
@@ -502,6 +417,22 @@ def update_docs() -> None:
                 list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
             ),
         ),
+        # Group tables
+        (
+            "<!-- architecture-groups-table-start -->\n\n",
+            "\n\n<!-- architecture-groups-table-end -->",
+            generate_group_table(ALL_ARCHITECTURE_GROUPS),
+        ),
+        (
+            "<!-- platform-groups-table-start -->\n\n",
+            "\n\n<!-- platform-groups-table-end -->",
+            generate_group_table(ALL_PLATFORM_GROUPS),
+        ),
+        (
+            "<!-- groups-table-start -->\n\n",
+            "\n\n<!-- groups-table-end -->",
+            generate_group_table(ALL_GROUPS),
+        ),
     ]
 
     # Collect all markdown files from docs directory and project root.
@@ -524,35 +455,6 @@ def update_docs() -> None:
                 matching_files.append(md_file)
         if matching_files:
             replace_content(matching_files, start_tag, end_tag, content)
-
-    # Update grouping charts of all groups, including non-overlapping and extra groups.
-    platform_doc = PROJECT_ROOT / "docs" / "groups.md"
-    # TODO: Replace this hard-coded dict by allowing Group dataclass to group
-    # other groups.
-    all_groups = (
-        {
-            "id": "NON_OVERLAPPING_GROUPS",
-            "description": "Non-overlapping groups.",
-            "groups": NON_OVERLAPPING_GROUPS,
-        },
-        {
-            "id": "EXTRA_GROUPS",
-            "description": "Overlapping groups, defined for convenience.",
-            "groups": EXTRA_GROUPS,
-        },
-    )
-    assert frozenset(g for groups in all_groups for g in groups["groups"]) == ALL_GROUPS
-    for top_groups in all_groups:
-        replace_content(
-            platform_doc,
-            f"<!-- {top_groups['id']}-graph-start -->\n\n",
-            f"\n\n<!-- {top_groups['id']}-graph-end -->",
-            generate_platforms_graph(
-                top_groups["id"],  # type: ignore[arg-type]
-                top_groups["description"],  # type: ignore[arg-type]
-                top_groups["groups"],  # type: ignore[arg-type]
-            ),
-        )
 
 
 if __name__ == "__main__":

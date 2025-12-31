@@ -171,125 +171,30 @@ mindmap
 
 <!-- architecture-mindmap-end -->
 
-### Individual architecture families
+### All architecture groups
 
 <!-- architecture-groups-table-start -->
 
-|  Icon  | Group ID            | Description            |   Member count |  Non-overlapping  |
-| :--: | :------------------ | :--------------------- | -----------: | :-------------: |
-|   🏛️   | `all_architectures` | All architectures      |             25 |        ⚠️         |
-|   📱   | `any_arm`           | Any ARM architecture   |              5 |        ✅         |
-|   🔧   | `any_mips`          | Any MIPS architecture  |              4 |        ✅         |
-|   ☀️   | `any_sparc`         | Any SPARC architecture |              2 |        ✅         |
-|   🏢   | `ibm_mainframe`     | IBM mainframe          |              1 |        ✅         |
-|   🐉   | `loongarch`         | LoongArch              |              1 |        ✅         |
-|   ⚡   | `powerpc`           | PowerPC family         |              3 |        ✅         |
-|   🌱   | `riscv`             | RISC-V family          |              2 |        ✅         |
-|   🌐   | `webassembly`       | WebAssembly            |              2 |        ✅         |
-|   🔲   | `x86`               | x86 family             |              4 |        ✅         |
+|  Icon  | Group ID            | Description            |  Canonical  |   Member count |
+| :--: | :------------------ | :--------------------- | :-------: | -----------: |
+|   🏛️   | `all_architectures` | All architectures      |             |             25 |
+|   📱   | `any_arm`           | Any ARM architecture   |     ✅      |              5 |
+|   🔧   | `any_mips`          | Any MIPS architecture  |     ✅      |              4 |
+|   ☀️   | `any_sparc`         | Any SPARC architecture |     ✅      |              2 |
+|   🏢   | `ibm_mainframe`     | IBM mainframe          |     ✅      |              1 |
+|   🐉   | `loongarch`         | LoongArch              |     ✅      |              1 |
+|   ⚡   | `powerpc`           | PowerPC family         |     ✅      |              3 |
+|   🌱   | `riscv`             | RISC-V family          |     ✅      |              2 |
+|   🌐   | `webassembly`       | WebAssembly            |     ✅      |              2 |
+|   🔲   | `x86`               | x86 family             |     ✅      |              4 |
 
 <!-- architecture-groups-table-end -->
 
+```{hint}
+Canonical groups are non-overlapping groups that together cover all recognized architectures. They are marked with a ✅ icon in the table above.
 
-<!-- architecture-sankey-start -->
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-ANY_ARM,aarch64,1
-ANY_ARM,arm,1
-ANY_ARM,armv6l,1
-ANY_ARM,armv7l,1
-ANY_ARM,armv8l,1
+Other groups are provided for convenience, but overlap with each other or with canonical groups.
 ```
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-ANY_MIPS,mips,1
-ANY_MIPS,mips64,1
-ANY_MIPS,mips64el,1
-ANY_MIPS,mipsel,1
-```
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-ANY_SPARC,sparc,1
-ANY_SPARC,sparc64,1
-```
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-IBM_MAINFRAME,s390x,1
-```
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-LOONGARCH,loongarch64,1
-```
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-POWERPC,ppc,1
-POWERPC,ppc64,1
-POWERPC,ppc64le,1
-```
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-RISCV,riscv32,1
-RISCV,riscv64,1
-```
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-WEBASSEMBLY,wasm32,1
-WEBASSEMBLY,wasm64,1
-```
-
-```mermaid
----
-config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
----
-sankey-beta
-
-X86,i386,1
-X86,i586,1
-X86,i686,1
-X86,x86_64,1
-```
-
-<!-- architecture-sankey-end -->
 
 ## `extra_platforms.architecture` API
 
