@@ -21,6 +21,7 @@ import functools
 import inspect
 import json
 import os
+import sys
 from pathlib import Path
 
 from extra_platforms import (  # type: ignore[attr-defined]
@@ -245,6 +246,7 @@ def test_github_runner_detection():
         "This test must be run inside a GitHub Actions job using a matrix strategy."
     )
 
+    # X86-64 runners.
     if github_runner_os() in {
         "ubuntu-slim",
         "ubuntu-24.04",
@@ -256,15 +258,24 @@ def test_github_runner_detection():
         assert current_architecture() is X86_64
         assert X86_64 in current_traits()
         assert is_x86_64()
+    # XXX Windows ARM runners report unknown architecture.
     elif github_runner_os() == "windows-11-arm":
-        assert current_architecture() is UNKNOWN_ARCHITECTURE
-        assert UNKNOWN_ARCHITECTURE in current_traits()
-        assert is_unknown_architecture()
+        if sys.version_info > (3, 10):
+            assert current_architecture() is UNKNOWN_ARCHITECTURE
+            assert UNKNOWN_ARCHITECTURE in current_traits()
+            assert is_unknown_architecture()
+        # XXX Python <= 3.10 on Windows ARM runners reports x86_64.
+        else:
+            assert current_architecture() is X86_64
+            assert X86_64 in current_traits()
+            assert is_x86_64()
+    # AArch64 runners.
     else:
         assert current_architecture() is AARCH64
         assert AARCH64 in current_traits()
         assert is_aarch64()
 
+    # Linux runners.
     if github_runner_os() in {
         "ubuntu-latest",
         "ubuntu-slim",
@@ -282,6 +293,7 @@ def test_github_runner_detection():
             assert current_traits() == {GITHUB_CI, UBUNTU, current_architecture()}
             assert not is_wsl2()
 
+    # MacOS runners.
     if github_runner_os() in {
         "macos-latest",
         "macos-latest-large",
@@ -299,6 +311,7 @@ def test_github_runner_detection():
         assert current_traits() == {GITHUB_CI, MACOS, current_architecture()}
         assert is_macos()
 
+    # Windows runners.
     if github_runner_os() in {
         "windows-latest",
         "windows-11-arm",
