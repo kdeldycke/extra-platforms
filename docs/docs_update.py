@@ -119,7 +119,8 @@ def _generate_markdown_table(
     # Manually produce Markdown alignment hints. This has been proposed upstream at:
     # https://github.com/astanin/python-tabulate/pull/261
     # https://github.com/astanin/python-tabulate/issues/53
-    # Copy of: https://github.com/kdeldycke/meta-package-manager/blob/6d250993edf22ba7456ad0f105d8937f7e650ccd/meta_package_manager/inventory.py#L139C1-L160C1
+    # Copy of:
+    # https://github.com/kdeldycke/meta-package-manager/blob/6d250993edf22ba7456ad0f105d8937f7e650ccd/meta_package_manager/inventory.py#L139C1-L160C1
     separators = []
     for col_index, header in enumerate(headers):
         cells = [line[col_index] for line in table_data] + [header]
@@ -266,7 +267,8 @@ def generate_sankey(groups: Iterable[Group]) -> str:
 
     table = []
 
-    # First layer: superset -> intermediate groups (weight = number of members in group).
+    # First layer: superset -> intermediate groups (weight = number of members
+    # in group).
     for group in sorted(
         intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
     ):
