@@ -1,5 +1,10 @@
 # Changelog
 
+## [6.0.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v6.0.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [6.0.0 (2026-01-02)](https://github.com/kdeldycke/extra-platforms/compare/v5.1.0...v6.0.0)
 
 - Add architecture detection: `aarch64`, `arm`, `armv6l`, `armv7l`, `armv8l`, `i386`, `i586`, `i686`, `loongarch64`, `mips`, `mips64`, `mips64el`, `mipsel`, `ppc`, `ppc64`, `ppc64le`, `riscv32`, `riscv64`, `s390x`, `sparc`, `sparc64`, `unknown_architecture`, `wasm32`, `wasm64`, `x86_64`.
