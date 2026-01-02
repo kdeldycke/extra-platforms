@@ -25,6 +25,7 @@
 - Add new `ALL_ARCHITECTURE_GROUPS`, `ALL_PLATFORM_GROUPS` and `ALL_CI_GROUPS` collections of groups.
 - Remove utilization workaround for `macos-15-intel`.
 - Replace deprecated `codecov/test-results-action` by `codecov/codecov-action`.
+- Move auto-lock time from 8:43 to 4:43.
 
 ## [5.1.0 (2025-12-06)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.1...v5.1.0)
 
