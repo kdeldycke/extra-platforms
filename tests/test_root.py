@@ -209,7 +209,8 @@ def test_module_root_declarations():
     assert deprecated_members <= set(extra_platforms_members)
 
     expected_members = sorted(
-        detection_members.union(group_members)
+        detection_members
+        .union(group_members)
         .union(architecture_members)
         .union(architecture_data_members)
         .union(ci_members)
