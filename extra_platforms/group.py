@@ -192,6 +192,19 @@ class Group:
                 case _:
                     raise TypeError(f"Unsupported type: {type(item)}")
 
+    @staticmethod
+    def _extract_platforms(*other: _TNestedReferences) -> Iterator[Trait]:
+        """Deprecated alias for `_extract_members()`.
+
+        .. deprecated:: 6.0.0
+           Use `_extract_members()` instead.
+        """
+        # Prevent circular import.
+        from ._deprecated import _warn_deprecated
+
+        _warn_deprecated("Group._extract_platforms()", "Group._extract_members()")
+        return Group._extract_members(*other)
+
     def isdisjoint(self, other: _TNestedReferences) -> bool:
         """Return `True` if the group has no members in common with ``other``.
 
