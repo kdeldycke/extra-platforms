@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import html
 import sys
+from itertools import chain
 from operator import attrgetter
 from pathlib import Path
 from textwrap import dedent, indent
@@ -47,6 +48,7 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
+    ALL_TRAITS,
     NON_OVERLAPPING_GROUPS,
     Group,
 )
@@ -200,7 +202,9 @@ def generate_group_table(groups: Iterable[Group]) -> str:
 
     for group in sorted(groups, key=attrgetter("id")):
         symbol_name = group.id.upper()
-        symbol_link = f"[`{symbol_name}`](groups.md#extra_platforms.group_data.{symbol_name})"
+        symbol_link = (
+            f"[`{symbol_name}`](groups.md#extra_platforms.group_data.{symbol_name})"
+        )
         table_data.append([
             html.escape(group.icon),
             symbol_link,
@@ -363,6 +367,50 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     return output
 
 
+def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
+    """Produce a Markdown table for pytest decorators.
+
+    The table contains the skip decorator, unless decorator, symbol link, and description for each trait or group.
+    """
+    table_data = []
+    headers = ["Skip decorator", "Unless decorator", "Source symbol", "Description"]
+    alignments = ["left", "left", "left", "left"]
+
+    for trait in sorted(objects, key=attrgetter("id")):
+        class_name = type(trait).__name__
+
+        # Determine the documentation page and module based on the class
+        if class_name == "Architecture":
+            page = "architectures.md"
+            module = "architecture_data"
+        elif class_name == "Platform":
+            page = "platforms.md"
+            module = "platform_data"
+        elif class_name == "CI":
+            page = "ci.md"
+            module = "ci_data"
+        elif class_name == "Group":
+            page = "groups.md"
+            module = "group_data"
+        else:
+            page = "index.md"
+            module = "unknown"
+
+        symbol_name = trait.id.upper()
+        symbol_link = (
+            f"[`{symbol_name}`]({page}#extra_platforms.{module}.{symbol_name})"
+        )
+
+        table_data.append([
+            f"`@skip_{trait.id}`",
+            f"`@unless_{trait.id}`",
+            symbol_link,
+            html.escape(trait.name),
+        ])
+
+    return _generate_markdown_table(table_data, headers, alignments)
+
+
 def generate_autodata_directives(traits: Iterable[Trait], module_name: str) -> str:
     """Generate Sphinx autodata directives for a collection of traits.
 
@@ -478,6 +526,12 @@ def update_docs() -> None:
             "<!-- groups-table-start -->\n\n",
             "\n\n<!-- groups-table-end -->",
             generate_group_table(ALL_GROUPS),
+        ),
+        # Pytest decorators table.
+        (
+            "<!-- decorators-table-start -->\n\n",
+            "\n\n<!-- decorators-table-end -->",
+            generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)),
         ),
         # Autodata directives for Sphinx documentation of module-level constants.
         (
