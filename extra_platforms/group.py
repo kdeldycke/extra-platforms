@@ -118,6 +118,9 @@ class Group:
 
         A canonical group is one that does not share any members with other groups, and
         is composed of members that are of the same kind.
+
+        .. hint::
+            Canonical groups are denoted with a "⬥" symbol in the documentation and tables.
         """
         if len({trait.__class__ for trait in self._members.values()}) == 1:
             # Avoid circular import.

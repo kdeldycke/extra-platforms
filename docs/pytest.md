@@ -67,7 +67,7 @@ def test_not_in_github_actions():
 
 <!-- decorators-table-start -->
 
-| Skip Decorator               | Unless Decorator               | Symbol                                                                                            | Description                                 |
+| Skip decorator               | Unless decorator               | Source symbol                                                                                     | Description                                 |
 | :--------------------------- | :----------------------------- | :------------------------------------------------------------------------------------------------ | :------------------------------------------ |
 | `@skip_aarch64`              | `@unless_aarch64`              | [`AARCH64`](architectures.md#extra_platforms.architecture_data.AARCH64)                           | ARM64 (AArch64)                             |
 | `@skip_aix`                  | `@unless_aix`                  | [`AIX`](platforms.md#extra_platforms.platform_data.AIX)                                           | IBM AIX                                     |

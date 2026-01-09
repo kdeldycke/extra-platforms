@@ -250,16 +250,16 @@ Here is a table listing all defined platform groups:
 |  Icon  | Symbol                                                                          | Description                        |  Canonical  |   Member count |
 | :--: | :------------------------------------------------------------------------------ | :--------------------------------- | :-------: | -----------: |
 |   ⚙️   | [`ALL_PLATFORMS`](groups.md#extra_platforms.group_data.ALL_PLATFORMS)           | All platforms                      |             |             48 |
-|   🪟   | [`ANY_WINDOWS`](groups.md#extra_platforms.group_data.ANY_WINDOWS)               | Any Windows                        |     ✅      |              1 |
-|  🅱️+   | [`BSD`](groups.md#extra_platforms.group_data.BSD)                               | Any BSD                            |     ✅      |              6 |
+|   🪟   | [`ANY_WINDOWS`](groups.md#extra_platforms.group_data.ANY_WINDOWS)               | Any Windows                        |      ⬥      |              1 |
+|  🅱️+   | [`BSD`](groups.md#extra_platforms.group_data.BSD)                               | Any BSD                            |      ⬥      |              6 |
 |   🅱️   | [`BSD_WITHOUT_MACOS`](groups.md#extra_platforms.group_data.BSD_WITHOUT_MACOS)   | Any BSD excluding macOS            |             |              5 |
-|   🐧   | [`LINUX`](groups.md#extra_platforms.group_data.LINUX)                           | Any Linux distribution             |     ✅      |             35 |
-|   ≚    | [`LINUX_LAYERS`](groups.md#extra_platforms.group_data.LINUX_LAYERS)             | Any Linux compatibility layers     |     ✅      |              2 |
+|   🐧   | [`LINUX`](groups.md#extra_platforms.group_data.LINUX)                           | Any Linux distribution             |      ⬥      |             35 |
+|   ≚    | [`LINUX_LAYERS`](groups.md#extra_platforms.group_data.LINUX_LAYERS)             | Any Linux compatibility layers     |      ⬥      |              2 |
 |  🐧+   | [`LINUX_LIKE`](groups.md#extra_platforms.group_data.LINUX_LIKE)                 | Any Linux and compatibility layers |             |             37 |
-|   ⊎    | [`OTHER_UNIX`](groups.md#extra_platforms.group_data.OTHER_UNIX)                 | Any other Unix                     |     ✅      |              1 |
-|   𝐕    | [`SYSTEM_V`](groups.md#extra_platforms.group_data.SYSTEM_V)                     | AT&T System Five                   |     ✅      |              2 |
+|   ⊎    | [`OTHER_UNIX`](groups.md#extra_platforms.group_data.OTHER_UNIX)                 | Any other Unix                     |      ⬥      |              1 |
+|   𝐕    | [`SYSTEM_V`](groups.md#extra_platforms.group_data.SYSTEM_V)                     | AT&T System Five                   |      ⬥      |              2 |
 |   ⨷    | [`UNIX`](groups.md#extra_platforms.group_data.UNIX)                             | Any Unix                           |             |             47 |
-|   ≛    | [`UNIX_LAYERS`](groups.md#extra_platforms.group_data.UNIX_LAYERS)               | Any Unix compatibility layers      |     ✅      |              1 |
+|   ≛    | [`UNIX_LAYERS`](groups.md#extra_platforms.group_data.UNIX_LAYERS)               | Any Unix compatibility layers      |      ⬥      |              1 |
 |   ⨂    | [`UNIX_WITHOUT_MACOS`](groups.md#extra_platforms.group_data.UNIX_WITHOUT_MACOS) | Any Unix excluding macOS           |             |             46 |
 
 <!-- platform-groups-table-end -->

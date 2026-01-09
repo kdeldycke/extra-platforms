@@ -241,7 +241,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
             html.escape(group.icon),
             symbol_link,
             group.name,
-            "✅" if group.canonical else "",
+            "⬥" if group.canonical else "",
             str(len(group)),
         ])
 
