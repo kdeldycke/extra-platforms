@@ -207,17 +207,17 @@ config: {"mindmap": {"padding": 5}}
 ---
 mindmap
     ((🏛️ all_architectures))
-        )🔲 X86(
-            (🔲 i386)
-            (🔲 i586)
-            (🔲 i686)
-            (💻 x86_64)
+        )𝘅 X86(
+            (𝗶 i386)
+            (𝗶 i586)
+            (𝗶 i686)
+            (🖥️ x86_64)
         )🌐 WEBASSEMBLY(
             (🌐 wasm32)
             (🌐 wasm64)
-        )🌱 RISCV(
-            (🌱 riscv32)
-            (🌱 riscv64)
+        )Ⅴ RISCV(
+            (Ⅴ riscv32)
+            (Ⅴ riscv64)
         )⚡ POWERPC(
             (⚡ ppc)
             (⚡ ppc64)
@@ -229,13 +229,13 @@ mindmap
         )☀️ ANY_SPARC(
             (☀️ sparc)
             (☀️ sparc64)
-        )🔧 ANY_MIPS(
-            (🔧 mips)
-            (🔧 mips64)
-            (🔧 mips64el)
-            (🔧 mipsel)
+        )🔲 ANY_MIPS(
+            (🔲 mips)
+            (🔲 mips64)
+            (🔲 mips64el)
+            (🔲 mipsel)
         )📱 ANY_ARM(
-            (🔋 aarch64)
+            (📱 aarch64)
             (📱 arm)
             (📱 armv6l)
             (📱 armv7l)
@@ -259,7 +259,7 @@ mindmap
     ((⚙️ all_platforms))
         )≛ UNIX_LAYERS(
             (Ͼ cygwin)
-        )Ⅴ SYSTEM_V(
+        )𝐕 SYSTEM_V(
             (➿ aix)
             (🌞 solaris)
         )⊎ OTHER_UNIX(

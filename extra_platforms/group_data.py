@@ -161,7 +161,7 @@ ANY_ARM = Group(
 X86 = Group(
     "x86",
     "x86 family",
-    "🔲",
+    "𝘅",
     (I386, I586, I686, X86_64),
 )
 """All x86-based architectures (Intel-compatible)."""
@@ -179,7 +179,7 @@ LOONGARCH = Group(
 ANY_MIPS = Group(
     "any_mips",
     "Any MIPS architecture",
-    "🔧",
+    "🔲",
     (MIPS, MIPS64, MIPS64EL, MIPSEL),
 )
 """All MIPS-based architectures."""
@@ -197,7 +197,7 @@ POWERPC = Group(
 RISCV = Group(
     "riscv",
     "RISC-V family",
-    "🌱",
+    "Ⅴ",
     (RISCV32, RISCV64),
 )
 """All RISC-V-based architectures."""
@@ -435,7 +435,7 @@ LINUX_LIKE = Group(
 SYSTEM_V = Group(
     "system_v",
     "AT&T System Five",
-    "Ⅴ",
+    "𝐕",
     (AIX, SOLARIS),
 )
 """All Unix platforms derived from AT&T System Five.

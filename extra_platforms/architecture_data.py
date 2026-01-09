@@ -27,7 +27,7 @@ from .architecture import Architecture
 AARCH64 = Architecture(
     "aarch64",
     "ARM64 (AArch64)",
-    "🔋",
+    "📱",
     "https://en.wikipedia.org/wiki/AArch64",
 )
 
@@ -62,21 +62,21 @@ ARMV8L = Architecture(
 I386 = Architecture(
     "i386",
     "Intel 80386 (i386)",
-    "🔲",
+    "𝗶",
     "https://en.wikipedia.org/wiki/Intel_80386",
 )
 
 I586 = Architecture(
     "i586",
     "Intel Pentium (i586)",
-    "🔲",
+    "𝗶",
     "https://en.wikipedia.org/wiki/P5_(microarchitecture)",
 )
 
 I686 = Architecture(
     "i686",
     "Intel Pentium Pro (i686)",
-    "🔲",
+    "𝗶",
     "https://en.wikipedia.org/wiki/P6_(microarchitecture)",
 )
 
@@ -90,28 +90,28 @@ LOONGARCH64 = Architecture(
 MIPS = Architecture(
     "mips",
     "MIPS (32-bit, big-endian)",
-    "🔧",
+    "🔲",
     "https://en.wikipedia.org/wiki/MIPS_architecture",
 )
 
 MIPS64 = Architecture(
     "mips64",
     "MIPS64 (big-endian)",
-    "🔧",
+    "🔲",
     "https://en.wikipedia.org/wiki/MIPS_architecture",
 )
 
 MIPS64EL = Architecture(
     "mips64el",
     "MIPS64 (little-endian)",
-    "🔧",
+    "🔲",
     "https://en.wikipedia.org/wiki/MIPS_architecture",
 )
 
 MIPSEL = Architecture(
     "mipsel",
     "MIPS (32-bit, little-endian)",
-    "🔧",
+    "🔲",
     "https://en.wikipedia.org/wiki/MIPS_architecture",
 )
 
@@ -139,14 +139,14 @@ PPC64LE = Architecture(
 RISCV32 = Architecture(
     "riscv32",
     "RISC-V (32-bit)",
-    "🌱",
+    "Ⅴ",
     "https://en.wikipedia.org/wiki/RISC-V",
 )
 
 RISCV64 = Architecture(
     "riscv64",
     "RISC-V (64-bit)",
-    "🌱",
+    "Ⅴ",
     "https://en.wikipedia.org/wiki/RISC-V",
 )
 
@@ -195,6 +195,6 @@ WASM64 = Architecture(
 X86_64 = Architecture(
     "x86_64",
     "x86-64 (AMD64)",
-    "💻",
+    "🖥️",
     "https://en.wikipedia.org/wiki/X86-64",
 )

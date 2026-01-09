@@ -359,7 +359,7 @@ def update_docs() -> None:
     """
     # Define all replacement rules as (start_tag, end_tag, content) tuples.
     replacement_rules = [
-        # Trait tables
+        # Trait tables.
         (
             "<!-- architecture-table-start -->\n\n",
             "\n\n<!-- architecture-table-end -->",
@@ -396,7 +396,7 @@ def update_docs() -> None:
             "\n\n<!-- ci-sankey-end -->",
             generate_sankey(ALL_CI_GROUPS),
         ),
-        # Mindmap diagrams
+        # Mindmap diagrams.
         (
             "<!-- architecture-mindmap-start -->\n\n",
             "\n\n<!-- architecture-mindmap-end -->",
@@ -419,7 +419,7 @@ def update_docs() -> None:
                 list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
             ),
         ),
-        # Group tables
+        # Group tables.
         (
             "<!-- architecture-groups-table-start -->\n\n",
             "\n\n<!-- architecture-groups-table-end -->",
