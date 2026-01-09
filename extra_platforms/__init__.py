@@ -273,7 +273,7 @@ from .operations import (  # noqa: E402
     traits_from_ids,
 )
 
-__version__ = "6.0.1"
+__version__ = "6.1.0"
 
 
 def _unrecognized_message(kind: str) -> SystemError:
