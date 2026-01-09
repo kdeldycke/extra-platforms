@@ -124,10 +124,15 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
     ``__post_init__`` method, but Sphinx autodoc doesn't pick it up by default
     for module-level constants. This hook reads the instance's ``__doc__`` and
     injects it into the documentation.
+
+    For Group instances, we preserve the original attribute docstring from the
+    source file and only append the metadata.
     """
-    if isinstance(obj, (Architecture, Platform, CI, Group)) and obj.__doc__:
+    if isinstance(obj, (Architecture, Platform, CI)):
+        # For traits, replace with their dynamic docstring + metadata.
         lines.clear()
-        lines.append(obj.__doc__)
+        if obj.__doc__:
+            lines.append(obj.__doc__)
         lines.append("")
         lines.append(f"- **ID**: ``{obj.id}``")
         lines.append(f"- **Name**: {obj.name}")
@@ -135,6 +140,17 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
             lines.append(f"- **Icon**: {obj.icon}")
         if hasattr(obj, "url") and obj.url:
             lines.append(f"- **Reference**: {obj.url}")
+        lines.append(
+            f"- **Detection function**: `is_{obj.id}() <detection.html#extra_platforms.detection.is_{obj.id}>`_"
+        )
+    elif isinstance(obj, Group):
+        # For groups, preserve original docstring and append metadata.
+        # The original docstring is already in `lines` from the source file.
+        lines.append("")
+        lines.append(f"- **ID**: ``{obj.id}``")
+        lines.append(f"- **Name**: {obj.name}")
+        if hasattr(obj, "icon") and obj.icon:
+            lines.append(f"- **Icon**: {obj.icon}")
 
 
 def autodoc_skip_member(app, what, name, obj, skip, options):

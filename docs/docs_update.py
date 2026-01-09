@@ -147,20 +147,37 @@ def _generate_markdown_table(
 def generate_trait_table(traits) -> str:
     """Produce a Markdown table for a collection of traits.
 
-    The table contains the icon, a linked name, the quoted ID, and a linked detection function for each trait.
+    The table contains the icon, the symbol constant name (linked to its full definition),
+    a linked name, and a linked detection function for each trait.
     """
     table_data = []
-    headers = ["Icon", "Name", "ID", "Detection function"]
+    headers = ["Icon", "Symbol", "Name", "Detection function"]
     alignments = ["center", "left", "left", "left"]
 
     for trait in sorted(traits, key=attrgetter("id")):
         icon = html.escape(trait.icon)
         name = html.escape(trait.name)
-        url = trait.url
+
+        # Determine the module name based on the trait type.
+        class_name = type(trait).__name__
+        if class_name == "Architecture":
+            module = "architecture_data"
+        elif class_name == "Platform":
+            module = "platform_data"
+        elif class_name == "CI":
+            module = "ci_data"
+        else:
+            module = "unknown"
+
+        # Create symbol name and link to its autodata definition.
+        # Sphinx generates anchors like: extra_platforms.architecture_data.AARCH64
+        symbol_name = trait.id.upper()
+        symbol_link = f"[`{symbol_name}`](#extra_platforms.{module}.{symbol_name})"
+
         detection_func = (
             f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})"
         )
-        table_data.append([icon, f"[{name}]({url})", f"`{trait.id}`", detection_func])
+        table_data.append([icon, symbol_link, name, detection_func])
 
     return _generate_markdown_table(table_data, headers, alignments)
 
@@ -168,7 +185,7 @@ def generate_trait_table(traits) -> str:
 def generate_group_table(groups: Iterable[Group]) -> str:
     """Produce a Markdown table for a collection of groups.
 
-    The table contains the icon, ID with link to documentation, description, member count, and non-overlapping
+    The table contains the icon, symbol with link to documentation, description, member count, and canonical
     status for each group.
 
     Args:
@@ -178,13 +195,15 @@ def generate_group_table(groups: Iterable[Group]) -> str:
                                 non-overlapping.
     """
     table_data = []
-    headers = ["Icon", "Group ID", "Description", "Canonical", "Member count"]
+    headers = ["Icon", "Symbol", "Description", "Canonical", "Member count"]
     alignments = ["center", "left", "left", "center", "right"]
 
     for group in sorted(groups, key=attrgetter("id")):
+        symbol_name = group.id.upper()
+        symbol_link = f"[`{symbol_name}`](groups.md#extra_platforms.group_data.{symbol_name})"
         table_data.append([
             html.escape(group.icon),
-            f"[`{group.id}`](groups.md#extra_platforms.group_data.{group.id.upper()})",
+            symbol_link,
             group.name,
             "✅" if group.canonical else "",
             str(len(group)),
