@@ -176,18 +176,18 @@ mindmap
 
 <!-- architecture-groups-table-start -->
 
-|  Icon  | Group ID            | Description            |  Canonical  |   Member count |
-| :--: | :------------------ | :--------------------- | :-------: | -----------: |
-|   🏛️   | `all_architectures` | All architectures      |             |             25 |
-|   📱   | `any_arm`           | Any ARM architecture   |     ✅      |              5 |
-|   🔲   | `any_mips`          | Any MIPS architecture  |     ✅      |              4 |
-|   ☀️   | `any_sparc`         | Any SPARC architecture |     ✅      |              2 |
-|   🏢   | `ibm_mainframe`     | IBM mainframe          |     ✅      |              1 |
-|   🐉   | `loongarch`         | LoongArch              |     ✅      |              1 |
-|   ⚡   | `powerpc`           | PowerPC family         |     ✅      |              3 |
-|   Ⅴ    | `riscv`             | RISC-V family          |     ✅      |              2 |
-|   🌐   | `webassembly`       | WebAssembly            |     ✅      |              2 |
-|   𝘅    | `x86`               | x86 family             |     ✅      |              4 |
+|  Icon  | Group ID                                                                      | Description            |  Canonical  |   Member count |
+| :--: | :---------------------------------------------------------------------------- | :--------------------- | :-------: | -----------: |
+|   🏛️   | [`all_architectures`](groups.md#extra_platforms.group_data.ALL_ARCHITECTURES) | All architectures      |             |             25 |
+|   📱   | [`any_arm`](groups.md#extra_platforms.group_data.ANY_ARM)                     | Any ARM architecture   |     ✅      |              5 |
+|   🔲   | [`any_mips`](groups.md#extra_platforms.group_data.ANY_MIPS)                   | Any MIPS architecture  |     ✅      |              4 |
+|   ☀️   | [`any_sparc`](groups.md#extra_platforms.group_data.ANY_SPARC)                 | Any SPARC architecture |     ✅      |              2 |
+|   🏢   | [`ibm_mainframe`](groups.md#extra_platforms.group_data.IBM_MAINFRAME)         | IBM mainframe          |     ✅      |              1 |
+|   🐉   | [`loongarch`](groups.md#extra_platforms.group_data.LOONGARCH)                 | LoongArch              |     ✅      |              1 |
+|   ⚡   | [`powerpc`](groups.md#extra_platforms.group_data.POWERPC)                     | PowerPC family         |     ✅      |              3 |
+|   Ⅴ    | [`riscv`](groups.md#extra_platforms.group_data.RISCV)                         | RISC-V family          |     ✅      |              2 |
+|   🌐   | [`webassembly`](groups.md#extra_platforms.group_data.WEBASSEMBLY)             | WebAssembly            |     ✅      |              2 |
+|   𝘅    | [`x86`](groups.md#extra_platforms.group_data.X86)                             | x86 family             |     ✅      |              4 |
 
 <!-- architecture-groups-table-end -->
 

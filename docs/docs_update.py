@@ -167,7 +167,7 @@ def generate_trait_table(traits) -> str:
 def generate_group_table(groups: Iterable[Group]) -> str:
     """Produce a Markdown table for a collection of groups.
 
-    The table contains the icon, ID, description, member count, and non-overlapping
+    The table contains the icon, ID with link to documentation, description, member count, and non-overlapping
     status for each group.
 
     Args:
@@ -183,7 +183,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     for group in sorted(groups, key=attrgetter("id")):
         table_data.append([
             html.escape(group.icon),
-            f"`{group.id}`",
+            f"[`{group.id}`](groups.md#extra_platforms.group_data.{group.id.upper()})",
             group.name,
             "✅" if group.canonical else "",
             str(len(group)),
