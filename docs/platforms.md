@@ -300,7 +300,59 @@ To add a new Linux distribution, you can get inspiration from these pull request
 
 ```{eval-rst}
 .. automodule:: extra_platforms.platform_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
 ```
+
+<!-- platform-data-autodata-start -->
+
+```{eval-rst}
+.. autodata:: extra_platforms.platform_data.AIX
+.. autodata:: extra_platforms.platform_data.ALTLINUX
+.. autodata:: extra_platforms.platform_data.AMZN
+.. autodata:: extra_platforms.platform_data.ANDROID
+.. autodata:: extra_platforms.platform_data.ARCH
+.. autodata:: extra_platforms.platform_data.BUILDROOT
+.. autodata:: extra_platforms.platform_data.CACHYOS
+.. autodata:: extra_platforms.platform_data.CENTOS
+.. autodata:: extra_platforms.platform_data.CLOUDLINUX
+.. autodata:: extra_platforms.platform_data.CYGWIN
+.. autodata:: extra_platforms.platform_data.DEBIAN
+.. autodata:: extra_platforms.platform_data.EXHERBO
+.. autodata:: extra_platforms.platform_data.FEDORA
+.. autodata:: extra_platforms.platform_data.FREEBSD
+.. autodata:: extra_platforms.platform_data.GENTOO
+.. autodata:: extra_platforms.platform_data.GUIX
+.. autodata:: extra_platforms.platform_data.HURD
+.. autodata:: extra_platforms.platform_data.IBM_POWERKVM
+.. autodata:: extra_platforms.platform_data.KVMIBM
+.. autodata:: extra_platforms.platform_data.LINUXMINT
+.. autodata:: extra_platforms.platform_data.MACOS
+.. autodata:: extra_platforms.platform_data.MAGEIA
+.. autodata:: extra_platforms.platform_data.MANDRIVA
+.. autodata:: extra_platforms.platform_data.MIDNIGHTBSD
+.. autodata:: extra_platforms.platform_data.NETBSD
+.. autodata:: extra_platforms.platform_data.NOBARA
+.. autodata:: extra_platforms.platform_data.OPENBSD
+.. autodata:: extra_platforms.platform_data.OPENSUSE
+.. autodata:: extra_platforms.platform_data.ORACLE
+.. autodata:: extra_platforms.platform_data.PARALLELS
+.. autodata:: extra_platforms.platform_data.PIDORA
+.. autodata:: extra_platforms.platform_data.RASPBIAN
+.. autodata:: extra_platforms.platform_data.RHEL
+.. autodata:: extra_platforms.platform_data.ROCKY
+.. autodata:: extra_platforms.platform_data.SCIENTIFIC
+.. autodata:: extra_platforms.platform_data.SLACKWARE
+.. autodata:: extra_platforms.platform_data.SLES
+.. autodata:: extra_platforms.platform_data.SOLARIS
+.. autodata:: extra_platforms.platform_data.SUNOS
+.. autodata:: extra_platforms.platform_data.TUMBLEWEED
+.. autodata:: extra_platforms.platform_data.TUXEDO
+.. autodata:: extra_platforms.platform_data.UBUNTU
+.. autodata:: extra_platforms.platform_data.ULTRAMARINE
+.. autodata:: extra_platforms.platform_data.UNKNOWN_LINUX
+.. autodata:: extra_platforms.platform_data.WINDOWS
+.. autodata:: extra_platforms.platform_data.WSL1
+.. autodata:: extra_platforms.platform_data.WSL2
+.. autodata:: extra_platforms.platform_data.XENSERVER
+```
+
+<!-- platform-data-autodata-end -->

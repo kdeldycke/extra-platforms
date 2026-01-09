@@ -50,6 +50,7 @@ from extra_platforms import (
     NON_OVERLAPPING_GROUPS,
     Group,
 )
+from extra_platforms.trait import Trait
 
 DOCS_ROOT = Path(__file__).parent
 """The root path of Sphinx documentation."""
@@ -343,6 +344,30 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     return output
 
 
+def generate_autodata_directives(traits: Iterable[Trait], module_name: str) -> str:
+    """Generate Sphinx autodata directives for a collection of traits.
+
+    This produces a code block with ``.. autodata::`` directives for each trait,
+    allowing Sphinx to document module-level constants with their dynamic docstrings.
+
+    Args:
+        traits: The traits to generate directives for.
+        module_name: The fully qualified module name (e.g., "extra_platforms.architecture_data").
+
+    Returns:
+        A MyST-compatible code block containing the autodata directives.
+    """
+    directives = []
+    for trait in sorted(traits, key=attrgetter("id")):
+        var_name = trait.id.upper()
+        directives.append(f".. autodata:: {module_name}.{var_name}")
+
+    output = "```{eval-rst}\n"
+    output += "\n".join(directives)
+    output += "\n```"
+    return output
+
+
 def update_docs() -> None:
     """Update documentation with dynamic content.
 
@@ -434,6 +459,31 @@ def update_docs() -> None:
             "<!-- groups-table-start -->\n\n",
             "\n\n<!-- groups-table-end -->",
             generate_group_table(ALL_GROUPS),
+        ),
+        # Autodata directives for Sphinx documentation of module-level constants.
+        (
+            "<!-- architecture-data-autodata-start -->\n\n",
+            "\n\n<!-- architecture-data-autodata-end -->",
+            generate_autodata_directives(
+                ALL_ARCHITECTURES, "extra_platforms.architecture_data"
+            ),
+        ),
+        (
+            "<!-- platform-data-autodata-start -->\n\n",
+            "\n\n<!-- platform-data-autodata-end -->",
+            generate_autodata_directives(
+                ALL_PLATFORMS, "extra_platforms.platform_data"
+            ),
+        ),
+        (
+            "<!-- ci-data-autodata-start -->\n\n",
+            "\n\n<!-- ci-data-autodata-end -->",
+            generate_autodata_directives(ALL_CI, "extra_platforms.ci_data"),
+        ),
+        (
+            "<!-- group-data-autodata-start -->\n\n",
+            "\n\n<!-- group-data-autodata-end -->",
+            generate_autodata_directives(ALL_GROUPS, "extra_platforms.group_data"),
         ),
     ]
 

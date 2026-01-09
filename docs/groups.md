@@ -58,7 +58,35 @@ All recognized groups and their properties:
 
 ```{eval-rst}
 .. automodule:: extra_platforms.group_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
 ```
+
+<!-- group-data-autodata-start -->
+
+```{eval-rst}
+.. autodata:: extra_platforms.group_data.ALL_ARCHITECTURES
+.. autodata:: extra_platforms.group_data.ALL_CI
+.. autodata:: extra_platforms.group_data.ALL_PLATFORMS
+.. autodata:: extra_platforms.group_data.ALL_TRAITS
+.. autodata:: extra_platforms.group_data.ANY_ARM
+.. autodata:: extra_platforms.group_data.ANY_MIPS
+.. autodata:: extra_platforms.group_data.ANY_SPARC
+.. autodata:: extra_platforms.group_data.ANY_WINDOWS
+.. autodata:: extra_platforms.group_data.BSD
+.. autodata:: extra_platforms.group_data.BSD_WITHOUT_MACOS
+.. autodata:: extra_platforms.group_data.IBM_MAINFRAME
+.. autodata:: extra_platforms.group_data.LINUX
+.. autodata:: extra_platforms.group_data.LINUX_LAYERS
+.. autodata:: extra_platforms.group_data.LINUX_LIKE
+.. autodata:: extra_platforms.group_data.LOONGARCH
+.. autodata:: extra_platforms.group_data.OTHER_UNIX
+.. autodata:: extra_platforms.group_data.POWERPC
+.. autodata:: extra_platforms.group_data.RISCV
+.. autodata:: extra_platforms.group_data.SYSTEM_V
+.. autodata:: extra_platforms.group_data.UNIX
+.. autodata:: extra_platforms.group_data.UNIX_LAYERS
+.. autodata:: extra_platforms.group_data.UNIX_WITHOUT_MACOS
+.. autodata:: extra_platforms.group_data.WEBASSEMBLY
+.. autodata:: extra_platforms.group_data.X86
+```
+
+<!-- group-data-autodata-end -->

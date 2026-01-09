@@ -220,7 +220,36 @@ Other groups are provided for convenience, but overlap with each other or with c
 
 ```{eval-rst}
 .. automodule:: extra_platforms.architecture_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
 ```
+
+<!-- architecture-data-autodata-start -->
+
+```{eval-rst}
+.. autodata:: extra_platforms.architecture_data.AARCH64
+.. autodata:: extra_platforms.architecture_data.ARM
+.. autodata:: extra_platforms.architecture_data.ARMV6L
+.. autodata:: extra_platforms.architecture_data.ARMV7L
+.. autodata:: extra_platforms.architecture_data.ARMV8L
+.. autodata:: extra_platforms.architecture_data.I386
+.. autodata:: extra_platforms.architecture_data.I586
+.. autodata:: extra_platforms.architecture_data.I686
+.. autodata:: extra_platforms.architecture_data.LOONGARCH64
+.. autodata:: extra_platforms.architecture_data.MIPS
+.. autodata:: extra_platforms.architecture_data.MIPS64
+.. autodata:: extra_platforms.architecture_data.MIPS64EL
+.. autodata:: extra_platforms.architecture_data.MIPSEL
+.. autodata:: extra_platforms.architecture_data.PPC
+.. autodata:: extra_platforms.architecture_data.PPC64
+.. autodata:: extra_platforms.architecture_data.PPC64LE
+.. autodata:: extra_platforms.architecture_data.RISCV32
+.. autodata:: extra_platforms.architecture_data.RISCV64
+.. autodata:: extra_platforms.architecture_data.S390X
+.. autodata:: extra_platforms.architecture_data.SPARC
+.. autodata:: extra_platforms.architecture_data.SPARC64
+.. autodata:: extra_platforms.architecture_data.UNKNOWN_ARCHITECTURE
+.. autodata:: extra_platforms.architecture_data.WASM32
+.. autodata:: extra_platforms.architecture_data.WASM64
+.. autodata:: extra_platforms.architecture_data.X86_64
+```
+
+<!-- architecture-data-autodata-end -->

@@ -134,7 +134,23 @@ mindmap
 
 ```{eval-rst}
 .. automodule:: extra_platforms.ci_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
 ```
+
+<!-- ci-data-autodata-start -->
+
+```{eval-rst}
+.. autodata:: extra_platforms.ci_data.AZURE_PIPELINES
+.. autodata:: extra_platforms.ci_data.BAMBOO
+.. autodata:: extra_platforms.ci_data.BUILDKITE
+.. autodata:: extra_platforms.ci_data.CIRCLE_CI
+.. autodata:: extra_platforms.ci_data.CIRRUS_CI
+.. autodata:: extra_platforms.ci_data.CODEBUILD
+.. autodata:: extra_platforms.ci_data.GITHUB_CI
+.. autodata:: extra_platforms.ci_data.GITLAB_CI
+.. autodata:: extra_platforms.ci_data.HEROKU_CI
+.. autodata:: extra_platforms.ci_data.TEAMCITY
+.. autodata:: extra_platforms.ci_data.TRAVIS_CI
+.. autodata:: extra_platforms.ci_data.UNKNOWN_CI
+```
+
+<!-- ci-data-autodata-end -->

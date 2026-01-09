@@ -8,6 +8,7 @@ if sys.version_info >= (3, 11):
 else:
     import tomli as tomllib  # type: ignore[import-not-found]
 
+from extra_platforms import CI, Architecture, Group, Platform
 
 project_path = Path(__file__).parent.parent.resolve()
 
@@ -114,3 +115,41 @@ html_last_updated_fmt = "%Y-%m-%d"
 copyright = f"{author} and contributors"
 html_show_copyright = True
 html_show_sphinx = False
+
+
+def autodoc_process_docstring(app, what, name, obj, options, lines):
+    """Generate docstrings for Architecture, Platform, CI, and Group instances.
+
+    These dataclass instances have a dynamic ``__doc__`` attribute set in their
+    ``__post_init__`` method, but Sphinx autodoc doesn't pick it up by default
+    for module-level constants. This hook reads the instance's ``__doc__`` and
+    injects it into the documentation.
+    """
+    if isinstance(obj, (Architecture, Platform, CI, Group)) and obj.__doc__:
+        lines.clear()
+        lines.append(obj.__doc__)
+        lines.append("")
+        lines.append(f"- **ID**: ``{obj.id}``")
+        lines.append(f"- **Name**: {obj.name}")
+        if hasattr(obj, "icon") and obj.icon:
+            lines.append(f"- **Icon**: {obj.icon}")
+        if hasattr(obj, "url") and obj.url:
+            lines.append(f"- **Reference**: {obj.url}")
+
+
+def autodoc_skip_member(app, what, name, obj, skip, options):
+    """Force inclusion of Architecture, Platform, CI, and Group instances.
+
+    By default, autodoc skips module-level constants without docstrings.
+    Since our trait instances have dynamically generated docstrings, we need
+    to explicitly include them.
+    """
+    if isinstance(obj, (Architecture, Platform, CI, Group)):
+        return False  # Don't skip - include in documentation
+    return None  # Use default behavior for everything else
+
+
+def setup(app):
+    """Connect Sphinx events to custom handlers."""
+    app.connect("autodoc-process-docstring", autodoc_process_docstring)
+    app.connect("autodoc-skip-member", autodoc_skip_member)
