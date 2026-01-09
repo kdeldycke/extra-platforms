@@ -5,7 +5,10 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
-- Re-introduce `Group._extract_platforms()` as a deprecated alias to `Group._extract_members()`.
+- Re-introduce deprecated aliases:
+  - `Group._extract_platforms()` → `Group._extract_members()`.
+  - `is_all_platforms_without_ci()` → `is_all_platforms()`.
+  - `is_ci()` → `is_all_ci()`.
 
 ## [6.0.0 (2026-01-02)](https://github.com/kdeldycke/extra-platforms/compare/v5.1.0...v6.0.0)
 

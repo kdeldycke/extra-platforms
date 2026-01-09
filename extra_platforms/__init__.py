@@ -482,6 +482,8 @@ from ._deprecated import (  # noqa: E402
     ALL_PLATFORMS_WITHOUT_CI,
     current_os,
     current_platforms,
+    is_all_platforms_without_ci,
+    is_ci,
     platforms_from_ids,
 )
 
@@ -558,6 +560,7 @@ __all__ = (  # noqa: F405
     "is_all_architectures",  # noqa: F822
     "is_all_ci",  # noqa: F822
     "is_all_platforms",  # noqa: F822
+    "is_all_platforms_without_ci",
     "is_all_traits",  # noqa: F822
     "is_altlinux",
     "is_amzn",
@@ -579,6 +582,7 @@ __all__ = (  # noqa: F405
     "is_buildroot",
     "is_cachyos",
     "is_centos",
+    "is_ci",
     "is_circle_ci",
     "is_cirrus_ci",
     "is_cloudlinux",

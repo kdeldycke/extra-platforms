@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Deprecated utilities shared by package-level aliases."""
+"""Backward-compatible deprecated aliases."""
 
 from __future__ import annotations
 
@@ -108,12 +108,16 @@ def _make_deprecated_callable(name: str, replacement: str, func):
     return _wrapper
 
 
-# Backward-compatible deprecated aliases.
+# ================================================================
+# Data aliases
+# ================================================================
+
+
 ALL_PLATFORM_IDS = _make_deprecated_proxy(
     ALL_TRAIT_IDS, "ALL_PLATFORM_IDS", "ALL_TRAIT_IDS"
 )
 """
-Deprecated alias for `ALL_TRAIT_IDS`.
+Alias `ALL_PLATFORM_IDS` → `ALL_TRAIT_IDS`.
 
 .. deprecated:: 6.0.0
    Use `ALL_TRAIT_IDS` instead.
@@ -124,11 +128,16 @@ ALL_PLATFORMS_WITHOUT_CI = _make_deprecated_proxy(
     ALL_PLATFORMS, "ALL_PLATFORMS_WITHOUT_CI", "ALL_PLATFORMS"
 )
 """
-All recognized platforms.
+Alias `ALL_PLATFORMS_WITHOUT_CI` → `ALL_PLATFORMS`.
 
 .. deprecated:: 6.0.0
-   Use ALL_PLATFORMS instead.
+   Use `ALL_PLATFORMS` instead.
 """
+
+
+# ================================================================
+# Platform and trait detection functions
+# ================================================================
 
 
 def _current_os_impl() -> Platform:
@@ -137,6 +146,17 @@ def _current_os_impl() -> Platform:
     from . import current_platform
 
     return current_platform()
+
+
+current_os = _make_deprecated_callable(
+    "current_os()", "current_platform()", _current_os_impl
+)
+"""
+Alias `current_os()` → `current_platform()`.
+
+.. deprecated:: 6.0.0
+   Use `current_platform()` instead.
+"""
 
 
 def _current_platforms_impl() -> tuple[Platform, ...]:
@@ -148,20 +168,70 @@ def _current_platforms_impl() -> tuple[Platform, ...]:
     return tuple(t for t in current_traits() if isinstance(t, Platform))
 
 
-current_os = _make_deprecated_callable(
-    "current_os()", "current_platform()", _current_os_impl
-)
-
 current_platforms = _make_deprecated_callable(
     "current_platforms()", "current_traits()", _current_platforms_impl
 )
+"""
+Alias `current_platforms()` → `current_traits()`.
+
+.. deprecated:: 6.0.0
+   Use `current_traits()` instead.
+"""
+
+
+# ================================================================
+# Group membership check functions
+# ================================================================
+
+
+def _is_all_platforms_without_ci_impl() -> bool:
+    # Import lazily to avoid circular import when this module is imported
+    # from the package top-level `__init__.py`.
+    from . import is_all_platforms
+
+    return is_all_platforms()
+
+
+is_all_platforms_without_ci = _make_deprecated_callable(
+    "is_all_platforms_without_ci()",
+    "is_all_platforms()",
+    _is_all_platforms_without_ci_impl,
+)
+"""
+Alias `is_all_platforms_without_ci()` → `is_all_platforms()`.
+
+.. deprecated:: 6.0.0
+   Use `is_all_platforms()` instead.
+"""
+
+
+def _is_ci_impl() -> bool:
+    # Import lazily to avoid circular import when this module is imported
+    # from the package top-level `__init__.py`.
+    from . import is_all_ci
+
+    return is_all_ci()
+
+
+is_ci = _make_deprecated_callable("is_ci()", "is_all_ci()", _is_ci_impl)
+"""
+Alias `is_ci()` → `is_all_ci()`.
+
+.. deprecated:: 6.0.0
+   Use `is_all_ci()` instead.
+"""
+
+
+# ================================================================
+# Trait utilities
+# ================================================================
 
 
 platforms_from_ids = _make_deprecated_callable(
     "platforms_from_ids", "traits_from_ids", traits_from_ids
 )
 """
-Deprecated alias for `traits_from_ids`.
+Alias `platforms_from_ids` → `traits_from_ids`.
 
 .. deprecated:: 6.0.0
    Use `traits_from_ids` instead.
