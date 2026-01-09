@@ -30,6 +30,7 @@
 from __future__ import annotations
 
 import html
+import re
 import sys
 from itertools import chain
 from operator import attrgetter
@@ -70,7 +71,11 @@ def replace_content(
     end_tag: str,
     new_content: str,
 ) -> None:
-    """Replace in the provided files the content surrounded by the provided tags."""
+    """Replace in the provided files the content surrounded by the provided tags.
+
+    Tags are specified as simple names (e.g., "architecture-table-start") and will be
+    matched with flexible whitespace handling in HTML comment format.
+    """
     if isinstance(filepath, Path):
         path_list = [filepath]
     else:
@@ -83,13 +88,40 @@ def replace_content(
 
         orig_content = filepath.read_text()
 
-        # Extract pre- and post-content surrounding the tags.
-        pre_content, table_start = orig_content.split(start_tag, 1)
-        _, post_content = table_start.split(end_tag, 1)
+        # Construct regex patterns that match tags with flexible whitespace.
+        # Matches: <!-- tag -->\s* (any whitespace including newlines)
+        start_pattern = re.compile(
+            rf"<!--\s*{re.escape(start_tag)}\s*-->\s*",
+            re.MULTILINE | re.DOTALL,
+        )
+        end_pattern = re.compile(
+            rf"\s*<!--\s*{re.escape(end_tag)}\s*-->",
+            re.MULTILINE | re.DOTALL,
+        )
 
-        # Reconstruct the content with our updated table.
+        # Find start tag
+        start_match = start_pattern.search(orig_content)
+        if not start_match:
+            continue
+
+        # Split at start tag
+        pre_content = orig_content[: start_match.start()]
+        after_start = orig_content[start_match.end() :]
+
+        # Find end tag
+        end_match = end_pattern.search(after_start)
+        if not end_match:
+            continue
+
+        # Split at end tag
+        post_content = after_start[end_match.end() :]
+
+        # Reconstruct with standardized formatting
+        start_tag_formatted = f"<!-- {start_tag} -->\n\n"
+        end_tag_formatted = f"\n\n<!-- {end_tag} -->"
+
         filepath.write_text(
-            f"{pre_content}{start_tag}{new_content}{end_tag}{post_content}",
+            f"{pre_content}{start_tag_formatted}{new_content}{end_tag_formatted}{post_content}",
         )
 
 
@@ -450,112 +482,113 @@ def update_docs() -> None:
         Mermaid](https://github.com/mermaid-js/mermaid/issues/2583).
     """
     # Define all replacement rules as (start_tag, end_tag, content) tuples.
+    # Tags are simple names that will be wrapped in HTML comments automatically.
     replacement_rules = [
         # Trait tables.
         (
-            "<!-- architecture-table-start -->\n\n",
-            "\n\n<!-- architecture-table-end -->",
+            "architecture-table-start",
+            "architecture-table-end",
             generate_trait_table(ALL_ARCHITECTURES),
         ),
         (
-            "<!-- platform-table-start -->\n\n",
-            "\n\n<!-- platform-table-end -->",
+            "platform-table-start",
+            "platform-table-end",
             generate_trait_table(ALL_PLATFORMS),
         ),
         (
-            "<!-- ci-table-start -->\n\n",
-            "\n\n<!-- ci-table-end -->",
+            "ci-table-start",
+            "ci-table-end",
             generate_trait_table(ALL_CI),
         ),
         # Sankey diagrams.
         (
-            "<!-- architecture-multi-level-sankey-start -->\n\n",
-            "\n\n<!-- architecture-multi-level-sankey-end -->",
+            "architecture-multi-level-sankey-start",
+            "architecture-multi-level-sankey-end",
             generate_sankey(
                 list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
                 + [ALL_ARCHITECTURES]
             ),
         ),
         (
-            "<!-- platform-multi-level-sankey-start -->\n\n",
-            "\n\n<!-- platform-multi-level-sankey-end -->",
+            "platform-multi-level-sankey-start",
+            "platform-multi-level-sankey-end",
             generate_sankey(
                 list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
             ),
         ),
         (
-            "<!-- ci-sankey-start -->\n\n",
-            "\n\n<!-- ci-sankey-end -->",
+            "ci-sankey-start",
+            "ci-sankey-end",
             generate_sankey(ALL_CI_GROUPS),
         ),
         # Mindmap diagrams.
         (
-            "<!-- architecture-mindmap-start -->\n\n",
-            "\n\n<!-- architecture-mindmap-end -->",
+            "architecture-mindmap-start",
+            "architecture-mindmap-end",
             generate_traits_mindmap(
                 list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
                 + [ALL_ARCHITECTURES]
             ),
         ),
         (
-            "<!-- platform-mindmap-start -->\n\n",
-            "\n\n<!-- platform-mindmap-end -->",
+            "platform-mindmap-start",
+            "platform-mindmap-end",
             generate_traits_mindmap(
                 list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
             ),
         ),
         (
-            "<!-- ci-mindmap-start -->\n\n",
-            "\n\n<!-- ci-mindmap-end -->",
+            "ci-mindmap-start",
+            "ci-mindmap-end",
             generate_traits_mindmap(
                 list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
             ),
         ),
         # Group tables.
         (
-            "<!-- architecture-groups-table-start -->\n\n",
-            "\n\n<!-- architecture-groups-table-end -->",
+            "architecture-groups-table-start",
+            "architecture-groups-table-end",
             generate_group_table(ALL_ARCHITECTURE_GROUPS),
         ),
         (
-            "<!-- platform-groups-table-start -->\n\n",
-            "\n\n<!-- platform-groups-table-end -->",
+            "platform-groups-table-start",
+            "platform-groups-table-end",
             generate_group_table(ALL_PLATFORM_GROUPS),
         ),
         (
-            "<!-- groups-table-start -->\n\n",
-            "\n\n<!-- groups-table-end -->",
+            "groups-table-start",
+            "groups-table-end",
             generate_group_table(ALL_GROUPS),
         ),
         # Pytest decorators table.
         (
-            "<!-- decorators-table-start -->\n\n",
-            "\n\n<!-- decorators-table-end -->",
+            "decorators-table-start",
+            "decorators-table-end",
             generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)),
         ),
         # Autodata directives for Sphinx documentation of module-level constants.
         (
-            "<!-- architecture-data-autodata-start -->\n\n",
-            "\n\n<!-- architecture-data-autodata-end -->",
+            "architecture-data-autodata-start",
+            "architecture-data-autodata-end",
             generate_autodata_directives(
                 ALL_ARCHITECTURES, "extra_platforms.architecture_data"
             ),
         ),
         (
-            "<!-- platform-data-autodata-start -->\n\n",
-            "\n\n<!-- platform-data-autodata-end -->",
+            "platform-data-autodata-start",
+            "platform-data-autodata-end",
             generate_autodata_directives(
                 ALL_PLATFORMS, "extra_platforms.platform_data"
             ),
         ),
         (
-            "<!-- ci-data-autodata-start -->\n\n",
-            "\n\n<!-- ci-data-autodata-end -->",
+            "ci-data-autodata-start",
+            "ci-data-autodata-end",
             generate_autodata_directives(ALL_CI, "extra_platforms.ci_data"),
         ),
         (
-            "<!-- group-data-autodata-start -->\n\n",
-            "\n\n<!-- group-data-autodata-end -->",
+            "group-data-autodata-start",
+            "group-data-autodata-end",
             generate_autodata_directives(ALL_GROUPS, "extra_platforms.group_data"),
         ),
     ]
@@ -574,9 +607,19 @@ def update_docs() -> None:
     # Apply each replacement rule to all matching files.
     for start_tag, end_tag, content in replacement_rules:
         matching_files: list[Path] = []
+        # Use regex to check if tags exist (with flexible whitespace)
+        start_pattern = re.compile(
+            rf"<!--\s*{re.escape(start_tag)}\s*-->",
+            re.MULTILINE | re.DOTALL,
+        )
+        end_pattern = re.compile(
+            rf"<!--\s*{re.escape(end_tag)}\s*-->",
+            re.MULTILINE | re.DOTALL,
+        )
+
         for filepath in all_md_files:
             file_content = filepath.read_text()
-            if start_tag in file_content and end_tag in file_content:
+            if start_pattern.search(file_content) and end_pattern.search(file_content):
                 matching_files.append(filepath)
         if matching_files:
             replace_content(matching_files, start_tag, end_tag, content)
