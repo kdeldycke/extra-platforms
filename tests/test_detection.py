@@ -114,9 +114,6 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_tuxedo,
     is_ubuntu,
     is_ultramarine,
-    is_unknown_architecture,
-    is_unknown_ci,
-    is_unknown_linux,
     is_wasm32,
     is_wasm64,
     is_windows,
@@ -263,7 +260,6 @@ def test_github_runner_detection():
         if sys.version_info >= (3, 11):
             assert current_architecture() is UNKNOWN_ARCHITECTURE
             assert UNKNOWN_ARCHITECTURE in current_traits()
-            assert is_unknown_architecture()
         # XXX Python <= 3.10 on Windows ARM runners reports x86_64.
         else:
             assert current_architecture() is X86_64
@@ -371,7 +367,6 @@ def test_mutual_exclusion():
         assert not is_tuxedo()
         assert is_ubuntu()
         assert not is_ultramarine()
-        assert not is_unknown_linux()
         assert not is_windows()
         assert not is_wsl1()
         # ubuntu-slim is a GitHub actions image running on WSL2.
@@ -425,7 +420,6 @@ def test_mutual_exclusion():
         assert not is_tuxedo()
         assert not is_ubuntu()
         assert not is_ultramarine()
-        assert not is_unknown_linux()
         assert not is_windows()
         assert not is_wsl1()
         assert not is_wsl2()
@@ -475,7 +469,6 @@ def test_mutual_exclusion():
         assert not is_tuxedo()
         assert not is_ubuntu()
         assert not is_ultramarine()
-        assert not is_unknown_linux()
         assert is_windows()
         assert not is_wsl1()
         assert not is_wsl2()
@@ -493,7 +486,6 @@ def test_mutual_exclusion():
         assert not is_heroku_ci()
         assert not is_teamcity()
         assert not is_travis_ci()
-        assert not is_unknown_ci()
 
     if is_x86_64():
         assert not is_i386()
@@ -518,7 +510,6 @@ def test_mutual_exclusion():
         assert not is_sparc64()
         assert not is_s390x()
         assert not is_loongarch64()
-        assert not is_unknown_architecture()
         assert not is_wasm32()
         assert not is_wasm64()
 
@@ -545,6 +536,5 @@ def test_mutual_exclusion():
         assert not is_sparc64()
         assert not is_s390x()
         assert not is_loongarch64()
-        assert not is_unknown_architecture()
         assert not is_wasm32()
         assert not is_wasm64()

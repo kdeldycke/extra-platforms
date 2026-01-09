@@ -10,6 +10,20 @@
   - `is_all_platforms_without_ci()` → `is_all_platforms()`.
   - `is_ci()` → `is_all_ci()`.
 
+- Rename `UNKNOWN_LINUX` trait to `UNKNOWN_PLATFORM`.
+- Use `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits as fallback when no other trait matches the current environment.
+- Remove `is_unknown_architecture()`, `is_unknown_linux()` and `is_unknown_ci()` detection functions.
+- Add new `is_unknown()` detection function for the `UNKNOWN` group.
+- Remove `UNKNOWN_ARCHITECTURE` from `ALL_ARCHITECTURES` group.
+- Remove `UNKNOWN_LINUX` from `ALL_PLATFORMS` group.
+- Remove `UNKNOWN_CI` from `ALL_CI` group.
+- Add new `UNKNOWN` group that contains `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits. Aligns all their icons.
+- Add new `detection_function_name` attribute to `Trait` to explicitly specify the name of the detection function to use.
+- Remove `@skip_unknown_architecture`/`@unless_unknown_architecture`, `@skip_unknown_ci`/`@unless_unknown_ci` and `@skip_unknown_platform`/`@unless_unknown_platform` decorators.
+- Add new `@skip_unknown` and `@unless_unknown` decorators for the `UNKNOWN` group for completeness.
+- Add strict mode to `current_architecture()`, `current_platform()` and `current_ci()` methods to raise an exception when the current environment fallback to an `UNKNOWN_*` trait.
+- Mark all canonical groups with the ⬥ symbol everywhere in the documentation.
+
 ## [6.0.0 (2026-01-02)](https://github.com/kdeldycke/extra-platforms/compare/v5.1.0...v6.0.0)
 
 - Add architecture detection: `aarch64`, `arm`, `armv6l`, `armv7l`, `armv8l`, `i386`, `i586`, `i686`, `loongarch64`, `mips`, `mips64`, `mips64el`, `mipsel`, `ppc`, `ppc64`, `ppc64le`, `riscv32`, `riscv64`, `s390x`, `sparc`, `sparc64`, `unknown_architecture`, `wasm32`, `wasm64`, `x86_64`.

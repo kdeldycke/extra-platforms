@@ -155,7 +155,12 @@ ULTRAMARINE = Platform(
     "ultramarine", "Ultramarine", "🌊", "https://ultramarine-linux.org"
 )
 
-UNKNOWN_LINUX = Platform("unknown_linux", "Unknown Linux", "🐧", "https://kernel.org")
+UNKNOWN_PLATFORM = Platform(
+    "unknown_platform",
+    "Unknown platform",
+    "❓",
+    "https://en.wikipedia.org/wiki/Computer_platform",
+)
 
 WINDOWS = Platform("windows", "Windows", "🪟", "https://windows.com")
 

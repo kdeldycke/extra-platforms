@@ -168,7 +168,9 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines.append(f"- **Name**: {obj.name}")
         if hasattr(obj, "icon") and obj.icon:
             lines.append(f"- **Icon**: {obj.icon}")
-        lines.append(f"- **Canonical**: {'`True` ⬥' if obj.canonical else '`False`'}")
+        lines.append(
+            f"- **Canonical**: ``{obj.canonical}`` {'⬥' if obj.canonical else ''}"
+        )
 
         lines.append(make_pytest_decorator_line(obj.id))
 
@@ -218,9 +220,13 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         if hasattr(obj, "url") and obj.url:
             lines.append(f"- **Reference**: <{obj.url}>_")
 
-        detection_url = f"detection.html#extra_platforms.detection.is_{obj.id}"
+        if obj.detection_function_name:
+            detection_url = make_rst_link(
+                f"{obj.detection_function_name}()",
+                f"detection.html#extra_platforms.detection.{obj.detection_function_name}",
+            )
         lines.append(
-            f"- **Detection function**: {make_rst_link(f'is_{obj.id}()', detection_url)}"
+            f"- **Detection function**: {detection_url if obj.detection_function_name else 'N/A'}"
         )
         lines.append(make_pytest_decorator_line(obj.id))
 

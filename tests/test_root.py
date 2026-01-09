@@ -32,9 +32,6 @@ from extra_platforms import (
     GITHUB_CI,
     SYSTEM_V,
     UNIX,
-    UNKNOWN_ARCHITECTURE,
-    UNKNOWN_CI,
-    UNKNOWN_LINUX,
     WSL1,
     WSL2,
     current_architecture,
@@ -84,10 +81,6 @@ def test_pyproject_keywords():
         p.name
         for p in (
             ALL_TRAITS
-            # Remove generic unknown platforms.
-            - UNKNOWN_ARCHITECTURE
-            - UNKNOWN_LINUX
-            - UNKNOWN_CI
             # Remove versioned WSL platforms.
             - WSL1
             - WSL2

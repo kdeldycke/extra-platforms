@@ -89,13 +89,34 @@ class Trait(ABC):
         return self.name
 
     @cached_property
+    def detection_function_name(self) -> str | None:
+        """Returns the name of the detection function for this trait.
+
+        The detection function is expected to be named ``is_<id>()`` in the
+        ``detection`` module. If no such function exists, returns ``None``.
+
+        .. hint::
+            This is a property to avoid calling all detection heuristics on
+            ``Trait`` objects creation, which happens at module import time.
+        """
+        func_id = f"is_{self.id}"
+        if not hasattr(detection, func_id):
+            return None
+        return func_id
+
+    @cached_property
     def current(self) -> bool:
         """Returns whether the current environment matches this trait.
 
-        This is a property to avoid calling all detection heuristics on
-        ``Trait`` objects creation, which happens at module import time.
+        Only ``UNKNOWN_*`` traits are expected to not have a detection function. Because
+        these traits are not going to be evaluated and serves as a fallback only, this
+        property is not going to be called.
         """
-        return getattr(detection, f"is_{self.id}")()  # type: ignore[no-any-return]
+        if not self.detection_function_name:
+            raise NotImplementedError(
+                f"Detection function {self.detection_function_name}() is not implemented."
+            )
+        return getattr(detection, self.detection_function_name)()  # type: ignore[no-any-return]
 
     @abstractmethod
     def info(self) -> dict:

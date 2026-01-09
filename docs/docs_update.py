@@ -51,6 +51,9 @@ from extra_platforms import (
     ALL_PLATFORMS,
     ALL_TRAITS,
     NON_OVERLAPPING_GROUPS,
+    UNKNOWN_ARCHITECTURE,
+    UNKNOWN_CI,
+    UNKNOWN_PLATFORM,
     Group,
 )
 from extra_platforms.trait import Trait
@@ -182,11 +185,37 @@ def generate_trait_table(traits) -> str:
     """Produce a Markdown table for a collection of traits.
 
     The table contains the icon, the symbol constant name (linked to its full definition),
-    a linked name, and a linked detection function for each trait.
+    a linked name, and a linked detection function for each trait. A hint block is appended
+    after the table explaining the unknown trait for this trait type.
     """
     table_data = []
     headers = ["Icon", "Symbol", "Name", "Detection function"]
     alignments = ["center", "left", "left", "left"]
+
+    # Determine trait type from first trait to customize hint
+    trait_type = None
+    module = None
+    if traits:
+        first_trait = next(iter(traits))
+        class_name = type(first_trait).__name__
+        if class_name == "Architecture":
+            trait_type = "architecture"
+            module = "architecture_data"
+            unknown_symbol = "UNKNOWN_ARCHITECTURE"
+            all_group = "ALL_ARCHITECTURES"
+            current_func = "current_architecture()"
+        elif class_name == "Platform":
+            trait_type = "platform"
+            module = "platform_data"
+            unknown_symbol = "UNKNOWN_PLATFORM"
+            all_group = "ALL_PLATFORMS"
+            current_func = "current_platform()"
+        elif class_name == "CI":
+            trait_type = "CI"
+            module = "ci_data"
+            unknown_symbol = "UNKNOWN_CI"
+            all_group = "ALL_CI"
+            current_func = "current_ci()"
 
     for trait in sorted(traits, key=attrgetter("id")):
         icon = html.escape(trait.icon)
@@ -195,38 +224,47 @@ def generate_trait_table(traits) -> str:
         # Determine the module name based on the trait type.
         class_name = type(trait).__name__
         if class_name == "Architecture":
-            module = "architecture_data"
+            trait_module = "architecture_data"
         elif class_name == "Platform":
-            module = "platform_data"
+            trait_module = "platform_data"
         elif class_name == "CI":
-            module = "ci_data"
+            trait_module = "ci_data"
         else:
-            module = "unknown"
+            trait_module = "unknown"
 
         # Create symbol name and link to its autodata definition.
         # Sphinx generates anchors like: extra_platforms.architecture_data.AARCH64
         symbol_name = trait.id.upper()
-        symbol_link = f"[`{symbol_name}`](#extra_platforms.{module}.{symbol_name})"
+        symbol_link = (
+            f"[`{symbol_name}`](#extra_platforms.{trait_module}.{symbol_name})"
+        )
 
         detection_func = (
             f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})"
         )
         table_data.append([icon, symbol_link, name, detection_func])
 
-    return _generate_markdown_table(table_data, headers, alignments)
+    table = _generate_markdown_table(table_data, headers, alignments)
+
+    # Append hint block explaining unknown trait if trait type was detected
+    if trait_type and module:
+        hint = f"""
+```{{hint}}
+The [`{unknown_symbol}`](#extra_platforms.{module}.{unknown_symbol}) trait represents an unrecognized {trait_type}. It is not included in the [`{all_group}`](groups.md#extra_platforms.group_data.{all_group}) group, and will be returned by `{current_func}` if the current {trait_type} is not recognized.
+```"""
+        return f"{table}\n{hint}"
+
+    return table
 
 
 def generate_group_table(groups: Iterable[Group]) -> str:
     """Produce a Markdown table for a collection of groups.
 
     The table contains the icon, symbol with link to documentation, description, member count, and canonical
-    status for each group.
+    status for each group. A hint block is appended after the table to explain canonical groups.
 
     Args:
         groups: The groups to include in the table.
-        non_overlapping_groups: Optional set of non-overlapping groups. If provided, a
-                                column will be added indicating whether each group is
-                                non-overlapping.
     """
     table_data = []
     headers = ["Icon", "Symbol", "Description", "Canonical", "Member count"]
@@ -245,7 +283,17 @@ def generate_group_table(groups: Iterable[Group]) -> str:
             str(len(group)),
         ])
 
-    return _generate_markdown_table(table_data, headers, alignments)
+    table = _generate_markdown_table(table_data, headers, alignments)
+
+    # Append hint block explaining canonical groups
+    hint = """
+```{hint}
+Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
+
+Other groups are provided for convenience, but overlap with each other or with canonical groups.
+```"""
+
+    return f"{table}\n{hint}"
 
 
 def _analyze_group_hierarchy(
@@ -571,20 +619,24 @@ def update_docs() -> None:
             "architecture-data-autodata-start",
             "architecture-data-autodata-end",
             generate_autodata_directives(
-                ALL_ARCHITECTURES, "extra_platforms.architecture_data"
+                list(ALL_ARCHITECTURES) + [UNKNOWN_ARCHITECTURE],
+                "extra_platforms.architecture_data",
             ),
         ),
         (
             "platform-data-autodata-start",
             "platform-data-autodata-end",
             generate_autodata_directives(
-                ALL_PLATFORMS, "extra_platforms.platform_data"
+                list(ALL_PLATFORMS) + [UNKNOWN_PLATFORM],
+                "extra_platforms.platform_data",
             ),
         ),
         (
             "ci-data-autodata-start",
             "ci-data-autodata-end",
-            generate_autodata_directives(ALL_CI, "extra_platforms.ci_data"),
+            generate_autodata_directives(
+                list(ALL_CI) + [UNKNOWN_CI], "extra_platforms.ci_data"
+            ),
         ),
         (
             "group-data-autodata-start",

@@ -17,6 +17,7 @@
 
 from __future__ import annotations
 
+import logging
 import platform as stdlib_platform
 import sys
 from functools import cache
@@ -152,9 +153,6 @@ from .detection import (  # noqa: E402
     is_tuxedo,
     is_ubuntu,
     is_ultramarine,
-    is_unknown_architecture,
-    is_unknown_ci,
-    is_unknown_linux,
     is_wasm32,
     is_wasm64,
     is_windows,
@@ -193,6 +191,7 @@ from .group_data import (  # noqa: E402
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
+    UNKNOWN,
     WEBASSEMBLY,
     X86,
 )
@@ -241,7 +240,7 @@ from .platform_data import (  # noqa: E402
     TUXEDO,
     UBUNTU,
     ULTRAMARINE,
-    UNKNOWN_LINUX,
+    UNKNOWN_PLATFORM,
     WINDOWS,
     WSL1,
     WSL2,
@@ -277,9 +276,9 @@ from .operations import (  # noqa: E402
 __version__ = "6.0.1"
 
 
-def _unrecognized_env_error(kind: str) -> SystemError:
-    """Generate a consistent SystemError for unrecognized environments."""
-    return SystemError(
+def _unrecognized_message(kind: str) -> SystemError:
+    """Generate a consistent message for unrecognized environments."""
+    return (
         f"Unrecognized {kind}: {sys.platform!r} / "
         f"{stdlib_platform.platform(aliased=True, terse=True)!r} / "
         f"{stdlib_platform.machine()!r} / {stdlib_platform.architecture()!r}. "
@@ -288,13 +287,16 @@ def _unrecognized_env_error(kind: str) -> SystemError:
 
 
 @cache
-def current_architecture() -> Architecture:
+def current_architecture(strict: bool = False) -> Architecture:
     """Returns the ``Architecture`` matching the current environment.
 
-    Always raises an error if the current environment is not recognized, or if
-    multiple architectures match.
+    Returns ``UNKNOWN_ARCHITECTURE`` if not running inside a recognized architecture.
+    To raise an error instead, set ``strict`` to ``True``.
+
+    Always raises an error if multiple architectures match.
     """
     matching = set()
+    # Iterate over all recognized architectures.
     for arch in ALL_ARCHITECTURES:
         if arch.current:
             # Assert to please type checkers.
@@ -305,22 +307,30 @@ def current_architecture() -> Architecture:
     if len(matching) == 1:
         return matching.pop()
 
-    if not matching:
-        raise _unrecognized_env_error("architecture")
+    if len(matching) > 1:
+        raise RuntimeError(
+            f"Multiple architectures match current environment: {matching!r}. "
+            f"{_report_msg}"
+        )
 
-    raise RuntimeError(
-        f"Multiple architectures match current environment: {matching!r}. {_report_msg}"
-    )
+    # No matching architecture found.
+    msg = _unrecognized_message("architecture")
+    if strict:
+        raise SystemError(msg)
+    logging.warning(msg)
+    return UNKNOWN_ARCHITECTURE
 
 
 @cache
-def current_platform() -> Platform:
-    """Always returns the best matching platform for the current environment.
+def current_platform(strict: bool = False) -> Platform:
+    """Always returns the best matching ``Platform`` for the current environment.
+
+    Returns ``UNKNOWN_PLATFORM`` if not running inside a recognized platform.
+    To raise an error instead, set ``strict`` to ``True``.
 
     If multiple platforms match the current environment, this function will try to
-    select the best, informative one.
-
-    Raises an error if we can't decide on a single, appropriate platform.
+    select the best, informative one. Raises an error if we can't decide on a single,
+    appropriate platform.
     """
     matching = set()
     for platform in ALL_PLATFORMS:
@@ -333,17 +343,9 @@ def current_platform() -> Platform:
     if len(matching) == 1:
         return matching.pop()
 
-    if not matching:
-        raise _unrecognized_env_error("platform")
-
-    # Remove unknown Linux, which is too generic to be useful.
-    if UNKNOWN_LINUX in matching:
-        matching.remove(UNKNOWN_LINUX)
-        if len(matching) == 1:
-            return matching.pop()
-
-    # Remove WSL1, then WSL2, until we have a single match. WSL is a generic platform,
-    # so we should prefer the other, more specific platform matches like Ubuntu. See:
+    # Removes some generic platforms from the matching, until we have a single match.
+    # Starts by removing the least specific WSL1, then WSL2: WSL is a generic platform,
+    # so we should prefer the remaining, more specific platform matches like Ubuntu. See:
     # - https://github.com/kdeldycke/extra-platforms/issues/158
     # - https://github.com/kdeldycke/meta-package-manager/issues/944
     for wsl in (WSL1, WSL2):
@@ -352,21 +354,30 @@ def current_platform() -> Platform:
             if len(matching) == 1:
                 return matching.pop()
 
-    # Our meta-heuristics above failed to decide on a single, appropriate platform.
-    raise RuntimeError(
-        f"Multiple platforms match current environment: {matching!r}. {_report_msg}"
-    )
+    if len(matching) > 1:
+        raise RuntimeError(
+            f"Multiple platforms match current environment: {matching!r}. {_report_msg}"
+        )
+
+    # No matching platform found.
+    msg = _unrecognized_message("platform")
+    if strict:
+        raise SystemError(msg)
+    logging.warning(msg)
+    return UNKNOWN_PLATFORM
 
 
 @cache
-def current_ci() -> CI | None:
+def current_ci(strict: bool = False) -> CI | None:
     """Returns the ``CI`` system matching the current environment.
 
-    Returns ``None`` if not running inside a recognized CI system.
+    Returns ``UNKNOWN_CI`` if not running inside a recognized CI system.
+    To raise an error instead, set ``strict`` to ``True``.
 
     Always raises an error if multiple CI systems match.
     """
     matching = set()
+    # Iterate over all recognized CI systems.
     for ci in ALL_CI:
         if ci.current:
             # Assert to please type checkers.
@@ -377,12 +388,18 @@ def current_ci() -> CI | None:
     if len(matching) == 1:
         return matching.pop()
 
-    if not matching:
-        return None
+    if len(matching) > 1:
+        raise RuntimeError(
+            f"Multiple CI systems match current environment: {matching!r}. "
+            f"{_report_msg}"
+        )
 
-    raise RuntimeError(
-        f"Multiple CI systems match current environment: {matching!r}. {_report_msg}"
-    )
+    # No matching CI system found.
+    msg = _unrecognized_message("CI system")
+    if strict:
+        raise SystemError(msg)
+    logging.warning(msg)
+    return UNKNOWN_CI
 
 
 @cache
@@ -391,7 +408,9 @@ def current_traits() -> set[Trait]:
 
     This includes platforms, architectures, and CI systems.
 
-    Always raises an error if the current environment is not recognized.
+    Never returns ``UNKNOWN_*`` traits.
+
+    Raises an error if the current environment is not recognized at all.
 
     .. attention::
         At this point it is too late to worry about caching. This function has no
@@ -403,7 +422,7 @@ def current_traits() -> set[Trait]:
             matching.add(trait)
 
     if not matching:
-        raise _unrecognized_env_error("environment")
+        raise SystemError(_unrecognized_message("environment"))
 
     return matching
 
@@ -654,9 +673,7 @@ __all__ = (  # noqa: F405
     "is_unix",  # noqa: F822
     "is_unix_layers",  # noqa: F822
     "is_unix_without_macos",  # noqa: F822
-    "is_unknown_architecture",
-    "is_unknown_ci",
-    "is_unknown_linux",
+    "is_unknown",
     "is_wasm32",
     "is_wasm64",
     "is_webassembly",  # noqa: F822
@@ -723,9 +740,10 @@ __all__ = (  # noqa: F405
     "UNIX",
     "UNIX_LAYERS",
     "UNIX_WITHOUT_MACOS",
+    "UNKNOWN",
     "UNKNOWN_ARCHITECTURE",
     "UNKNOWN_CI",
-    "UNKNOWN_LINUX",
+    "UNKNOWN_PLATFORM",
     "WASM32",
     "WASM64",
     "WEBASSEMBLY",

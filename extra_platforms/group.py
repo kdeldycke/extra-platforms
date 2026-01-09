@@ -116,19 +116,16 @@ class Group:
     def canonical(self) -> bool:
         """Returns `True` if the group is canonical (non-overlapping), `False` otherwise.
 
-        A canonical group is one that does not share any members with other groups, and
-        is composed of members that are of the same kind.
+        A canonical group is one that does not share any members with other canonical
+        groups.
 
         .. hint::
             Canonical groups are denoted with a "⬥" symbol in the documentation and tables.
         """
-        if len({trait.__class__ for trait in self._members.values()}) == 1:
-            # Avoid circular import.
-            from .group_data import NON_OVERLAPPING_GROUPS
+        # Avoid circular import.
+        from .group_data import NON_OVERLAPPING_GROUPS
 
-            if self in NON_OVERLAPPING_GROUPS:
-                return True
-        return False
+        return self in NON_OVERLAPPING_GROUPS
 
     @cached_property
     def short_desc(self) -> str:

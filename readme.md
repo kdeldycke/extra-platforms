@@ -240,7 +240,6 @@ mindmap
             (📱 armv6l)
             (📱 armv7l)
             (📱 armv8l)
-        (❓ unknown_architecture)
 ```
 
 <!-- architecture-mindmap-end -->
@@ -301,7 +300,6 @@ mindmap
             (🤵 tuxedo)
             (🎯 ubuntu)
             (🌊 ultramarine)
-            (🐧 unknown_linux)
             (Ⓧ xenserver)
         )🅱️+ BSD(
             (😈 freebsd)
@@ -342,7 +340,6 @@ mindmap
         (⥁ heroku_ci)
         (🏙️ teamcity)
         (👷 travis_ci)
-        (♲ unknown_ci)
 ```
 
 <!-- ci-mindmap-end -->

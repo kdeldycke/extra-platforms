@@ -46,6 +46,7 @@ from extra_platforms import (
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
+    UNKNOWN,
     Group,
     Trait,
 )
@@ -109,7 +110,6 @@ def test_group_definitions():
 
         # Members are unique, in keys and values.
         assert len(group.members) == len(group.member_ids)
-        assert group.member_ids.issubset(ALL_TRAITS.member_ids)
         assert tuple(group.members.keys()) == tuple(group.members)
         assert len(set(group.members.keys())) == len(group.members)
         assert len(set(group.members.values())) == len(group.members)
@@ -120,14 +120,16 @@ def test_group_definitions():
         assert group.canonical is (group in NON_OVERLAPPING_GROUPS)
 
         # Check general subset properties and operators.
-        assert group.issubset(ALL_TRAITS)
-        assert group <= ALL_TRAITS
-        if group != ALL_TRAITS:
-            assert group < ALL_TRAITS
-        assert ALL_TRAITS.issuperset(group)
-        assert ALL_TRAITS >= group
-        if group != ALL_TRAITS:
-            assert ALL_TRAITS > group
+        all_traits = ALL_TRAITS | UNKNOWN
+        assert group.member_ids.issubset(all_traits.member_ids)
+        assert group.issubset(all_traits)
+        assert group <= all_traits
+        if group != all_traits:
+            assert group < all_traits
+        assert all_traits.issuperset(group)
+        assert all_traits >= group
+        if group != all_traits:
+            assert all_traits > group
 
         # Each group is both a subset and a superset of itself.
         assert group.issubset(group)
@@ -149,7 +151,7 @@ def test_group_definitions():
 
         for member in group:
             assert member in group
-            assert member in ALL_TRAITS
+            assert member in all_traits
             assert isinstance(member, Trait)
             assert member.id in group.member_ids
             assert group.issuperset([member])
@@ -226,6 +228,17 @@ def test_unique_icons():
     assert len(icons) == len(ALL_GROUPS)
 
 
+def test_unknown_group():
+    """All members of the UNKNOWN group are unknown traits."""
+    for trait in UNKNOWN:
+        assert trait.id.startswith("unknown_")
+        assert trait not in ALL_TRAITS
+        assert trait not in ALL_ARCHITECTURES
+        assert trait not in ALL_PLATFORMS
+        assert trait not in ALL_CI
+        assert trait.icon == "❓"
+
+
 def test_platform_logical_grouping():
     """Test logical grouping of platforms."""
     for group in BSD, LINUX, LINUX_LAYERS, SYSTEM_V, UNIX_LAYERS, OTHER_UNIX:
@@ -290,7 +303,11 @@ def test_sets_of_groups():
     assert ALL_GROUPS == NON_OVERLAPPING_GROUPS | EXTRA_GROUPS
     assert (
         ALL_GROUPS
-        == ALL_ARCHITECTURE_GROUPS | ALL_PLATFORM_GROUPS | ALL_CI_GROUPS | {ALL_TRAITS}
+        == ALL_ARCHITECTURE_GROUPS
+        | ALL_PLATFORM_GROUPS
+        | ALL_CI_GROUPS
+        | {ALL_TRAITS}
+        | {UNKNOWN}
     )
 
 
@@ -319,3 +336,13 @@ def test_overlapping_groups():
                 break
         assert overlap is True
         assert not extra_group.canonical
+
+
+def test_each_trait_in_exactly_one_canonical_group():
+    """Check each trait belongs to exactly one canonical group."""
+    for trait in ALL_TRAITS:
+        canonical_groups = [group for group in NON_OVERLAPPING_GROUPS if trait in group]
+        assert len(canonical_groups) == 1, (
+            f"Trait {trait.id!r} is in {len(canonical_groups)} canonical groups: "
+            f"{[g.id for g in canonical_groups]}"
+        )

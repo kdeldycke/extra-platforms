@@ -58,6 +58,6 @@ TRAVIS_CI = CI("travis_ci", "Travis CI", "👷", "https://www.travis-ci.com")
 UNKNOWN_CI = CI(
     "unknown_ci",
     "Unknown CI",
-    "♲",
+    "❓",
     "https://en.wikipedia.org/wiki/Continuous_integration",
 )

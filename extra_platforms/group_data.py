@@ -103,7 +103,7 @@ from .platform_data import (
     TUXEDO,
     UBUNTU,
     ULTRAMARINE,
-    UNKNOWN_LINUX,
+    UNKNOWN_PLATFORM,
     WINDOWS,
     WSL1,
     WSL2,
@@ -140,13 +140,16 @@ ALL_ARCHITECTURES: Group = Group(
         S390X,
         SPARC,
         SPARC64,
-        UNKNOWN_ARCHITECTURE,
         WASM32,
         WASM64,
         X86_64,
     ),
 )
-"""All supported architectures."""
+"""All recognized architectures.
+
+.. caution::
+    This group does not contain the ``UNKNOWN_ARCHITECTURE`` trait.
+"""
 
 
 ANY_ARM = Group(
@@ -282,13 +285,17 @@ ALL_PLATFORMS: Group = Group(
         TUXEDO,
         UBUNTU,
         ULTRAMARINE,
-        UNKNOWN_LINUX,
         WINDOWS,
         WSL1,
         WSL2,
         XENSERVER,
     ),
 )
+"""All recognized platforms.
+
+.. caution::
+    This group does not contain the ``UNKNOWN_PLATFORM`` traits.
+"""
 
 
 ANY_WINDOWS = Group(
@@ -391,7 +398,6 @@ LINUX = Group(
         TUXEDO,
         UBUNTU,
         ULTRAMARINE,
-        UNKNOWN_LINUX,
         XENSERVER,
     ),
 )
@@ -534,14 +540,16 @@ ALL_CI = Group(
         HEROKU_CI,
         TEAMCITY,
         TRAVIS_CI,
-        UNKNOWN_CI,
     ),
 )
-"""All Continuous Integration systems.
+"""All recognized Continuous Integration systems.
 
 .. note::
     `List of known CI systems
     <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
+
+.. caution::
+    This group does not contain the ``UNKNOWN_CI`` trait.
 """
 
 
@@ -555,7 +563,20 @@ ALL_TRAITS = Group(
     "⁕",
     tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_CI),
 )
-"""All supported architectures, platforms and CI systems."""
+"""All recognized architectures, platforms and CI systems.
+
+.. caution::
+    This group does not contain all ``UNKNOWN_*`` traits.
+"""
+
+
+UNKNOWN = Group(
+    "unknown",
+    "Unknown",
+    "❓",
+    (UNKNOWN_ARCHITECTURE, UNKNOWN_CI, UNKNOWN_PLATFORM),
+)
+"""Unknown or unrecognized traits."""
 
 
 # =============================================================================
@@ -629,6 +650,8 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         OTHER_UNIX,
         # CI groups.
         ALL_CI,
+        # Mixed groups.
+        UNKNOWN,
     ),
 )
 """Non-overlapping groups.

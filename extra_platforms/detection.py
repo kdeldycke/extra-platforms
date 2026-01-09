@@ -69,15 +69,12 @@ For all other traits, we either rely on:
 
 from __future__ import annotations
 
-import logging
 import platform
 import sys
 from functools import cache
 from os import environ
 
 import distro
-
-from . import _report_msg
 
 # =============================================================================
 # Architecture detection heuristics
@@ -248,44 +245,6 @@ def is_wasm64() -> bool:
         WebAssembly 64-bit (memory64) is still experimental.
     """
     return sys.platform == "emscripten" and platform.architecture()[0] == "64bit"
-
-
-@cache
-def is_unknown_architecture() -> bool:
-    """Return ``True`` if current architecture is unknown."""
-    if any((
-        is_i386(),
-        is_i586(),
-        is_i686(),
-        is_x86_64(),
-        is_arm(),
-        is_armv6l(),
-        is_armv7l(),
-        is_armv8l(),
-        is_aarch64(),
-        is_mips(),
-        is_mipsel(),
-        is_mips64(),
-        is_mips64el(),
-        is_ppc(),
-        is_ppc64(),
-        is_ppc64le(),
-        is_riscv32(),
-        is_riscv64(),
-        is_sparc(),
-        is_sparc64(),
-        is_s390x(),
-        is_loongarch64(),
-        is_wasm32(),
-        is_wasm64(),
-    )):
-        return False
-
-    machine = platform.machine()
-    if machine:
-        logging.warning(f"Unknown architecture detected: {machine!r}. {_report_msg}")
-        return True
-    return False
 
 
 # =============================================================================
@@ -559,53 +518,6 @@ def is_ultramarine() -> bool:
 
 
 @cache
-def is_unknown_linux() -> bool:
-    """Return ``True`` if current platform is an unknown Linux."""
-    if any((
-        is_altlinux(),
-        is_amzn(),
-        is_android(),
-        is_arch(),
-        is_buildroot(),
-        is_cachyos(),
-        is_centos(),
-        is_cloudlinux(),
-        is_debian(),
-        is_exherbo(),
-        is_fedora(),
-        is_gentoo(),
-        is_guix(),
-        is_ibm_powerkvm(),
-        is_kvmibm(),
-        is_linuxmint(),
-        is_mageia(),
-        is_mandriva(),
-        is_nobara(),
-        is_opensuse(),
-        is_oracle(),
-        is_parallels(),
-        is_pidora(),
-        is_raspbian(),
-        is_rhel(),
-        is_rocky(),
-        is_scientific(),
-        is_slackware(),
-        is_sles(),
-        is_tumbleweed(),
-        is_tuxedo(),
-        is_ubuntu(),
-        is_ultramarine(),
-        is_xenserver(),
-    )):
-        return False
-
-    if sys.platform.startswith("linux"):
-        logging.warning(f"Unknown Linux detected: {distro.info()!r}. {_report_msg}")
-        return True
-    return False  # type: ignore[unreachable,unused-ignore]
-
-
-@cache
 def is_windows() -> bool:
     """Return ``True`` if current platform is Windows."""
     return sys.platform.startswith("win32")
@@ -761,34 +673,3 @@ def is_travis_ci() -> bool:
     <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>`_.
     """
     return "TRAVIS" in environ
-
-
-@cache
-def is_unknown_ci() -> bool:
-    """Return ``True`` if current platform is an unknown CI.
-
-    Some CI systems relies on `generic environment variables to identify themselves
-    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_:
-
-    - ``CI``
-    - ``BUILD_ID``
-    """
-    if any((
-        is_azure_pipelines(),
-        is_bamboo(),
-        is_buildkite(),
-        is_circle_ci(),
-        is_cirrus_ci(),
-        is_codebuild(),
-        is_github_ci(),
-        is_gitlab_ci(),
-        is_heroku_ci(),
-        is_teamcity(),
-        is_travis_ci(),
-    )):
-        return False
-
-    if "CI" in environ or "BUILD_ID" in environ:
-        logging.warning(f"Unknown CI detected: {environ}. {_report_msg}")
-        return True
-    return False

@@ -194,9 +194,7 @@ if TYPE_CHECKING:
     skip_unix: MarkDecorator
     skip_unix_layers: MarkDecorator
     skip_unix_without_macos: MarkDecorator
-    skip_unknown_architecture: MarkDecorator
-    skip_unknown_ci: MarkDecorator
-    skip_unknown_linux: MarkDecorator
+    skip_unknown: MarkDecorator
     skip_wasm32: MarkDecorator
     skip_wasm64: MarkDecorator
     skip_webassembly: MarkDecorator
@@ -303,9 +301,7 @@ if TYPE_CHECKING:
     unless_unix: MarkDecorator
     unless_unix_layers: MarkDecorator
     unless_unix_without_macos: MarkDecorator
-    unless_unknown_architecture: MarkDecorator
-    unless_unknown_ci: MarkDecorator
-    unless_unknown_linux: MarkDecorator
+    unless_unknown: MarkDecorator
     unless_wasm32: MarkDecorator
     unless_wasm64: MarkDecorator
     unless_webassembly: MarkDecorator

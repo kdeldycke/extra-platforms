@@ -55,7 +55,10 @@ CI(id='unknown_ci', name='Unknown CI')
 |   ⥁    | [`HEROKU_CI`](#extra_platforms.ci_data.HEROKU_CI)             | Heroku CI             | [`is_heroku_ci()`](detection.md#extra_platforms.detection.is_heroku_ci)             |
 |   🏙️   | [`TEAMCITY`](#extra_platforms.ci_data.TEAMCITY)               | TeamCity              | [`is_teamcity()`](detection.md#extra_platforms.detection.is_teamcity)               |
 |   👷   | [`TRAVIS_CI`](#extra_platforms.ci_data.TRAVIS_CI)             | Travis CI             | [`is_travis_ci()`](detection.md#extra_platforms.detection.is_travis_ci)             |
-|   ♲    | [`UNKNOWN_CI`](#extra_platforms.ci_data.UNKNOWN_CI)           | Unknown CI            | [`is_unknown_ci()`](detection.md#extra_platforms.detection.is_unknown_ci)           |
+
+```{hint}
+The [`UNKNOWN_CI`](#extra_platforms.ci_data.UNKNOWN_CI) trait represents an unrecognized CI. It is not included in the [`ALL_CI`](groups.md#extra_platforms.group_data.ALL_CI) group, and will be returned by `current_ci()` if the current CI is not recognized.
+```
 
 <!-- ci-table-end -->
 
@@ -82,7 +85,6 @@ ALL_CI,gitlab_ci,1
 ALL_CI,heroku_ci,1
 ALL_CI,teamcity,1
 ALL_CI,travis_ci,1
-ALL_CI,unknown_ci,1
 ```
 
 <!-- ci-sankey-end -->
@@ -106,7 +108,6 @@ mindmap
         (⥁ heroku_ci)
         (🏙️ teamcity)
         (👷 travis_ci)
-        (♲ unknown_ci)
 ```
 
 <!-- ci-mindmap-end -->
