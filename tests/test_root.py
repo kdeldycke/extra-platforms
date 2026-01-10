@@ -21,20 +21,26 @@ import inspect
 import sys
 from pathlib import Path
 
+import pytest
 import requests
 
 import extra_platforms
 from extra_platforms import (
     ALL_ARCHITECTURES,
+    ALL_CI,
     ALL_GROUPS,
     ALL_PLATFORMS,
     ALL_TRAITS,
     GITHUB_CI,
     SYSTEM_V,
     UNIX,
+    UNKNOWN_ARCHITECTURE,
+    UNKNOWN_CI,
+    UNKNOWN_PLATFORM,
     WSL1,
     WSL2,
     current_architecture,
+    current_ci,
     current_platform,
     current_traits,
     invalidate_caches,
@@ -230,6 +236,78 @@ def test_current_funcs():
 
     current_architecture_result = current_architecture()
     assert current_architecture_result in ALL_ARCHITECTURES
+
+
+def test_current_architecture_strict(monkeypatch):
+    """Test that ``current_architecture(strict=True)`` raises an error when unrecognized."""
+    # First verify that without mocking, current_architecture works normally.
+    invalidate_caches()
+    arch = current_architecture()
+    assert arch in ALL_ARCHITECTURES
+    assert arch is not UNKNOWN_ARCHITECTURE
+
+    # Now mock all architectures to not match.
+    invalidate_caches()
+    for arch in ALL_ARCHITECTURES:
+        monkeypatch.setattr(type(arch), "current", property(lambda self: False))
+
+    # Without strict mode, we get UNKNOWN_ARCHITECTURE.
+    result = current_architecture(strict=False)
+    assert result is UNKNOWN_ARCHITECTURE
+
+    # With strict mode, we get a SystemError.
+    invalidate_caches()
+    with pytest.raises(SystemError, match="Unrecognized architecture"):
+        current_architecture(strict=True)
+
+    # Cleanup: restore the original property.
+    invalidate_caches()
+
+
+def test_current_platform_strict(monkeypatch):
+    """Test that ``current_platform(strict=True)`` raises an error when unrecognized."""
+    # First verify that without mocking, current_platform works normally.
+    invalidate_caches()
+    platform = current_platform()
+    assert platform in ALL_PLATFORMS
+    assert platform is not UNKNOWN_PLATFORM
+
+    # Now mock all platforms to not match.
+    invalidate_caches()
+    for platform in ALL_PLATFORMS:
+        monkeypatch.setattr(type(platform), "current", property(lambda self: False))
+
+    # Without strict mode, we get UNKNOWN_PLATFORM.
+    result = current_platform(strict=False)
+    assert result is UNKNOWN_PLATFORM
+
+    # With strict mode, we get a SystemError.
+    invalidate_caches()
+    with pytest.raises(SystemError, match="Unrecognized platform"):
+        current_platform(strict=True)
+
+    # Cleanup: restore the original property.
+    invalidate_caches()
+
+
+def test_current_ci_strict(monkeypatch):
+    """Test that ``current_ci(strict=True)`` raises an error when unrecognized."""
+    # Now mock all CI systems to not match.
+    invalidate_caches()
+    for ci in ALL_CI:
+        monkeypatch.setattr(type(ci), "current", property(lambda self: False))
+
+    # Without strict mode, we get UNKNOWN_CI.
+    result = current_ci(strict=False)
+    assert result is UNKNOWN_CI
+
+    # With strict mode, we get a SystemError.
+    invalidate_caches()
+    with pytest.raises(SystemError, match="Unrecognized CI"):
+        current_ci(strict=True)
+
+    # Cleanup: restore the original property.
+    invalidate_caches()
 
 
 def test_group_membership_funcs():
