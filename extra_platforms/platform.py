@@ -15,7 +15,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Backward-compatible module for deprecated imports.
 
-.. deprecated:: 6.0.0
+.. deprecated:: 7.0.0
    This module is deprecated. Import from ``extra_platforms.trait`` instead.
 """
 

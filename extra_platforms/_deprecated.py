@@ -253,7 +253,7 @@ _recursive_update = _make_deprecated_callable(
 """
 Alias for backward compatibility.
 
-.. deprecated:: 6.0.0
+.. deprecated:: 7.0.0
    Use ``extra_platforms.trait._recursive_update`` instead.
 """
 
@@ -266,6 +266,6 @@ _remove_blanks = _make_deprecated_callable(
 """
 Alias for backward compatibility.
 
-.. deprecated:: 6.0.0
+.. deprecated:: 7.0.0
    Use ``extra_platforms.trait._remove_blanks`` instead.
 """
