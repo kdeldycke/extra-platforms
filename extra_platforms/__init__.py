@@ -272,6 +272,7 @@ from .operations import (  # noqa: E402
 __version__ = "7.0.0"
 
 
+@cache
 def _unrecognized_message() -> str:
     """Generate a consistent message for unrecognized environments."""
     return (
