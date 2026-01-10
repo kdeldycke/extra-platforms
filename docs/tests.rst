@@ -49,14 +49,6 @@ tests.test\_operations module
    :show-inheritance:
    :undoc-members:
 
-tests.test\_platform module
----------------------------
-
-.. automodule:: tests.test_platform
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
 tests.test\_platform\_data module
 ---------------------------------
 
@@ -77,6 +69,14 @@ tests.test\_root module
 -----------------------
 
 .. automodule:: tests.test_root
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+tests.test\_trait module
+------------------------
+
+.. automodule:: tests.test_trait
    :members:
    :show-inheritance:
    :undoc-members:
