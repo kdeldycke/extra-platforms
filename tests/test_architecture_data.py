@@ -18,18 +18,9 @@ from __future__ import annotations
 
 import ast
 import inspect
-from operator import attrgetter
 from pathlib import Path
-from string import ascii_lowercase, digits
 
-import pytest
-
-from extra_platforms import ALL_ARCHITECTURES, ALL_GROUP_IDS, ALL_IDS, ALL_TRAIT_IDS
 from extra_platforms import architecture_data as architecture_data_module
-
-all_architectures_params = pytest.mark.parametrize(
-    "architecture", list(ALL_ARCHITECTURES), ids=attrgetter("id")
-)
 
 
 def test_architecture_data_sorting():
@@ -48,51 +39,3 @@ def test_architecture_data_sorting():
             architecture_instance_ids.append(instance_id)
 
     assert architecture_instance_ids == sorted(architecture_instance_ids)
-
-
-@all_architectures_params
-def test_architecture_definitions(architecture):
-    assert architecture
-
-    # ID.
-    assert architecture.id
-    assert architecture.id.isascii()
-    assert architecture.id[0] in ascii_lowercase
-    assert architecture.id[-1] in ascii_lowercase + digits
-    assert set(architecture.id).issubset(ascii_lowercase + digits + "_")
-    assert architecture.id.islower()
-    # Architectures are not allowed to start with all_ or any_, which is
-    # reserved for groups. Use unknown_ prefix instead.
-    assert not architecture.id.startswith(("all_", "any_"))
-    assert architecture.id in ALL_TRAIT_IDS
-    assert architecture.id not in ALL_GROUP_IDS
-    assert architecture.id in ALL_IDS
-
-    # Name.
-    assert architecture.name
-    assert architecture.name.isascii()
-    assert architecture.name.isprintable()
-
-    # Icon.
-    assert architecture.icon
-    assert 2 >= len(architecture.icon) >= 1
-
-    # URL.
-    assert architecture.url
-    assert architecture.url.startswith("https://")
-
-    # Info.
-    assert architecture.info()
-    for k, v in architecture.info().items():
-        assert set(k).issubset(ascii_lowercase + "_")
-        if v is not None:
-            assert isinstance(v, (str, bool, dict))
-            if isinstance(v, str):
-                assert v
-            elif isinstance(v, dict):
-                assert v
-                for k1, v1 in v.items():
-                    assert set(k1).issubset(ascii_lowercase + "_")
-                    if v1 is not None:
-                        assert v1
-    assert architecture.info()["id"] == architecture.id

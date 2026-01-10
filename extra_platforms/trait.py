@@ -122,6 +122,22 @@ class Trait(ABC):
     id: str
     """Unique ID of the trait."""
 
+    symbol_id: str = field(repr=False, init=False)
+    """Symbolic identifier.
+
+    This is the variable name under which the instance can be accessed at the
+    root of the ``extra_platforms`` module.
+
+    Mainly useful for documentation generation.
+    """
+
+    detection_func_id: str = field(repr=False, init=False)
+    """ID of the detection function for this trait.
+
+    The detection function is expected to be named ``is_<id>()`` and located at the root
+    of the ``extra_platforms`` module.
+    """
+
     name: str
     """User-friendly name of the trait."""
 
@@ -131,28 +147,27 @@ class Trait(ABC):
     url: str = field(repr=False, default="")
     """URL to the trait's official website or documentation."""
 
-    detection_func_id: str = field(repr=False, init=False)
-    """ID of the detection function for this trait.
-
-    The detection function is expected to be named ``is_<id>()`` and located at the root
-    of the ``extra_platforms`` module.
-    """
-
     def __post_init__(self) -> None:
         """Validate and normalize trait fields.
 
         - Ensure the trait ID, name, icon and URL are not empty.
         - Ensure the URL starts with ``https://``.
+        - Set the symbolic ID based on the trait ID.
         - Set the detection function ID based on the trait ID.
         - Populate the docstring.
         """
         assert self.id, f"{self.__class__.__name__} ID cannot be empty."
-        assert self.name, f"{self.__class__.__name__} name cannot be empty."
-        assert self.icon, f"{self.__class__.__name__} icon cannot be empty."
-        assert self.url, f"{self.__class__.__name__} URL cannot be empty."
-        assert self.url.startswith("https://"), "URL must start with https://."
+
+        object.__setattr__(self, "symbol_id", self.id.upper())
 
         object.__setattr__(self, "detection_func_id", f"is_{self.id}")
+
+        assert self.name, f"{self.__class__.__name__} name cannot be empty."
+
+        assert self.icon, f"{self.__class__.__name__} icon cannot be empty."
+
+        assert self.url, f"{self.__class__.__name__} URL cannot be empty."
+        assert self.url.startswith("https://"), "URL must start with https://."
 
         object.__setattr__(self, "__doc__", f"Identify {self.name}.")
 
@@ -161,7 +176,7 @@ class Trait(ABC):
         """Returns a short description of the trait.
 
         Mainly used to produce docstrings for functions dynamically generated for each
-        group.
+        trait.
         """
         return self.name
 

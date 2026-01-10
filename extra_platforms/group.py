@@ -57,6 +57,15 @@ class Group:
     id: str
     """Unique ID of the group."""
 
+    symbol_id: str = field(repr=False, init=False)
+    """Symbolic identifier.
+
+    This is the variable name under which the instance can be accessed at the
+    root of the ``extra_platforms`` module.
+
+    Mainly useful for documentation generation.
+    """
+
     name: str
     """User-friendly description of a group."""
 
@@ -84,7 +93,11 @@ class Group:
     def __post_init__(self):
         """Validate fields and normalize members to a sorted, deduplicated mapping."""
         assert self.id, "Group ID cannot be empty."
+
+        object.__setattr__(self, "symbol_id", self.id.upper())
+
         assert self.name, "Group name cannot be empty."
+
         assert self.icon, "Group icon cannot be empty."
 
         # Accept either a MappingProxyType, dict, or iterable of Traits.
@@ -94,7 +107,6 @@ class Group:
             traits = self.members.values()
         else:
             traits = self.members
-
         # Deduplicate and sort by ID, then build the immutable mapping.
         sorted_traits = sorted(set(traits), key=lambda t: t.id)
         object.__setattr__(

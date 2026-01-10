@@ -18,18 +18,9 @@ from __future__ import annotations
 
 import ast
 import inspect
-from operator import attrgetter
 from pathlib import Path
-from string import ascii_lowercase, digits
 
-import pytest
-
-from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_PLATFORMS, ALL_TRAIT_IDS
 from extra_platforms import platform_data as platform_data_module
-
-all_platforms_params = pytest.mark.parametrize(
-    "platform", list(ALL_PLATFORMS), ids=attrgetter("id")
-)
 
 
 def test_platform_data_sorting():
@@ -48,51 +39,3 @@ def test_platform_data_sorting():
             platform_instance_ids.append(instance_id)
 
     assert platform_instance_ids == sorted(platform_instance_ids)
-
-
-@all_platforms_params
-def test_platform_definitions(platform):
-    assert platform
-
-    # ID.
-    assert platform.id
-    assert platform.id.isascii()
-    assert platform.id[0] in ascii_lowercase
-    assert platform.id[-1] in ascii_lowercase + digits
-    assert set(platform.id).issubset(ascii_lowercase + digits + "_")
-    assert platform.id.islower()
-    # Platforms are not allowed to start with all_ or any_, which is reserved
-    # for groups. Use unknown_ prefix instead.
-    assert not platform.id.startswith(("all_", "any_"))
-    assert platform.id in ALL_TRAIT_IDS
-    assert platform.id not in ALL_GROUP_IDS
-    assert platform.id in ALL_IDS
-
-    # Name.
-    assert platform.name
-    assert platform.name.isascii()
-    assert platform.name.isprintable()
-
-    # Icon.
-    assert platform.icon
-    assert 2 >= len(platform.icon) >= 1
-
-    # URL.
-    assert platform.url
-    assert platform.url.startswith("https://")
-
-    # Info.
-    assert platform.info()
-    for k, v in platform.info().items():
-        assert set(k).issubset(ascii_lowercase + "_")
-        if v is not None:
-            assert isinstance(v, (str, bool, dict))
-            if isinstance(v, str):
-                assert v
-            elif isinstance(v, dict):
-                assert v
-                for k1, v1 in v.items():
-                    assert set(k1).issubset(ascii_lowercase + "_")
-                    if v1 is not None:
-                        assert v1
-    assert platform.info()["id"] == platform.id

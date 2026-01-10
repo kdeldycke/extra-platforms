@@ -23,6 +23,7 @@
   - `Group._extract_platforms()` → `Group._extract_members()`.
   - `is_all_platforms_without_ci()` → `is_all_platforms()`.
   - `is_ci()` → `is_all_ci()`.
+- Pre-compute some traits and groups attributes for documentation generation.
 - Use symbols consistently for all traits and groups in the documentation.
 - Mark all canonical groups with the ⬥ symbol everywhere in the documentation.
 - Cross-link all traits and groups in the documentation.
