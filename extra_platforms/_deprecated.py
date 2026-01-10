@@ -39,16 +39,6 @@ if TYPE_CHECKING:
     from .platform import Platform
 
 
-def _get_dynamic_functions():
-    """Lazy import of dynamically-generated group membership functions.
-
-    These functions are generated at module initialization time, so we need
-    to import them after the module is fully loaded.
-    """
-
-    return _is_all_ci, _is_all_platforms
-
-
 def _warn_deprecated(name: str, replacement: str) -> None:
     """Issue a deprecation warning for a name pointing to a replacement.
 
