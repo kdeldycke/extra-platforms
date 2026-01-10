@@ -673,7 +673,7 @@ __all__ = (  # noqa: F405
     "is_unix",  # noqa: F822
     "is_unix_layers",  # noqa: F822
     "is_unix_without_macos",  # noqa: F822
-    "is_unknown",
+    "is_unknown",  # noqa: F822
     "is_wasm32",
     "is_wasm64",
     "is_webassembly",  # noqa: F822
