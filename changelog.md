@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Fix detection of `AARCH64` on Windows ARM runners.
 - Re-introduce deprecated aliases:
   - `Group._extract_platforms()` → `Group._extract_members()`.
   - `is_all_platforms_without_ci()` → `is_all_platforms()`.

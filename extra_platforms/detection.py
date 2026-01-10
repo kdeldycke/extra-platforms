@@ -83,8 +83,16 @@ import distro
 
 @cache
 def is_aarch64() -> bool:
-    """Return ``True`` if current architecture is ARM64 (AArch64)."""
-    return platform.machine() in ("aarch64", "arm64")
+    """Return ``True`` if current architecture is ARM64 (AArch64).
+
+    .. note::
+        ``platform.machine()`` returns different values depending on the OS:
+
+        - Linux: ``aarch64``
+        - macOS: ``arm64``
+        - Windows: ``ARM64``
+    """
+    return platform.machine().lower() in ("aarch64", "arm64")
 
 
 @cache

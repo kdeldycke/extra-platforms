@@ -30,7 +30,6 @@ from extra_platforms import (  # type: ignore[attr-defined]
     GITHUB_CI,
     MACOS,
     UBUNTU,
-    UNKNOWN_ARCHITECTURE,
     WINDOWS,
     WSL2,
     X86_64,
@@ -235,7 +234,6 @@ def test_github_runner_detection():
     assert GITHUB_CI in current_traits()
     assert current_architecture() in current_traits()
     assert current_platform() in current_traits()
-    assert current_platform() in current_traits()
     assert current_ci() in current_traits()
 
     assert github_runner_os() is not None, (
@@ -251,20 +249,13 @@ def test_github_runner_detection():
         "macos-15-intel",
         "windows-2025",
         "windows-2022",
-    }:
+    } or (
+        # XXX Python <= 3.10.x on Windows ARM runners reports x86_64.
+        github_runner_os() == "windows-11-arm" and sys.version_info < (3, 11)
+    ):
         assert current_architecture() is X86_64
         assert X86_64 in current_traits()
         assert is_x86_64()
-    # XXX Windows ARM runners report unknown architecture.
-    elif github_runner_os() == "windows-11-arm":
-        if sys.version_info >= (3, 11):
-            assert current_architecture() is UNKNOWN_ARCHITECTURE
-            assert UNKNOWN_ARCHITECTURE in current_traits()
-        # XXX Python <= 3.10 on Windows ARM runners reports x86_64.
-        else:
-            assert current_architecture() is X86_64
-            assert X86_64 in current_traits()
-            assert is_x86_64()
     # AArch64 runners.
     else:
         assert current_architecture() is AARCH64
