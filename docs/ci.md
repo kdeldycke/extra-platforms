@@ -74,17 +74,17 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_CI,azure_pipelines,1
-ALL_CI,bamboo,1
-ALL_CI,buildkite,1
-ALL_CI,circle_ci,1
-ALL_CI,cirrus_ci,1
-ALL_CI,codebuild,1
-ALL_CI,github_ci,1
-ALL_CI,gitlab_ci,1
-ALL_CI,heroku_ci,1
-ALL_CI,teamcity,1
-ALL_CI,travis_ci,1
+ALL_CI,AZURE_PIPELINES,1
+ALL_CI,BAMBOO,1
+ALL_CI,BUILDKITE,1
+ALL_CI,CIRCLE_CI,1
+ALL_CI,CIRRUS_CI,1
+ALL_CI,CODEBUILD,1
+ALL_CI,GITHUB_CI,1
+ALL_CI,GITLAB_CI,1
+ALL_CI,HEROKU_CI,1
+ALL_CI,TEAMCITY,1
+ALL_CI,TRAVIS_CI,1
 ```
 
 <!-- ci-sankey-end -->
@@ -96,18 +96,18 @@ ALL_CI,travis_ci,1
 config: {"mindmap": {"padding": 5}}
 ---
 mindmap
-    ((♺ all_ci))
-        (═ azure_pipelines)
-        (⟲ bamboo)
-        (🪁 buildkite)
-        (⪾ circle_ci)
-        (≋ cirrus_ci)
-        (ᚙ codebuild)
-        (🐙 github_ci)
-        (🦊 gitlab_ci)
-        (⥁ heroku_ci)
-        (🏙️ teamcity)
-        (👷 travis_ci)
+    ((♺ ALL_CI))
+        (═ AZURE_PIPELINES)
+        (⟲ BAMBOO)
+        (🪁 BUILDKITE)
+        (⪾ CIRCLE_CI)
+        (≋ CIRRUS_CI)
+        (ᚙ CODEBUILD)
+        (🐙 GITHUB_CI)
+        (🦊 GITLAB_CI)
+        (⥁ HEROKU_CI)
+        (🏙️ TEAMCITY)
+        (👷 TRAVIS_CI)
 ```
 
 <!-- ci-mindmap-end -->

@@ -98,30 +98,30 @@ ALL_ARCHITECTURES,RISCV,2
 ALL_ARCHITECTURES,ANY_SPARC,2
 ALL_ARCHITECTURES,LOONGARCH,1
 ALL_ARCHITECTURES,IBM_MAINFRAME,1
-ANY_ARM,aarch64,1
-ANY_ARM,arm,1
-ANY_ARM,armv6l,1
-ANY_ARM,armv7l,1
-ANY_ARM,armv8l,1
-X86,i386,1
-X86,i586,1
-X86,i686,1
-X86,x86_64,1
-ANY_MIPS,mips,1
-ANY_MIPS,mips64,1
-ANY_MIPS,mips64el,1
-ANY_MIPS,mipsel,1
-POWERPC,ppc,1
-POWERPC,ppc64,1
-POWERPC,ppc64le,1
-WEBASSEMBLY,wasm32,1
-WEBASSEMBLY,wasm64,1
-RISCV,riscv32,1
-RISCV,riscv64,1
-ANY_SPARC,sparc,1
-ANY_SPARC,sparc64,1
-LOONGARCH,loongarch64,1
-IBM_MAINFRAME,s390x,1
+ANY_ARM,AARCH64,1
+ANY_ARM,ARM,1
+ANY_ARM,ARMV6L,1
+ANY_ARM,ARMV7L,1
+ANY_ARM,ARMV8L,1
+X86,I386,1
+X86,I586,1
+X86,I686,1
+X86,X86_64,1
+ANY_MIPS,MIPS,1
+ANY_MIPS,MIPS64,1
+ANY_MIPS,MIPS64EL,1
+ANY_MIPS,MIPSEL,1
+POWERPC,PPC,1
+POWERPC,PPC64,1
+POWERPC,PPC64LE,1
+WEBASSEMBLY,WASM32,1
+WEBASSEMBLY,WASM64,1
+RISCV,RISCV32,1
+RISCV,RISCV64,1
+ANY_SPARC,SPARC,1
+ANY_SPARC,SPARC64,1
+LOONGARCH,LOONGARCH64,1
+IBM_MAINFRAME,S390X,1
 ```
 
 <!-- architecture-multi-level-sankey-end -->
@@ -135,40 +135,40 @@ And the same families visualized as a mindmap:
 config: {"mindmap": {"padding": 5}}
 ---
 mindmap
-    ((🏛️ all_architectures))
+    ((🏛️ ALL_ARCHITECTURES))
         )𝘅 X86(
-            (𝗶 i386)
-            (𝗶 i586)
-            (𝗶 i686)
-            (🖥️ x86_64)
+            (𝗶 I386)
+            (𝗶 I586)
+            (𝗶 I686)
+            (🖥️ X86_64)
         )🌐 WEBASSEMBLY(
-            (🌐 wasm32)
-            (🌐 wasm64)
+            (🌐 WASM32)
+            (🌐 WASM64)
         )Ⅴ RISCV(
-            (Ⅴ riscv32)
-            (Ⅴ riscv64)
+            (Ⅴ RISCV32)
+            (Ⅴ RISCV64)
         )⚡ POWERPC(
-            (⚡ ppc)
-            (⚡ ppc64)
-            (⚡ ppc64le)
+            (⚡ PPC)
+            (⚡ PPC64)
+            (⚡ PPC64LE)
         )🐉 LOONGARCH(
-            (🐉 loongarch64)
+            (🐉 LOONGARCH64)
         )🏢 IBM_MAINFRAME(
-            (🏢 s390x)
+            (🏢 S390X)
         )☀️ ANY_SPARC(
-            (☀️ sparc)
-            (☀️ sparc64)
+            (☀️ SPARC)
+            (☀️ SPARC64)
         )🔲 ANY_MIPS(
-            (🔲 mips)
-            (🔲 mips64)
-            (🔲 mips64el)
-            (🔲 mipsel)
+            (🔲 MIPS)
+            (🔲 MIPS64)
+            (🔲 MIPS64EL)
+            (🔲 MIPSEL)
         )📱 ANY_ARM(
-            (📱 aarch64)
-            (📱 arm)
-            (📱 armv6l)
-            (📱 armv7l)
-            (📱 armv8l)
+            (📱 AARCH64)
+            (📱 ARM)
+            (📱 ARMV6L)
+            (📱 ARMV7L)
+            (📱 ARMV8L)
 ```
 
 <!-- architecture-mindmap-end -->

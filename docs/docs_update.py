@@ -389,11 +389,11 @@ def generate_sankey(groups: Iterable[Group]) -> str:
             #     f'"{html.escape(group.icon)} {group.id}",'
             #     f'"{html.escape(member.icon)} {member_id}",1'
             # )
-            table.append(f"{group.id.upper()},{member_id},1")
+            table.append(f"{group.id.upper()},{member_id.upper()},1")
 
     # Third layer: superset -> missing traits (weight = 1 each), placed at the end.
     for trait in missing_traits:
-        table.append(f"{superset.id.upper()},{trait.id},1")
+        table.append(f"{superset.id.upper()},{trait.id.upper()},1")
 
     output = dedent("""\
         ```mermaid
@@ -427,13 +427,13 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     for group in sorted(intermediate_groups, key=attrgetter("id"), reverse=True):
         group_map += f"){group.icon} {group.id.upper()}(\n"
         for platform_id, platform in group.items():
-            group_map += f"    ({platform.icon} {platform_id})\n"
+            group_map += f"    ({platform.icon} {platform_id.upper()})\n"
 
     # Add missing traits as direct children of the superset.
     for trait in missing_traits:
-        group_map += f"({html.escape(trait.icon)} {trait.id})\n"
+        group_map += f"({html.escape(trait.icon)} {trait.id.upper()})\n"
 
-    name = f"{html.escape(superset.icon)} {superset.id}"
+    name = f"{html.escape(superset.icon)} {superset.id.upper()}"
     output = dedent(f"""\
         ```mermaid
         ---

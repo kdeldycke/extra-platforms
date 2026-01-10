@@ -123,53 +123,53 @@ ALL_PLATFORMS,LINUX_LAYERS,2
 ALL_PLATFORMS,UNIX_LAYERS,1
 ALL_PLATFORMS,OTHER_UNIX,1
 ALL_PLATFORMS,ANY_WINDOWS,1
-LINUX,altlinux,1
-LINUX,amzn,1
-LINUX,android,1
-LINUX,arch,1
-LINUX,buildroot,1
-LINUX,cachyos,1
-LINUX,centos,1
-LINUX,cloudlinux,1
-LINUX,debian,1
-LINUX,exherbo,1
-LINUX,fedora,1
-LINUX,gentoo,1
-LINUX,guix,1
-LINUX,ibm_powerkvm,1
-LINUX,kvmibm,1
-LINUX,linuxmint,1
-LINUX,mageia,1
-LINUX,mandriva,1
-LINUX,nobara,1
-LINUX,opensuse,1
-LINUX,oracle,1
-LINUX,parallels,1
-LINUX,pidora,1
-LINUX,raspbian,1
-LINUX,rhel,1
-LINUX,rocky,1
-LINUX,scientific,1
-LINUX,slackware,1
-LINUX,sles,1
-LINUX,tumbleweed,1
-LINUX,tuxedo,1
-LINUX,ubuntu,1
-LINUX,ultramarine,1
-LINUX,xenserver,1
-BSD,freebsd,1
-BSD,macos,1
-BSD,midnightbsd,1
-BSD,netbsd,1
-BSD,openbsd,1
-BSD,sunos,1
-SYSTEM_V,aix,1
-SYSTEM_V,solaris,1
-LINUX_LAYERS,wsl1,1
-LINUX_LAYERS,wsl2,1
-UNIX_LAYERS,cygwin,1
-OTHER_UNIX,hurd,1
-ANY_WINDOWS,windows,1
+LINUX,ALTLINUX,1
+LINUX,AMZN,1
+LINUX,ANDROID,1
+LINUX,ARCH,1
+LINUX,BUILDROOT,1
+LINUX,CACHYOS,1
+LINUX,CENTOS,1
+LINUX,CLOUDLINUX,1
+LINUX,DEBIAN,1
+LINUX,EXHERBO,1
+LINUX,FEDORA,1
+LINUX,GENTOO,1
+LINUX,GUIX,1
+LINUX,IBM_POWERKVM,1
+LINUX,KVMIBM,1
+LINUX,LINUXMINT,1
+LINUX,MAGEIA,1
+LINUX,MANDRIVA,1
+LINUX,NOBARA,1
+LINUX,OPENSUSE,1
+LINUX,ORACLE,1
+LINUX,PARALLELS,1
+LINUX,PIDORA,1
+LINUX,RASPBIAN,1
+LINUX,RHEL,1
+LINUX,ROCKY,1
+LINUX,SCIENTIFIC,1
+LINUX,SLACKWARE,1
+LINUX,SLES,1
+LINUX,TUMBLEWEED,1
+LINUX,TUXEDO,1
+LINUX,UBUNTU,1
+LINUX,ULTRAMARINE,1
+LINUX,XENSERVER,1
+BSD,FREEBSD,1
+BSD,MACOS,1
+BSD,MIDNIGHTBSD,1
+BSD,NETBSD,1
+BSD,OPENBSD,1
+BSD,SUNOS,1
+SYSTEM_V,AIX,1
+SYSTEM_V,SOLARIS,1
+LINUX_LAYERS,WSL1,1
+LINUX_LAYERS,WSL2,1
+UNIX_LAYERS,CYGWIN,1
+OTHER_UNIX,HURD,1
+ANY_WINDOWS,WINDOWS,1
 ```
 
 <!-- platform-multi-level-sankey-end -->
@@ -183,61 +183,61 @@ And the same groups visualized as a mindmap:
 config: {"mindmap": {"padding": 5}}
 ---
 mindmap
-    ((⚙️ all_platforms))
+    ((⚙️ ALL_PLATFORMS))
         )≛ UNIX_LAYERS(
-            (Ͼ cygwin)
+            (Ͼ CYGWIN)
         )𝐕 SYSTEM_V(
-            (➿ aix)
-            (🌞 solaris)
+            (➿ AIX)
+            (🌞 SOLARIS)
         )⊎ OTHER_UNIX(
-            (🐃 hurd)
+            (🐃 HURD)
         )≚ LINUX_LAYERS(
-            (⊞ wsl1)
-            (⊞ wsl2)
+            (⊞ WSL1)
+            (⊞ WSL2)
         )🐧 LINUX(
-            (🐧 altlinux)
-            (⤻ amzn)
-            (🤖 android)
-            (🎗️ arch)
-            (⛑️ buildroot)
-            (⌬ cachyos)
-            (💠 centos)
-            (꩜ cloudlinux)
-            (🌀 debian)
-            (🐽 exherbo)
-            (🎩 fedora)
-            (🗜️ gentoo)
-            (🐃 guix)
-            (🤹 ibm_powerkvm)
-            (🤹 kvmibm)
-            (🌿 linuxmint)
-            (⍥ mageia)
-            (💫 mandriva)
-            ( nobara)
-            (🦎 opensuse)
-            (🦴 oracle)
-            (∥ parallels)
-            (🍓 pidora)
-            (🍓 raspbian)
-            (🎩 rhel)
-            (⛰️ rocky)
-            (⚛️ scientific)
-            (🚬 slackware)
-            (🦎 sles)
-            (↻ tumbleweed)
-            (🤵 tuxedo)
-            (🎯 ubuntu)
-            (🌊 ultramarine)
-            (Ⓧ xenserver)
+            (🐧 ALTLINUX)
+            (⤻ AMZN)
+            (🤖 ANDROID)
+            (🎗️ ARCH)
+            (⛑️ BUILDROOT)
+            (⌬ CACHYOS)
+            (💠 CENTOS)
+            (꩜ CLOUDLINUX)
+            (🌀 DEBIAN)
+            (🐽 EXHERBO)
+            (🎩 FEDORA)
+            (🗜️ GENTOO)
+            (🐃 GUIX)
+            (🤹 IBM_POWERKVM)
+            (🤹 KVMIBM)
+            (🌿 LINUXMINT)
+            (⍥ MAGEIA)
+            (💫 MANDRIVA)
+            ( NOBARA)
+            (🦎 OPENSUSE)
+            (🦴 ORACLE)
+            (∥ PARALLELS)
+            (🍓 PIDORA)
+            (🍓 RASPBIAN)
+            (🎩 RHEL)
+            (⛰️ ROCKY)
+            (⚛️ SCIENTIFIC)
+            (🚬 SLACKWARE)
+            (🦎 SLES)
+            (↻ TUMBLEWEED)
+            (🤵 TUXEDO)
+            (🎯 UBUNTU)
+            (🌊 ULTRAMARINE)
+            (Ⓧ XENSERVER)
         )🅱️+ BSD(
-            (😈 freebsd)
-            (🍎 macos)
-            (🌘 midnightbsd)
-            (🚩 netbsd)
-            (🐡 openbsd)
-            (☀️ sunos)
+            (😈 FREEBSD)
+            (🍎 MACOS)
+            (🌘 MIDNIGHTBSD)
+            (🚩 NETBSD)
+            (🐡 OPENBSD)
+            (☀️ SUNOS)
         )🪟 ANY_WINDOWS(
-            (🪟 windows)
+            (🪟 WINDOWS)
 ```
 
 <!-- platform-mindmap-end -->
