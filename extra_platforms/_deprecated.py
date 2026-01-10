@@ -19,14 +19,16 @@ from __future__ import annotations
 
 import warnings
 from functools import wraps
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
-from . import (
+from . import (  # type: ignore[attr-defined]
     ALL_PLATFORMS,
     ALL_TRAIT_IDS,
     UNKNOWN_PLATFORM,
     current_platform,
     current_traits,
+    is_all_ci,
+    is_all_platforms,
     is_unknown_platform,
     traits_from_ids,
 )
@@ -43,8 +45,6 @@ def _get_dynamic_functions():
     These functions are generated at module initialization time, so we need
     to import them after the module is fully loaded.
     """
-    from . import is_all_ci as _is_all_ci
-    from . import is_all_platforms as _is_all_platforms
 
     return _is_all_ci, _is_all_platforms
 
@@ -220,15 +220,10 @@ Alias `is_unknown_linux()` → `is_unknown_platform()`.
 # ================================================================
 
 
-def _is_all_platforms_without_ci_impl() -> bool:
-    _, is_all_platforms_func = _get_dynamic_functions()
-    return cast(bool, is_all_platforms_func())
-
-
 is_all_platforms_without_ci = _make_deprecated_callable(
     "is_all_platforms_without_ci()",
     "is_all_platforms()",
-    _is_all_platforms_without_ci_impl,
+    is_all_platforms,
 )
 """
 Alias `is_all_platforms_without_ci()` → `is_all_platforms()`.
@@ -238,12 +233,7 @@ Alias `is_all_platforms_without_ci()` → `is_all_platforms()`.
 """
 
 
-def _is_ci_impl() -> bool:
-    is_all_ci_func, _ = _get_dynamic_functions()
-    return cast(bool, is_all_ci_func())
-
-
-is_ci = _make_deprecated_callable("is_ci()", "is_all_ci()", _is_ci_impl)
+is_ci = _make_deprecated_callable("is_ci()", "is_all_ci()", is_all_ci)
 """
 Alias `is_ci()` → `is_all_ci()`.
 
