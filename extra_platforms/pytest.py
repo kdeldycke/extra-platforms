@@ -34,7 +34,7 @@ from itertools import chain
 import extra_platforms
 
 from .group import Group
-from .group_data import ALL_GROUPS, ALL_TRAITS
+from .group_data import ALL_GROUPS, ALL_TRAITS, UNKNOWN
 from .trait import Trait
 
 TYPE_CHECKING = False
@@ -73,12 +73,12 @@ class DeferredCondition:
 
 
 # Generate a pair of skip/unless decorators for each platform and group.
-for _obj in chain(ALL_TRAITS, ALL_GROUPS):
+for _obj in chain(ALL_TRAITS, UNKNOWN, ALL_GROUPS):
     # Sanity check to please the type checker.
     assert isinstance(_obj, (Trait, Group))
 
     # Get the detection function for the current object.
-    _func = getattr(extra_platforms, f"is_{_obj.id}")
+    _func = getattr(extra_platforms, _obj.detection_func_id)
 
     # Generate @skip decorator.
     globals()[f"skip_{_obj.id}"] = pytest.mark.skipif(
@@ -195,6 +195,9 @@ if TYPE_CHECKING:
     skip_unix_layers: MarkDecorator
     skip_unix_without_macos: MarkDecorator
     skip_unknown: MarkDecorator
+    skip_unknown_architecture: MarkDecorator
+    skip_unknown_ci: MarkDecorator
+    skip_unknown_platform: MarkDecorator
     skip_wasm32: MarkDecorator
     skip_wasm64: MarkDecorator
     skip_webassembly: MarkDecorator
@@ -302,6 +305,9 @@ if TYPE_CHECKING:
     unless_unix_layers: MarkDecorator
     unless_unix_without_macos: MarkDecorator
     unless_unknown: MarkDecorator
+    unless_unknown_architecture: MarkDecorator
+    unless_unknown_ci: MarkDecorator
+    unless_unknown_platform: MarkDecorator
     unless_wasm32: MarkDecorator
     unless_wasm64: MarkDecorator
     unless_webassembly: MarkDecorator

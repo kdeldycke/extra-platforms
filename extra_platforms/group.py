@@ -66,6 +66,13 @@ class Group:
     Mainly useful for documentation generation.
     """
 
+    detection_func_id: str = field(repr=False, init=False)
+    """ID of the detection function for this group.
+
+    The detection function is expected to be named ``is_<id>()`` and located at the root
+    of the ``extra_platforms`` module.
+    """
+
     name: str
     """User-friendly description of a group."""
 
@@ -91,10 +98,12 @@ class Group:
         return cast(_MembersMapping, self.members)
 
     def __post_init__(self):
-        """Validate fields and normalize members to a sorted, deduplicated mapping."""
+        """Validate fields, populate metadata, and normalize members to a sorted, deduplicated mapping."""
         assert self.id, "Group ID cannot be empty."
 
         object.__setattr__(self, "symbol_id", self.id.upper())
+
+        object.__setattr__(self, "detection_func_id", f"is_{self.id}")
 
         assert self.name, "Group name cannot be empty."
 
