@@ -166,15 +166,14 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines.append("")
         lines.append(f"- **ID**: ``{obj.id}``")
         lines.append(f"- **Name**: {obj.name}")
-        if hasattr(obj, "icon") and obj.icon:
-            lines.append(f"- **Icon**: {obj.icon}")
+        lines.append(f"- **Icon**: {obj.icon}")
         lines.append(
             f"- **Canonical**: ``{obj.canonical}`` {'⬥' if obj.canonical else ''}"
         )
 
         lines.append(make_pytest_decorator_line(obj.id))
 
-        # Add list of members with links to their definitions
+        # Add list of members with links to their definitions.
         if obj.members:
             member_links = []
             type_counts = {}
@@ -208,29 +207,28 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
                 lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
 
     elif isinstance(obj, Trait):
-        # For other traits (Architecture, Platform, CI), replace with their dynamic docstring + metadata.
+        # For traits, replace with their dynamic docstring + metadata.
         lines.clear()
         if obj.__doc__:
             lines.append(obj.__doc__)
         lines.append("")
         lines.append(f"- **ID**: ``{obj.id}``")
         lines.append(f"- **Name**: {obj.name}")
-        if hasattr(obj, "icon") and obj.icon:
-            lines.append(f"- **Icon**: {obj.icon}")
-        if hasattr(obj, "url") and obj.url:
-            lines.append(f"- **Reference**: <{obj.url}>_")
+        lines.append(f"- **Icon**: {obj.icon}")
+        lines.append(f"- **Reference**: <{obj.url}>_")
 
         if obj.detection_function_name:
             detection_url = make_rst_link(
                 f"{obj.detection_function_name}()",
                 f"detection.html#extra_platforms.detection.{obj.detection_function_name}",
             )
-        lines.append(
-            f"- **Detection function**: {detection_url if obj.detection_function_name else 'N/A'}"
-        )
+        else:
+            detection_url = "N/A"
+        lines.append(f"- **Detection function**: {detection_url}")
+
         lines.append(make_pytest_decorator_line(obj.id))
 
-        # Add list of groups this trait belongs to
+        # Add list of groups this trait belongs to.
         trait_groups = [group for group in ALL_GROUPS if obj.id in group.member_ids]
         if trait_groups:
             group_links = [

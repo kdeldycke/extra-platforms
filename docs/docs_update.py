@@ -491,21 +491,40 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     return _generate_markdown_table(table_data, headers, alignments)
 
 
-def generate_autodata_directives(traits: Iterable[Trait], module_name: str) -> str:
-    """Generate Sphinx autodata directives for a collection of traits.
+def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
+    """Generate Sphinx autodata directives for a collection of traits or groups.
 
     This produces a code block with ``.. autodata::`` directives for each trait,
     allowing Sphinx to document module-level constants with their dynamic docstrings.
 
+    The module name is automatically determined from the trait type.
+
     Args:
-        traits: The traits to generate directives for.
-        module_name: The fully qualified module name (e.g., "extra_platforms.architecture_data").
+        traits: The traits or groups to generate directives for.
 
     Returns:
         A MyST-compatible code block containing the autodata directives.
     """
+    traits_list = list(traits)
+    if not traits_list:
+        return "```{eval-rst}\n```"
+
+    # Determine module name from the first item's type
+    first_item = traits_list[0]
+    class_name = type(first_item).__name__
+    if class_name == "Architecture":
+        module_name = "extra_platforms.architecture_data"
+    elif class_name == "Platform":
+        module_name = "extra_platforms.platform_data"
+    elif class_name == "CI":
+        module_name = "extra_platforms.ci_data"
+    elif class_name == "Group":
+        module_name = "extra_platforms.group_data"
+    else:
+        raise ValueError(f"Unknown trait type: {class_name}")
+
     directives = []
-    for trait in sorted(traits, key=attrgetter("id")):
+    for trait in sorted(traits_list, key=attrgetter("id")):
         var_name = trait.id.upper()
         directives.append(f".. autodata:: {module_name}.{var_name}")
 
@@ -619,29 +638,23 @@ def update_docs() -> None:
             "architecture-data-autodata-start",
             "architecture-data-autodata-end",
             generate_autodata_directives(
-                list(ALL_ARCHITECTURES) + [UNKNOWN_ARCHITECTURE],
-                "extra_platforms.architecture_data",
+                list(ALL_ARCHITECTURES) + [UNKNOWN_ARCHITECTURE]
             ),
         ),
         (
             "platform-data-autodata-start",
             "platform-data-autodata-end",
-            generate_autodata_directives(
-                list(ALL_PLATFORMS) + [UNKNOWN_PLATFORM],
-                "extra_platforms.platform_data",
-            ),
+            generate_autodata_directives(list(ALL_PLATFORMS) + [UNKNOWN_PLATFORM]),
         ),
         (
             "ci-data-autodata-start",
             "ci-data-autodata-end",
-            generate_autodata_directives(
-                list(ALL_CI) + [UNKNOWN_CI], "extra_platforms.ci_data"
-            ),
+            generate_autodata_directives(list(ALL_CI) + [UNKNOWN_CI]),
         ),
         (
             "group-data-autodata-start",
             "group-data-autodata-end",
-            generate_autodata_directives(ALL_GROUPS, "extra_platforms.group_data"),
+            generate_autodata_directives([g for g in ALL_GROUPS]),
         ),
     ]
 

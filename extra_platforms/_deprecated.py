@@ -18,7 +18,8 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING
+from functools import wraps
+from typing import TYPE_CHECKING, cast
 
 from .group_data import ALL_PLATFORMS
 from .operations import ALL_TRAIT_IDS, traits_from_ids
@@ -98,7 +99,6 @@ def _make_deprecated_callable(name: str, replacement: str, func):
 
     The returned callable preserves the wrapped function metadata.
     """
-    from functools import wraps
 
     @wraps(func)
     def _wrapper(*args, **kwargs):
@@ -187,9 +187,9 @@ Alias `current_platforms()` → `current_traits()`.
 def _is_all_platforms_without_ci_impl() -> bool:
     # Import lazily to avoid circular import when this module is imported
     # from the package top-level `__init__.py`.
-    from . import is_all_platforms
+    from . import is_all_platforms  # type: ignore[attr-defined]
 
-    return is_all_platforms()
+    return cast(bool, is_all_platforms())
 
 
 is_all_platforms_without_ci = _make_deprecated_callable(
@@ -208,9 +208,9 @@ Alias `is_all_platforms_without_ci()` → `is_all_platforms()`.
 def _is_ci_impl() -> bool:
     # Import lazily to avoid circular import when this module is imported
     # from the package top-level `__init__.py`.
-    from . import is_all_ci
+    from . import is_all_ci  # type: ignore[attr-defined]
 
-    return is_all_ci()
+    return cast(bool, is_all_ci())
 
 
 is_ci = _make_deprecated_callable("is_ci()", "is_all_ci()", _is_ci_impl)

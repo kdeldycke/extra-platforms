@@ -276,7 +276,7 @@ from .operations import (  # noqa: E402
 __version__ = "6.1.0"
 
 
-def _unrecognized_message(kind: str) -> SystemError:
+def _unrecognized_message(kind: str) -> str:
     """Generate a consistent message for unrecognized environments."""
     return (
         f"Unrecognized {kind}: {sys.platform!r} / "
