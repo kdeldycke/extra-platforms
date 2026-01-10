@@ -27,8 +27,6 @@ from . import (
     UNKNOWN_PLATFORM,
     current_platform,
     current_traits,
-    is_all_ci,
-    is_all_platforms,
     is_unknown_platform,
     traits_from_ids,
 )
@@ -37,6 +35,18 @@ from .trait import _remove_blanks as _trait_remove_blanks
 
 if TYPE_CHECKING:
     from .platform import Platform
+
+
+def _get_dynamic_functions():
+    """Lazy import of dynamically-generated group membership functions.
+
+    These functions are generated at module initialization time, so we need
+    to import them after the module is fully loaded.
+    """
+    from . import is_all_ci as _is_all_ci
+    from . import is_all_platforms as _is_all_platforms
+
+    return _is_all_ci, _is_all_platforms
 
 
 def _warn_deprecated(name: str, replacement: str) -> None:
@@ -163,7 +173,9 @@ Alias `UNKNOWN_LINUX` → `UNKNOWN_PLATFORM`.
 
 
 current_os = _make_deprecated_callable(
-    "current_os()", "current_platform()", current_platform
+    "current_os()",
+    "current_platform()",
+    current_platform,  # type: ignore[has-type]
 )
 """
 Alias `current_os()` → `current_platform()`.
@@ -209,7 +221,8 @@ Alias `is_unknown_linux()` → `is_unknown_platform()`.
 
 
 def _is_all_platforms_without_ci_impl() -> bool:
-    return cast(bool, is_all_platforms())
+    _, is_all_platforms_func = _get_dynamic_functions()
+    return cast(bool, is_all_platforms_func())
 
 
 is_all_platforms_without_ci = _make_deprecated_callable(
@@ -226,7 +239,8 @@ Alias `is_all_platforms_without_ci()` → `is_all_platforms()`.
 
 
 def _is_ci_impl() -> bool:
-    return cast(bool, is_all_ci())
+    is_all_ci_func, _ = _get_dynamic_functions()
+    return cast(bool, is_all_ci_func())
 
 
 is_ci = _make_deprecated_callable("is_ci()", "is_all_ci()", _is_ci_impl)
