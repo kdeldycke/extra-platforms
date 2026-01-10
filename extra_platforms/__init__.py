@@ -27,12 +27,6 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
 
-# This message is put up there because it is used in multiple places in other files.
-_report_msg = (
-    "Please report this at https://github.com/kdeldycke/extra-platforms/issues to "
-    "improve detection heuristics."
-)
-
 from . import detection  # noqa: E402
 from .architecture_data import (  # noqa: E402
     AARCH64,
@@ -278,13 +272,14 @@ from .operations import (  # noqa: E402
 __version__ = "7.0.0"
 
 
-def _unrecognized_message(kind: str) -> str:
+def _unrecognized_message() -> str:
     """Generate a consistent message for unrecognized environments."""
     return (
-        f"Unrecognized {kind}: {sys.platform!r} / "
+        f"Environment: {sys.platform!r} / "
         f"{stdlib_platform.platform(aliased=True, terse=True)!r} / "
         f"{stdlib_platform.machine()!r} / {stdlib_platform.architecture()!r}. "
-        f"{_report_msg}"
+        "Please report this at https://github.com/kdeldycke/extra-platforms/issues to "
+        "improve detection heuristics."
     )
 
 
@@ -311,12 +306,11 @@ def current_architecture(strict: bool = False) -> Architecture:
 
     if len(matching) > 1:
         raise RuntimeError(
-            f"Multiple architectures match current environment: {matching!r}. "
-            f"{_report_msg}"
+            f"Multiple architectures matches: {matching!r}. {_unrecognized_message()}"
         )
 
     # No matching architecture found.
-    msg = _unrecognized_message("architecture")
+    msg = f"Unrecognized architecture: {_unrecognized_message()}"
     if strict:
         raise SystemError(msg)
     logging.warning(msg)
@@ -358,11 +352,11 @@ def current_platform(strict: bool = False) -> Platform:
 
     if len(matching) > 1:
         raise RuntimeError(
-            f"Multiple platforms match current environment: {matching!r}. {_report_msg}"
+            f"Multiple platforms matches: {matching!r}. {_unrecognized_message()}"
         )
 
     # No matching platform found.
-    msg = _unrecognized_message("platform")
+    msg = f"Unrecognized platform: {_unrecognized_message()}"
     if strict:
         raise SystemError(msg)
     logging.warning(msg)
@@ -392,12 +386,11 @@ def current_ci(strict: bool = False) -> CI | None:
 
     if len(matching) > 1:
         raise RuntimeError(
-            f"Multiple CI systems match current environment: {matching!r}. "
-            f"{_report_msg}"
+            f"Multiple CI matches: {matching!r}. {_unrecognized_message()}"
         )
 
     # No matching CI system found.
-    msg = _unrecognized_message("CI system")
+    msg = f"Unrecognized CI: {_unrecognized_message()}"
     if strict:
         raise SystemError(msg)
     logging.warning(msg)
@@ -408,7 +401,7 @@ def current_ci(strict: bool = False) -> CI | None:
 def current_traits() -> set[Trait]:
     """Returns all traits matching the current environment.
 
-    This includes platforms, architectures, and CI systems.
+    This includes platforms, architectures and CI systems.
 
     Never returns ``UNKNOWN_*`` traits.
 
@@ -424,7 +417,7 @@ def current_traits() -> set[Trait]:
             matching.add(trait)
 
     if not matching:
-        raise SystemError(_unrecognized_message("environment"))
+        raise SystemError(f"Unrecognized environment: {_unrecognized_message()}")
 
     return matching
 
