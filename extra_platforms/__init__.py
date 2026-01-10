@@ -422,6 +422,21 @@ def current_traits() -> set[Trait]:
     return matching
 
 
+def is_unknown_architecture() -> bool:
+    """Returns ``True`` if the current architecture is not recognized, ``False`` otherwise."""
+    return current_architecture() is UNKNOWN_ARCHITECTURE
+
+
+def is_unknown_platform() -> bool:
+    """Returns ``True`` if the current platform is not recognized, ``False`` otherwise."""
+    return current_platform() is UNKNOWN_PLATFORM
+
+
+def is_unknown_ci() -> bool:
+    """Returns ``True`` if the current CI system is not recognized, ``False`` otherwise."""
+    return current_ci() is UNKNOWN_CI
+
+
 def _generate_group_membership_func(_group: Group) -> Callable:
     """Factory to dynamiccaly produce a group membership test function."""
 
@@ -494,10 +509,12 @@ def invalidate_caches():
 from ._deprecated import (  # noqa: E402
     ALL_PLATFORM_IDS,
     ALL_PLATFORMS_WITHOUT_CI,
+    UNKNOWN_LINUX,
     current_os,
     current_platforms,
     is_all_platforms_without_ci,
     is_ci,
+    is_unknown_linux,
     platforms_from_ids,
 )
 
@@ -669,6 +686,10 @@ __all__ = (  # noqa: F405
     "is_unix_layers",  # noqa: F822
     "is_unix_without_macos",  # noqa: F822
     "is_unknown",  # noqa: F822
+    "is_unknown_architecture",
+    "is_unknown_ci",
+    "is_unknown_linux",
+    "is_unknown_platform",
     "is_wasm32",
     "is_wasm64",
     "is_webassembly",  # noqa: F822
@@ -738,6 +759,7 @@ __all__ = (  # noqa: F405
     "UNKNOWN",
     "UNKNOWN_ARCHITECTURE",
     "UNKNOWN_CI",
+    "UNKNOWN_LINUX",
     "UNKNOWN_PLATFORM",
     "WASM32",
     "WASM64",

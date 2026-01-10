@@ -32,7 +32,7 @@ from functools import cached_property
 
 import distro
 
-from . import detection
+import extra_platforms
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -131,11 +131,19 @@ class Trait(ABC):
     url: str = field(repr=False, default="")
     """URL to the trait's official website or documentation."""
 
+    detection_func_id: str = field(repr=False, init=False)
+    """ID of the detection function for this trait.
+
+    The detection function is expected to be named ``is_<id>()`` and located at the root
+    of the ``extra_platforms`` module.
+    """
+
     def __post_init__(self) -> None:
         """Validate and normalize trait fields.
 
         - Ensure the trait ID, name, icon and URL are not empty.
         - Ensure the URL starts with ``https://``.
+        - Set the detection function ID based on the trait ID.
         - Populate the docstring.
         """
         assert self.id, f"{self.__class__.__name__} ID cannot be empty."
@@ -143,6 +151,8 @@ class Trait(ABC):
         assert self.icon, f"{self.__class__.__name__} icon cannot be empty."
         assert self.url, f"{self.__class__.__name__} URL cannot be empty."
         assert self.url.startswith("https://"), "URL must start with https://."
+
+        object.__setattr__(self, "detection_func_id", f"is_{self.id}")
 
         object.__setattr__(self, "__doc__", f"Identify {self.name}.")
 
@@ -156,34 +166,24 @@ class Trait(ABC):
         return self.name
 
     @cached_property
-    def detection_function_name(self) -> str | None:
-        """Returns the name of the detection function for this trait.
+    def current(self) -> bool:
+        """Returns whether the current environment matches this trait.
 
-        The detection function is expected to be named ``is_<id>()`` in the
-        ``detection`` module. If no such function exists, returns ``None``.
+        The detection function is dynamically looked up based on the trait ID, and is
+        expected to be found at the root of the ``extra_platforms`` module.
+
+        Raises ``NotImplementedError`` if a detection function cannot be found.
 
         .. hint::
             This is a property to avoid calling all detection heuristics on
             ``Trait`` objects creation, which happens at module import time.
         """
-        func_id = f"is_{self.id}"
-        if not hasattr(detection, func_id):
-            return None
-        return func_id
-
-    @cached_property
-    def current(self) -> bool:
-        """Returns whether the current environment matches this trait.
-
-        Only ``UNKNOWN_*`` traits are expected to not have a detection function. Because
-        these traits are not going to be evaluated and serves as a fallback only, this
-        property is not going to be called.
-        """
-        if not self.detection_function_name:
+        func = getattr(extra_platforms, self.detection_func_id, None)
+        if not func:
             raise NotImplementedError(
-                f"Detection function {self.detection_function_name}() is not implemented."
+                f"Detection function {self.detection_func_id}() is not implemented."
             )
-        return getattr(detection, self.detection_function_name)()  # type: ignore[no-any-return]
+        return func()  # type: ignore[no-any-return]
 
     @abstractmethod
     def info(self) -> dict:

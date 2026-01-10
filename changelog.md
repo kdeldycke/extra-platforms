@@ -6,24 +6,27 @@
 > This version is not released yet and is under active development.
 
 - Fix detection of `AARCH64` on Windows ARM runners.
-- Re-introduce deprecated aliases:
+- Add new `UNKNOWN` group that contains `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits. Aligns all their icons.
+- Add new `is_unknown()` detection function for the `UNKNOWN` group.
+- Add new `detection_function_name` attribute to `Trait` to explicitly specify the name of the detection function to use.
+- Rename `UNKNOWN_LINUX` trait to `UNKNOWN_PLATFORM`.
+- Deprecate `is_unknown_linux()` in favor of `is_unknown_platform()`.
+- Remove `UNKNOWN_ARCHITECTURE` trait from `ALL_ARCHITECTURES` group.
+- Remove `UNKNOWN_LINUX` trait from `ALL_PLATFORMS` group.
+- Remove `UNKNOWN_CI` trait from `ALL_CI` group.
+- Use `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits as fallback when no other trait matches the current environment.
+- Add strict mode to `current_architecture()`, `current_platform()` and `current_ci()` methods to raise an exception when the current environment fallback to an `UNKNOWN_*` trait.
+- Add new `@skip_unknown` and `@unless_unknown` decorators for the `UNKNOWN` group for completeness.
+- Remove `@skip_unknown_architecture`/`@unless_unknown_architecture`, `@skip_unknown_ci`/`@unless_unknown_ci` and `@skip_unknown_platform`/`@unless_unknown_platform` decorators.
+- Move all trait base classes to `trait.py` module.
+- Re-introduce aliases deprecated in v6.0.0 for backward compatibility:
   - `Group._extract_platforms()` → `Group._extract_members()`.
   - `is_all_platforms_without_ci()` → `is_all_platforms()`.
   - `is_ci()` → `is_all_ci()`.
-
-- Rename `UNKNOWN_LINUX` trait to `UNKNOWN_PLATFORM`.
-- Use `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits as fallback when no other trait matches the current environment.
-- Remove `is_unknown_architecture()`, `is_unknown_linux()` and `is_unknown_ci()` detection functions.
-- Add new `is_unknown()` detection function for the `UNKNOWN` group.
-- Remove `UNKNOWN_ARCHITECTURE` from `ALL_ARCHITECTURES` group.
-- Remove `UNKNOWN_LINUX` from `ALL_PLATFORMS` group.
-- Remove `UNKNOWN_CI` from `ALL_CI` group.
-- Add new `UNKNOWN` group that contains `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits. Aligns all their icons.
-- Add new `detection_function_name` attribute to `Trait` to explicitly specify the name of the detection function to use.
-- Remove `@skip_unknown_architecture`/`@unless_unknown_architecture`, `@skip_unknown_ci`/`@unless_unknown_ci` and `@skip_unknown_platform`/`@unless_unknown_platform` decorators.
-- Add new `@skip_unknown` and `@unless_unknown` decorators for the `UNKNOWN` group for completeness.
-- Add strict mode to `current_architecture()`, `current_platform()` and `current_ci()` methods to raise an exception when the current environment fallback to an `UNKNOWN_*` trait.
+- Use symbols consistently for all traits and groups in the documentation.
 - Mark all canonical groups with the ⬥ symbol everywhere in the documentation.
+- Cross-link all traits and groups in the documentation.
+- Update all diagrams.
 
 ## [6.0.0 (2026-01-02)](https://github.com/kdeldycke/extra-platforms/compare/v5.1.0...v6.0.0)
 

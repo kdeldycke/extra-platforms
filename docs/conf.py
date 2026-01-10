@@ -217,13 +217,10 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines.append(f"- **Icon**: {obj.icon}")
         lines.append(f"- **Reference**: <{obj.url}>_")
 
-        if obj.detection_function_name:
-            detection_url = make_rst_link(
-                f"{obj.detection_function_name}()",
-                f"detection.html#extra_platforms.detection.{obj.detection_function_name}",
-            )
-        else:
-            detection_url = "N/A"
+        detection_url = make_rst_link(
+            f"{obj.detection_func_id}()",
+            f"detection.html#extra_platforms.detection.{obj.detection_func_id}",
+        )
         lines.append(f"- **Detection function**: {detection_url}")
 
         lines.append(make_pytest_decorator_line(obj.id))

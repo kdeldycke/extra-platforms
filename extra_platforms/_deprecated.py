@@ -21,8 +21,17 @@ import warnings
 from functools import wraps
 from typing import TYPE_CHECKING, cast
 
-from .group_data import ALL_PLATFORMS
-from .operations import ALL_TRAIT_IDS, traits_from_ids
+from . import (
+    ALL_PLATFORMS,
+    ALL_TRAIT_IDS,
+    UNKNOWN_PLATFORM,
+    current_platform,
+    current_traits,
+    is_all_ci,
+    is_all_platforms,
+    is_unknown_platform,
+    traits_from_ids,
+)
 from .trait import _recursive_update as _trait_recursive_update
 from .trait import _remove_blanks as _trait_remove_blanks
 
@@ -137,21 +146,24 @@ Alias `ALL_PLATFORMS_WITHOUT_CI` → `ALL_PLATFORMS`.
 """
 
 
+UNKNOWN_LINUX = _make_deprecated_proxy(
+    UNKNOWN_PLATFORM, "UNKNOWN_LINUX", "UNKNOWN_PLATFORM"
+)
+"""
+Alias `UNKNOWN_LINUX` → `UNKNOWN_PLATFORM`.
+
+.. deprecated:: 7.0.0
+   Use `UNKNOWN_PLATFORM` instead.
+"""
+
+
 # ================================================================
 # Platform and trait detection functions
 # ================================================================
 
 
-def _current_os_impl() -> Platform:
-    # Import lazily to avoid circular import when this module is imported
-    # from the package top-level `__init__.py`.
-    from . import current_platform
-
-    return current_platform()
-
-
 current_os = _make_deprecated_callable(
-    "current_os()", "current_platform()", _current_os_impl
+    "current_os()", "current_platform()", current_platform
 )
 """
 Alias `current_os()` → `current_platform()`.
@@ -164,7 +176,6 @@ Alias `current_os()` → `current_platform()`.
 def _current_platforms_impl() -> tuple[Platform, ...]:
     # Import lazily to avoid circular import when this module is imported
     # from the package top-level `__init__.py`.
-    from . import current_traits
     from .platform import Platform
 
     return tuple(t for t in current_traits() if isinstance(t, Platform))
@@ -181,16 +192,23 @@ Alias `current_platforms()` → `current_traits()`.
 """
 
 
+is_unknown_linux = _make_deprecated_callable(
+    "is_unknown_linux()", "is_unknown_platform()", is_unknown_platform
+)
+"""
+Alias `is_unknown_linux()` → `is_unknown_platform()`.
+
+.. deprecated:: 7.0.0
+   Use `is_unknown_platform()` instead.
+"""
+
+
 # ================================================================
 # Group membership check functions
 # ================================================================
 
 
 def _is_all_platforms_without_ci_impl() -> bool:
-    # Import lazily to avoid circular import when this module is imported
-    # from the package top-level `__init__.py`.
-    from . import is_all_platforms  # type: ignore[attr-defined]
-
     return cast(bool, is_all_platforms())
 
 
@@ -208,10 +226,6 @@ Alias `is_all_platforms_without_ci()` → `is_all_platforms()`.
 
 
 def _is_ci_impl() -> bool:
-    # Import lazily to avoid circular import when this module is imported
-    # from the package top-level `__init__.py`.
-    from . import is_all_ci  # type: ignore[attr-defined]
-
     return cast(bool, is_all_ci())
 
 
