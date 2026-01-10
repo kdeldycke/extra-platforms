@@ -51,9 +51,8 @@ from extra_platforms import (
     Trait,
 )
 from extra_platforms import group_data as group_data_module
-from extra_platforms.architecture import Architecture
-from extra_platforms.ci import CI
 from extra_platforms.platform import Platform
+from extra_platforms.trait import CI, Architecture
 
 
 def test_group_data_ordering():

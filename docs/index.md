@@ -11,6 +11,7 @@ maxdepth: 2
 hidden:
 ---
 install
+trait
 architectures
 platforms
 ci

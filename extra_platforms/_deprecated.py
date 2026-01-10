@@ -23,6 +23,8 @@ from typing import TYPE_CHECKING, cast
 
 from .group_data import ALL_PLATFORMS
 from .operations import ALL_TRAIT_IDS, traits_from_ids
+from .trait import _recursive_update as _trait_recursive_update
+from .trait import _remove_blanks as _trait_remove_blanks
 
 if TYPE_CHECKING:
     from .platform import Platform
@@ -235,4 +237,35 @@ Alias `platforms_from_ids` → `traits_from_ids`.
 
 .. deprecated:: 6.0.0
    Use `traits_from_ids` instead.
+"""
+
+
+# ================================================================
+# Internal utility aliases (for backward compatibility)
+# ================================================================
+
+
+_recursive_update = _make_deprecated_callable(
+    "_recursive_update",
+    "extra_platforms.trait._recursive_update",
+    _trait_recursive_update,
+)
+"""
+Alias for backward compatibility.
+
+.. deprecated:: 6.0.0
+   Use ``extra_platforms.trait._recursive_update`` instead.
+"""
+
+
+_remove_blanks = _make_deprecated_callable(
+    "_remove_blanks",
+    "extra_platforms.trait._remove_blanks",
+    _trait_remove_blanks,
+)
+"""
+Alias for backward compatibility.
+
+.. deprecated:: 6.0.0
+   Use ``extra_platforms.trait._remove_blanks`` instead.
 """

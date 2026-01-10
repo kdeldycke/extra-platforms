@@ -27,7 +27,7 @@
 
 from __future__ import annotations
 
-from .platform import Platform
+from .trait import Platform
 
 AIX = Platform("aix", "IBM AIX", "➿", "https://ibm.com/products/aix/")
 

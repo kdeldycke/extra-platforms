@@ -25,11 +25,78 @@ computed based on environment-dependent values.
 
 from __future__ import annotations
 
+import platform
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
 
+import distro
+
 from . import detection
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from typing import Any
+
+
+def _recursive_update(
+    a: dict[str, Any], b: dict[str, Any], strict: bool = False
+) -> dict[str, Any]:
+    """Like standard ``dict.update()``, but recursive so sub-dict gets updated.
+
+    Ignore elements present in ``b`` but not in ``a``. Unless ``strict`` is set to
+    ``True``, in which case a ``ValueError`` exception will be raised.
+    """
+    for k, v in b.items():
+        if isinstance(v, dict) and isinstance(a.get(k), dict):
+            a[k] = _recursive_update(a[k], v, strict=strict)
+        # Ignore elements unregistered in the template structure.
+        elif k in a:
+            a[k] = b[k]
+        elif strict:
+            raise ValueError(f"Parameter {k!r} found in second dict but not in first.")
+    return a
+
+
+def _remove_blanks(
+    tree: dict,
+    remove_none: bool = True,
+    remove_dicts: bool = True,
+    remove_str: bool = True,
+) -> dict:
+    """Returns a copy of a dict without items whose values blanks.
+
+    Are considered blanks:
+
+    - ``None`` values
+    - empty strings
+    - empty ``dict``
+
+    The removal of each of these class can be skipped by setting ``remove_*``
+    parameters.
+
+    Dictionarries are inspected recursively and their own blank values are removed.
+    """
+    result = {}
+    for key, value in tree.items():
+        # Skip None values if configured.
+        if remove_none and value is None:
+            continue
+
+        # Recursively process nested dicts.
+        if isinstance(value, dict):
+            cleaned = _remove_blanks(value, remove_none, remove_dicts, remove_str)
+            # Skip empty dicts if configured.
+            if remove_dicts and not cleaned:
+                continue
+            result[key] = cleaned
+        # Skip empty strings if configured.
+        elif remove_str and isinstance(value, str) and not value:
+            continue
+        else:
+            result[key] = value
+
+    return result
 
 
 @dataclass(frozen=True)
@@ -134,4 +201,197 @@ class Trait(ABC):
             "icon": self.icon,
             "url": self.url,
             "current": self.current,
+        }
+
+
+@dataclass(frozen=True)
+class Architecture(Trait):
+    """A CPU architecture identifies a `processor instruction set
+    <https://en.wikipedia.org/wiki/Instruction_set_architecture>`_.
+
+    It has a unique ID, a human-readable name, and boolean to flag current architecture.
+    """
+
+    icon: str = field(repr=False, default="▣")
+    """Icon of the architecture."""
+
+    def __post_init__(self) -> None:
+        """Validate and normalize architecture fields."""
+        super().__post_init__()
+        # Customize the docstring for architectures.
+        object.__setattr__(self, "__doc__", f"Identify {self.name} architecture.")
+
+    def info(self) -> dict[str, str | bool | None]:
+        """Returns all architecture attributes we can gather."""
+        info: dict[str, str | bool | None] = {
+            **self._base_info(),
+            "machine": None,
+            "processor": None,
+        }
+        if self.current:
+            info["machine"] = platform.machine() or None
+            info["processor"] = platform.processor() or None
+
+        return info
+
+
+@dataclass(frozen=True)
+class Platform(Trait):
+    """A platform can identify multiple distributions or OSes with the same
+    characteristics.
+
+    It has a unique ID, a human-readable name, and boolean to flag current platform.
+    """
+
+    icon: str = field(repr=False, default="❓")
+    """Icon of the platform."""
+
+    def __post_init__(self) -> None:
+        """Validate and normalize platform fields."""
+        super().__post_init__()
+
+    def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
+        """Returns all platform attributes we can gather."""
+        info: dict[str, str | bool | None | dict[str, str | None]] = {
+            **self._base_info(),
+            # Extra fields from distro.info().
+            "distro_id": None,
+            "version": None,
+            "version_parts": {"major": None, "minor": None, "build_number": None},
+            "like": None,
+            "codename": None,
+        }
+        if self.current:
+            # Get extra Linux distribution info from distro.
+            distro_info = dict(distro.info())
+            # Rename distro ID to avoid conflict with our own ID.
+            distro_info["distro_id"] = distro_info.pop("id")
+            info = _recursive_update(info, _remove_blanks(distro_info), strict=True)
+
+            # Add extra macOS infos.
+            if self.id == "macos":
+                info = _recursive_update(info, self._macos_infos(), strict=True)
+            # Add extra Windows infos.
+            elif self.id == "windows":
+                info = _recursive_update(info, self._windows_infos(), strict=True)
+
+        return info
+
+    _MACOS_CODENAMES = {
+        ("10", "0"): "Cheetah",
+        ("10", "1"): "Puma",
+        ("10", "2"): "Jaguar",
+        ("10", "3"): "Panther",
+        ("10", "4"): "Tiger",
+        ("10", "5"): "Leopard",
+        ("10", "6"): "Snow Leopard",
+        ("10", "7"): "Lion",
+        ("10", "8"): "Mountain Lion",
+        ("10", "9"): "Mavericks",
+        ("10", "10"): "Yosemite",
+        ("10", "11"): "El Capitan",
+        ("10", "12"): "Sierra",
+        ("10", "13"): "High Sierra",
+        ("10", "14"): "Mojave",
+        ("10", "15"): "Catalina",
+        ("11", None): "Big Sur",
+        ("12", None): "Monterey",
+        ("13", None): "Ventura",
+        ("14", None): "Sonoma",
+        ("15", None): "Sequoia",
+        ("26", None): "Tahoe",
+    }
+    """Maps macOS ``(major, minor)`` version parts to release code name.
+
+    See:
+
+    - https://en.wikipedia.org/wiki/Template:MacOS_versions
+    - https://docs.python.org/3/library/platform.html#platform.mac_ver
+    """
+
+    @classmethod
+    def _get_macos_codename(
+        cls, major: str | None = None, minor: str | None = None
+    ) -> str:
+        matches = set()
+        for (major_key, minor_key), codename in cls._MACOS_CODENAMES.items():
+            if minor_key is not None and minor_key != minor:
+                continue
+            if major_key == major:
+                matches.add(codename)
+        if not matches:
+            raise ValueError(f"No macOS codename match version ({major!r}, {minor!r})")
+        if len(matches) != 1:
+            raise ValueError(
+                f"Version {major}.{minor} match multiple codenames: {matches!r}"
+            )
+        return matches.pop()
+
+    @classmethod
+    def _macos_infos(cls) -> dict[str, Any]:
+        """Fetch extra macOS infos.
+
+        Returns the same dict structure as ``distro.info()``.
+        """
+        release, _versioninfo, _machine = platform.mac_ver()
+        parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
+        major = parts.get("major")
+        minor = parts.get("minor")
+        build_number = parts.get("build_number")
+        return {
+            "version": release,
+            "version_parts": {
+                "major": major,
+                "minor": minor,
+                "build_number": build_number,
+            },
+            "codename": cls._get_macos_codename(major, minor),
+        }
+
+    @classmethod
+    def _windows_infos(cls) -> dict[str, Any]:
+        """Fetch extra Windows infos.
+
+        Returns the same dict structure as ``distro.info()``.
+
+        .. todo:
+            Get even more details for windows version? See inspirations from:
+            https://github.com/saltstack/salt/blob/246d066/salt/grains/core.py#L1432-L1488
+        """
+        release, _version, _csd, _ptype = platform.win32_ver()
+        parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
+        major = parts.get("major")
+        minor = parts.get("minor")
+        build_number = parts.get("build_number")
+        return {
+            "version": release,
+            "version_parts": {
+                "major": major,
+                "minor": minor,
+                "build_number": build_number,
+            },
+            "codename": " ".join((release, platform.win32_edition())),
+        }
+
+
+@dataclass(frozen=True)
+class CI(Trait):
+    """A CI/CD environment identifies a continuous integration platform.
+
+    It has a unique ID, a human-readable name, and boolean to flag current CI.
+    """
+
+    icon: str = field(repr=False, default="♲")
+    """Icon of the CI environment."""
+
+    def __post_init__(self) -> None:
+        """Validate and normalize CI fields."""
+        super().__post_init__()
+        # Customize the docstring for CI environments.
+        object.__setattr__(self, "__doc__", f"Identify {self.name} CI environment.")
+
+    def info(self) -> dict[str, str | bool | None]:
+        """Returns all CI attributes we can gather."""
+        return {
+            **self._base_info(),
         }

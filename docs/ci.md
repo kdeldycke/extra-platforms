@@ -112,20 +112,6 @@ mindmap
 
 <!-- ci-mindmap-end -->
 
-## `extra_platforms.ci` API
-
-```{eval-rst}
-.. autoclasstree:: extra_platforms.ci
-   :strict:
-```
-
-```{eval-rst}
-.. automodule:: extra_platforms.ci
-   :members:
-   :undoc-members:
-   :show-inheritance:
-```
-
 ## `extra_platforms.ci_data` API
 
 ```{eval-rst}

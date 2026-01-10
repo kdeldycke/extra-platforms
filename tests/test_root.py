@@ -44,15 +44,12 @@ from extra_platforms import (
     is_windows,
 )
 from extra_platforms import _deprecated as deprecated_module
-from extra_platforms import architecture as architecture_module
 from extra_platforms import architecture_data as architecture_data_module
-from extra_platforms import ci as ci_module
 from extra_platforms import ci_data as ci_data_module
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
 from extra_platforms import operations as operations_module
-from extra_platforms import platform as platform_module
 from extra_platforms import platform_data as platform_data_module
 from extra_platforms import trait as trait_module
 
@@ -163,13 +160,10 @@ def test_module_root_declarations():
         return {m for m in members if not m.startswith("_")}
 
     detection_members = fetch_module_implements(detection_module)
-    architecture_members = fetch_module_implements(architecture_module)
     architecture_data_members = fetch_module_implements(architecture_data_module)
-    ci_members = fetch_module_implements(ci_module)
     ci_data_members = fetch_module_implements(ci_data_module)
     group_members = fetch_module_implements(group_module)
     group_data_members = fetch_module_implements(group_data_module)
-    platform_members = fetch_module_implements(platform_module)
     platform_data_members = fetch_module_implements(platform_data_module)
     operations_members = fetch_module_implements(operations_module)
     trait_members = fetch_module_implements(trait_module)
@@ -189,13 +183,10 @@ def test_module_root_declarations():
                         extra_platforms_members.append(element.value)
 
     assert detection_members <= set(extra_platforms_members)
-    assert architecture_members <= set(extra_platforms_members)
     assert architecture_data_members <= set(extra_platforms_members)
-    assert ci_members <= set(extra_platforms_members)
     assert ci_data_members <= set(extra_platforms_members)
     assert group_members <= set(extra_platforms_members)
     assert group_data_members <= set(extra_platforms_members)
-    assert platform_members <= set(extra_platforms_members)
     assert platform_data_members <= set(extra_platforms_members)
     assert operations_members <= set(extra_platforms_members)
     assert trait_members <= set(extra_platforms_members)
@@ -204,12 +195,9 @@ def test_module_root_declarations():
     expected_members = sorted(
         detection_members
         .union(group_members)
-        .union(architecture_members)
         .union(architecture_data_members)
-        .union(ci_members)
         .union(ci_data_members)
         .union(group_data_members)
-        .union(platform_members)
         .union(platform_data_members)
         .union(operations_members)
         .union(trait_members)

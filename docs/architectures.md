@@ -198,20 +198,6 @@ Other groups are provided for convenience, but overlap with each other or with c
 
 <!-- architecture-groups-table-end -->
 
-## `extra_platforms.architecture` API
-
-```{eval-rst}
-.. autoclasstree:: extra_platforms.architecture
-   :strict:
-```
-
-```{eval-rst}
-.. automodule:: extra_platforms.architecture
-   :members:
-   :undoc-members:
-   :show-inheritance:
-```
-
 ## `extra_platforms.architecture_data` API
 
 ```{eval-rst}

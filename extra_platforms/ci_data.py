@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-from .ci import CI
+from .trait import CI
 
 AZURE_PIPELINES = CI(
     "azure_pipelines",

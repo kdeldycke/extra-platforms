@@ -34,7 +34,6 @@ _report_msg = (
 )
 
 from . import detection  # noqa: E402
-from .architecture import Architecture  # noqa: E402
 from .architecture_data import (  # noqa: E402
     AARCH64,
     ARM,
@@ -62,7 +61,6 @@ from .architecture_data import (  # noqa: E402
     WASM64,
     X86_64,
 )
-from .ci import CI  # noqa: E402
 from .ci_data import (  # noqa: E402
     AZURE_PIPELINES,
     BAMBOO,
@@ -195,7 +193,6 @@ from .group_data import (  # noqa: E402
     WEBASSEMBLY,
     X86,
 )
-from .platform import Platform  # noqa: E402
 from .platform_data import (  # noqa: E402
     AIX,
     ALTLINUX,
@@ -246,7 +243,12 @@ from .platform_data import (  # noqa: E402
     WSL2,
     XENSERVER,
 )
-from .trait import Trait  # noqa: E402
+from .trait import (  # noqa: E402
+    CI,
+    Architecture,
+    Platform,
+    Trait,
+)
 
 """
 .. important::

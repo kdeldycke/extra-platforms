@@ -22,7 +22,7 @@
 
 from __future__ import annotations
 
-from .architecture import Architecture
+from .trait import Architecture
 
 AARCH64 = Architecture(
     "aarch64",
