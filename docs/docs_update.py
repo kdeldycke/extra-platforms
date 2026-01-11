@@ -221,21 +221,30 @@ The [`{trait_class.unknown_symbol}`](#extra_platforms.{trait_class.data_module_i
 def generate_group_table(groups: Iterable[Group]) -> str:
     """Produce a Markdown table for a collection of groups.
 
-    The table contains the icon, symbol with link to documentation, description, member count, and canonical
-    status for each group. A hint block is appended after the table to explain canonical groups.
+    The table contains the icon, symbol with link to documentation, description,
+    a linked detection function, member count, and canonical status for each group.
+    A hint block is appended after the table to explain canonical groups.
 
     Args:
         groups: The groups to include in the table.
     """
     table_data = []
-    headers = ["Icon", "Symbol", "Description", "Canonical", "Member count"]
-    alignments = ["center", "left", "left", "center", "right"]
+    headers = [
+        "Icon",
+        "Symbol",
+        "Description",
+        "Detection function",
+        "Canonical",
+        "Member count",
+    ]
+    alignments = ["center", "left", "left", "left", "center", "right"]
 
     for group in sorted(groups, key=attrgetter("id")):
         table_data.append([
             html.escape(group.icon),
             f"[`{group.symbol_id}`](groups.md#extra_platforms.group_data.{group.symbol_id})",
             group.name,
+            f"[`{group.detection_func_id}()`](detection.md#extra_platforms.{group.detection_func_id})",
             "⬥" if group.canonical else "",
             str(len(group)),
         ])
@@ -452,6 +461,34 @@ def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
     return output
 
 
+def generate_group_detection_autofunction(groups: Iterable[Group]) -> str:
+    """Generate Sphinx autofunction directives for group detection functions.
+
+    These are the ``is_<group_id>()`` functions dynamically generated in the
+    ``extra_platforms`` package for each group.
+
+    Args:
+        groups: The groups whose detection functions should be documented.
+
+    Returns:
+        A MyST-compatible code block containing the autofunction directives.
+    """
+    groups_list = list(groups)
+    if not groups_list:
+        return "```{eval-rst}\n```"
+
+    directives = []
+    for group in sorted(groups_list, key=attrgetter("id")):
+        directives.append(
+            f".. autofunction:: extra_platforms.{group.detection_func_id}"
+        )
+
+    output = "```{eval-rst}\n"
+    output += "\n".join(directives)
+    output += "\n```"
+    return output
+
+
 def update_docs() -> None:
     """Update documentation with dynamic content.
 
@@ -573,6 +610,12 @@ def update_docs() -> None:
             "group-data-autodata-start",
             "group-data-autodata-end",
             generate_autodata_directives([g for g in ALL_GROUPS]),
+        ),
+        # Autofunction directives for dynamically generated group detection functions.
+        (
+            "group-detection-autofunction-start",
+            "group-detection-autofunction-end",
+            generate_group_detection_autofunction(ALL_GROUPS),
         ),
     ]
 

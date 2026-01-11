@@ -16,8 +16,7 @@
 """Heuristics to detect all traits of the current environment.
 
 This collection of heuristics is designed as a set of separate function with minimal
-logic and dependencies. They're the building blocks to detect the current platform,
-and are the first functions called when trying to detect the current environment.
+logic and dependencies. They're the building blocks to evaluate the current environment.
 
 All these heuristics can be hard-cached as the underlying system is not changing
 between code execution. They are still allowed to depends on each others, as long as
