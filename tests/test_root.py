@@ -153,10 +153,13 @@ def test_module_root_declarations():
         for node in tree.body:
             if isinstance(node, ast.Assign):
                 for target in node.targets:
-                    # Skip TYPE_CHECKING variable. See _types.py for more details.
-                    if target.id == "TYPE_CHECKING":  # type: ignore[attr-defined]
+                    # Skip subscript targets like sys.modules["..."] = ...
+                    if not isinstance(target, ast.Name):
                         continue
-                    members.add(target.id)  # type: ignore[attr-defined]
+                    # Skip TYPE_CHECKING variable. See _types.py for more details.
+                    if target.id == "TYPE_CHECKING":
+                        continue
+                    members.add(target.id)
             elif isinstance(node, ast.AnnAssign):
                 members.add(node.target.id)  # type: ignore[union-attr]
             elif isinstance(node, ast.FunctionDef):

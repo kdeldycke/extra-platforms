@@ -17,9 +17,10 @@
 
 from __future__ import annotations
 
+import sys
 import warnings
 from functools import wraps
-from typing import TYPE_CHECKING
+from types import ModuleType
 
 from . import (  # type: ignore[attr-defined]
     ALL_PLATFORMS,
@@ -32,11 +33,7 @@ from . import (  # type: ignore[attr-defined]
     is_unknown_platform,
     traits_from_ids,
 )
-from .trait import _recursive_update as _trait_recursive_update
-from .trait import _remove_blanks as _trait_remove_blanks
-
-if TYPE_CHECKING:
-    from .platform import Platform
+from .trait import Platform, _recursive_update, _remove_blanks
 
 
 def _warn_deprecated(name: str, replacement: str) -> None:
@@ -176,10 +173,6 @@ Alias `current_os()` → `current_platform()`.
 
 
 def _current_platforms_impl() -> tuple[Platform, ...]:
-    # Import lazily to avoid circular import when this module is imported
-    # from the package top-level `__init__.py`.
-    from .platform import Platform
-
     return tuple(t for t in current_traits() if isinstance(t, Platform))
 
 
@@ -249,31 +242,53 @@ Alias `platforms_from_ids` → `traits_from_ids`.
 
 
 # ================================================================
-# Internal utility aliases (for backward compatibility)
+# Deprecated module: extra_platforms.platform
 # ================================================================
 
-
-_recursive_update = _make_deprecated_callable(
-    "_recursive_update",
-    "extra_platforms.trait._recursive_update",
-    _trait_recursive_update,
-)
-"""
-Alias for backward compatibility.
-
-.. deprecated:: 7.0.0
-   Use ``extra_platforms.trait._recursive_update`` instead.
-"""
+# Simulate the deprecated `extra_platforms.platform` module by injecting a fake
+# module into sys.modules. This allows `from extra_platforms.platform import Platform`
+# to work while issuing a deprecation warning, without needing a separate file.
 
 
-_remove_blanks = _make_deprecated_callable(
-    "_remove_blanks",
-    "extra_platforms.trait._remove_blanks",
-    _trait_remove_blanks,
-)
-"""
-Alias for backward compatibility.
+class _DeprecatedPlatformModule(ModuleType):
+    """A fake module that warns on attribute access.
 
-.. deprecated:: 7.0.0
-   Use ``extra_platforms.trait._remove_blanks`` instead.
-"""
+    .. deprecated:: 7.0.0
+       The ``extra_platforms.platform`` module is deprecated.
+       Import from ``extra_platforms.trait`` instead.
+    """
+
+    def __init__(self):
+        super().__init__("extra_platforms.platform")
+        self.__doc__ = (
+            "Backward-compatible module for deprecated imports.\n\n"
+            ".. deprecated:: 7.0.0\n"
+            "   This module is deprecated. Import from ``extra_platforms.trait`` instead."
+        )
+        self.__file__ = __file__
+        self.__all__ = ["Platform", "_recursive_update", "_remove_blanks"]
+        # Store actual values without triggering __setattr__ warning.
+        object.__setattr__(self, "_Platform", Platform)
+        object.__setattr__(self, "_recursive_update", _recursive_update)
+        object.__setattr__(self, "_remove_blanks", _remove_blanks)
+
+    def __getattr__(self, name: str):
+        warnings.warn(
+            "The 'extra_platforms.platform' module is deprecated. "
+            "Import from 'extra_platforms.trait' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if name == "Platform":
+            return self._Platform
+        if name == "_recursive_update":
+            return self._recursive_update
+        if name == "_remove_blanks":
+            return self._remove_blanks
+        raise AttributeError(
+            f"module 'extra_platforms.platform' has no attribute {name!r}"
+        )
+
+
+# Register the fake module in sys.modules.
+sys.modules["extra_platforms.platform"] = _DeprecatedPlatformModule()
