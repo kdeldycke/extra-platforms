@@ -29,7 +29,6 @@
 
 from __future__ import annotations
 
-import html
 import re
 import sys
 from itertools import chain
@@ -243,7 +242,7 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
 
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
-            html.escape(trait.icon),
+            trait.icon,
             f"[`{trait.symbol_id}`](#extra_platforms.{trait_class.data_module_id}.{trait.symbol_id})",
             trait.name,
             f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})",
@@ -282,7 +281,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
 
     for group in sorted(groups, key=attrgetter("id")):
         table_data.append([
-            html.escape(group.icon),
+            group.icon,
             f"[`{group.symbol_id}`](groups.md#extra_platforms.group_data.{group.symbol_id})",
             group.name,
             f"[`{group.detection_func_id}()`](detection.md#extra_platforms.{group.detection_func_id})",
@@ -437,8 +436,8 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
 
     # Add missing traits as direct children of the superset.
     for trait in missing_traits:
-        group_map += f"({html.escape(trait.icon)} {trait.symbol_id})\n"
-    name = f"{html.escape(superset.icon)} {superset.symbol_id}"
+        group_map += f"({trait.icon} {trait.symbol_id})\n"
+    name = f"{superset.icon} {superset.symbol_id}"
     output = dedent(f"""\
         ```mermaid
         ---
