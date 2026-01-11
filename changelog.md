@@ -1,9 +1,6 @@
 # Changelog
 
-## [7.0.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v6.0.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [7.0.0 (2026-01-11)](https://github.com/kdeldycke/extra-platforms/compare/v6.0.0...v7.0.0)
 
 - Fix detection of `AARCH64` on Windows ARM runners.
 - Add new `UNKNOWN` group that contains `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits. Aligns all their icons.
