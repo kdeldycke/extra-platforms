@@ -192,7 +192,8 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     headers = ["Icon", "Symbol", "Name", "Detection function"]
     alignments = ["center", "left", "left", "left"]
 
-    # Get metadata from the first trait (all traits in the table should be the same type).
+    # Get metadata from the first trait (all traits in the table should be the
+    # same type).
     traits_list = list(traits)
     all_classes = {type(trait) for trait in traits_list}
     assert len(all_classes) == 1, (
@@ -203,7 +204,9 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             html.escape(trait.icon),
-            f"[`{trait.symbol_id}`](#extra_platforms.{meta.data_module_id}.{trait.symbol_id})",
+            f"[`{trait.symbol_id}`](#extra_platforms.{meta.data_module_id}.{
+                trait.symbol_id
+            })",
             trait.name,
             f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})",
         ])
@@ -234,7 +237,9 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     for group in sorted(groups, key=attrgetter("id")):
         table_data.append([
             html.escape(group.icon),
-            f"[`{group.symbol_id}`](groups.md#extra_platforms.group_data.{group.symbol_id})",
+            f"[`{group.symbol_id}`](groups.md#extra_platforms.group_data.{
+                group.symbol_id
+            })",
             group.name,
             "⬥" if group.canonical else "",
             str(len(group)),
@@ -416,7 +421,9 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
         table_data.append([
             f"`@skip_{trait.id}`",
             f"`@unless_{trait.id}`",
-            f"[`{trait.symbol_id}`]({meta.doc_page}#extra_platforms.{meta.data_module_id}.{trait.symbol_id})",
+            f"[`{trait.symbol_id}`]({meta.doc_page}#extra_platforms.{
+                meta.data_module_id
+            }.{trait.symbol_id})",
             html.escape(trait.name),
         ])
 

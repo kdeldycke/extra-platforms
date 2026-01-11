@@ -125,7 +125,11 @@ def make_rst_link(text, url):
 
 def make_pytest_decorator_line(obj_id):
     """Create pytest decorator documentation line."""
-    return f"- **Pytest decorators**: {make_rst_link(f'@skip_{obj_id} / @unless_{obj_id}', 'pytest.html#decorators-reference')}"
+    return f"- **Pytest decorators**: {
+        make_rst_link(
+            f'@skip_{obj_id} / @unless_{obj_id}', 'pytest.html#decorators-reference'
+        )
+    }"
 
 
 def autodoc_process_docstring(app, what, name, obj, options, lines):
@@ -171,7 +175,9 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
             type_counts[class_id]["count"] += 1
 
             # Create member link.
-            member_url = f"{doc_page_html}#extra_platforms.{meta.data_module_id}.{member.symbol_id}"
+            member_url = f"{doc_page_html}#extra_platforms.{meta.data_module_id}.{
+                member.symbol_id
+            }"
             member_links.append(make_rst_link(member.symbol_id, member_url))
 
         if member_links:
@@ -207,7 +213,9 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         group_links = [
             make_rst_link(
                 f"{group.symbol_id}{' ⬥' if group.canonical else ''}",
-                f"groups.html#extra_platforms.{group.metadata.data_module_id}.{group.symbol_id}",
+                f"groups.html#extra_platforms.{group.metadata.data_module_id}.{
+                    group.symbol_id
+                }",
             )
             for group in sorted(obj.groups, key=lambda g: g.id)
         ]
