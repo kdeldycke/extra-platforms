@@ -16,6 +16,8 @@ All recognized groups and their properties:
 |   🔲   | [`ANY_MIPS`](groups.md#extra_platforms.group_data.ANY_MIPS)                     | Any MIPS architecture                       |      ⬥      |              4 |
 |   ☀️   | [`ANY_SPARC`](groups.md#extra_platforms.group_data.ANY_SPARC)                   | Any SPARC architecture                      |      ⬥      |              2 |
 |   🪟   | [`ANY_WINDOWS`](groups.md#extra_platforms.group_data.ANY_WINDOWS)               | Any Windows                                 |      ⬥      |              1 |
+|   ³²   | [`ARCH_32_BIT`](groups.md#extra_platforms.group_data.ARCH_32_BIT)               | 32-bit architectures                        |             |             13 |
+|   ⁶⁴   | [`ARCH_64_BIT`](groups.md#extra_platforms.group_data.ARCH_64_BIT)               | 64-bit architectures                        |             |             11 |
 |  🅱️+   | [`BSD`](groups.md#extra_platforms.group_data.BSD)                               | Any BSD                                     |      ⬥      |              6 |
 |   🅱️   | [`BSD_WITHOUT_MACOS`](groups.md#extra_platforms.group_data.BSD_WITHOUT_MACOS)   | Any BSD excluding macOS                     |             |              5 |
 |   🏢   | [`IBM_MAINFRAME`](groups.md#extra_platforms.group_data.IBM_MAINFRAME)           | IBM mainframe                               |      ⬥      |              1 |
@@ -78,6 +80,8 @@ Other groups are provided for convenience, but overlap with each other or with c
 .. autodata:: extra_platforms.group_data.ANY_MIPS
 .. autodata:: extra_platforms.group_data.ANY_SPARC
 .. autodata:: extra_platforms.group_data.ANY_WINDOWS
+.. autodata:: extra_platforms.group_data.ARCH_32_BIT
+.. autodata:: extra_platforms.group_data.ARCH_64_BIT
 .. autodata:: extra_platforms.group_data.BSD
 .. autodata:: extra_platforms.group_data.BSD_WITHOUT_MACOS
 .. autodata:: extra_platforms.group_data.IBM_MAINFRAME

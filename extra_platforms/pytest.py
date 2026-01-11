@@ -111,6 +111,8 @@ if TYPE_CHECKING:
     skip_any_sparc: MarkDecorator
     skip_any_windows: MarkDecorator
     skip_arch: MarkDecorator
+    skip_arch_32_bit: MarkDecorator
+    skip_arch_64_bit: MarkDecorator
     skip_arm: MarkDecorator
     skip_armv6l: MarkDecorator
     skip_armv7l: MarkDecorator
@@ -221,6 +223,8 @@ if TYPE_CHECKING:
     unless_any_sparc: MarkDecorator
     unless_any_windows: MarkDecorator
     unless_arch: MarkDecorator
+    unless_arch_32_bit: MarkDecorator
+    unless_arch_64_bit: MarkDecorator
     unless_arm: MarkDecorator
     unless_armv6l: MarkDecorator
     unless_armv7l: MarkDecorator

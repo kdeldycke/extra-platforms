@@ -6,15 +6,17 @@
 > This version is not released yet and is under active development.
 
 - Fix detection of `AARCH64` on Windows ARM runners.
+- Add new `ARCH_32_BIT` and `ARCH_64_BIT` groups.
+- Add new `is_arch_32_bit()` and `is_arch_64_bit()` detection
 - Add new `UNKNOWN` group that contains `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits. Aligns all their icons.
-- Add new `is_unknown()` detection function for the `UNKNOWN` group.
-- Deprecate `is_unknown_linux()` in favor of `is_unknown_platform()`.
-- Add new `detection_function_name` attribute to `Trait` to explicitly specify the name of the detection function to use.
 - Rename `UNKNOWN_LINUX` trait to `UNKNOWN_PLATFORM`.
 - Remove `UNKNOWN_ARCHITECTURE` trait from `ALL_ARCHITECTURES` group.
 - Remove `UNKNOWN_LINUX` trait from `ALL_PLATFORMS` group.
 - Remove `UNKNOWN_CI` trait from `ALL_CI` group.
 - Use `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits as fallback when no other trait matches the current environment.
+- Add new `is_unknown()` detection function for the `UNKNOWN` group.
+- Deprecate `is_unknown_linux()` in favor of `is_unknown_platform()`.
+- Add new `detection_function_name` attribute to `Trait` to explicitly specify the name of the detection function to use.
 - Add strict mode to `current_architecture()`, `current_platform()` and `current_ci()` methods to raise an exception when the current environment fallback to an `UNKNOWN_*` trait.
 - Add new `@skip_unknown` and `@unless_unknown` decorators for the `UNKNOWN` group.
 - Rename `@skip_unknown_linux`/`@unless_unknown_linux` decorators to `@skip_unknown_platform`/`@unless_unknown_platform`.

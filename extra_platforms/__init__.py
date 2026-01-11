@@ -167,6 +167,8 @@ from .group_data import (  # noqa: E402
     ANY_MIPS,
     ANY_SPARC,
     ANY_WINDOWS,
+    ARCH_32_BIT,
+    ARCH_64_BIT,
     BSD,
     BSD_WITHOUT_MACOS,
     EXTRA_GROUPS,
@@ -543,6 +545,8 @@ __all__ = (  # noqa: F405
     "ANY_SPARC",
     "ANY_WINDOWS",
     "ARCH",
+    "ARCH_32_BIT",
+    "ARCH_64_BIT",
     "Architecture",
     "ARM",
     "ARMV6L",
@@ -602,6 +606,8 @@ __all__ = (  # noqa: F405
     "is_any_sparc",  # noqa: F822
     "is_any_windows",  # noqa: F822
     "is_arch",
+    "is_arch_32_bit",  # noqa: F822
+    "is_arch_64_bit",  # noqa: F822
     "is_arm",
     "is_armv6l",
     "is_armv7l",

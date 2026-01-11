@@ -233,6 +233,50 @@ WEBASSEMBLY = Group(
 """WebAssembly architectures."""
 
 
+ARCH_64_BIT = Group(
+    "arch_64_bit",
+    "64-bit architectures",
+    "⁶⁴",
+    (
+        AARCH64,
+        LOONGARCH64,
+        MIPS64,
+        MIPS64EL,
+        PPC64,
+        PPC64LE,
+        RISCV64,
+        S390X,
+        SPARC64,
+        WASM64,
+        X86_64,
+    ),
+)
+"""All 64-bit architectures."""
+
+
+ARCH_32_BIT = Group(
+    "arch_32_bit",
+    "32-bit architectures",
+    "³²",
+    (
+        ARM,
+        ARMV6L,
+        ARMV7L,
+        ARMV8L,
+        I386,
+        I586,
+        I686,
+        MIPS,
+        MIPSEL,
+        PPC,
+        RISCV32,
+        SPARC,
+        WASM32,
+    ),
+)
+"""All 32-bit architectures."""
+
+
 # =============================================================================
 # Platform groups
 # =============================================================================
@@ -595,6 +639,8 @@ ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
         ANY_SPARC,
         IBM_MAINFRAME,
         WEBASSEMBLY,
+        ARCH_64_BIT,
+        ARCH_32_BIT,
     ),
 )
 """All groups whose members are architectures."""
@@ -667,6 +713,8 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         ALL_TRAITS,
         # Architecture groups.
         ALL_ARCHITECTURES,
+        ARCH_64_BIT,
+        ARCH_32_BIT,
         # Platform groups.
         ALL_PLATFORMS,
         UNIX,

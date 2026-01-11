@@ -83,6 +83,8 @@ def test_not_in_github_actions():
 | `@skip_any_sparc`          | `@unless_any_sparc`          | [`ANY_SPARC`](groups.md#extra_platforms.group_data.ANY_SPARC)                   | Any SPARC architecture                      |
 | `@skip_any_windows`        | `@unless_any_windows`        | [`ANY_WINDOWS`](groups.md#extra_platforms.group_data.ANY_WINDOWS)               | Any Windows                                 |
 | `@skip_arch`               | `@unless_arch`               | [`ARCH`](platforms.md#extra_platforms.platform_data.ARCH)                       | Arch Linux                                  |
+| `@skip_arch_32_bit`        | `@unless_arch_32_bit`        | [`ARCH_32_BIT`](groups.md#extra_platforms.group_data.ARCH_32_BIT)               | 32-bit architectures                        |
+| `@skip_arch_64_bit`        | `@unless_arch_64_bit`        | [`ARCH_64_BIT`](groups.md#extra_platforms.group_data.ARCH_64_BIT)               | 64-bit architectures                        |
 | `@skip_arm`                | `@unless_arm`                | [`ARM`](architectures.md#extra_platforms.architecture_data.ARM)                 | ARM (32-bit)                                |
 | `@skip_armv6l`             | `@unless_armv6l`             | [`ARMV6L`](architectures.md#extra_platforms.architecture_data.ARMV6L)           | ARMv6 (little-endian)                       |
 | `@skip_armv7l`             | `@unless_armv7l`             | [`ARMV7L`](architectures.md#extra_platforms.architecture_data.ARMV7L)           | ARMv7 (little-endian)                       |
