@@ -23,7 +23,7 @@ from functools import cached_property
 from types import MappingProxyType
 from typing import cast
 
-from .trait import Trait
+from .trait import Trait, _TraitMetadata
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -84,6 +84,16 @@ class Group:
 
     Normalized to ``MappingProxyType[str, Trait]`` at init, providing O(1) lookup by ID.
     """
+
+    metadata: _TraitMetadata = _TraitMetadata(
+        type_name="group",
+        data_module_id="group_data",
+        unknown_symbol="UNKNOWN",
+        all_group="ALL_GROUPS",
+        current_func_id="",
+        doc_page="groups.md",
+    )
+    """Metadata for documentation generation."""
 
     @property
     def _members(self) -> _MembersMapping:

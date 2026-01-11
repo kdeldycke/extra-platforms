@@ -57,7 +57,7 @@ CI(id='unknown_ci', name='Unknown CI')
 |   👷   | [`TRAVIS_CI`](#extra_platforms.ci_data.TRAVIS_CI)             | Travis CI             | [`is_travis_ci()`](detection.md#extra_platforms.detection.is_travis_ci)             |
 
 ```{hint}
-The [`UNKNOWN_CI`](#extra_platforms.ci_data.UNKNOWN_CI) trait represents an unrecognized CI. It is not included in the [`ALL_CI`](groups.md#extra_platforms.group_data.ALL_CI) group, and will be returned by `current_ci()` if the current CI is not recognized.
+The [`UNKNOWN_CI`](#extra_platforms.ci_data.UNKNOWN_CI) trait represents an unrecognized CI system. It is not included in the [`ALL_CI`](groups.md#extra_platforms.group_data.ALL_CI) group, and will be returned by `current_ci()` if the current CI system is not recognized.
 ```
 
 <!-- ci-table-end -->

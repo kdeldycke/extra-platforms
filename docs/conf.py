@@ -9,7 +9,6 @@ else:
     import tomli as tomllib  # type: ignore[import-not-found]
 
 from extra_platforms import Group
-from extra_platforms.group_data import ALL_GROUPS
 from extra_platforms.trait import Trait
 
 project_path = Path(__file__).parent.parent.resolve()
@@ -119,26 +118,6 @@ html_show_copyright = True
 html_show_sphinx = False
 
 
-# Type mapping for trait classes
-TRAIT_TYPE_INFO = {
-    "Architecture": {
-        "page": "architectures.html",
-        "module": "architecture_data",
-        "class_anchor": "architectures.html#extra_platforms.architecture.Architecture",
-    },
-    "Platform": {
-        "page": "platforms.html",
-        "module": "platform_data",
-        "class_anchor": "platforms.html#extra_platforms.platform.Platform",
-    },
-    "CI": {
-        "page": "ci.html",
-        "module": "ci_data",
-        "class_anchor": "ci.html#extra_platforms.ci.CI",
-    },
-}
-
-
 def make_rst_link(text, url):
     """Create a reStructuredText link."""
     return f"`{text} <{url}>`_"
@@ -164,6 +143,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         # For groups, preserve original docstring and append metadata.
         # The original docstring is already in `lines` from the source file.
         lines.append("")
+
         lines.append(f"- **ID**: ``{obj.id}``")
         lines.append(f"- **Name**: {obj.name}")
         lines.append(f"- **Icon**: {obj.icon}")
@@ -174,37 +154,34 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines.append(make_pytest_decorator_line(obj.id))
 
         # Add list of members with links to their definitions.
-        if obj.members:
-            member_links = []
-            type_counts = {}
+        member_links = []
+        type_counts = {}
 
-            for member_id, member in obj.items():
-                class_name = type(member).__name__
-                type_info = TRAIT_TYPE_INFO.get(class_name)
-                if not type_info:
-                    continue  # Skip unknown types
+        for _, member in obj.items():
+            meta = type(member).metadata
+            class_id = type(member).__name__
+            doc_page_html = meta.doc_page.replace(".md", ".html")
 
-                # Count types
-                if class_name not in type_counts:
-                    type_counts[class_name] = {
-                        "count": 0,
-                        "anchor": type_info["class_anchor"],
-                    }
-                type_counts[class_name]["count"] += 1
+            # Count types.
+            if class_id not in type_counts:
+                type_counts[class_id] = {
+                    "count": 0,
+                    "anchor": f"trait.html#extra_platforms.trait.{class_id}",
+                }
+            type_counts[class_id]["count"] += 1
 
-                # Create member link
-                symbol_name = member_id.upper()
-                member_url = f"{type_info['page']}#extra_platforms.{type_info['module']}.{symbol_name}"
-                member_links.append(make_rst_link(symbol_name, member_url))
+            # Create member link.
+            member_url = f"{doc_page_html}#extra_platforms.{meta.data_module_id}.{member.symbol_id}"
+            member_links.append(make_rst_link(member.symbol_id, member_url))
 
-            if member_links:
-                # Format type information with links
-                type_parts = [
-                    f"{info['count']} {make_rst_link(type_name, info['anchor'])}"
-                    for type_name, info in sorted(type_counts.items())
-                ]
-                type_info = ", ".join(type_parts)
-                lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
+        if member_links:
+            # Format type information with links
+            type_parts = [
+                f"{info['count']} {make_rst_link(class_id, info['anchor'])}"
+                for class_id, info in sorted(type_counts.items())
+            ]
+            type_info = ", ".join(type_parts)
+            lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
 
     elif isinstance(obj, Trait):
         # For traits, replace with their dynamic docstring + metadata.
@@ -212,6 +189,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         if obj.__doc__:
             lines.append(obj.__doc__)
         lines.append("")
+
         lines.append(f"- **ID**: ``{obj.id}``")
         lines.append(f"- **Name**: {obj.name}")
         lines.append(f"- **Icon**: {obj.icon}")
@@ -226,16 +204,14 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines.append(make_pytest_decorator_line(obj.id))
 
         # Add list of groups this trait belongs to.
-        trait_groups = [group for group in ALL_GROUPS if obj.id in group.member_ids]
-        if trait_groups:
-            group_links = [
-                make_rst_link(
-                    f"{group.id.upper()}{' ⬥' if group.canonical else ''}",
-                    f"groups.html#extra_platforms.group_data.{group.id.upper()}",
-                )
-                for group in sorted(trait_groups, key=lambda g: g.id)
-            ]
-            lines.append(f"- **Groups** ({len(group_links)}): {', '.join(group_links)}")
+        group_links = [
+            make_rst_link(
+                f"{group.symbol_id}{' ⬥' if group.canonical else ''}",
+                f"groups.html#extra_platforms.{group.metadata.data_module_id}.{group.symbol_id}",
+            )
+            for group in sorted(obj.groups, key=lambda g: g.id)
+        ]
+        lines.append(f"- **Groups** ({len(group_links)}): {', '.join(group_links)}")
 
 
 def autodoc_skip_member(app, what, name, obj, skip, options):

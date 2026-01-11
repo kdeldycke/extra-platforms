@@ -181,7 +181,7 @@ def _generate_markdown_table(
     return "\n".join(lines)
 
 
-def generate_trait_table(traits) -> str:
+def generate_trait_table(traits: Iterable[Trait]) -> str:
     """Produce a Markdown table for a collection of traits.
 
     The table contains the icon, the symbol constant name (linked to its full definition),
@@ -192,69 +192,30 @@ def generate_trait_table(traits) -> str:
     headers = ["Icon", "Symbol", "Name", "Detection function"]
     alignments = ["center", "left", "left", "left"]
 
-    # Determine trait type from first trait to customize hint
-    trait_type = None
-    module = None
-    if traits:
-        first_trait = next(iter(traits))
-        class_name = type(first_trait).__name__
-        if class_name == "Architecture":
-            trait_type = "architecture"
-            module = "architecture_data"
-            unknown_symbol = "UNKNOWN_ARCHITECTURE"
-            all_group = "ALL_ARCHITECTURES"
-            current_func = "current_architecture()"
-        elif class_name == "Platform":
-            trait_type = "platform"
-            module = "platform_data"
-            unknown_symbol = "UNKNOWN_PLATFORM"
-            all_group = "ALL_PLATFORMS"
-            current_func = "current_platform()"
-        elif class_name == "CI":
-            trait_type = "CI"
-            module = "ci_data"
-            unknown_symbol = "UNKNOWN_CI"
-            all_group = "ALL_CI"
-            current_func = "current_ci()"
+    # Get metadata from the first trait (all traits in the table should be the same type).
+    traits_list = list(traits)
+    all_classes = {type(trait) for trait in traits_list}
+    assert len(all_classes) == 1, (
+        "All traits must be of the same class to generate a trait table."
+    )
+    meta = all_classes.pop().metadata
 
-    for trait in sorted(traits, key=attrgetter("id")):
-        icon = html.escape(trait.icon)
-        name = html.escape(trait.name)
-
-        # Determine the module name based on the trait type.
-        class_name = type(trait).__name__
-        if class_name == "Architecture":
-            trait_module = "architecture_data"
-        elif class_name == "Platform":
-            trait_module = "platform_data"
-        elif class_name == "CI":
-            trait_module = "ci_data"
-        else:
-            trait_module = "unknown"
-
-        # Create symbol name and link to its autodata definition.
-        # Sphinx generates anchors like: extra_platforms.architecture_data.AARCH64
-        symbol_name = trait.id.upper()
-        symbol_link = (
-            f"[`{symbol_name}`](#extra_platforms.{trait_module}.{symbol_name})"
-        )
-
-        detection_func = (
-            f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})"
-        )
-        table_data.append([icon, symbol_link, name, detection_func])
+    for trait in sorted(traits_list, key=attrgetter("id")):
+        table_data.append([
+            html.escape(trait.icon),
+            f"[`{trait.symbol_id}`](#extra_platforms.{meta.data_module_id}.{trait.symbol_id})",
+            trait.name,
+            f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})",
+        ])
 
     table = _generate_markdown_table(table_data, headers, alignments)
 
-    # Append hint block explaining unknown trait if trait type was detected
-    if trait_type and module:
-        hint = f"""
+    # Append hint block explaining unknown trait if trait type was detected.
+    hint = f"""
 ```{{hint}}
-The [`{unknown_symbol}`](#extra_platforms.{module}.{unknown_symbol}) trait represents an unrecognized {trait_type}. It is not included in the [`{all_group}`](groups.md#extra_platforms.group_data.{all_group}) group, and will be returned by `{current_func}` if the current {trait_type} is not recognized.
+The [`{meta.unknown_symbol}`](#extra_platforms.{meta.data_module_id}.{meta.unknown_symbol}) trait represents an unrecognized {meta.type_name}. It is not included in the [`{meta.all_group}`](groups.md#extra_platforms.group_data.{meta.all_group}) group, and will be returned by `{meta.current_func_id}()` if the current {meta.type_name} is not recognized.
 ```"""
-        return f"{table}\n{hint}"
-
-    return table
+    return f"{table}\n{hint}"
 
 
 def generate_group_table(groups: Iterable[Group]) -> str:
@@ -271,13 +232,9 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     alignments = ["center", "left", "left", "center", "right"]
 
     for group in sorted(groups, key=attrgetter("id")):
-        symbol_name = group.id.upper()
-        symbol_link = (
-            f"[`{symbol_name}`](groups.md#extra_platforms.group_data.{symbol_name})"
-        )
         table_data.append([
             html.escape(group.icon),
-            symbol_link,
+            f"[`{group.symbol_id}`](groups.md#extra_platforms.group_data.{group.symbol_id})",
             group.name,
             "⬥" if group.canonical else "",
             str(len(group)),
@@ -377,24 +334,23 @@ def generate_sankey(groups: Iterable[Group]) -> str:
         intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
     ):
         member_count = len(group)
-        table.append(f"{superset.id.upper()},{group.id.upper()},{member_count}")
+        table.append(f"{superset.symbol_id},{group.symbol_id},{member_count}")
 
     # Second layer: intermediate groups -> their members (weight = 1 each).
     for group in sorted(
         intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
     ):
-        for member_id in group.members:
+        for member in group._members.values():
             # XXX Sankey diagrams do not support emoji icons yet.
             # table.append(
             #     f'"{html.escape(group.icon)} {group.id}",'
             #     f'"{html.escape(member.icon)} {member_id}",1'
             # )
-            table.append(f"{group.id.upper()},{member_id.upper()},1")
+            table.append(f"{group.symbol_id},{member.symbol_id},1")
 
     # Third layer: superset -> missing traits (weight = 1 each), placed at the end.
     for trait in missing_traits:
-        table.append(f"{superset.id.upper()},{trait.id.upper()},1")
-
+        table.append(f"{superset.symbol_id},{trait.symbol_id},1")
     output = dedent("""\
         ```mermaid
         ---
@@ -425,15 +381,14 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
 
     group_map = ""
     for group in sorted(intermediate_groups, key=attrgetter("id"), reverse=True):
-        group_map += f"){group.icon} {group.id.upper()}(\n"
-        for platform_id, platform in group.items():
-            group_map += f"    ({platform.icon} {platform_id.upper()})\n"
+        group_map += f"){group.icon} {group.symbol_id}(\n"
+        for platform in group:
+            group_map += f"    ({platform.icon} {platform.symbol_id})\n"
 
     # Add missing traits as direct children of the superset.
     for trait in missing_traits:
-        group_map += f"({html.escape(trait.icon)} {trait.id.upper()})\n"
-
-    name = f"{html.escape(superset.icon)} {superset.id.upper()}"
+        group_map += f"({html.escape(trait.icon)} {trait.symbol_id})\n"
+    name = f"{html.escape(superset.icon)} {superset.symbol_id}"
     output = dedent(f"""\
         ```mermaid
         ---
@@ -457,34 +412,11 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     alignments = ["left", "left", "left", "left"]
 
     for trait in sorted(objects, key=attrgetter("id")):
-        class_name = type(trait).__name__
-
-        # Determine the documentation page and module based on the class
-        if class_name == "Architecture":
-            page = "architectures.md"
-            module = "architecture_data"
-        elif class_name == "Platform":
-            page = "platforms.md"
-            module = "platform_data"
-        elif class_name == "CI":
-            page = "ci.md"
-            module = "ci_data"
-        elif class_name == "Group":
-            page = "groups.md"
-            module = "group_data"
-        else:
-            page = "index.md"
-            module = "unknown"
-
-        symbol_name = trait.id.upper()
-        symbol_link = (
-            f"[`{symbol_name}`]({page}#extra_platforms.{module}.{symbol_name})"
-        )
-
+        meta = type(trait).metadata
         table_data.append([
             f"`@skip_{trait.id}`",
             f"`@unless_{trait.id}`",
-            symbol_link,
+            f"[`{trait.symbol_id}`]({meta.doc_page}#extra_platforms.{meta.data_module_id}.{trait.symbol_id})",
             html.escape(trait.name),
         ])
 
@@ -509,24 +441,12 @@ def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
     if not traits_list:
         return "```{eval-rst}\n```"
 
-    # Determine module name from the first item's type
-    first_item = traits_list[0]
-    class_name = type(first_item).__name__
-    if class_name == "Architecture":
-        module_name = "extra_platforms.architecture_data"
-    elif class_name == "Platform":
-        module_name = "extra_platforms.platform_data"
-    elif class_name == "CI":
-        module_name = "extra_platforms.ci_data"
-    elif class_name == "Group":
-        module_name = "extra_platforms.group_data"
-    else:
-        raise ValueError(f"Unknown trait type: {class_name}")
-
     directives = []
     for trait in sorted(traits_list, key=attrgetter("id")):
-        var_name = trait.id.upper()
-        directives.append(f".. autodata:: {module_name}.{var_name}")
+        meta = type(trait).metadata
+        directives.append(
+            f".. autodata:: extra_platforms.{meta.data_module_id}.{trait.symbol_id}"
+        )
 
     output = "```{eval-rst}\n"
     output += "\n".join(directives)

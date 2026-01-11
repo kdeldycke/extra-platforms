@@ -16,21 +16,19 @@
 
 from __future__ import annotations
 
+import re
 from operator import attrgetter
+from pathlib import Path
 from string import ascii_lowercase, digits
 
 import pytest
 
 import extra_platforms
 from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_TRAIT_IDS, ALL_TRAITS, UNKNOWN
-from extra_platforms.trait import Trait
-
-all_traits_params = pytest.mark.parametrize(
-    "trait", list(ALL_TRAITS | UNKNOWN), ids=attrgetter("id")
-)
+from extra_platforms.trait import CI, Architecture, Platform, Trait
 
 
-@all_traits_params
+@pytest.mark.parametrize("trait", tuple(ALL_TRAITS | UNKNOWN), ids=attrgetter("id"))
 def test_all_traits_generated_constants(trait):
     assert trait
 
@@ -96,6 +94,38 @@ def test_all_traits_generated_constants(trait):
                     if v1 is not None:
                         assert v1
     assert trait.info()["id"] == trait.id
+
+
+@pytest.mark.parametrize(
+    "trait_class", (Architecture, Platform, CI), ids=attrgetter("__name__")
+)
+def test_trait_class_metadata(trait_class):
+    metadata = trait_class.metadata
+    class_id = trait_class.__name__.lower()
+
+    assert metadata.type_name
+    assert metadata.type_name.isascii()
+    assert metadata.type_name.isprintable()
+
+    assert metadata.data_module_id == f"{class_id}_data"
+
+    assert metadata.unknown_symbol == f"UNKNOWN_{class_id.upper()}"
+
+    assert re.fullmatch(rf"ALL_{class_id.upper()}S?", metadata.all_group)
+
+    assert metadata.current_func_id == f"current_{class_id}"
+
+    assert metadata.doc_page.startswith(class_id)
+    assert metadata.doc_page.endswith(".md")
+    # Verify that the doc_page actually exists in the docs directory.
+    doc_file = Path(__file__).parent.parent / "docs" / metadata.doc_page
+    assert doc_file.exists(), f"Documentation file not found: {doc_file}"
+    assert doc_file.is_file(), f"Expected a file but got directory: {doc_file}"
+    # Verify that the file starts with a proper markdown title.
+    assert re.fullmatch(
+        rf"# \{{octicon}}`\S+` {metadata.type_name[0].upper()}{metadata.type_name[1:]}s",
+        doc_file.read_text().splitlines()[0],
+    )
 
 
 def test_detection_function_missing(caplog):

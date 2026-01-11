@@ -29,6 +29,7 @@ import platform
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
+from typing import NamedTuple
 
 import distro
 
@@ -181,6 +182,20 @@ class Trait(ABC):
         return self.name
 
     @cached_property
+    def groups(self) -> frozenset:
+        """Returns the set of groups this trait belongs to.
+
+        Uses dynamic import to avoid circular dependency with group_data module.
+
+        Returns:
+            A frozenset of Group objects that contain this trait as a member.
+        """
+        # Avoid circular import by importing here.
+        from .group_data import ALL_GROUPS
+
+        return frozenset(group for group in ALL_GROUPS if self.id in group.member_ids)
+
+    @cached_property
     def current(self) -> bool:
         """Returns whether the current environment matches this trait.
 
@@ -219,6 +234,32 @@ class Trait(ABC):
         }
 
 
+class _TraitMetadata(NamedTuple):
+    """Metadata for each trait class, used in documentation generation.
+
+    This centralizes trait-type-specific information that is used for generating
+    documentation, such as module names, documentation pages, and related symbols.
+    """
+
+    type_name: str
+    """The name of the trait type."""
+
+    data_module_id: str
+    """The module name where trait instances are defined."""
+
+    unknown_symbol: str
+    """The symbol name for the unknown trait."""
+
+    all_group: str
+    """The symbol name for the group containing all traits of this type."""
+
+    current_func_id: str
+    """The function name to get the current trait of this type."""
+
+    doc_page: str
+    """The documentation page filename."""
+
+
 @dataclass(frozen=True)
 class Architecture(Trait):
     """A CPU architecture identifies a `processor instruction set
@@ -229,6 +270,16 @@ class Architecture(Trait):
 
     icon: str = field(repr=False, default="▣")
     """Icon of the architecture."""
+
+    metadata = _TraitMetadata(
+        type_name="architecture",
+        data_module_id="architecture_data",
+        unknown_symbol="UNKNOWN_ARCHITECTURE",
+        all_group="ALL_ARCHITECTURES",
+        current_func_id="current_architecture",
+        doc_page="architectures.md",
+    )
+    """Metadata for documentation generation."""
 
     def __post_init__(self) -> None:
         """Validate and normalize architecture fields."""
@@ -260,6 +311,16 @@ class Platform(Trait):
 
     icon: str = field(repr=False, default="❓")
     """Icon of the platform."""
+
+    metadata = _TraitMetadata(
+        type_name="platform",
+        data_module_id="platform_data",
+        unknown_symbol="UNKNOWN_PLATFORM",
+        all_group="ALL_PLATFORMS",
+        current_func_id="current_platform",
+        doc_page="platforms.md",
+    )
+    """Metadata for documentation generation."""
 
     def __post_init__(self) -> None:
         """Validate and normalize platform fields."""
@@ -399,6 +460,16 @@ class CI(Trait):
     icon: str = field(repr=False, default="♲")
     """Icon of the CI environment."""
 
+    metadata = _TraitMetadata(
+        type_name="CI system",
+        data_module_id="ci_data",
+        unknown_symbol="UNKNOWN_CI",
+        all_group="ALL_CI",
+        current_func_id="current_ci",
+        doc_page="ci.md",
+    )
+    """Metadata for documentation generation."""
+
     def __post_init__(self) -> None:
         """Validate and normalize CI fields."""
         super().__post_init__()
@@ -407,6 +478,4 @@ class CI(Trait):
 
     def info(self) -> dict[str, str | bool | None]:
         """Returns all CI attributes we can gather."""
-        return {
-            **self._base_info(),
-        }
+        return {**self._base_info()}
