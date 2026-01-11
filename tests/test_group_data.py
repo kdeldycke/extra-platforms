@@ -35,6 +35,8 @@ from extra_platforms import (
     ALL_TRAIT_IDS,
     ALL_TRAITS,
     ANY_WINDOWS,
+    ARCH_32_BIT,
+    ARCH_64_BIT,
     BSD,
     BSD_WITHOUT_MACOS,
     EXTRA_GROUPS,
@@ -51,8 +53,7 @@ from extra_platforms import (
     Trait,
 )
 from extra_platforms import group_data as group_data_module
-from extra_platforms.platform import Platform
-from extra_platforms.trait import CI, Architecture
+from extra_platforms.trait import CI, Architecture, Platform
 
 
 def test_group_data_ordering():
@@ -236,6 +237,14 @@ def test_unknown_group():
         assert trait not in ALL_PLATFORMS
         assert trait not in ALL_CI
         assert trait.icon == "❓"
+
+
+def test_architecture_logical_grouping():
+    """Test logical grouping of architectures."""
+    assert ARCH_32_BIT.isdisjoint(ARCH_64_BIT)
+    assert ARCH_64_BIT.isdisjoint(ARCH_32_BIT)
+
+    assert ALL_ARCHITECTURES.fullyintersects(ARCH_32_BIT | ARCH_64_BIT)
 
 
 def test_platform_logical_grouping():
