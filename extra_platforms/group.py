@@ -23,7 +23,7 @@ from functools import cached_property
 from types import MappingProxyType
 from typing import cast
 
-from .trait import Trait, _TraitMetadata
+from .trait import Trait, _Identifiable
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -48,52 +48,28 @@ def _flatten(items: Iterable) -> Iterator:
 
 
 @dataclass(frozen=True)
-class Group:
+class Group(_Identifiable):
     """A ``Group`` identifies a collection of ``Trait`` members.
 
-    Supports `set`-like operations (union, intersection, difference, etc.).
+    Additionally of the common fields inherited from ``_Identifiable``, each trait provides:
+
+    - ``members``: An iterable of ``Trait`` instances that belong to this group.
+    - ``member_ids``: A frozenset of member IDs for quick lookup.
+    - ``canonical``: A boolean indicating if the group is canonical (non-overlapping).
+    - various `set`-like operations (union, intersection, difference, etc.).
     """
 
-    id: str
-    """Unique ID of the group."""
+    unknown_symbol = "UNKNOWN"
+    """Groups use 'UNKNOWN' instead of 'UNKNOWN_GROUP'."""
 
-    symbol_id: str = field(repr=False, init=False)
-    """Symbolic identifier.
-
-    This is the variable name under which the instance can be accessed at the
-    root of the ``extra_platforms`` module.
-
-    Mainly useful for documentation generation.
-    """
-
-    detection_func_id: str = field(repr=False, init=False)
-    """ID of the detection function for this group.
-
-    The detection function is expected to be named ``is_<id>()`` and located at the root
-    of the ``extra_platforms`` module.
-    """
-
-    name: str
-    """User-friendly description of a group."""
-
-    icon: str = field(repr=False, default="❓")
-    """Icon of the group."""
+    current_func_id = None
+    """Groups don't have a ``current_group()`` function."""
 
     members: Iterable[Trait] = field(repr=False, default_factory=tuple)
     """Traits in this group.
 
     Normalized to ``MappingProxyType[str, Trait]`` at init, providing O(1) lookup by ID.
     """
-
-    metadata: _TraitMetadata = _TraitMetadata(
-        type_name="group",
-        data_module_id="group_data",
-        unknown_symbol="UNKNOWN",
-        all_group="ALL_GROUPS",
-        current_func_id="",
-        doc_page="groups.md",
-    )
-    """Metadata for documentation generation."""
 
     @property
     def _members(self) -> _MembersMapping:
@@ -108,16 +84,8 @@ class Group:
         return cast(_MembersMapping, self.members)
 
     def __post_init__(self):
-        """Validate fields, populate metadata, and normalize members to a sorted, deduplicated mapping."""
-        assert self.id, "Group ID cannot be empty."
-
-        object.__setattr__(self, "symbol_id", self.id.upper())
-
-        object.__setattr__(self, "detection_func_id", f"is_{self.id}")
-
-        assert self.name, "Group name cannot be empty."
-
-        assert self.icon, "Group icon cannot be empty."
+        """Normalize members to a sorted, deduplicated mapping."""
+        super().__post_init__()
 
         # Accept either a MappingProxyType, dict, or iterable of Traits.
         if isinstance(self.members, MappingProxyType):
@@ -126,6 +94,7 @@ class Group:
             traits = self.members.values()
         else:
             traits = self.members
+
         # Deduplicate and sort by ID, then build the immutable mapping.
         sorted_traits = sorted(set(traits), key=lambda t: t.id)
         object.__setattr__(
@@ -160,11 +129,11 @@ class Group:
 
     @cached_property
     def short_desc(self) -> str:
-        """Returns the group name with its first letter in lowercase to be used as a
-        short description.
+        """Return a short description with the first letter lowercased.
 
-        Mainly used to produce docstrings for function dynamically generated for each
-        group.
+        Overrides the base implementation to produce text suitable for mid-sentence
+        use in docstrings, e.g., "any Linux distribution" instead of "Any Linux
+        distribution".
         """
         return self.name[0].lower() + self.name[1:]
 

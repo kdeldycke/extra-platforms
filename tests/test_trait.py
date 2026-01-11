@@ -100,30 +100,29 @@ def test_all_traits_generated_constants(trait):
     "trait_class", (Architecture, Platform, CI), ids=attrgetter("__name__")
 )
 def test_trait_class_metadata(trait_class):
-    metadata = trait_class.metadata
     class_id = trait_class.__name__.lower()
 
-    assert metadata.type_name
-    assert metadata.type_name.isascii()
-    assert metadata.type_name.isprintable()
+    assert trait_class.type_name
+    assert trait_class.type_name.isascii()
+    assert trait_class.type_name.isprintable()
 
-    assert metadata.data_module_id == f"{class_id}_data"
+    assert trait_class.data_module_id == f"{class_id}_data"
 
-    assert metadata.unknown_symbol == f"UNKNOWN_{class_id.upper()}"
+    assert trait_class.unknown_symbol == f"UNKNOWN_{class_id.upper()}"
 
-    assert re.fullmatch(rf"ALL_{class_id.upper()}S?", metadata.all_group)
+    assert re.fullmatch(rf"ALL_{class_id.upper()}S?", trait_class.all_group)
 
-    assert metadata.current_func_id == f"current_{class_id}"
+    assert trait_class.current_func_id == f"current_{class_id}"
 
-    assert metadata.doc_page.startswith(class_id)
-    assert metadata.doc_page.endswith(".md")
+    assert trait_class.doc_page.startswith(class_id)
+    assert trait_class.doc_page.endswith(".md")
     # Verify that the doc_page actually exists in the docs directory.
-    doc_file = Path(__file__).parent.parent / "docs" / metadata.doc_page
+    doc_file = Path(__file__).parent.parent / "docs" / trait_class.doc_page
     assert doc_file.exists(), f"Documentation file not found: {doc_file}"
     assert doc_file.is_file(), f"Expected a file but got directory: {doc_file}"
     # Verify that the file starts with a proper markdown title.
     assert re.fullmatch(
-        rf"# \{{octicon}}`\S+` {metadata.type_name[0].upper()}{metadata.type_name[1:]}s",
+        rf"# \{{octicon}}`\S+` {trait_class.type_name[0].upper()}{trait_class.type_name[1:]}s",
         doc_file.read_text().splitlines()[0],
     )
 

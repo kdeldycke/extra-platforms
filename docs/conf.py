@@ -158,27 +158,26 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         type_counts = {}
 
         for _, member in obj.items():
-            meta = type(member).metadata
-            class_id = type(member).__name__
-            doc_page_html = meta.doc_page.replace(".md", ".html")
+            class_name = type(member).__name__
+            doc_page_html = member.doc_page.replace(".md", ".html")
 
             # Count types.
-            if class_id not in type_counts:
-                type_counts[class_id] = {
+            if class_name not in type_counts:
+                type_counts[class_name] = {
                     "count": 0,
-                    "anchor": f"trait.html#extra_platforms.trait.{class_id}",
+                    "anchor": f"trait.html#extra_platforms.trait.{class_name}",
                 }
-            type_counts[class_id]["count"] += 1
+            type_counts[class_name]["count"] += 1
 
             # Create member link.
-            member_url = f"{doc_page_html}#extra_platforms.{meta.data_module_id}.{member.symbol_id}"
+            member_url = f"{doc_page_html}#extra_platforms.{member.data_module_id}.{member.symbol_id}"
             member_links.append(make_rst_link(member.symbol_id, member_url))
 
         if member_links:
             # Format type information with links
             type_parts = [
-                f"{info['count']} {make_rst_link(class_id, info['anchor'])}"
-                for class_id, info in sorted(type_counts.items())
+                f"{info['count']} {make_rst_link(class_name, info['anchor'])}"
+                for class_name, info in sorted(type_counts.items())
             ]
             type_info = ", ".join(type_parts)
             lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
@@ -207,7 +206,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         group_links = [
             make_rst_link(
                 f"{group.symbol_id}{' ⬥' if group.canonical else ''}",
-                f"groups.html#extra_platforms.{group.metadata.data_module_id}.{group.symbol_id}",
+                f"groups.html#extra_platforms.{group.data_module_id}.{group.symbol_id}",
             )
             for group in sorted(obj.groups, key=lambda g: g.id)
         ]

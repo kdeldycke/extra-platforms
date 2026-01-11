@@ -29,7 +29,7 @@ import platform
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import NamedTuple
+from typing import ClassVar
 
 import distro
 
@@ -38,6 +38,257 @@ import extra_platforms
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any
+
+
+@dataclass(frozen=True)
+class _Identifiable:
+    """Base class for identifiable objects with common documentation fields.
+
+    Provides the common fields and initialization logic shared by both ``Trait``
+    and ``Group`` classes:
+
+    - ``id``: Unique identifier
+    - ``name``: Human-readable name
+    - ``icon``: Visual representation
+    - ``symbol_id``: Uppercase version of ID for module-level constants
+    - ``detection_func_id``: Name of the ``is_<id>()`` detection function
+
+    Subclasses must define the class-level documentation metadata:
+
+    - ``type_id``: Machine-readable type identifier (e.g., "architecture", "ci")
+    - ``type_name``: Human-readable type name (e.g., "architecture", "CI system")
+
+    The following are automatically derived from ``type_id`` via ``__init_subclass__``:
+
+    - ``data_module_id``: Module name where instances are defined
+    - ``unknown_symbol``: Symbol name for the unknown instance
+    - ``all_group``: Symbol name for the group containing all instances
+    - ``current_func_id``: Function name to get the current instance
+    - ``doc_page``: Documentation page filename
+    """
+
+    # Class-level documentation metadata (must be overridden by subclasses).
+    type_id: ClassVar[str] = ""
+    """Machine-readable type identifier used to derive module and symbol names."""
+
+    type_name: ClassVar[str] = ""
+    """Human-readable type name for documentation."""
+
+    # Derived class-level attributes (set by __init_subclass__).
+    data_module_id: ClassVar[str] = ""
+    """The module name where instances of this type are defined."""
+
+    unknown_symbol: ClassVar[str] = ""
+    """The symbol name for the unknown instance of this type."""
+
+    all_group: ClassVar[str] = ""
+    """The symbol name for the group containing all instances of this type."""
+
+    current_func_id: ClassVar[str | None] = None
+    """The function name to get the current instance of this type.
+
+    Set to ``None`` for types that don't have a ``current_<type>()`` function.
+    """
+
+    doc_page: ClassVar[str] = ""
+    """The documentation page filename."""
+
+    id: str
+    """Unique ID of the object."""
+
+    symbol_id: str = field(repr=False, init=False)
+    """Symbolic identifier.
+
+    This is the variable name under which the instance can be accessed at the
+    root of the ``extra_platforms`` module.
+
+    Mainly useful for documentation generation.
+    """
+
+    detection_func_id: str = field(repr=False, init=False)
+    """ID of the detection function for this object.
+
+    The detection function is expected to be named ``is_<id>()`` and located at the root
+    of the ``extra_platforms`` module.
+    """
+
+    name: str
+    """User-friendly name of the object."""
+
+    icon: str = field(repr=False, default="❓")
+    """Icon of the object."""
+
+    def __init_subclass__(cls, **kwargs: Any) -> None:
+        """Compute derived class attributes from class name when subclass is defined.
+
+        Only sets attributes if they haven't been explicitly defined in the subclass.
+        """
+        super().__init_subclass__(**kwargs)
+
+        # Derive type_id from class name if not explicitly set.
+        if "type_id" in cls.__dict__:
+            assert cls.type_id, f"{cls.__name__} must define a non-empty type_id."
+        else:
+            cls.type_id = cls.__name__.lower()
+
+        # Derive type_name from type_id if not explicitly set.
+        if "type_name" in cls.__dict__:
+            assert cls.type_name, f"{cls.__name__} must define a non-empty type_name."
+        else:
+            cls.type_name = cls.type_id
+
+        # Only set derived values if not explicitly defined in the subclass itself.
+        if "data_module_id" not in cls.__dict__:
+            cls.data_module_id = f"{cls.type_id}_data"
+
+        if "unknown_symbol" not in cls.__dict__:
+            cls.unknown_symbol = f"UNKNOWN_{cls.type_id.upper()}"
+
+        if "all_group" not in cls.__dict__:
+            # Handle pluralization: "ci" -> "ALL_CI", others get "S" suffix.
+            suffix = "" if cls.type_id == "ci" else "S"
+            cls.all_group = f"ALL_{cls.type_id.upper()}{suffix}"
+
+        if "current_func_id" not in cls.__dict__:
+            cls.current_func_id = f"current_{cls.type_id}"
+
+        if "doc_page" not in cls.__dict__:
+            # Handle pluralization: "ci" -> "ci.md", others get "s.md" suffix.
+            doc_suffix = "" if cls.type_id == "ci" else "s"
+            cls.doc_page = f"{cls.type_id}{doc_suffix}.md"
+
+    @cached_property
+    def short_desc(self) -> str:
+        """Return a short description of the object.
+
+        Mainly used to produce docstrings for functions dynamically generated for
+        each object.
+
+        By default returns the name. Subclasses may override for custom formatting.
+        """
+        return self.name
+
+    def __post_init__(self) -> None:
+        """Validate and normalize common fields.
+
+        - Ensure the ID, name, and icon are not empty.
+        - Set the symbolic ID based on the ID.
+        - Set the detection function ID based on the ID.
+        """
+        assert self.id, f"{self.__class__.__name__} ID cannot be empty."
+
+        object.__setattr__(self, "symbol_id", self.id.upper())
+
+        object.__setattr__(self, "detection_func_id", f"is_{self.id}")
+
+        assert self.name, f"{self.__class__.__name__} name cannot be empty."
+
+        assert self.icon, f"{self.__class__.__name__} icon cannot be empty."
+
+
+@dataclass(frozen=True)
+class Trait(_Identifiable, ABC):
+    """Base class for system traits like platforms and architectures.
+
+    A trait is a distinguishing characteristic of the runtime environment that can
+    be detected and identified.
+
+    Additionally of the common fields inherited from ``_Identifiable``, each trait provides:
+
+    - ``url``: A link to official documentation or website for the trait.
+    - ``current``: A boolean indicating if the current environment matches this trait.
+    - ``info()``: A method returning a dictionary of gathered attributes about the trait.
+    - ``groups``: A set of ``Group`` objects that include this trait as a member.
+    """
+
+    url: str = field(repr=False, default="")
+    """URL to the trait's official website or documentation."""
+
+    def __post_init__(self) -> None:
+        """Validate and normalize trait fields.
+
+        - Ensure the URL is not empty and starts with ``https://``.
+        - Populate the docstring.
+        """
+        super().__post_init__()
+
+        assert self.url, f"{self.__class__.__name__} URL cannot be empty."
+        assert self.url.startswith("https://"), "URL must start with https://."
+
+        # Generate docstring using type_name for context (e.g., "Identify ARM64 architecture.").
+        object.__setattr__(self, "__doc__", f"Identify {self.name} {self.type_name}.")
+
+    @cached_property
+    def groups(self) -> frozenset:
+        """Returns the set of groups this trait belongs to.
+
+        Uses dynamic import to avoid circular dependency with group_data module.
+
+        Returns:
+            A frozenset of Group objects that contain this trait as a member.
+        """
+        # Avoid circular import by importing here.
+        from .group_data import ALL_GROUPS
+
+        return frozenset(group for group in ALL_GROUPS if self.id in group.member_ids)
+
+    @cached_property
+    def current(self) -> bool:
+        """Returns whether the current environment matches this trait.
+
+        The detection function is dynamically looked up based on the trait ID, and is
+        expected to be found at the root of the ``extra_platforms`` module.
+
+        Raises ``NotImplementedError`` if a detection function cannot be found.
+
+        .. hint::
+            This is a property to avoid calling all detection heuristics on
+            ``Trait`` objects creation, which happens at module import time.
+        """
+        func = getattr(extra_platforms, self.detection_func_id, None)
+        if not func:
+            raise NotImplementedError(
+                f"Detection function {self.detection_func_id}() is not implemented."
+            )
+        return func()  # type: ignore[no-any-return]
+
+    @abstractmethod
+    def info(self) -> dict:
+        """Returns all trait attributes that can be gathered.
+
+        Subclasses should override this to include trait-specific information.
+        """
+        ...
+
+    def _base_info(self) -> dict[str, str | bool | None]:
+        """Returns the base info dictionary common to all traits."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "icon": self.icon,
+            "url": self.url,
+            "current": self.current,
+        }
+
+
+@dataclass(frozen=True)
+class Architecture(Trait):
+    """A CPU architecture identifies a `processor instruction set
+    <https://en.wikipedia.org/wiki/Instruction_set_architecture>`_.
+    """
+
+    def info(self) -> dict[str, str | bool | None]:
+        """Returns all architecture attributes we can gather."""
+        info: dict[str, str | bool | None] = {
+            **self._base_info(),
+            "machine": None,
+            "processor": None,
+        }
+        if self.current:
+            info["machine"] = platform.machine() or None
+            info["processor"] = platform.processor() or None
+
+        return info
 
 
 def _recursive_update(
@@ -101,230 +352,10 @@ def _remove_blanks(
 
 
 @dataclass(frozen=True)
-class Trait(ABC):
-    """Base class for system traits like platforms and architectures.
-
-    A trait is a distinguishing characteristic of the runtime environment that can
-    be detected and identified. Examples include:
-
-    - Operating systems (macOS, Linux, Windows)
-    - CPU architectures (x86_64, ARM64)
-    - CI/CD environments (GitHub Actions, GitLab CI)
-
-    Each trait has:
-
-    - A unique ID for programmatic use
-    - A human-readable name
-    - An icon for visual representation
-    - A URL to official documentation
-    - A ``current`` property that detects if this trait matches the runtime
-    """
-
-    id: str
-    """Unique ID of the trait."""
-
-    symbol_id: str = field(repr=False, init=False)
-    """Symbolic identifier.
-
-    This is the variable name under which the instance can be accessed at the
-    root of the ``extra_platforms`` module.
-
-    Mainly useful for documentation generation.
-    """
-
-    detection_func_id: str = field(repr=False, init=False)
-    """ID of the detection function for this trait.
-
-    The detection function is expected to be named ``is_<id>()`` and located at the root
-    of the ``extra_platforms`` module.
-    """
-
-    name: str
-    """User-friendly name of the trait."""
-
-    icon: str = field(repr=False, default="❓")
-    """Icon of the trait."""
-
-    url: str = field(repr=False, default="")
-    """URL to the trait's official website or documentation."""
-
-    def __post_init__(self) -> None:
-        """Validate and normalize trait fields.
-
-        - Ensure the trait ID, name, icon and URL are not empty.
-        - Ensure the URL starts with ``https://``.
-        - Set the symbolic ID based on the trait ID.
-        - Set the detection function ID based on the trait ID.
-        - Populate the docstring.
-        """
-        assert self.id, f"{self.__class__.__name__} ID cannot be empty."
-
-        object.__setattr__(self, "symbol_id", self.id.upper())
-
-        object.__setattr__(self, "detection_func_id", f"is_{self.id}")
-
-        assert self.name, f"{self.__class__.__name__} name cannot be empty."
-
-        assert self.icon, f"{self.__class__.__name__} icon cannot be empty."
-
-        assert self.url, f"{self.__class__.__name__} URL cannot be empty."
-        assert self.url.startswith("https://"), "URL must start with https://."
-
-        object.__setattr__(self, "__doc__", f"Identify {self.name}.")
-
-    @cached_property
-    def short_desc(self) -> str:
-        """Returns a short description of the trait.
-
-        Mainly used to produce docstrings for functions dynamically generated for each
-        trait.
-        """
-        return self.name
-
-    @cached_property
-    def groups(self) -> frozenset:
-        """Returns the set of groups this trait belongs to.
-
-        Uses dynamic import to avoid circular dependency with group_data module.
-
-        Returns:
-            A frozenset of Group objects that contain this trait as a member.
-        """
-        # Avoid circular import by importing here.
-        from .group_data import ALL_GROUPS
-
-        return frozenset(group for group in ALL_GROUPS if self.id in group.member_ids)
-
-    @cached_property
-    def current(self) -> bool:
-        """Returns whether the current environment matches this trait.
-
-        The detection function is dynamically looked up based on the trait ID, and is
-        expected to be found at the root of the ``extra_platforms`` module.
-
-        Raises ``NotImplementedError`` if a detection function cannot be found.
-
-        .. hint::
-            This is a property to avoid calling all detection heuristics on
-            ``Trait`` objects creation, which happens at module import time.
-        """
-        func = getattr(extra_platforms, self.detection_func_id, None)
-        if not func:
-            raise NotImplementedError(
-                f"Detection function {self.detection_func_id}() is not implemented."
-            )
-        return func()  # type: ignore[no-any-return]
-
-    @abstractmethod
-    def info(self) -> dict:
-        """Returns all trait attributes that can be gathered.
-
-        Subclasses should override this to include trait-specific information.
-        """
-        ...
-
-    def _base_info(self) -> dict[str, str | bool | None]:
-        """Returns the base info dictionary common to all traits."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "icon": self.icon,
-            "url": self.url,
-            "current": self.current,
-        }
-
-
-class _TraitMetadata(NamedTuple):
-    """Metadata for each trait class, used in documentation generation.
-
-    This centralizes trait-type-specific information that is used for generating
-    documentation, such as module names, documentation pages, and related symbols.
-    """
-
-    type_name: str
-    """The name of the trait type."""
-
-    data_module_id: str
-    """The module name where trait instances are defined."""
-
-    unknown_symbol: str
-    """The symbol name for the unknown trait."""
-
-    all_group: str
-    """The symbol name for the group containing all traits of this type."""
-
-    current_func_id: str
-    """The function name to get the current trait of this type."""
-
-    doc_page: str
-    """The documentation page filename."""
-
-
-@dataclass(frozen=True)
-class Architecture(Trait):
-    """A CPU architecture identifies a `processor instruction set
-    <https://en.wikipedia.org/wiki/Instruction_set_architecture>`_.
-
-    It has a unique ID, a human-readable name, and boolean to flag current architecture.
-    """
-
-    icon: str = field(repr=False, default="▣")
-    """Icon of the architecture."""
-
-    metadata = _TraitMetadata(
-        type_name="architecture",
-        data_module_id="architecture_data",
-        unknown_symbol="UNKNOWN_ARCHITECTURE",
-        all_group="ALL_ARCHITECTURES",
-        current_func_id="current_architecture",
-        doc_page="architectures.md",
-    )
-    """Metadata for documentation generation."""
-
-    def __post_init__(self) -> None:
-        """Validate and normalize architecture fields."""
-        super().__post_init__()
-        # Customize the docstring for architectures.
-        object.__setattr__(self, "__doc__", f"Identify {self.name} architecture.")
-
-    def info(self) -> dict[str, str | bool | None]:
-        """Returns all architecture attributes we can gather."""
-        info: dict[str, str | bool | None] = {
-            **self._base_info(),
-            "machine": None,
-            "processor": None,
-        }
-        if self.current:
-            info["machine"] = platform.machine() or None
-            info["processor"] = platform.processor() or None
-
-        return info
-
-
-@dataclass(frozen=True)
 class Platform(Trait):
     """A platform can identify multiple distributions or OSes with the same
     characteristics.
-
-    It has a unique ID, a human-readable name, and boolean to flag current platform.
     """
-
-    icon: str = field(repr=False, default="❓")
-    """Icon of the platform."""
-
-    metadata = _TraitMetadata(
-        type_name="platform",
-        data_module_id="platform_data",
-        unknown_symbol="UNKNOWN_PLATFORM",
-        all_group="ALL_PLATFORMS",
-        current_func_id="current_platform",
-        doc_page="platforms.md",
-    )
-    """Metadata for documentation generation."""
-
-    def __post_init__(self) -> None:
-        """Validate and normalize platform fields."""
-        super().__post_init__()
 
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
         """Returns all platform attributes we can gather."""
@@ -452,29 +483,15 @@ class Platform(Trait):
 
 @dataclass(frozen=True)
 class CI(Trait):
-    """A CI/CD environment identifies a continuous integration platform.
+    """A CI/CD environment identifies a continuous integration platform."""
 
-    It has a unique ID, a human-readable name, and boolean to flag current CI.
-    """
-
-    icon: str = field(repr=False, default="♲")
-    """Icon of the CI environment."""
-
-    metadata = _TraitMetadata(
-        type_name="CI system",
-        data_module_id="ci_data",
-        unknown_symbol="UNKNOWN_CI",
-        all_group="ALL_CI",
-        current_func_id="current_ci",
-        doc_page="ci.md",
-    )
-    """Metadata for documentation generation."""
+    type_name = "CI system"
+    """Human-readable type name for documentation."""
 
     def __post_init__(self) -> None:
-        """Validate and normalize CI fields."""
+        """Tweak CI docstring."""
         super().__post_init__()
-        # Customize the docstring for CI environments.
-        object.__setattr__(self, "__doc__", f"Identify {self.name} CI environment.")
+        object.__setattr__(self, "__doc__", f"Identify {self.name} environment.")
 
     def info(self) -> dict[str, str | bool | None]:
         """Returns all CI attributes we can gather."""

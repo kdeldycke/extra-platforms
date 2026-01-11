@@ -198,12 +198,12 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     assert len(all_classes) == 1, (
         "All traits must be of the same class to generate a trait table."
     )
-    meta = all_classes.pop().metadata
+    trait_class = all_classes.pop()
 
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             html.escape(trait.icon),
-            f"[`{trait.symbol_id}`](#extra_platforms.{meta.data_module_id}.{trait.symbol_id})",
+            f"[`{trait.symbol_id}`](#extra_platforms.{trait_class.data_module_id}.{trait.symbol_id})",
             trait.name,
             f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})",
         ])
@@ -213,7 +213,7 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     # Append hint block explaining unknown trait if trait type was detected.
     hint = f"""
 ```{{hint}}
-The [`{meta.unknown_symbol}`](#extra_platforms.{meta.data_module_id}.{meta.unknown_symbol}) trait represents an unrecognized {meta.type_name}. It is not included in the [`{meta.all_group}`](groups.md#extra_platforms.group_data.{meta.all_group}) group, and will be returned by `{meta.current_func_id}()` if the current {meta.type_name} is not recognized.
+The [`{trait_class.unknown_symbol}`](#extra_platforms.{trait_class.data_module_id}.{trait_class.unknown_symbol}) trait represents an unrecognized {trait_class.type_name}. It is not included in the [`{trait_class.all_group}`](groups.md#extra_platforms.group_data.{trait_class.all_group}) group, and will be returned by `{trait_class.current_func_id}()` if the current {trait_class.type_name} is not recognized.
 ```"""
     return f"{table}\n{hint}"
 
@@ -412,11 +412,10 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     alignments = ["left", "left", "left", "left"]
 
     for trait in sorted(objects, key=attrgetter("id")):
-        meta = type(trait).metadata
         table_data.append([
             f"`@skip_{trait.id}`",
             f"`@unless_{trait.id}`",
-            f"[`{trait.symbol_id}`]({meta.doc_page}#extra_platforms.{meta.data_module_id}.{trait.symbol_id})",
+            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.data_module_id}.{trait.symbol_id})",
             html.escape(trait.name),
         ])
 
@@ -443,9 +442,8 @@ def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
 
     directives = []
     for trait in sorted(traits_list, key=attrgetter("id")):
-        meta = type(trait).metadata
         directives.append(
-            f".. autodata:: extra_platforms.{meta.data_module_id}.{trait.symbol_id}"
+            f".. autodata:: extra_platforms.{trait.data_module_id}.{trait.symbol_id}"
         )
 
     output = "```{eval-rst}\n"
