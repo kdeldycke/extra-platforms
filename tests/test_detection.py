@@ -142,7 +142,7 @@ def test_detection_heuristics_sorting():
     """Detection heuristics must be sorted within each section."""
     detection_path = Path(inspect.getfile(detection_module))
     tree = ast.parse(detection_path.read_bytes())
-    source_lines = detection_path.read_text().splitlines()
+    source_lines = detection_path.read_text(encoding="utf-8").splitlines()
 
     # Find section boundaries by looking for comment markers.
     arch_section_start = None

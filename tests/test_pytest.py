@@ -75,7 +75,7 @@ def test_all_definition():
 def test_type_annotations():
     """Check all @skip_*/@unless_* annotations are defined and sorted."""
     pytest_file = Path(__file__).parent.parent / "extra_platforms" / "pytest.py"
-    tree = ast.parse(pytest_file.read_text())
+    tree = ast.parse(pytest_file.read_text(encoding="utf-8"))
 
     # Collect all annotated assignments in the TYPE_CHECKING block.
     decorator_annotations = []

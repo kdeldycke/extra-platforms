@@ -123,7 +123,7 @@ def test_trait_class_metadata(trait_class):
     # Verify that the file starts with a proper markdown title.
     assert re.fullmatch(
         rf"# \{{octicon}}`\S+` {trait_class.type_name[0].upper()}{trait_class.type_name[1:]}s",
-        doc_file.read_text().splitlines()[0],
+        doc_file.read_text(encoding="utf-8").splitlines()[0],
     )
 
 

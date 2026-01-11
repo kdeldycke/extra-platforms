@@ -98,7 +98,7 @@ def replace_content(
         assert filepath.exists(), f"File {filepath} does not exist."
         assert filepath.is_file(), f"File {filepath} is not a file."
 
-        orig_content = filepath.read_text()
+        orig_content = filepath.read_text(encoding="utf-8")
 
         # Construct regex patterns that match tags with flexible whitespace.
         # Matches: <!-- tag -->\s* (any whitespace including newlines)
@@ -134,6 +134,7 @@ def replace_content(
 
         filepath.write_text(
             f"{pre_content}{start_tag_formatted}{new_content}{end_tag_formatted}{post_content}",
+            encoding="utf-8",
         )
 
 
@@ -684,7 +685,7 @@ def update_docs() -> None:
         )
 
         for filepath in all_md_files:
-            file_content = filepath.read_text()
+            file_content = filepath.read_text(encoding="utf-8")
             if start_pattern.search(file_content) and end_pattern.search(file_content):
                 matching_files.append(filepath)
         if matching_files:
