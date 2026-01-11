@@ -158,7 +158,7 @@ def test_not_in_github_actions():
 | `@skip_sparc`              | `@unless_sparc`              | [`SPARC`](architectures.md#extra_platforms.architecture_data.SPARC)             | SPARC (32-bit)                              |
 | `@skip_sparc64`            | `@unless_sparc64`            | [`SPARC64`](architectures.md#extra_platforms.architecture_data.SPARC64)         | SPARC (64-bit)                              |
 | `@skip_sunos`              | `@unless_sunos`              | [`SUNOS`](platforms.md#extra_platforms.platform_data.SUNOS)                     | SunOS                                       |
-| `@skip_system_v`           | `@unless_system_v`           | [`SYSTEM_V`](groups.md#extra_platforms.group_data.SYSTEM_V)                     | AT&amp;T System Five                        |
+| `@skip_system_v`           | `@unless_system_v`           | [`SYSTEM_V`](groups.md#extra_platforms.group_data.SYSTEM_V)                     | AT&T System Five                            |
 | `@skip_teamcity`           | `@unless_teamcity`           | [`TEAMCITY`](ci.md#extra_platforms.ci_data.TEAMCITY)                            | TeamCity                                    |
 | `@skip_travis_ci`          | `@unless_travis_ci`          | [`TRAVIS_CI`](ci.md#extra_platforms.ci_data.TRAVIS_CI)                          | Travis CI                                   |
 | `@skip_tumbleweed`         | `@unless_tumbleweed`         | [`TUMBLEWEED`](platforms.md#extra_platforms.platform_data.TUMBLEWEED)           | openSUSE Tumbleweed                         |

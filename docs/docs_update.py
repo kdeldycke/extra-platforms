@@ -38,7 +38,7 @@ from pathlib import Path
 from textwrap import dedent, indent
 from typing import Iterable
 
-from tabulate import _visible_width
+import wcwidth  # type: ignore[import-untyped]
 from wcmatch import glob as wcglob
 
 from extra_platforms import (
@@ -66,6 +66,16 @@ PROJECT_ROOT = DOCS_ROOT.parent
 
 README_PATH = PROJECT_ROOT / "readme.md"
 """The path to the ``readme.md`` file."""
+
+
+def _visible_width(s: str) -> int:
+    """Return the display width of a string, accounting for unicode characters.
+
+    Uses wcwidth to calculate the proper display width of unicode and emoji characters.
+    """
+    width = wcwidth.wcswidth(s)
+    # wcswidth returns -1 for control characters; fall back to len() in that case.
+    return len(s) if width < 0 else width
 
 
 def replace_content(
@@ -175,16 +185,19 @@ def _generate_markdown_table(
     # Build all rows with proper display-width-based padding.
     def pad_cell(content: str, width: int, align: str) -> str:
         """Pad a cell to the target display width with proper alignment."""
-        content_width = _visible_width(content)
-        padding_needed = width - content_width
+        content_width: int = _visible_width(content)
+        padding_needed: int = width - content_width
         if align == "center":
-            left_pad = padding_needed // 2
-            right_pad = padding_needed - left_pad
-            return " " * left_pad + content + " " * right_pad
+            left_pad: int = padding_needed // 2
+            right_pad: int = padding_needed - left_pad
+            result: str = " " * left_pad + content + " " * right_pad
+            return result
         elif align == "right":
-            return " " * padding_needed + content
+            result = " " * padding_needed + content
+            return result
         else:  # left or default
-            return content + " " * padding_needed
+            result = content + " " * padding_needed
+            return result
 
     # Build header row.
     header_cells = [
@@ -453,7 +466,7 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
             f"`@skip_{trait.id}`",
             f"`@unless_{trait.id}`",
             f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.data_module_id}.{trait.symbol_id})",
-            html.escape(trait.name),
+            trait.name,
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)
