@@ -21,6 +21,7 @@ Skip a test on Windows:
 import pytest
 from extra_platforms.pytest import skip_windows
 
+
 @skip_windows
 def test_unix_only():
     # This test will be skipped on Windows
@@ -32,6 +33,7 @@ Run a test only on Linux:
 ```python
 import pytest
 from extra_platforms.pytest import unless_linux
+
 
 @unless_linux
 def test_linux_only():
@@ -45,6 +47,7 @@ Skip a test on specific architectures:
 import pytest
 from extra_platforms.pytest import skip_aarch64
 
+
 @skip_aarch64
 def test_not_on_arm64():
     # This test will be skipped on ARM64 (AArch64)
@@ -56,6 +59,7 @@ Skip a test in CI environments:
 ```python
 import pytest
 from extra_platforms.pytest import skip_github_ci
+
 
 @skip_github_ci
 def test_not_in_github_actions():
