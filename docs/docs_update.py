@@ -38,7 +38,7 @@ from pathlib import Path
 from textwrap import dedent, indent
 from typing import Iterable
 
-from tabulate import tabulate
+from tabulate import _visible_width
 from wcmatch import glob as wcglob
 
 from extra_platforms import (
@@ -138,6 +138,9 @@ def _generate_markdown_table(
     This is a shared helper function that both generate_trait_table() and
     generate_group_table() use to render tables with proper Markdown alignment hints.
 
+    Uses display width (not character count) for proper unicode/emoji padding,
+    matching the behavior of mdformat linter.
+
     Args:
         table_data: List of rows, where each row is a list of cell values.
         headers: List of column header names.
@@ -146,37 +149,62 @@ def _generate_markdown_table(
     Returns:
         A formatted Markdown table string with proper alignment separators.
     """
-    rendered_table = tabulate(
-        table_data,
-        headers=headers,
-        tablefmt="github",
-        colalign=alignments,
-        disable_numparse=True,
-    )
+    # Calculate column widths based on display width (for proper unicode/emoji handling).
+    # This matches the behavior of mdformat linter.
+    col_widths = []
+    for col_index, header in enumerate(headers):
+        cells = [row[col_index] for row in table_data] + [header]
+        col_widths.append(max(_visible_width(c) for c in cells))
 
-    # Manually produce Markdown alignment hints. This has been proposed upstream at:
+    # Build separator row with proper alignment hints.
     # https://github.com/astanin/python-tabulate/pull/261
     # https://github.com/astanin/python-tabulate/issues/53
-    # Copy of:
-    # https://github.com/kdeldycke/meta-package-manager/blob/6d250993edf22ba7456ad0f105d8937f7e650ccd/meta_package_manager/inventory.py#L139C1-L160C1
     separators = []
-    for col_index, header in enumerate(headers):
-        cells = [line[col_index] for line in table_data] + [header]
-        max_len = max(len(c) for c in cells)
+    for col_index, width in enumerate(col_widths):
         align = alignments[col_index]
         if align == "left":
-            sep = f":{'-' * (max_len - 1)}"
+            sep = f":{'-' * (width - 1)}"
         elif align == "center":
-            sep = f":{'-' * (max_len - 2)}:"
+            sep = f":{'-' * (width - 2)}:"
         elif align == "right":
-            sep = f"{'-' * (max_len - 1)}:"
+            sep = f"{'-' * (width - 1)}:"
         else:
-            sep = "-" * max_len
+            sep = "-" * width
         separators.append(sep)
-    header_separator = f"| {' | '.join(separators)} |"
 
-    lines = rendered_table.splitlines()
-    lines[1] = header_separator
+    # Build all rows with proper display-width-based padding.
+    def pad_cell(content: str, width: int, align: str) -> str:
+        """Pad a cell to the target display width with proper alignment."""
+        content_width = _visible_width(content)
+        padding_needed = width - content_width
+        if align == "center":
+            left_pad = padding_needed // 2
+            right_pad = padding_needed - left_pad
+            return " " * left_pad + content + " " * right_pad
+        elif align == "right":
+            return " " * padding_needed + content
+        else:  # left or default
+            return content + " " * padding_needed
+
+    # Build header row.
+    header_cells = [
+        pad_cell(h, col_widths[i], alignments[i]) for i, h in enumerate(headers)
+    ]
+
+    # Build data rows.
+    data_rows = []
+    for row in table_data:
+        row_cells = [
+            pad_cell(cell, col_widths[i], alignments[i]) for i, cell in enumerate(row)
+        ]
+        data_rows.append(row_cells)
+
+    # Assemble the table.
+    lines = []
+    lines.append("| " + " | ".join(header_cells) + " |")
+    lines.append("| " + " | ".join(separators) + " |")
+    for row_cells in data_rows:
+        lines.append("| " + " | ".join(row_cells) + " |")
 
     return "\n".join(lines)
 
