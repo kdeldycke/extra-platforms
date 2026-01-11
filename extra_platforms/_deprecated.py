@@ -33,7 +33,7 @@ from . import (  # type: ignore[attr-defined]
     is_unknown_platform,
     traits_from_ids,
 )
-from .trait import Platform, _recursive_update, _remove_blanks
+from ._utils import Platform, _recursive_update, _remove_blanks
 
 
 def _warn_deprecated(name: str, replacement: str) -> None:

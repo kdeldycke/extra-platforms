@@ -18,6 +18,7 @@ There are three main types of traits:
 ```{eval-rst}
 .. automodule:: extra_platforms.trait
    :members:
+   :private-members:
    :undoc-members:
    :show-inheritance:
 ```
