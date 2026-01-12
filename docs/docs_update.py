@@ -263,7 +263,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     """Produce a Markdown table for a collection of groups.
 
     The table contains the icon, symbol with link to documentation, description,
-    a linked detection function, member count, and canonical status for each group.
+    a linked detection function, and canonical status for each group.
     A hint block is appended after the table to explain canonical groups.
 
     Args:
@@ -276,9 +276,8 @@ def generate_group_table(groups: Iterable[Group]) -> str:
         "Description",
         "Detection function",
         "Canonical",
-        "Member count",
     ]
-    alignments = ["center", "left", "left", "left", "center", "right"]
+    alignments = ["center", "left", "left", "left", "center"]
 
     for group in sorted(groups, key=attrgetter("id")):
         table_data.append([
@@ -287,7 +286,6 @@ def generate_group_table(groups: Iterable[Group]) -> str:
             group.name,
             f"[`{group.detection_func_id}()`](detection.md#extra_platforms.{group.detection_func_id})",
             "⬥" if group.canonical else "",
-            str(len(group)),
         ])
 
     table = _generate_markdown_table(table_data, headers, alignments)
