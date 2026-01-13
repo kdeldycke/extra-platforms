@@ -416,7 +416,7 @@ def current_traits() -> set[Trait]:
         choice but to evaluate all detection heuristics.
     """
     matching = set()
-    for trait in ALL_TRAITS:
+    for trait in ALL_TRAITS - UNKNOWN:
         if trait.current:
             matching.add(trait)
 

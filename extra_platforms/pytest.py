@@ -34,7 +34,7 @@ from itertools import chain
 import extra_platforms
 
 from .group import Group
-from .group_data import ALL_GROUPS, ALL_TRAITS, UNKNOWN
+from .group_data import ALL_GROUPS, ALL_TRAITS
 from .trait import Trait
 
 TYPE_CHECKING = False
@@ -73,7 +73,7 @@ class DeferredCondition:
 
 
 # Generate a pair of skip/unless decorators for each platform and group.
-for _obj in chain(ALL_TRAITS, UNKNOWN, ALL_GROUPS):
+for _obj in chain(ALL_TRAITS, ALL_GROUPS):
     # Sanity check to please the type checker.
     assert isinstance(_obj, (Trait, Group))
 

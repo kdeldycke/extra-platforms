@@ -33,6 +33,7 @@ from extra_platforms import (
     ALL_TRAITS,
     SYSTEM_V,
     UNIX,
+    UNKNOWN,
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
@@ -86,6 +87,8 @@ def test_pyproject_keywords():
             # Remove versioned WSL platforms.
             - WSL1
             - WSL2
+            # Remove UNKNOWN_* traits.
+            - UNKNOWN
         )
     ]
     # Re-add un-versioned platform names.

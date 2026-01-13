@@ -24,7 +24,6 @@ import extra_platforms
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_GROUPS,
     ALL_TRAITS,
-    UNKNOWN,
     Group,
     Trait,
     is_any_windows,
@@ -52,7 +51,7 @@ from extra_platforms.pytest import (
 def _all_decorator_ids() -> list[str]:
     "Generate the list of decorators IDs we expect to find."
     all_decorator_ids = []
-    for _obj in chain(ALL_TRAITS, UNKNOWN, ALL_GROUPS):
+    for _obj in chain(ALL_TRAITS, ALL_GROUPS):
         assert isinstance(_obj, (Trait, Group))
         skip_id = f"skip_{_obj.id}"
         unless_id = f"unless_{_obj.id}"

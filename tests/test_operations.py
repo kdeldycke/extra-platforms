@@ -89,6 +89,7 @@ from extra_platforms import (
     ULTRAMARINE,
     UNIX,
     UNIX_WITHOUT_MACOS,
+    UNKNOWN,
     WINDOWS,
     WSL1,
     WSL2,
@@ -115,11 +116,11 @@ def test_unique_ids():
     # Check there is no overlap between trait and group IDs.
     assert all_group_ids.isdisjoint(all_trait_ids)
 
-    assert len(ALL_TRAIT_IDS) == len(ALL_TRAITS)
+    assert len(ALL_TRAIT_IDS) == len(ALL_TRAITS) - len(UNKNOWN)
     assert ALL_TRAIT_IDS.issubset(ALL_IDS)
     assert ALL_TRAIT_IDS.isdisjoint(ALL_GROUP_IDS)
 
-    assert len(ALL_GROUP_IDS) == len(ALL_GROUPS)
+    assert len(ALL_GROUP_IDS) == len(ALL_GROUPS) - 1  # Exclude UNKNOWN group.
     assert ALL_GROUP_IDS.issubset(ALL_IDS)
     assert ALL_GROUP_IDS.isdisjoint(ALL_TRAIT_IDS)
 

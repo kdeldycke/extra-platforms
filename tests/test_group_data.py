@@ -19,7 +19,7 @@ from __future__ import annotations
 import ast
 import inspect
 import re
-from itertools import chain, combinations
+from itertools import combinations
 from pathlib import Path
 from string import ascii_lowercase, digits
 
@@ -119,8 +119,12 @@ def test_group_definitions(group: Group):
         assert not group.id.startswith("all_")
 
     assert group.id not in ALL_TRAIT_IDS
-    assert group.id in ALL_GROUP_IDS
-    assert group.id in ALL_IDS
+    if group is UNKNOWN:
+        assert group.id not in ALL_GROUP_IDS
+        assert group.id not in ALL_IDS
+    else:
+        assert group.id in ALL_GROUP_IDS
+        assert group.id in ALL_IDS
 
     # Symbol ID.
     assert group.symbol_id == group.id.upper()
@@ -153,16 +157,15 @@ def test_group_definitions(group: Group):
     assert group.canonical is (group in NON_OVERLAPPING_GROUPS)
 
     # Check general subset properties and operators.
-    all_traits = ALL_TRAITS | UNKNOWN
-    assert group.member_ids.issubset(all_traits.member_ids)
-    assert group.issubset(all_traits)
-    assert group <= all_traits
-    if group != all_traits:
-        assert group < all_traits
-    assert all_traits.issuperset(group)
-    assert all_traits >= group
-    if group != all_traits:
-        assert all_traits > group
+    assert group.member_ids.issubset(ALL_TRAITS.member_ids)
+    assert group.issubset(ALL_TRAITS)
+    assert group <= ALL_TRAITS
+    if group != ALL_TRAITS:
+        assert group < ALL_TRAITS
+    assert ALL_TRAITS.issuperset(group)
+    assert ALL_TRAITS >= group
+    if group != ALL_TRAITS:
+        assert ALL_TRAITS > group
 
     # Each group is both a subset and a superset of itself.
     assert group.issubset(group)
@@ -184,7 +187,7 @@ def test_group_definitions(group: Group):
 
     for member in group:
         assert member in group
-        assert member in all_traits
+        assert member in ALL_TRAITS
         assert isinstance(member, Trait)
         assert member.id in group.member_ids
         assert group.issuperset([member])
@@ -257,7 +260,7 @@ def test_unknown_group():
     """All members of the UNKNOWN group are unknown traits."""
     for trait in UNKNOWN:
         assert trait.id.startswith("unknown_")
-        assert trait not in ALL_TRAITS
+        assert trait in ALL_TRAITS
         assert trait not in ALL_ARCHITECTURES
         assert trait not in ALL_PLATFORMS
         assert trait not in ALL_CI
@@ -329,7 +332,7 @@ def test_overlapping_groups():
 
 def test_each_trait_in_exactly_one_canonical_group():
     """Check each trait belongs to exactly one canonical group."""
-    for trait in chain(ALL_TRAITS, UNKNOWN):
+    for trait in ALL_TRAITS:
         canonical_groups = [group for group in NON_OVERLAPPING_GROUPS if trait in group]
         assert len(canonical_groups) == 1, (
             f"Trait {trait.id!r} is in {len(canonical_groups)} canonical groups: "

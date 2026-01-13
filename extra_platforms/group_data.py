@@ -601,19 +601,6 @@ ALL_CI = Group(
 # Mixed groups
 # =============================================================================
 
-ALL_TRAITS = Group(
-    "all_traits",
-    "Any architectures, platforms and CI systems",
-    "⁕",
-    tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_CI),
-)
-"""All recognized architectures, platforms and CI systems.
-
-.. caution::
-    This group does not contain all ``UNKNOWN_*`` traits.
-"""
-
-
 UNKNOWN = Group(
     "unknown",
     "Unknown",
@@ -621,6 +608,19 @@ UNKNOWN = Group(
     (UNKNOWN_ARCHITECTURE, UNKNOWN_CI, UNKNOWN_PLATFORM),
 )
 """Unknown or unrecognized traits."""
+
+
+ALL_TRAITS = Group(
+    "all_traits",
+    "Any architectures, platforms and CI systems",
+    "⁕",
+    tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_CI | UNKNOWN),
+)
+"""All predefined architectures, platforms and CI systems.
+
+.. hint::
+    This group includes all ``UNKNOWN_*`` traits.
+"""
 
 
 # =============================================================================
@@ -703,8 +703,10 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 """Non-overlapping groups.
 
 .. hint::
-    These groups together cover all recognized architectures, platforms, and CI systems.
-    They are all marked as canonical.
+    These groups together cover all predefined architectures, platforms, and CI systems,
+    including the ``UNKNOWN_*`` traits.
+
+    All groups in this collection are marked as canonical.
 """
 
 
@@ -731,4 +733,9 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
 
 
 ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
-"""All groups."""
+"""All predefined groups.
+
+.. hint::
+    This collection contains both canonical and non-canonical groups, including the
+    ``UNKNOWN`` group.
+"""

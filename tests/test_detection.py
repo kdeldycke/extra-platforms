@@ -28,6 +28,7 @@ import extra_platforms
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_GROUPS,
     ALL_TRAITS,
+    UNKNOWN,
     Group,
     Trait,
 )
@@ -116,7 +117,7 @@ def test_detection_heuristics_sorting():
                 ci_heuristics.append(func_id)
 
     # Check there is no extra "is_" function.
-    assert {f"is_{p.id}" for p in ALL_TRAITS} == set(all_heuristic_ids)
+    assert {f"is_{p.id}" for p in ALL_TRAITS - UNKNOWN} == set(all_heuristic_ids)
 
     # We only allow one generic "is_unknown*()" detection heuristics per category.
     for heuristics in [arch_heuristics, platform_heuristics, ci_heuristics]:

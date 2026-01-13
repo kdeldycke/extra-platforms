@@ -20,7 +20,7 @@ from __future__ import annotations
 from itertools import combinations
 
 from .group import Group
-from .group_data import ALL_GROUPS, ALL_TRAITS
+from .group_data import ALL_GROUPS, ALL_TRAITS, UNKNOWN
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -30,14 +30,26 @@ if TYPE_CHECKING:
     from .trait import Trait
 
 
-ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS))
-"""Set of all recognized traits IDs."""
+ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS - UNKNOWN))
+"""Set of all recognized traits IDs.
 
-ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS))
-"""Set of all recognized group IDs."""
+.. attention::
+    This collection does not contain all the ``UNKNOWN_*`` traits.
+"""
+
+ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS - {UNKNOWN}))
+"""Set of all recognized group IDs.
+
+.. attention::
+    This collection does not contain the ``UNKNOWN`` group.
+"""
 
 ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
-"""Set of all recognized traits and group IDs."""
+"""Set of all recognized traits and group IDs.
+
+.. attention::
+    This collection does not contain all the ``UNKNOWN_*`` traits and the ``UNKNOWN`` group.
+"""
 
 
 def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
