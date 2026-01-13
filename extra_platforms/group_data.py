@@ -588,12 +588,12 @@ ALL_CI = Group(
 )
 """All recognized Continuous Integration systems.
 
-.. note::
-    `List of known CI systems
-    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
-
 .. caution::
     This group does not contain the ``UNKNOWN_CI`` trait.
+
+.. seealso::
+    `List of known CI systems
+    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
 """
 
 

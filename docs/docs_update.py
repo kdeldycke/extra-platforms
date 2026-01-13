@@ -254,7 +254,7 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     # Append hint block explaining unknown trait if trait type was detected.
     hint = f"""
 ```{{hint}}
-The [`{trait_class.unknown_symbol}`](#extra_platforms.{trait_class.data_module_id}.{trait_class.unknown_symbol}) trait represents an unrecognized {trait_class.type_name}. It is not included in the [`{trait_class.all_group}`](groups.md#extra_platforms.group_data.{trait_class.all_group}) group, and will be returned by `{trait_class.current_func_id}()` if the current {trait_class.type_name} is not recognized.
+The [`{trait_class.unknown_symbol}`](#extra_platforms.{trait_class.data_module_id}.{trait_class.unknown_symbol}) trait represents an unrecognized {trait_class.type_name}. It is not included in the [`{trait_class.all_group}`](groups.md#extra_platforms.group_data.{trait_class.all_group}) group, and will be returned by `current_{trait_class.type_id}()` if the current {trait_class.type_name} is not recognized.
 ```"""
     return f"{table}\n{hint}"
 
@@ -563,8 +563,8 @@ def update_docs() -> None:
         ),
         # Sankey diagrams.
         (
-            "architecture-multi-level-sankey-start",
-            "architecture-multi-level-sankey-end",
+            "architecture-canonical-sankey-start",
+            "architecture-canonical-sankey-end",
             generate_sankey(
                 list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
                 + [ALL_ARCHITECTURES]
@@ -584,8 +584,8 @@ def update_docs() -> None:
         ),
         # Mindmap diagrams.
         (
-            "architecture-mindmap-start",
-            "architecture-mindmap-end",
+            "architecture-canonical-mindmap-start",
+            "architecture-canonical-mindmap-end",
             generate_traits_mindmap(
                 list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
                 + [ALL_ARCHITECTURES]

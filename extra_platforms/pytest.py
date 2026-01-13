@@ -44,7 +44,7 @@ if TYPE_CHECKING:
     from _pytest.mark.structures import MarkDecorator
 
 
-class DeferredCondition:
+class _DeferredCondition:
     """Defer the evaluation of a condition.
 
     This allow a callable returning a boolean to be evaluated only when the boolean
@@ -82,13 +82,13 @@ for _obj in chain(ALL_TRAITS, ALL_GROUPS):
 
     # Generate @skip decorator.
     globals()[f"skip_{_obj.id}"] = pytest.mark.skipif(
-        DeferredCondition(_func),  # type: ignore[arg-type]
+        _DeferredCondition(_func),  # type: ignore[arg-type]
         reason=f"Skip {_obj.short_desc}",
     )
 
     # Generate @unless decorator.
     globals()[f"unless_{_obj.id}"] = pytest.mark.skipif(
-        DeferredCondition(_func, invert=True),  # type: ignore[arg-type]
+        _DeferredCondition(_func, invert=True),  # type: ignore[arg-type]
         reason=f"Requires {_obj.short_desc}",
     )
 
