@@ -406,7 +406,8 @@ def current_traits() -> set[Trait]:
 
     This includes platforms, architectures and CI systems.
 
-    Never returns ``UNKNOWN_*`` traits.
+    .. caution::
+        Never returns ``UNKNOWN_*`` traits.
 
     Raises an error if the current environment is not recognized at all.
 
@@ -425,16 +426,19 @@ def current_traits() -> set[Trait]:
     return matching
 
 
+@cache
 def is_unknown_architecture() -> bool:
     """Returns ``True`` if the current architecture is not recognized, ``False`` otherwise."""
     return current_architecture() is UNKNOWN_ARCHITECTURE
 
 
+@cache
 def is_unknown_platform() -> bool:
     """Returns ``True`` if the current platform is not recognized, ``False`` otherwise."""
     return current_platform() is UNKNOWN_PLATFORM
 
 
+@cache
 def is_unknown_ci() -> bool:
     """Returns ``True`` if the current CI system is not recognized, ``False`` otherwise."""
     return current_ci() is UNKNOWN_CI

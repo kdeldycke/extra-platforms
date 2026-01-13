@@ -28,6 +28,40 @@ from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_TRAIT_IDS, ALL_TRAITS, U
 from extra_platforms.trait import CI, Architecture, Platform, Trait
 
 
+@pytest.mark.parametrize(
+    "klass", (Architecture, Platform, CI), ids=attrgetter("__name__")
+)
+def test_trait_class_metadata(klass):
+    class_id = klass.__name__.lower()
+
+    assert klass.type_name
+    assert klass.type_name.isascii()
+    assert klass.type_name.isprintable()
+
+    assert klass.data_module_id == f"{class_id}_data"
+    assert hasattr(extra_platforms, klass.data_module_id)
+
+    assert klass.unknown_symbol == f"UNKNOWN_{class_id.upper()}"
+    assert (
+        klass.unknown_symbol == getattr(extra_platforms, klass.unknown_symbol).symbol_id
+    )
+
+    assert re.fullmatch(rf"ALL_{class_id.upper()}S?", klass.all_group)
+    assert klass.all_group == getattr(extra_platforms, klass.all_group).symbol_id
+
+    assert klass.doc_page.startswith(class_id)
+    assert klass.doc_page.endswith(".md")
+    # Verify that the doc_page actually exists in the docs directory.
+    doc_file = Path(__file__).parent.parent / "docs" / klass.doc_page
+    assert doc_file.exists(), f"Documentation file not found: {doc_file}"
+    assert doc_file.is_file(), f"Expected a file but got directory: {doc_file}"
+    # Verify that the file starts with a proper markdown title.
+    assert re.fullmatch(
+        rf"# \{{octicon}}`\S+` {klass.type_name[0].upper()}{klass.type_name[1:]}s",
+        doc_file.read_text(encoding="utf-8").splitlines()[0],
+    )
+
+
 @pytest.mark.parametrize("trait", tuple(ALL_TRAITS | UNKNOWN), ids=attrgetter("id"))
 def test_all_traits_generated_constants(trait):
     assert trait
@@ -39,7 +73,7 @@ def test_all_traits_generated_constants(trait):
     assert set(trait.id).issubset(ascii_lowercase + digits + "_")
     assert trait.id.islower()
     # Traits are not allowed to start with all_ or any_, which is reserved for groups.
-    assert not trait.id.startswith(("all_", "any_"))
+    assert not trait.id.startswith(("all", "any"))
     assert trait.id not in ALL_GROUP_IDS
     if trait.id.startswith("unknown"):
         assert trait in UNKNOWN
@@ -94,37 +128,6 @@ def test_all_traits_generated_constants(trait):
                     if v1 is not None:
                         assert v1
     assert trait.info()["id"] == trait.id
-
-
-@pytest.mark.parametrize(
-    "trait_class", (Architecture, Platform, CI), ids=attrgetter("__name__")
-)
-def test_trait_class_metadata(trait_class):
-    class_id = trait_class.__name__.lower()
-
-    assert trait_class.type_name
-    assert trait_class.type_name.isascii()
-    assert trait_class.type_name.isprintable()
-
-    assert trait_class.data_module_id == f"{class_id}_data"
-
-    assert trait_class.unknown_symbol == f"UNKNOWN_{class_id.upper()}"
-
-    assert re.fullmatch(rf"ALL_{class_id.upper()}S?", trait_class.all_group)
-
-    assert trait_class.current_func_id == f"current_{class_id}"
-
-    assert trait_class.doc_page.startswith(class_id)
-    assert trait_class.doc_page.endswith(".md")
-    # Verify that the doc_page actually exists in the docs directory.
-    doc_file = Path(__file__).parent.parent / "docs" / trait_class.doc_page
-    assert doc_file.exists(), f"Documentation file not found: {doc_file}"
-    assert doc_file.is_file(), f"Expected a file but got directory: {doc_file}"
-    # Verify that the file starts with a proper markdown title.
-    assert re.fullmatch(
-        rf"# \{{octicon}}`\S+` {trait_class.type_name[0].upper()}{trait_class.type_name[1:]}s",
-        doc_file.read_text(encoding="utf-8").splitlines()[0],
-    )
 
 
 def test_detection_function_missing(caplog):

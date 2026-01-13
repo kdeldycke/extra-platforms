@@ -64,7 +64,6 @@ class _Identifiable:
     - ``data_module_id``: Module name where instances are defined
     - ``unknown_symbol``: Symbol name for the unknown instance
     - ``all_group``: Symbol name for the group containing all instances
-    - ``current_func_id``: Function name to get the current instance
     - ``doc_page``: Documentation page filename
     """
 
@@ -85,12 +84,6 @@ class _Identifiable:
     all_group: ClassVar[str] = ""
     """The symbol name for the group containing all instances of this type."""
 
-    current_func_id: ClassVar[str | None] = None
-    """The function name to get the current instance of this type.
-
-    Set to ``None`` for types that don't have a ``current_<type>()`` function.
-    """
-
     doc_page: ClassVar[str] = ""
     """The documentation page filename."""
 
@@ -109,7 +102,7 @@ class _Identifiable:
     detection_func_id: str = field(repr=False, init=False)
     """ID of the detection function for this object.
 
-    The detection function is expected to be named ``is_<id>()`` and located at the root
+    The detection function is expected to be named ``is_<id>()`` and available at the root
     of the ``extra_platforms`` module.
     """
 
@@ -146,17 +139,10 @@ class _Identifiable:
             cls.unknown_symbol = f"UNKNOWN_{cls.type_id.upper()}"
 
         if "all_group" not in cls.__dict__:
-            # Handle pluralization: "ci" -> "ALL_CI", others get "S" suffix.
-            suffix = "" if cls.type_id == "ci" else "S"
-            cls.all_group = f"ALL_{cls.type_id.upper()}{suffix}"
-
-        if "current_func_id" not in cls.__dict__:
-            cls.current_func_id = f"current_{cls.type_id}"
+            cls.all_group = f"ALL_{cls.type_id.upper()}S"
 
         if "doc_page" not in cls.__dict__:
-            # Handle pluralization: "ci" -> "ci.md", others get "s.md" suffix.
-            doc_suffix = "" if cls.type_id == "ci" else "s"
-            cls.doc_page = f"{cls.type_id}{doc_suffix}.md"
+            cls.doc_page = f"{cls.type_id}s.md"
 
     @cached_property
     def short_desc(self) -> str:
@@ -428,6 +414,12 @@ class CI(Trait):
 
     type_name = "CI system"
     """Human-readable type name for documentation."""
+
+    all_group = "ALL_CI"
+    """The top CI group should not be automaticcaly named ``ALL_CIS``."""
+
+    doc_page = "ci.md"
+    """The documentation page filename."""
 
     def __post_init__(self) -> None:
         """Tweak CI docstring."""

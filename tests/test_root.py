@@ -31,7 +31,6 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORMS,
     ALL_TRAITS,
-    GITHUB_CI,
     SYSTEM_V,
     UNIX,
     UNKNOWN_ARCHITECTURE,
@@ -59,7 +58,7 @@ from extra_platforms import operations as operations_module
 from extra_platforms import platform_data as platform_data_module
 from extra_platforms import trait as trait_module
 
-from .test_detection import github_runner_os
+from .test_ci_data import github_runner_os
 
 if sys.version_info >= (3, 11):
     import tomllib
@@ -221,24 +220,31 @@ def test_current_funcs():
     current_traits_results = current_traits()
     assert ALL_TRAITS.issuperset(current_traits_results)
 
+    # 1 platform + 1 architecture = 2 traits.
+    detected_traits = 2
     if is_github_ci():
-        assert GITHUB_CI in current_traits_results
         if github_runner_os() == "ubuntu-slim":
-            # 1 platform + 1 architecture + 1 CI = 3 traits, plus possible WSL.
-            assert len(current_traits_results) >= 3
+            # 1 platform + 2 architectures (Ubuntu + WSL) + 1 CI = 4 traits.
+            detected_traits = 4
         else:
             # 1 platform + 1 architecture + 1 CI = 3 traits.
-            assert len(current_traits_results) >= 2
-    else:
-        # 1 platform + 1 architecture = 2 traits.
-        assert len(current_traits_results) == 2
+            detected_traits = 3
+    assert len(current_traits_results) == detected_traits
+
+    current_architecture_result = current_architecture()
+    assert current_architecture_result in ALL_ARCHITECTURES
+    assert current_architecture_result in current_traits_results
+    assert current_architecture_result is not UNKNOWN_ARCHITECTURE
 
     current_platform_result = current_platform()
     assert current_platform_result in ALL_PLATFORMS
     assert current_platform_result in current_traits_results
+    assert current_platform_result is not UNKNOWN_PLATFORM
 
-    current_architecture_result = current_architecture()
-    assert current_architecture_result in ALL_ARCHITECTURES
+    current_ci_result = current_ci()
+    assert current_ci_result in ALL_CI | {UNKNOWN_CI}
+    if current_ci_result is not UNKNOWN_CI:
+        assert current_ci_result in current_traits_results
 
 
 def test_current_architecture_strict(monkeypatch):

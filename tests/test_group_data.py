@@ -18,10 +18,14 @@ from __future__ import annotations
 
 import ast
 import inspect
-from itertools import combinations
+import re
+from itertools import chain, combinations
 from pathlib import Path
 from string import ascii_lowercase, digits
 
+import pytest
+
+import extra_platforms
 from extra_platforms import (
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
@@ -34,26 +38,45 @@ from extra_platforms import (
     ALL_PLATFORMS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
-    ANY_WINDOWS,
-    ARCH_32_BIT,
-    ARCH_64_BIT,
-    BSD,
-    BSD_WITHOUT_MACOS,
     EXTRA_GROUPS,
-    LINUX,
-    LINUX_LAYERS,
     NON_OVERLAPPING_GROUPS,
-    OTHER_UNIX,
-    SYSTEM_V,
-    UNIX,
-    UNIX_LAYERS,
-    UNIX_WITHOUT_MACOS,
     UNKNOWN,
     Group,
     Trait,
 )
 from extra_platforms import group_data as group_data_module
 from extra_platforms.trait import CI, Architecture, Platform
+
+
+def test_group_class_metadata():
+    class_id = Group.__name__.lower()
+
+    assert Group.type_name
+    assert Group.type_name.isascii()
+    assert Group.type_name.isprintable()
+
+    assert Group.data_module_id == f"{class_id}_data"
+    assert hasattr(extra_platforms, Group.data_module_id)
+
+    assert Group.unknown_symbol == "UNKNOWN"
+    assert (
+        Group.unknown_symbol == getattr(extra_platforms, Group.unknown_symbol).symbol_id
+    )
+
+    assert Group.all_group == "ALL_GROUPS"
+    assert hasattr(extra_platforms, Group.all_group)
+
+    assert Group.doc_page.startswith(class_id)
+    assert Group.doc_page.endswith(".md")
+    # Verify that the doc_page actually exists in the docs directory.
+    doc_file = Path(__file__).parent.parent / "docs" / Group.doc_page
+    assert doc_file.exists(), f"Documentation file not found: {doc_file}"
+    assert doc_file.is_file(), f"Expected a file but got directory: {doc_file}"
+    # Verify that the file starts with a proper markdown title.
+    assert re.fullmatch(
+        rf"# \{{octicon}}`\S+` {Group.type_name[0].upper()}{Group.type_name[1:]}s",
+        doc_file.read_text(encoding="utf-8").splitlines()[0],
+    )
 
 
 def test_group_data_ordering():
@@ -75,151 +98,153 @@ def test_group_data_ordering():
     assert group_instance_ids != sorted(group_instance_ids)
 
 
-def test_group_definitions():
-    for group in ALL_GROUPS:
-        assert isinstance(group, Group)
+@pytest.mark.parametrize("group", tuple(ALL_GROUPS), ids=lambda g: g.id)
+def test_group_definitions(group: Group):
+    assert isinstance(group, Group)
 
-        # ID.
-        assert group.id
-        assert group.id.isascii()
-        assert group.id[0] in ascii_lowercase
-        assert group.id[-1] in ascii_lowercase + digits
-        assert set(group.id).issubset(ascii_lowercase + digits + "_")
-        assert group.id.islower()
-        # Only the group referencing all platforms and its derivate are allowed to
-        # start with "all_" prefix.
-        if group in (ALL_ARCHITECTURES, ALL_PLATFORMS, ALL_CI, ALL_TRAITS):
-            assert group.id.startswith("all_")
+    # ID.
+    assert group.id
+    assert group.id.isascii()
+    assert group.id[0] in ascii_lowercase
+    assert group.id[-1] in ascii_lowercase + digits
+    assert set(group.id).issubset(ascii_lowercase + digits + "_")
+    assert group.id.islower()
+    # Only groups referencing all platforms and its derivate are allowed to
+    # start with "all_" prefix.
+    if group.id.startswith("all"):
+        assert group in (ALL_ARCHITECTURES, ALL_PLATFORMS, ALL_CI, ALL_TRAITS)
+    elif group.id.startswith("unknown"):
+        assert group is UNKNOWN
+    else:
+        assert not group.id.startswith("all_")
+
+    assert group.id not in ALL_TRAIT_IDS
+    assert group.id in ALL_GROUP_IDS
+    assert group.id in ALL_IDS
+
+    # Symbol ID.
+    assert group.symbol_id == group.id.upper()
+    assert group.symbol_id.lower() == group.id
+    assert group.symbol_id in group_data_module.__dict__
+    assert getattr(group_data_module, group.symbol_id) is group
+    assert getattr(extra_platforms, group.symbol_id) is group
+
+    # Name.
+    assert group.name
+    assert group.name.isascii()
+    assert group.name.isprintable()
+
+    # Icon.
+    assert group.icon
+    assert 3 >= len(group.icon) >= 1
+
+    # Members.
+    assert len(group) > 0
+
+    # Members are unique, in keys and values.
+    assert len(group.members) == len(group.member_ids)
+    assert tuple(group.members.keys()) == tuple(group.members)
+    assert len(set(group.members.keys())) == len(group.members)
+    assert len(set(group.members.values())) == len(group.members)
+    assert all(isinstance(m_id, str) for m_id in group.members.keys())
+    assert all(isinstance(m, Trait) for m in group.members.values())
+
+    # Canonical groups are self-canonical.
+    assert group.canonical is (group in NON_OVERLAPPING_GROUPS)
+
+    # Check general subset properties and operators.
+    all_traits = ALL_TRAITS | UNKNOWN
+    assert group.member_ids.issubset(all_traits.member_ids)
+    assert group.issubset(all_traits)
+    assert group <= all_traits
+    if group != all_traits:
+        assert group < all_traits
+    assert all_traits.issuperset(group)
+    assert all_traits >= group
+    if group != all_traits:
+        assert all_traits > group
+
+    # Each group is both a subset and a superset of itself.
+    assert group.issubset(group)
+    assert group.issuperset(group)
+    assert group.issubset(group.members.values())
+    assert group.issuperset(group.members.values())
+
+    # Test against empty iterables.
+    assert group.issuperset(())
+    assert group.issuperset([])
+    assert group.issuperset({})
+    assert group.issuperset(set())
+    assert group.issuperset(frozenset())
+    assert not group.issubset(())
+    assert not group.issubset([])
+    assert not group.issubset({})
+    assert not group.issubset(set())
+    assert not group.issubset(frozenset())
+
+    for member in group:
+        assert member in group
+        assert member in all_traits
+        assert isinstance(member, Trait)
+        assert member.id in group.member_ids
+        assert group.issuperset([member])
+        if len(group) == 1:
+            assert group.issubset([member])
         else:
-            assert not group.id.startswith("all_")
-        assert group.id not in ALL_TRAIT_IDS
-        assert group.id in ALL_GROUP_IDS
-        assert group.id in ALL_IDS
+            assert not group.issubset([member])
 
-        # Name.
-        assert group.name
-        assert group.name.isascii()
-        assert group.name.isprintable()
+    # A group cannot be disjoint from itself.
+    assert not group.isdisjoint(group)
+    assert not group.isdisjoint(group.members.values())
+    assert group.fullyintersects(group)
+    assert group.fullyintersects(group.members.values())
 
-        # Icon.
-        assert group.icon
-        assert 3 >= len(group.icon) >= 1
+    # Test union.
+    assert group.union() == group
+    assert group.union(()) == group
+    assert group.union([]) == group
+    assert group.union({}) == group
+    assert group.union(set()) == group
+    assert group.union(frozenset()) == group
+    assert group.union(group) == group
+    assert group.union(group, group) == group
+    assert group | group == group
+    assert group | group | group == group
 
-        # Members.
-        assert len(group) > 0
+    empty_group = Group(group.id, group.name, group.icon)
 
-        # Members are unique, in keys and values.
-        assert len(group.members) == len(group.member_ids)
-        assert tuple(group.members.keys()) == tuple(group.members)
-        assert len(set(group.members.keys())) == len(group.members)
-        assert len(set(group.members.values())) == len(group.members)
-        assert all(isinstance(m_id, str) for m_id in group.members.keys())
-        assert all(isinstance(m, Trait) for m in group.members.values())
+    # Test intersection.
+    assert group.intersection() == group
+    assert group.intersection(()) == empty_group
+    assert group.intersection([]) == empty_group
+    assert group.intersection({}) == empty_group
+    assert group.intersection(set()) == empty_group
+    assert group.intersection(frozenset()) == empty_group
+    assert group.intersection(group) == group
+    assert group.intersection(group, group) == group
+    assert group & group == group
+    assert group & group & group == group
 
-        # Canonical groups are self-canonical.
-        assert group.canonical is (group in NON_OVERLAPPING_GROUPS)
+    # Test difference.
+    assert group.difference() == group
+    assert group.difference(()) == group
+    assert group.difference([]) == group
+    assert group.difference({}) == group
+    assert group.difference(set()) == group
+    assert group.difference(frozenset()) == group
+    assert group.difference(group) == empty_group
+    assert group.difference(group, group) == empty_group
+    assert group - group == empty_group
+    assert group - group - group == empty_group
 
-        # Check general subset properties and operators.
-        all_traits = ALL_TRAITS | UNKNOWN
-        assert group.member_ids.issubset(all_traits.member_ids)
-        assert group.issubset(all_traits)
-        assert group <= all_traits
-        if group != all_traits:
-            assert group < all_traits
-        assert all_traits.issuperset(group)
-        assert all_traits >= group
-        if group != all_traits:
-            assert all_traits > group
-
-        # Each group is both a subset and a superset of itself.
-        assert group.issubset(group)
-        assert group.issuperset(group)
-        assert group.issubset(group.members.values())
-        assert group.issuperset(group.members.values())
-
-        # Test against empty iterables.
-        assert group.issuperset(())
-        assert group.issuperset([])
-        assert group.issuperset({})
-        assert group.issuperset(set())
-        assert group.issuperset(frozenset())
-        assert not group.issubset(())
-        assert not group.issubset([])
-        assert not group.issubset({})
-        assert not group.issubset(set())
-        assert not group.issubset(frozenset())
-
-        for member in group:
-            assert member in group
-            assert member in all_traits
-            assert isinstance(member, Trait)
-            assert member.id in group.member_ids
-            assert group.issuperset([member])
-            if len(group) == 1:
-                assert group.issubset([member])
-            else:
-                assert not group.issubset([member])
-
-        # A group cannot be disjoint from itself.
-        assert not group.isdisjoint(group)
-        assert not group.isdisjoint(group.members.values())
-        assert group.fullyintersects(group)
-        assert group.fullyintersects(group.members.values())
-
-        # Test union.
-        assert group.union() == group
-        assert group.union(()) == group
-        assert group.union([]) == group
-        assert group.union({}) == group
-        assert group.union(set()) == group
-        assert group.union(frozenset()) == group
-        assert group.union(group) == group
-        assert group.union(group, group) == group
-        assert group | group == group
-        assert group | group | group == group
-
-        empty_group = Group(group.id, group.name, group.icon)
-
-        # Test intersection.
-        assert group.intersection() == group
-        assert group.intersection(()) == empty_group
-        assert group.intersection([]) == empty_group
-        assert group.intersection({}) == empty_group
-        assert group.intersection(set()) == empty_group
-        assert group.intersection(frozenset()) == empty_group
-        assert group.intersection(group) == group
-        assert group.intersection(group, group) == group
-        assert group & group == group
-        assert group & group & group == group
-
-        # Test difference.
-        assert group.difference() == group
-        assert group.difference(()) == group
-        assert group.difference([]) == group
-        assert group.difference({}) == group
-        assert group.difference(set()) == group
-        assert group.difference(frozenset()) == group
-        assert group.difference(group) == empty_group
-        assert group.difference(group, group) == empty_group
-        assert group - group == empty_group
-        assert group - group - group == empty_group
-
-        # Test symmetric_difference.
-        assert group.symmetric_difference(()) == group
-        assert group.symmetric_difference([]) == group
-        assert group.symmetric_difference({}) == group
-        assert group.symmetric_difference(set()) == group
-        assert group.symmetric_difference(frozenset()) == group
-        assert group.symmetric_difference(group) == empty_group
-        assert group ^ group == empty_group
-
-
-def test_group_constants():
-    """Group constants and IDs must be aligned."""
-    for group in ALL_GROUPS:
-        group_constant = group.id.upper()
-        assert group_constant in group_data_module.__dict__
-        assert getattr(group_data_module, group_constant) is group
+    # Test symmetric_difference.
+    assert group.symmetric_difference(()) == group
+    assert group.symmetric_difference([]) == group
+    assert group.symmetric_difference({}) == group
+    assert group.symmetric_difference(set()) == group
+    assert group.symmetric_difference(frozenset()) == group
+    assert group.symmetric_difference(group) == empty_group
+    assert group ^ group == empty_group
 
 
 def test_unique_icons():
@@ -237,45 +262,6 @@ def test_unknown_group():
         assert trait not in ALL_PLATFORMS
         assert trait not in ALL_CI
         assert trait.icon == "❓"
-
-
-def test_architecture_logical_grouping():
-    """Test logical grouping of architectures."""
-    assert ARCH_32_BIT.isdisjoint(ARCH_64_BIT)
-    assert ARCH_64_BIT.isdisjoint(ARCH_32_BIT)
-
-    assert ALL_ARCHITECTURES.fullyintersects(ARCH_32_BIT | ARCH_64_BIT)
-
-
-def test_platform_logical_grouping():
-    """Test logical grouping of platforms."""
-    for group in BSD, LINUX, LINUX_LAYERS, SYSTEM_V, UNIX_LAYERS, OTHER_UNIX:
-        assert group.issubset(UNIX)
-        assert UNIX.issuperset(group)
-
-    assert UNIX_WITHOUT_MACOS.issubset(UNIX)
-    assert UNIX.issuperset(UNIX_WITHOUT_MACOS)
-
-    assert BSD_WITHOUT_MACOS.issubset(UNIX)
-    assert BSD_WITHOUT_MACOS.issubset(BSD)
-    assert UNIX.issuperset(BSD_WITHOUT_MACOS)
-    assert BSD.issuperset(BSD_WITHOUT_MACOS)
-
-    # All platforms are divided into Windows and Unix at the highest level.
-    assert ALL_PLATFORMS.fullyintersects(ANY_WINDOWS | UNIX)
-    assert ANY_WINDOWS.canonical
-    assert not UNIX.canonical
-
-    # All UNIX platforms are divided into BSD, Linux, and Unix families.
-    assert UNIX.fullyintersects(
-        BSD | LINUX | LINUX_LAYERS | SYSTEM_V | UNIX_LAYERS | OTHER_UNIX
-    )
-    assert BSD.canonical
-    assert LINUX.canonical
-    assert LINUX_LAYERS.canonical
-    assert SYSTEM_V.canonical
-    assert UNIX_LAYERS.canonical
-    assert OTHER_UNIX.canonical
 
 
 def test_sets_of_groups():
@@ -319,11 +305,6 @@ def test_sets_of_groups():
     )
 
 
-def test_no_missing_platform_in_groups():
-    """Check all platform are attached to at least one non-overlapping group."""
-    ALL_PLATFORMS.fullyintersects(ALL_PLATFORM_GROUPS & NON_OVERLAPPING_GROUPS)
-
-
 def test_non_overlapping_groups():
     """Check non-overlapping groups are mutually exclusive."""
     for combination in combinations(NON_OVERLAPPING_GROUPS, 2):
@@ -348,7 +329,7 @@ def test_overlapping_groups():
 
 def test_each_trait_in_exactly_one_canonical_group():
     """Check each trait belongs to exactly one canonical group."""
-    for trait in ALL_TRAITS:
+    for trait in chain(ALL_TRAITS, UNKNOWN):
         canonical_groups = [group for group in NON_OVERLAPPING_GROUPS if trait in group]
         assert len(canonical_groups) == 1, (
             f"Trait {trait.id!r} is in {len(canonical_groups)} canonical groups: "

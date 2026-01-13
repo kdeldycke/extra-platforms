@@ -36,7 +36,7 @@ from extra_platforms import (
 )
 
 
-def test_platform_deduplication():
+def test_deduplication():
     my_group = Group("my_group", "My Group", "✅", (AIX, AIX))
     assert len(my_group) == 1
     assert len(my_group.members) == 1
@@ -46,7 +46,7 @@ def test_platform_deduplication():
     assert my_group.member_ids == frozenset({"aix"})
 
 
-def test_platform_membership():
+def test_membership():
     my_group = Group("my_group", "My Group", "✅", (AIX, PIDORA))
 
     # Test iteration.

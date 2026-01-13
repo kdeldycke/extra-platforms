@@ -60,10 +60,7 @@ class Group(_Identifiable):
     """
 
     unknown_symbol = "UNKNOWN"
-    """Groups use 'UNKNOWN' instead of 'UNKNOWN_GROUP'."""
-
-    current_func_id = None
-    """Groups don't have a ``current_group()`` function."""
+    """Groups use ``UNKNOWN`` instead of ``UNKNOWN_GROUP``."""
 
     members: Iterable[Trait] = field(repr=False, default_factory=tuple)
     """Traits in this group.
