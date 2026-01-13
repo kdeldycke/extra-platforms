@@ -117,10 +117,13 @@ class Group(_Identifiable):
         """Returns `True` if the group is canonical (non-overlapping), `False` otherwise.
 
         A canonical group is one that does not share any members with other canonical
-        groups.
+        groups. All canonical groups are non-overlapping.
+
+        Non-canonical groups are provided for convenience, but overlap with each other
+        or with canonical groups.
 
         .. hint::
-            Canonical groups are denoted with a "⬥" symbol in the documentation and tables.
+            Canonical groups are denoted with a ⬥ symbol in the documentation and tables.
         """
         # Avoid circular import.
         from .group_data import NON_OVERLAPPING_GROUPS
