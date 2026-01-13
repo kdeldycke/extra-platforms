@@ -77,11 +77,40 @@ The [`UNKNOWN_ARCHITECTURE`](#extra_platforms.architecture_data.UNKNOWN_ARCHITEC
 
 ## Groups of architectures
 
-All recognized architectures are grouped in families, with each architecture belonging to exactly one family.
+### All architecture groups
+
+<!-- architecture-groups-table-start -->
+
+| Icon | Symbol                                                                        | Description            | [Detection](detection.md)                                                     | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
+| :--: | :---------------------------------------------------------------------------- | :--------------------- | :---------------------------------------------------------------------------- | :----------------------------------------------------------: |
+|  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.group_data.ALL_ARCHITECTURES) | All architectures      | [`is_all_architectures()`](detection.md#extra_platforms.is_all_architectures) |                                                              |
+|  📱  | [`ANY_ARM`](groups.md#extra_platforms.group_data.ANY_ARM)                     | Any ARM architecture   | [`is_any_arm()`](detection.md#extra_platforms.is_any_arm)                     |                              ⬥                               |
+|  🔲  | [`ANY_MIPS`](groups.md#extra_platforms.group_data.ANY_MIPS)                   | Any MIPS architecture  | [`is_any_mips()`](detection.md#extra_platforms.is_any_mips)                   |                              ⬥                               |
+|  ☀️  | [`ANY_SPARC`](groups.md#extra_platforms.group_data.ANY_SPARC)                 | Any SPARC architecture | [`is_any_sparc()`](detection.md#extra_platforms.is_any_sparc)                 |                              ⬥                               |
+|  ³²  | [`ARCH_32_BIT`](groups.md#extra_platforms.group_data.ARCH_32_BIT)             | 32-bit architectures   | [`is_arch_32_bit()`](detection.md#extra_platforms.is_arch_32_bit)             |                                                              |
+|  ⁶⁴  | [`ARCH_64_BIT`](groups.md#extra_platforms.group_data.ARCH_64_BIT)             | 64-bit architectures   | [`is_arch_64_bit()`](detection.md#extra_platforms.is_arch_64_bit)             |                                                              |
+|  🏢  | [`IBM_MAINFRAME`](groups.md#extra_platforms.group_data.IBM_MAINFRAME)         | IBM mainframe          | [`is_ibm_mainframe()`](detection.md#extra_platforms.is_ibm_mainframe)         |                              ⬥                               |
+|  🐉  | [`LOONGARCH`](groups.md#extra_platforms.group_data.LOONGARCH)                 | LoongArch              | [`is_loongarch()`](detection.md#extra_platforms.is_loongarch)                 |                              ⬥                               |
+|  ⚡  | [`POWERPC`](groups.md#extra_platforms.group_data.POWERPC)                     | PowerPC family         | [`is_powerpc()`](detection.md#extra_platforms.is_powerpc)                     |                              ⬥                               |
+|  Ⅴ   | [`RISCV`](groups.md#extra_platforms.group_data.RISCV)                         | RISC-V family          | [`is_riscv()`](detection.md#extra_platforms.is_riscv)                         |                              ⬥                               |
+|  🌐  | [`WEBASSEMBLY`](groups.md#extra_platforms.group_data.WEBASSEMBLY)             | WebAssembly            | [`is_webassembly()`](detection.md#extra_platforms.is_webassembly)             |                              ⬥                               |
+|  𝘅   | [`X86`](groups.md#extra_platforms.group_data.X86)                             | x86 family             | [`is_x86()`](detection.md#extra_platforms.is_x86)                             |                              ⬥                               |
+
+```{hint}
+Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
+
+Other groups are provided for convenience, but overlap with each other or with canonical groups.
+```
+
+<!-- architecture-groups-table-end -->
+
+### Canonical families
+
+All recognized architectures are grouped in canonical families, with each architecture belonging to exactly one family.
 
 Here are the non-overlapping families that encompass all recognized architectures, visualized as a Sankey diagram:
 
-<!-- architecture-multi-level-sankey-start -->
+<!-- architecture-canonical-sankey-start -->
 
 ```mermaid
 ---
@@ -124,11 +153,11 @@ LOONGARCH,LOONGARCH64,1
 IBM_MAINFRAME,S390X,1
 ```
 
-<!-- architecture-multi-level-sankey-end -->
+<!-- architecture-canonical-sankey-end -->
 
 And the same families visualized as a mindmap:
 
-<!-- architecture-mindmap-start -->
+<!-- architecture-canonical-mindmap-start -->
 
 ```mermaid
 ---
@@ -171,34 +200,90 @@ mindmap
             (📱 ARMV8L)
 ```
 
-<!-- architecture-mindmap-end -->
+<!-- architecture-canonical-mindmap-end -->
 
-### All architecture groups
+### Bitness groups
 
-<!-- architecture-groups-table-start -->
+Architectures are also grouped by bitness (32-bit vs 64-bit), visualized as a Sankey diagram:
 
-| Icon | Symbol                                                                        | Description            | [Detection](detection.md)                                                     | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :---------------------------------------------------------------------------- | :--------------------- | :---------------------------------------------------------------------------- | :----------------------------------------------------------: |
-|  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.group_data.ALL_ARCHITECTURES) | All architectures      | [`is_all_architectures()`](detection.md#extra_platforms.is_all_architectures) |                                                              |
-|  📱  | [`ANY_ARM`](groups.md#extra_platforms.group_data.ANY_ARM)                     | Any ARM architecture   | [`is_any_arm()`](detection.md#extra_platforms.is_any_arm)                     |                              ⬥                               |
-|  🔲  | [`ANY_MIPS`](groups.md#extra_platforms.group_data.ANY_MIPS)                   | Any MIPS architecture  | [`is_any_mips()`](detection.md#extra_platforms.is_any_mips)                   |                              ⬥                               |
-|  ☀️  | [`ANY_SPARC`](groups.md#extra_platforms.group_data.ANY_SPARC)                 | Any SPARC architecture | [`is_any_sparc()`](detection.md#extra_platforms.is_any_sparc)                 |                              ⬥                               |
-|  ³²  | [`ARCH_32_BIT`](groups.md#extra_platforms.group_data.ARCH_32_BIT)             | 32-bit architectures   | [`is_arch_32_bit()`](detection.md#extra_platforms.is_arch_32_bit)             |                                                              |
-|  ⁶⁴  | [`ARCH_64_BIT`](groups.md#extra_platforms.group_data.ARCH_64_BIT)             | 64-bit architectures   | [`is_arch_64_bit()`](detection.md#extra_platforms.is_arch_64_bit)             |                                                              |
-|  🏢  | [`IBM_MAINFRAME`](groups.md#extra_platforms.group_data.IBM_MAINFRAME)         | IBM mainframe          | [`is_ibm_mainframe()`](detection.md#extra_platforms.is_ibm_mainframe)         |                              ⬥                               |
-|  🐉  | [`LOONGARCH`](groups.md#extra_platforms.group_data.LOONGARCH)                 | LoongArch              | [`is_loongarch()`](detection.md#extra_platforms.is_loongarch)                 |                              ⬥                               |
-|  ⚡  | [`POWERPC`](groups.md#extra_platforms.group_data.POWERPC)                     | PowerPC family         | [`is_powerpc()`](detection.md#extra_platforms.is_powerpc)                     |                              ⬥                               |
-|  Ⅴ   | [`RISCV`](groups.md#extra_platforms.group_data.RISCV)                         | RISC-V family          | [`is_riscv()`](detection.md#extra_platforms.is_riscv)                         |                              ⬥                               |
-|  🌐  | [`WEBASSEMBLY`](groups.md#extra_platforms.group_data.WEBASSEMBLY)             | WebAssembly            | [`is_webassembly()`](detection.md#extra_platforms.is_webassembly)             |                              ⬥                               |
-|  𝘅   | [`X86`](groups.md#extra_platforms.group_data.X86)                             | x86 family             | [`is_x86()`](detection.md#extra_platforms.is_x86)                             |                              ⬥                               |
+<!-- architecture-bitness-sankey-start -->
 
-```{hint}
-Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
+---
+sankey-beta
 
-Other groups are provided for convenience, but overlap with each other or with canonical groups.
+ALL_ARCHITECTURES,ARCH_32_BIT,13
+ALL_ARCHITECTURES,ARCH_64_BIT,11
+ARCH_32_BIT,ARM,1
+ARCH_32_BIT,ARMV6L,1
+ARCH_32_BIT,ARMV7L,1
+ARCH_32_BIT,ARMV8L,1
+ARCH_32_BIT,I386,1
+ARCH_32_BIT,I586,1
+ARCH_32_BIT,I686,1
+ARCH_32_BIT,MIPS,1
+ARCH_32_BIT,MIPSEL,1
+ARCH_32_BIT,PPC,1
+ARCH_32_BIT,RISCV32,1
+ARCH_32_BIT,SPARC,1
+ARCH_32_BIT,WASM32,1
+ARCH_64_BIT,AARCH64,1
+ARCH_64_BIT,LOONGARCH64,1
+ARCH_64_BIT,MIPS64,1
+ARCH_64_BIT,MIPS64EL,1
+ARCH_64_BIT,PPC64,1
+ARCH_64_BIT,PPC64LE,1
+ARCH_64_BIT,RISCV64,1
+ARCH_64_BIT,S390X,1
+ARCH_64_BIT,SPARC64,1
+ARCH_64_BIT,WASM64,1
+ARCH_64_BIT,X86_64,1
 ```
 
-<!-- architecture-groups-table-end -->
+<!-- architecture-bitness-sankey-end -->
+
+And the same bitness groups visualized as a mindmap:
+
+<!-- architecture-bitness-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((🏛️ ALL_ARCHITECTURES))
+        )⁶⁴ ARCH_64_BIT(
+            (📱 AARCH64)
+            (🐉 LOONGARCH64)
+            (🔲 MIPS64)
+            (🔲 MIPS64EL)
+            (⚡ PPC64)
+            (⚡ PPC64LE)
+            (Ⅴ RISCV64)
+            (🏢 S390X)
+            (☀️ SPARC64)
+            (🌐 WASM64)
+            (🖥️ X86_64)
+        )³² ARCH_32_BIT(
+            (📱 ARM)
+            (📱 ARMV6L)
+            (📱 ARMV7L)
+            (📱 ARMV8L)
+            (𝗶 I386)
+            (𝗶 I586)
+            (𝗶 I686)
+            (🔲 MIPS)
+            (🔲 MIPSEL)
+            (⚡ PPC)
+            (Ⅴ RISCV32)
+            (☀️ SPARC)
+            (🌐 WASM32)
+```
+
+<!-- architecture-bitness-mindmap-end -->
+
 
 ## `extra_platforms.architecture_data` API
 

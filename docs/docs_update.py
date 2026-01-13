@@ -49,6 +49,8 @@ from extra_platforms import (
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
     ALL_TRAITS,
+    ARCH_32_BIT,
+    ARCH_64_BIT,
     NON_OVERLAPPING_GROUPS,
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
@@ -571,6 +573,11 @@ def update_docs() -> None:
             ),
         ),
         (
+            "architecture-bitness-sankey-start",
+            "architecture-bitness-sankey-end",
+            generate_sankey([ARCH_32_BIT, ARCH_64_BIT, ALL_ARCHITECTURES]),
+        ),
+        (
             "platform-multi-level-sankey-start",
             "platform-multi-level-sankey-end",
             generate_sankey(
@@ -590,6 +597,11 @@ def update_docs() -> None:
                 list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
                 + [ALL_ARCHITECTURES]
             ),
+        ),
+        (
+            "architecture-bitness-mindmap-start",
+            "architecture-bitness-mindmap-end",
+            generate_traits_mindmap([ARCH_32_BIT, ARCH_64_BIT, ALL_ARCHITECTURES]),
         ),
         (
             "platform-mindmap-start",
