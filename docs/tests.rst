@@ -17,6 +17,14 @@ tests.test\_architecture\_data module
    :show-inheritance:
    :undoc-members:
 
+tests.test\_ci\_data module
+---------------------------
+
+.. automodule:: tests.test_ci_data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 tests.test\_detection module
 ----------------------------
 
