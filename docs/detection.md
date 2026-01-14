@@ -127,90 +127,344 @@
 
 ```{eval-rst}
 .. autofunction:: extra_platforms.is_aarch64
+
+   **Associated trait**: `AARCH64 <architectures.html#extra_platforms.AARCH64>`_
+
 .. autofunction:: extra_platforms.is_aix
+
+   **Associated trait**: `AIX <platforms.html#extra_platforms.AIX>`_
+
 .. autofunction:: extra_platforms.is_altlinux
+
+   **Associated trait**: `ALTLINUX <platforms.html#extra_platforms.ALTLINUX>`_
+
 .. autofunction:: extra_platforms.is_amzn
+
+   **Associated trait**: `AMZN <platforms.html#extra_platforms.AMZN>`_
+
 .. autofunction:: extra_platforms.is_android
+
+   **Associated trait**: `ANDROID <platforms.html#extra_platforms.ANDROID>`_
+
 .. autofunction:: extra_platforms.is_arch
+
+   **Associated trait**: `ARCH <platforms.html#extra_platforms.ARCH>`_
+
 .. autofunction:: extra_platforms.is_arm
+
+   **Associated trait**: `ARM <architectures.html#extra_platforms.ARM>`_
+
 .. autofunction:: extra_platforms.is_armv6l
+
+   **Associated trait**: `ARMV6L <architectures.html#extra_platforms.ARMV6L>`_
+
 .. autofunction:: extra_platforms.is_armv7l
+
+   **Associated trait**: `ARMV7L <architectures.html#extra_platforms.ARMV7L>`_
+
 .. autofunction:: extra_platforms.is_armv8l
+
+   **Associated trait**: `ARMV8L <architectures.html#extra_platforms.ARMV8L>`_
+
 .. autofunction:: extra_platforms.is_azure_pipelines
+
+   **Associated trait**: `AZURE_PIPELINES <ci.html#extra_platforms.AZURE_PIPELINES>`_
+
 .. autofunction:: extra_platforms.is_bamboo
+
+   **Associated trait**: `BAMBOO <ci.html#extra_platforms.BAMBOO>`_
+
 .. autofunction:: extra_platforms.is_buildkite
+
+   **Associated trait**: `BUILDKITE <ci.html#extra_platforms.BUILDKITE>`_
+
 .. autofunction:: extra_platforms.is_buildroot
+
+   **Associated trait**: `BUILDROOT <platforms.html#extra_platforms.BUILDROOT>`_
+
 .. autofunction:: extra_platforms.is_cachyos
+
+   **Associated trait**: `CACHYOS <platforms.html#extra_platforms.CACHYOS>`_
+
 .. autofunction:: extra_platforms.is_centos
+
+   **Associated trait**: `CENTOS <platforms.html#extra_platforms.CENTOS>`_
+
 .. autofunction:: extra_platforms.is_circle_ci
+
+   **Associated trait**: `CIRCLE_CI <ci.html#extra_platforms.CIRCLE_CI>`_
+
 .. autofunction:: extra_platforms.is_cirrus_ci
+
+   **Associated trait**: `CIRRUS_CI <ci.html#extra_platforms.CIRRUS_CI>`_
+
 .. autofunction:: extra_platforms.is_cloudlinux
+
+   **Associated trait**: `CLOUDLINUX <platforms.html#extra_platforms.CLOUDLINUX>`_
+
 .. autofunction:: extra_platforms.is_codebuild
+
+   **Associated trait**: `CODEBUILD <ci.html#extra_platforms.CODEBUILD>`_
+
 .. autofunction:: extra_platforms.is_cygwin
+
+   **Associated trait**: `CYGWIN <platforms.html#extra_platforms.CYGWIN>`_
+
 .. autofunction:: extra_platforms.is_debian
+
+   **Associated trait**: `DEBIAN <platforms.html#extra_platforms.DEBIAN>`_
+
 .. autofunction:: extra_platforms.is_exherbo
+
+   **Associated trait**: `EXHERBO <platforms.html#extra_platforms.EXHERBO>`_
+
 .. autofunction:: extra_platforms.is_fedora
+
+   **Associated trait**: `FEDORA <platforms.html#extra_platforms.FEDORA>`_
+
 .. autofunction:: extra_platforms.is_freebsd
+
+   **Associated trait**: `FREEBSD <platforms.html#extra_platforms.FREEBSD>`_
+
 .. autofunction:: extra_platforms.is_gentoo
+
+   **Associated trait**: `GENTOO <platforms.html#extra_platforms.GENTOO>`_
+
 .. autofunction:: extra_platforms.is_github_ci
+
+   **Associated trait**: `GITHUB_CI <ci.html#extra_platforms.GITHUB_CI>`_
+
 .. autofunction:: extra_platforms.is_gitlab_ci
+
+   **Associated trait**: `GITLAB_CI <ci.html#extra_platforms.GITLAB_CI>`_
+
 .. autofunction:: extra_platforms.is_guix
+
+   **Associated trait**: `GUIX <platforms.html#extra_platforms.GUIX>`_
+
 .. autofunction:: extra_platforms.is_heroku_ci
+
+   **Associated trait**: `HEROKU_CI <ci.html#extra_platforms.HEROKU_CI>`_
+
 .. autofunction:: extra_platforms.is_hurd
+
+   **Associated trait**: `HURD <platforms.html#extra_platforms.HURD>`_
+
 .. autofunction:: extra_platforms.is_i386
+
+   **Associated trait**: `I386 <architectures.html#extra_platforms.I386>`_
+
 .. autofunction:: extra_platforms.is_i586
+
+   **Associated trait**: `I586 <architectures.html#extra_platforms.I586>`_
+
 .. autofunction:: extra_platforms.is_i686
+
+   **Associated trait**: `I686 <architectures.html#extra_platforms.I686>`_
+
 .. autofunction:: extra_platforms.is_ibm_powerkvm
+
+   **Associated trait**: `IBM_POWERKVM <platforms.html#extra_platforms.IBM_POWERKVM>`_
+
 .. autofunction:: extra_platforms.is_kvmibm
+
+   **Associated trait**: `KVMIBM <platforms.html#extra_platforms.KVMIBM>`_
+
 .. autofunction:: extra_platforms.is_linuxmint
+
+   **Associated trait**: `LINUXMINT <platforms.html#extra_platforms.LINUXMINT>`_
+
 .. autofunction:: extra_platforms.is_loongarch64
+
+   **Associated trait**: `LOONGARCH64 <architectures.html#extra_platforms.LOONGARCH64>`_
+
 .. autofunction:: extra_platforms.is_macos
+
+   **Associated trait**: `MACOS <platforms.html#extra_platforms.MACOS>`_
+
 .. autofunction:: extra_platforms.is_mageia
+
+   **Associated trait**: `MAGEIA <platforms.html#extra_platforms.MAGEIA>`_
+
 .. autofunction:: extra_platforms.is_mandriva
+
+   **Associated trait**: `MANDRIVA <platforms.html#extra_platforms.MANDRIVA>`_
+
 .. autofunction:: extra_platforms.is_midnightbsd
+
+   **Associated trait**: `MIDNIGHTBSD <platforms.html#extra_platforms.MIDNIGHTBSD>`_
+
 .. autofunction:: extra_platforms.is_mips
+
+   **Associated trait**: `MIPS <architectures.html#extra_platforms.MIPS>`_
+
 .. autofunction:: extra_platforms.is_mips64
+
+   **Associated trait**: `MIPS64 <architectures.html#extra_platforms.MIPS64>`_
+
 .. autofunction:: extra_platforms.is_mips64el
+
+   **Associated trait**: `MIPS64EL <architectures.html#extra_platforms.MIPS64EL>`_
+
 .. autofunction:: extra_platforms.is_mipsel
+
+   **Associated trait**: `MIPSEL <architectures.html#extra_platforms.MIPSEL>`_
+
 .. autofunction:: extra_platforms.is_netbsd
+
+   **Associated trait**: `NETBSD <platforms.html#extra_platforms.NETBSD>`_
+
 .. autofunction:: extra_platforms.is_nobara
+
+   **Associated trait**: `NOBARA <platforms.html#extra_platforms.NOBARA>`_
+
 .. autofunction:: extra_platforms.is_openbsd
+
+   **Associated trait**: `OPENBSD <platforms.html#extra_platforms.OPENBSD>`_
+
 .. autofunction:: extra_platforms.is_opensuse
+
+   **Associated trait**: `OPENSUSE <platforms.html#extra_platforms.OPENSUSE>`_
+
 .. autofunction:: extra_platforms.is_oracle
+
+   **Associated trait**: `ORACLE <platforms.html#extra_platforms.ORACLE>`_
+
 .. autofunction:: extra_platforms.is_parallels
+
+   **Associated trait**: `PARALLELS <platforms.html#extra_platforms.PARALLELS>`_
+
 .. autofunction:: extra_platforms.is_pidora
+
+   **Associated trait**: `PIDORA <platforms.html#extra_platforms.PIDORA>`_
+
 .. autofunction:: extra_platforms.is_ppc
+
+   **Associated trait**: `PPC <architectures.html#extra_platforms.PPC>`_
+
 .. autofunction:: extra_platforms.is_ppc64
+
+   **Associated trait**: `PPC64 <architectures.html#extra_platforms.PPC64>`_
+
 .. autofunction:: extra_platforms.is_ppc64le
+
+   **Associated trait**: `PPC64LE <architectures.html#extra_platforms.PPC64LE>`_
+
 .. autofunction:: extra_platforms.is_raspbian
+
+   **Associated trait**: `RASPBIAN <platforms.html#extra_platforms.RASPBIAN>`_
+
 .. autofunction:: extra_platforms.is_rhel
+
+   **Associated trait**: `RHEL <platforms.html#extra_platforms.RHEL>`_
+
 .. autofunction:: extra_platforms.is_riscv32
+
+   **Associated trait**: `RISCV32 <architectures.html#extra_platforms.RISCV32>`_
+
 .. autofunction:: extra_platforms.is_riscv64
+
+   **Associated trait**: `RISCV64 <architectures.html#extra_platforms.RISCV64>`_
+
 .. autofunction:: extra_platforms.is_rocky
+
+   **Associated trait**: `ROCKY <platforms.html#extra_platforms.ROCKY>`_
+
 .. autofunction:: extra_platforms.is_s390x
+
+   **Associated trait**: `S390X <architectures.html#extra_platforms.S390X>`_
+
 .. autofunction:: extra_platforms.is_scientific
+
+   **Associated trait**: `SCIENTIFIC <platforms.html#extra_platforms.SCIENTIFIC>`_
+
 .. autofunction:: extra_platforms.is_slackware
+
+   **Associated trait**: `SLACKWARE <platforms.html#extra_platforms.SLACKWARE>`_
+
 .. autofunction:: extra_platforms.is_sles
+
+   **Associated trait**: `SLES <platforms.html#extra_platforms.SLES>`_
+
 .. autofunction:: extra_platforms.is_solaris
+
+   **Associated trait**: `SOLARIS <platforms.html#extra_platforms.SOLARIS>`_
+
 .. autofunction:: extra_platforms.is_sparc
+
+   **Associated trait**: `SPARC <architectures.html#extra_platforms.SPARC>`_
+
 .. autofunction:: extra_platforms.is_sparc64
+
+   **Associated trait**: `SPARC64 <architectures.html#extra_platforms.SPARC64>`_
+
 .. autofunction:: extra_platforms.is_sunos
+
+   **Associated trait**: `SUNOS <platforms.html#extra_platforms.SUNOS>`_
+
 .. autofunction:: extra_platforms.is_teamcity
+
+   **Associated trait**: `TEAMCITY <ci.html#extra_platforms.TEAMCITY>`_
+
 .. autofunction:: extra_platforms.is_travis_ci
+
+   **Associated trait**: `TRAVIS_CI <ci.html#extra_platforms.TRAVIS_CI>`_
+
 .. autofunction:: extra_platforms.is_tumbleweed
+
+   **Associated trait**: `TUMBLEWEED <platforms.html#extra_platforms.TUMBLEWEED>`_
+
 .. autofunction:: extra_platforms.is_tuxedo
+
+   **Associated trait**: `TUXEDO <platforms.html#extra_platforms.TUXEDO>`_
+
 .. autofunction:: extra_platforms.is_ubuntu
+
+   **Associated trait**: `UBUNTU <platforms.html#extra_platforms.UBUNTU>`_
+
 .. autofunction:: extra_platforms.is_ultramarine
+
+   **Associated trait**: `ULTRAMARINE <platforms.html#extra_platforms.ULTRAMARINE>`_
+
 .. autofunction:: extra_platforms.is_unknown_architecture
+
+   **Associated trait**: `UNKNOWN_ARCHITECTURE <architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE>`_
+
 .. autofunction:: extra_platforms.is_unknown_ci
+
+   **Associated trait**: `UNKNOWN_CI <ci.html#extra_platforms.UNKNOWN_CI>`_
+
 .. autofunction:: extra_platforms.is_unknown_platform
+
+   **Associated trait**: `UNKNOWN_PLATFORM <platforms.html#extra_platforms.UNKNOWN_PLATFORM>`_
+
 .. autofunction:: extra_platforms.is_wasm32
+
+   **Associated trait**: `WASM32 <architectures.html#extra_platforms.WASM32>`_
+
 .. autofunction:: extra_platforms.is_wasm64
+
+   **Associated trait**: `WASM64 <architectures.html#extra_platforms.WASM64>`_
+
 .. autofunction:: extra_platforms.is_windows
+
+   **Associated trait**: `WINDOWS <platforms.html#extra_platforms.WINDOWS>`_
+
 .. autofunction:: extra_platforms.is_wsl1
+
+   **Associated trait**: `WSL1 <platforms.html#extra_platforms.WSL1>`_
+
 .. autofunction:: extra_platforms.is_wsl2
+
+   **Associated trait**: `WSL2 <platforms.html#extra_platforms.WSL2>`_
+
 .. autofunction:: extra_platforms.is_x86_64
+
+   **Associated trait**: `X86_64 <architectures.html#extra_platforms.X86_64>`_
+
 .. autofunction:: extra_platforms.is_xenserver
+
+   **Associated trait**: `XENSERVER <platforms.html#extra_platforms.XENSERVER>`_
 ```
 
 <!-- trait-detection-autofunction-end -->
@@ -225,32 +479,112 @@ These functions are dynamically generated for each [group](groups.md) and test w
 
 ```{eval-rst}
 .. autofunction:: extra_platforms.is_all_architectures
+
+   **Associated group**: `ALL_ARCHITECTURES <groups.html#extra_platforms.ALL_ARCHITECTURES>`_
+
 .. autofunction:: extra_platforms.is_all_ci
+
+   **Associated group**: `ALL_CI <groups.html#extra_platforms.ALL_CI>`_
+
 .. autofunction:: extra_platforms.is_all_platforms
+
+   **Associated group**: `ALL_PLATFORMS <groups.html#extra_platforms.ALL_PLATFORMS>`_
+
 .. autofunction:: extra_platforms.is_all_traits
+
+   **Associated group**: `ALL_TRAITS <groups.html#extra_platforms.ALL_TRAITS>`_
+
 .. autofunction:: extra_platforms.is_any_arm
+
+   **Associated group**: `ANY_ARM <groups.html#extra_platforms.ANY_ARM>`_
+
 .. autofunction:: extra_platforms.is_any_mips
+
+   **Associated group**: `ANY_MIPS <groups.html#extra_platforms.ANY_MIPS>`_
+
 .. autofunction:: extra_platforms.is_any_sparc
+
+   **Associated group**: `ANY_SPARC <groups.html#extra_platforms.ANY_SPARC>`_
+
 .. autofunction:: extra_platforms.is_any_windows
+
+   **Associated group**: `ANY_WINDOWS <groups.html#extra_platforms.ANY_WINDOWS>`_
+
 .. autofunction:: extra_platforms.is_arch_32_bit
+
+   **Associated group**: `ARCH_32_BIT <groups.html#extra_platforms.ARCH_32_BIT>`_
+
 .. autofunction:: extra_platforms.is_arch_64_bit
+
+   **Associated group**: `ARCH_64_BIT <groups.html#extra_platforms.ARCH_64_BIT>`_
+
 .. autofunction:: extra_platforms.is_bsd
+
+   **Associated group**: `BSD <groups.html#extra_platforms.BSD>`_
+
 .. autofunction:: extra_platforms.is_bsd_without_macos
+
+   **Associated group**: `BSD_WITHOUT_MACOS <groups.html#extra_platforms.BSD_WITHOUT_MACOS>`_
+
 .. autofunction:: extra_platforms.is_ibm_mainframe
+
+   **Associated group**: `IBM_MAINFRAME <groups.html#extra_platforms.IBM_MAINFRAME>`_
+
 .. autofunction:: extra_platforms.is_linux
+
+   **Associated group**: `LINUX <groups.html#extra_platforms.LINUX>`_
+
 .. autofunction:: extra_platforms.is_linux_layers
+
+   **Associated group**: `LINUX_LAYERS <groups.html#extra_platforms.LINUX_LAYERS>`_
+
 .. autofunction:: extra_platforms.is_linux_like
+
+   **Associated group**: `LINUX_LIKE <groups.html#extra_platforms.LINUX_LIKE>`_
+
 .. autofunction:: extra_platforms.is_loongarch
+
+   **Associated group**: `LOONGARCH <groups.html#extra_platforms.LOONGARCH>`_
+
 .. autofunction:: extra_platforms.is_other_unix
+
+   **Associated group**: `OTHER_UNIX <groups.html#extra_platforms.OTHER_UNIX>`_
+
 .. autofunction:: extra_platforms.is_powerpc
+
+   **Associated group**: `POWERPC <groups.html#extra_platforms.POWERPC>`_
+
 .. autofunction:: extra_platforms.is_riscv
+
+   **Associated group**: `RISCV <groups.html#extra_platforms.RISCV>`_
+
 .. autofunction:: extra_platforms.is_system_v
+
+   **Associated group**: `SYSTEM_V <groups.html#extra_platforms.SYSTEM_V>`_
+
 .. autofunction:: extra_platforms.is_unix
+
+   **Associated group**: `UNIX <groups.html#extra_platforms.UNIX>`_
+
 .. autofunction:: extra_platforms.is_unix_layers
+
+   **Associated group**: `UNIX_LAYERS <groups.html#extra_platforms.UNIX_LAYERS>`_
+
 .. autofunction:: extra_platforms.is_unix_without_macos
+
+   **Associated group**: `UNIX_WITHOUT_MACOS <groups.html#extra_platforms.UNIX_WITHOUT_MACOS>`_
+
 .. autofunction:: extra_platforms.is_unknown
+
+   **Associated group**: `UNKNOWN <groups.html#extra_platforms.UNKNOWN>`_
+
 .. autofunction:: extra_platforms.is_webassembly
+
+   **Associated group**: `WEBASSEMBLY <groups.html#extra_platforms.WEBASSEMBLY>`_
+
 .. autofunction:: extra_platforms.is_x86
+
+   **Associated group**: `X86 <groups.html#extra_platforms.X86>`_
 ```
 
 <!-- group-detection-autofunction-end -->

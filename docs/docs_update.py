@@ -524,7 +524,9 @@ def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
     return output
 
 
-def generate_all_detection_function_table(traits: Iterable[Trait], groups: Iterable[Group]) -> str:
+def generate_all_detection_function_table(
+    traits: Iterable[Trait], groups: Iterable[Group]
+) -> str:
     """Generate a combined Markdown table for all detection functions.
 
     This produces a single table listing all detection functions for both
@@ -589,20 +591,27 @@ def generate_trait_detection_autofunction(traits: Iterable[Trait]) -> str:
         traits: The traits whose detection functions should be documented.
 
     Returns:
-        A MyST-compatible code block containing the autofunction directives.
+        A MyST-compatible code block containing the autofunction directives with
+        links to their associated symbols.
     """
     traits_list = list(traits)
     if not traits_list:
         return "```{eval-rst}\n```"
 
-    # Generate autofunction directives
+    # Generate autofunction directives with associated symbol links
     directives = []
     for trait in sorted(traits_list, key=attrgetter("id")):
+        doc_page_html = trait.doc_page.replace(".md", ".html")
         directives.append(f".. autofunction:: extra_platforms.is_{trait.id}")
+        directives.append("")
+        directives.append(
+            f"   **Associated trait**: `{trait.symbol_id} <{doc_page_html}#extra_platforms.{trait.symbol_id}>`_"
+        )
+        directives.append("")
 
     output = "```{eval-rst}\n"
     output += "\n".join(directives)
-    output += "\n```"
+    output += "```"
     return output
 
 
@@ -616,22 +625,28 @@ def generate_group_detection_autofunction(groups: Iterable[Group]) -> str:
         groups: The groups whose detection functions should be documented.
 
     Returns:
-        A MyST-compatible code block containing the autofunction directives.
+        A MyST-compatible code block containing the autofunction directives with
+        links to their associated symbols.
     """
     groups_list = list(groups)
     if not groups_list:
         return "```{eval-rst}\n```"
 
-    # Generate autofunction directives
+    # Generate autofunction directives with associated symbol links
     directives = []
     for group in sorted(groups_list, key=attrgetter("id")):
         directives.append(
             f".. autofunction:: extra_platforms.{group.detection_func_id}"
         )
+        directives.append("")
+        directives.append(
+            f"   **Associated group**: `{group.symbol_id} <groups.html#extra_platforms.{group.symbol_id}>`_"
+        )
+        directives.append("")
 
     output = "```{eval-rst}\n"
     output += "\n".join(directives)
-    output += "\n```"
+    output += "```"
     return output
 
 
