@@ -413,13 +413,13 @@ class CI(Trait):
     """A CI/CD environment identifies a continuous integration platform."""
 
     type_name = "CI system"
-    """Human-readable type name for documentation."""
+    """Override the default ``ci`` type name."""
 
     all_group = "ALL_CI"
-    """The top CI group should not be automaticcaly named ``ALL_CIS``."""
+    """Override the default ``ALL_CIS`` name with a more natural ``ALL_CI``."""
 
     doc_page = "ci.md"
-    """The documentation page filename."""
+    """Override the default ``cis.md`` filename."""
 
     def __post_init__(self) -> None:
         """Tweak CI docstring."""

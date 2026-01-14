@@ -26,6 +26,7 @@ caption: Development
 maxdepth: 2
 hidden:
 ---
+contributing
 API <extra_platforms>
 tests
 genindex

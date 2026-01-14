@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import ast
+import importlib
+import inspect
 import sys
 from pathlib import Path
 
@@ -10,6 +13,46 @@ else:
 
 from extra_platforms import Group
 from extra_platforms.trait import Trait
+
+
+def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
+    """Extract attribute docstring from a module's source file.
+
+    Attribute docstrings are string literals that immediately follow an assignment.
+    This function parses the source file using AST to find such docstrings.
+
+    Args:
+        module_name: The full module name (e.g., 'extra_platforms.platform_data').
+        attr_name: The attribute name to look for (e.g., 'NOBARA').
+
+    Returns:
+        The attribute docstring if found, or None.
+    """
+    try:
+        module = importlib.import_module(module_name)
+        source_file = inspect.getsourcefile(module)
+        if not source_file:
+            return None
+
+        source = Path(source_file).read_text(encoding="utf-8")
+        tree = ast.parse(source)
+
+        # Look for assignment followed by a string literal (attribute docstring).
+        for i, node in enumerate(tree.body):
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id == attr_name:
+                        # Check if the next statement is a string expression.
+                        if i + 1 < len(tree.body):
+                            next_node = tree.body[i + 1]
+                            if isinstance(next_node, ast.Expr) and isinstance(
+                                next_node.value, ast.Constant
+                            ):
+                                if isinstance(next_node.value.value, str):
+                                    return next_node.value.value
+        return None
+    except Exception:
+        return None
 
 project_path = Path(__file__).parent.parent.resolve()
 
@@ -131,17 +174,23 @@ def make_pytest_decorator_line(obj_id):
 def autodoc_process_docstring(app, what, name, obj, options, lines):
     """Generate docstrings for Trait instances and Groups.
 
-    These dataclass instances have a dynamic ``__doc__`` attribute set in their
-    ``__post_init__`` method, but Sphinx autodoc doesn't pick it up by default
-    for module-level constants. This hook reads the instance's ``__doc__`` and
-    injects it into the documentation.
-
-    For Group instances, we preserve the original attribute docstring from the
-    source file and only append the metadata.
+    Since autodata directives use ``extra_platforms.X`` paths but the attribute
+    docstrings (string literals following assignments) are defined in submodules
+    like ``platform_data.py``, this hook fetches those docstrings from the source
+    files using AST parsing and injects them into the documentation along with
+    additional metadata.
     """
     if isinstance(obj, Group):
-        # For groups, preserve original docstring and append metadata.
-        # The original docstring is already in `lines` from the source file.
+        # Fetch attribute docstring from source module since autodata uses
+        # extra_platforms.X but docstrings are in the submodules.
+        source_docstring = get_attribute_docstring(
+            f"extra_platforms.{obj.data_module_id}", obj.symbol_id
+        )
+        if source_docstring:
+            # Clear any existing content and add the source docstring.
+            lines.clear()
+            lines.extend(source_docstring.strip().split("\n"))
+
         lines.append("")
 
         lines.append(f"- **ID**: ``{obj.id}``")
@@ -150,6 +199,12 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines.append(
             f"- **Canonical**: ``{obj.canonical}`` {'⬥' if obj.canonical else ''}"
         )
+
+        detection_url = make_rst_link(
+            f"{obj.detection_func_id}()",
+            f"detection.html#extra_platforms.{obj.detection_func_id}",
+        )
+        lines.append(f"- **Detection function**: {detection_url}")
 
         lines.append(make_pytest_decorator_line(obj.id))
 
@@ -170,7 +225,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
             type_counts[class_name]["count"] += 1
 
             # Create member link.
-            member_url = f"{doc_page_html}#extra_platforms.{member.data_module_id}.{member.symbol_id}"
+            member_url = f"{doc_page_html}#extra_platforms.{member.symbol_id}"
             member_links.append(make_rst_link(member.symbol_id, member_url))
 
         if member_links:
@@ -183,10 +238,16 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
             lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
 
     elif isinstance(obj, Trait):
-        # For traits, replace with their dynamic docstring + metadata.
-        lines.clear()
-        if obj.__doc__:
-            lines.append(obj.__doc__)
+        # Fetch attribute docstring from source module since autodata uses
+        # extra_platforms.X but docstrings are in the submodules.
+        source_docstring = get_attribute_docstring(
+            f"extra_platforms.{obj.data_module_id}", obj.symbol_id
+        )
+        if source_docstring:
+            # Clear any existing content and add the source docstring.
+            lines.clear()
+            lines.extend(source_docstring.strip().split("\n"))
+
         lines.append("")
 
         lines.append(f"- **ID**: ``{obj.id}``")
@@ -196,7 +257,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
 
         detection_url = make_rst_link(
             f"{obj.detection_func_id}()",
-            f"detection.html#extra_platforms.detection.{obj.detection_func_id}",
+            f"detection.html#extra_platforms.{obj.detection_func_id}",
         )
         lines.append(f"- **Detection function**: {detection_url}")
 
@@ -206,7 +267,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         group_links = [
             make_rst_link(
                 f"{group.symbol_id}{' ⬥' if group.canonical else ''}",
-                f"groups.html#extra_platforms.{group.data_module_id}.{group.symbol_id}",
+                f"groups.html#extra_platforms.{group.symbol_id}",
             )
             for group in sorted(obj.groups, key=lambda g: g.id)
         ]

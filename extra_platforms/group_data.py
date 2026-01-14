@@ -148,7 +148,7 @@ ALL_ARCHITECTURES: Group = Group(
 """All recognized architectures.
 
 .. caution::
-    This group does not contain the ``UNKNOWN_ARCHITECTURE`` trait.
+    This group does not contain the :data:`UNKNOWN_ARCHITECTURE` trait.
 """
 
 
@@ -338,7 +338,7 @@ ALL_PLATFORMS: Group = Group(
 """All recognized platforms.
 
 .. caution::
-    This group does not contain the ``UNKNOWN_PLATFORM`` traits.
+    This group does not contain the :data:`UNKNOWN_PLATFORM` trait.
 """
 
 
@@ -589,7 +589,7 @@ ALL_CI = Group(
 """All recognized Continuous Integration systems.
 
 .. caution::
-    This group does not contain the ``UNKNOWN_CI`` trait.
+    This group does not contain the :data:`UNKNOWN_CI` trait.
 
 .. seealso::
     `List of known CI systems
@@ -704,7 +704,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 
 .. hint::
     These groups together cover all predefined architectures, platforms, and CI systems,
-    including the ``UNKNOWN_*`` traits.
+    including traits from the :data:`UNKNOWN` group.
 
     All groups in this collection are marked as canonical.
 """
@@ -737,5 +737,5 @@ ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
 
 .. hint::
     This collection contains both canonical and non-canonical groups, including the
-    ``UNKNOWN`` group.
+    :data:`UNKNOWN` group.
 """

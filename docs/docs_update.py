@@ -224,6 +224,28 @@ def _generate_markdown_table(
     return "\n".join(lines)
 
 
+def generate_all_traits_table(traits: Iterable[Trait]) -> str:
+    """Produce a simple Markdown table for a collection of traits (for trait.md's "All traits" section).
+
+    Similar to group tables, contains icon, symbol, type, name, and detection function.
+    """
+    table_data = []
+    headers = ["Icon", "Symbol", "Name", "Detection function", "Type"]
+    alignments = ["center", "left", "left", "left", "left"]
+
+    traits_list = list(traits)
+    for trait in sorted(traits_list, key=attrgetter("id")):
+        table_data.append([
+            trait.icon,
+            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.symbol_id})",
+            trait.name,
+            f"[`is_{trait.id}()`](detection.md#extra_platforms.is_{trait.id})",
+            type(trait).__name__,
+        ])
+
+    return _generate_markdown_table(table_data, headers, alignments)
+
+
 def generate_trait_table(traits: Iterable[Trait]) -> str:
     """Produce a Markdown table for a collection of traits.
 
@@ -246,9 +268,9 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             trait.icon,
-            f"[`{trait.symbol_id}`](#extra_platforms.{trait_class.data_module_id}.{trait.symbol_id})",
+            f"[`{trait.symbol_id}`](#extra_platforms.{trait.symbol_id})",
             trait.name,
-            f"[`is_{trait.id}()`](detection.md#extra_platforms.detection.is_{trait.id})",
+            f"[`is_{trait.id}()`](detection.md#extra_platforms.is_{trait.id})",
         ])
 
     table = _generate_markdown_table(table_data, headers, alignments)
@@ -256,7 +278,7 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     # Append hint block explaining unknown trait if trait type was detected.
     hint = f"""
 ```{{hint}}
-The [`{trait_class.unknown_symbol}`](#extra_platforms.{trait_class.data_module_id}.{trait_class.unknown_symbol}) trait represents an unrecognized {trait_class.type_name}. It is not included in the [`{trait_class.all_group}`](groups.md#extra_platforms.group_data.{trait_class.all_group}) group, and will be returned by `current_{trait_class.type_id}()` if the current {trait_class.type_name} is not recognized.
+The [`{trait_class.unknown_symbol}`](#extra_platforms.{trait_class.unknown_symbol}) trait represents an unrecognized {trait_class.type_name}. It is not included in the [`{trait_class.all_group}`](groups.md#extra_platforms.{trait_class.all_group}) group, and will be returned by `current_{trait_class.type_id}()` if the current {trait_class.type_name} is not recognized.
 ```"""
     return f"{table}\n{hint}"
 
@@ -284,7 +306,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     for group in sorted(groups, key=attrgetter("id")):
         table_data.append([
             group.icon,
-            f"[`{group.symbol_id}`](groups.md#extra_platforms.group_data.{group.symbol_id})",
+            f"[`{group.symbol_id}`](groups.md#extra_platforms.{group.symbol_id})",
             group.name,
             f"[`{group.detection_func_id}()`](detection.md#extra_platforms.{group.detection_func_id})",
             "⬥" if group.canonical else "",
@@ -293,14 +315,16 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     table = _generate_markdown_table(table_data, headers, alignments)
 
     # Append hint block explaining canonical groups
-    hint = """
+    if len(groups) > 1:
+        hint = """
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
 
 Other groups are provided for convenience, but overlap with each other or with canonical groups.
 ```"""
+        table = f"{table}\n{hint}"
 
-    return f"{table}\n{hint}"
+    return table
 
 
 def _analyze_group_hierarchy(
@@ -465,7 +489,7 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
         table_data.append([
             f"`@skip_{trait.id}`",
             f"`@unless_{trait.id}`",
-            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.data_module_id}.{trait.symbol_id})",
+            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.symbol_id})",
             trait.name,
         ])
 
@@ -492,9 +516,89 @@ def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
 
     directives = []
     for trait in sorted(traits_list, key=attrgetter("id")):
-        directives.append(
-            f".. autodata:: extra_platforms.{trait.data_module_id}.{trait.symbol_id}"
-        )
+        directives.append(f".. autodata:: extra_platforms.{trait.symbol_id}")
+
+    output = "```{eval-rst}\n"
+    output += "\n".join(directives)
+    output += "\n```"
+    return output
+
+
+def generate_all_detection_function_table(traits: Iterable[Trait], groups: Iterable[Group]) -> str:
+    """Generate a combined Markdown table for all detection functions.
+
+    This produces a single table listing all detection functions for both
+    individual traits (is_macos, is_ubuntu, etc.) and groups (is_linux, is_unix, etc.),
+    sorted by function name.
+
+    Args:
+        traits: The traits whose detection functions should be included.
+        groups: The groups whose detection functions should be included.
+
+    Returns:
+        A Markdown table with all detection functions.
+    """
+    # Collect all entries as tuples: (func_name, icon, symbol_link, type_name)
+    entries: list[tuple[str, str, str, str]] = []
+
+    # Add trait detection functions
+    for trait in traits:
+        func_name = f"is_{trait.id}"
+        entries.append((
+            func_name,
+            trait.icon,
+            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.symbol_id})",
+            type(trait).__name__,
+        ))
+
+    # Add group detection functions
+    for group in groups:
+        entries.append((
+            group.detection_func_id,
+            group.icon,
+            f"[`{group.symbol_id}`](groups.md#extra_platforms.{group.symbol_id})",
+            "Group",
+        ))
+
+    # Sort all entries by function name
+    entries.sort(key=lambda e: e[0])
+
+    # Build table data
+    table_data = []
+    headers = ["Detection function", "Icon", "Associated symbol", "Type"]
+    alignments = ["left", "center", "left", "left"]
+
+    for func_name, icon, symbol_link, type_name in entries:
+        table_data.append([
+            f"[`{func_name}()`](#extra_platforms.{func_name})",
+            icon,
+            symbol_link,
+            type_name,
+        ])
+
+    return _generate_markdown_table(table_data, headers, alignments)
+
+
+def generate_trait_detection_autofunction(traits: Iterable[Trait]) -> str:
+    """Generate Sphinx autofunction directives for trait detection functions.
+
+    These are the ``is_<trait_id>()`` functions defined in the ``detection`` module
+    and re-exported at the ``extra_platforms`` package level.
+
+    Args:
+        traits: The traits whose detection functions should be documented.
+
+    Returns:
+        A MyST-compatible code block containing the autofunction directives.
+    """
+    traits_list = list(traits)
+    if not traits_list:
+        return "```{eval-rst}\n```"
+
+    # Generate autofunction directives
+    directives = []
+    for trait in sorted(traits_list, key=attrgetter("id")):
+        directives.append(f".. autofunction:: extra_platforms.is_{trait.id}")
 
     output = "```{eval-rst}\n"
     output += "\n".join(directives)
@@ -518,6 +622,7 @@ def generate_group_detection_autofunction(groups: Iterable[Group]) -> str:
     if not groups_list:
         return "```{eval-rst}\n```"
 
+    # Generate autofunction directives
     directives = []
     for group in sorted(groups_list, key=attrgetter("id")):
         directives.append(
@@ -562,6 +667,12 @@ def update_docs() -> None:
             "ci-table-start",
             "ci-table-end",
             generate_trait_table(ALL_CI),
+        ),
+        # All traits table (for trait.md) - merged table of all traits.
+        (
+            "all-traits-table-start",
+            "all-traits-table-end",
+            generate_all_traits_table(ALL_TRAITS),
         ),
         # Sankey diagrams.
         (
@@ -629,6 +740,11 @@ def update_docs() -> None:
             generate_group_table(ALL_PLATFORM_GROUPS),
         ),
         (
+            "ci-groups-table-start",
+            "ci-groups-table-end",
+            generate_group_table(ALL_CI_GROUPS),
+        ),
+        (
             "groups-table-start",
             "groups-table-end",
             generate_group_table(ALL_GROUPS),
@@ -662,7 +778,17 @@ def update_docs() -> None:
             "group-data-autodata-end",
             generate_autodata_directives([g for g in ALL_GROUPS]),
         ),
-        # Autofunction directives for dynamically generated group detection functions.
+        # Autofunction directives for all detection functions (traits and groups).
+        (
+            "all-detection-function-table-start",
+            "all-detection-function-table-end",
+            generate_all_detection_function_table(ALL_TRAITS, ALL_GROUPS),
+        ),
+        (
+            "trait-detection-autofunction-start",
+            "trait-detection-autofunction-end",
+            generate_trait_detection_autofunction(ALL_TRAITS),
+        ),
         (
             "group-detection-autofunction-start",
             "group-detection-autofunction-end",

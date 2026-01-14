@@ -8,7 +8,9 @@ Each CI system represents a continuous integration/delivery platform, and is ass
 - a [detection function](detection.md)
 - various metadata in its `info()` method
 
-Each CI system is materialized by a [`CI` object](#extra_platforms.ci.CI), from which you can access various metadata:
+## CI usage
+
+Each CI system is materialized by a [`CI` object](trait.md#extra_platforms.trait.CI), from which you can access various metadata:
 
 ```pycon
 >>> from extra_platforms import GITHUB_CI
@@ -42,22 +44,22 @@ CI(id='unknown_ci', name='Unknown CI')
 
 <!-- ci-table-start -->
 
-| Icon | Symbol                                                        | Name                  | Detection function                                                                  |
-| :--: | :------------------------------------------------------------ | :-------------------- | :---------------------------------------------------------------------------------- |
-|  ═   | [`AZURE_PIPELINES`](#extra_platforms.ci_data.AZURE_PIPELINES) | Azure Pipelines       | [`is_azure_pipelines()`](detection.md#extra_platforms.detection.is_azure_pipelines) |
-|  ⟲   | [`BAMBOO`](#extra_platforms.ci_data.BAMBOO)                   | Bamboo                | [`is_bamboo()`](detection.md#extra_platforms.detection.is_bamboo)                   |
-|  🪁  | [`BUILDKITE`](#extra_platforms.ci_data.BUILDKITE)             | Buildkite             | [`is_buildkite()`](detection.md#extra_platforms.detection.is_buildkite)             |
-|  ⪾   | [`CIRCLE_CI`](#extra_platforms.ci_data.CIRCLE_CI)             | Circle CI             | [`is_circle_ci()`](detection.md#extra_platforms.detection.is_circle_ci)             |
-|  ≋   | [`CIRRUS_CI`](#extra_platforms.ci_data.CIRRUS_CI)             | Cirrus CI             | [`is_cirrus_ci()`](detection.md#extra_platforms.detection.is_cirrus_ci)             |
-|  ᚙ   | [`CODEBUILD`](#extra_platforms.ci_data.CODEBUILD)             | CodeBuild             | [`is_codebuild()`](detection.md#extra_platforms.detection.is_codebuild)             |
-|  🐙  | [`GITHUB_CI`](#extra_platforms.ci_data.GITHUB_CI)             | GitHub Actions runner | [`is_github_ci()`](detection.md#extra_platforms.detection.is_github_ci)             |
-|  🦊  | [`GITLAB_CI`](#extra_platforms.ci_data.GITLAB_CI)             | GitLab CI             | [`is_gitlab_ci()`](detection.md#extra_platforms.detection.is_gitlab_ci)             |
-|  ⥁   | [`HEROKU_CI`](#extra_platforms.ci_data.HEROKU_CI)             | Heroku CI             | [`is_heroku_ci()`](detection.md#extra_platforms.detection.is_heroku_ci)             |
-|  🏙️  | [`TEAMCITY`](#extra_platforms.ci_data.TEAMCITY)               | TeamCity              | [`is_teamcity()`](detection.md#extra_platforms.detection.is_teamcity)               |
-|  👷  | [`TRAVIS_CI`](#extra_platforms.ci_data.TRAVIS_CI)             | Travis CI             | [`is_travis_ci()`](detection.md#extra_platforms.detection.is_travis_ci)             |
+| Icon | Symbol                                                | Name                  | Detection function                                                        |
+| :--: | :---------------------------------------------------- | :-------------------- | :------------------------------------------------------------------------ |
+|  ═   | [`AZURE_PIPELINES`](#extra_platforms.AZURE_PIPELINES) | Azure Pipelines       | [`is_azure_pipelines()`](detection.md#extra_platforms.is_azure_pipelines) |
+|  ⟲   | [`BAMBOO`](#extra_platforms.BAMBOO)                   | Bamboo                | [`is_bamboo()`](detection.md#extra_platforms.is_bamboo)                   |
+|  🪁  | [`BUILDKITE`](#extra_platforms.BUILDKITE)             | Buildkite             | [`is_buildkite()`](detection.md#extra_platforms.is_buildkite)             |
+|  ⪾   | [`CIRCLE_CI`](#extra_platforms.CIRCLE_CI)             | Circle CI             | [`is_circle_ci()`](detection.md#extra_platforms.is_circle_ci)             |
+|  ≋   | [`CIRRUS_CI`](#extra_platforms.CIRRUS_CI)             | Cirrus CI             | [`is_cirrus_ci()`](detection.md#extra_platforms.is_cirrus_ci)             |
+|  ᚙ   | [`CODEBUILD`](#extra_platforms.CODEBUILD)             | CodeBuild             | [`is_codebuild()`](detection.md#extra_platforms.is_codebuild)             |
+|  🐙  | [`GITHUB_CI`](#extra_platforms.GITHUB_CI)             | GitHub Actions runner | [`is_github_ci()`](detection.md#extra_platforms.is_github_ci)             |
+|  🦊  | [`GITLAB_CI`](#extra_platforms.GITLAB_CI)             | GitLab CI             | [`is_gitlab_ci()`](detection.md#extra_platforms.is_gitlab_ci)             |
+|  ⥁   | [`HEROKU_CI`](#extra_platforms.HEROKU_CI)             | Heroku CI             | [`is_heroku_ci()`](detection.md#extra_platforms.is_heroku_ci)             |
+|  🏙️  | [`TEAMCITY`](#extra_platforms.TEAMCITY)               | TeamCity              | [`is_teamcity()`](detection.md#extra_platforms.is_teamcity)               |
+|  👷  | [`TRAVIS_CI`](#extra_platforms.TRAVIS_CI)             | Travis CI             | [`is_travis_ci()`](detection.md#extra_platforms.is_travis_ci)             |
 
 ```{hint}
-The [`UNKNOWN_CI`](#extra_platforms.ci_data.UNKNOWN_CI) trait represents an unrecognized CI system. It is not included in the [`ALL_CI`](groups.md#extra_platforms.group_data.ALL_CI) group, and will be returned by `current_ci()` if the current CI system is not recognized.
+The [`UNKNOWN_CI`](#extra_platforms.UNKNOWN_CI) trait represents an unrecognized CI system. It is not included in the [`ALL_CI`](groups.md#extra_platforms.ALL_CI) group, and will be returned by `current_ci()` if the current CI system is not recognized.
 ```
 
 <!-- ci-table-end -->
@@ -65,6 +67,14 @@ The [`UNKNOWN_CI`](#extra_platforms.ci_data.UNKNOWN_CI) trait represents an unre
 ## Groups of CI
 
 There is only one group defined for CI systems: `ALL_CI`, which includes all recognized CI systems.
+
+<!-- ci-groups-table-start -->
+
+| Icon | Symbol                                       | Description    | [Detection](detection.md)                               | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
+| :--: | :------------------------------------------- | :------------- | :------------------------------------------------------ | :----------------------------------------------------------: |
+|  ♺   | [`ALL_CI`](groups.md#extra_platforms.ALL_CI) | All CI systems | [`is_all_ci()`](detection.md#extra_platforms.is_all_ci) |                              ⬥                               |
+
+<!-- ci-groups-table-end -->
 
 <!-- ci-sankey-start -->
 
@@ -112,7 +122,7 @@ mindmap
 
 <!-- ci-mindmap-end -->
 
-## `extra_platforms.ci_data` API
+## CI details
 
 ```{eval-rst}
 .. autoclasstree:: extra_platforms.ci_data
@@ -126,18 +136,18 @@ mindmap
 <!-- ci-data-autodata-start -->
 
 ```{eval-rst}
-.. autodata:: extra_platforms.ci_data.AZURE_PIPELINES
-.. autodata:: extra_platforms.ci_data.BAMBOO
-.. autodata:: extra_platforms.ci_data.BUILDKITE
-.. autodata:: extra_platforms.ci_data.CIRCLE_CI
-.. autodata:: extra_platforms.ci_data.CIRRUS_CI
-.. autodata:: extra_platforms.ci_data.CODEBUILD
-.. autodata:: extra_platforms.ci_data.GITHUB_CI
-.. autodata:: extra_platforms.ci_data.GITLAB_CI
-.. autodata:: extra_platforms.ci_data.HEROKU_CI
-.. autodata:: extra_platforms.ci_data.TEAMCITY
-.. autodata:: extra_platforms.ci_data.TRAVIS_CI
-.. autodata:: extra_platforms.ci_data.UNKNOWN_CI
+.. autodata:: extra_platforms.AZURE_PIPELINES
+.. autodata:: extra_platforms.BAMBOO
+.. autodata:: extra_platforms.BUILDKITE
+.. autodata:: extra_platforms.CIRCLE_CI
+.. autodata:: extra_platforms.CIRRUS_CI
+.. autodata:: extra_platforms.CODEBUILD
+.. autodata:: extra_platforms.GITHUB_CI
+.. autodata:: extra_platforms.GITLAB_CI
+.. autodata:: extra_platforms.HEROKU_CI
+.. autodata:: extra_platforms.TEAMCITY
+.. autodata:: extra_platforms.TRAVIS_CI
+.. autodata:: extra_platforms.UNKNOWN_CI
 ```
 
 <!-- ci-data-autodata-end -->

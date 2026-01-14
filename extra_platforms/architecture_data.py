@@ -30,6 +30,14 @@ AARCH64 = Architecture(
     "📱",
     "https://en.wikipedia.org/wiki/AArch64",
 )
+"""
+.. warning::
+    Although ``aarch64`` is the canonical ID for this architecture, some
+    platforms may use the alias ``arm64`` instead (e.g., macOS on Apple Silicon).
+
+.. todo::
+    Consider adding ``arm64`` as an alias in the future.
+"""
 
 ARM = Architecture(
     "arm",
@@ -51,6 +59,11 @@ ARMV7L = Architecture(
     "📱",
     "https://en.wikipedia.org/wiki/ARM_Cortex-A",
 )
+"""
+.. note::
+    This architecture is commonly referred to as ``armhf`` (ARM hard-float) in Debian-based
+    distributions, or simply ``armv7`` in other contexts.
+"""
 
 ARMV8L = Architecture(
     "armv8l",
@@ -65,6 +78,10 @@ I386 = Architecture(
     "𝗶",
     "https://en.wikipedia.org/wiki/Intel_80386",
 )
+"""
+.. todo::
+    Alias this to ``i486``.
+"""
 
 I586 = Architecture(
     "i586",
@@ -135,6 +152,10 @@ PPC64LE = Architecture(
     "⚡",
     "https://en.wikipedia.org/wiki/Ppc64",
 )
+"""
+.. note::
+    Also known as ``powerpc64le`` or ``ppc64el`` in some distributions.
+"""
 
 RISCV32 = Architecture(
     "riscv32",
@@ -198,3 +219,11 @@ X86_64 = Architecture(
     "🖥️",
     "https://en.wikipedia.org/wiki/X86-64",
 )
+"""
+.. warning::
+    Although ``x86_64`` is the canonical ID for this architecture, some
+    platforms may use the alias ``amd64`` instead (e.g., Windows on x86-64).
+
+.. todo::
+    Consider adding ``amd64`` as an alias in the future.
+"""

@@ -8,7 +8,9 @@ Each architecture represents a CPU instruction set, and is associated with:
 - a [detection function](detection.md)
 - various metadata in its `info()` method
 
-Each architecture is materialized by an [`Architecture` object](#extra_platforms.architecture.Architecture), from which you can access various metadata:
+## Architecture usage
+
+Each architecture is materialized by an [`Architecture` object](trait.md#extra_platforms.trait.Architecture), from which you can access various metadata:
 
 ```pycon
 >>> from extra_platforms import X86_64
@@ -42,35 +44,35 @@ Architecture(id='x86_64', name='x86-64 (AMD64)')
 
 <!-- architecture-table-start -->
 
-| Icon | Symbol                                                          | Name                           | Detection function                                                          |
-| :--: | :-------------------------------------------------------------- | :----------------------------- | :-------------------------------------------------------------------------- |
-|  📱  | [`AARCH64`](#extra_platforms.architecture_data.AARCH64)         | ARM64 (AArch64)                | [`is_aarch64()`](detection.md#extra_platforms.detection.is_aarch64)         |
-|  📱  | [`ARM`](#extra_platforms.architecture_data.ARM)                 | ARM (32-bit)                   | [`is_arm()`](detection.md#extra_platforms.detection.is_arm)                 |
-|  📱  | [`ARMV6L`](#extra_platforms.architecture_data.ARMV6L)           | ARMv6 (little-endian)          | [`is_armv6l()`](detection.md#extra_platforms.detection.is_armv6l)           |
-|  📱  | [`ARMV7L`](#extra_platforms.architecture_data.ARMV7L)           | ARMv7 (little-endian)          | [`is_armv7l()`](detection.md#extra_platforms.detection.is_armv7l)           |
-|  📱  | [`ARMV8L`](#extra_platforms.architecture_data.ARMV8L)           | ARMv8 (32-bit, little-endian)  | [`is_armv8l()`](detection.md#extra_platforms.detection.is_armv8l)           |
-|  𝗶   | [`I386`](#extra_platforms.architecture_data.I386)               | Intel 80386 (i386)             | [`is_i386()`](detection.md#extra_platforms.detection.is_i386)               |
-|  𝗶   | [`I586`](#extra_platforms.architecture_data.I586)               | Intel Pentium (i586)           | [`is_i586()`](detection.md#extra_platforms.detection.is_i586)               |
-|  𝗶   | [`I686`](#extra_platforms.architecture_data.I686)               | Intel Pentium Pro (i686)       | [`is_i686()`](detection.md#extra_platforms.detection.is_i686)               |
-|  🐉  | [`LOONGARCH64`](#extra_platforms.architecture_data.LOONGARCH64) | LoongArch (64-bit)             | [`is_loongarch64()`](detection.md#extra_platforms.detection.is_loongarch64) |
-|  🔲  | [`MIPS`](#extra_platforms.architecture_data.MIPS)               | MIPS (32-bit, big-endian)      | [`is_mips()`](detection.md#extra_platforms.detection.is_mips)               |
-|  🔲  | [`MIPS64`](#extra_platforms.architecture_data.MIPS64)           | MIPS64 (big-endian)            | [`is_mips64()`](detection.md#extra_platforms.detection.is_mips64)           |
-|  🔲  | [`MIPS64EL`](#extra_platforms.architecture_data.MIPS64EL)       | MIPS64 (little-endian)         | [`is_mips64el()`](detection.md#extra_platforms.detection.is_mips64el)       |
-|  🔲  | [`MIPSEL`](#extra_platforms.architecture_data.MIPSEL)           | MIPS (32-bit, little-endian)   | [`is_mipsel()`](detection.md#extra_platforms.detection.is_mipsel)           |
-|  ⚡  | [`PPC`](#extra_platforms.architecture_data.PPC)                 | PowerPC (32-bit)               | [`is_ppc()`](detection.md#extra_platforms.detection.is_ppc)                 |
-|  ⚡  | [`PPC64`](#extra_platforms.architecture_data.PPC64)             | PowerPC 64-bit (big-endian)    | [`is_ppc64()`](detection.md#extra_platforms.detection.is_ppc64)             |
-|  ⚡  | [`PPC64LE`](#extra_platforms.architecture_data.PPC64LE)         | PowerPC 64-bit (little-endian) | [`is_ppc64le()`](detection.md#extra_platforms.detection.is_ppc64le)         |
-|  Ⅴ   | [`RISCV32`](#extra_platforms.architecture_data.RISCV32)         | RISC-V (32-bit)                | [`is_riscv32()`](detection.md#extra_platforms.detection.is_riscv32)         |
-|  Ⅴ   | [`RISCV64`](#extra_platforms.architecture_data.RISCV64)         | RISC-V (64-bit)                | [`is_riscv64()`](detection.md#extra_platforms.detection.is_riscv64)         |
-|  🏢  | [`S390X`](#extra_platforms.architecture_data.S390X)             | IBM z/Architecture (s390x)     | [`is_s390x()`](detection.md#extra_platforms.detection.is_s390x)             |
-|  ☀️  | [`SPARC`](#extra_platforms.architecture_data.SPARC)             | SPARC (32-bit)                 | [`is_sparc()`](detection.md#extra_platforms.detection.is_sparc)             |
-|  ☀️  | [`SPARC64`](#extra_platforms.architecture_data.SPARC64)         | SPARC (64-bit)                 | [`is_sparc64()`](detection.md#extra_platforms.detection.is_sparc64)         |
-|  🌐  | [`WASM32`](#extra_platforms.architecture_data.WASM32)           | WebAssembly (32-bit)           | [`is_wasm32()`](detection.md#extra_platforms.detection.is_wasm32)           |
-|  🌐  | [`WASM64`](#extra_platforms.architecture_data.WASM64)           | WebAssembly (64-bit)           | [`is_wasm64()`](detection.md#extra_platforms.detection.is_wasm64)           |
-|  🖥️  | [`X86_64`](#extra_platforms.architecture_data.X86_64)           | x86-64 (AMD64)                 | [`is_x86_64()`](detection.md#extra_platforms.detection.is_x86_64)           |
+| Icon | Symbol                                        | Name                           | Detection function                                                |
+| :--: | :-------------------------------------------- | :----------------------------- | :---------------------------------------------------------------- |
+|  📱  | [`AARCH64`](#extra_platforms.AARCH64)         | ARM64 (AArch64)                | [`is_aarch64()`](detection.md#extra_platforms.is_aarch64)         |
+|  📱  | [`ARM`](#extra_platforms.ARM)                 | ARM (32-bit)                   | [`is_arm()`](detection.md#extra_platforms.is_arm)                 |
+|  📱  | [`ARMV6L`](#extra_platforms.ARMV6L)           | ARMv6 (little-endian)          | [`is_armv6l()`](detection.md#extra_platforms.is_armv6l)           |
+|  📱  | [`ARMV7L`](#extra_platforms.ARMV7L)           | ARMv7 (little-endian)          | [`is_armv7l()`](detection.md#extra_platforms.is_armv7l)           |
+|  📱  | [`ARMV8L`](#extra_platforms.ARMV8L)           | ARMv8 (32-bit, little-endian)  | [`is_armv8l()`](detection.md#extra_platforms.is_armv8l)           |
+|  𝗶   | [`I386`](#extra_platforms.I386)               | Intel 80386 (i386)             | [`is_i386()`](detection.md#extra_platforms.is_i386)               |
+|  𝗶   | [`I586`](#extra_platforms.I586)               | Intel Pentium (i586)           | [`is_i586()`](detection.md#extra_platforms.is_i586)               |
+|  𝗶   | [`I686`](#extra_platforms.I686)               | Intel Pentium Pro (i686)       | [`is_i686()`](detection.md#extra_platforms.is_i686)               |
+|  🐉  | [`LOONGARCH64`](#extra_platforms.LOONGARCH64) | LoongArch (64-bit)             | [`is_loongarch64()`](detection.md#extra_platforms.is_loongarch64) |
+|  🔲  | [`MIPS`](#extra_platforms.MIPS)               | MIPS (32-bit, big-endian)      | [`is_mips()`](detection.md#extra_platforms.is_mips)               |
+|  🔲  | [`MIPS64`](#extra_platforms.MIPS64)           | MIPS64 (big-endian)            | [`is_mips64()`](detection.md#extra_platforms.is_mips64)           |
+|  🔲  | [`MIPS64EL`](#extra_platforms.MIPS64EL)       | MIPS64 (little-endian)         | [`is_mips64el()`](detection.md#extra_platforms.is_mips64el)       |
+|  🔲  | [`MIPSEL`](#extra_platforms.MIPSEL)           | MIPS (32-bit, little-endian)   | [`is_mipsel()`](detection.md#extra_platforms.is_mipsel)           |
+|  ⚡  | [`PPC`](#extra_platforms.PPC)                 | PowerPC (32-bit)               | [`is_ppc()`](detection.md#extra_platforms.is_ppc)                 |
+|  ⚡  | [`PPC64`](#extra_platforms.PPC64)             | PowerPC 64-bit (big-endian)    | [`is_ppc64()`](detection.md#extra_platforms.is_ppc64)             |
+|  ⚡  | [`PPC64LE`](#extra_platforms.PPC64LE)         | PowerPC 64-bit (little-endian) | [`is_ppc64le()`](detection.md#extra_platforms.is_ppc64le)         |
+|  Ⅴ   | [`RISCV32`](#extra_platforms.RISCV32)         | RISC-V (32-bit)                | [`is_riscv32()`](detection.md#extra_platforms.is_riscv32)         |
+|  Ⅴ   | [`RISCV64`](#extra_platforms.RISCV64)         | RISC-V (64-bit)                | [`is_riscv64()`](detection.md#extra_platforms.is_riscv64)         |
+|  🏢  | [`S390X`](#extra_platforms.S390X)             | IBM z/Architecture (s390x)     | [`is_s390x()`](detection.md#extra_platforms.is_s390x)             |
+|  ☀️  | [`SPARC`](#extra_platforms.SPARC)             | SPARC (32-bit)                 | [`is_sparc()`](detection.md#extra_platforms.is_sparc)             |
+|  ☀️  | [`SPARC64`](#extra_platforms.SPARC64)         | SPARC (64-bit)                 | [`is_sparc64()`](detection.md#extra_platforms.is_sparc64)         |
+|  🌐  | [`WASM32`](#extra_platforms.WASM32)           | WebAssembly (32-bit)           | [`is_wasm32()`](detection.md#extra_platforms.is_wasm32)           |
+|  🌐  | [`WASM64`](#extra_platforms.WASM64)           | WebAssembly (64-bit)           | [`is_wasm64()`](detection.md#extra_platforms.is_wasm64)           |
+|  🖥️  | [`X86_64`](#extra_platforms.X86_64)           | x86-64 (AMD64)                 | [`is_x86_64()`](detection.md#extra_platforms.is_x86_64)           |
 
 ```{hint}
-The [`UNKNOWN_ARCHITECTURE`](#extra_platforms.architecture_data.UNKNOWN_ARCHITECTURE) trait represents an unrecognized architecture. It is not included in the [`ALL_ARCHITECTURES`](groups.md#extra_platforms.group_data.ALL_ARCHITECTURES) group, and will be returned by `current_architecture()` if the current architecture is not recognized.
+The [`UNKNOWN_ARCHITECTURE`](#extra_platforms.UNKNOWN_ARCHITECTURE) trait represents an unrecognized architecture. It is not included in the [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES) group, and will be returned by `current_architecture()` if the current architecture is not recognized.
 ```
 
 <!-- architecture-table-end -->
@@ -81,20 +83,20 @@ The [`UNKNOWN_ARCHITECTURE`](#extra_platforms.architecture_data.UNKNOWN_ARCHITEC
 
 <!-- architecture-groups-table-start -->
 
-| Icon | Symbol                                                                        | Description            | [Detection](detection.md)                                                     | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :---------------------------------------------------------------------------- | :--------------------- | :---------------------------------------------------------------------------- | :----------------------------------------------------------: |
-|  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.group_data.ALL_ARCHITECTURES) | All architectures      | [`is_all_architectures()`](detection.md#extra_platforms.is_all_architectures) |                                                              |
-|  📱  | [`ANY_ARM`](groups.md#extra_platforms.group_data.ANY_ARM)                     | Any ARM architecture   | [`is_any_arm()`](detection.md#extra_platforms.is_any_arm)                     |                              ⬥                               |
-|  🔲  | [`ANY_MIPS`](groups.md#extra_platforms.group_data.ANY_MIPS)                   | Any MIPS architecture  | [`is_any_mips()`](detection.md#extra_platforms.is_any_mips)                   |                              ⬥                               |
-|  ☀️  | [`ANY_SPARC`](groups.md#extra_platforms.group_data.ANY_SPARC)                 | Any SPARC architecture | [`is_any_sparc()`](detection.md#extra_platforms.is_any_sparc)                 |                              ⬥                               |
-|  ³²  | [`ARCH_32_BIT`](groups.md#extra_platforms.group_data.ARCH_32_BIT)             | 32-bit architectures   | [`is_arch_32_bit()`](detection.md#extra_platforms.is_arch_32_bit)             |                                                              |
-|  ⁶⁴  | [`ARCH_64_BIT`](groups.md#extra_platforms.group_data.ARCH_64_BIT)             | 64-bit architectures   | [`is_arch_64_bit()`](detection.md#extra_platforms.is_arch_64_bit)             |                                                              |
-|  🏢  | [`IBM_MAINFRAME`](groups.md#extra_platforms.group_data.IBM_MAINFRAME)         | IBM mainframe          | [`is_ibm_mainframe()`](detection.md#extra_platforms.is_ibm_mainframe)         |                              ⬥                               |
-|  🐉  | [`LOONGARCH`](groups.md#extra_platforms.group_data.LOONGARCH)                 | LoongArch              | [`is_loongarch()`](detection.md#extra_platforms.is_loongarch)                 |                              ⬥                               |
-|  ⚡  | [`POWERPC`](groups.md#extra_platforms.group_data.POWERPC)                     | PowerPC family         | [`is_powerpc()`](detection.md#extra_platforms.is_powerpc)                     |                              ⬥                               |
-|  Ⅴ   | [`RISCV`](groups.md#extra_platforms.group_data.RISCV)                         | RISC-V family          | [`is_riscv()`](detection.md#extra_platforms.is_riscv)                         |                              ⬥                               |
-|  🌐  | [`WEBASSEMBLY`](groups.md#extra_platforms.group_data.WEBASSEMBLY)             | WebAssembly            | [`is_webassembly()`](detection.md#extra_platforms.is_webassembly)             |                              ⬥                               |
-|  𝘅   | [`X86`](groups.md#extra_platforms.group_data.X86)                             | x86 family             | [`is_x86()`](detection.md#extra_platforms.is_x86)                             |                              ⬥                               |
+| Icon | Symbol                                                             | Description            | [Detection](detection.md)                                                     | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
+| :--: | :----------------------------------------------------------------- | :--------------------- | :---------------------------------------------------------------------------- | :----------------------------------------------------------: |
+|  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES) | All architectures      | [`is_all_architectures()`](detection.md#extra_platforms.is_all_architectures) |                                                              |
+|  📱  | [`ANY_ARM`](groups.md#extra_platforms.ANY_ARM)                     | Any ARM architecture   | [`is_any_arm()`](detection.md#extra_platforms.is_any_arm)                     |                              ⬥                               |
+|  🔲  | [`ANY_MIPS`](groups.md#extra_platforms.ANY_MIPS)                   | Any MIPS architecture  | [`is_any_mips()`](detection.md#extra_platforms.is_any_mips)                   |                              ⬥                               |
+|  ☀️  | [`ANY_SPARC`](groups.md#extra_platforms.ANY_SPARC)                 | Any SPARC architecture | [`is_any_sparc()`](detection.md#extra_platforms.is_any_sparc)                 |                              ⬥                               |
+|  ³²  | [`ARCH_32_BIT`](groups.md#extra_platforms.ARCH_32_BIT)             | 32-bit architectures   | [`is_arch_32_bit()`](detection.md#extra_platforms.is_arch_32_bit)             |                                                              |
+|  ⁶⁴  | [`ARCH_64_BIT`](groups.md#extra_platforms.ARCH_64_BIT)             | 64-bit architectures   | [`is_arch_64_bit()`](detection.md#extra_platforms.is_arch_64_bit)             |                                                              |
+|  🏢  | [`IBM_MAINFRAME`](groups.md#extra_platforms.IBM_MAINFRAME)         | IBM mainframe          | [`is_ibm_mainframe()`](detection.md#extra_platforms.is_ibm_mainframe)         |                              ⬥                               |
+|  🐉  | [`LOONGARCH`](groups.md#extra_platforms.LOONGARCH)                 | LoongArch              | [`is_loongarch()`](detection.md#extra_platforms.is_loongarch)                 |                              ⬥                               |
+|  ⚡  | [`POWERPC`](groups.md#extra_platforms.POWERPC)                     | PowerPC family         | [`is_powerpc()`](detection.md#extra_platforms.is_powerpc)                     |                              ⬥                               |
+|  Ⅴ   | [`RISCV`](groups.md#extra_platforms.RISCV)                         | RISC-V family          | [`is_riscv()`](detection.md#extra_platforms.is_riscv)                         |                              ⬥                               |
+|  🌐  | [`WEBASSEMBLY`](groups.md#extra_platforms.WEBASSEMBLY)             | WebAssembly            | [`is_webassembly()`](detection.md#extra_platforms.is_webassembly)             |                              ⬥                               |
+|  𝘅   | [`X86`](groups.md#extra_platforms.X86)                             | x86 family             | [`is_x86()`](detection.md#extra_platforms.is_x86)                             |                              ⬥                               |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
@@ -104,7 +106,7 @@ Other groups are provided for convenience, but overlap with each other or with c
 
 <!-- architecture-groups-table-end -->
 
-### Canonical families
+### Canonical groups
 
 All recognized architectures are grouped in canonical families, with each architecture belonging to exactly one family.
 
@@ -285,7 +287,7 @@ mindmap
 <!-- architecture-bitness-mindmap-end -->
 
 
-## `extra_platforms.architecture_data` API
+## Architecture details
 
 ```{eval-rst}
 .. autoclasstree:: extra_platforms.architecture_data
@@ -299,31 +301,31 @@ mindmap
 <!-- architecture-data-autodata-start -->
 
 ```{eval-rst}
-.. autodata:: extra_platforms.architecture_data.AARCH64
-.. autodata:: extra_platforms.architecture_data.ARM
-.. autodata:: extra_platforms.architecture_data.ARMV6L
-.. autodata:: extra_platforms.architecture_data.ARMV7L
-.. autodata:: extra_platforms.architecture_data.ARMV8L
-.. autodata:: extra_platforms.architecture_data.I386
-.. autodata:: extra_platforms.architecture_data.I586
-.. autodata:: extra_platforms.architecture_data.I686
-.. autodata:: extra_platforms.architecture_data.LOONGARCH64
-.. autodata:: extra_platforms.architecture_data.MIPS
-.. autodata:: extra_platforms.architecture_data.MIPS64
-.. autodata:: extra_platforms.architecture_data.MIPS64EL
-.. autodata:: extra_platforms.architecture_data.MIPSEL
-.. autodata:: extra_platforms.architecture_data.PPC
-.. autodata:: extra_platforms.architecture_data.PPC64
-.. autodata:: extra_platforms.architecture_data.PPC64LE
-.. autodata:: extra_platforms.architecture_data.RISCV32
-.. autodata:: extra_platforms.architecture_data.RISCV64
-.. autodata:: extra_platforms.architecture_data.S390X
-.. autodata:: extra_platforms.architecture_data.SPARC
-.. autodata:: extra_platforms.architecture_data.SPARC64
-.. autodata:: extra_platforms.architecture_data.UNKNOWN_ARCHITECTURE
-.. autodata:: extra_platforms.architecture_data.WASM32
-.. autodata:: extra_platforms.architecture_data.WASM64
-.. autodata:: extra_platforms.architecture_data.X86_64
+.. autodata:: extra_platforms.AARCH64
+.. autodata:: extra_platforms.ARM
+.. autodata:: extra_platforms.ARMV6L
+.. autodata:: extra_platforms.ARMV7L
+.. autodata:: extra_platforms.ARMV8L
+.. autodata:: extra_platforms.I386
+.. autodata:: extra_platforms.I586
+.. autodata:: extra_platforms.I686
+.. autodata:: extra_platforms.LOONGARCH64
+.. autodata:: extra_platforms.MIPS
+.. autodata:: extra_platforms.MIPS64
+.. autodata:: extra_platforms.MIPS64EL
+.. autodata:: extra_platforms.MIPSEL
+.. autodata:: extra_platforms.PPC
+.. autodata:: extra_platforms.PPC64
+.. autodata:: extra_platforms.PPC64LE
+.. autodata:: extra_platforms.RISCV32
+.. autodata:: extra_platforms.RISCV64
+.. autodata:: extra_platforms.S390X
+.. autodata:: extra_platforms.SPARC
+.. autodata:: extra_platforms.SPARC64
+.. autodata:: extra_platforms.UNKNOWN_ARCHITECTURE
+.. autodata:: extra_platforms.WASM32
+.. autodata:: extra_platforms.WASM64
+.. autodata:: extra_platforms.X86_64
 ```
 
 <!-- architecture-data-autodata-end -->
