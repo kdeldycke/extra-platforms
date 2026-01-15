@@ -38,6 +38,8 @@ def test_trait_class_metadata(klass):
     assert klass.type_name.isascii()
     assert klass.type_name.isprintable()
 
+    assert hasattr(extra_platforms, f"current_{class_id}")
+
     assert klass.data_module_id == f"{class_id}_data"
     assert hasattr(extra_platforms, klass.data_module_id)
 

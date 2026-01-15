@@ -27,6 +27,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     ALL_ARM,
     ALL_MIPS,
     ALL_SPARC,
+    ALL_TRAITS,
     ARCH_32_BIT,
     ARCH_64_BIT,
     IBM_MAINFRAME,
@@ -76,17 +77,21 @@ def test_architecture_data_sorting():
     architecture_instance_ids = []
     tree = ast.parse(Path(inspect.getfile(architecture_data_module)).read_bytes())
     for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and isinstance(node.value, ast.Call)
-            and node.value.func.id == "Architecture"
-        ):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            assert node.value.func.id == "Architecture"
             assert len(node.targets) == 1
             instance_id = node.targets[0].id
             assert instance_id.isupper()
             architecture_instance_ids.append(instance_id)
 
     assert architecture_instance_ids == sorted(architecture_instance_ids)
+
+    # Check all defined architectures are references in top-level collections.
+    all_architecture_ids = set(map(str.lower, architecture_instance_ids))
+    assert all_architecture_ids.issubset(
+        ALL_ARCHITECTURES.member_ids | {UNKNOWN_ARCHITECTURE.id}
+    )
+    assert all_architecture_ids.issubset(ALL_TRAITS.member_ids)
 
 
 def test_architecture_detection():

@@ -24,6 +24,7 @@ from pathlib import Path
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
+    ALL_TRAITS,
     ALL_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
@@ -98,17 +99,19 @@ def test_platform_data_sorting():
     platform_instance_ids = []
     tree = ast.parse(Path(inspect.getfile(platform_data_module)).read_bytes())
     for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and isinstance(node.value, ast.Call)
-            and node.value.func.id == "Platform"
-        ):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            assert node.value.func.id == "Platform"
             assert len(node.targets) == 1
             instance_id = node.targets[0].id
             assert instance_id.isupper()
             platform_instance_ids.append(instance_id)
 
     assert platform_instance_ids == sorted(platform_instance_ids)
+
+    # Check all defined platforms are references in top-level collections.
+    all_platform_ids = set(map(str.lower, platform_instance_ids))
+    assert all_platform_ids.issubset(ALL_PLATFORMS.member_ids | {UNKNOWN_PLATFORM.id})
+    assert all_platform_ids.issubset(ALL_TRAITS.member_ids)
 
 
 def test_platform_detection():

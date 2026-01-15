@@ -97,6 +97,11 @@ def test_group_data_ordering():
     # Group order is logical, not alphabetical.
     assert group_instance_ids != sorted(group_instance_ids)
 
+    # Check all defined groups are in ALL_GROUPS.
+    for group_symbol_id in group_instance_ids:
+        group_id = group_symbol_id.lower()
+        assert group_id in ALL_GROUP_IDS or group_id == UNKNOWN.id
+
 
 @pytest.mark.parametrize("group", tuple(ALL_GROUPS), ids=lambda g: g.id)
 def test_group_definitions(group: Group):

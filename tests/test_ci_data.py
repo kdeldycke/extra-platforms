@@ -29,6 +29,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     AARCH64,
     ALL_CI,
     ALL_CI_GROUPS,
+    ALL_TRAITS,
     GITHUB_CI,
     MACOS,
     NON_OVERLAPPING_GROUPS,
@@ -91,17 +92,19 @@ def test_ci_data_sorting():
     ci_instance_ids = []
     tree = ast.parse(Path(inspect.getfile(ci_data_module)).read_bytes())
     for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and isinstance(node.value, ast.Call)
-            and node.value.func.id == "CI"
-        ):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            assert node.value.func.id == "CI"
             assert len(node.targets) == 1
             instance_id = node.targets[0].id
             assert instance_id.isupper()
             ci_instance_ids.append(instance_id)
 
     assert ci_instance_ids == sorted(ci_instance_ids)
+
+    # Check all defined CI systems are references in top-level collections.
+    all_ci_ids = set(map(str.lower, ci_instance_ids))
+    assert all_ci_ids.issubset(ALL_CI.member_ids | {UNKNOWN_CI.id})
+    assert all_ci_ids.issubset(ALL_TRAITS.member_ids)
 
 
 @unless_github_ci
