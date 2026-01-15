@@ -332,7 +332,7 @@ def test_group_membership_funcs():
         assert isinstance(func(), bool)
         assert func() == any(t in group for t in current_traits())
 
-        assert group.name.lower() in func.__doc__.lower()
+        assert group.symbol_id in func.__doc__
 
 
 def test_invalidate_caches():

@@ -456,9 +456,10 @@ def _initialize_group_detection_functions() -> list[str]:
         func_id = group.detection_func_id
 
         # Create the group membership test function.
-        def group_membership_check() -> bool:
+        # Use default argument to capture the current group value (not the variable reference).
+        def group_membership_check(_group: Group = group) -> bool:
             """Compares all the current traits to the ``group``."""
-            return any(t in group for t in current_traits())
+            return any(t in _group for t in current_traits())
 
         group_membership_check.__doc__ = f"Return ``True`` if current traits match `{group.symbol_id} <groups.html#extra_platforms.{group.symbol_id}>`_ group."
 
