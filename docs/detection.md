@@ -23,6 +23,7 @@
 | [`is_arch_32_bit()`](detection.md#extra_platforms.is_arch_32_bit)                   |  ³²  | [`ARCH_32_BIT`](groups.md#extra_platforms.ARCH_32_BIT)                          | Group        |
 | [`is_arch_64_bit()`](detection.md#extra_platforms.is_arch_64_bit)                   |  ⁶⁴  | [`ARCH_64_BIT`](groups.md#extra_platforms.ARCH_64_BIT)                          | Group        |
 | [`is_arm()`](detection.md#extra_platforms.is_arm)                                   |  📱  | [`ARM`](architectures.md#extra_platforms.ARM)                                   | Architecture |
+| [`is_armv5tel()`](detection.md#extra_platforms.is_armv5tel)                         |  📱  | [`ARMV5TEL`](architectures.md#extra_platforms.ARMV5TEL)                         | Architecture |
 | [`is_armv6l()`](detection.md#extra_platforms.is_armv6l)                             |  📱  | [`ARMV6L`](architectures.md#extra_platforms.ARMV6L)                             | Architecture |
 | [`is_armv7l()`](detection.md#extra_platforms.is_armv7l)                             |  📱  | [`ARMV7L`](architectures.md#extra_platforms.ARMV7L)                             | Architecture |
 | [`is_armv8l()`](detection.md#extra_platforms.is_armv8l)                             |  📱  | [`ARMV8L`](architectures.md#extra_platforms.ARMV8L)                             | Architecture |
@@ -133,6 +134,7 @@
 .. autofunction:: extra_platforms.is_android
 .. autofunction:: extra_platforms.is_arch
 .. autofunction:: extra_platforms.is_arm
+.. autofunction:: extra_platforms.is_armv5tel
 .. autofunction:: extra_platforms.is_armv6l
 .. autofunction:: extra_platforms.is_armv7l
 .. autofunction:: extra_platforms.is_armv8l

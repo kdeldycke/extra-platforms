@@ -48,6 +48,7 @@ Architecture(id='x86_64', name='x86-64 (AMD64)')
 | :--: | :-------------------------------------------- | :----------------------------- | :---------------------------------------------------------------- |
 |  📱  | [`AARCH64`](#extra_platforms.AARCH64)         | ARM64 (AArch64)                | [`is_aarch64()`](detection.md#extra_platforms.is_aarch64)         |
 |  📱  | [`ARM`](#extra_platforms.ARM)                 | ARM (32-bit)                   | [`is_arm()`](detection.md#extra_platforms.is_arm)                 |
+|  📱  | [`ARMV5TEL`](#extra_platforms.ARMV5TEL)       | ARMv5TE (little-endian)        | [`is_armv5tel()`](detection.md#extra_platforms.is_armv5tel)       |
 |  📱  | [`ARMV6L`](#extra_platforms.ARMV6L)           | ARMv6 (little-endian)          | [`is_armv6l()`](detection.md#extra_platforms.is_armv6l)           |
 |  📱  | [`ARMV7L`](#extra_platforms.ARMV7L)           | ARMv7 (little-endian)          | [`is_armv7l()`](detection.md#extra_platforms.is_armv7l)           |
 |  📱  | [`ARMV8L`](#extra_platforms.ARMV8L)           | ARMv8 (32-bit, little-endian)  | [`is_armv8l()`](detection.md#extra_platforms.is_armv8l)           |
@@ -120,7 +121,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_ARCHITECTURES,ALL_ARM,5
+ALL_ARCHITECTURES,ALL_ARM,6
 ALL_ARCHITECTURES,X86,4
 ALL_ARCHITECTURES,ALL_MIPS,4
 ALL_ARCHITECTURES,POWERPC,3
@@ -131,6 +132,7 @@ ALL_ARCHITECTURES,LOONGARCH,1
 ALL_ARCHITECTURES,IBM_MAINFRAME,1
 ALL_ARM,AARCH64,1
 ALL_ARM,ARM,1
+ALL_ARM,ARMV5TEL,1
 ALL_ARM,ARMV6L,1
 ALL_ARM,ARMV7L,1
 ALL_ARM,ARMV8L,1
@@ -197,6 +199,7 @@ mindmap
         )📱 ALL_ARM(
             (📱 AARCH64)
             (📱 ARM)
+            (📱 ARMV5TEL)
             (📱 ARMV6L)
             (📱 ARMV7L)
             (📱 ARMV8L)
@@ -216,9 +219,10 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_ARCHITECTURES,ARCH_32_BIT,13
+ALL_ARCHITECTURES,ARCH_32_BIT,14
 ALL_ARCHITECTURES,ARCH_64_BIT,11
 ARCH_32_BIT,ARM,1
+ARCH_32_BIT,ARMV5TEL,1
 ARCH_32_BIT,ARMV6L,1
 ARCH_32_BIT,ARMV7L,1
 ARCH_32_BIT,ARMV8L,1
@@ -270,6 +274,7 @@ mindmap
             (🖥️ X86_64)
         )³² ARCH_32_BIT(
             (📱 ARM)
+            (📱 ARMV5TEL)
             (📱 ARMV6L)
             (📱 ARMV7L)
             (📱 ARMV8L)
@@ -302,6 +307,7 @@ mindmap
 ```{eval-rst}
 .. autodata:: extra_platforms.AARCH64
 .. autodata:: extra_platforms.ARM
+.. autodata:: extra_platforms.ARMV5TEL
 .. autodata:: extra_platforms.ARMV6L
 .. autodata:: extra_platforms.ARMV7L
 .. autodata:: extra_platforms.ARMV8L

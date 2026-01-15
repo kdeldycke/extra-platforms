@@ -16,6 +16,7 @@ keywords = [
     "Architecture detection",
     "ARM (32-bit)",
     "ARM64 (AArch64)",
+    "ARMv5TE (little-endian)",
     "ARMv6 (little-endian)",
     "ARMv7 (little-endian)",
     "ARMv8 (32-bit, little-endian)",

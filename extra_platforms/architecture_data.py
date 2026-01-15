@@ -51,6 +51,18 @@ ARM = Architecture(
     "https://en.wikipedia.org/wiki/ARM_architecture_family",
 )
 
+ARMV5TEL = Architecture(
+    "armv5tel",
+    "ARMv5TE (little-endian)",
+    "📱",
+    "https://en.wikipedia.org/wiki/ARM11",
+)
+"""
+.. note::
+    ARMv5TE includes Thumb and DSP extensions. This architecture is found on
+    older ARM devices and may appear in embedded systems or legacy platforms.
+"""
+
 ARMV6L = Architecture(
     "armv6l",
     "ARMv6 (little-endian)",
@@ -68,18 +80,6 @@ ARMV7L = Architecture(
 .. note::
     This architecture is commonly referred to as ``armhf`` (ARM hard-float) in Debian-based
     distributions, or simply ``armv7`` in other contexts.
-"""
-
-ARMV5TEL = Architecture(
-    "armv5tel",
-    "ARMv5TE (little-endian)",
-    "📱",
-    "https://en.wikipedia.org/wiki/ARM11",
-)
-"""
-.. note::
-    ARMv5TE includes Thumb and DSP extensions. This architecture is found on
-    older ARM devices and may appear in embedded systems or legacy platforms.
 """
 
 ARMV8L = Architecture(

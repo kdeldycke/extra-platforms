@@ -20,6 +20,7 @@ from __future__ import annotations
 from .architecture_data import (
     AARCH64,
     ARM,
+    ARMV5TEL,
     ARMV6L,
     ARMV7L,
     ARMV8L,
@@ -121,6 +122,7 @@ ALL_ARCHITECTURES: Group = Group(
     (
         AARCH64,
         ARM,
+        ARMV5TEL,
         ARMV6L,
         ARMV7L,
         ARMV8L,
@@ -156,7 +158,7 @@ ALL_ARM = Group(
     "all_arm",
     "All ARM architectures",
     "📱",
-    (AARCH64, ARM, ARMV6L, ARMV7L, ARMV8L),
+    (AARCH64, ARM, ARMV5TEL, ARMV6L, ARMV7L, ARMV8L),
 )
 """All ARM-based architectures."""
 
@@ -260,6 +262,7 @@ ARCH_32_BIT = Group(
     "³²",
     (
         ARM,
+        ARMV5TEL,
         ARMV6L,
         ARMV7L,
         ARMV8L,

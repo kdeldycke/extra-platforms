@@ -90,6 +90,7 @@ def test_not_in_github_actions():
 | `@skip_arch_32_bit`          | `@unless_arch_32_bit`          | [`ARCH_32_BIT`](groups.md#extra_platforms.ARCH_32_BIT)                          | 32-bit architectures                        |
 | `@skip_arch_64_bit`          | `@unless_arch_64_bit`          | [`ARCH_64_BIT`](groups.md#extra_platforms.ARCH_64_BIT)                          | 64-bit architectures                        |
 | `@skip_arm`                  | `@unless_arm`                  | [`ARM`](architectures.md#extra_platforms.ARM)                                   | ARM (32-bit)                                |
+| `@skip_armv5tel`             | `@unless_armv5tel`             | [`ARMV5TEL`](architectures.md#extra_platforms.ARMV5TEL)                         | ARMv5TE (little-endian)                     |
 | `@skip_armv6l`               | `@unless_armv6l`               | [`ARMV6L`](architectures.md#extra_platforms.ARMV6L)                             | ARMv6 (little-endian)                       |
 | `@skip_armv7l`               | `@unless_armv7l`               | [`ARMV7L`](architectures.md#extra_platforms.ARMV7L)                             | ARMv7 (little-endian)                       |
 | `@skip_armv8l`               | `@unless_armv8l`               | [`ARMV8L`](architectures.md#extra_platforms.ARMV8L)                             | ARMv8 (32-bit, little-endian)               |
