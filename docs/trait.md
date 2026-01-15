@@ -10,6 +10,34 @@ There are three main types of traits:
 
 ## Trait usage
 
+### Current traits
+
+You can get all currently detected traits via the [`current_traits()` function](detection.md#extra_platforms.current_traits).
+
+```pycon
+>>> from extra_platforms import current_traits
+>>> current_traits()
+{
+   Architecture(id='aarch64', name='ARM64 (AArch64)'),
+   Platform(id='macos', name='macOS'),
+   CI(id='github_ci', name='GitHub Actions runner'),
+}
+```
+
+This function returns a set of all [predefined traits](#all-traits) that match the current system.
+
+Other current traits can be specifically checked via their dedicated `current_*()` functions:
+
+```pycon
+>>> from extra_platforms import current_architectures, current_platforms, current_ci
+>>> current_architectures()
+{Architecture(id='aarch64', name='ARM64 (AArch64)')}
+>>> current_platforms()
+{Platform(id='macos', name='macOS')}
+>>> current_ci()
+{CI(id='github_ci', name='GitHub Actions runner')}
+```
+
 ### Predefined traits
 
 All traits are available at the root of the `extra_platforms` package, as an uppercase symbol:
@@ -28,6 +56,19 @@ CI(id='github_ci', name='GitHub Actions runner')
 
 They all inherit from the [`Trait` base class](#extra_platforms.trait.Trait), and share a common interface.
 
+### Current property
+
+Each trait has a [`current` property](#extra_platforms.trait.Trait.current) that calls the corresponding [detection function](detection.md):
+
+```pycon
+>>> X86_64.current
+True
+>>> DEBIAN.current
+False
+>>> GITHUB_CI.current
+False
+```
+
 ### Detection functions
 
 Each trait is associated with a [detection function](detection.md), which returns `True` if the current system matches that trait.
@@ -41,19 +82,6 @@ True
 >>> is_debian()
 False
 >>> is_github_ci()
-False
-```
-
-### Current property
-
-Each trait has a [`current` property](#extra_platforms.trait.Trait.current) that calls the corresponding detection function:
-
-```pycon
->>> X86_64.current
-True
->>> DEBIAN.current
-False
->>> GITHUB_CI.current
 False
 ```
 
