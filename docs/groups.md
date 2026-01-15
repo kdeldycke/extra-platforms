@@ -3,7 +3,7 @@
 ## Group usage
 
 ```{todo}
-Explain high-level usage of groups here. Including membership testing and set operations.
+Explain high-level usage of groups here. Including membership testing and set operations. And how to create custom groups (from scratch or by combining existing groups).
 ```
 
 ## All groups
