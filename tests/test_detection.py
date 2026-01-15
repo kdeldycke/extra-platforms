@@ -19,6 +19,7 @@ from __future__ import annotations
 import ast
 import functools
 import inspect
+import re
 from itertools import chain
 from pathlib import Path
 
@@ -39,35 +40,37 @@ from extra_platforms import detection as detection_module
     "obj", list(chain(ALL_TRAITS, ALL_GROUPS)), ids=lambda obj: obj.id
 )
 def test_detection_trait_functions(obj: Trait | Group):
-    check_func_id = f"is_{obj.id}"
-
     # All traits must implement a real function in the detection module.
     if isinstance(obj, Trait):
-        # Unknown traits detectation functions are implemented at the root level.
+        # Unknown traits detection functions are implemented at the root level.
         if obj.id.startswith("unknown_"):
-            assert not hasattr(detection_module, check_func_id)
-            check_func = getattr(extra_platforms, check_func_id)
+            assert not hasattr(detection_module, obj.detection_func_id)
+            check_func = getattr(extra_platforms, obj.detection_func_id)
         else:
-            check_func = getattr(detection_module, check_func_id)
-            assert hasattr(extra_platforms, check_func_id)
-
+            check_func = getattr(detection_module, obj.detection_func_id)
+            assert hasattr(extra_platforms, obj.detection_func_id)
         # current property is aligned with detection function.
         assert check_func() == obj.current
 
-    # All groups' detection functions are dynamiccally generated, but still must exist.
+    # All groups' detection functions are dynamically generated, but still must exist.
     else:
-        assert not hasattr(detection_module, check_func_id)
-        check_func = getattr(extra_platforms, check_func_id)
+        assert not hasattr(detection_module, obj.detection_func_id)
+        check_func = getattr(extra_platforms, obj.detection_func_id)
 
         # Groups do not have a "current" property.
         assert not hasattr(obj, "current")
 
     assert isinstance(check_func, functools._lru_cache_wrapper)
     assert isinstance(check_func(), bool)
-    # Ensure the detection function is the one referenced by the trait.
-    assert obj.detection_func_id == check_func_id
     # Ensure the detection function name is lowercase.
     assert obj.detection_func_id.islower()
+
+    # Verify the docstring contains an rST link to the symbol.
+    # Format: `SYMBOL_ID <...#extra_platforms.SYMBOL_ID>`_
+    assert re.search(
+        rf"`{re.escape(obj.symbol_id)} <.*#extra_platforms\.{re.escape(obj.symbol_id)}>`_",
+        check_func.__doc__,
+    )
 
 
 def test_detection_heuristics_sorting():

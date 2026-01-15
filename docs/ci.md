@@ -72,7 +72,7 @@ There is only one group defined for CI systems: `ALL_CI`, which includes all rec
 
 | Icon | Symbol                                       | Description    | [Detection](detection.md)                               | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
 | :--: | :------------------------------------------- | :------------- | :------------------------------------------------------ | :----------------------------------------------------------: |
-|  ♺   | [`ALL_CI`](groups.md#extra_platforms.ALL_CI) | All CI systems | [`is_all_ci()`](detection.md#extra_platforms.is_all_ci) |                              ⬥                               |
+|  ♺   | [`ALL_CI`](groups.md#extra_platforms.ALL_CI) | All CI systems | [`is_any_ci()`](detection.md#extra_platforms.is_any_ci) |                              ⬥                               |
 
 <!-- ci-groups-table-end -->
 
@@ -122,7 +122,7 @@ mindmap
 
 <!-- ci-mindmap-end -->
 
-## CI details
+## Predefined CI
 
 ```{eval-rst}
 .. autoclasstree:: extra_platforms.ci_data

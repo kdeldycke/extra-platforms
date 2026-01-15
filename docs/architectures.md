@@ -83,20 +83,20 @@ The [`UNKNOWN_ARCHITECTURE`](#extra_platforms.UNKNOWN_ARCHITECTURE) trait repres
 
 <!-- architecture-groups-table-start -->
 
-| Icon | Symbol                                                             | Description            | [Detection](detection.md)                                                     | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :----------------------------------------------------------------- | :--------------------- | :---------------------------------------------------------------------------- | :----------------------------------------------------------: |
-|  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES) | All architectures      | [`is_all_architectures()`](detection.md#extra_platforms.is_all_architectures) |                                                              |
-|  📱  | [`ANY_ARM`](groups.md#extra_platforms.ANY_ARM)                     | Any ARM architecture   | [`is_any_arm()`](detection.md#extra_platforms.is_any_arm)                     |                              ⬥                               |
-|  🔲  | [`ANY_MIPS`](groups.md#extra_platforms.ANY_MIPS)                   | Any MIPS architecture  | [`is_any_mips()`](detection.md#extra_platforms.is_any_mips)                   |                              ⬥                               |
-|  ☀️  | [`ANY_SPARC`](groups.md#extra_platforms.ANY_SPARC)                 | Any SPARC architecture | [`is_any_sparc()`](detection.md#extra_platforms.is_any_sparc)                 |                              ⬥                               |
-|  ³²  | [`ARCH_32_BIT`](groups.md#extra_platforms.ARCH_32_BIT)             | 32-bit architectures   | [`is_arch_32_bit()`](detection.md#extra_platforms.is_arch_32_bit)             |                                                              |
-|  ⁶⁴  | [`ARCH_64_BIT`](groups.md#extra_platforms.ARCH_64_BIT)             | 64-bit architectures   | [`is_arch_64_bit()`](detection.md#extra_platforms.is_arch_64_bit)             |                                                              |
-|  🏢  | [`IBM_MAINFRAME`](groups.md#extra_platforms.IBM_MAINFRAME)         | IBM mainframe          | [`is_ibm_mainframe()`](detection.md#extra_platforms.is_ibm_mainframe)         |                              ⬥                               |
-|  🐉  | [`LOONGARCH`](groups.md#extra_platforms.LOONGARCH)                 | LoongArch              | [`is_loongarch()`](detection.md#extra_platforms.is_loongarch)                 |                              ⬥                               |
-|  ⚡  | [`POWERPC`](groups.md#extra_platforms.POWERPC)                     | PowerPC family         | [`is_powerpc()`](detection.md#extra_platforms.is_powerpc)                     |                              ⬥                               |
-|  Ⅴ   | [`RISCV`](groups.md#extra_platforms.RISCV)                         | RISC-V family          | [`is_riscv()`](detection.md#extra_platforms.is_riscv)                         |                              ⬥                               |
-|  🌐  | [`WEBASSEMBLY`](groups.md#extra_platforms.WEBASSEMBLY)             | WebAssembly            | [`is_webassembly()`](detection.md#extra_platforms.is_webassembly)             |                              ⬥                               |
-|  𝘅   | [`X86`](groups.md#extra_platforms.X86)                             | x86 family             | [`is_x86()`](detection.md#extra_platforms.is_x86)                             |                              ⬥                               |
+| Icon | Symbol                                                             | Description             | [Detection](detection.md)                                                   | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
+| :--: | :----------------------------------------------------------------- | :---------------------- | :-------------------------------------------------------------------------- | :----------------------------------------------------------: |
+|  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES) | All architectures       | [`is_any_architecture()`](detection.md#extra_platforms.is_any_architecture) |                                                              |
+|  📱  | [`ALL_ARM`](groups.md#extra_platforms.ALL_ARM)                     | All ARM architectures   | [`is_any_arm()`](detection.md#extra_platforms.is_any_arm)                   |                              ⬥                               |
+|  🔲  | [`ALL_MIPS`](groups.md#extra_platforms.ALL_MIPS)                   | All MIPS architectures  | [`is_any_mips()`](detection.md#extra_platforms.is_any_mips)                 |                              ⬥                               |
+|  ☀️  | [`ALL_SPARC`](groups.md#extra_platforms.ALL_SPARC)                 | All SPARC architectures | [`is_any_sparc()`](detection.md#extra_platforms.is_any_sparc)               |                              ⬥                               |
+|  ³²  | [`ARCH_32_BIT`](groups.md#extra_platforms.ARCH_32_BIT)             | 32-bit architectures    | [`is_arch_32_bit()`](detection.md#extra_platforms.is_arch_32_bit)           |                                                              |
+|  ⁶⁴  | [`ARCH_64_BIT`](groups.md#extra_platforms.ARCH_64_BIT)             | 64-bit architectures    | [`is_arch_64_bit()`](detection.md#extra_platforms.is_arch_64_bit)           |                                                              |
+|  🏢  | [`IBM_MAINFRAME`](groups.md#extra_platforms.IBM_MAINFRAME)         | IBM mainframe           | [`is_ibm_mainframe()`](detection.md#extra_platforms.is_ibm_mainframe)       |                              ⬥                               |
+|  🐉  | [`LOONGARCH`](groups.md#extra_platforms.LOONGARCH)                 | LoongArch               | [`is_loongarch()`](detection.md#extra_platforms.is_loongarch)               |                              ⬥                               |
+|  ⚡  | [`POWERPC`](groups.md#extra_platforms.POWERPC)                     | PowerPC family          | [`is_powerpc()`](detection.md#extra_platforms.is_powerpc)                   |                              ⬥                               |
+|  Ⅴ   | [`RISCV`](groups.md#extra_platforms.RISCV)                         | RISC-V family           | [`is_riscv()`](detection.md#extra_platforms.is_riscv)                       |                              ⬥                               |
+|  🌐  | [`WEBASSEMBLY`](groups.md#extra_platforms.WEBASSEMBLY)             | WebAssembly             | [`is_webassembly()`](detection.md#extra_platforms.is_webassembly)           |                              ⬥                               |
+|  𝘅   | [`X86`](groups.md#extra_platforms.X86)                             | x86 family              | [`is_x86()`](detection.md#extra_platforms.is_x86)                           |                              ⬥                               |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
@@ -120,28 +120,28 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_ARCHITECTURES,ANY_ARM,5
+ALL_ARCHITECTURES,ALL_ARM,5
 ALL_ARCHITECTURES,X86,4
-ALL_ARCHITECTURES,ANY_MIPS,4
+ALL_ARCHITECTURES,ALL_MIPS,4
 ALL_ARCHITECTURES,POWERPC,3
 ALL_ARCHITECTURES,WEBASSEMBLY,2
 ALL_ARCHITECTURES,RISCV,2
-ALL_ARCHITECTURES,ANY_SPARC,2
+ALL_ARCHITECTURES,ALL_SPARC,2
 ALL_ARCHITECTURES,LOONGARCH,1
 ALL_ARCHITECTURES,IBM_MAINFRAME,1
-ANY_ARM,AARCH64,1
-ANY_ARM,ARM,1
-ANY_ARM,ARMV6L,1
-ANY_ARM,ARMV7L,1
-ANY_ARM,ARMV8L,1
+ALL_ARM,AARCH64,1
+ALL_ARM,ARM,1
+ALL_ARM,ARMV6L,1
+ALL_ARM,ARMV7L,1
+ALL_ARM,ARMV8L,1
 X86,I386,1
 X86,I586,1
 X86,I686,1
 X86,X86_64,1
-ANY_MIPS,MIPS,1
-ANY_MIPS,MIPS64,1
-ANY_MIPS,MIPS64EL,1
-ANY_MIPS,MIPSEL,1
+ALL_MIPS,MIPS,1
+ALL_MIPS,MIPS64,1
+ALL_MIPS,MIPS64EL,1
+ALL_MIPS,MIPSEL,1
 POWERPC,PPC,1
 POWERPC,PPC64,1
 POWERPC,PPC64LE,1
@@ -149,8 +149,8 @@ WEBASSEMBLY,WASM32,1
 WEBASSEMBLY,WASM64,1
 RISCV,RISCV32,1
 RISCV,RISCV64,1
-ANY_SPARC,SPARC,1
-ANY_SPARC,SPARC64,1
+ALL_SPARC,SPARC,1
+ALL_SPARC,SPARC64,1
 LOONGARCH,LOONGARCH64,1
 IBM_MAINFRAME,S390X,1
 ```
@@ -186,15 +186,15 @@ mindmap
             (🐉 LOONGARCH64)
         )🏢 IBM_MAINFRAME(
             (🏢 S390X)
-        )☀️ ANY_SPARC(
+        )☀️ ALL_SPARC(
             (☀️ SPARC)
             (☀️ SPARC64)
-        )🔲 ANY_MIPS(
+        )🔲 ALL_MIPS(
             (🔲 MIPS)
             (🔲 MIPS64)
             (🔲 MIPS64EL)
             (🔲 MIPSEL)
-        )📱 ANY_ARM(
+        )📱 ALL_ARM(
             (📱 AARCH64)
             (📱 ARM)
             (📱 ARMV6L)
@@ -286,8 +286,7 @@ mindmap
 
 <!-- architecture-bitness-mindmap-end -->
 
-
-## Architecture details
+## Predefined architectures
 
 ```{eval-rst}
 .. autoclasstree:: extra_platforms.architecture_data

@@ -545,9 +545,8 @@ def generate_all_detection_function_table(
 
     # Add trait detection functions
     for trait in traits:
-        func_name = f"is_{trait.id}"
         entries.append((
-            func_name,
+            trait.detection_func_id,
             trait.icon,
             f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.symbol_id})",
             type(trait).__name__,
@@ -572,7 +571,7 @@ def generate_all_detection_function_table(
 
     for func_name, icon, symbol_link, type_name in entries:
         table_data.append([
-            f"[`{func_name}()`](#extra_platforms.{func_name})",
+            f"[`{func_name}()`](detection.md#extra_platforms.{func_name})",
             icon,
             symbol_link,
             type_name,
@@ -581,72 +580,40 @@ def generate_all_detection_function_table(
     return _generate_markdown_table(table_data, headers, alignments)
 
 
-def generate_trait_detection_autofunction(traits: Iterable[Trait]) -> str:
-    """Generate Sphinx autofunction directives for trait detection functions.
+def generate_detection_autofunction(
+    objects: Iterable[Trait | Group],
+) -> str:
+    """Generate Sphinx autofunction directives for detection functions.
 
-    These are the ``is_<trait_id>()`` functions defined in the ``detection`` module
-    and re-exported at the ``extra_platforms`` package level.
+    Generates directives for both trait detection functions (``is_<trait>()``)
+    defined in the ``detection`` module and group detection functions
+    (``is_<group>()``) dynamically generated in the ``extra_platforms`` package.
 
     Args:
-        traits: The traits whose detection functions should be documented.
+        objects: The traits or groups whose detection functions should be documented.
 
     Returns:
         A MyST-compatible code block containing the autofunction directives with
         links to their associated symbols.
     """
-    traits_list = list(traits)
-    if not traits_list:
+    objects_list = list(objects)
+    if not objects_list:
         return "```{eval-rst}\n```"
 
     # Generate autofunction directives with associated symbol links
     directives = []
-    for trait in sorted(traits_list, key=attrgetter("id")):
-        doc_page_html = trait.doc_page.replace(".md", ".html")
-        directives.append(f".. autofunction:: extra_platforms.is_{trait.id}")
-        directives.append("")
-        directives.append(
-            f"   **Associated trait**: `{trait.symbol_id} <{doc_page_html}#extra_platforms.{trait.symbol_id}>`_"
+    for obj in sorted(objects_list, key=attrgetter("id")):
+        # Use detection_func_id if available (groups), otherwise construct for traits
+        func_id = (
+            obj.detection_func_id
+            if hasattr(obj, "detection_func_id")
+            else f"is_{obj.id}"
         )
-        directives.append("")
+        directives.append(f".. autofunction:: extra_platforms.{func_id}")
 
     output = "```{eval-rst}\n"
     output += "\n".join(directives)
-    output += "```"
-    return output
-
-
-def generate_group_detection_autofunction(groups: Iterable[Group]) -> str:
-    """Generate Sphinx autofunction directives for group detection functions.
-
-    These are the ``is_<group_id>()`` functions dynamically generated in the
-    ``extra_platforms`` package for each group.
-
-    Args:
-        groups: The groups whose detection functions should be documented.
-
-    Returns:
-        A MyST-compatible code block containing the autofunction directives with
-        links to their associated symbols.
-    """
-    groups_list = list(groups)
-    if not groups_list:
-        return "```{eval-rst}\n```"
-
-    # Generate autofunction directives with associated symbol links
-    directives = []
-    for group in sorted(groups_list, key=attrgetter("id")):
-        directives.append(
-            f".. autofunction:: extra_platforms.{group.detection_func_id}"
-        )
-        directives.append("")
-        directives.append(
-            f"   **Associated group**: `{group.symbol_id} <groups.html#extra_platforms.{group.symbol_id}>`_"
-        )
-        directives.append("")
-
-    output = "```{eval-rst}\n"
-    output += "\n".join(directives)
-    output += "```"
+    output += "\n```"
     return output
 
 
@@ -802,12 +769,12 @@ def update_docs() -> None:
         (
             "trait-detection-autofunction-start",
             "trait-detection-autofunction-end",
-            generate_trait_detection_autofunction(ALL_TRAITS),
+            generate_detection_autofunction(ALL_TRAITS),
         ),
         (
             "group-detection-autofunction-start",
             "group-detection-autofunction-end",
-            generate_group_detection_autofunction(ALL_GROUPS),
+            generate_detection_autofunction(ALL_GROUPS),
         ),
     ]
 

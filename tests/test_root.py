@@ -180,8 +180,8 @@ def test_module_root_declarations():
     trait_members = fetch_module_implements(trait_module)
     deprecated_members = fetch_module_implements(deprecated_module)
     root_members = fetch_module_implements(extra_platforms)
-    # Update root members with auto-generated ``is_<group.id>`` variables.
-    root_members.update((f"is_{g.id}" for g in ALL_GROUPS))
+    # Update root members with auto-generated group detection function names.
+    root_members.update((g.detection_func_id for g in ALL_GROUPS))
 
     # Check all members are exposed at the module root.
     tree = ast.parse(Path(inspect.getfile(extra_platforms)).read_bytes())
@@ -324,11 +324,10 @@ def test_current_ci_strict(monkeypatch):
 
 def test_group_membership_funcs():
     for group in ALL_GROUPS:
-        func_id = f"is_{group.id}"
-        assert func_id in extra_platforms.__dict__
+        assert group.detection_func_id in extra_platforms.__dict__
 
-        func = extra_platforms.__dict__[func_id]
-        assert getattr(extra_platforms, func_id) is func
+        func = extra_platforms.__dict__[group.detection_func_id]
+        assert getattr(extra_platforms, group.detection_func_id) is func
 
         assert isinstance(func(), bool)
         assert func() == any(t in group for t in current_traits())

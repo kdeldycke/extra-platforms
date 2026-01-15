@@ -76,16 +76,16 @@ def test_not_in_github_actions():
 | `@skip_aarch64`              | `@unless_aarch64`              | [`AARCH64`](architectures.md#extra_platforms.AARCH64)                           | ARM64 (AArch64)                             |
 | `@skip_aix`                  | `@unless_aix`                  | [`AIX`](platforms.md#extra_platforms.AIX)                                       | IBM AIX                                     |
 | `@skip_all_architectures`    | `@unless_all_architectures`    | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES)              | All architectures                           |
+| `@skip_all_arm`              | `@unless_all_arm`              | [`ALL_ARM`](groups.md#extra_platforms.ALL_ARM)                                  | All ARM architectures                       |
 | `@skip_all_ci`               | `@unless_all_ci`               | [`ALL_CI`](groups.md#extra_platforms.ALL_CI)                                    | All CI systems                              |
+| `@skip_all_mips`             | `@unless_all_mips`             | [`ALL_MIPS`](groups.md#extra_platforms.ALL_MIPS)                                | All MIPS architectures                      |
 | `@skip_all_platforms`        | `@unless_all_platforms`        | [`ALL_PLATFORMS`](groups.md#extra_platforms.ALL_PLATFORMS)                      | All platforms                               |
-| `@skip_all_traits`           | `@unless_all_traits`           | [`ALL_TRAITS`](groups.md#extra_platforms.ALL_TRAITS)                            | Any architectures, platforms and CI systems |
+| `@skip_all_sparc`            | `@unless_all_sparc`            | [`ALL_SPARC`](groups.md#extra_platforms.ALL_SPARC)                              | All SPARC architectures                     |
+| `@skip_all_traits`           | `@unless_all_traits`           | [`ALL_TRAITS`](groups.md#extra_platforms.ALL_TRAITS)                            | All architectures, platforms and CI systems |
+| `@skip_all_windows`          | `@unless_all_windows`          | [`ALL_WINDOWS`](groups.md#extra_platforms.ALL_WINDOWS)                          | All Windows                                 |
 | `@skip_altlinux`             | `@unless_altlinux`             | [`ALTLINUX`](platforms.md#extra_platforms.ALTLINUX)                             | ALT Linux                                   |
 | `@skip_amzn`                 | `@unless_amzn`                 | [`AMZN`](platforms.md#extra_platforms.AMZN)                                     | Amazon Linux                                |
 | `@skip_android`              | `@unless_android`              | [`ANDROID`](platforms.md#extra_platforms.ANDROID)                               | Android                                     |
-| `@skip_any_arm`              | `@unless_any_arm`              | [`ANY_ARM`](groups.md#extra_platforms.ANY_ARM)                                  | Any ARM architecture                        |
-| `@skip_any_mips`             | `@unless_any_mips`             | [`ANY_MIPS`](groups.md#extra_platforms.ANY_MIPS)                                | Any MIPS architecture                       |
-| `@skip_any_sparc`            | `@unless_any_sparc`            | [`ANY_SPARC`](groups.md#extra_platforms.ANY_SPARC)                              | Any SPARC architecture                      |
-| `@skip_any_windows`          | `@unless_any_windows`          | [`ANY_WINDOWS`](groups.md#extra_platforms.ANY_WINDOWS)                          | Any Windows                                 |
 | `@skip_arch`                 | `@unless_arch`                 | [`ARCH`](platforms.md#extra_platforms.ARCH)                                     | Arch Linux                                  |
 | `@skip_arch_32_bit`          | `@unless_arch_32_bit`          | [`ARCH_32_BIT`](groups.md#extra_platforms.ARCH_32_BIT)                          | 32-bit architectures                        |
 | `@skip_arch_64_bit`          | `@unless_arch_64_bit`          | [`ARCH_64_BIT`](groups.md#extra_platforms.ARCH_64_BIT)                          | 64-bit architectures                        |

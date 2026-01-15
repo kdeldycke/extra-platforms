@@ -24,7 +24,7 @@ from pathlib import Path
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
-    ANY_WINDOWS,
+    ALL_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
     LINUX,
@@ -287,8 +287,8 @@ def test_platform_logical_grouping():
     assert BSD.issuperset(BSD_WITHOUT_MACOS)
 
     # All platforms are divided into Windows and Unix at the highest level.
-    assert ALL_PLATFORMS.fullyintersects(ANY_WINDOWS | UNIX)
-    assert ANY_WINDOWS.canonical
+    assert ALL_PLATFORMS.fullyintersects(ALL_WINDOWS | UNIX)
+    assert ALL_WINDOWS.canonical
     assert not UNIX.canonical
 
     # All UNIX platforms are divided into BSD, Linux, and Unix families.

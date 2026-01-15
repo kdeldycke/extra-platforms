@@ -84,6 +84,22 @@ class Group(_Identifiable):
         """Normalize members to a sorted, deduplicated mapping."""
         super().__post_init__()
 
+        # Override detection_func_id for groups with "all_" prefix.
+        # Groups with "all_" prefix get "is_any_*" detection functions.
+        # Class-type groups (those matching Trait subclasses) use the subclass's type_id.
+        if self.id.startswith("all_"):
+            suffix = self.id[4:]
+            # Map group suffix to singular type_id using Trait and its subclasses.
+            # e.g., "architectures" → "architecture", "platforms" → "platform",
+            #       "ci" → "ci", "traits" → "trait"
+            suffix_to_type_id = {
+                cls.all_group.lower()[4:]: cls.type_id
+                for cls in (Trait, *Trait.__subclasses__())
+            }
+            if suffix in suffix_to_type_id:
+                suffix = suffix_to_type_id[suffix]
+            object.__setattr__(self, "detection_func_id", f"is_any_{suffix}")
+
         # Accept either a MappingProxyType, dict, or iterable of Traits.
         if isinstance(self.members, MappingProxyType):
             traits = self.members.values()

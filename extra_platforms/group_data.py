@@ -152,9 +152,9 @@ ALL_ARCHITECTURES: Group = Group(
 """
 
 
-ANY_ARM = Group(
-    "any_arm",
-    "Any ARM architecture",
+ALL_ARM = Group(
+    "all_arm",
+    "All ARM architectures",
     "📱",
     (AARCH64, ARM, ARMV6L, ARMV7L, ARMV8L),
 )
@@ -179,9 +179,9 @@ LOONGARCH = Group(
 """LoongArch architecture."""
 
 
-ANY_MIPS = Group(
-    "any_mips",
-    "Any MIPS architecture",
+ALL_MIPS = Group(
+    "all_mips",
+    "All MIPS architectures",
     "🔲",
     (MIPS, MIPS64, MIPS64EL, MIPSEL),
 )
@@ -206,9 +206,9 @@ RISCV = Group(
 """All RISC-V-based architectures."""
 
 
-ANY_SPARC = Group(
-    "any_sparc",
-    "Any SPARC architecture",
+ALL_SPARC = Group(
+    "all_sparc",
+    "All SPARC architectures",
     "☀️",
     (SPARC, SPARC64),
 )
@@ -342,9 +342,9 @@ ALL_PLATFORMS: Group = Group(
 """
 
 
-ANY_WINDOWS = Group(
-    "any_windows",
-    "Any Windows",
+ALL_WINDOWS = Group(
+    "all_windows",
+    "All Windows",
     "🪟",
     (WINDOWS,),
 )
@@ -355,7 +355,7 @@ UNIX = Group(
     "unix",
     "Any Unix",
     "⨷",
-    tuple(ALL_PLATFORMS - ANY_WINDOWS),
+    tuple(ALL_PLATFORMS - ALL_WINDOWS),
 )
 """All Unix-like operating systems and compatibility layers."""
 
@@ -612,7 +612,7 @@ UNKNOWN = Group(
 
 ALL_TRAITS = Group(
     "all_traits",
-    "Any architectures, platforms and CI systems",
+    "All architectures, platforms and CI systems",
     "⁕",
     tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_CI | UNKNOWN),
 )
@@ -630,13 +630,13 @@ ALL_TRAITS = Group(
 ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_ARCHITECTURES,
-        ANY_ARM,
+        ALL_ARM,
         X86,
         LOONGARCH,
-        ANY_MIPS,
+        ALL_MIPS,
         POWERPC,
         RISCV,
-        ANY_SPARC,
+        ALL_SPARC,
         IBM_MAINFRAME,
         WEBASSEMBLY,
         ARCH_64_BIT,
@@ -649,7 +649,7 @@ ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
 ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_PLATFORMS,
-        ANY_WINDOWS,
+        ALL_WINDOWS,
         UNIX,
         UNIX_WITHOUT_MACOS,
         BSD,
@@ -677,17 +677,17 @@ ALL_CI_GROUPS: frozenset[Group] = frozenset((ALL_CI,))
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
         # Architecture groups.
-        ANY_ARM,
+        ALL_ARM,
         X86,
         LOONGARCH,
-        ANY_MIPS,
+        ALL_MIPS,
         POWERPC,
         RISCV,
-        ANY_SPARC,
+        ALL_SPARC,
         IBM_MAINFRAME,
         WEBASSEMBLY,
         # Platform groups.
-        ANY_WINDOWS,
+        ALL_WINDOWS,
         BSD,
         LINUX,
         LINUX_LAYERS,

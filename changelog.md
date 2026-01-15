@@ -23,8 +23,19 @@
 - Move all trait base classes to `trait.py` module.
 - Re-introduce aliases deprecated in v6.0.0 for backward compatibility:
   - `Group._extract_platforms()` → `Group._extract_members()`.
-  - `is_all_platforms_without_ci()` → `is_all_platforms()`.
-  - `is_ci()` → `is_all_ci()`.
+  - `is_all_platforms_without_ci()` → `is_any_platform()`.
+  - `is_ci()` → `is_any_ci()`.
+- Rename `ANY_*` groups to `ALL_*` for consistency:
+  - `ANY_ARM` → `ALL_ARM`.
+  - `ANY_MIPS` → `ALL_MIPS`.
+  - `ANY_SPARC` → `ALL_SPARC`.
+  - `ANY_WINDOWS` → `ALL_WINDOWS`.
+- Rename group detection functions to use `is_any_*()` pattern:
+  - `is_all_architectures()` → `is_any_architecture()`.
+  - `is_all_platforms()` → `is_any_platform()`.
+  - `is_all_ci()` → `is_any_ci()`.
+  - `is_all_traits()` → `is_any_trait()`.
+- Deprecate old group symbols and detection functions with aliases.
 - Pre-compute some traits and groups attributes for documentation generation.
 - Use symbols consistently for all traits and groups in the documentation.
 - Mark all canonical groups with the ⬥ symbol everywhere in the documentation.

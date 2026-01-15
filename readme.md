@@ -308,7 +308,7 @@ mindmap
             (🚩 NETBSD)
             (🐡 OPENBSD)
             (☀️ SUNOS)
-        )🪟 ANY_WINDOWS(
+        )🪟 ALL_WINDOWS(
             (🪟 WINDOWS)
 ```
 

@@ -22,14 +22,20 @@ import warnings
 from functools import wraps
 from types import ModuleType
 
+# Dynamically generated detection functions are imported lazily to avoid
+# circular imports during module initialization.
+import extra_platforms as _ep
+
 from . import (  # type: ignore[attr-defined]
+    ALL_ARM,
+    ALL_MIPS,
     ALL_PLATFORMS,
+    ALL_SPARC,
     ALL_TRAIT_IDS,
+    ALL_WINDOWS,
     UNKNOWN_PLATFORM,
     current_platform,
     current_traits,
-    is_all_ci,
-    is_all_platforms,
     is_unknown_platform,
     traits_from_ids,
 )
@@ -107,12 +113,18 @@ def _make_deprecated_callable(name: str, replacement: str, func):
     """Return a function wrapping `func` that emits a deprecation warning.
 
     The returned callable preserves the wrapped function metadata.
+
+    ``func`` can be either a callable or a string. If it's a string, it's treated
+    as the name of a function to look up lazily in ``extra_platforms`` module.
+    This allows wrapping dynamically generated functions that don't exist yet at
+    module load time.
     """
 
-    @wraps(func)
+    @wraps(func) if callable(func) else (lambda f: f)
     def _wrapper(*args, **kwargs):
         _warn_deprecated(name, replacement)
-        return func(*args, **kwargs)
+        target = func if callable(func) else getattr(_ep, func)
+        return target(*args, **kwargs)
 
     return _wrapper
 
@@ -206,23 +218,106 @@ Alias `is_unknown_linux()` → `is_unknown_platform()`.
 
 is_all_platforms_without_ci = _make_deprecated_callable(
     "is_all_platforms_without_ci()",
-    "is_all_platforms()",
-    is_all_platforms,
+    "is_any_platform()",
+    "is_any_platform",
 )
 """
-Alias `is_all_platforms_without_ci()` → `is_all_platforms()`.
+Alias `is_all_platforms_without_ci()` → `is_any_platform()`.
 
 .. deprecated:: 6.0.0
-   Use `is_all_platforms()` instead.
+   Use `is_any_platform()` instead.
 """
 
 
-is_ci = _make_deprecated_callable("is_ci()", "is_all_ci()", is_all_ci)
+is_ci = _make_deprecated_callable("is_ci()", "is_any_ci()", "is_any_ci")
 """
-Alias `is_ci()` → `is_all_ci()`.
+Alias `is_ci()` → `is_any_ci()`.
 
 .. deprecated:: 6.0.0
-   Use `is_all_ci()` instead.
+   Use `is_any_ci()` instead.
+"""
+
+
+is_all_architectures = _make_deprecated_callable(
+    "is_all_architectures()", "is_any_architecture()", "is_any_architecture"
+)
+"""
+Alias `is_all_architectures()` → `is_any_architecture()`.
+
+.. deprecated:: 7.0.0
+   Use `is_any_architecture()` instead.
+"""
+
+
+is_all_platforms = _make_deprecated_callable(
+    "is_all_platforms()", "is_any_platform()", "is_any_platform"
+)
+"""
+Alias `is_all_platforms()` → `is_any_platform()`.
+
+.. deprecated:: 7.0.0
+   Use `is_any_platform()` instead.
+"""
+
+
+is_all_ci = _make_deprecated_callable("is_all_ci()", "is_any_ci()", "is_any_ci")
+"""
+Alias `is_all_ci()` → `is_any_ci()`.
+
+.. deprecated:: 7.0.0
+   Use `is_any_ci()` instead.
+"""
+
+
+is_all_traits = _make_deprecated_callable(
+    "is_all_traits()", "is_any_trait()", "is_any_trait"
+)
+"""
+Alias `is_all_traits()` → `is_any_trait()`.
+
+.. deprecated:: 7.0.0
+   Use `is_any_trait()` instead.
+"""
+
+
+# ================================================================
+# Deprecated group symbols
+# ================================================================
+
+
+ANY_ARM = _make_deprecated_proxy(ALL_ARM, "ANY_ARM", "ALL_ARM")
+"""
+Alias `ANY_ARM` → `ALL_ARM`.
+
+.. deprecated:: 7.0.0
+   Use `ALL_ARM` instead.
+"""
+
+
+ANY_MIPS = _make_deprecated_proxy(ALL_MIPS, "ANY_MIPS", "ALL_MIPS")
+"""
+Alias `ANY_MIPS` → `ALL_MIPS`.
+
+.. deprecated:: 7.0.0
+   Use `ALL_MIPS` instead.
+"""
+
+
+ANY_SPARC = _make_deprecated_proxy(ALL_SPARC, "ANY_SPARC", "ALL_SPARC")
+"""
+Alias `ANY_SPARC` → `ALL_SPARC`.
+
+.. deprecated:: 7.0.0
+   Use `ALL_SPARC` instead.
+"""
+
+
+ANY_WINDOWS = _make_deprecated_proxy(ALL_WINDOWS, "ANY_WINDOWS", "ALL_WINDOWS")
+"""
+Alias `ANY_WINDOWS` → `ALL_WINDOWS`.
+
+.. deprecated:: 7.0.0
+   Use `ALL_WINDOWS` instead.
 """
 
 

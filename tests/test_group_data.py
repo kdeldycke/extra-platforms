@@ -109,14 +109,14 @@ def test_group_definitions(group: Group):
     assert group.id[-1] in ascii_lowercase + digits
     assert set(group.id).issubset(ascii_lowercase + digits + "_")
     assert group.id.islower()
-    # Only groups referencing all platforms and its derivate are allowed to
-    # start with "all_" prefix.
-    if group.id.startswith("all"):
-        assert group in (ALL_ARCHITECTURES, ALL_PLATFORMS, ALL_CI, ALL_TRAITS)
-    elif group.id.startswith("unknown"):
+    # Only the UNKNOWN group is allowed to have an ID starting with "unknown".
+    if group.id.startswith("unknown"):
         assert group is UNKNOWN
-    else:
-        assert not group.id.startswith("all_")
+        assert group.name == "Unknown"
+    # Groups starting with "all" must be canonical and have proper naming.
+    if group.id.startswith("all"):
+        assert group.id.startswith("all_")
+        assert group.name.startswith("All ")
 
     assert group.id not in ALL_TRAIT_IDS
     if group is UNKNOWN:
@@ -260,6 +260,7 @@ def test_unknown_group():
     """All members of the UNKNOWN group are unknown traits."""
     for trait in UNKNOWN:
         assert trait.id.startswith("unknown_")
+        assert trait.name.startswith("Unknown ")
         assert trait in ALL_TRAITS
         assert trait not in ALL_ARCHITECTURES
         assert trait not in ALL_PLATFORMS

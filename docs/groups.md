@@ -14,14 +14,14 @@ All recognized groups and their properties:
 
 | Icon | Symbol                                                               | Description                                 | [Detection](detection.md)                                                       | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
 | :--: | :------------------------------------------------------------------- | :------------------------------------------ | :------------------------------------------------------------------------------ | :----------------------------------------------------------: |
-|  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES)   | All architectures                           | [`is_all_architectures()`](detection.md#extra_platforms.is_all_architectures)   |                                                              |
-|  ♺   | [`ALL_CI`](groups.md#extra_platforms.ALL_CI)                         | All CI systems                              | [`is_all_ci()`](detection.md#extra_platforms.is_all_ci)                         |                              ⬥                               |
-|  ⚙️  | [`ALL_PLATFORMS`](groups.md#extra_platforms.ALL_PLATFORMS)           | All platforms                               | [`is_all_platforms()`](detection.md#extra_platforms.is_all_platforms)           |                                                              |
-|  ⁕   | [`ALL_TRAITS`](groups.md#extra_platforms.ALL_TRAITS)                 | Any architectures, platforms and CI systems | [`is_all_traits()`](detection.md#extra_platforms.is_all_traits)                 |                                                              |
-|  📱  | [`ANY_ARM`](groups.md#extra_platforms.ANY_ARM)                       | Any ARM architecture                        | [`is_any_arm()`](detection.md#extra_platforms.is_any_arm)                       |                              ⬥                               |
-|  🔲  | [`ANY_MIPS`](groups.md#extra_platforms.ANY_MIPS)                     | Any MIPS architecture                       | [`is_any_mips()`](detection.md#extra_platforms.is_any_mips)                     |                              ⬥                               |
-|  ☀️  | [`ANY_SPARC`](groups.md#extra_platforms.ANY_SPARC)                   | Any SPARC architecture                      | [`is_any_sparc()`](detection.md#extra_platforms.is_any_sparc)                   |                              ⬥                               |
-|  🪟  | [`ANY_WINDOWS`](groups.md#extra_platforms.ANY_WINDOWS)               | Any Windows                                 | [`is_any_windows()`](detection.md#extra_platforms.is_any_windows)               |                              ⬥                               |
+|  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES)   | All architectures                           | [`is_any_architecture()`](detection.md#extra_platforms.is_any_architecture)     |                                                              |
+|  📱  | [`ALL_ARM`](groups.md#extra_platforms.ALL_ARM)                       | All ARM architectures                       | [`is_any_arm()`](detection.md#extra_platforms.is_any_arm)                       |                              ⬥                               |
+|  ♺   | [`ALL_CI`](groups.md#extra_platforms.ALL_CI)                         | All CI systems                              | [`is_any_ci()`](detection.md#extra_platforms.is_any_ci)                         |                              ⬥                               |
+|  🔲  | [`ALL_MIPS`](groups.md#extra_platforms.ALL_MIPS)                     | All MIPS architectures                      | [`is_any_mips()`](detection.md#extra_platforms.is_any_mips)                     |                              ⬥                               |
+|  ⚙️  | [`ALL_PLATFORMS`](groups.md#extra_platforms.ALL_PLATFORMS)           | All platforms                               | [`is_any_platform()`](detection.md#extra_platforms.is_any_platform)             |                                                              |
+|  ☀️  | [`ALL_SPARC`](groups.md#extra_platforms.ALL_SPARC)                   | All SPARC architectures                     | [`is_any_sparc()`](detection.md#extra_platforms.is_any_sparc)                   |                              ⬥                               |
+|  ⁕   | [`ALL_TRAITS`](groups.md#extra_platforms.ALL_TRAITS)                 | All architectures, platforms and CI systems | [`is_any_trait()`](detection.md#extra_platforms.is_any_trait)                   |                                                              |
+|  🪟  | [`ALL_WINDOWS`](groups.md#extra_platforms.ALL_WINDOWS)               | All Windows                                 | [`is_any_windows()`](detection.md#extra_platforms.is_any_windows)               |                              ⬥                               |
 |  ³²  | [`ARCH_32_BIT`](groups.md#extra_platforms.ARCH_32_BIT)               | 32-bit architectures                        | [`is_arch_32_bit()`](detection.md#extra_platforms.is_arch_32_bit)               |                                                              |
 |  ⁶⁴  | [`ARCH_64_BIT`](groups.md#extra_platforms.ARCH_64_BIT)               | 64-bit architectures                        | [`is_arch_64_bit()`](detection.md#extra_platforms.is_arch_64_bit)               |                                                              |
 | 🅱️+  | [`BSD`](groups.md#extra_platforms.BSD)                               | Any BSD                                     | [`is_bsd()`](detection.md#extra_platforms.is_bsd)                               |                              ⬥                               |
@@ -50,19 +50,19 @@ Other groups are provided for convenience, but overlap with each other or with c
 
 <!-- groups-table-end -->
 
-## Group details
+## Predefined groups
 
 <!-- group-data-autodata-start -->
 
 ```{eval-rst}
 .. autodata:: extra_platforms.ALL_ARCHITECTURES
+.. autodata:: extra_platforms.ALL_ARM
 .. autodata:: extra_platforms.ALL_CI
+.. autodata:: extra_platforms.ALL_MIPS
 .. autodata:: extra_platforms.ALL_PLATFORMS
+.. autodata:: extra_platforms.ALL_SPARC
 .. autodata:: extra_platforms.ALL_TRAITS
-.. autodata:: extra_platforms.ANY_ARM
-.. autodata:: extra_platforms.ANY_MIPS
-.. autodata:: extra_platforms.ANY_SPARC
-.. autodata:: extra_platforms.ANY_WINDOWS
+.. autodata:: extra_platforms.ALL_WINDOWS
 .. autodata:: extra_platforms.ARCH_32_BIT
 .. autodata:: extra_platforms.ARCH_64_BIT
 .. autodata:: extra_platforms.BSD

@@ -24,9 +24,9 @@ from pathlib import Path
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
-    ANY_ARM,
-    ANY_MIPS,
-    ANY_SPARC,
+    ALL_ARM,
+    ALL_MIPS,
+    ALL_SPARC,
     ARCH_32_BIT,
     ARCH_64_BIT,
     IBM_MAINFRAME,
@@ -158,9 +158,9 @@ def test_architecture_logical_grouping():
 
     # All architectures are divided by Unix families.
     assert ALL_ARCHITECTURES.fullyintersects(
-        ANY_ARM
-        | ANY_MIPS
-        | ANY_SPARC
+        ALL_ARM
+        | ALL_MIPS
+        | ALL_SPARC
         | IBM_MAINFRAME
         | LOONGARCH
         | POWERPC
@@ -168,9 +168,9 @@ def test_architecture_logical_grouping():
         | WEBASSEMBLY
         | X86
     )
-    assert ANY_ARM.canonical
-    assert ANY_MIPS.canonical
-    assert ANY_SPARC.canonical
+    assert ALL_ARM.canonical
+    assert ALL_MIPS.canonical
+    assert ALL_SPARC.canonical
     assert IBM_MAINFRAME.canonical
     assert LOONGARCH.canonical
     assert POWERPC.canonical

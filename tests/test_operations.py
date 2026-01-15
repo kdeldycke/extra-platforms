@@ -33,7 +33,7 @@ from extra_platforms import (
     ALTLINUX,
     AMZN,
     ANDROID,
-    ANY_WINDOWS,
+    ALL_WINDOWS,
     ARCH,
     AZURE_PIPELINES,
     BAMBOO,
@@ -187,10 +187,10 @@ def test_groups_from_ids(group_id):
         ([UNIX], {UNIX}),
         ([UNIX, UNIX], {UNIX}),
         ([UNIX, AIX], {UNIX}),
-        ([WINDOWS], {ANY_WINDOWS}),
+        ([WINDOWS], {ALL_WINDOWS}),
         ([ALL_PLATFORMS, WINDOWS], {ALL_PLATFORMS}),
         ([UNIX, WINDOWS, ALL_CI], {ALL_PLATFORMS, ALL_CI}),
-        ([UNIX, ANY_WINDOWS, ALL_CI], {ALL_PLATFORMS, ALL_CI}),
+        ([UNIX, ALL_WINDOWS, ALL_CI], {ALL_PLATFORMS, ALL_CI}),
         ([BSD_WITHOUT_MACOS, UNIX], {UNIX}),
         ([BSD_WITHOUT_MACOS, MACOS], {BSD}),
         (
@@ -274,12 +274,12 @@ def test_reduction(items, expected):
         (frozenset(), frozenset()),
         ([AIX], {AIX}),
         ([AIX, AIX], {AIX}),
-        ([WINDOWS], {ANY_WINDOWS}),
+        ([WINDOWS], {ALL_WINDOWS}),
         (
             [BSD_WITHOUT_MACOS, MACOS],
             {FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS},
         ),
-        ([MACOS, WINDOWS, WSL1], {MACOS, ANY_WINDOWS, WSL1}),
+        ([MACOS, WINDOWS, WSL1], {MACOS, ALL_WINDOWS, WSL1}),
     ],
 )
 def test_reduce_custom_targets(items, expected):
@@ -290,7 +290,7 @@ def test_reduce_custom_targets(items, expected):
             name="Unix",
             members=tuple(UNIX_WITHOUT_MACOS - BSD_WITHOUT_MACOS - LINUX_LIKE),
         ),
-        ANY_WINDOWS,
+        ALL_WINDOWS,
     )
 
     results = reduce(items, target_pool=target_pool)

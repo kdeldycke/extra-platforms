@@ -22,11 +22,6 @@ import platform as stdlib_platform
 import sys
 from functools import cache
 
-TYPE_CHECKING = False
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
-
 from . import detection  # noqa: E402
 from .architecture_data import (  # noqa: E402
     AARCH64,
@@ -157,16 +152,16 @@ from .group import Group  # noqa: E402
 from .group_data import (  # noqa: E402
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
+    ALL_ARM,
     ALL_CI,
     ALL_CI_GROUPS,
     ALL_GROUPS,
+    ALL_MIPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
+    ALL_SPARC,
     ALL_TRAITS,
-    ANY_ARM,
-    ANY_MIPS,
-    ANY_SPARC,
-    ANY_WINDOWS,
+    ALL_WINDOWS,
     ARCH_32_BIT,
     ARCH_64_BIT,
     BSD,
@@ -428,54 +423,59 @@ def current_traits() -> set[Trait]:
 
 @cache
 def is_unknown_architecture() -> bool:
-    """Returns ``True`` if the current architecture is not recognized, ``False`` otherwise."""
+    """Return ``True`` if current architecture is `UNKNOWN_ARCHITECTURE <architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE>`_."""
     return current_architecture() is UNKNOWN_ARCHITECTURE
 
 
 @cache
 def is_unknown_platform() -> bool:
-    """Returns ``True`` if the current platform is not recognized, ``False`` otherwise."""
+    """Return ``True`` if current platform is `UNKNOWN_PLATFORM <platforms.html#extra_platforms.UNKNOWN_PLATFORM>`_."""
     return current_platform() is UNKNOWN_PLATFORM
 
 
 @cache
 def is_unknown_ci() -> bool:
-    """Returns ``True`` if the current CI system is not recognized, ``False`` otherwise."""
+    """Return ``True`` if current CI is `UNKNOWN_CI <ci.html#extra_platforms.UNKNOWN_CI>`_."""
     return current_ci() is UNKNOWN_CI
 
 
-def _generate_group_membership_func(_group: Group) -> Callable:
-    """Factory to dynamiccaly produce a group membership test function."""
+def _initialize_group_detection_functions() -> list[str]:
+    """Initialize and register all group detection functions.
 
-    def group_membership_check() -> bool:
-        """Compares all the current traits to the ``_group``.
+    Generates the appropriate test function for each group and registers it globally.
+    Since traits and groups have unique, non-overlapping IDs, we can create a
+    ``is_<group>()`` function for each group.
 
-        Returns ``True`` if at least one trait is part of the group, ``False``
-        otherwise.
-        """
-        return any(t in _group for t in current_traits())
+    Returns a list of all registered function IDs for cache invalidation purposes.
+    """
+    func_ids = []
 
-    group_membership_check.__doc__ = (
-        "Returns ``True`` if at least one trait is part of the group composed of "
-        f"{_group.short_desc}, ``False`` otherwise."
-    )
-    return cache(group_membership_check)
+    for group in ALL_GROUPS:
+        func_id = group.detection_func_id
+
+        # Create the group membership test function.
+        def group_membership_check() -> bool:
+            """Compares all the current traits to the ``group``."""
+            return any(t in group for t in current_traits())
+
+        group_membership_check.__doc__ = f"Return ``True`` if current traits match `{group.symbol_id} <groups.html#extra_platforms.{group.symbol_id}>`_ group."
+
+        assert func_id not in locals(), (
+            f"Function ID {func_id} already defined locally."
+        )
+        func_ids.append(func_id)
+        globals()[func_id] = cache(group_membership_check)
+
+    return func_ids
 
 
-_group_membership_func_ids = []
-for _group in ALL_GROUPS:
-    _func_id = f"is_{_group.id}"
-    assert _func_id not in locals(), f"Function ID {_func_id} already defined locally."
-    _group_membership_func_ids.append(_func_id)
-    globals()[_func_id] = _generate_group_membership_func(_group)
-"""Generates an ``is_<group.id>()`` local function for each group.
+_group_detection_func_ids = _initialize_group_detection_functions()
+"""Generates ``is_<group>()`` function for each group.
+
+These are the equivalent for groups of ``is_<trait>()`` functions defined in ``detection.py``.
 
 These functions return a boolean value indicating the membership of the current
 system into that group.
-
-Since traits and groups have unique, non-overlapping IDs, we can create a
-``is_<group.id>`` method for each group. The value of this boolean variable mark the
-membership of the current system to that group.
 """
 
 
@@ -490,13 +490,13 @@ def invalidate_caches():
     if sys.version_info >= (3, 14):
         stdlib_platform.invalidate_caches()
 
-    # Invalidate cached properties of the Platform and Architecture classes.
+    # Invalidate cached properties of trait classes.
     for member in ALL_TRAITS:
         if "current" in vars(member):
             # Use object.__delattr__ to bypass frozen dataclass restriction.
             object.__delattr__(member, "current")
 
-    # Invalidate detection module cached functions.
+    # Invalidate cached trait detection functions.
     for func_id in dir(detection):
         func = getattr(detection, func_id)
         if callable(func) and hasattr(func, "cache_clear"):
@@ -508,18 +508,26 @@ def invalidate_caches():
     current_ci.cache_clear()
     current_traits.cache_clear()
 
-    # Invalidate dynamically generated group membership functions.
-    for func_id in _group_membership_func_ids:
+    # Invalidate dynamically generated group detection functions.
+    for func_id in _group_detection_func_ids:
         globals()[func_id].cache_clear()
 
 
 from ._deprecated import (  # noqa: E402
     ALL_PLATFORM_IDS,
     ALL_PLATFORMS_WITHOUT_CI,
+    ANY_ARM,
+    ANY_MIPS,
+    ANY_SPARC,
+    ANY_WINDOWS,
     UNKNOWN_LINUX,
     current_os,
     current_platforms,
+    is_all_architectures,
+    is_all_ci,
+    is_all_platforms,
     is_all_platforms_without_ci,
+    is_all_traits,
     is_ci,
     is_unknown_linux,
     platforms_from_ids,
@@ -530,17 +538,21 @@ __all__ = (  # noqa: F405
     "AIX",
     "ALL_ARCHITECTURE_GROUPS",
     "ALL_ARCHITECTURES",
+    "ALL_ARM",
     "ALL_CI",
     "ALL_CI_GROUPS",
     "ALL_GROUP_IDS",
     "ALL_GROUPS",
     "ALL_IDS",
+    "ALL_MIPS",
     "ALL_PLATFORM_GROUPS",
     "ALL_PLATFORM_IDS",
     "ALL_PLATFORMS",
     "ALL_PLATFORMS_WITHOUT_CI",
+    "ALL_SPARC",
     "ALL_TRAIT_IDS",
     "ALL_TRAITS",
+    "ALL_WINDOWS",
     "ALTLINUX",
     "AMZN",
     "ANDROID",
@@ -597,17 +609,21 @@ __all__ = (  # noqa: F405
     "invalidate_caches",
     "is_aarch64",
     "is_aix",
-    "is_all_architectures",  # noqa: F822
-    "is_all_ci",  # noqa: F822
-    "is_all_platforms",  # noqa: F822
+    "is_all_architectures",
+    "is_all_ci",
+    "is_all_platforms",
     "is_all_platforms_without_ci",
-    "is_all_traits",  # noqa: F822
+    "is_all_traits",
     "is_altlinux",
     "is_amzn",
     "is_android",
+    "is_any_architecture",  # noqa: F822
     "is_any_arm",  # noqa: F822
+    "is_any_ci",  # noqa: F822
     "is_any_mips",  # noqa: F822
+    "is_any_platform",  # noqa: F822
     "is_any_sparc",  # noqa: F822
+    "is_any_trait",  # noqa: F822
     "is_any_windows",  # noqa: F822
     "is_arch",
     "is_arch_32_bit",  # noqa: F822

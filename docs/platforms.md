@@ -108,8 +108,8 @@ The [`UNKNOWN_PLATFORM`](#extra_platforms.UNKNOWN_PLATFORM) trait represents an 
 
 | Icon | Symbol                                                               | Description                        | [Detection](detection.md)                                                       | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
 | :--: | :------------------------------------------------------------------- | :--------------------------------- | :------------------------------------------------------------------------------ | :----------------------------------------------------------: |
-|  ⚙️  | [`ALL_PLATFORMS`](groups.md#extra_platforms.ALL_PLATFORMS)           | All platforms                      | [`is_all_platforms()`](detection.md#extra_platforms.is_all_platforms)           |                                                              |
-|  🪟  | [`ANY_WINDOWS`](groups.md#extra_platforms.ANY_WINDOWS)               | Any Windows                        | [`is_any_windows()`](detection.md#extra_platforms.is_any_windows)               |                              ⬥                               |
+|  ⚙️  | [`ALL_PLATFORMS`](groups.md#extra_platforms.ALL_PLATFORMS)           | All platforms                      | [`is_any_platform()`](detection.md#extra_platforms.is_any_platform)             |                                                              |
+|  🪟  | [`ALL_WINDOWS`](groups.md#extra_platforms.ALL_WINDOWS)               | All Windows                        | [`is_any_windows()`](detection.md#extra_platforms.is_any_windows)               |                              ⬥                               |
 | 🅱️+  | [`BSD`](groups.md#extra_platforms.BSD)                               | Any BSD                            | [`is_bsd()`](detection.md#extra_platforms.is_bsd)                               |                              ⬥                               |
 |  🅱️  | [`BSD_WITHOUT_MACOS`](groups.md#extra_platforms.BSD_WITHOUT_MACOS)   | Any BSD excluding macOS            | [`is_bsd_without_macos()`](detection.md#extra_platforms.is_bsd_without_macos)   |                                                              |
 |  🐧  | [`LINUX`](groups.md#extra_platforms.LINUX)                           | Any Linux distribution             | [`is_linux()`](detection.md#extra_platforms.is_linux)                           |                              ⬥                               |
@@ -149,7 +149,7 @@ ALL_PLATFORMS,SYSTEM_V,2
 ALL_PLATFORMS,LINUX_LAYERS,2
 ALL_PLATFORMS,UNIX_LAYERS,1
 ALL_PLATFORMS,OTHER_UNIX,1
-ALL_PLATFORMS,ANY_WINDOWS,1
+ALL_PLATFORMS,ALL_WINDOWS,1
 LINUX,ALTLINUX,1
 LINUX,AMZN,1
 LINUX,ANDROID,1
@@ -196,7 +196,7 @@ LINUX_LAYERS,WSL1,1
 LINUX_LAYERS,WSL2,1
 UNIX_LAYERS,CYGWIN,1
 OTHER_UNIX,HURD,1
-ANY_WINDOWS,WINDOWS,1
+ALL_WINDOWS,WINDOWS,1
 ```
 
 <!-- platform-multi-level-sankey-end -->
@@ -263,13 +263,13 @@ mindmap
             (🚩 NETBSD)
             (🐡 OPENBSD)
             (☀️ SUNOS)
-        )🪟 ANY_WINDOWS(
+        )🪟 ALL_WINDOWS(
             (🪟 WINDOWS)
 ```
 
 <!-- platform-mindmap-end -->
 
-## Platform details
+## Predefined platforms
 
 ```{eval-rst}
 .. autoclasstree:: extra_platforms.platform_data
