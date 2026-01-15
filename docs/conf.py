@@ -166,9 +166,9 @@ def make_rst_link(text, url):
     return f"`{text} <{url}>`_"
 
 
-def make_pytest_decorator_line(obj_id):
+def make_pytest_decorator_line(obj):
     """Create pytest decorator documentation line."""
-    return f"- **Pytest decorators**: {make_rst_link(f'@skip_{obj_id} / @unless_{obj_id}', 'pytest.html#decorators-reference')}"
+    return f"- **Pytest decorators**: {make_rst_link(f'@{obj.skip_decorator_id} / @{obj.unless_decorator_id}', 'pytest.html#decorators-reference')}"
 
 
 def autodoc_process_docstring(app, what, name, obj, options, lines):
@@ -206,7 +206,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         )
         lines.append(f"- **Detection function**: {detection_url}")
 
-        lines.append(make_pytest_decorator_line(obj.id))
+        lines.append(make_pytest_decorator_line(obj))
 
         # Add list of members with links to their definitions.
         member_links = []
@@ -261,7 +261,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         )
         lines.append(f"- **Detection function**: {detection_url}")
 
-        lines.append(make_pytest_decorator_line(obj.id))
+        lines.append(make_pytest_decorator_line(obj))
 
         # Add list of groups this trait belongs to.
         group_links = [

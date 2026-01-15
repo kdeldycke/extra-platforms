@@ -81,13 +81,13 @@ for _obj in chain(ALL_TRAITS, ALL_GROUPS):
     _func = getattr(extra_platforms, _obj.detection_func_id)
 
     # Generate @skip decorator.
-    globals()[f"skip_{_obj.id}"] = pytest.mark.skipif(
+    globals()[_obj.skip_decorator_id] = pytest.mark.skipif(
         _DeferredCondition(_func),  # type: ignore[arg-type]
         reason=f"Skip {_obj.short_desc}",
     )
 
     # Generate @unless decorator.
-    globals()[f"unless_{_obj.id}"] = pytest.mark.skipif(
+    globals()[_obj.unless_decorator_id] = pytest.mark.skipif(
         _DeferredCondition(_func, invert=True),  # type: ignore[arg-type]
         reason=f"Requires {_obj.short_desc}",
     )

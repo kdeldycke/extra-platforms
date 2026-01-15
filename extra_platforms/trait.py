@@ -106,6 +106,20 @@ class _Identifiable:
     of the ``extra_platforms`` module.
     """
 
+    skip_decorator_id: str = field(repr=False, init=False)
+    """ID of the Pytest skip decorator for this object.
+
+    The decorator is expected to be named ``@skip_<id>`` and available from the
+    ``extra_platforms.pytest`` module.
+    """
+
+    unless_decorator_id: str = field(repr=False, init=False)
+    """ID of the Pytest unless decorator for this object.
+
+    The decorator is expected to be named ``@unless_<id>`` and available from the
+    ``extra_platforms.pytest`` module.
+    """
+
     name: str
     """User-friendly name of the object."""
 
@@ -159,14 +173,18 @@ class _Identifiable:
         """Validate and normalize common fields.
 
         - Ensure the ID, name, and icon are not empty.
-        - Set the symbolic ID based on the ID.
-        - Set the detection function ID based on the ID.
+        - Set the symbolic ID.
+        - Set the detection function ID.
+        - Set the Pytest decorator IDs.
         """
         assert self.id, f"{self.__class__.__name__} ID cannot be empty."
 
         object.__setattr__(self, "symbol_id", self.id.upper())
 
         object.__setattr__(self, "detection_func_id", f"is_{self.id}")
+
+        object.__setattr__(self, "skip_decorator_id", f"skip_{self.id}")
+        object.__setattr__(self, "unless_decorator_id", f"unless_{self.id}")
 
         assert self.name, f"{self.__class__.__name__} name cannot be empty."
 

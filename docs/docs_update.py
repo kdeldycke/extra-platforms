@@ -485,12 +485,12 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     headers = ["Skip decorator", "Unless decorator", "Source symbol", "Description"]
     alignments = ["left", "left", "left", "left"]
 
-    for trait in sorted(objects, key=attrgetter("id")):
+    for obj in sorted(objects, key=attrgetter("id")):
         table_data.append([
-            f"`@skip_{trait.id}`",
-            f"`@unless_{trait.id}`",
-            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.symbol_id})",
-            trait.name,
+            f"`@{obj.skip_decorator_id}`",
+            f"`@{obj.unless_decorator_id}`",
+            f"[`{obj.symbol_id}`]({obj.doc_page}#extra_platforms.{obj.symbol_id})",
+            obj.name,
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)
