@@ -18,6 +18,11 @@
 .. seealso::
     Architecture variants from `Rust's target-lexicon
     <https://docs.rs/target-lexicon/latest/target_lexicon/enum.Architecture.html#variants>`_.
+
+.. todo::
+    Add mapping of architecture to manylinux Python targets? As per:
+    - https://github.com/zaniebot/uv/blob/6e9a42e31b19f56abb69352c9e5b3b17a013ad45/crates/uv-platform-tags/src/platform.rs#L182-L199
+    - https://github.com/pypa/manylinux
 """
 
 from __future__ import annotations
