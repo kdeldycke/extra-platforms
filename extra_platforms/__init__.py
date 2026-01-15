@@ -287,10 +287,11 @@ def _unrecognized_message() -> str:
 def current_architecture(strict: bool = False) -> Architecture:
     """Returns the ``Architecture`` matching the current environment.
 
-    Returns ``UNKNOWN_ARCHITECTURE`` if not running inside a recognized architecture.
+    Returns `UNKNOWN_ARCHITECTURE <architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE>`_ if not running inside a recognized architecture.
     To raise an error instead, set ``strict`` to ``True``.
 
-    Always raises an error if multiple architectures match.
+    .. important::
+        Always raises an error if multiple architectures match.
     """
     matching = set()
     # Iterate over all recognized architectures.
@@ -321,12 +322,13 @@ def current_architecture(strict: bool = False) -> Architecture:
 def current_platform(strict: bool = False) -> Platform:
     """Always returns the best matching ``Platform`` for the current environment.
 
-    Returns ``UNKNOWN_PLATFORM`` if not running inside a recognized platform.
+    Returns `UNKNOWN_PLATFORM <platforms.html#extra_platforms.UNKNOWN_PLATFORM>`_ if not running inside a recognized platform.
     To raise an error instead, set ``strict`` to ``True``.
 
-    If multiple platforms match the current environment, this function will try to
-    select the best, informative one. Raises an error if we can't decide on a single,
-    appropriate platform.
+    .. important::
+        If multiple platforms match the current environment, this function will try to
+        select the best, informative one. Raises an error if we can't decide on a single,
+        appropriate platform.
     """
     matching = set()
     for platform in ALL_PLATFORMS:
@@ -364,13 +366,14 @@ def current_platform(strict: bool = False) -> Platform:
 
 
 @cache
-def current_ci(strict: bool = False) -> CI | None:
+def current_ci(strict: bool = False) -> CI:
     """Returns the ``CI`` system matching the current environment.
 
-    Returns ``UNKNOWN_CI`` if not running inside a recognized CI system.
+    Returns `UNKNOWN_CI <ci.html#extra_platforms.UNKNOWN_CI>`_ if not running inside a recognized CI system.
     To raise an error instead, set ``strict`` to ``True``.
 
-    Always raises an error if multiple CI systems match.
+    .. important::
+        Always raises an error if multiple CI systems match.
     """
     matching = set()
     # Iterate over all recognized CI systems.
@@ -404,7 +407,7 @@ def current_traits() -> set[Trait]:
     This includes platforms, architectures and CI systems.
 
     .. caution::
-        Never returns ``UNKNOWN_*`` traits.
+        Never returns `UNKNOWN <groups.html#extra_platforms.UNKNOWN>`_ traits.
 
     Raises an error if the current environment is not recognized at all.
 
@@ -461,7 +464,7 @@ def _initialize_group_detection_functions() -> list[str]:
             """Compares all the current traits to the ``group``."""
             return any(t in _group for t in current_traits())
 
-        group_membership_check.__doc__ = f"Return ``True`` if current traits match `{group.symbol_id} <groups.html#extra_platforms.{group.symbol_id}>`_ group."
+        group_membership_check.__doc__ = f"Return ``True`` if at least one `current traits <detection.html#extra_platforms.current_traits>`_ is found in the `{group.symbol_id} <groups.html#extra_platforms.{group.symbol_id}>`_ group."
 
         assert func_id not in locals(), (
             f"Function ID {func_id} already defined locally."

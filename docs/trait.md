@@ -12,7 +12,7 @@ There are three main types of traits:
 
 ### Current traits
 
-You can get all currently detected traits via the [`current_traits()` function](detection.md#extra_platforms.current_traits).
+You can get all currently detected traits via the [`current_traits()`](detection.md#extra_platforms.current_traits) function.
 
 ```pycon
 >>> from extra_platforms import current_traits
@@ -26,7 +26,7 @@ You can get all currently detected traits via the [`current_traits()` function](
 
 This function returns a set of all [predefined traits](#all-traits) that match the current system.
 
-Other current traits can be specifically checked via their dedicated `current_*()` functions:
+Other current traits can be specifically checked via their dedicated [`current_*()` functions](detection.md#current-trait-functions):
 
 ```pycon
 >>> from extra_platforms import current_architectures, current_platforms, current_ci
@@ -210,13 +210,6 @@ All recognized traits and their properties:
 |  Ⓧ   | [`XENSERVER`](platforms.md#extra_platforms.XENSERVER)                           | XenServer                      | [`is_xenserver()`](detection.md#extra_platforms.is_xenserver)                       | Platform     |
 
 <!-- all-traits-table-end -->
-
-## Trait details
-
-All trait details and their properties are listed in their respective sections:
-- [Architectures](architectures.md#architecture-details)
-- [Platforms](platforms.md#platform-details)
-- [CI systems](ci.md#ci-details)
 
 ## Trait implementation
 

@@ -256,3 +256,14 @@ These functions are dynamically generated for each [group](groups.md) and test w
 ```
 
 <!-- group-detection-autofunction-end -->
+
+## Current trait functions
+
+These functions retrieve the currently detected traits:
+
+```{eval-rst}
+.. autofunction:: extra_platforms.current_traits
+.. autofunction:: extra_platforms.current_architecture
+.. autofunction:: extra_platforms.current_platform
+.. autofunction:: extra_platforms.current_ci
+```
