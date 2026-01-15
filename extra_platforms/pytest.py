@@ -100,16 +100,16 @@ if TYPE_CHECKING:
     skip_aarch64: MarkDecorator
     skip_aix: MarkDecorator
     skip_all_architectures: MarkDecorator
+    skip_all_arm: MarkDecorator
     skip_all_ci: MarkDecorator
+    skip_all_mips: MarkDecorator
     skip_all_platforms: MarkDecorator
+    skip_all_sparc: MarkDecorator
     skip_all_traits: MarkDecorator
+    skip_all_windows: MarkDecorator
     skip_altlinux: MarkDecorator
     skip_amzn: MarkDecorator
     skip_android: MarkDecorator
-    skip_any_arm: MarkDecorator
-    skip_any_mips: MarkDecorator
-    skip_any_sparc: MarkDecorator
-    skip_any_windows: MarkDecorator
     skip_arch: MarkDecorator
     skip_arch_32_bit: MarkDecorator
     skip_arch_64_bit: MarkDecorator
@@ -213,16 +213,16 @@ if TYPE_CHECKING:
     unless_aarch64: MarkDecorator
     unless_aix: MarkDecorator
     unless_all_architectures: MarkDecorator
+    unless_all_arm: MarkDecorator
     unless_all_ci: MarkDecorator
+    unless_all_mips: MarkDecorator
     unless_all_platforms: MarkDecorator
+    unless_all_sparc: MarkDecorator
     unless_all_traits: MarkDecorator
+    unless_all_windows: MarkDecorator
     unless_altlinux: MarkDecorator
     unless_amzn: MarkDecorator
     unless_android: MarkDecorator
-    unless_any_arm: MarkDecorator
-    unless_any_mips: MarkDecorator
-    unless_any_sparc: MarkDecorator
-    unless_any_windows: MarkDecorator
     unless_arch: MarkDecorator
     unless_arch_32_bit: MarkDecorator
     unless_arch_64_bit: MarkDecorator
