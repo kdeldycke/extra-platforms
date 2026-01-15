@@ -9,6 +9,7 @@
 - Add new `ARCH_32_BIT` and `ARCH_64_BIT` groups.
 - Add new `is_arch_32_bit()` and `is_arch_64_bit()` detection
 - Add new `UNKNOWN` group that contains `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` traits. Aligns all their icons.
+- Add new `ARMV5TEL` architecture.
 - Rename `UNKNOWN_LINUX` trait to `UNKNOWN_PLATFORM`.
 - Remove `UNKNOWN_ARCHITECTURE` trait from `ALL_ARCHITECTURES` group.
 - Remove `UNKNOWN_LINUX` trait from `ALL_PLATFORMS` group.

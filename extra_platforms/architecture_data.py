@@ -65,6 +65,18 @@ ARMV7L = Architecture(
     distributions, or simply ``armv7`` in other contexts.
 """
 
+ARMV5TEL = Architecture(
+    "armv5tel",
+    "ARMv5TE (little-endian)",
+    "📱",
+    "https://en.wikipedia.org/wiki/ARM11",
+)
+"""
+.. note::
+    ARMv5TE includes Thumb and DSP extensions. This architecture is found on
+    older ARM devices and may appear in embedded systems or legacy platforms.
+"""
+
 ARMV8L = Architecture(
     "armv8l",
     "ARMv8 (32-bit, little-endian)",

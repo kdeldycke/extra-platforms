@@ -101,6 +101,7 @@ def is_arm() -> bool:
     This matches ARM architectures not covered by more specific variants.
     """
     if platform.machine().startswith("arm") and not any((
+        is_armv5tel(),
         is_armv6l(),
         is_armv7l(),
         is_armv8l(),
@@ -120,6 +121,12 @@ def is_armv6l() -> bool:
 def is_armv7l() -> bool:
     """Return ``True`` if current architecture is `ARMV7L <architectures.html#extra_platforms.ARMV7L>`_."""
     return platform.machine() == "armv7l"
+
+
+@cache
+def is_armv5tel() -> bool:
+    """Return ``True`` if current architecture is `ARMV5TEL <architectures.html#extra_platforms.ARMV5TEL>`_."""
+    return platform.machine() == "armv5tel"
 
 
 @cache

@@ -26,6 +26,7 @@ from . import detection  # noqa: E402
 from .architecture_data import (  # noqa: E402
     AARCH64,
     ARM,
+    ARMV5TEL,
     ARMV6L,
     ARMV7L,
     ARMV8L,
@@ -72,6 +73,7 @@ from .detection import (  # noqa: E402
     is_android,
     is_arch,
     is_arm,
+    is_armv5tel,
     is_armv6l,
     is_armv7l,
     is_armv8l,
@@ -565,6 +567,7 @@ __all__ = (  # noqa: F405
     "ARCH_64_BIT",
     "Architecture",
     "ARM",
+    "ARMV5TEL",
     "ARMV6L",
     "ARMV7L",
     "ARMV8L",
@@ -629,6 +632,7 @@ __all__ = (  # noqa: F405
     "is_arch_32_bit",  # noqa: F822
     "is_arch_64_bit",  # noqa: F822
     "is_arm",
+    "is_armv5tel",
     "is_armv6l",
     "is_armv7l",
     "is_armv8l",
