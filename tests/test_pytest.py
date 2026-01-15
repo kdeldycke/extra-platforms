@@ -147,7 +147,7 @@ def test_skip_all_architectures():
 def test_unless_all_architectures():
     assert not is_unknown_architecture()
     assert True, (
-        "This test should always be run as we exprect to always detect an architecture."
+        "This test should always be run as we expect to always detect an architecture."
     )
 
 
@@ -163,7 +163,7 @@ def test_skip_all_platforms():
 def test_unless_all_platforms():
     assert not is_unknown_platform()
     assert True, (
-        "This test should always be run as we exprect to always detect a platform."
+        "This test should always be run as we expect to always detect a platform."
     )
 
 
