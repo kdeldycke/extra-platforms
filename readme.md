@@ -304,7 +304,7 @@ mindmap
             (🌊 ULTRAMARINE)
             (Ⓧ XENSERVER)
         )🅱️+ BSD(
-            (🪰 DRAGONFLYBSD)
+            (🪰 DRAGONFLY_BSD)
             (😈 FREEBSD)
             (🍎 MACOS)
             (🌘 MIDNIGHTBSD)
