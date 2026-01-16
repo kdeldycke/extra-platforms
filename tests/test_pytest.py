@@ -26,9 +26,9 @@ from extra_platforms import (  # type: ignore[attr-defined]
     ALL_TRAITS,
     Group,
     Trait,
-    is_all_architectures,
-    is_all_ci,
-    is_all_platforms,
+    is_any_architecture,
+    is_any_ci,
+    is_any_platform,
     is_any_windows,
     is_github_ci,
     is_linux,
@@ -177,67 +177,67 @@ def test_unless_any_ci():
 
 @skip_unknown_architecture
 def test_skip_unknown_architecture():
-    assert is_all_architectures()
+    assert is_any_architecture()
     assert not is_unknown_architecture()
 
-    assert is_all_platforms() or is_unknown_platform()
+    assert is_any_platform() or is_unknown_platform()
 
-    assert is_all_ci() or is_unknown_ci()
+    assert is_any_ci() or is_unknown_ci()
 
 
 @unless_unknown_architecture
 def test_unless_unknown_architecture():
-    assert not is_all_architectures()
+    assert not is_any_architecture()
     assert is_unknown_architecture()
 
-    assert is_all_platforms() or is_unknown_platform()
+    assert is_any_platform() or is_unknown_platform()
 
-    assert is_all_ci() or is_unknown_ci()
+    assert is_any_ci() or is_unknown_ci()
 
 
 @skip_unknown_platform
 def test_skip_unknown_platform():
-    assert is_all_architectures() or is_unknown_architecture()
+    assert is_any_architecture() or is_unknown_architecture()
 
-    assert is_all_platforms()
+    assert is_any_platform()
     assert not is_unknown_platform()
 
-    assert is_all_ci() or is_unknown_ci()
+    assert is_any_ci() or is_unknown_ci()
 
 
 @unless_unknown_platform
 def test_unless_unknown_platform():
-    assert is_all_architectures() or is_unknown_architecture()
+    assert is_any_architecture() or is_unknown_architecture()
 
-    assert not is_all_platforms()
+    assert not is_any_platform()
     assert is_unknown_platform()
 
-    assert is_all_ci() or is_unknown_ci()
+    assert is_any_ci() or is_unknown_ci()
 
 
 @skip_unknown_ci
 def test_skip_unknown_ci():
-    assert is_all_architectures() or is_unknown_architecture()
+    assert is_any_architecture() or is_unknown_architecture()
 
-    assert is_all_platforms() or is_unknown_platform()
+    assert is_any_platform() or is_unknown_platform()
 
-    assert is_all_ci()
+    assert is_any_ci()
     assert not is_unknown_ci()
 
 
 @unless_unknown_ci
 def test_unless_unknown_ci():
-    assert is_all_architectures() or is_unknown_architecture()
+    assert is_any_architecture() or is_unknown_architecture()
 
-    assert is_all_platforms() or is_unknown_platform()
+    assert is_any_platform() or is_unknown_platform()
 
-    assert not is_all_ci()
+    assert not is_any_ci()
     assert is_unknown_ci()
 
 
 @skip_linux
 def test_skip_linux():
-    assert is_all_platforms()
+    assert is_any_platform()
     assert not is_linux()
     assert not is_ubuntu()
     assert is_any_windows() or is_macos() or is_windows()
@@ -245,7 +245,7 @@ def test_skip_linux():
 
 @unless_linux
 def test_unless_linux():
-    assert is_all_platforms()
+    assert is_any_platform()
     assert not is_any_windows()
     assert is_linux()
     assert not is_macos()
@@ -255,14 +255,14 @@ def test_unless_linux():
 
 @skip_macos
 def test_skip_macos():
-    assert is_all_platforms()
+    assert is_any_platform()
     assert not is_macos()
     assert is_any_windows() or is_linux() or is_ubuntu() or is_windows()
 
 
 @unless_macos
 def test_unless_macos():
-    assert is_all_platforms()
+    assert is_any_platform()
     assert not is_any_windows()
     assert not is_linux()
     assert is_macos()
@@ -272,14 +272,14 @@ def test_unless_macos():
 
 @skip_ubuntu
 def test_skip_ubuntu():
-    assert is_all_platforms()
+    assert is_any_platform()
     assert not is_ubuntu()
     assert is_any_windows() or is_linux() or is_macos() or is_windows()
 
 
 @unless_ubuntu
 def test_unless_ubuntu():
-    assert is_all_platforms()
+    assert is_any_platform()
     assert not is_any_windows()
     assert is_linux()
     assert not is_macos()
@@ -289,7 +289,7 @@ def test_unless_ubuntu():
 
 @skip_windows
 def test_skip_windows():
-    assert is_all_platforms()
+    assert is_any_platform()
     assert not is_windows()
     assert not is_any_windows()
     assert is_linux() or is_macos() or is_ubuntu()
@@ -297,7 +297,7 @@ def test_skip_windows():
 
 @unless_windows
 def test_unless_windows():
-    assert is_all_platforms()
+    assert is_any_platform()
     # assert is_any_windows()
     assert not is_linux()
     assert not is_macos()
@@ -307,12 +307,12 @@ def test_unless_windows():
 
 @skip_github_ci
 def test_skip_github_ci():
-    assert is_all_ci() or is_unknown_ci()
+    assert is_any_ci() or is_unknown_ci()
     assert not is_github_ci()
 
 
 @unless_github_ci
 def test_unless_github_ci():
-    assert is_all_ci()
+    assert is_any_ci()
     assert not is_unknown_ci()
     assert is_github_ci()

@@ -22,7 +22,7 @@ from extra_platforms import (
     AIX,
     ALL_CI,
     ALL_PLATFORMS,
-    ANY_WINDOWS,
+    ALL_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
     LINUX,
@@ -122,8 +122,8 @@ def test_canonical_property():
     assert not empty_group.canonical
 
     # A copied canonical group stays canonical.
-    assert ANY_WINDOWS.canonical
-    copied_windows = ANY_WINDOWS.copy()
+    assert ALL_WINDOWS.canonical
+    copied_windows = ALL_WINDOWS.copy()
     assert copied_windows.canonical
 
     # A modified canonical group is not canonical.
@@ -133,93 +133,93 @@ def test_canonical_property():
 
 
 def test_simple_union():
-    new_group = ANY_WINDOWS.union(LINUX_LAYERS)
+    new_group = ALL_WINDOWS.union(LINUX_LAYERS)
 
-    assert ANY_WINDOWS.issubset(new_group)
+    assert ALL_WINDOWS.issubset(new_group)
     assert LINUX_LAYERS.issubset(new_group)
-    assert new_group.issuperset(ANY_WINDOWS)
+    assert new_group.issuperset(ALL_WINDOWS)
     assert new_group.issuperset(LINUX_LAYERS)
 
-    assert new_group.id == ANY_WINDOWS.id
+    assert new_group.id == ALL_WINDOWS.id
     assert new_group.id != LINUX_LAYERS.id
-    assert new_group.name == ANY_WINDOWS.name
+    assert new_group.name == ALL_WINDOWS.name
     assert new_group.name != LINUX_LAYERS.name
-    assert new_group.icon == ANY_WINDOWS.icon
+    assert new_group.icon == ALL_WINDOWS.icon
     assert new_group.icon != LINUX_LAYERS.icon
 
-    assert set(new_group.members) != set(ANY_WINDOWS.members)
-    assert set(new_group.member_ids) != set(ANY_WINDOWS.member_ids)
+    assert set(new_group.members) != set(ALL_WINDOWS.members)
+    assert set(new_group.member_ids) != set(ALL_WINDOWS.member_ids)
     assert set(new_group.members) != set(LINUX_LAYERS.members)
     assert set(new_group.member_ids) != set(LINUX_LAYERS.member_ids)
 
-    assert set(new_group.members) == set(ANY_WINDOWS.members).union(
+    assert set(new_group.members) == set(ALL_WINDOWS.members).union(
         LINUX_LAYERS.members
     )
-    assert set(new_group.member_ids) == set(ANY_WINDOWS.member_ids).union(
+    assert set(new_group.member_ids) == set(ALL_WINDOWS.member_ids).union(
         LINUX_LAYERS.member_ids
     )
 
 
 def test_multiple_union():
-    new_group = ANY_WINDOWS.union(LINUX_LAYERS, UNIX_LAYERS)
+    new_group = ALL_WINDOWS.union(LINUX_LAYERS, UNIX_LAYERS)
 
     assert new_group.member_ids == frozenset(("windows", "wsl1", "wsl2", "cygwin"))
 
-    assert ANY_WINDOWS.issubset(new_group)
+    assert ALL_WINDOWS.issubset(new_group)
     assert LINUX_LAYERS.issubset(new_group)
     assert UNIX_LAYERS.issubset(new_group)
 
-    assert new_group.issuperset(ANY_WINDOWS)
+    assert new_group.issuperset(ALL_WINDOWS)
     assert new_group.issuperset(LINUX_LAYERS)
     assert new_group.issuperset(UNIX_LAYERS)
 
-    assert new_group.id == ANY_WINDOWS.id
+    assert new_group.id == ALL_WINDOWS.id
     assert new_group.id != LINUX_LAYERS.id
     assert new_group.id != UNIX_LAYERS.id
-    assert new_group.name == ANY_WINDOWS.name
+    assert new_group.name == ALL_WINDOWS.name
     assert new_group.name != LINUX_LAYERS.name
     assert new_group.name != UNIX_LAYERS.name
-    assert new_group.icon == ANY_WINDOWS.icon
+    assert new_group.icon == ALL_WINDOWS.icon
     assert new_group.icon != LINUX_LAYERS.icon
     assert new_group.icon != UNIX_LAYERS.icon
 
-    assert set(new_group.members) != set(ANY_WINDOWS.members)
-    assert set(new_group.member_ids) != set(ANY_WINDOWS.member_ids)
+    assert set(new_group.members) != set(ALL_WINDOWS.members)
+    assert set(new_group.member_ids) != set(ALL_WINDOWS.member_ids)
     assert set(new_group.members) != set(LINUX_LAYERS.members)
     assert set(new_group.member_ids) != set(LINUX_LAYERS.member_ids)
     assert set(new_group.members) != set(UNIX_LAYERS.members)
     assert set(new_group.member_ids) != set(UNIX_LAYERS.member_ids)
 
-    assert set(new_group.members) == set(ANY_WINDOWS.members).union(
+    assert set(new_group.members) == set(ALL_WINDOWS.members).union(
         LINUX_LAYERS.members
     ).union(UNIX_LAYERS.members)
-    assert set(new_group.member_ids) == set(ANY_WINDOWS.member_ids).union(
+    assert set(new_group.member_ids) == set(ALL_WINDOWS.member_ids).union(
         LINUX_LAYERS.member_ids
     ).union(UNIX_LAYERS.member_ids)
 
 
 def test_single_intersection():
-    new_group = ALL_PLATFORMS.intersection(ANY_WINDOWS)
+    new_group = ALL_PLATFORMS.intersection(ALL_WINDOWS)
 
     assert new_group.member_ids == frozenset(("windows",))
 
-    assert ANY_WINDOWS.issubset(new_group)
+    assert ALL_WINDOWS.issubset(new_group)
     assert not ALL_PLATFORMS.issubset(new_group)
-    assert new_group.issuperset(ANY_WINDOWS)
+    assert new_group.issuperset(ALL_WINDOWS)
     assert not new_group.issuperset(ALL_PLATFORMS)
 
     assert new_group.id == ALL_PLATFORMS.id
-    assert new_group.id != ANY_WINDOWS.id
+    assert new_group.id != ALL_WINDOWS.id
     assert new_group.name == ALL_PLATFORMS.name
-    assert new_group.name != ANY_WINDOWS.name
+    assert new_group.name != ALL_WINDOWS.name
     assert new_group.icon == ALL_PLATFORMS.icon
-    assert new_group.icon != ANY_WINDOWS.icon
+    assert new_group.icon != ALL_WINDOWS.icon
 
     assert set(new_group.members) != set(ALL_PLATFORMS.members)
     assert set(new_group.member_ids) != set(ALL_PLATFORMS.member_ids)
 
-    assert set(new_group.members) == set(ANY_WINDOWS.members)
-    assert set(new_group.member_ids) == set(ANY_WINDOWS.member_ids)
+    assert set(new_group.members) == set(ALL_WINDOWS.members)
+    assert set(new_group.member_ids) == set(ALL_WINDOWS.member_ids)
 
 
 def test_multiple_intersection():
@@ -339,7 +339,7 @@ def test_multiple_difference():
 
 
 def test_symmetric_difference():
-    win_and_bsd = ANY_WINDOWS.union(BSD_WITHOUT_MACOS)
+    win_and_bsd = ALL_WINDOWS.union(BSD_WITHOUT_MACOS)
     new_group = win_and_bsd.symmetric_difference(BSD)
 
     assert new_group.member_ids == frozenset((("macos", "windows")))

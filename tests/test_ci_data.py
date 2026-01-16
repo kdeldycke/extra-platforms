@@ -43,8 +43,8 @@ from extra_platforms import (  # type: ignore[attr-defined]
     current_platform,
     current_traits,
     is_aarch64,
-    is_all_ci,
-    is_all_traits,
+    is_any_ci,
+    is_any_trait,
     is_arch_64_bit,
     is_azure_pipelines,
     is_bamboo,
@@ -115,7 +115,7 @@ def test_github_runner_detection():
     https://github.com/actions/runner-images#available-images
     """
     assert current_ci() is GITHUB_CI
-    assert is_all_ci()
+    assert is_any_ci()
     assert is_github_ci()
 
     assert GITHUB_CI in current_traits()
@@ -205,7 +205,7 @@ def test_github_runner_detection():
 
 def test_ci_detection():
     # We always expect to detect something.
-    assert is_all_traits()
+    assert is_any_trait()
 
     # We don't always expect to detect a CI.
     current_ci_result = current_ci()
@@ -213,11 +213,11 @@ def test_ci_detection():
     if is_unknown_ci():
         assert current_ci_result is UNKNOWN_CI
         assert current_ci_result not in ALL_CI
-        assert not is_all_ci()
+        assert not is_any_ci()
     else:
         assert current_ci_result is not UNKNOWN_CI
         assert current_ci_result in ALL_CI
-        assert is_all_ci()
+        assert is_any_ci()
 
     if is_github_ci():
         assert not is_azure_pipelines()

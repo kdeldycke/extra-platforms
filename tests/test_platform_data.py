@@ -39,8 +39,8 @@ from extra_platforms import (  # type: ignore[attr-defined]
     UNKNOWN_PLATFORM,
     current_platform,
     is_aix,
-    is_all_platforms,
-    is_all_traits,
+    is_any_platform,
+    is_any_trait,
     is_altlinux,
     is_amzn,
     is_android,
@@ -116,8 +116,8 @@ def test_platform_data_sorting():
 
 def test_platform_detection():
     # We always expect to detect a platform.
-    assert is_all_traits()
-    assert is_all_platforms()
+    assert is_any_trait()
+    assert is_any_platform()
     assert not is_unknown_platform()
     assert current_platform() is not UNKNOWN_PLATFORM
 

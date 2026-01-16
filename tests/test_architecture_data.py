@@ -40,8 +40,8 @@ from extra_platforms import (  # type: ignore[attr-defined]
     X86,
     current_architecture,
     is_aarch64,
-    is_all_architectures,
-    is_all_traits,
+    is_any_architecture,
+    is_any_trait,
     is_arch_32_bit,
     is_arch_64_bit,
     is_arm,
@@ -96,8 +96,8 @@ def test_architecture_data_sorting():
 
 def test_architecture_detection():
     # We always expect to detect an architecture.
-    assert is_all_traits()
-    assert is_all_architectures()
+    assert is_any_trait()
+    assert is_any_architecture()
     assert not is_unknown_architecture()
     assert current_architecture() is not UNKNOWN_ARCHITECTURE
 
