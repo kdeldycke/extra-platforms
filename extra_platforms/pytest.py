@@ -72,6 +72,31 @@ class _DeferredCondition:
         return not result if self.invert else result
 
 
+def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
+    """Generate a reStructuredText docstring for a pytest decorator.
+
+    Creates a concise docstring with links to the associated trait/group and
+    its detection function.
+
+    Args:
+        obj: The trait or group to document.
+        is_skip: Whether this is a skip decorator (True) or unless decorator (False).
+
+    Returns:
+        A reStructuredText docstring.
+    """
+    # Create reference links in reStructuredText format.
+    name_link = f"`{obj.symbol_id} <{obj.doc_page.replace('.md', '.html')}#extra_platforms.{obj.symbol_id}>`_"
+    detection_link = f"`{obj.detection_func_id}() <detection.html#extra_platforms.{obj.detection_func_id}>`_"
+
+    if is_skip:
+        summary = f"Skip tests when {name_link} {obj.type_name} is detected by {detection_link}."
+    else:
+        summary = f"Run tests only if {name_link} {obj.type_name} is detected by {detection_link}."
+
+    return summary
+
+
 # Generate a pair of skip/unless decorators for each platform and group.
 for _obj in chain(ALL_TRAITS, ALL_GROUPS):
     # Sanity check to please the type checker.
@@ -80,17 +105,21 @@ for _obj in chain(ALL_TRAITS, ALL_GROUPS):
     # Get the detection function for the current object.
     _func = getattr(extra_platforms, _obj.detection_func_id)
 
-    # Generate @skip decorator.
-    globals()[_obj.skip_decorator_id] = pytest.mark.skipif(
-        _DeferredCondition(_func),  # type: ignore[arg-type]
-        reason=f"Skip {_obj.short_desc}",
-    )
+    # Generate both skip and unless decorators for this object.
+    for _is_skip in [True, False]:
+        _decorator_id = _obj.skip_decorator_id if _is_skip else _obj.unless_decorator_id
+        _reason_prefix = "Skip" if _is_skip else "Requires"
+        _condition = _DeferredCondition(_func, invert=not _is_skip)  # type: ignore[arg-type]
 
-    # Generate @unless decorator.
-    globals()[_obj.unless_decorator_id] = pytest.mark.skipif(
-        _DeferredCondition(_func, invert=True),  # type: ignore[arg-type]
-        reason=f"Requires {_obj.short_desc}",
-    )
+        _decorator = pytest.mark.skipif(
+            _condition,
+            reason=f"{_reason_prefix} {_obj.short_desc}",
+        )
+
+        # Set a custom docstring for Sphinx autodoc.
+        _decorator.__doc__ = _make_decorator_docstring(_obj, is_skip=_is_skip)
+
+        globals()[_decorator_id] = _decorator
 
 
 # XXX Mypy doesn't understand dynamic type annotation, so we need to explicitly declare

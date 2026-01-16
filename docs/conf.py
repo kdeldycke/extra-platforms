@@ -54,6 +54,7 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
     except Exception:
         return None
 
+
 project_path = Path(__file__).parent.parent.resolve()
 
 # Fetch general information about the project from pyproject.toml.
@@ -168,7 +169,15 @@ def make_rst_link(text, url):
 
 def make_pytest_decorator_line(obj):
     """Create pytest decorator documentation line."""
-    return f"- **Pytest decorators**: {make_rst_link(f'@{obj.skip_decorator_id} / @{obj.unless_decorator_id}', 'pytest.html#decorators-reference')}"
+    skip_link = make_rst_link(
+        f"@{obj.skip_decorator_id}",
+        f"pytest.html#extra_platforms.pytest.{obj.skip_decorator_id}",
+    )
+    unless_link = make_rst_link(
+        f"@{obj.unless_decorator_id}",
+        f"pytest.html#extra_platforms.pytest.{obj.unless_decorator_id}",
+    )
+    return f"- **Pytest decorators**: {skip_link} / {unless_link}"
 
 
 def autodoc_process_docstring(app, what, name, obj, options, lines):

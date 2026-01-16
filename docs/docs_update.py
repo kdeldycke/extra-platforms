@@ -476,21 +476,27 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     return output
 
 
+def _symbol_link(obj: Trait | Group) -> str:
+    """Generate a Markdown link to the documentation page for a trait or group."""
+    return f"[`{obj.symbol_id}`]({obj.doc_page}#extra_platforms.{obj.symbol_id})"
+
+
 def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     """Produce a Markdown table for pytest decorators.
 
-    The table contains the skip decorator, unless decorator, symbol link, and description for each trait or group.
+    The table contains the skip decorator (linked), unless decorator (linked),
+    icon, and source symbol link for each trait or group.
     """
     table_data = []
-    headers = ["Skip decorator", "Unless decorator", "Source symbol", "Description"]
-    alignments = ["left", "left", "left", "left"]
+    headers = ["Skip decorator", "Unless decorator", "Icon", "Associated symbol"]
+    alignments = ["left", "left", "center", "left"]
 
     for obj in sorted(objects, key=attrgetter("id")):
         table_data.append([
-            f"`@{obj.skip_decorator_id}`",
-            f"`@{obj.unless_decorator_id}`",
-            f"[`{obj.symbol_id}`]({obj.doc_page}#extra_platforms.{obj.symbol_id})",
-            obj.name,
+            f"[`@{obj.skip_decorator_id}`](pytest.md#extra_platforms.pytest.{obj.skip_decorator_id})",
+            f"[`@{obj.unless_decorator_id}`](pytest.md#extra_platforms.pytest.{obj.unless_decorator_id})",
+            obj.icon,
+            _symbol_link(obj),
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)
@@ -525,7 +531,7 @@ def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
 
 
 def generate_all_detection_function_table(
-    traits: Iterable[Trait], groups: Iterable[Group]
+    objects: Iterable[Trait | Group],
 ) -> str:
     """Generate a combined Markdown table for all detection functions.
 
@@ -534,47 +540,20 @@ def generate_all_detection_function_table(
     sorted by function name.
 
     Args:
-        traits: The traits whose detection functions should be included.
-        groups: The groups whose detection functions should be included.
+        objects: The traits and groups whose detection functions should be included.
 
     Returns:
         A Markdown table with all detection functions.
     """
-    # Collect all entries as tuples: (func_name, icon, symbol_link, type_name)
-    entries: list[tuple[str, str, str, str]] = []
-
-    # Add trait detection functions
-    for trait in traits:
-        entries.append((
-            trait.detection_func_id,
-            trait.icon,
-            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.symbol_id})",
-            type(trait).__name__,
-        ))
-
-    # Add group detection functions
-    for group in groups:
-        entries.append((
-            group.detection_func_id,
-            group.icon,
-            f"[`{group.symbol_id}`](groups.md#extra_platforms.{group.symbol_id})",
-            "Group",
-        ))
-
-    # Sort all entries by function name
-    entries.sort(key=lambda e: e[0])
-
-    # Build table data
     table_data = []
-    headers = ["Detection function", "Icon", "Associated symbol", "Type"]
-    alignments = ["left", "center", "left", "left"]
+    headers = ["Detection function", "Icon", "Associated symbol"]
+    alignments = ["left", "center", "left"]
 
-    for func_name, icon, symbol_link, type_name in entries:
+    for obj in sorted(objects, key=attrgetter("detection_func_id")):
         table_data.append([
-            f"[`{func_name}()`](detection.md#extra_platforms.{func_name})",
-            icon,
-            symbol_link,
-            type_name,
+            f"[`{obj.detection_func_id}()`](detection.md#extra_platforms.{obj.detection_func_id})",
+            obj.icon,
+            _symbol_link(obj),
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)
@@ -615,6 +594,75 @@ def generate_detection_autofunction(
     output += "\n".join(directives)
     output += "\n```"
     return output
+
+
+def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
+    """Generate Sphinx autodata directives for pytest decorators.
+
+    Generates directives for both ``@skip_<id>`` and ``@unless_<id>`` decorators
+    defined in the ``extra_platforms.pytest`` module, organized in separate sections.
+
+    Args:
+        objects: The traits or groups whose decorators should be documented.
+
+    Returns:
+        A string containing skip and unless decorator sections with autodata directives.
+    """
+    objects_list = list(objects)
+    if not objects_list:
+        return ""
+
+    sorted_objects = sorted(objects_list, key=attrgetter("id"))
+
+    # Generate skip decorators section
+    skip_directives = [
+        f".. autodata:: extra_platforms.pytest.{obj.skip_decorator_id}"
+        for obj in sorted_objects
+    ]
+    skip_output = "### Skip decorators\n\n```{eval-rst}\n"
+    skip_output += "\n".join(skip_directives)
+    skip_output += "\n```\n\n"
+
+    # Generate unless decorators section
+    unless_directives = [
+        f".. autodata:: extra_platforms.pytest.{obj.unless_decorator_id}"
+        for obj in sorted_objects
+    ]
+    unless_output = "### Unless decorators\n\n```{eval-rst}\n"
+    unless_output += "\n".join(unless_directives)
+    unless_output += "\n```"
+
+    return skip_output + unless_output
+
+
+def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
+    """Generate the pytest automodule directive with dynamically excluded members.
+
+    This excludes all dynamically generated decorators from the automodule output,
+    since they are documented separately via autodata directives in a dedicated section.
+
+    Args:
+        objects: The traits or groups whose decorators should be excluded.
+
+    Returns:
+        A MyST-compatible code block containing the automodule directive.
+    """
+    objects_list = list(objects)
+
+    exclude_list = []
+    for obj in sorted(objects_list, key=attrgetter("id")):
+        exclude_list.append(obj.skip_decorator_id)
+        exclude_list.append(obj.unless_decorator_id)
+
+    exclude_members = ", ".join(exclude_list)
+
+    return f"""```{{eval-rst}}
+.. automodule:: extra_platforms.pytest
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members: {exclude_members}
+```"""
 
 
 def update_docs() -> None:
@@ -764,7 +812,7 @@ def update_docs() -> None:
         (
             "all-detection-function-table-start",
             "all-detection-function-table-end",
-            generate_all_detection_function_table(ALL_TRAITS, ALL_GROUPS),
+            generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)),
         ),
         (
             "trait-detection-autofunction-start",
@@ -775,6 +823,18 @@ def update_docs() -> None:
             "group-detection-autofunction-start",
             "group-detection-autofunction-end",
             generate_detection_autofunction(ALL_GROUPS),
+        ),
+        # Pytest automodule directive (excludes dynamically generated decorators).
+        (
+            "pytest-automodule-start",
+            "pytest-automodule-end",
+            generate_pytest_automodule(chain(ALL_TRAITS, ALL_GROUPS)),
+        ),
+        # Pytest decorator autodata directives.
+        (
+            "pytest-decorators-autodata-start",
+            "pytest-decorators-autodata-end",
+            generate_pytest_decorator_autodata(chain(ALL_TRAITS, ALL_GROUPS)),
         ),
     ]
 
