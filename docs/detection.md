@@ -41,6 +41,7 @@
 | [`is_codebuild()`](detection.md#extra_platforms.is_codebuild)                       |  ᚙ   | [`CODEBUILD`](ci.md#extra_platforms.CODEBUILD)                                  |
 | [`is_cygwin()`](detection.md#extra_platforms.is_cygwin)                             |  Ͼ   | [`CYGWIN`](platforms.md#extra_platforms.CYGWIN)                                 |
 | [`is_debian()`](detection.md#extra_platforms.is_debian)                             |  🌀  | [`DEBIAN`](platforms.md#extra_platforms.DEBIAN)                                 |
+| [`is_dragonflybsd()`](detection.md#extra_platforms.is_dragonflybsd)                 |  🪰  | [`DRAGONFLYBSD`](platforms.md#extra_platforms.DRAGONFLYBSD)                     |
 | [`is_exherbo()`](detection.md#extra_platforms.is_exherbo)                           |  🐽  | [`EXHERBO`](platforms.md#extra_platforms.EXHERBO)                               |
 | [`is_fedora()`](detection.md#extra_platforms.is_fedora)                             |  🎩  | [`FEDORA`](platforms.md#extra_platforms.FEDORA)                                 |
 | [`is_freebsd()`](detection.md#extra_platforms.is_freebsd)                           |  😈  | [`FREEBSD`](platforms.md#extra_platforms.FREEBSD)                               |
@@ -48,6 +49,7 @@
 | [`is_github_ci()`](detection.md#extra_platforms.is_github_ci)                       |  🐙  | [`GITHUB_CI`](ci.md#extra_platforms.GITHUB_CI)                                  |
 | [`is_gitlab_ci()`](detection.md#extra_platforms.is_gitlab_ci)                       |  🦊  | [`GITLAB_CI`](ci.md#extra_platforms.GITLAB_CI)                                  |
 | [`is_guix()`](detection.md#extra_platforms.is_guix)                                 |  🐃  | [`GUIX`](platforms.md#extra_platforms.GUIX)                                     |
+| [`is_haiku()`](detection.md#extra_platforms.is_haiku)                               |  🍂  | [`HAIKU`](platforms.md#extra_platforms.HAIKU)                                   |
 | [`is_heroku_ci()`](detection.md#extra_platforms.is_heroku_ci)                       |  ⥁   | [`HEROKU_CI`](ci.md#extra_platforms.HEROKU_CI)                                  |
 | [`is_hurd()`](detection.md#extra_platforms.is_hurd)                                 |  🐃  | [`HURD`](platforms.md#extra_platforms.HURD)                                     |
 | [`is_i386()`](detection.md#extra_platforms.is_i386)                                 |  𝗶   | [`I386`](architectures.md#extra_platforms.I386)                                 |
@@ -55,6 +57,7 @@
 | [`is_i686()`](detection.md#extra_platforms.is_i686)                                 |  𝗶   | [`I686`](architectures.md#extra_platforms.I686)                                 |
 | [`is_ibm_mainframe()`](detection.md#extra_platforms.is_ibm_mainframe)               |  🏢  | [`IBM_MAINFRAME`](groups.md#extra_platforms.IBM_MAINFRAME)                      |
 | [`is_ibm_powerkvm()`](detection.md#extra_platforms.is_ibm_powerkvm)                 |  🤹  | [`IBM_POWERKVM`](platforms.md#extra_platforms.IBM_POWERKVM)                     |
+| [`is_illumos()`](detection.md#extra_platforms.is_illumos)                           |  🔥  | [`ILLUMOS`](platforms.md#extra_platforms.ILLUMOS)                               |
 | [`is_kvmibm()`](detection.md#extra_platforms.is_kvmibm)                             |  🤹  | [`KVMIBM`](platforms.md#extra_platforms.KVMIBM)                                 |
 | [`is_linux()`](detection.md#extra_platforms.is_linux)                               |  🐧  | [`LINUX`](groups.md#extra_platforms.LINUX)                                      |
 | [`is_linux_layers()`](detection.md#extra_platforms.is_linux_layers)                 |  ≚   | [`LINUX_LAYERS`](groups.md#extra_platforms.LINUX_LAYERS)                        |
@@ -150,6 +153,7 @@
 .. autofunction:: extra_platforms.is_codebuild
 .. autofunction:: extra_platforms.is_cygwin
 .. autofunction:: extra_platforms.is_debian
+.. autofunction:: extra_platforms.is_dragonflybsd
 .. autofunction:: extra_platforms.is_exherbo
 .. autofunction:: extra_platforms.is_fedora
 .. autofunction:: extra_platforms.is_freebsd
@@ -157,12 +161,14 @@
 .. autofunction:: extra_platforms.is_github_ci
 .. autofunction:: extra_platforms.is_gitlab_ci
 .. autofunction:: extra_platforms.is_guix
+.. autofunction:: extra_platforms.is_haiku
 .. autofunction:: extra_platforms.is_heroku_ci
 .. autofunction:: extra_platforms.is_hurd
 .. autofunction:: extra_platforms.is_i386
 .. autofunction:: extra_platforms.is_i586
 .. autofunction:: extra_platforms.is_i686
 .. autofunction:: extra_platforms.is_ibm_powerkvm
+.. autofunction:: extra_platforms.is_illumos
 .. autofunction:: extra_platforms.is_kvmibm
 .. autofunction:: extra_platforms.is_linuxmint
 .. autofunction:: extra_platforms.is_loongarch64

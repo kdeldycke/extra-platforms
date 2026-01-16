@@ -87,7 +87,9 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
     """
     # Create reference links in reStructuredText format.
     doc_page_html = obj.doc_page.replace(".md", ".html")
-    symbol_link = f"`{obj.symbol_id} <{doc_page_html}#extra_platforms.{obj.symbol_id}>`_"
+    symbol_link = (
+        f"`{obj.symbol_id} <{doc_page_html}#extra_platforms.{obj.symbol_id}>`_"
+    )
     detection_link = f"`{obj.detection_func_id}() <detection.html#extra_platforms.{obj.detection_func_id}>`_"
 
     is_group = isinstance(obj, Group)
@@ -183,6 +185,7 @@ if TYPE_CHECKING:
     skip_codebuild: MarkDecorator
     skip_cygwin: MarkDecorator
     skip_debian: MarkDecorator
+    skip_dragonfly_bsd: MarkDecorator
     skip_exherbo: MarkDecorator
     skip_fedora: MarkDecorator
     skip_freebsd: MarkDecorator
@@ -190,6 +193,7 @@ if TYPE_CHECKING:
     skip_github_ci: MarkDecorator
     skip_gitlab_ci: MarkDecorator
     skip_guix: MarkDecorator
+    skip_haiku: MarkDecorator
     skip_heroku_ci: MarkDecorator
     skip_hurd: MarkDecorator
     skip_i386: MarkDecorator
@@ -197,6 +201,7 @@ if TYPE_CHECKING:
     skip_i686: MarkDecorator
     skip_ibm_mainframe: MarkDecorator
     skip_ibm_powerkvm: MarkDecorator
+    skip_illumos: MarkDecorator
     skip_kvmibm: MarkDecorator
     skip_linux: MarkDecorator
     skip_linux_layers: MarkDecorator
@@ -296,6 +301,7 @@ if TYPE_CHECKING:
     unless_codebuild: MarkDecorator
     unless_cygwin: MarkDecorator
     unless_debian: MarkDecorator
+    unless_dragonfly_bsd: MarkDecorator
     unless_exherbo: MarkDecorator
     unless_fedora: MarkDecorator
     unless_freebsd: MarkDecorator
@@ -303,6 +309,7 @@ if TYPE_CHECKING:
     unless_github_ci: MarkDecorator
     unless_gitlab_ci: MarkDecorator
     unless_guix: MarkDecorator
+    unless_haiku: MarkDecorator
     unless_heroku_ci: MarkDecorator
     unless_hurd: MarkDecorator
     unless_i386: MarkDecorator
@@ -310,6 +317,7 @@ if TYPE_CHECKING:
     unless_i686: MarkDecorator
     unless_ibm_mainframe: MarkDecorator
     unless_ibm_powerkvm: MarkDecorator
+    unless_illumos: MarkDecorator
     unless_kvmibm: MarkDecorator
     unless_linux: MarkDecorator
     unless_linux_layers: MarkDecorator

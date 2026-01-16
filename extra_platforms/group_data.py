@@ -72,13 +72,16 @@ from .platform_data import (
     CLOUDLINUX,
     CYGWIN,
     DEBIAN,
+    DRAGONFLY_BSD,
     EXHERBO,
     FEDORA,
     FREEBSD,
     GENTOO,
     GUIX,
+    HAIKU,
     HURD,
     IBM_POWERKVM,
+    ILLUMOS,
     KVMIBM,
     LINUXMINT,
     MACOS,
@@ -300,13 +303,16 @@ ALL_PLATFORMS: Group = Group(
         CLOUDLINUX,
         CYGWIN,
         DEBIAN,
+        DRAGONFLY_BSD,
         EXHERBO,
         FEDORA,
         FREEBSD,
         GENTOO,
         GUIX,
+        HAIKU,
         HURD,
         IBM_POWERKVM,
+        ILLUMOS,
         KVMIBM,
         LINUXMINT,
         MACOS,
@@ -379,7 +385,7 @@ BSD = Group(
     "bsd",
     "Any BSD",
     "🅱️+",
-    (FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS),
+    (DRAGONFLY_BSD, FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS),
 )
 """All BSD platforms.
 
@@ -489,7 +495,7 @@ SYSTEM_V = Group(
     "system_v",
     "AT&T System Five",
     "𝐕",
-    (AIX, SOLARIS),
+    (AIX, ILLUMOS, SOLARIS),
 )
 """All Unix platforms derived from AT&T System Five.
 

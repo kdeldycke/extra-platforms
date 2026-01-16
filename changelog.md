@@ -6,13 +6,14 @@
 > This version is not released yet and is under active development.
 
 - Add new `ARMV5TEL` architecture.
+- Add new `DRAGONFLY_BSD`, `HAIKU` and `ILLUMOS` platforms.
 - Add new `ARCH_32_BIT`, `ARCH_64_BIT` and `UNKNOWN` groups.
 - Rename `UNKNOWN_LINUX` trait to `UNKNOWN_PLATFORM`.
 - Remove `UNKNOWN_ARCHITECTURE` trait from `ALL_ARCHITECTURES` group.
 - Remove `UNKNOWN_LINUX` trait from `ALL_PLATFORMS` group.
 - Remove `UNKNOWN_CI` trait from `ALL_CI` group.
 - `current_architecture()`, `current_platform()` and `current_ci()` functions now returns `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` if detection fails. Add strict mode to raise an exception when detection fails.
-- Add new `is_armv5tel()`, `is_arch_32_bit()`, `is_arch_64_bit()` and `is_unknown()` detection functions.
+- Add new `is_armv5tel()`, `is_arch_32_bit()`, `is_arch_64_bit()`, `is_dragonfly_bsd()`, `is_haiku()`, `is_illumos()` and `is_unknown()` detection functions.
 - Fix detection of `AARCH64` on Windows ARM runners.
 - Deprecate `is_unknown_linux()` in favor of `is_unknown_platform()`.
 - Link `Trait` and `Group` to their detection functions via the `detection_func_id` attribute.

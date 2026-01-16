@@ -106,6 +106,7 @@ def test_not_in_github_actions():
 | [`@skip_codebuild`](pytest.md#extra_platforms.pytest.skip_codebuild)                       | [`@unless_codebuild`](pytest.md#extra_platforms.pytest.unless_codebuild)                       |  ᚙ   | [`CODEBUILD`](ci.md#extra_platforms.CODEBUILD)                                  |
 | [`@skip_cygwin`](pytest.md#extra_platforms.pytest.skip_cygwin)                             | [`@unless_cygwin`](pytest.md#extra_platforms.pytest.unless_cygwin)                             |  Ͼ   | [`CYGWIN`](platforms.md#extra_platforms.CYGWIN)                                 |
 | [`@skip_debian`](pytest.md#extra_platforms.pytest.skip_debian)                             | [`@unless_debian`](pytest.md#extra_platforms.pytest.unless_debian)                             |  🌀  | [`DEBIAN`](platforms.md#extra_platforms.DEBIAN)                                 |
+| [`@skip_dragonflybsd`](pytest.md#extra_platforms.pytest.skip_dragonflybsd)                 | [`@unless_dragonflybsd`](pytest.md#extra_platforms.pytest.unless_dragonflybsd)                 |  🪰  | [`DRAGONFLYBSD`](platforms.md#extra_platforms.DRAGONFLYBSD)                     |
 | [`@skip_exherbo`](pytest.md#extra_platforms.pytest.skip_exherbo)                           | [`@unless_exherbo`](pytest.md#extra_platforms.pytest.unless_exherbo)                           |  🐽  | [`EXHERBO`](platforms.md#extra_platforms.EXHERBO)                               |
 | [`@skip_fedora`](pytest.md#extra_platforms.pytest.skip_fedora)                             | [`@unless_fedora`](pytest.md#extra_platforms.pytest.unless_fedora)                             |  🎩  | [`FEDORA`](platforms.md#extra_platforms.FEDORA)                                 |
 | [`@skip_freebsd`](pytest.md#extra_platforms.pytest.skip_freebsd)                           | [`@unless_freebsd`](pytest.md#extra_platforms.pytest.unless_freebsd)                           |  😈  | [`FREEBSD`](platforms.md#extra_platforms.FREEBSD)                               |
@@ -113,6 +114,7 @@ def test_not_in_github_actions():
 | [`@skip_github_ci`](pytest.md#extra_platforms.pytest.skip_github_ci)                       | [`@unless_github_ci`](pytest.md#extra_platforms.pytest.unless_github_ci)                       |  🐙  | [`GITHUB_CI`](ci.md#extra_platforms.GITHUB_CI)                                  |
 | [`@skip_gitlab_ci`](pytest.md#extra_platforms.pytest.skip_gitlab_ci)                       | [`@unless_gitlab_ci`](pytest.md#extra_platforms.pytest.unless_gitlab_ci)                       |  🦊  | [`GITLAB_CI`](ci.md#extra_platforms.GITLAB_CI)                                  |
 | [`@skip_guix`](pytest.md#extra_platforms.pytest.skip_guix)                                 | [`@unless_guix`](pytest.md#extra_platforms.pytest.unless_guix)                                 |  🐃  | [`GUIX`](platforms.md#extra_platforms.GUIX)                                     |
+| [`@skip_haiku`](pytest.md#extra_platforms.pytest.skip_haiku)                               | [`@unless_haiku`](pytest.md#extra_platforms.pytest.unless_haiku)                               |  🍂  | [`HAIKU`](platforms.md#extra_platforms.HAIKU)                                   |
 | [`@skip_heroku_ci`](pytest.md#extra_platforms.pytest.skip_heroku_ci)                       | [`@unless_heroku_ci`](pytest.md#extra_platforms.pytest.unless_heroku_ci)                       |  ⥁   | [`HEROKU_CI`](ci.md#extra_platforms.HEROKU_CI)                                  |
 | [`@skip_hurd`](pytest.md#extra_platforms.pytest.skip_hurd)                                 | [`@unless_hurd`](pytest.md#extra_platforms.pytest.unless_hurd)                                 |  🐃  | [`HURD`](platforms.md#extra_platforms.HURD)                                     |
 | [`@skip_i386`](pytest.md#extra_platforms.pytest.skip_i386)                                 | [`@unless_i386`](pytest.md#extra_platforms.pytest.unless_i386)                                 |  𝗶   | [`I386`](architectures.md#extra_platforms.I386)                                 |
@@ -120,6 +122,7 @@ def test_not_in_github_actions():
 | [`@skip_i686`](pytest.md#extra_platforms.pytest.skip_i686)                                 | [`@unless_i686`](pytest.md#extra_platforms.pytest.unless_i686)                                 |  𝗶   | [`I686`](architectures.md#extra_platforms.I686)                                 |
 | [`@skip_ibm_mainframe`](pytest.md#extra_platforms.pytest.skip_ibm_mainframe)               | [`@unless_ibm_mainframe`](pytest.md#extra_platforms.pytest.unless_ibm_mainframe)               |  🏢  | [`IBM_MAINFRAME`](groups.md#extra_platforms.IBM_MAINFRAME)                      |
 | [`@skip_ibm_powerkvm`](pytest.md#extra_platforms.pytest.skip_ibm_powerkvm)                 | [`@unless_ibm_powerkvm`](pytest.md#extra_platforms.pytest.unless_ibm_powerkvm)                 |  🤹  | [`IBM_POWERKVM`](platforms.md#extra_platforms.IBM_POWERKVM)                     |
+| [`@skip_illumos`](pytest.md#extra_platforms.pytest.skip_illumos)                           | [`@unless_illumos`](pytest.md#extra_platforms.pytest.unless_illumos)                           |  🔥  | [`ILLUMOS`](platforms.md#extra_platforms.ILLUMOS)                               |
 | [`@skip_kvmibm`](pytest.md#extra_platforms.pytest.skip_kvmibm)                             | [`@unless_kvmibm`](pytest.md#extra_platforms.pytest.unless_kvmibm)                             |  🤹  | [`KVMIBM`](platforms.md#extra_platforms.KVMIBM)                                 |
 | [`@skip_linux`](pytest.md#extra_platforms.pytest.skip_linux)                               | [`@unless_linux`](pytest.md#extra_platforms.pytest.unless_linux)                               |  🐧  | [`LINUX`](groups.md#extra_platforms.LINUX)                                      |
 | [`@skip_linux_layers`](pytest.md#extra_platforms.pytest.skip_linux_layers)                 | [`@unless_linux_layers`](pytest.md#extra_platforms.pytest.unless_linux_layers)                 |  ≚   | [`LINUX_LAYERS`](groups.md#extra_platforms.LINUX_LAYERS)                        |
@@ -229,6 +232,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.skip_codebuild
 .. autodata:: extra_platforms.pytest.skip_cygwin
 .. autodata:: extra_platforms.pytest.skip_debian
+.. autodata:: extra_platforms.pytest.skip_dragonflybsd
 .. autodata:: extra_platforms.pytest.skip_exherbo
 .. autodata:: extra_platforms.pytest.skip_fedora
 .. autodata:: extra_platforms.pytest.skip_freebsd
@@ -236,6 +240,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.skip_github_ci
 .. autodata:: extra_platforms.pytest.skip_gitlab_ci
 .. autodata:: extra_platforms.pytest.skip_guix
+.. autodata:: extra_platforms.pytest.skip_haiku
 .. autodata:: extra_platforms.pytest.skip_heroku_ci
 .. autodata:: extra_platforms.pytest.skip_hurd
 .. autodata:: extra_platforms.pytest.skip_i386
@@ -243,6 +248,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.skip_i686
 .. autodata:: extra_platforms.pytest.skip_ibm_mainframe
 .. autodata:: extra_platforms.pytest.skip_ibm_powerkvm
+.. autodata:: extra_platforms.pytest.skip_illumos
 .. autodata:: extra_platforms.pytest.skip_kvmibm
 .. autodata:: extra_platforms.pytest.skip_linux
 .. autodata:: extra_platforms.pytest.skip_linux_layers
@@ -347,6 +353,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.unless_codebuild
 .. autodata:: extra_platforms.pytest.unless_cygwin
 .. autodata:: extra_platforms.pytest.unless_debian
+.. autodata:: extra_platforms.pytest.unless_dragonflybsd
 .. autodata:: extra_platforms.pytest.unless_exherbo
 .. autodata:: extra_platforms.pytest.unless_fedora
 .. autodata:: extra_platforms.pytest.unless_freebsd
@@ -354,6 +361,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.unless_github_ci
 .. autodata:: extra_platforms.pytest.unless_gitlab_ci
 .. autodata:: extra_platforms.pytest.unless_guix
+.. autodata:: extra_platforms.pytest.unless_haiku
 .. autodata:: extra_platforms.pytest.unless_heroku_ci
 .. autodata:: extra_platforms.pytest.unless_hurd
 .. autodata:: extra_platforms.pytest.unless_i386
@@ -361,6 +369,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.unless_i686
 .. autodata:: extra_platforms.pytest.unless_ibm_mainframe
 .. autodata:: extra_platforms.pytest.unless_ibm_powerkvm
+.. autodata:: extra_platforms.pytest.unless_illumos
 .. autodata:: extra_platforms.pytest.unless_kvmibm
 .. autodata:: extra_platforms.pytest.unless_linux
 .. autodata:: extra_platforms.pytest.unless_linux_layers

@@ -16,7 +16,6 @@
 """Platform definitions and metadata.
 
 .. note::
-
     Default icons are inspired from Starship project:
     - https://starship.rs/config/#os
     - https://github.com/davidkna/starship/blob/e9faf17/.github/config-schema.json#L1221-L1269
@@ -51,6 +50,10 @@ CYGWIN = Platform("cygwin", "Cygwin", "Ͼ", "https://cygwin.com")
 
 DEBIAN = Platform("debian", "Debian", "🌀", "https://debian.org")
 
+DRAGONFLY_BSD = Platform(
+    "dragonfly_bsd", "DragonFly BSD", "🪰", "https://www.dragonflybsd.org"
+)
+
 EXHERBO = Platform("exherbo", "Exherbo Linux", "🐽", "https://exherbolinux.org")
 
 FEDORA = Platform("fedora", "Fedora", "🎩", "https://fedoraproject.org")
@@ -61,6 +64,8 @@ GENTOO = Platform("gentoo", "Gentoo Linux", "🗜️", "https://gentoo.org")
 
 GUIX = Platform("guix", "Guix System", "🐃", "https://guix.gnu.org")
 
+HAIKU = Platform("haiku", "Haiku", "🍂", "https://www.haiku-os.org")
+
 HURD = Platform("hurd", "GNU/Hurd", "🐃", "https://gnu.org/software/hurd/")
 
 IBM_POWERKVM = Platform(
@@ -69,6 +74,8 @@ IBM_POWERKVM = Platform(
     "🤹",
     "https://ibm.com/mysupport/s/topic/0TO50000000QkyPGAS/",
 )
+
+ILLUMOS = Platform("illumos", "illumos", "🔥", "https://illumos.org")
 
 KVMIBM = Platform(
     "kvmibm", "KVM for IBM z Systems", "🤹", "https://ibm.com/products/kvm/"

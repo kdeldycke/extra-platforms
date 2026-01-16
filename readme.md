@@ -260,8 +260,10 @@ mindmap
             (Ͼ CYGWIN)
         )𝐕 SYSTEM_V(
             (➿ AIX)
+            (🔥 ILLUMOS)
             (🌞 SOLARIS)
         )⊎ OTHER_UNIX(
+            (🍂 HAIKU)
             (🐃 HURD)
         )≚ LINUX_LAYERS(
             (⊞ WSL1)
@@ -302,6 +304,7 @@ mindmap
             (🌊 ULTRAMARINE)
             (Ⓧ XENSERVER)
         )🅱️+ BSD(
+            (🪰 DRAGONFLYBSD)
             (😈 FREEBSD)
             (🍎 MACOS)
             (🌘 MIDNIGHTBSD)

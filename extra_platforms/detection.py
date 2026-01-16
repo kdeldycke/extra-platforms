@@ -342,6 +342,12 @@ def is_debian() -> bool:
 
 
 @cache
+def is_dragonfly_bsd() -> bool:
+    """Return ``True`` if current platform is `DRAGONFLY_BSD <platforms.html#extra_platforms.DRAGONFLY_BSD>`_."""
+    return sys.platform.startswith("dragonfly")
+
+
+@cache
 def is_exherbo() -> bool:
     """Return ``True`` if current platform is `EXHERBO <platforms.html#extra_platforms.EXHERBO>`_."""
     return distro.id() == "exherbo"
@@ -372,6 +378,12 @@ def is_guix() -> bool:
 
 
 @cache
+def is_haiku() -> bool:
+    """Return ``True`` if current platform is `HAIKU <platforms.html#extra_platforms.HAIKU>`_."""
+    return sys.platform.startswith("haiku")
+
+
+@cache
 def is_hurd() -> bool:
     """Return ``True`` if current platform is `HURD <platforms.html#extra_platforms.HURD>`_.
 
@@ -385,6 +397,17 @@ def is_hurd() -> bool:
 def is_ibm_powerkvm() -> bool:
     """Return ``True`` if current platform is `IBM_POWERKVM <platforms.html#extra_platforms.IBM_POWERKVM>`_."""
     return distro.id() == "ibm_powerkvm"
+
+
+@cache
+def is_illumos() -> bool:
+    """Return ``True`` if current platform is `ILLUMOS <platforms.html#extra_platforms.ILLUMOS>`_.
+
+    Illumos is a Unix OS derived from OpenSolaris. It shares ``sys.platform == 'sunos5'``
+    with Solaris, but can be distinguished by checking ``platform.uname().version`` which
+    contains "illumos" on Illumos-based systems (like OpenIndiana, SmartOS, OmniOS).
+    """
+    return "illumos" in platform.uname().version.lower()
 
 
 @cache

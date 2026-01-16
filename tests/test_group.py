@@ -226,6 +226,7 @@ def test_multiple_intersection():
     new_group = ALL_PLATFORMS.intersection(UNIX_WITHOUT_MACOS, BSD_WITHOUT_MACOS)
 
     assert new_group.member_ids == frozenset((
+        "dragonfly_bsd",
         "freebsd",
         "midnightbsd",
         "netbsd",

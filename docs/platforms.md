@@ -57,13 +57,16 @@ Platform(id='macos', name='macOS')
 |  ꩜   | [`CLOUDLINUX`](#extra_platforms.CLOUDLINUX)     | CloudLinux OS                  | [`is_cloudlinux()`](detection.md#extra_platforms.is_cloudlinux)     |
 |  Ͼ   | [`CYGWIN`](#extra_platforms.CYGWIN)             | Cygwin                         | [`is_cygwin()`](detection.md#extra_platforms.is_cygwin)             |
 |  🌀  | [`DEBIAN`](#extra_platforms.DEBIAN)             | Debian                         | [`is_debian()`](detection.md#extra_platforms.is_debian)             |
+|  🪰  | [`DRAGONFLYBSD`](#extra_platforms.DRAGONFLYBSD) | DragonFly BSD                  | [`is_dragonflybsd()`](detection.md#extra_platforms.is_dragonflybsd) |
 |  🐽  | [`EXHERBO`](#extra_platforms.EXHERBO)           | Exherbo Linux                  | [`is_exherbo()`](detection.md#extra_platforms.is_exherbo)           |
 |  🎩  | [`FEDORA`](#extra_platforms.FEDORA)             | Fedora                         | [`is_fedora()`](detection.md#extra_platforms.is_fedora)             |
 |  😈  | [`FREEBSD`](#extra_platforms.FREEBSD)           | FreeBSD                        | [`is_freebsd()`](detection.md#extra_platforms.is_freebsd)           |
 |  🗜️  | [`GENTOO`](#extra_platforms.GENTOO)             | Gentoo Linux                   | [`is_gentoo()`](detection.md#extra_platforms.is_gentoo)             |
 |  🐃  | [`GUIX`](#extra_platforms.GUIX)                 | Guix System                    | [`is_guix()`](detection.md#extra_platforms.is_guix)                 |
+|  🍂  | [`HAIKU`](#extra_platforms.HAIKU)               | Haiku                          | [`is_haiku()`](detection.md#extra_platforms.is_haiku)               |
 |  🐃  | [`HURD`](#extra_platforms.HURD)                 | GNU/Hurd                       | [`is_hurd()`](detection.md#extra_platforms.is_hurd)                 |
 |  🤹  | [`IBM_POWERKVM`](#extra_platforms.IBM_POWERKVM) | IBM PowerKVM                   | [`is_ibm_powerkvm()`](detection.md#extra_platforms.is_ibm_powerkvm) |
+|  🔥  | [`ILLUMOS`](#extra_platforms.ILLUMOS)           | illumos                        | [`is_illumos()`](detection.md#extra_platforms.is_illumos)           |
 |  🤹  | [`KVMIBM`](#extra_platforms.KVMIBM)             | KVM for IBM z Systems          | [`is_kvmibm()`](detection.md#extra_platforms.is_kvmibm)             |
 |  🌿  | [`LINUXMINT`](#extra_platforms.LINUXMINT)       | Linux Mint                     | [`is_linuxmint()`](detection.md#extra_platforms.is_linuxmint)       |
 |  🍎  | [`MACOS`](#extra_platforms.MACOS)               | macOS                          | [`is_macos()`](detection.md#extra_platforms.is_macos)               |
@@ -144,11 +147,11 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 sankey-beta
 
 ALL_PLATFORMS,LINUX,34
-ALL_PLATFORMS,BSD,6
-ALL_PLATFORMS,SYSTEM_V,2
+ALL_PLATFORMS,BSD,7
+ALL_PLATFORMS,SYSTEM_V,3
+ALL_PLATFORMS,OTHER_UNIX,2
 ALL_PLATFORMS,LINUX_LAYERS,2
 ALL_PLATFORMS,UNIX_LAYERS,1
-ALL_PLATFORMS,OTHER_UNIX,1
 ALL_PLATFORMS,ALL_WINDOWS,1
 LINUX,ALTLINUX,1
 LINUX,AMZN,1
@@ -184,6 +187,7 @@ LINUX,TUXEDO,1
 LINUX,UBUNTU,1
 LINUX,ULTRAMARINE,1
 LINUX,XENSERVER,1
+BSD,DRAGONFLYBSD,1
 BSD,FREEBSD,1
 BSD,MACOS,1
 BSD,MIDNIGHTBSD,1
@@ -191,11 +195,13 @@ BSD,NETBSD,1
 BSD,OPENBSD,1
 BSD,SUNOS,1
 SYSTEM_V,AIX,1
+SYSTEM_V,ILLUMOS,1
 SYSTEM_V,SOLARIS,1
+OTHER_UNIX,HAIKU,1
+OTHER_UNIX,HURD,1
 LINUX_LAYERS,WSL1,1
 LINUX_LAYERS,WSL2,1
 UNIX_LAYERS,CYGWIN,1
-OTHER_UNIX,HURD,1
 ALL_WINDOWS,WINDOWS,1
 ```
 
@@ -215,8 +221,10 @@ mindmap
             (Ͼ CYGWIN)
         )𝐕 SYSTEM_V(
             (➿ AIX)
+            (🔥 ILLUMOS)
             (🌞 SOLARIS)
         )⊎ OTHER_UNIX(
+            (🍂 HAIKU)
             (🐃 HURD)
         )≚ LINUX_LAYERS(
             (⊞ WSL1)
@@ -257,6 +265,7 @@ mindmap
             (🌊 ULTRAMARINE)
             (Ⓧ XENSERVER)
         )🅱️+ BSD(
+            (🪰 DRAGONFLYBSD)
             (😈 FREEBSD)
             (🍎 MACOS)
             (🌘 MIDNIGHTBSD)
@@ -294,13 +303,16 @@ mindmap
 .. autodata:: extra_platforms.CLOUDLINUX
 .. autodata:: extra_platforms.CYGWIN
 .. autodata:: extra_platforms.DEBIAN
+.. autodata:: extra_platforms.DRAGONFLYBSD
 .. autodata:: extra_platforms.EXHERBO
 .. autodata:: extra_platforms.FEDORA
 .. autodata:: extra_platforms.FREEBSD
 .. autodata:: extra_platforms.GENTOO
 .. autodata:: extra_platforms.GUIX
+.. autodata:: extra_platforms.HAIKU
 .. autodata:: extra_platforms.HURD
 .. autodata:: extra_platforms.IBM_POWERKVM
+.. autodata:: extra_platforms.ILLUMOS
 .. autodata:: extra_platforms.KVMIBM
 .. autodata:: extra_platforms.LINUXMINT
 .. autodata:: extra_platforms.MACOS
