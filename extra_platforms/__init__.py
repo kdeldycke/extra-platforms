@@ -279,12 +279,24 @@ __version__ = "7.0.0"
 
 @cache
 def _unrecognized_message() -> str:
-    """Generate a consistent message for unrecognized environments."""
+    """Generate a consistent message for unrecognized environments.
+
+    .. important::
+        This message must contain all the primitives used in the ``detection`` module so
+        maintainers can debug heuristics from user reports.
+    """
+    import distro as distro_module
+
     return (
-        f"Environment: {sys.platform!r} / "
-        f"{stdlib_platform.platform(aliased=True, terse=True)!r} / "
-        f"{stdlib_platform.machine()!r} / {stdlib_platform.architecture()!r}. "
-        "Please report this at https://github.com/kdeldycke/extra-platforms/issues to "
+        "Environment:\n"
+        f"  sys.platform:              {sys.platform!r}\n"
+        f"  platform.platform:         {stdlib_platform.platform(aliased=True, terse=True)!r}\n"
+        f"  platform.release:          {stdlib_platform.release()!r}\n"
+        f"  platform.uname:            {stdlib_platform.uname()!r}\n"
+        f"  platform.machine:          {stdlib_platform.machine()!r}\n"
+        f"  platform.architecture:     {stdlib_platform.architecture()!r}\n"
+        f"  distro.id:                 {distro_module.id()!r}\n"
+        "\nPlease report this at https://github.com/kdeldycke/extra-platforms/issues to "
         "improve detection heuristics."
     )
 
