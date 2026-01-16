@@ -84,11 +84,8 @@ def test_group_data_ordering():
     group_instance_ids = []
     tree = ast.parse(Path(inspect.getfile(group_data_module)).read_bytes())
     for node in tree.body:
-        if (
-            isinstance(node, ast.Assign)
-            and isinstance(node.value, ast.Call)
-            and node.value.func.id == "Group"
-        ):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            assert node.value.func.id == "Group"
             assert len(node.targets) == 1
             instance_id = node.targets[0].id
             assert instance_id.isupper()
@@ -114,14 +111,22 @@ def test_group_definitions(group: Group):
     assert group.id[-1] in ascii_lowercase + digits
     assert set(group.id).issubset(ascii_lowercase + digits + "_")
     assert group.id.islower()
-    # Only the UNKNOWN group is allowed to have an ID starting with "unknown".
-    if group.id.startswith("unknown"):
+
+    # Split ID by underscores to get individual tokens.
+    tokens = group.id.split("_")
+    # "unknown" is a special string that is only allowed for the UNKNOWN group.
+    if "unknown" in tokens:
+        assert group.id.startswith("unknown")
         assert group is UNKNOWN
         assert group.name == "Unknown"
-    # Groups starting with "all" must be canonical and have proper naming.
-    if group.id.startswith("all"):
+    # "all" is a special string that is only allowed for all-traits groups.
+    if "all" in tokens:
         assert group.id.startswith("all_")
         assert group.name.startswith("All ")
+    # Special words that should never appear as standalone tokens in group IDs.
+    for special_word in ("any", "is", "skip", "unless"):
+        assert not group.id.startswith(special_word)
+        assert special_word not in group.id.split("_")
 
     assert group.id not in ALL_TRAIT_IDS
     if group is UNKNOWN:

@@ -74,10 +74,9 @@ def test_all_traits_generated_constants(trait):
     assert trait.id[-1] in ascii_lowercase + digits
     assert set(trait.id).issubset(ascii_lowercase + digits + "_")
     assert trait.id.islower()
-    # Traits are not allowed to start with all_ or any_, which is reserved for groups.
-    assert not trait.id.startswith(("all", "any"))
     assert trait.id not in ALL_GROUP_IDS
-    if trait.id.startswith("unknown"):
+
+    if "unknown" in trait.id:
         assert trait in UNKNOWN
         assert trait.id not in ALL_TRAIT_IDS
         assert trait.id not in ALL_IDS
@@ -91,6 +90,12 @@ def test_all_traits_generated_constants(trait):
         assert trait.id in ALL_TRAIT_IDS
         assert trait.id in ALL_IDS
         assert trait not in UNKNOWN
+
+    # Some special words can only be used as part of a compound word, never as
+    # standalone tokens.
+    for special_word in ("all", "any", "is", "skip", "unless"):
+        assert not trait.id.startswith(special_word)
+        assert special_word not in trait.id.split("_")
 
     # Name.
     assert trait.name
