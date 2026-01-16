@@ -76,7 +76,7 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
     """Generate a reStructuredText docstring for a pytest decorator.
 
     Creates a concise docstring with links to the associated trait/group and
-    its detection function.
+    its detection function, using unambiguous language about the behavior.
 
     Args:
         obj: The trait or group to document.
@@ -86,13 +86,35 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
         A reStructuredText docstring.
     """
     # Create reference links in reStructuredText format.
-    name_link = f"`{obj.symbol_id} <{obj.doc_page.replace('.md', '.html')}#extra_platforms.{obj.symbol_id}>`_"
+    doc_page_html = obj.doc_page.replace(".md", ".html")
+    symbol_link = f"`{obj.symbol_id} <{doc_page_html}#extra_platforms.{obj.symbol_id}>`_"
     detection_link = f"`{obj.detection_func_id}() <detection.html#extra_platforms.{obj.detection_func_id}>`_"
 
+    is_group = isinstance(obj, Group)
+
     if is_skip:
-        summary = f"Skip tests when {name_link} {obj.type_name} is detected by {detection_link}."
+        if is_group:
+            summary = (
+                f"Skip test if current environment matches any member of the "
+                f"{symbol_link} group (i.e., when {detection_link} returns ``True``)."
+            )
+        else:
+            summary = (
+                f"Skip test if current environment is {symbol_link} "
+                f"(i.e., when {detection_link} returns ``True``)."
+            )
     else:
-        summary = f"Run tests only if {name_link} {obj.type_name} is detected by {detection_link}."
+        if is_group:
+            summary = (
+                f"Run test only if current environment matches any member of the "
+                f"{symbol_link} group (i.e., when {detection_link} returns ``True``). "
+                f"Skip otherwise."
+            )
+        else:
+            summary = (
+                f"Run test only if current environment is {symbol_link} "
+                f"(i.e., when {detection_link} returns ``True``). Skip otherwise."
+            )
 
     return summary
 
@@ -241,17 +263,17 @@ if TYPE_CHECKING:
     skip_xenserver: MarkDecorator
     unless_aarch64: MarkDecorator
     unless_aix: MarkDecorator
-    unless_all_architectures: MarkDecorator
-    unless_all_arm: MarkDecorator
-    unless_all_ci: MarkDecorator
-    unless_all_mips: MarkDecorator
-    unless_all_platforms: MarkDecorator
-    unless_all_sparc: MarkDecorator
-    unless_all_traits: MarkDecorator
-    unless_all_windows: MarkDecorator
     unless_altlinux: MarkDecorator
     unless_amzn: MarkDecorator
     unless_android: MarkDecorator
+    unless_any_architecture: MarkDecorator
+    unless_any_arm: MarkDecorator
+    unless_any_ci: MarkDecorator
+    unless_any_mips: MarkDecorator
+    unless_any_platform: MarkDecorator
+    unless_any_sparc: MarkDecorator
+    unless_any_trait: MarkDecorator
+    unless_any_windows: MarkDecorator
     unless_arch: MarkDecorator
     unless_arch_32_bit: MarkDecorator
     unless_arch_64_bit: MarkDecorator

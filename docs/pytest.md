@@ -73,14 +73,14 @@ def test_not_in_github_actions():
 | :----------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- | :--: | :------------------------------------------------------------------------------ |
 | [`@skip_aarch64`](pytest.md#extra_platforms.pytest.skip_aarch64)                           | [`@unless_aarch64`](pytest.md#extra_platforms.pytest.unless_aarch64)                           |  📱  | [`AARCH64`](architectures.md#extra_platforms.AARCH64)                           |
 | [`@skip_aix`](pytest.md#extra_platforms.pytest.skip_aix)                                   | [`@unless_aix`](pytest.md#extra_platforms.pytest.unless_aix)                                   |  ➿  | [`AIX`](platforms.md#extra_platforms.AIX)                                       |
-| [`@skip_all_architectures`](pytest.md#extra_platforms.pytest.skip_all_architectures)       | [`@unless_all_architectures`](pytest.md#extra_platforms.pytest.unless_all_architectures)       |  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES)              |
-| [`@skip_all_arm`](pytest.md#extra_platforms.pytest.skip_all_arm)                           | [`@unless_all_arm`](pytest.md#extra_platforms.pytest.unless_all_arm)                           |  📱  | [`ALL_ARM`](groups.md#extra_platforms.ALL_ARM)                                  |
-| [`@skip_all_ci`](pytest.md#extra_platforms.pytest.skip_all_ci)                             | [`@unless_all_ci`](pytest.md#extra_platforms.pytest.unless_all_ci)                             |  ♺   | [`ALL_CI`](groups.md#extra_platforms.ALL_CI)                                    |
-| [`@skip_all_mips`](pytest.md#extra_platforms.pytest.skip_all_mips)                         | [`@unless_all_mips`](pytest.md#extra_platforms.pytest.unless_all_mips)                         |  🔲  | [`ALL_MIPS`](groups.md#extra_platforms.ALL_MIPS)                                |
-| [`@skip_all_platforms`](pytest.md#extra_platforms.pytest.skip_all_platforms)               | [`@unless_all_platforms`](pytest.md#extra_platforms.pytest.unless_all_platforms)               |  ⚙️  | [`ALL_PLATFORMS`](groups.md#extra_platforms.ALL_PLATFORMS)                      |
-| [`@skip_all_sparc`](pytest.md#extra_platforms.pytest.skip_all_sparc)                       | [`@unless_all_sparc`](pytest.md#extra_platforms.pytest.unless_all_sparc)                       |  ☀️  | [`ALL_SPARC`](groups.md#extra_platforms.ALL_SPARC)                              |
-| [`@skip_all_traits`](pytest.md#extra_platforms.pytest.skip_all_traits)                     | [`@unless_all_traits`](pytest.md#extra_platforms.pytest.unless_all_traits)                     |  ⁕   | [`ALL_TRAITS`](groups.md#extra_platforms.ALL_TRAITS)                            |
-| [`@skip_all_windows`](pytest.md#extra_platforms.pytest.skip_all_windows)                   | [`@unless_all_windows`](pytest.md#extra_platforms.pytest.unless_all_windows)                   |  🪟  | [`ALL_WINDOWS`](groups.md#extra_platforms.ALL_WINDOWS)                          |
+| [`@skip_all_architectures`](pytest.md#extra_platforms.pytest.skip_all_architectures)       | [`@unless_any_architecture`](pytest.md#extra_platforms.pytest.unless_any_architecture)         |  🏛️  | [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES)              |
+| [`@skip_all_arm`](pytest.md#extra_platforms.pytest.skip_all_arm)                           | [`@unless_any_arm`](pytest.md#extra_platforms.pytest.unless_any_arm)                           |  📱  | [`ALL_ARM`](groups.md#extra_platforms.ALL_ARM)                                  |
+| [`@skip_all_ci`](pytest.md#extra_platforms.pytest.skip_all_ci)                             | [`@unless_any_ci`](pytest.md#extra_platforms.pytest.unless_any_ci)                             |  ♺   | [`ALL_CI`](groups.md#extra_platforms.ALL_CI)                                    |
+| [`@skip_all_mips`](pytest.md#extra_platforms.pytest.skip_all_mips)                         | [`@unless_any_mips`](pytest.md#extra_platforms.pytest.unless_any_mips)                         |  🔲  | [`ALL_MIPS`](groups.md#extra_platforms.ALL_MIPS)                                |
+| [`@skip_all_platforms`](pytest.md#extra_platforms.pytest.skip_all_platforms)               | [`@unless_any_platform`](pytest.md#extra_platforms.pytest.unless_any_platform)                 |  ⚙️  | [`ALL_PLATFORMS`](groups.md#extra_platforms.ALL_PLATFORMS)                      |
+| [`@skip_all_sparc`](pytest.md#extra_platforms.pytest.skip_all_sparc)                       | [`@unless_any_sparc`](pytest.md#extra_platforms.pytest.unless_any_sparc)                       |  ☀️  | [`ALL_SPARC`](groups.md#extra_platforms.ALL_SPARC)                              |
+| [`@skip_all_traits`](pytest.md#extra_platforms.pytest.skip_all_traits)                     | [`@unless_any_trait`](pytest.md#extra_platforms.pytest.unless_any_trait)                       |  ⁕   | [`ALL_TRAITS`](groups.md#extra_platforms.ALL_TRAITS)                            |
+| [`@skip_all_windows`](pytest.md#extra_platforms.pytest.skip_all_windows)                   | [`@unless_any_windows`](pytest.md#extra_platforms.pytest.unless_any_windows)                   |  🪟  | [`ALL_WINDOWS`](groups.md#extra_platforms.ALL_WINDOWS)                          |
 | [`@skip_altlinux`](pytest.md#extra_platforms.pytest.skip_altlinux)                         | [`@unless_altlinux`](pytest.md#extra_platforms.pytest.unless_altlinux)                         |  🐧  | [`ALTLINUX`](platforms.md#extra_platforms.ALTLINUX)                             |
 | [`@skip_amzn`](pytest.md#extra_platforms.pytest.skip_amzn)                                 | [`@unless_amzn`](pytest.md#extra_platforms.pytest.unless_amzn)                                 |  ⤻   | [`AMZN`](platforms.md#extra_platforms.AMZN)                                     |
 | [`@skip_android`](pytest.md#extra_platforms.pytest.skip_android)                           | [`@unless_android`](pytest.md#extra_platforms.pytest.unless_android)                           |  🤖  | [`ANDROID`](platforms.md#extra_platforms.ANDROID)                               |
@@ -314,14 +314,14 @@ def test_not_in_github_actions():
 ```{eval-rst}
 .. autodata:: extra_platforms.pytest.unless_aarch64
 .. autodata:: extra_platforms.pytest.unless_aix
-.. autodata:: extra_platforms.pytest.unless_all_architectures
-.. autodata:: extra_platforms.pytest.unless_all_arm
-.. autodata:: extra_platforms.pytest.unless_all_ci
-.. autodata:: extra_platforms.pytest.unless_all_mips
-.. autodata:: extra_platforms.pytest.unless_all_platforms
-.. autodata:: extra_platforms.pytest.unless_all_sparc
-.. autodata:: extra_platforms.pytest.unless_all_traits
-.. autodata:: extra_platforms.pytest.unless_all_windows
+.. autodata:: extra_platforms.pytest.unless_any_architecture
+.. autodata:: extra_platforms.pytest.unless_any_arm
+.. autodata:: extra_platforms.pytest.unless_any_ci
+.. autodata:: extra_platforms.pytest.unless_any_mips
+.. autodata:: extra_platforms.pytest.unless_any_platform
+.. autodata:: extra_platforms.pytest.unless_any_sparc
+.. autodata:: extra_platforms.pytest.unless_any_trait
+.. autodata:: extra_platforms.pytest.unless_any_windows
 .. autodata:: extra_platforms.pytest.unless_altlinux
 .. autodata:: extra_platforms.pytest.unless_amzn
 .. autodata:: extra_platforms.pytest.unless_android

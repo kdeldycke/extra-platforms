@@ -84,8 +84,9 @@ class Group(_Identifiable):
         """Normalize members to a sorted, deduplicated mapping."""
         super().__post_init__()
 
-        # Override detection_func_id for groups with "all_" prefix.
-        # Groups with "all_" prefix get "is_any_*" detection functions.
+        # Override detection_func_id and unless_decorator_id for groups with "all_" prefix.
+        # Groups with "all_" prefix get "is_any_*" detection functions and "unless_any_*"
+        # decorators (singular form) to better convey the "any member matches" semantic.
         # Class-type groups (those matching Trait subclasses) use the subclass's type_id.
         if self.id.startswith("all_"):
             suffix = self.id[4:]
@@ -99,6 +100,7 @@ class Group(_Identifiable):
             if suffix in suffix_to_type_id:
                 suffix = suffix_to_type_id[suffix]
             object.__setattr__(self, "detection_func_id", f"is_any_{suffix}")
+            object.__setattr__(self, "unless_decorator_id", f"unless_any_{suffix}")
 
         # Accept either a MappingProxyType, dict, or iterable of Traits.
         if isinstance(self.members, MappingProxyType):

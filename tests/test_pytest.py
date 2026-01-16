@@ -52,9 +52,9 @@ from extra_platforms.pytest import (
     skip_unknown_ci,
     skip_unknown_platform,
     skip_windows,
-    unless_all_architectures,
-    unless_all_ci,
-    unless_all_platforms,
+    unless_any_architecture,
+    unless_any_ci,
+    unless_any_platform,
     unless_github_ci,
     unless_linux,
     unless_macos,
@@ -72,9 +72,7 @@ def _all_decorator_ids() -> list[str]:
     all_decorator_ids = []
     for _obj in chain(ALL_TRAITS, ALL_GROUPS):
         assert isinstance(_obj, (Trait, Group))
-        skip_id = f"skip_{_obj.id}"
-        unless_id = f"unless_{_obj.id}"
-        all_decorator_ids.extend([skip_id, unless_id])
+        all_decorator_ids.extend([_obj.skip_decorator_id, _obj.unless_decorator_id])
     return sorted(all_decorator_ids)
 
 
@@ -143,8 +141,8 @@ def test_skip_all_architectures():
     )
 
 
-@unless_all_architectures
-def test_unless_all_architectures():
+@unless_any_architecture
+def test_unless_any_architecture():
     assert not is_unknown_architecture()
     assert True, (
         "This test should always be run as we expect to always detect an architecture."
@@ -159,8 +157,8 @@ def test_skip_all_platforms():
     )
 
 
-@unless_all_platforms
-def test_unless_all_platforms():
+@unless_any_platform
+def test_unless_any_platform():
     assert not is_unknown_platform()
     assert True, (
         "This test should always be run as we expect to always detect a platform."
@@ -172,8 +170,8 @@ def test_skip_all_ci():
     assert is_unknown_ci()
 
 
-@unless_all_ci
-def test_unless_all_ci():
+@unless_any_ci
+def test_unless_any_ci():
     assert not is_unknown_ci()
 
 
