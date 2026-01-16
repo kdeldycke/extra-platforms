@@ -628,6 +628,25 @@ def generate_detection_autofunction(
     return output
 
 
+def _generate_directive_section(
+    section_name: str,
+    objects: Iterable[str],
+) -> str:
+    """Generate a MyST code block with Sphinx directives for a section.
+
+    Args:
+        section_name: The section header name (e.g., "Skip decorators").
+        objects: An iterable of directive strings (e.g., autodata directives).
+
+    Returns:
+        A formatted MyST-compatible code block with directives.
+    """
+    directives = list(objects)
+    if not directives:
+        return ""
+    return f"### {section_name}\n\n```{{eval-rst}}\n" + "\n".join(directives) + "\n```"
+
+
 def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     """Generate Sphinx autodata directives for pytest decorators.
 
@@ -646,25 +665,23 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
 
     sorted_objects = sorted(objects_list, key=attrgetter("id"))
 
-    # Generate skip decorators section
-    skip_directives = [
-        f".. autodata:: extra_platforms.pytest.{obj.skip_decorator_id}"
-        for obj in sorted_objects
-    ]
-    skip_output = "### Skip decorators\n\n```{eval-rst}\n"
-    skip_output += "\n".join(skip_directives)
-    skip_output += "\n```\n\n"
+    skip_section = _generate_directive_section(
+        "Skip decorators",
+        (
+            f".. autodata:: extra_platforms.pytest.{obj.skip_decorator_id}"
+            for obj in sorted_objects
+        ),
+    )
 
-    # Generate unless decorators section
-    unless_directives = [
-        f".. autodata:: extra_platforms.pytest.{obj.unless_decorator_id}"
-        for obj in sorted_objects
-    ]
-    unless_output = "### Unless decorators\n\n```{eval-rst}\n"
-    unless_output += "\n".join(unless_directives)
-    unless_output += "\n```"
+    unless_section = _generate_directive_section(
+        "Unless decorators",
+        (
+            f".. autodata:: extra_platforms.pytest.{obj.unless_decorator_id}"
+            for obj in sorted_objects
+        ),
+    )
 
-    return skip_output + unless_output
+    return f"{skip_section}\n\n{unless_section}"
 
 
 def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
@@ -681,10 +698,11 @@ def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
     """
     objects_list = list(objects)
 
-    exclude_list = []
-    for obj in sorted(objects_list, key=attrgetter("id")):
-        exclude_list.append(obj.skip_decorator_id)
-        exclude_list.append(obj.unless_decorator_id)
+    exclude_list = [
+        decorator_id
+        for obj in sorted(objects_list, key=attrgetter("id"))
+        for decorator_id in (obj.skip_decorator_id, obj.unless_decorator_id)
+    ]
 
     exclude_members = ", ".join(exclude_list)
 
