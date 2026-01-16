@@ -106,7 +106,7 @@ def test_not_in_github_actions():
 | [`@skip_codebuild`](pytest.md#extra_platforms.pytest.skip_codebuild)                       | [`@unless_codebuild`](pytest.md#extra_platforms.pytest.unless_codebuild)                       |  ᚙ   | [`CODEBUILD`](ci.md#extra_platforms.CODEBUILD)                                  |
 | [`@skip_cygwin`](pytest.md#extra_platforms.pytest.skip_cygwin)                             | [`@unless_cygwin`](pytest.md#extra_platforms.pytest.unless_cygwin)                             |  Ͼ   | [`CYGWIN`](platforms.md#extra_platforms.CYGWIN)                                 |
 | [`@skip_debian`](pytest.md#extra_platforms.pytest.skip_debian)                             | [`@unless_debian`](pytest.md#extra_platforms.pytest.unless_debian)                             |  🌀  | [`DEBIAN`](platforms.md#extra_platforms.DEBIAN)                                 |
-| [`@skip_dragonflybsd`](pytest.md#extra_platforms.pytest.skip_dragonflybsd)                 | [`@unless_dragonflybsd`](pytest.md#extra_platforms.pytest.unless_dragonflybsd)                 |  🪰  | [`DRAGONFLYBSD`](platforms.md#extra_platforms.DRAGONFLYBSD)                     |
+| [`@skip_dragonfly_bsd`](pytest.md#extra_platforms.pytest.skip_dragonfly_bsd)               | [`@unless_dragonfly_bsd`](pytest.md#extra_platforms.pytest.unless_dragonfly_bsd)               |  🪰  | [`DRAGONFLY_BSD`](platforms.md#extra_platforms.DRAGONFLY_BSD)                   |
 | [`@skip_exherbo`](pytest.md#extra_platforms.pytest.skip_exherbo)                           | [`@unless_exherbo`](pytest.md#extra_platforms.pytest.unless_exherbo)                           |  🐽  | [`EXHERBO`](platforms.md#extra_platforms.EXHERBO)                               |
 | [`@skip_fedora`](pytest.md#extra_platforms.pytest.skip_fedora)                             | [`@unless_fedora`](pytest.md#extra_platforms.pytest.unless_fedora)                             |  🎩  | [`FEDORA`](platforms.md#extra_platforms.FEDORA)                                 |
 | [`@skip_freebsd`](pytest.md#extra_platforms.pytest.skip_freebsd)                           | [`@unless_freebsd`](pytest.md#extra_platforms.pytest.unless_freebsd)                           |  😈  | [`FREEBSD`](platforms.md#extra_platforms.FREEBSD)                               |
@@ -232,7 +232,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.skip_codebuild
 .. autodata:: extra_platforms.pytest.skip_cygwin
 .. autodata:: extra_platforms.pytest.skip_debian
-.. autodata:: extra_platforms.pytest.skip_dragonflybsd
+.. autodata:: extra_platforms.pytest.skip_dragonfly_bsd
 .. autodata:: extra_platforms.pytest.skip_exherbo
 .. autodata:: extra_platforms.pytest.skip_fedora
 .. autodata:: extra_platforms.pytest.skip_freebsd
@@ -353,7 +353,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.unless_codebuild
 .. autodata:: extra_platforms.pytest.unless_cygwin
 .. autodata:: extra_platforms.pytest.unless_debian
-.. autodata:: extra_platforms.pytest.unless_dragonflybsd
+.. autodata:: extra_platforms.pytest.unless_dragonfly_bsd
 .. autodata:: extra_platforms.pytest.unless_exherbo
 .. autodata:: extra_platforms.pytest.unless_fedora
 .. autodata:: extra_platforms.pytest.unless_freebsd

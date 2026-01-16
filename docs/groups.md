@@ -43,9 +43,11 @@ All recognized groups and their properties:
 |  𝘅   | [`X86`](groups.md#extra_platforms.X86)                               | x86 family                                  | [`is_x86()`](detection.md#extra_platforms.is_x86)                               |                              ⬥                               |
 
 ```{hint}
-Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
+Canonical groups are non-overlapping groups that together cover all
+recognized traits. They are marked with a ⬥ icon in the table above.
 
-Other groups are provided for convenience, but overlap with each other or with canonical groups.
+Other groups are provided for convenience, but overlap with each other or
+with canonical groups.
 ```
 
 <!-- groups-table-end -->

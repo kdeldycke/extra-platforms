@@ -276,10 +276,21 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     table = _generate_markdown_table(table_data, headers, alignments)
 
     # Append hint block explaining unknown trait if trait type was detected.
-    hint = f"""
-```{{hint}}
-The [`{trait_class.unknown_symbol}`](#extra_platforms.{trait_class.unknown_symbol}) trait represents an unrecognized {trait_class.type_name}. It is not included in the [`{trait_class.all_group}`](groups.md#extra_platforms.{trait_class.all_group}) group, and will be returned by `current_{trait_class.type_id}()` if the current {trait_class.type_name} is not recognized.
-```"""
+    unknown_link = (
+        f"[`{trait_class.unknown_symbol}`]("
+        f"#extra_platforms.{trait_class.unknown_symbol})"
+    )
+    all_group_link = (
+        f"[`{trait_class.all_group}`]("
+        f"groups.md#extra_platforms.{trait_class.all_group})"
+    )
+    hint = dedent(f"""
+        ```{{hint}}
+        The {unknown_link} trait represents an unrecognized
+        {trait_class.type_name}. It is not included in the {all_group_link} group,
+        and will be returned by `current_{trait_class.type_id}()` if the current
+        {trait_class.type_name} is not recognized.
+        ```""")
     return f"{table}\n{hint}"
 
 
@@ -304,11 +315,18 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     alignments = ["center", "left", "left", "left", "center"]
 
     for group in sorted(groups, key=attrgetter("id")):
+        group_link = (
+            f"[`{group.symbol_id}`](groups.md#extra_platforms.{group.symbol_id})"
+        )
+        detection_link = (
+            f"[`{group.detection_func_id}()`]("
+            f"detection.md#extra_platforms.{group.detection_func_id})"
+        )
         table_data.append([
             group.icon,
-            f"[`{group.symbol_id}`](groups.md#extra_platforms.{group.symbol_id})",
+            group_link,
             group.name,
-            f"[`{group.detection_func_id}()`](detection.md#extra_platforms.{group.detection_func_id})",
+            detection_link,
             "⬥" if group.canonical else "",
         ])
 
@@ -316,12 +334,14 @@ def generate_group_table(groups: Iterable[Group]) -> str:
 
     # Append hint block explaining canonical groups
     if len(groups) > 1:
-        hint = """
-```{hint}
-Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
+        hint = dedent("""
+            ```{hint}
+            Canonical groups are non-overlapping groups that together cover all
+            recognized traits. They are marked with a ⬥ icon in the table above.
 
-Other groups are provided for convenience, but overlap with each other or with canonical groups.
-```"""
+            Other groups are provided for convenience, but overlap with each other or
+            with canonical groups.
+            ```""")
         table = f"{table}\n{hint}"
 
     return table
@@ -492,9 +512,17 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     alignments = ["left", "left", "center", "left"]
 
     for obj in sorted(objects, key=attrgetter("id")):
+        skip_link = (
+            f"[`@{obj.skip_decorator_id}`]("
+            f"pytest.md#extra_platforms.pytest.{obj.skip_decorator_id})"
+        )
+        unless_link = (
+            f"[`@{obj.unless_decorator_id}`]("
+            f"pytest.md#extra_platforms.pytest.{obj.unless_decorator_id})"
+        )
         table_data.append([
-            f"[`@{obj.skip_decorator_id}`](pytest.md#extra_platforms.pytest.{obj.skip_decorator_id})",
-            f"[`@{obj.unless_decorator_id}`](pytest.md#extra_platforms.pytest.{obj.unless_decorator_id})",
+            skip_link,
+            unless_link,
             obj.icon,
             _symbol_link(obj),
         ])
@@ -550,8 +578,12 @@ def generate_all_detection_function_table(
     alignments = ["left", "center", "left"]
 
     for obj in sorted(objects, key=attrgetter("detection_func_id")):
+        func_link = (
+            f"[`{obj.detection_func_id}()`]("
+            f"detection.md#extra_platforms.{obj.detection_func_id})"
+        )
         table_data.append([
-            f"[`{obj.detection_func_id}()`](detection.md#extra_platforms.{obj.detection_func_id})",
+            func_link,
             obj.icon,
             _symbol_link(obj),
         ])
@@ -656,13 +688,14 @@ def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
 
     exclude_members = ", ".join(exclude_list)
 
-    return f"""```{{eval-rst}}
-.. automodule:: extra_platforms.pytest
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :exclude-members: {exclude_members}
-```"""
+    return dedent(f"""\
+        ```{{eval-rst}}
+        .. automodule:: extra_platforms.pytest
+           :members:
+           :undoc-members:
+           :show-inheritance:
+           :exclude-members: {exclude_members}
+        ```""")
 
 
 def update_docs() -> None:

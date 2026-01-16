@@ -73,7 +73,10 @@ Architecture(id='x86_64', name='x86-64 (AMD64)')
 |  🖥️  | [`X86_64`](#extra_platforms.X86_64)           | x86-64 (AMD64)                 | [`is_x86_64()`](detection.md#extra_platforms.is_x86_64)           |
 
 ```{hint}
-The [`UNKNOWN_ARCHITECTURE`](#extra_platforms.UNKNOWN_ARCHITECTURE) trait represents an unrecognized architecture. It is not included in the [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES) group, and will be returned by `current_architecture()` if the current architecture is not recognized.
+The [`UNKNOWN_ARCHITECTURE`](#extra_platforms.UNKNOWN_ARCHITECTURE) trait represents an unrecognized
+architecture. It is not included in the [`ALL_ARCHITECTURES`](groups.md#extra_platforms.ALL_ARCHITECTURES) group,
+and will be returned by `current_architecture()` if the current
+architecture is not recognized.
 ```
 
 <!-- architecture-table-end -->
@@ -100,9 +103,11 @@ The [`UNKNOWN_ARCHITECTURE`](#extra_platforms.UNKNOWN_ARCHITECTURE) trait repres
 |  𝘅   | [`X86`](groups.md#extra_platforms.X86)                             | x86 family              | [`is_x86()`](detection.md#extra_platforms.is_x86)                           |                              ⬥                               |
 
 ```{hint}
-Canonical groups are non-overlapping groups that together cover all recognized traits. They are marked with a ⬥ icon in the table above.
+Canonical groups are non-overlapping groups that together cover all
+recognized traits. They are marked with a ⬥ icon in the table above.
 
-Other groups are provided for convenience, but overlap with each other or with canonical groups.
+Other groups are provided for convenience, but overlap with each other or
+with canonical groups.
 ```
 
 <!-- architecture-groups-table-end -->

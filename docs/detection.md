@@ -41,7 +41,7 @@
 | [`is_codebuild()`](detection.md#extra_platforms.is_codebuild)                       |  ᚙ   | [`CODEBUILD`](ci.md#extra_platforms.CODEBUILD)                                  |
 | [`is_cygwin()`](detection.md#extra_platforms.is_cygwin)                             |  Ͼ   | [`CYGWIN`](platforms.md#extra_platforms.CYGWIN)                                 |
 | [`is_debian()`](detection.md#extra_platforms.is_debian)                             |  🌀  | [`DEBIAN`](platforms.md#extra_platforms.DEBIAN)                                 |
-| [`is_dragonflybsd()`](detection.md#extra_platforms.is_dragonflybsd)                 |  🪰  | [`DRAGONFLYBSD`](platforms.md#extra_platforms.DRAGONFLYBSD)                     |
+| [`is_dragonfly_bsd()`](detection.md#extra_platforms.is_dragonfly_bsd)               |  🪰  | [`DRAGONFLY_BSD`](platforms.md#extra_platforms.DRAGONFLY_BSD)                   |
 | [`is_exherbo()`](detection.md#extra_platforms.is_exherbo)                           |  🐽  | [`EXHERBO`](platforms.md#extra_platforms.EXHERBO)                               |
 | [`is_fedora()`](detection.md#extra_platforms.is_fedora)                             |  🎩  | [`FEDORA`](platforms.md#extra_platforms.FEDORA)                                 |
 | [`is_freebsd()`](detection.md#extra_platforms.is_freebsd)                           |  😈  | [`FREEBSD`](platforms.md#extra_platforms.FREEBSD)                               |
@@ -153,7 +153,7 @@
 .. autofunction:: extra_platforms.is_codebuild
 .. autofunction:: extra_platforms.is_cygwin
 .. autofunction:: extra_platforms.is_debian
-.. autofunction:: extra_platforms.is_dragonflybsd
+.. autofunction:: extra_platforms.is_dragonfly_bsd
 .. autofunction:: extra_platforms.is_exherbo
 .. autofunction:: extra_platforms.is_fedora
 .. autofunction:: extra_platforms.is_freebsd
