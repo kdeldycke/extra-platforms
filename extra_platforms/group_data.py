@@ -159,7 +159,7 @@ ALL_ARCHITECTURES: Group = Group(
 
 ALL_ARM = Group(
     "all_arm",
-    "All ARM architectures",
+    "ARM architectures",
     "📱",
     (AARCH64, ARM, ARMV5TEL, ARMV6L, ARMV7L, ARMV8L),
 )
@@ -186,7 +186,7 @@ LOONGARCH = Group(
 
 ALL_MIPS = Group(
     "all_mips",
-    "All MIPS architectures",
+    "MIPS architectures",
     "🔲",
     (MIPS, MIPS64, MIPS64EL, MIPSEL),
 )
@@ -213,7 +213,7 @@ RISCV = Group(
 
 ALL_SPARC = Group(
     "all_sparc",
-    "All SPARC architectures",
+    "SPARC architectures",
     "☀️",
     (SPARC, SPARC64),
 )
@@ -362,7 +362,7 @@ ALL_WINDOWS = Group(
 
 UNIX = Group(
     "unix",
-    "Any Unix",
+    "All Unix",
     "⨷",
     tuple(ALL_PLATFORMS - ALL_WINDOWS),
 )
@@ -371,7 +371,7 @@ UNIX = Group(
 
 UNIX_WITHOUT_MACOS = Group(
     "unix_without_macos",
-    "Any Unix excluding macOS",
+    "All Unix excluding macOS",
     "⨂",
     tuple(UNIX - MACOS),
 )
@@ -383,7 +383,7 @@ This is useful to avoid macOS-specific workarounds on Unix platforms.
 
 BSD = Group(
     "bsd",
-    "Any BSD",
+    "All BSD",
     "🅱️+",
     (DRAGONFLY_BSD, FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS),
 )
@@ -403,7 +403,7 @@ BSD = Group(
 
 BSD_WITHOUT_MACOS = Group(
     "bsd_without_macos",
-    "Any BSD excluding macOS",
+    "All BSD excluding macOS",
     "🅱️",
     tuple(BSD - MACOS),
 )
@@ -415,7 +415,7 @@ This is useful to avoid macOS-specific workarounds on BSD platforms.
 
 LINUX = Group(
     "linux",
-    "Any Linux distribution",
+    "Linux distributions",
     "🐧",
     (
         ALTLINUX,
@@ -468,7 +468,7 @@ LINUX = Group(
 
 LINUX_LAYERS = Group(
     "linux_layers",
-    "Any Linux compatibility layers",
+    "Linux compatibility layers",
     "≚",
     (WSL1, WSL2),
 )
@@ -484,7 +484,7 @@ LINUX_LAYERS = Group(
 
 LINUX_LIKE = Group(
     "linux_like",
-    "Any Linux and compatibility layers",
+    "All Linux & compatibility layers",
     "🐧+",
     tuple(LINUX | LINUX_LAYERS),
 )
@@ -519,7 +519,7 @@ SYSTEM_V = Group(
 
 UNIX_LAYERS = Group(
     "unix_layers",
-    "Any Unix compatibility layers",
+    "Unix compatibility layers",
     "≛",
     (CYGWIN,),
 )
@@ -548,7 +548,7 @@ UNIX_LAYERS = Group(
 
 OTHER_POSIX = Group(
     "other_posix",
-    "Any other POSIX-compliant platform",
+    "Other POSIX-compliant platforms",
     "🅟",
     tuple(UNIX - BSD - LINUX - LINUX_LAYERS - SYSTEM_V - UNIX_LAYERS),
 )
@@ -579,7 +579,7 @@ OTHER_POSIX = Group(
 
 ALL_CI = Group(
     "all_ci",
-    "All CI systems",
+    "CI systems",
     "♺",
     (
         AZURE_PIPELINES,
