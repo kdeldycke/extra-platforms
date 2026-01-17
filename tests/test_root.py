@@ -462,6 +462,9 @@ def test_unrecognized_message_format():
     assert "github.com/kdeldycke/extra-platforms/issues" in message
 
 
+@pytest.mark.skipif(
+    sys.version_info < (3, 14), reason="platform.invalidate_caches added in Python 3.14"
+)
 def test_invalidate_caches_python_314(monkeypatch):
     """Test that invalidate_caches calls platform.invalidate_caches on Python 3.14+."""
     import platform as stdlib_platform
@@ -478,8 +481,7 @@ def test_invalidate_caches_python_314(monkeypatch):
     invalidate_caches()
 
     # On Python 3.14+, platform.invalidate_caches should be called.
-    if sys.version_info >= (3, 14):
-        assert len(called) > 0, "platform.invalidate_caches was not called"
+    assert len(called) > 0, "platform.invalidate_caches was not called"
 
 
 def test_invalidate_caches_clears_all_detection_functions():
