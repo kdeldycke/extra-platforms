@@ -89,15 +89,9 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
     Returns:
         A reStructuredText docstring.
     """
-    # Create reference links in reStructuredText format.
-    doc_page_html = obj.doc_page.replace(".md", ".html")
-    symbol_link = (
-        f"`{obj.symbol_id} <{doc_page_html}#extra_platforms.{obj.symbol_id}>`_"
-    )
-    detection_link = (
-        f"`{obj.detection_func_id}() "
-        f"<detection.html#extra_platforms.{obj.detection_func_id}>`_"
-    )
+    # Create reference links using Sphinx roles for concise cross-referencing.
+    symbol_link = f":data:`~extra_platforms.{obj.symbol_id}`"
+    detection_link = f":func:`~extra_platforms.{obj.detection_func_id}`"
 
     is_group = isinstance(obj, Group)
 

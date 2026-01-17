@@ -27,8 +27,8 @@ you're careful of not implementing circular dependencies.
     same environment.
 
     Typical example is `Ubuntu WSL <https://documentation.ubuntu.com/wsl/>`_, which
-    will make both the ``is_wsl2()`` and ``is_ubuntu()`` functions return ``True`` at
-    the same time.
+    will make both the :func:`~extra_platforms.is_wsl2` and
+    :func:`~extra_platforms.is_ubuntu` functions return ``True`` at the same time.
 
     That's because of the environment metadata, where:
 
@@ -82,8 +82,7 @@ import distro
 
 @cache
 def is_aarch64() -> bool:
-    """Return ``True`` if current architecture is `AARCH64
-    <architectures.html#extra_platforms.AARCH64>`_.
+    """Return ``True`` if current architecture is :data:`~extra_platforms.AARCH64`.
 
     .. note::
         ``platform.machine()`` returns different values depending on the OS:
@@ -97,40 +96,31 @@ def is_aarch64() -> bool:
 
 @cache
 def is_armv5tel() -> bool:
-    """Return ``True`` if current architecture is `ARMV5TEL
-    <architectures.html#extra_platforms.ARMV5TEL>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.ARMV5TEL`."""
     return platform.machine() == "armv5tel"
 
 
 @cache
 def is_armv6l() -> bool:
-    """Return ``True`` if current architecture is `ARMV6L
-    <architectures.html#extra_platforms.ARMV6L>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.ARMV6L`."""
     return platform.machine() == "armv6l"
 
 
 @cache
 def is_armv7l() -> bool:
-    """Return ``True`` if current architecture is `ARMV7L
-    <architectures.html#extra_platforms.ARMV7L>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.ARMV7L`."""
     return platform.machine() == "armv7l"
 
 
 @cache
 def is_armv8l() -> bool:
-    """Return ``True`` if current architecture is `ARMV8L
-    <architectures.html#extra_platforms.ARMV8L>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.ARMV8L`."""
     return platform.machine() == "armv8l"
 
 
 @cache
 def is_arm() -> bool:
-    """Return ``True`` if current architecture is `ARM
-    <architectures.html#extra_platforms.ARM>`_.
+    """Return ``True`` if current architecture is :data:`~extra_platforms.ARM`.
 
     This matches ARM architectures not covered by more specific variants.
     """
@@ -147,32 +137,25 @@ def is_arm() -> bool:
 
 @cache
 def is_i386() -> bool:
-    """Return ``True`` if current architecture is `I386
-    <architectures.html#extra_platforms.I386>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.I386`."""
     return platform.machine() in ("i386", "i486")
 
 
 @cache
 def is_i586() -> bool:
-    """Return ``True`` if current architecture is `I586
-    <architectures.html#extra_platforms.I586>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.I586`."""
     return platform.machine() == "i586"
 
 
 @cache
 def is_i686() -> bool:
-    """Return ``True`` if current architecture is `I686
-    <architectures.html#extra_platforms.I686>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.I686`."""
     return platform.machine() == "i686"
 
 
 @cache
 def is_x86_64() -> bool:
-    """Return ``True`` if current architecture is `X86_64
-    <architectures.html#extra_platforms.X86_64>`_.
+    """Return ``True`` if current architecture is :data:`~extra_platforms.X86_64`.
 
     .. note::
         Windows returns ``AMD64`` in uppercase, so we normalize to lowercase.
@@ -182,112 +165,85 @@ def is_x86_64() -> bool:
 
 @cache
 def is_mips() -> bool:
-    """Return ``True`` if current architecture is `MIPS
-    <architectures.html#extra_platforms.MIPS>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.MIPS`."""
     return platform.machine() == "mips"
 
 
 @cache
 def is_mipsel() -> bool:
-    """Return ``True`` if current architecture is `MIPSEL
-    <architectures.html#extra_platforms.MIPSEL>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.MIPSEL`."""
     return platform.machine() == "mipsel"
 
 
 @cache
 def is_mips64() -> bool:
-    """Return ``True`` if current architecture is `MIPS64
-    <architectures.html#extra_platforms.MIPS64>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.MIPS64`."""
     return platform.machine() == "mips64"
 
 
 @cache
 def is_mips64el() -> bool:
-    """Return ``True`` if current architecture is `MIPS64EL
-    <architectures.html#extra_platforms.MIPS64EL>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.MIPS64EL`."""
     return platform.machine() == "mips64el"
 
 
 @cache
 def is_ppc() -> bool:
-    """Return ``True`` if current architecture is `PPC
-    <architectures.html#extra_platforms.PPC>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.PPC`."""
     return platform.machine() in ("ppc", "powerpc")
 
 
 @cache
 def is_ppc64() -> bool:
-    """Return ``True`` if current architecture is `PPC64
-    <architectures.html#extra_platforms.PPC64>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.PPC64`."""
     return platform.machine() == "ppc64"
 
 
 @cache
 def is_ppc64le() -> bool:
-    """Return ``True`` if current architecture is `PPC64LE
-    <architectures.html#extra_platforms.PPC64LE>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.PPC64LE`."""
     return platform.machine() == "ppc64le"
 
 
 @cache
 def is_riscv32() -> bool:
-    """Return ``True`` if current architecture is `RISCV32
-    <architectures.html#extra_platforms.RISCV32>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.RISCV32`."""
     return platform.machine() == "riscv32"
 
 
 @cache
 def is_riscv64() -> bool:
-    """Return ``True`` if current architecture is `RISCV64
-    <architectures.html#extra_platforms.RISCV64>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.RISCV64`."""
     return platform.machine() == "riscv64"
 
 
 @cache
 def is_sparc() -> bool:
-    """Return ``True`` if current architecture is `SPARC
-    <architectures.html#extra_platforms.SPARC>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.SPARC`."""
     return platform.machine() == "sparc"
 
 
 @cache
 def is_sparc64() -> bool:
-    """Return ``True`` if current architecture is `SPARC64
-    <architectures.html#extra_platforms.SPARC64>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.SPARC64`."""
     return platform.machine() in ("sparc64", "sun4u", "sun4v")
 
 
 @cache
 def is_s390x() -> bool:
-    """Return ``True`` if current architecture is `S390X
-    <architectures.html#extra_platforms.S390X>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.S390X`."""
     return platform.machine() == "s390x"
 
 
 @cache
 def is_loongarch64() -> bool:
-    """Return ``True`` if current architecture is `LOONGARCH64
-    <architectures.html#extra_platforms.LOONGARCH64>`_.
-    """
+    """Return ``True`` if current architecture is :data:`~extra_platforms.LOONGARCH64`."""
     return platform.machine() == "loongarch64"
 
 
 @cache
 def is_wasm32() -> bool:
-    """Return ``True`` if current architecture is `WASM32
-    <architectures.html#extra_platforms.WASM32>`_.
+    """Return ``True`` if current architecture is :data:`~extra_platforms.WASM32`.
 
     .. note::
         WebAssembly detection is based on Emscripten's platform identifier.
@@ -297,8 +253,7 @@ def is_wasm32() -> bool:
 
 @cache
 def is_wasm64() -> bool:
-    """Return ``True`` if current architecture is `WASM64
-    <architectures.html#extra_platforms.WASM64>`_.
+    """Return ``True`` if current architecture is :data:`~extra_platforms.WASM64`.
 
     .. note::
         WebAssembly 64-bit (memory64) is still experimental.
@@ -313,32 +268,25 @@ def is_wasm64() -> bool:
 
 @cache
 def is_aix() -> bool:
-    """Return ``True`` if current platform is `AIX
-    <platforms.html#extra_platforms.AIX>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.AIX`."""
     return sys.platform.startswith("aix") or distro.id() == "aix"
 
 
 @cache
 def is_altlinux() -> bool:
-    """Return ``True`` if current platform is `ALTLINUX
-    <platforms.html#extra_platforms.ALTLINUX>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.ALTLINUX`."""
     return distro.id() == "altlinux"
 
 
 @cache
 def is_amzn() -> bool:
-    """Return ``True`` if current platform is `AMZN
-    <platforms.html#extra_platforms.AMZN>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.AMZN`."""
     return distro.id() == "amzn"
 
 
 @cache
 def is_android() -> bool:
-    """Return ``True`` if current platform is `ANDROID
-    <platforms.html#extra_platforms.ANDROID>`_.
+    """Return ``True`` if current platform is :data:`~extra_platforms.ANDROID`.
 
     Source: https://github.com/kivy/kivy/blob/master/kivy/utils.py#L429
     """
@@ -347,120 +295,91 @@ def is_android() -> bool:
 
 @cache
 def is_arch() -> bool:
-    """Return ``True`` if current platform is `ARCH
-    <platforms.html#extra_platforms.ARCH>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.ARCH`."""
     return distro.id() == "arch"
 
 
 @cache
 def is_buildroot() -> bool:
-    """Return ``True`` if current platform is `BUILDROOT
-    <platforms.html#extra_platforms.BUILDROOT>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.BUILDROOT`."""
     return distro.id() == "buildroot"
 
 
 @cache
 def is_cachyos() -> bool:
-    """Return ``True`` if current platform is `CACHYOS
-    <platforms.html#extra_platforms.CACHYOS>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.CACHYOS`."""
     return distro.id() == "cachyos"
 
 
 @cache
 def is_centos() -> bool:
-    """Return ``True`` if current platform is `CENTOS
-    <platforms.html#extra_platforms.CENTOS>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.CENTOS`."""
     return distro.id() == "centos"
 
 
 @cache
 def is_cloudlinux() -> bool:
-    """Return ``True`` if current platform is `CLOUDLINUX
-    <platforms.html#extra_platforms.CLOUDLINUX>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.CLOUDLINUX`."""
     return distro.id() == "cloudlinux"
 
 
 @cache
 def is_cygwin() -> bool:
-    """Return ``True`` if current platform is `CYGWIN
-    <platforms.html#extra_platforms.CYGWIN>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.CYGWIN`."""
     return sys.platform.startswith("cygwin")
 
 
 @cache
 def is_debian() -> bool:
-    """Return ``True`` if current platform is `DEBIAN
-    <platforms.html#extra_platforms.DEBIAN>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.DEBIAN`."""
     return distro.id() == "debian"
 
 
 @cache
 def is_dragonfly_bsd() -> bool:
-    """Return ``True`` if current platform is `DRAGONFLY_BSD
-    <platforms.html#extra_platforms.DRAGONFLY_BSD>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.DRAGONFLY_BSD`."""
     return sys.platform.startswith("dragonfly")
 
 
 @cache
 def is_exherbo() -> bool:
-    """Return ``True`` if current platform is `EXHERBO
-    <platforms.html#extra_platforms.EXHERBO>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.EXHERBO`."""
     return distro.id() == "exherbo"
 
 
 @cache
 def is_fedora() -> bool:
-    """Return ``True`` if current platform is `FEDORA
-    <platforms.html#extra_platforms.FEDORA>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.FEDORA`."""
     return distro.id() == "fedora"
 
 
 @cache
 def is_freebsd() -> bool:
-    """Return ``True`` if current platform is `FREEBSD
-    <platforms.html#extra_platforms.FREEBSD>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.FREEBSD`."""
     return sys.platform.startswith("freebsd") or distro.id() == "freebsd"
 
 
 @cache
 def is_gentoo() -> bool:
-    """Return ``True`` if current platform is `GENTOO
-    <platforms.html#extra_platforms.GENTOO>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.GENTOO`."""
     return distro.id() == "gentoo"
 
 
 @cache
 def is_guix() -> bool:
-    """Return ``True`` if current platform is `GUIX
-    <platforms.html#extra_platforms.GUIX>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.GUIX`."""
     return distro.id() == "guix"
 
 
 @cache
 def is_haiku() -> bool:
-    """Return ``True`` if current platform is `HAIKU
-    <platforms.html#extra_platforms.HAIKU>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.HAIKU`."""
     return sys.platform.startswith("haiku")
 
 
 @cache
 def is_hurd() -> bool:
-    """Return ``True`` if current platform is `HURD
-    <platforms.html#extra_platforms.HURD>`_.
+    """Return ``True`` if current platform is :data:`~extra_platforms.HURD`.
 
     ``sys.platform`` can returns ``GNU`` or ``gnu0``, see:
     https://github.com/kdeldycke/extra-platforms/issues/308
@@ -470,16 +389,13 @@ def is_hurd() -> bool:
 
 @cache
 def is_ibm_powerkvm() -> bool:
-    """Return ``True`` if current platform is `IBM_POWERKVM
-    <platforms.html#extra_platforms.IBM_POWERKVM>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.IBM_POWERKVM`."""
     return distro.id() == "ibm_powerkvm"
 
 
 @cache
 def is_illumos() -> bool:
-    """Return ``True`` if current platform is `ILLUMOS
-    <platforms.html#extra_platforms.ILLUMOS>`_.
+    """Return ``True`` if current platform is :data:`~extra_platforms.ILLUMOS`.
 
     Illumos is a Unix OS derived from OpenSolaris. It shares ``sys.platform == 'sunos5'``
     with Solaris, but can be distinguished by checking ``platform.uname().version`` which
@@ -490,216 +406,163 @@ def is_illumos() -> bool:
 
 @cache
 def is_kvmibm() -> bool:
-    """Return ``True`` if current platform is `KVMIBM
-    <platforms.html#extra_platforms.KVMIBM>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.KVMIBM`."""
     return distro.id() == "kvmibm"
 
 
 @cache
 def is_linuxmint() -> bool:
-    """Return ``True`` if current platform is `LINUXMINT
-    <platforms.html#extra_platforms.LINUXMINT>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.LINUXMINT`."""
     return distro.id() == "linuxmint"
 
 
 @cache
 def is_macos() -> bool:
-    """Return ``True`` if current platform is `MACOS
-    <platforms.html#extra_platforms.MACOS>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.MACOS`."""
     return platform.platform(terse=True).startswith(("macOS", "Darwin"))
 
 
 @cache
 def is_mageia() -> bool:
-    """Return ``True`` if current platform is `MAGEIA
-    <platforms.html#extra_platforms.MAGEIA>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.MAGEIA`."""
     return distro.id() == "mageia"
 
 
 @cache
 def is_mandriva() -> bool:
-    """Return ``True`` if current platform is `MANDRIVA
-    <platforms.html#extra_platforms.MANDRIVA>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.MANDRIVA`."""
     return distro.id() == "mandriva"
 
 
 @cache
 def is_midnightbsd() -> bool:
-    """Return ``True`` if current platform is `MIDNIGHTBSD
-    <platforms.html#extra_platforms.MIDNIGHTBSD>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.MIDNIGHTBSD`."""
     return sys.platform.startswith("midnightbsd") or distro.id() == "midnightbsd"
 
 
 @cache
 def is_netbsd() -> bool:
-    """Return ``True`` if current platform is `NETBSD
-    <platforms.html#extra_platforms.NETBSD>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.NETBSD`."""
     return sys.platform.startswith("netbsd") or distro.id() == "netbsd"
 
 
 @cache
 def is_nobara() -> bool:
-    """Return ``True`` if current platform is `NOBARA
-    <platforms.html#extra_platforms.NOBARA>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.NOBARA`."""
     return distro.id() == "nobara"
 
 
 @cache
 def is_openbsd() -> bool:
-    """Return ``True`` if current platform is `OPENBSD
-    <platforms.html#extra_platforms.OPENBSD>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.OPENBSD`."""
     return sys.platform.startswith("openbsd") or distro.id() == "openbsd"
 
 
 @cache
 def is_opensuse() -> bool:
-    """Return ``True`` if current platform is `OPENSUSE
-    <platforms.html#extra_platforms.OPENSUSE>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.OPENSUSE`."""
     return distro.id() == "opensuse"
 
 
 @cache
 def is_oracle() -> bool:
-    """Return ``True`` if current platform is `ORACLE
-    <platforms.html#extra_platforms.ORACLE>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.ORACLE`."""
     return distro.id() == "oracle"
 
 
 @cache
 def is_parallels() -> bool:
-    """Return ``True`` if current platform is `PARALLELS
-    <platforms.html#extra_platforms.PARALLELS>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.PARALLELS`."""
     return distro.id() == "parallels"
 
 
 @cache
 def is_pidora() -> bool:
-    """Return ``True`` if current platform is `PIDORA
-    <platforms.html#extra_platforms.PIDORA>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.PIDORA`."""
     return distro.id() == "pidora"
 
 
 @cache
 def is_raspbian() -> bool:
-    """Return ``True`` if current platform is `RASPBIAN
-    <platforms.html#extra_platforms.RASPBIAN>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.RASPBIAN`."""
     return distro.id() == "raspbian"
 
 
 @cache
 def is_rhel() -> bool:
-    """Return ``True`` if current platform is `RHEL
-    <platforms.html#extra_platforms.RHEL>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.RHEL`."""
     return distro.id() == "rhel"
 
 
 @cache
 def is_rocky() -> bool:
-    """Return ``True`` if current platform is `ROCKY
-    <platforms.html#extra_platforms.ROCKY>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.ROCKY`."""
     return distro.id() == "rocky"
 
 
 @cache
 def is_scientific() -> bool:
-    """Return ``True`` if current platform is `SCIENTIFIC
-    <platforms.html#extra_platforms.SCIENTIFIC>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.SCIENTIFIC`."""
     return distro.id() == "scientific"
 
 
 @cache
 def is_slackware() -> bool:
-    """Return ``True`` if current platform is `SLACKWARE
-    <platforms.html#extra_platforms.SLACKWARE>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.SLACKWARE`."""
     return distro.id() == "slackware"
 
 
 @cache
 def is_sles() -> bool:
-    """Return ``True`` if current platform is `SLES
-    <platforms.html#extra_platforms.SLES>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.SLES`."""
     return distro.id() == "sles"
 
 
 @cache
 def is_solaris() -> bool:
-    """Return ``True`` if current platform is `SOLARIS
-    <platforms.html#extra_platforms.SOLARIS>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.SOLARIS`."""
     return platform.platform(aliased=True, terse=True).startswith("Solaris")
 
 
 @cache
 def is_sunos() -> bool:
-    """Return ``True`` if current platform is `SUNOS
-    <platforms.html#extra_platforms.SUNOS>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.SUNOS`."""
     return platform.platform(aliased=True, terse=True).startswith("SunOS")
 
 
 @cache
 def is_tumbleweed() -> bool:
-    """Return ``True`` if current platform is `TUMBLEWEED
-    <platforms.html#extra_platforms.TUMBLEWEED>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.TUMBLEWEED`."""
     return distro.id() == "opensuse-tumbleweed"
 
 
 @cache
 def is_tuxedo() -> bool:
-    """Return ``True`` if current platform is `TUXEDO
-    <platforms.html#extra_platforms.TUXEDO>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.TUXEDO`."""
     return distro.id() == "tuxedo"
 
 
 @cache
 def is_ubuntu() -> bool:
-    """Return ``True`` if current platform is `UBUNTU
-    <platforms.html#extra_platforms.UBUNTU>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.UBUNTU`."""
     return distro.id() == "ubuntu"
 
 
 @cache
 def is_ultramarine() -> bool:
-    """Return ``True`` if current platform is `ULTRAMARINE
-    <platforms.html#extra_platforms.ULTRAMARINE>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.ULTRAMARINE`."""
     return distro.id() == "ultramarine"
 
 
 @cache
 def is_windows() -> bool:
-    """Return ``True`` if current platform is `WINDOWS
-    <platforms.html#extra_platforms.WINDOWS>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.WINDOWS`."""
     return sys.platform.startswith("win32")
 
 
 @cache
 def is_wsl1() -> bool:
-    """Return ``True`` if current platform is `WSL1
-    <platforms.html#extra_platforms.WSL1>`_.
+    """Return ``True`` if current platform is :data:`~extra_platforms.WSL1`.
 
     .. caution::
         The only difference between WSL1 and WSL2 is `the case of the kernel release
@@ -724,17 +587,13 @@ def is_wsl1() -> bool:
 
 @cache
 def is_wsl2() -> bool:
-    """Return ``True`` if current platform is `WSL2
-    <platforms.html#extra_platforms.WSL2>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.WSL2`."""
     return "microsoft" in platform.release()
 
 
 @cache
 def is_xenserver() -> bool:
-    """Return ``True`` if current platform is `XENSERVER
-    <platforms.html#extra_platforms.XENSERVER>`_.
-    """
+    """Return ``True`` if current platform is :data:`~extra_platforms.XENSERVER`."""
     return distro.id() == "xenserver"
 
 
@@ -745,8 +604,7 @@ def is_xenserver() -> bool:
 
 @cache
 def is_azure_pipelines() -> bool:
-    """Return ``True`` if current CI is `AZURE_PIPELINES
-    <ci.html#extra_platforms.AZURE_PIPELINES>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.AZURE_PIPELINES`.
 
     `Environment variables reference
     <https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&viewFallbackFrom=vsts&tabs=yaml#system-variables>`_.
@@ -756,7 +614,7 @@ def is_azure_pipelines() -> bool:
 
 @cache
 def is_bamboo() -> bool:
-    """Return ``True`` if current CI is `BAMBOO <ci.html#extra_platforms.BAMBOO>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.BAMBOO`.
 
     `Environment variables reference
     <https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html#Bamboovariables-Build-specificvariables>`_.
@@ -766,7 +624,7 @@ def is_bamboo() -> bool:
 
 @cache
 def is_buildkite() -> bool:
-    """Return ``True`` if current CI is `BUILDKITE <ci.html#extra_platforms.BUILDKITE>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.BUILDKITE`.
 
     `Environment variables reference
     <https://buildkite.com/docs/pipelines/environment-variables>`_.
@@ -776,7 +634,7 @@ def is_buildkite() -> bool:
 
 @cache
 def is_circle_ci() -> bool:
-    """Return ``True`` if current CI is `CIRCLE_CI <ci.html#extra_platforms.CIRCLE_CI>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.CIRCLE_CI`.
 
     `Environment variables reference
     <https://circleci.com/docs/2.0/env-vars/#built-in-environment-variables>`_.
@@ -786,7 +644,7 @@ def is_circle_ci() -> bool:
 
 @cache
 def is_cirrus_ci() -> bool:
-    """Return ``True`` if current CI is `CIRRUS_CI <ci.html#extra_platforms.CIRRUS_CI>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.CIRRUS_CI`.
 
     `Environment variables reference
     <https://cirrus-ci.org/guide/writing-tasks/#environment-variables>`_.
@@ -796,7 +654,7 @@ def is_cirrus_ci() -> bool:
 
 @cache
 def is_codebuild() -> bool:
-    """Return ``True`` if current CI is `CODEBUILD <ci.html#extra_platforms.CODEBUILD>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.CODEBUILD`.
 
     `Environment variables reference
     <https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html>`_.
@@ -806,7 +664,7 @@ def is_codebuild() -> bool:
 
 @cache
 def is_github_ci() -> bool:
-    """Return ``True`` if current CI is `GITHUB_CI <ci.html#extra_platforms.GITHUB_CI>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.GITHUB_CI`.
 
     `Environment variables reference
     <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables>`_.
@@ -816,7 +674,7 @@ def is_github_ci() -> bool:
 
 @cache
 def is_gitlab_ci() -> bool:
-    """Return ``True`` if current CI is `GITLAB_CI <ci.html#extra_platforms.GITLAB_CI>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.GITLAB_CI`.
 
     `Environment variables reference
     <https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables>`_.
@@ -826,7 +684,7 @@ def is_gitlab_ci() -> bool:
 
 @cache
 def is_heroku_ci() -> bool:
-    """Return ``True`` if current CI is `HEROKU_CI <ci.html#extra_platforms.HEROKU_CI>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.HEROKU_CI`.
 
     `Environment variables reference
     <https://devcenter.heroku.com/articles/heroku-ci#immutable-environment-variables>`_.
@@ -836,7 +694,7 @@ def is_heroku_ci() -> bool:
 
 @cache
 def is_teamcity() -> bool:
-    """Return ``True`` if current CI is `TEAMCITY <ci.html#extra_platforms.TEAMCITY>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.TEAMCITY`.
 
     `Environment variables reference
     <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#PredefinedBuildParameters-ServerBuildProperties>`_.
@@ -846,7 +704,7 @@ def is_teamcity() -> bool:
 
 @cache
 def is_travis_ci() -> bool:
-    """Return ``True`` if current CI is `TRAVIS_CI <ci.html#extra_platforms.TRAVIS_CI>`_.
+    """Return ``True`` if current CI is :data:`~extra_platforms.TRAVIS_CI`.
 
     `Environment variables reference
     <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>`_.

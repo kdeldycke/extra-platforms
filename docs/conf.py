@@ -162,22 +162,13 @@ html_show_copyright = True
 html_show_sphinx = False
 
 
-def make_rst_link(text, url):
-    """Create a reStructuredText link."""
-    return f"`{text} <{url}>`_"
-
-
 def make_pytest_decorator_line(obj):
     """Create pytest decorator documentation line."""
-    skip_link = make_rst_link(
-        f"@{obj.skip_decorator_id}",
-        f"pytest.html#extra_platforms.pytest.{obj.skip_decorator_id}",
+    return (
+        "- **Pytest decorators**: "
+        f":data:`~extra_platforms.pytest.{obj.skip_decorator_id}` / "
+        f":data:`~extra_platforms.pytest.{obj.unless_decorator_id}`"
     )
-    unless_link = make_rst_link(
-        f"@{obj.unless_decorator_id}",
-        f"pytest.html#extra_platforms.pytest.{obj.unless_decorator_id}",
-    )
-    return f"- **Pytest decorators**: {skip_link} / {unless_link}"
 
 
 def autodoc_process_docstring(app, what, name, obj, options, lines):
@@ -209,11 +200,9 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
             f"- **Canonical**: ``{obj.canonical}`` {'⬥' if obj.canonical else ''}"
         )
 
-        detection_url = make_rst_link(
-            f"{obj.detection_func_id}()",
-            f"detection.html#extra_platforms.{obj.detection_func_id}",
+        lines.append(
+            f"- **Detection function**: :func:`~extra_platforms.{obj.detection_func_id}`"
         )
-        lines.append(f"- **Detection function**: {detection_url}")
 
         lines.append(make_pytest_decorator_line(obj))
 
@@ -223,24 +212,19 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
 
         for _, member in obj.items():
             class_name = type(member).__name__
-            doc_page_html = member.doc_page.replace(".md", ".html")
 
             # Count types.
             if class_name not in type_counts:
-                type_counts[class_name] = {
-                    "count": 0,
-                    "anchor": f"trait.html#extra_platforms.trait.{class_name}",
-                }
+                type_counts[class_name] = {"count": 0}
             type_counts[class_name]["count"] += 1
 
-            # Create member link.
-            member_url = f"{doc_page_html}#extra_platforms.{member.symbol_id}"
-            member_links.append(make_rst_link(member.symbol_id, member_url))
+            # Create member link using Sphinx role.
+            member_links.append(f":data:`~extra_platforms.{member.symbol_id}`")
 
         if member_links:
-            # Format type information with links
+            # Format type information with links.
             type_parts = [
-                f"{info['count']} {make_rst_link(class_name, info['anchor'])}"
+                f"{info['count']} :class:`~extra_platforms.{class_name}`"
                 for class_name, info in sorted(type_counts.items())
             ]
             type_info = ", ".join(type_parts)
@@ -264,19 +248,16 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines.append(f"- **Icon**: {obj.icon}")
         lines.append(f"- **Reference**: <{obj.url}>_")
 
-        detection_url = make_rst_link(
-            f"{obj.detection_func_id}()",
-            f"detection.html#extra_platforms.{obj.detection_func_id}",
+        lines.append(
+            f"- **Detection function**: :func:`~extra_platforms.{obj.detection_func_id}`"
         )
-        lines.append(f"- **Detection function**: {detection_url}")
 
         lines.append(make_pytest_decorator_line(obj))
 
         # Add list of groups this trait belongs to.
         group_links = [
-            make_rst_link(
-                f"{group.symbol_id}{' ⬥' if group.canonical else ''}",
-                f"groups.html#extra_platforms.{group.symbol_id}",
+            (
+                f":data:`~extra_platforms.{group.symbol_id}`{' ⬥' if group.canonical else ''}"
             )
             for group in sorted(obj.groups, key=lambda g: g.id)
         ]

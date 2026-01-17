@@ -713,7 +713,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 
 .. hint::
     These groups together cover all predefined architectures, platforms, and CI systems,
-    including traits from the :data:`UNKNOWN` group.
+    including traits from the :data:`~extra_platforms.UNKNOWN` group.
 
     All groups in this collection are marked as canonical.
 """
@@ -746,5 +746,5 @@ ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
 
 .. hint::
     This collection contains both canonical and non-canonical groups, including the
-    :data:`UNKNOWN` group.
+    :data:`~extra_platforms.UNKNOWN` group.
 """

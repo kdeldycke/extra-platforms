@@ -88,7 +88,8 @@ def replace_content(
     """Replace in the provided files the content surrounded by the provided tags.
 
     Tags are specified as simple names (e.g., "architecture-table-start") and will be
-    matched with flexible whitespace handling in HTML comment format.
+    matched with flexible whitespace handling. Supports both HTML comment format
+    (``<!-- tag -->``) for Markdown and rST comment format (``.. tag``) for rST files.
     """
     if isinstance(filepath, Path):
         path_list = [filepath]
@@ -101,38 +102,49 @@ def replace_content(
         assert filepath.is_file(), f"File {filepath} is not a file."
 
         orig_content = filepath.read_text(encoding="utf-8")
+        is_rst = filepath.suffix == ".rst"
 
-        # Construct regex patterns that match tags with flexible whitespace.
-        # Matches: <!-- tag -->\s* (any whitespace including newlines)
-        start_pattern = re.compile(
-            rf"<!--\s*{re.escape(start_tag)}\s*-->\s*",
-            re.MULTILINE | re.DOTALL,
-        )
-        end_pattern = re.compile(
-            rf"\s*<!--\s*{re.escape(end_tag)}\s*-->",
-            re.MULTILINE | re.DOTALL,
-        )
+        if is_rst:
+            # rST comment format: .. tag
+            start_pattern = re.compile(
+                rf"\.\.\s+{re.escape(start_tag)}\s*",
+                re.MULTILINE | re.DOTALL,
+            )
+            end_pattern = re.compile(
+                rf"\s*\.\.\s+{re.escape(end_tag)}",
+                re.MULTILINE | re.DOTALL,
+            )
+            start_tag_formatted = f".. {start_tag}\n\n"
+            end_tag_formatted = f"\n\n.. {end_tag}"
+        else:
+            # HTML comment format: <!-- tag -->
+            start_pattern = re.compile(
+                rf"<!--\s*{re.escape(start_tag)}\s*-->\s*",
+                re.MULTILINE | re.DOTALL,
+            )
+            end_pattern = re.compile(
+                rf"\s*<!--\s*{re.escape(end_tag)}\s*-->",
+                re.MULTILINE | re.DOTALL,
+            )
+            start_tag_formatted = f"<!-- {start_tag} -->\n\n"
+            end_tag_formatted = f"\n\n<!-- {end_tag} -->"
 
-        # Find start tag
+        # Find start tag.
         start_match = start_pattern.search(orig_content)
         if not start_match:
             continue
 
-        # Split at start tag
+        # Split at start tag.
         pre_content = orig_content[: start_match.start()]
         after_start = orig_content[start_match.end() :]
 
-        # Find end tag
+        # Find end tag.
         end_match = end_pattern.search(after_start)
         if not end_match:
             continue
 
-        # Split at end tag
+        # Split at end tag.
         post_content = after_start[end_match.end() :]
-
-        # Reconstruct with standardized formatting
-        start_tag_formatted = f"<!-- {start_tag} -->\n\n"
-        end_tag_formatted = f"\n\n<!-- {end_tag} -->"
 
         filepath.write_text(
             f"{pre_content}{start_tag_formatted}{new_content}{end_tag_formatted}{post_content}",
@@ -237,12 +249,9 @@ def generate_all_traits_table(traits: Iterable[Trait]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             trait.icon,
-            (
-                f"[`{trait.symbol_id}`]({trait.doc_page}"
-                f"#extra_platforms.{trait.symbol_id})"
-            ),
+            f"{{data}}`~extra_platforms.{trait.symbol_id}`",
             trait.name,
-            f"[`is_{trait.id}()`](detection.md#extra_platforms.is_{trait.id})",
+            f"{{func}}`~extra_platforms.{trait.detection_func_id}`",
             type(trait).__name__,
         ])
 
@@ -272,27 +281,19 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             trait.icon,
-            f"[`{trait.symbol_id}`](#extra_platforms.{trait.symbol_id})",
+            f"{{data}}`~extra_platforms.{trait.symbol_id}`",
             trait.name,
-            f"[`is_{trait.id}()`](detection.md#extra_platforms.is_{trait.id})",
+            f"{{func}}`~extra_platforms.{trait.detection_func_id}`",
         ])
 
     table = _generate_markdown_table(table_data, headers, alignments)
 
     # Append hint block explaining unknown trait if trait type was detected.
-    unknown_link = (
-        f"[`{trait_class.unknown_symbol}`]("
-        f"#extra_platforms.{trait_class.unknown_symbol})"
-    )
-    all_group_link = (
-        f"[`{trait_class.all_group}`]("
-        f"groups.md#extra_platforms.{trait_class.all_group})"
-    )
     hint = dedent(f"""
         ```{{hint}}
-        The {unknown_link} trait represents an unrecognized
-        {trait_class.type_name}. It is not included in the {all_group_link} group,
-        and will be returned by `current_{trait_class.type_id}()` if the current
+        The {{data}}`~extra_platforms.{trait_class.unknown_symbol}` trait represents an unrecognized
+        {trait_class.type_name}. It is not included in the {{data}}`~extra_platforms.{trait_class.all_group}` group,
+        and will be returned by {{func}}`~extra_platforms.current_{trait_class.type_id}` if the current
         {trait_class.type_name} is not recognized.
         ```""")
     return f"{table}\n{hint}"
@@ -320,18 +321,11 @@ def generate_group_table(groups: Iterable[Group]) -> str:
 
     sorted_groups = sorted(groups, key=attrgetter("id"))
     for group in sorted_groups:
-        group_link = (
-            f"[`{group.symbol_id}`](groups.md#extra_platforms.{group.symbol_id})"
-        )
-        detection_link = (
-            f"[`{group.detection_func_id}()`]("
-            f"detection.md#extra_platforms.{group.detection_func_id})"
-        )
         table_data.append([
             group.icon,
-            group_link,
+            f"{{data}}`~extra_platforms.{group.symbol_id}`",
             group.name,
-            detection_link,
+            f"{{func}}`~extra_platforms.{group.detection_func_id}`",
             "⬥" if group.canonical else "",
         ])
 
@@ -501,11 +495,6 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     return output
 
 
-def _symbol_link(obj: Trait | Group) -> str:
-    """Generate a Markdown link to the documentation page for a trait or group."""
-    return f"[`{obj.symbol_id}`]({obj.doc_page}#extra_platforms.{obj.symbol_id})"
-
-
 def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     """Produce a Markdown table for pytest decorators.
 
@@ -517,19 +506,11 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     alignments = ["left", "left", "center", "left"]
 
     for obj in sorted(objects, key=attrgetter("id")):
-        skip_link = (
-            f"[`@{obj.skip_decorator_id}`]("
-            f"pytest.md#extra_platforms.pytest.{obj.skip_decorator_id})"
-        )
-        unless_link = (
-            f"[`@{obj.unless_decorator_id}`]("
-            f"pytest.md#extra_platforms.pytest.{obj.unless_decorator_id})"
-        )
         table_data.append([
-            skip_link,
-            unless_link,
+            f"{{func}}`~extra_platforms.pytest.{obj.skip_decorator_id}`",
+            f"{{func}}`~extra_platforms.pytest.{obj.unless_decorator_id}`",
             obj.icon,
-            _symbol_link(obj),
+            f"{{data}}`~extra_platforms.{obj.symbol_id}`",
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)
@@ -583,14 +564,10 @@ def generate_all_detection_function_table(
     alignments = ["left", "center", "left"]
 
     for obj in sorted(objects, key=attrgetter("detection_func_id")):
-        func_link = (
-            f"[`{obj.detection_func_id}()`]("
-            f"detection.md#extra_platforms.{obj.detection_func_id})"
-        )
         table_data.append([
-            func_link,
+            f"{{func}}`~extra_platforms.{obj.detection_func_id}`",
             obj.icon,
-            _symbol_link(obj),
+            f"{{data}}`~extra_platforms.{obj.symbol_id}`",
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)
@@ -719,6 +696,44 @@ def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
            :show-inheritance:
            :exclude-members: {exclude_members}
         ```""")
+
+
+def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str:
+    """Generate the extra_platforms automodule directive with excluded detection funcs.
+
+    This excludes all detection functions from the automodule output, since they are
+    documented in detection.md via autofunction directives. This ensures that
+    {{func}} references resolve to detection.html as the canonical location.
+
+    Args:
+        objects: The traits and groups whose detection functions should be excluded.
+
+    Returns:
+        An rST automodule directive with exclude-members.
+    """
+    objects_list = list(objects)
+
+    # Exclude all detection functions so detection.md is the canonical location.
+    exclude_list = [
+        obj.detection_func_id for obj in sorted(objects_list, key=attrgetter("id"))
+    ]
+
+    # Also exclude utility functions documented in detection.md.
+    exclude_list.extend([
+        "current_architecture",
+        "current_ci",
+        "current_platform",
+        "current_traits",
+    ])
+
+    exclude_members = ", ".join(sorted(exclude_list))
+
+    return dedent(f"""\
+        .. automodule:: extra_platforms
+           :members:
+           :show-inheritance:
+           :undoc-members:
+           :exclude-members: {exclude_members}""")
 
 
 def update_docs() -> None:
@@ -892,35 +907,60 @@ def update_docs() -> None:
             "pytest-decorators-autodata-end",
             generate_pytest_decorator_autodata(chain(ALL_TRAITS, ALL_GROUPS)),
         ),
+        # Extra-platforms automodule directive (excludes detection functions).
+        (
+            "extra-platforms-automodule-start",
+            "extra-platforms-automodule-end",
+            generate_extra_platforms_automodule(chain(ALL_TRAITS, ALL_GROUPS)),
+        ),
     ]
 
-    # Collect all markdown files from docs directory and project root.
-    all_md_files = set()
+    # Collect all markdown and rST files from docs directory and project root.
+    all_doc_files = set()
 
     # Add markdown files from docs directory using wcmatch glob.
     for md_file in wcglob.iglob(str(DOCS_ROOT / "**/*.md"), flags=wcglob.GLOBSTAR):
-        all_md_files.add(Path(md_file).resolve())
+        all_doc_files.add(Path(md_file).resolve())
+
+    # Add rST files from docs directory.
+    for rst_file in wcglob.iglob(str(DOCS_ROOT / "**/*.rst"), flags=wcglob.GLOBSTAR):
+        all_doc_files.add(Path(rst_file).resolve())
 
     # Add readme.md from project root.
     if README_PATH.exists():
-        all_md_files.add(README_PATH.resolve())
+        all_doc_files.add(README_PATH.resolve())
 
     # Apply each replacement rule to all matching files.
     for start_tag, end_tag, content in replacement_rules:
         matching_files: list[Path] = []
-        # Use regex to check if tags exist (with flexible whitespace)
-        start_pattern = re.compile(
+        # Use regex to check if tags exist (with flexible whitespace).
+        # Support both HTML comments (Markdown) and rST comments.
+        html_start_pattern = re.compile(
             rf"<!--\s*{re.escape(start_tag)}\s*-->",
             re.MULTILINE | re.DOTALL,
         )
-        end_pattern = re.compile(
+        html_end_pattern = re.compile(
             rf"<!--\s*{re.escape(end_tag)}\s*-->",
             re.MULTILINE | re.DOTALL,
         )
+        rst_start_pattern = re.compile(
+            rf"\.\.\s+{re.escape(start_tag)}",
+            re.MULTILINE | re.DOTALL,
+        )
+        rst_end_pattern = re.compile(
+            rf"\.\.\s+{re.escape(end_tag)}",
+            re.MULTILINE | re.DOTALL,
+        )
 
-        for filepath in all_md_files:
+        for filepath in all_doc_files:
             file_content = filepath.read_text(encoding="utf-8")
-            if start_pattern.search(file_content) and end_pattern.search(file_content):
+            has_html_tags = html_start_pattern.search(
+                file_content
+            ) and html_end_pattern.search(file_content)
+            has_rst_tags = rst_start_pattern.search(
+                file_content
+            ) and rst_end_pattern.search(file_content)
+            if has_html_tags or has_rst_tags:
                 matching_files.append(filepath)
         if matching_files:
             replace_content(matching_files, start_tag, end_tag, content)

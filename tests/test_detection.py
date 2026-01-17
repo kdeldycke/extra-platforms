@@ -73,9 +73,10 @@ def test_detection_trait_functions(obj: Trait | Group):
     assert obj.detection_func_id.islower()
 
     # Verify the docstring contains an rST link to the symbol.
-    # Format: `SYMBOL_ID <...#extra_platforms.SYMBOL_ID>`_
+    # Format: either old style `SYMBOL_ID <...#extra_platforms.SYMBOL_ID>`_
+    # or new style Sphinx role :data:`~extra_platforms.SYMBOL_ID`
     assert check_func.__doc__ is not None and re.search(
-        rf"`{re.escape(obj.symbol_id)}\s+<.*#extra_platforms\.{re.escape(obj.symbol_id)}>`_",
+        rf":data:`~extra_platforms\.{re.escape(obj.symbol_id)}`",
         check_func.__doc__,
     )
 

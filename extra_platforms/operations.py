@@ -41,15 +41,15 @@ ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS - {UNKNOWN})
 """Set of all recognized group IDs.
 
 .. attention::
-    This collection does not contain the ``UNKNOWN`` group.
+    This collection does not contain the :data:`~extra_platforms.UNKNOWN` group.
 """
 
 ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
 """Set of all recognized traits and group IDs.
 
 .. attention::
-    This collection does not contain all the ``UNKNOWN_*`` traits and the ``UNKNOWN``
-    group.
+    This collection does not contain all the ``UNKNOWN_*`` traits and the
+    :data:`~extra_platforms.UNKNOWN` group.
 """
 
 
