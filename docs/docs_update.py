@@ -699,11 +699,13 @@ def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
 
 
 def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str:
-    """Generate the extra_platforms automodule directive with excluded detection funcs.
+    """Generate the extra_platforms automodule directive with excluded members.
 
-    This excludes all detection functions from the automodule output, since they are
-    documented in detection.md via autofunction directives. This ensures that
-    {{func}} references resolve to detection.html as the canonical location.
+    This excludes detection functions, utility functions, and core classes from the
+    automodule output, since they are documented in other files:
+    - Detection functions in detection.md ({{func}} → detection.html)
+    - Utility functions in detection.md ({{func}} → detection.html)
+    - Core classes in trait.md ({{class}} → trait.html)
 
     Args:
         objects: The traits and groups whose detection functions should be excluded.
@@ -724,6 +726,14 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
         "current_ci",
         "current_platform",
         "current_traits",
+    ])
+
+    # Also exclude core classes documented in trait.md.
+    exclude_list.extend([
+        "Architecture",
+        "CI",
+        "Platform",
+        "Trait",
     ])
 
     exclude_members = ", ".join(sorted(exclude_list))

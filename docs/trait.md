@@ -222,7 +222,25 @@ All recognized traits and their properties:
 ```
 
 ```{eval-rst}
-.. automodule:: extra_platforms.trait
+.. autoclass:: extra_platforms.Trait
+   :members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: extra_platforms.Platform
+   :members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: extra_platforms.Architecture
+   :members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: extra_platforms.CI
    :members:
    :private-members:
    :undoc-members:
