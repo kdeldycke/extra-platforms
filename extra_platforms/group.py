@@ -87,7 +87,8 @@ class Group(_Identifiable):
         # Override detection_func_id and unless_decorator_id for groups with "all_" prefix.
         # Groups with "all_" prefix get "is_any_*" detection functions and "unless_any_*"
         # decorators (singular form) to better convey the "any member matches" semantic.
-        # Class-type groups (those matching Trait subclasses) use the subclass's type_id.
+        # Class-type groups (those matching Trait subclasses) use the subclass's
+        # type_id.
         if self.id.startswith("all_"):
             suffix = self.id[4:]
             # Map group suffix to singular type_id using Trait and its subclasses.

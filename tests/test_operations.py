@@ -386,7 +386,9 @@ def test_all_ids_constant():
 def test_all_trait_ids_completeness():
     """Test that ALL_TRAIT_IDS contains IDs from all non-unknown traits."""
     # ALL_TRAIT_IDS excludes unknown traits.
-    expected_ids = {trait.id for trait in ALL_TRAITS if not trait.id.startswith("unknown")}
+    expected_ids = {
+        trait.id for trait in ALL_TRAITS if not trait.id.startswith("unknown")
+    }
     assert ALL_TRAIT_IDS == expected_ids
 
 
