@@ -9,6 +9,14 @@ tests package
 Submodules
 ----------
 
+tests.conftest module
+---------------------
+
+.. automodule:: tests.conftest
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 tests.test\_architecture\_data module
 -------------------------------------
 
@@ -85,6 +93,14 @@ tests.test\_root module
 -----------------------
 
 .. automodule:: tests.test_root
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+tests.test\_sphinx\_crossrefs module
+------------------------------------
+
+.. automodule:: tests.test_sphinx_crossrefs
    :members:
    :show-inheritance:
    :undoc-members:
