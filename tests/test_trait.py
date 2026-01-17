@@ -24,8 +24,17 @@ from string import ascii_lowercase, digits
 import pytest
 
 import extra_platforms
-from extra_platforms import ALL_GROUP_IDS, ALL_IDS, ALL_TRAIT_IDS, ALL_TRAITS, UNKNOWN
-from extra_platforms.trait import CI, Architecture, Platform, Trait
+from extra_platforms import (
+    ALL_GROUP_IDS,
+    ALL_IDS,
+    ALL_TRAIT_IDS,
+    ALL_TRAITS,
+    CI,
+    UNKNOWN,
+    Architecture,
+    Platform,
+    Trait,
+)
 
 
 @pytest.mark.parametrize(

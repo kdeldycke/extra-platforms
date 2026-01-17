@@ -20,6 +20,8 @@ import ast
 from itertools import chain
 from pathlib import Path
 
+import pytest
+
 import extra_platforms
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_GROUPS,
@@ -42,6 +44,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_windows,
 )
 from extra_platforms.pytest import (
+    _DeferredCondition,
     skip_all_architectures,
     skip_all_ci,
     skip_all_platforms,
@@ -318,3 +321,92 @@ def test_unless_github_ci():
     assert is_any_ci()
     assert not is_unknown_ci()
     assert is_github_ci()
+
+
+def test_deferred_condition_defers_evaluation():
+    """Test that _DeferredCondition defers evaluation until needed."""
+    # Track whether the condition was called.
+    called = []
+
+    def condition():
+        called.append(True)
+        return True
+
+    # Creating the _DeferredCondition should NOT call the condition.
+    deferred = _DeferredCondition(condition)
+    assert len(called) == 0
+
+    # Only when we evaluate it as a bool should it call the condition.
+    result = bool(deferred)
+    assert len(called) == 1
+    assert result is True
+
+
+def test_deferred_condition_bool():
+    """Test that _DeferredCondition.__bool__() calls the condition."""
+
+    def true_condition():
+        return True
+
+    def false_condition():
+        return False
+
+    assert bool(_DeferredCondition(true_condition)) is True
+    assert bool(_DeferredCondition(false_condition)) is False
+
+
+def test_deferred_condition_call():
+    """Test that _DeferredCondition.__call__() works."""
+
+    def true_condition():
+        return True
+
+    deferred = _DeferredCondition(true_condition)
+    result = deferred()
+    assert result is True
+
+
+def test_deferred_condition_invert_false():
+    """Test that _DeferredCondition with invert=False returns the condition result."""
+
+    def true_condition():
+        return True
+
+    def false_condition():
+        return False
+
+    assert bool(_DeferredCondition(true_condition, invert=False)) is True
+    assert bool(_DeferredCondition(false_condition, invert=False)) is False
+
+
+def test_deferred_condition_invert_true():
+    """Test that _DeferredCondition with invert=True inverts the condition result."""
+    from extra_platforms.pytest import _DeferredCondition
+
+    def true_condition():
+        return True
+
+    def false_condition():
+        return False
+
+    assert bool(_DeferredCondition(true_condition, invert=True)) is False
+    assert bool(_DeferredCondition(false_condition, invert=True)) is True
+
+
+def test_deferred_condition_with_pytest_skipif():
+    """Test that _DeferredCondition works with pytest.mark.skipif."""
+
+    # Create a condition that always returns True.
+    def always_skip():
+        return True
+
+    condition = _DeferredCondition(always_skip)
+
+    # Create a skipif mark.
+    mark = pytest.mark.skipif(condition, reason="Testing deferred condition")
+
+    # The mark should have the condition.
+    assert mark is not None
+    # We can't easily test if the skip actually happens without running pytest,
+    # but we can verify the condition evaluates correctly.
+    assert bool(condition) is True

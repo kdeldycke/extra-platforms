@@ -63,6 +63,7 @@ from extra_platforms import (
     IBM_POWERKVM,
     ILLUMOS,
     KVMIBM,
+    LINUX,
     LINUX_LIKE,
     LINUXMINT,
     MACOS,
@@ -303,3 +304,94 @@ def test_reduce_custom_targets(items, expected):
     print(results)
     assert results == expected
     assert isinstance(results, frozenset)
+
+
+def test_traits_from_ids_with_invalid_id():
+    """Test that traits_from_ids raises ValueError for invalid IDs."""
+    with pytest.raises(ValueError, match="Unrecognized group or trait IDs"):
+        traits_from_ids("invalid_id_that_does_not_exist")
+
+
+def test_groups_from_ids_with_invalid_id():
+    """Test that groups_from_ids raises ValueError for invalid IDs."""
+    with pytest.raises(ValueError, match="Unrecognized group IDs"):
+        groups_from_ids("invalid_group_id_that_does_not_exist")
+
+
+def test_traits_from_ids_with_empty_list():
+    """Test that traits_from_ids works with empty input."""
+    result = traits_from_ids()
+    assert result == tuple()
+
+
+def test_groups_from_ids_with_empty_list():
+    """Test that groups_from_ids works with empty input."""
+    result = groups_from_ids()
+    assert result == tuple()
+
+
+def test_traits_from_ids_with_multiple_valid_ids():
+    """Test that traits_from_ids works with multiple valid IDs."""
+    result = traits_from_ids("linux", "ubuntu", "macos")
+    # Should include LINUX group members plus UBUNTU and MACOS.
+    assert UBUNTU in result
+    assert MACOS in result
+    # LINUX is a group, so its members should be in the result.
+    assert DEBIAN in result
+
+
+def test_groups_from_ids_with_multiple_valid_ids():
+    """Test that groups_from_ids works with multiple valid IDs."""
+    result = groups_from_ids("linux", "bsd", "unix")
+    assert LINUX in result
+    assert BSD in result
+    assert UNIX in result
+
+
+def test_reduce_with_already_minimal_group():
+    """Test reduce with groups that cannot be further reduced."""
+    # AIX is a single platform, can't be reduced further.
+    result = reduce([AIX])
+    assert result == {AIX}
+
+
+def test_reduce_with_complex_overlap():
+    """Test reduce with complex overlapping groups."""
+    # Test with multiple groups that have complex overlaps.
+    result = reduce([LINUX, BSD, UNIX])
+    # Should return the minimal covering set.
+    assert isinstance(result, frozenset)
+    # UNIX covers both LINUX and BSD, so it's the minimal representation.
+    assert UNIX in result
+    assert len(result) == 1
+
+
+def test_reduce_returns_frozenset():
+    """Test that reduce always returns a frozenset."""
+    result1 = reduce([])
+    result2 = reduce([MACOS])
+    result3 = reduce([LINUX, BSD])
+
+    assert isinstance(result1, frozenset)
+    assert isinstance(result2, frozenset)
+    assert isinstance(result3, frozenset)
+
+
+def test_all_ids_constant():
+    """Test that ALL_IDS constant contains all trait and group IDs."""
+    # ALL_IDS should be the union of ALL_TRAIT_IDS and ALL_GROUP_IDS.
+    assert ALL_IDS == ALL_TRAIT_IDS | ALL_GROUP_IDS
+
+
+def test_all_trait_ids_completeness():
+    """Test that ALL_TRAIT_IDS contains IDs from all non-unknown traits."""
+    # ALL_TRAIT_IDS excludes unknown traits.
+    expected_ids = {trait.id for trait in ALL_TRAITS if not trait.id.startswith("unknown")}
+    assert ALL_TRAIT_IDS == expected_ids
+
+
+def test_all_group_ids_completeness():
+    """Test that ALL_GROUP_IDS contains IDs from all non-unknown groups."""
+    # ALL_GROUP_IDS excludes the UNKNOWN group.
+    expected_ids = {group.id for group in ALL_GROUPS if group.id != "unknown"}
+    assert ALL_GROUP_IDS == expected_ids

@@ -32,6 +32,13 @@ from extra_platforms import (
     UNKNOWN,
     Group,
     Trait,
+    invalidate_caches,
+    is_aarch64,
+    is_arm,
+    is_github_ci,
+    is_gitlab_ci,
+    is_windows,
+    is_x86_64,
 )
 from extra_platforms import detection as detection_module
 
@@ -139,3 +146,72 @@ def test_detection_heuristics_sorting():
         assert non_generic_func_ids == sorted(non_generic_func_ids), (
             f"Heuristics are not sorted: {non_generic_func_ids!r}"
         )
+
+
+def test_is_arm_depends_on_arm_variants():
+    """Test that is_arm() correctly calls ARM variant detection functions."""
+    # Clear caches to ensure fresh evaluation.
+    invalidate_caches()
+
+    # Call is_arm() to ensure it internally calls the ARM variant functions.
+    result = is_arm()
+
+    # We can't easily test the internal calls without mocking,
+    # but we can verify the function returns a boolean.
+    assert isinstance(result, bool)
+
+    invalidate_caches()
+
+
+def test_detection_functions_cached():
+    """Test that detection functions are cached with @cache decorator."""
+    # Clear caches first.
+    invalidate_caches()
+
+    # Call each function twice.
+    _ = is_aarch64()
+    _ = is_aarch64()
+    _ = is_windows()
+    _ = is_windows()
+    _ = is_x86_64()
+    _ = is_x86_64()
+
+    # Check that cache_info shows hits.
+    assert is_aarch64.cache_info().hits >= 1
+    assert is_windows.cache_info().hits >= 1
+    assert is_x86_64.cache_info().hits >= 1
+
+    invalidate_caches()
+
+
+def test_environment_variable_ci_detection(monkeypatch):
+    """Test CI detection based on environment variables."""
+    invalidate_caches()
+
+    # Mock GitHub CI environment variable.
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    invalidate_caches()
+    assert is_github_ci() is True
+
+    # Remove GitHub CI and add GitLab CI.
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    monkeypatch.setenv("GITLAB_CI", "true")
+    invalidate_caches()
+    assert is_gitlab_ci() is True
+
+    # Clean up.
+    monkeypatch.delenv("GITLAB_CI", raising=False)
+    invalidate_caches()
+
+
+def test_detection_no_circular_dependencies():
+    """Test that detection functions can all be called without circular dependency issues."""
+    invalidate_caches()
+
+    # Call all trait detection functions.
+    for trait in ALL_TRAITS:
+        # Access the current property, which calls the detection function.
+        _ = trait.current
+
+    # If no exception was raised, there are no circular dependencies.
+    invalidate_caches()

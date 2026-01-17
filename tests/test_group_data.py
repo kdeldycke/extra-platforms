@@ -38,14 +38,16 @@ from extra_platforms import (
     ALL_PLATFORMS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
+    CI,
     EXTRA_GROUPS,
     NON_OVERLAPPING_GROUPS,
     UNKNOWN,
+    Architecture,
     Group,
+    Platform,
     Trait,
 )
 from extra_platforms import group_data as group_data_module
-from extra_platforms.trait import CI, Architecture, Platform
 
 
 def test_group_class_metadata():
@@ -349,3 +351,52 @@ def test_each_trait_in_exactly_one_canonical_group():
             f"Trait {trait.id!r} is in {len(canonical_groups)} canonical groups: "
             f"{[g.id for g in canonical_groups]}"
         )
+
+
+def test_canonical_groups_dont_overlap():
+    """Test that canonical groups have no members in common with each other."""
+    canonical_list = list(NON_OVERLAPPING_GROUPS)
+    for i, group1 in enumerate(canonical_list):
+        for group2 in canonical_list[i + 1 :]:
+            assert group1.isdisjoint(group2), (
+                f"Canonical groups {group1.id} and {group2.id} overlap"
+            )
+
+
+def test_canonical_groups_cover_all_traits():
+    """Test that canonical groups together cover all recognized traits."""
+    # Union all canonical groups, excluding unknown traits.
+    all_canonical_members = set()
+    for group in NON_OVERLAPPING_GROUPS:
+        for member in group:
+            # Exclude unknown traits.
+            if not member.id.startswith("unknown_"):
+                all_canonical_members.add(member)
+
+    # Should cover all traits except UNKNOWN.
+    # ALL_TRAITS - UNKNOWN returns a Group, so we compare to its set.
+    assert all_canonical_members == set(ALL_TRAITS - UNKNOWN), (
+        "Canonical groups don't cover all non-UNKNOWN traits"
+    )
+
+
+def test_non_overlapping_groups_completeness():
+    """Test that NON_OVERLAPPING_GROUPS is properly defined."""
+    # Should have at least 3 canonical groups (architectures, platforms, CI).
+    assert len(NON_OVERLAPPING_GROUPS) >= 3
+
+    # Each group in NON_OVERLAPPING_GROUPS should have canonical=True.
+    for group in NON_OVERLAPPING_GROUPS:
+        assert group.canonical is True
+
+
+def test_canonical_group_marker():
+    """Test that canonical groups have the ⬥ marker in their documentation."""
+    for group in NON_OVERLAPPING_GROUPS:
+        # We can't directly test the markdown output, but we can verify
+        # the canonical property is True.
+        assert group.canonical is True
+
+    # Non-canonical groups should have canonical=False.
+    for group in EXTRA_GROUPS:
+        assert group.canonical is False

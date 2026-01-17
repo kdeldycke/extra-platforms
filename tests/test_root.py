@@ -25,26 +25,39 @@ import pytest
 import requests
 
 import extra_platforms
-from extra_platforms import (
+from extra_platforms import (  # type: ignore[attr-defined]
+    AARCH64,
     ALL_ARCHITECTURES,
     ALL_CI,
     ALL_GROUPS,
     ALL_PLATFORMS,
     ALL_TRAITS,
+    GITHUB_CI,
+    GITLAB_CI,
+    MACOS,
     SYSTEM_V,
+    UBUNTU,
     UNIX,
     UNKNOWN,
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
+    WINDOWS,
     WSL1,
     WSL2,
+    X86_64,
+    _unrecognized_message,
     current_architecture,
     current_ci,
     current_platform,
     current_traits,
     invalidate_caches,
+    is_aarch64,
+    is_any_platform,
+    is_bsd,
+    is_fedora,
     is_github_ci,
+    is_linux,
     is_macos,
     is_ubuntu,
     is_windows,
@@ -388,3 +401,153 @@ def test_invalidate_caches():
         assert "current" not in vars(platform_obj), (
             f"'current' cache not cleared for {platform_obj.id}"
         )
+
+
+def test_multiple_architectures_match(monkeypatch):
+    """Test RuntimeError when multiple architectures match."""
+    invalidate_caches()
+
+    # Mock two architectures to both return True.
+    monkeypatch.setattr(type(AARCH64), "current", property(lambda self: True))
+    monkeypatch.setattr(type(X86_64), "current", property(lambda self: True))
+
+    with pytest.raises(RuntimeError, match="Multiple architectures matches"):
+        current_architecture()
+
+    invalidate_caches()
+
+
+def test_multiple_platforms_match_non_wsl(monkeypatch):
+    """Test RuntimeError when multiple non-WSL platforms match."""
+    invalidate_caches()
+
+    # Mock two non-WSL platforms to both return True.
+    monkeypatch.setattr(type(MACOS), "current", property(lambda self: True))
+    monkeypatch.setattr(type(UBUNTU), "current", property(lambda self: True))
+
+    with pytest.raises(RuntimeError, match="Multiple platforms matches"):
+        current_platform()
+
+    invalidate_caches()
+
+
+def test_multiple_ci_systems_match(monkeypatch):
+    """Test RuntimeError when multiple CI systems match."""
+    invalidate_caches()
+
+    # Mock two CI systems to both return True.
+    monkeypatch.setattr(type(GITHUB_CI), "current", property(lambda self: True))
+    monkeypatch.setattr(type(GITLAB_CI), "current", property(lambda self: True))
+
+    with pytest.raises(RuntimeError, match="Multiple CI matches"):
+        current_ci()
+
+    invalidate_caches()
+
+
+def test_unrecognized_message_format():
+    """Test that _unrecognized_message contains expected fields."""
+    message = _unrecognized_message()
+
+    # Check that the message contains expected platform primitives.
+    assert "sys.platform:" in message
+    assert "platform.platform:" in message
+    assert "platform.release:" in message
+    assert "platform.uname:" in message
+    assert "platform.machine:" in message
+    assert "platform.architecture:" in message
+    assert "distro.id:" in message
+
+    # Check it contains the GitHub issue URL.
+    assert "github.com/kdeldycke/extra-platforms/issues" in message
+
+
+def test_invalidate_caches_python_314(monkeypatch):
+    """Test that invalidate_caches calls platform.invalidate_caches on Python 3.14+."""
+    import platform as stdlib_platform
+
+    # Track if the original or mock was called.
+    called = []
+
+    def mock_invalidate():
+        called.append(True)
+
+    # Always set the mock to track calls.
+    monkeypatch.setattr(stdlib_platform, "invalidate_caches", mock_invalidate)
+
+    invalidate_caches()
+
+    # On Python 3.14+, platform.invalidate_caches should be called.
+    if sys.version_info >= (3, 14):
+        assert len(called) > 0, "platform.invalidate_caches was not called"
+
+
+def test_invalidate_caches_clears_all_detection_functions():
+    """Test that invalidate_caches clears all detection function caches."""
+    # Call some detection functions to populate caches.
+    _ = is_aarch64()
+    _ = is_fedora()
+    _ = is_windows()
+
+    # Verify they have cache entries.
+    assert is_aarch64.cache_info().currsize > 0 or is_aarch64.cache_info().hits > 0
+    assert is_fedora.cache_info().currsize > 0 or is_fedora.cache_info().hits > 0
+    assert is_windows.cache_info().currsize > 0 or is_windows.cache_info().hits > 0
+
+    # Invalidate caches.
+    invalidate_caches()
+
+    # Verify all detection function caches are cleared.
+    for func_id in dir(detection_module):
+        func = getattr(detection_module, func_id)
+        if callable(func) and hasattr(func, "cache_info"):
+            assert func.cache_info().currsize == 0, f"{func_id} cache not cleared"
+
+
+def test_invalidate_caches_clears_group_detection_functions():
+    """Test that invalidate_caches clears dynamically generated group detection functions."""
+    # Call some group detection functions.
+    _ = is_linux()
+    _ = is_bsd()
+    _ = is_any_platform()
+
+    # Verify they have cache entries.
+    assert is_linux.cache_info().currsize > 0 or is_linux.cache_info().hits > 0
+    assert is_bsd.cache_info().currsize > 0 or is_bsd.cache_info().hits > 0
+    assert (
+        is_any_platform.cache_info().currsize > 0
+        or is_any_platform.cache_info().hits > 0
+    )
+
+    # Invalidate caches.
+    invalidate_caches()
+
+    # Verify group detection function caches are cleared.
+    assert is_linux.cache_info().currsize == 0
+    assert is_bsd.cache_info().currsize == 0
+    assert is_any_platform.cache_info().currsize == 0
+
+
+def test_invalidate_caches_clears_trait_current_property():
+    """Test that invalidate_caches clears Trait.current cached_property."""
+    # Access current property for a few traits to populate their caches.
+    # Note: LINUX is a Group, not a Trait, so we use UBUNTU instead.
+    _ = MACOS.current
+    _ = UBUNTU.current
+    _ = WINDOWS.current
+    _ = X86_64.current
+
+    # Verify the properties are cached.
+    assert "current" in vars(MACOS)
+    assert "current" in vars(UBUNTU)
+    assert "current" in vars(WINDOWS)
+    assert "current" in vars(X86_64)
+
+    # Invalidate caches.
+    invalidate_caches()
+
+    # Verify the cached properties are cleared.
+    assert "current" not in vars(MACOS)
+    assert "current" not in vars(UBUNTU)
+    assert "current" not in vars(WINDOWS)
+    assert "current" not in vars(X86_64)

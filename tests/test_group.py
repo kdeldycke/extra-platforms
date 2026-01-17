@@ -27,12 +27,16 @@ from extra_platforms import (
     BSD_WITHOUT_MACOS,
     LINUX,
     LINUX_LAYERS,
+    NON_OVERLAPPING_GROUPS,
     PIDORA,
     RHEL,
+    UBUNTU,
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
     Group,
+    Platform,
+    Trait,
 )
 
 
@@ -629,3 +633,128 @@ def test_set_operations_with_new_methods():
     assert popped_trait == AIX
     after_discard = remaining.discard("pidora")
     assert len(after_discard) == 0
+
+
+def test_extract_members_with_unsupported_type():
+    """Test that _extract_members raises TypeError for unsupported types."""
+    # Pass an unsupported type.
+    with pytest.raises(TypeError, match="Unsupported type"):
+        list(Group._extract_members(123))
+
+
+def test_getitem_with_missing_key():
+    """Test that __getitem__ raises KeyError with proper message."""
+    with pytest.raises(KeyError, match="No trait found whose ID is nonexistent"):
+        _ = LINUX["nonexistent"]
+
+
+def test_empty_group_bool():
+    """Test that empty groups evaluate to False."""
+    empty_group = Group(id="empty", name="Empty Group", icon="❌", members=tuple())
+    assert bool(empty_group) is False
+    assert len(empty_group) == 0
+
+
+def test_group_operations_with_empty_groups():
+    """Test group operations with empty groups."""
+    empty_group = Group(id="empty", name="Empty Group", icon="❌", members=tuple())
+
+    # Union with empty group.
+    result = LINUX.union(empty_group)
+    assert result == LINUX
+
+    # Intersection with empty group.
+    result = LINUX.intersection(empty_group)
+    assert len(result) == 0
+
+    # Difference with empty group.
+    result = LINUX.difference(empty_group)
+    assert result == LINUX
+
+    # Empty group is disjoint with everything.
+    assert LINUX.isdisjoint(empty_group)
+    assert empty_group.isdisjoint(LINUX)
+
+
+def test_group_with_duplicate_members():
+    """Test that duplicate members in constructor are deduplicated."""
+    # Create a group with duplicate members.
+    group = Group(
+        id="test_dupe",
+        name="Test Duplicate",
+        icon="🔁",
+        members=[UBUNTU, UBUNTU, UBUNTU],
+    )
+
+    # Should only have one UBUNTU.
+    assert len(group) == 1
+    assert UBUNTU in group
+
+
+def test_group_contains_with_string():
+    """Test Group.__contains__ with string IDs."""
+    assert "ubuntu" in LINUX
+    assert "nonexistent" not in LINUX
+
+
+def test_group_contains_with_wrong_trait_object():
+    """Test that Group.__contains__ checks object identity, not just ID."""
+    # Create a fake trait with the same ID as Ubuntu but different object.
+    fake_ubuntu = Platform(
+        id="ubuntu",
+        name="Fake Ubuntu",
+        icon="🐧",
+        url="https://example.com",
+    )
+
+    # The real UBUNTU should be in LINUX.
+    assert UBUNTU in LINUX
+
+    # The fake ubuntu with the same ID but different object should NOT be in LINUX.
+    assert fake_ubuntu not in LINUX
+
+
+def test_group_items():
+    """Test Group.items() returns key-value pairs."""
+    items = list(BSD.items())
+    assert len(items) > 0
+    for trait_id, trait in items:
+        assert isinstance(trait_id, str)
+        assert isinstance(trait, Trait)
+        assert trait.id == trait_id
+
+
+def test_group_extract_members_with_none():
+    """Test that _extract_members ignores None values."""
+    result = list(Group._extract_members(UBUNTU, None, None))
+    assert result == [UBUNTU]
+
+
+def test_group_extract_members_nested():
+    """Test that _extract_members handles nested structures."""
+    # Nested list of groups and traits.
+    result = list(Group._extract_members([LINUX, [UBUNTU]]))
+    # Should include all members of LINUX plus UBUNTU.
+    assert UBUNTU in result
+    # LINUX members should also be in result.
+    assert any(t.id == "debian" for t in result)
+
+
+def test_group_fullyintersects():
+    """Test fullyintersects method."""
+    # LINUX and BSD should be disjoint (no full intersection).
+    assert not LINUX.fullyintersects(BSD)
+
+    # LINUX should fully intersect with itself.
+    assert LINUX.fullyintersects(LINUX)
+
+
+def test_group_canonical_property():
+    """Test that Group.canonical property works correctly."""
+    # LINUX is canonical.
+    if LINUX in NON_OVERLAPPING_GROUPS:
+        assert LINUX.canonical is True
+
+    # UNIX is not canonical (overlaps with others).
+    if UNIX not in NON_OVERLAPPING_GROUPS:
+        assert UNIX.canonical is False
