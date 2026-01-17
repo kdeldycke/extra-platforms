@@ -225,7 +225,7 @@ def _generate_markdown_table(
 
 
 def generate_all_traits_table(traits: Iterable[Trait]) -> str:
-    """Produce a simple Markdown table for a collection of traits (for trait.md's "All traits" section).
+    """Produce a simple Markdown table for a collection of traits.
 
     Similar to group tables, contains icon, symbol, type, name, and detection function.
     """
@@ -237,7 +237,10 @@ def generate_all_traits_table(traits: Iterable[Trait]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             trait.icon,
-            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.symbol_id})",
+            (
+                f"[`{trait.symbol_id}`]({trait.doc_page}"
+                f"#extra_platforms.{trait.symbol_id})"
+            ),
             trait.name,
             f"[`is_{trait.id}()`](detection.md#extra_platforms.is_{trait.id})",
             type(trait).__name__,

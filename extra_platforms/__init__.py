@@ -290,7 +290,8 @@ def _unrecognized_message() -> str:
     return (
         "Environment:\n"
         f"  sys.platform:          {sys.platform!r}\n"
-        f"  platform.platform:     {stdlib_platform.platform(aliased=True, terse=True)!r}\n"
+        "  platform.platform:     "
+        f"{stdlib_platform.platform(aliased=True, terse=True)!r}\n"
         f"  platform.release:      {stdlib_platform.release()!r}\n"
         f"  platform.uname:        {stdlib_platform.uname()!r}\n"
         f"  platform.machine:      {stdlib_platform.machine()!r}\n"
