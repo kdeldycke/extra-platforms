@@ -25,6 +25,14 @@ tests.test\_ci\_data module
    :show-inheritance:
    :undoc-members:
 
+tests.test\_deprecated module
+-----------------------------
+
+.. automodule:: tests.test_deprecated
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 tests.test\_detection module
 ----------------------------
 
@@ -85,6 +93,14 @@ tests.test\_trait module
 ------------------------
 
 .. automodule:: tests.test_trait
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+tests.test\_utils module
+------------------------
+
+.. automodule:: tests.test_utils
    :members:
    :show-inheritance:
    :undoc-members:
