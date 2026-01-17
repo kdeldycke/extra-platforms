@@ -549,7 +549,7 @@ UNIX_LAYERS = Group(
 OTHER_POSIX = Group(
     "other_posix",
     "Any other POSIX-compliant platform",
-    "⊎",
+    "🅟",
     tuple(UNIX - BSD - LINUX - LINUX_LAYERS - SYSTEM_V - UNIX_LAYERS),
 )
 """All other UNIX-like or POSIX-compliant platforms.

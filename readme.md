@@ -262,7 +262,7 @@ mindmap
             (➿ AIX)
             (🔥 ILLUMOS)
             (🌞 SOLARIS)
-        )⊎ OTHER_POSIX(
+        )🅟 OTHER_POSIX(
             (🍂 HAIKU)
             (🐃 HURD)
         )≚ LINUX_LAYERS(

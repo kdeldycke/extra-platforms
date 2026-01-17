@@ -78,7 +78,7 @@
 | [`is_openbsd()`](detection.md#extra_platforms.is_openbsd)                           |  🐡  | [`OPENBSD`](platforms.md#extra_platforms.OPENBSD)                               |
 | [`is_opensuse()`](detection.md#extra_platforms.is_opensuse)                         |  🦎  | [`OPENSUSE`](platforms.md#extra_platforms.OPENSUSE)                             |
 | [`is_oracle()`](detection.md#extra_platforms.is_oracle)                             |  🦴  | [`ORACLE`](platforms.md#extra_platforms.ORACLE)                                 |
-| [`is_other_posix()`](detection.md#extra_platforms.is_other_posix)                   |  ⊎   | [`OTHER_POSIX`](groups.md#extra_platforms.OTHER_POSIX)                          |
+| [`is_other_posix()`](detection.md#extra_platforms.is_other_posix)                   |  🅟   | [`OTHER_POSIX`](groups.md#extra_platforms.OTHER_POSIX)                          |
 | [`is_parallels()`](detection.md#extra_platforms.is_parallels)                       |  ∥   | [`PARALLELS`](platforms.md#extra_platforms.PARALLELS)                           |
 | [`is_pidora()`](detection.md#extra_platforms.is_pidora)                             |  🍓  | [`PIDORA`](platforms.md#extra_platforms.PIDORA)                                 |
 | [`is_powerpc()`](detection.md#extra_platforms.is_powerpc)                           |  ⚡  | [`POWERPC`](groups.md#extra_platforms.POWERPC)                                  |
