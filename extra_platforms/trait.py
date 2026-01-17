@@ -220,7 +220,8 @@ class Trait(_Identifiable, ABC):
         assert self.url, f"{self.__class__.__name__} URL cannot be empty."
         assert self.url.startswith("https://"), "URL must start with https://."
 
-        # Generate docstring using type_name for context (e.g., "Predefined ARM64 architecture.").
+        # Generate docstring using type_name for context (e.g., "Predefined ARM64
+        # architecture.").
         object.__setattr__(self, "__doc__", f"Predefined {self.name} {self.type_name}.")
 
     @cached_property

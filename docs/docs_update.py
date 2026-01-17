@@ -237,7 +237,9 @@ def generate_all_traits_table(traits: Iterable[Trait]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             trait.icon,
-            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{trait.symbol_id})",
+            f"[`{trait.symbol_id}`]({trait.doc_page}#extra_platforms.{
+                trait.symbol_id
+            })",
             trait.name,
             f"[`is_{trait.id}()`](detection.md#extra_platforms.is_{trait.id})",
             type(trait).__name__,
@@ -257,7 +259,8 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     headers = ["Icon", "Symbol", "Name", "Detection function"]
     alignments = ["center", "left", "left", "left"]
 
-    # Get metadata from the first trait (all traits in the table should be the same type).
+    # Get metadata from the first trait (all traits in the table should be the
+    # same type).
     traits_list = list(traits)
     all_classes = {type(trait) for trait in traits_list}
     assert len(all_classes) == 1, (

@@ -290,7 +290,9 @@ def _unrecognized_message() -> str:
     return (
         "Environment:\n"
         f"  sys.platform:          {sys.platform!r}\n"
-        f"  platform.platform:     {stdlib_platform.platform(aliased=True, terse=True)!r}\n"
+        f"  platform.platform:     {
+            stdlib_platform.platform(aliased=True, terse=True)!r
+        }\n"
         f"  platform.release:      {stdlib_platform.release()!r}\n"
         f"  platform.uname:        {stdlib_platform.uname()!r}\n"
         f"  platform.machine:      {stdlib_platform.machine()!r}\n"
@@ -477,12 +479,15 @@ def _initialize_group_detection_functions() -> list[str]:
         func_id = group.detection_func_id
 
         # Create the group membership test function.
-        # Use default argument to capture the current group value (not the variable reference).
+        # Use default argument to capture the current group value (not the
+        # variable reference).
         def group_membership_check(_group: Group = group) -> bool:
             """Compares all the current traits to the ``group``."""
             return any(t in _group for t in current_traits())
 
-        group_membership_check.__doc__ = f"Return ``True`` if at least one `current traits <detection.html#extra_platforms.current_traits>`_ is found in the `{group.symbol_id} <groups.html#extra_platforms.{group.symbol_id}>`_ group."
+        group_membership_check.__doc__ = f"Return ``True`` if at least one `current traits <detection.html#extra_platforms.current_traits>`_ is found in the `{
+            group.symbol_id
+        } <groups.html#extra_platforms.{group.symbol_id}>`_ group."
 
         assert func_id not in locals(), (
             f"Function ID {func_id} already defined locally."
