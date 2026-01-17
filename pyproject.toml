@@ -4,7 +4,7 @@ name = "extra-platforms"
 version = "7.0.0"
 # Python versions and their status: https://devguide.python.org/versions/
 requires-python = ">= 3.10"
-description = "Detect architectures, platforms and CI systems, and group them by family"
+description = "🔎 Detect architectures, platforms, and CI systems, grouped by family"
 authors = [{ name = "Kevin Deldycke", email = "kevin@deldycke.com" }]
 readme = "readme.md"
 license-files = ["license"]

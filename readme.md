@@ -10,14 +10,14 @@
 
 ## What is Extra Platforms?
 
-- Inventory of all known architectures, platforms and CI systems
-- Detect the current architecture platform, at the distribution level
-- Platform metadata (version, codename, etc.)
-- Group platforms and architectures into families
-- Manage collection of platforms and groups
-- Associate each platform and group to an emoji symbol
-- Conditional markers decorators for `pytest`: `@skip_<id>`/`@unless_<id>` for each platform and group (`@skip_android`, `@skip_any_windows`, `@skip_github_ci`, …)
-- Fix [`distro#177` issue (support for Windows and Mac OS)](https://github.com/python-distro/distro/issues/177)
+Extra Platforms detects the runtime architecture, operating system (including Linux distribution), and CI environment, and exposes rich, cacheable metadata (version, codename, icon, canonical URL). It also groups platforms and architectures into reusable families.
+
+- Accurate detection of architecture, OS/distribution, and CI systems using lightweight, cacheable heuristics.
+- Rich metadata for platforms: version, codename, icon, canonical URL, and "like" relationships.
+- Grouping and API primitives: predefined families, `is_*()` predicates, `current_*()` accessors, and `Group` membership helpers.
+- Testing helpers: Pytest decorators and markers such as `@skip_<id>` and `@unless_<id>` for concise platform-aware tests.
+- Extensible and CI-friendly: designed to be lightweight, easy to extend, and suitable for CI-aware workflows.
+- Fixes/workarounds for Windows and macOS detection (see [`distro#177`](https://github.com/python-distro/distro/issues/177)).
 
 ## Quick start
 
