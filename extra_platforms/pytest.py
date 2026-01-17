@@ -94,9 +94,10 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
     symbol_link = (
         f"`{obj.symbol_id} <{doc_page_html}#extra_platforms.{obj.symbol_id}>`_"
     )
-    detection_link = f"`{obj.detection_func_id}() <detection.html#extra_platforms.{
-        obj.detection_func_id
-    }>`_"
+    detection_link = (
+        f"`{obj.detection_func_id}() "
+        f"<detection.html#extra_platforms.{obj.detection_func_id}>`_"
+    )
 
     is_group = isinstance(obj, Group)
 

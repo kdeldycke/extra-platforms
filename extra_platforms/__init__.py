@@ -290,9 +290,7 @@ def _unrecognized_message() -> str:
     return (
         "Environment:\n"
         f"  sys.platform:          {sys.platform!r}\n"
-        f"  platform.platform:     {
-            stdlib_platform.platform(aliased=True, terse=True)!r
-        }\n"
+        f"  platform.platform:     {stdlib_platform.platform(aliased=True, terse=True)!r}\n"
         f"  platform.release:      {stdlib_platform.release()!r}\n"
         f"  platform.uname:        {stdlib_platform.uname()!r}\n"
         f"  platform.machine:      {stdlib_platform.machine()!r}\n"
@@ -307,8 +305,9 @@ def _unrecognized_message() -> str:
 def current_architecture(strict: bool = False) -> Architecture:
     """Returns the ``Architecture`` matching the current environment.
 
-    Returns `UNKNOWN_ARCHITECTURE <architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE>`_ if not running inside a recognized architecture.
-    To raise an error instead, set ``strict`` to ``True``.
+    Returns `UNKNOWN_ARCHITECTURE
+    <architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE>`_ if not running inside a
+    recognized architecture. To raise an error instead, set ``strict`` to ``True``.
 
     .. important::
         Always raises an error if multiple architectures match.
@@ -342,8 +341,9 @@ def current_architecture(strict: bool = False) -> Architecture:
 def current_platform(strict: bool = False) -> Platform:
     """Always returns the best matching ``Platform`` for the current environment.
 
-    Returns `UNKNOWN_PLATFORM <platforms.html#extra_platforms.UNKNOWN_PLATFORM>`_ if not running inside a recognized platform.
-    To raise an error instead, set ``strict`` to ``True``.
+    Returns `UNKNOWN_PLATFORM <platforms.html#extra_platforms.UNKNOWN_PLATFORM>`_ if not
+    running inside a recognized platform. To raise an error instead, set ``strict`` to
+    ``True``.
 
     .. important::
         If multiple platforms match the current environment, this function will try to
@@ -389,8 +389,8 @@ def current_platform(strict: bool = False) -> Platform:
 def current_ci(strict: bool = False) -> CI:
     """Returns the ``CI`` system matching the current environment.
 
-    Returns `UNKNOWN_CI <ci.html#extra_platforms.UNKNOWN_CI>`_ if not running inside a recognized CI system.
-    To raise an error instead, set ``strict`` to ``True``.
+    Returns `UNKNOWN_CI <ci.html#extra_platforms.UNKNOWN_CI>`_ if not running inside a
+    recognized CI system. To raise an error instead, set ``strict`` to ``True``.
 
     .. important::
         Always raises an error if multiple CI systems match.
@@ -448,19 +448,25 @@ def current_traits() -> set[Trait]:
 
 @cache
 def is_unknown_architecture() -> bool:
-    """Return ``True`` if current architecture is `UNKNOWN_ARCHITECTURE <architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE>`_."""
+    """Return ``True`` if current architecture is `UNKNOWN_ARCHITECTURE
+    <architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE>`_.
+    """
     return current_architecture() is UNKNOWN_ARCHITECTURE
 
 
 @cache
 def is_unknown_platform() -> bool:
-    """Return ``True`` if current platform is `UNKNOWN_PLATFORM <platforms.html#extra_platforms.UNKNOWN_PLATFORM>`_."""
+    """Return ``True`` if current platform is `UNKNOWN_PLATFORM
+    <platforms.html#extra_platforms.UNKNOWN_PLATFORM>`_.
+    """
     return current_platform() is UNKNOWN_PLATFORM
 
 
 @cache
 def is_unknown_ci() -> bool:
-    """Return ``True`` if current CI is `UNKNOWN_CI <ci.html#extra_platforms.UNKNOWN_CI>`_."""
+    """Return ``True`` if current CI is `UNKNOWN_CI
+    <ci.html#extra_platforms.UNKNOWN_CI>`_.
+    """
     return current_ci() is UNKNOWN_CI
 
 
@@ -485,9 +491,12 @@ def _initialize_group_detection_functions() -> list[str]:
             """Compares all the current traits to the ``group``."""
             return any(t in _group for t in current_traits())
 
-        group_membership_check.__doc__ = f"Return ``True`` if at least one `current traits <detection.html#extra_platforms.current_traits>`_ is found in the `{
-            group.symbol_id
-        } <groups.html#extra_platforms.{group.symbol_id}>`_ group."
+        group_membership_check.__doc__ = (
+            "Return ``True`` if at least one `current traits "
+            "<detection.html#extra_platforms.current_traits>`_ is found in the "
+            f"`{group.symbol_id} <groups.html#extra_platforms.{group.symbol_id}>`_ "
+            "group."
+        )
 
         assert func_id not in locals(), (
             f"Function ID {func_id} already defined locally."
@@ -501,7 +510,8 @@ def _initialize_group_detection_functions() -> list[str]:
 _group_detection_func_ids = _initialize_group_detection_functions()
 """Generates ``is_<group>()`` function for each group.
 
-These are the equivalent for groups of ``is_<trait>()`` functions defined in ``detection.py``.
+These are the equivalent for groups of ``is_<trait>()`` functions defined in
+``detection.py``.
 
 These functions return a boolean value indicating the membership of the current
 system into that group.

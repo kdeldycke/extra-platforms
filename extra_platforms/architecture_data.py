@@ -78,8 +78,8 @@ ARMV7L = Architecture(
 )
 """
 .. note::
-    This architecture is commonly referred to as ``armhf`` (ARM hard-float) in Debian-based
-    distributions, or simply ``armv7`` in other contexts.
+    This architecture is commonly referred to as ``armhf`` (ARM hard-float) in
+    Debian-based distributions, or simply ``armv7`` in other contexts.
 """
 
 ARMV8L = Architecture(

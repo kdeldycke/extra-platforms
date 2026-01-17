@@ -48,7 +48,8 @@ ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
 """Set of all recognized traits and group IDs.
 
 .. attention::
-    This collection does not contain all the ``UNKNOWN_*`` traits and the ``UNKNOWN`` group.
+    This collection does not contain all the ``UNKNOWN_*`` traits and the ``UNKNOWN``
+    group.
 """
 
 

@@ -385,7 +385,8 @@ class _DeprecatedPlatformModule(ModuleType):
         self.__doc__ = (
             "Backward-compatible module for deprecated imports.\n\n"
             ".. deprecated:: 7.0.0\n"
-            "   This module is deprecated. Import from ``extra_platforms.trait`` instead."
+            "    This module is deprecated. Import from ``extra_platforms.trait``"
+            " instead."
         )
         self.__file__ = __file__
         self.__all__ = ["Platform", "_recursive_update", "_remove_blanks"]
