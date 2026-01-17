@@ -36,9 +36,7 @@ class SphinxAppWrapper:
         return getattr(self.app, name)
 
     @classmethod
-    def create(
-        cls, tmp_path: Path
-    ) -> Generator[SphinxAppWrapper, None, None]:
+    def create(cls, tmp_path: Path) -> Generator[SphinxAppWrapper, None, None]:
         """Factory method to create a SphinxAppWrapper for testing."""
         srcdir = tmp_path / "source"
         outdir = tmp_path / "build"
@@ -72,9 +70,7 @@ class SphinxAppWrapper:
             "sys.path.insert(0, str(Path(__file__).parent.parent.parent))",
             "",
         ]
-        config_lines.extend(
-            f"{key} = {repr(value)}" for key, value in conf.items()
-        )
+        config_lines.extend(f"{key} = {repr(value)}" for key, value in conf.items())
         config_content = "\n".join(config_lines)
         (srcdir / "conf.py").write_text(config_content)
 
@@ -91,7 +87,9 @@ class SphinxAppWrapper:
             wrapper = cls(app)
             yield wrapper
 
-    def create_module_stubs(self, modules: list[str], include_root: bool = True) -> None:
+    def create_module_stubs(
+        self, modules: list[str], include_root: bool = True
+    ) -> None:
         """Create stub RST files for modules to enable cross-referencing.
 
         Args:
@@ -185,19 +183,24 @@ class SphinxAppWrapper:
 
             # Add specific member documentation if defined.
             if module in module_members:
-                # Add automodule directive to create module-level cross-reference target.
-                rst_lines.extend(
-                    [
-                        f".. automodule:: {module}",
-                        "",
-                    ]
-                )
+                # Add automodule directive to create module-level cross-reference
+                # target.
+                rst_lines.extend([
+                    f".. automodule:: {module}",
+                    "",
+                ])
 
                 for member in module_members[module]:
                     # Determine the directive type based on naming convention.
                     if member[0].isupper():
                         # Constants and classes start with uppercase.
-                        if member in ["Trait", "Platform", "Architecture", "CI", "Group"]:
+                        if member in [
+                            "Trait",
+                            "Platform",
+                            "Architecture",
+                            "CI",
+                            "Group",
+                        ]:
                             directive = "autoclass"
                         else:
                             directive = "autodata"
@@ -208,21 +211,17 @@ class SphinxAppWrapper:
                     rst_lines.append("")
             else:
                 # Fall back to automodule for modules without specific members.
-                rst_lines.extend(
-                    [
-                        f".. automodule:: {module}",
-                        "   :members:",
-                        "   :undoc-members:",
-                        "   :show-inheritance:",
-                    ]
-                )
+                rst_lines.extend([
+                    f".. automodule:: {module}",
+                    "   :members:",
+                    "   :undoc-members:",
+                    "   :show-inheritance:",
+                ])
 
             rst_content = "\n".join(rst_lines) + "\n"
             rst_file.write_text(rst_content)
 
-    def build_document(
-        self, content: str, filename: str = "index.md"
-    ) -> str | None:
+    def build_document(self, content: str, filename: str = "index.md") -> str | None:
         """Build a Sphinx document with content and return the HTML output.
 
         Args:
