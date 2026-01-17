@@ -158,17 +158,6 @@ class _Identifiable:
         if "doc_page" not in cls.__dict__:
             cls.doc_page = f"{cls.type_id}s.md"
 
-    @cached_property
-    def short_desc(self) -> str:
-        """Return a short description of the object.
-
-        Mainly used to produce docstrings for functions dynamically generated for
-        each object.
-
-        By default returns the name. Subclasses may override for custom formatting.
-        """
-        return self.name
-
     def __post_init__(self) -> None:
         """Validate and normalize common fields.
 

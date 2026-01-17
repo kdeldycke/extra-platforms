@@ -138,7 +138,7 @@ for _obj in chain(ALL_TRAITS, ALL_GROUPS):
 
         _decorator = pytest.mark.skipif(
             _condition,  # type: ignore[arg-type]
-            reason=f"{_reason_prefix} {_obj.short_desc}",
+            reason=f"{_reason_prefix} {_obj.name[0].lower() + _obj.name[1:]}",
         )
 
         # Set a custom docstring for Sphinx autodoc.

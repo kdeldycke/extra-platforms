@@ -157,16 +157,6 @@ class Group(_Identifiable):
 
         return self in NON_OVERLAPPING_GROUPS
 
-    @cached_property
-    def short_desc(self) -> str:
-        """Return a short description with the first letter lowercased.
-
-        Overrides the base implementation to produce text suitable for mid-sentence
-        use in docstrings, e.g., "any Linux distribution" instead of "Any Linux
-        distribution".
-        """
-        return self.name[0].lower() + self.name[1:]
-
     def __iter__(self) -> Iterator[Trait]:
         """Iterate over the members of the group."""
         yield from self._members.values()
