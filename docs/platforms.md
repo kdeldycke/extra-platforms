@@ -121,7 +121,7 @@ platform is not recognized.
 |  🐧  | [`LINUX`](groups.md#extra_platforms.LINUX)                           | Any Linux distribution             | [`is_linux()`](detection.md#extra_platforms.is_linux)                           |                              ⬥                               |
 |  ≚   | [`LINUX_LAYERS`](groups.md#extra_platforms.LINUX_LAYERS)             | Any Linux compatibility layers     | [`is_linux_layers()`](detection.md#extra_platforms.is_linux_layers)             |                              ⬥                               |
 | 🐧+  | [`LINUX_LIKE`](groups.md#extra_platforms.LINUX_LIKE)                 | Any Linux and compatibility layers | [`is_linux_like()`](detection.md#extra_platforms.is_linux_like)                 |                                                              |
-|  ⊎   | [`OTHER_UNIX`](groups.md#extra_platforms.OTHER_UNIX)                 | Any other Unix                     | [`is_other_unix()`](detection.md#extra_platforms.is_other_unix)                 |                              ⬥                               |
+|  ⊎   | [`OTHER_POSIX`](groups.md#extra_platforms.OTHER_POSIX)               | Any other POSIX-compliant platform | [`is_other_posix()`](detection.md#extra_platforms.is_other_posix)               |                              ⬥                               |
 |  𝐕   | [`SYSTEM_V`](groups.md#extra_platforms.SYSTEM_V)                     | AT&T System Five                   | [`is_system_v()`](detection.md#extra_platforms.is_system_v)                     |                              ⬥                               |
 |  ⨷   | [`UNIX`](groups.md#extra_platforms.UNIX)                             | Any Unix                           | [`is_unix()`](detection.md#extra_platforms.is_unix)                             |                                                              |
 |  ≛   | [`UNIX_LAYERS`](groups.md#extra_platforms.UNIX_LAYERS)               | Any Unix compatibility layers      | [`is_unix_layers()`](detection.md#extra_platforms.is_unix_layers)               |                              ⬥                               |
@@ -154,7 +154,7 @@ sankey-beta
 ALL_PLATFORMS,LINUX,34
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
-ALL_PLATFORMS,OTHER_UNIX,2
+ALL_PLATFORMS,OTHER_POSIX,2
 ALL_PLATFORMS,LINUX_LAYERS,2
 ALL_PLATFORMS,UNIX_LAYERS,1
 ALL_PLATFORMS,ALL_WINDOWS,1
@@ -202,8 +202,8 @@ BSD,SUNOS,1
 SYSTEM_V,AIX,1
 SYSTEM_V,ILLUMOS,1
 SYSTEM_V,SOLARIS,1
-OTHER_UNIX,HAIKU,1
-OTHER_UNIX,HURD,1
+OTHER_POSIX,HAIKU,1
+OTHER_POSIX,HURD,1
 LINUX_LAYERS,WSL1,1
 LINUX_LAYERS,WSL2,1
 UNIX_LAYERS,CYGWIN,1
@@ -228,7 +228,7 @@ mindmap
             (➿ AIX)
             (🔥 ILLUMOS)
             (🌞 SOLARIS)
-        )⊎ OTHER_UNIX(
+        )⊎ OTHER_POSIX(
             (🍂 HAIKU)
             (🐃 HURD)
         )≚ LINUX_LAYERS(

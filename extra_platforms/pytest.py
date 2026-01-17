@@ -222,7 +222,7 @@ if TYPE_CHECKING:
     skip_openbsd: MarkDecorator
     skip_opensuse: MarkDecorator
     skip_oracle: MarkDecorator
-    skip_other_unix: MarkDecorator
+    skip_other_posix: MarkDecorator
     skip_parallels: MarkDecorator
     skip_pidora: MarkDecorator
     skip_powerpc: MarkDecorator
@@ -338,7 +338,7 @@ if TYPE_CHECKING:
     unless_openbsd: MarkDecorator
     unless_opensuse: MarkDecorator
     unless_oracle: MarkDecorator
-    unless_other_unix: MarkDecorator
+    unless_other_posix: MarkDecorator
     unless_parallels: MarkDecorator
     unless_pidora: MarkDecorator
     unless_powerpc: MarkDecorator

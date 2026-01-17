@@ -8,32 +8,40 @@
 - Add new `ARMV5TEL` architecture.
 - Add new `DRAGONFLY_BSD`, `HAIKU` and `ILLUMOS` platforms.
 - Add new `ARCH_32_BIT`, `ARCH_64_BIT` and `UNKNOWN` groups.
+- Add new detection functions:
+  - `is_armv5tel()`
+  - `is_dragonfly_bsd()`
+  - `is_haiku()`
+  - `is_illumos()`
+  - `is_arch_32_bit()`
+  - `is_arch_64_bit()`
+  - `is_unknown()`
+- Fix detection of `AARCH64` on Windows ARM runners.
 - Rename `UNKNOWN_LINUX` trait to `UNKNOWN_PLATFORM`.
 - Remove `UNKNOWN_ARCHITECTURE` trait from `ALL_ARCHITECTURES` group.
 - Remove `UNKNOWN_LINUX` trait from `ALL_PLATFORMS` group.
 - Remove `UNKNOWN_CI` trait from `ALL_CI` group.
-- `current_architecture()`, `current_platform()` and `current_ci()` functions now returns `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` if detection fails. Add strict mode to raise an exception when detection fails.
-- Add new `is_armv5tel()`, `is_arch_32_bit()`, `is_arch_64_bit()`, `is_dragonfly_bsd()`, `is_haiku()`, `is_illumos()` and `is_unknown()` detection functions.
-- Fix detection of `AARCH64` on Windows ARM runners.
-- Deprecate `is_unknown_linux()` in favor of `is_unknown_platform()`.
-- Link `Trait` and `Group` to their detection functions via the `detection_func_id` attribute.
+- `current_architecture()`, `current_platform()` and `current_ci()` functions now returns `UNKNOWN_ARCHITECTURE`, `UNKNOWN_PLATFORM` and `UNKNOWN_CI` if detection fails. Add strict mode to raise an exception instead.
+- Rename groups:
+  - `OTHER_UNIX` → `OTHER_POSIX`
+  - `ANY_ARM` → `ALL_ARM`
+  - `ANY_MIPS` → `ALL_MIPS`
+  - `ANY_SPARC` → `ALL_SPARC`
+  - `ANY_WINDOWS` → `ALL_WINDOWS`
+- Rename detection functions:
+  - `is_other_unix()` → `is_other_posix()`
+  - `is_all_architectures()` → `is_any_architecture()`
+  - `is_all_platforms()` → `is_any_platform()`
+  - `is_all_ci()` → `is_any_ci()`
+  - `is_all_traits()` → `is_any_trait()`
+  - `is_unknown_linux()` → `is_unknown_platform()`
+- Re-introduce aliases removed in v6.0.0 for backward compatibility:
+  - `Group._extract_platforms()` → `Group._extract_members()`
+  - `is_all_platforms_without_ci()` → `is_any_platform()`
+  - `is_ci()` → `is_any_ci()`
 - Rename `@skip/@unless_unknown_linux` decorators to `@skip/@unless_unknown_platform`.
-- Rename `ANY_*` groups to `ALL_*` for consistency:
-  - `ANY_ARM` → `ALL_ARM`.
-  - `ANY_MIPS` → `ALL_MIPS`.
-  - `ANY_SPARC` → `ALL_SPARC`.
-  - `ANY_WINDOWS` → `ALL_WINDOWS`.
-- Rename group detection functions to use `is_any_*()` pattern:
-  - `is_all_architectures()` → `is_any_architecture()`.
-  - `is_all_platforms()` → `is_any_platform()`.
-  - `is_all_ci()` → `is_any_ci()`.
-  - `is_all_traits()` → `is_any_trait()`.
-- Re-introduce aliases deprecated in v6.0.0 for backward compatibility:
-  - `Group._extract_platforms()` → `Group._extract_members()`.
-  - `is_all_platforms_without_ci()` → `is_any_platform()`.
-  - `is_ci()` → `is_any_ci()`.
 - Deprecate renamed symbols and detection functions with aliases.
-- Pre-compute traits and groups attributes for documentation generation.
+- Pre-compute traits and groups metadata to enforce conventions for data definitions, detection functions, Pytest decorators and document generation.
 - Mark all canonical groups with the ⬥ symbol everywhere in the documentation.
 - Cross-link all traits, groups and detection functions in the documentation.
 

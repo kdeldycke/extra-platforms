@@ -31,7 +31,7 @@ All recognized groups and their properties:
 |  ≚   | [`LINUX_LAYERS`](groups.md#extra_platforms.LINUX_LAYERS)             | Any Linux compatibility layers              | [`is_linux_layers()`](detection.md#extra_platforms.is_linux_layers)             |                              ⬥                               |
 | 🐧+  | [`LINUX_LIKE`](groups.md#extra_platforms.LINUX_LIKE)                 | Any Linux and compatibility layers          | [`is_linux_like()`](detection.md#extra_platforms.is_linux_like)                 |                                                              |
 |  🐉  | [`LOONGARCH`](groups.md#extra_platforms.LOONGARCH)                   | LoongArch                                   | [`is_loongarch()`](detection.md#extra_platforms.is_loongarch)                   |                              ⬥                               |
-|  ⊎   | [`OTHER_UNIX`](groups.md#extra_platforms.OTHER_UNIX)                 | Any other Unix                              | [`is_other_unix()`](detection.md#extra_platforms.is_other_unix)                 |                              ⬥                               |
+|  ⊎   | [`OTHER_POSIX`](groups.md#extra_platforms.OTHER_POSIX)               | Any other POSIX-compliant platform          | [`is_other_posix()`](detection.md#extra_platforms.is_other_posix)               |                              ⬥                               |
 |  ⚡  | [`POWERPC`](groups.md#extra_platforms.POWERPC)                       | PowerPC family                              | [`is_powerpc()`](detection.md#extra_platforms.is_powerpc)                       |                              ⬥                               |
 |  Ⅴ   | [`RISCV`](groups.md#extra_platforms.RISCV)                           | RISC-V family                               | [`is_riscv()`](detection.md#extra_platforms.is_riscv)                           |                              ⬥                               |
 |  𝐕   | [`SYSTEM_V`](groups.md#extra_platforms.SYSTEM_V)                     | AT&T System Five                            | [`is_system_v()`](detection.md#extra_platforms.is_system_v)                     |                              ⬥                               |
@@ -74,7 +74,7 @@ with canonical groups.
 .. autodata:: extra_platforms.LINUX_LAYERS
 .. autodata:: extra_platforms.LINUX_LIKE
 .. autodata:: extra_platforms.LOONGARCH
-.. autodata:: extra_platforms.OTHER_UNIX
+.. autodata:: extra_platforms.OTHER_POSIX
 .. autodata:: extra_platforms.POWERPC
 .. autodata:: extra_platforms.RISCV
 .. autodata:: extra_platforms.SYSTEM_V

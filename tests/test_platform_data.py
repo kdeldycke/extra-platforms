@@ -31,7 +31,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     LINUX,
     LINUX_LAYERS,
     NON_OVERLAPPING_GROUPS,
-    OTHER_UNIX,
+    OTHER_POSIX,
     SYSTEM_V,
     UNIX,
     UNIX_LAYERS,
@@ -277,7 +277,7 @@ def test_platform_logical_grouping():
     for group in ALL_PLATFORM_GROUPS:
         assert group.issubset(ALL_PLATFORMS)
 
-    for group in BSD, LINUX, LINUX_LAYERS, SYSTEM_V, UNIX_LAYERS, OTHER_UNIX:
+    for group in BSD, LINUX, LINUX_LAYERS, SYSTEM_V, UNIX_LAYERS, OTHER_POSIX:
         assert group.issubset(UNIX)
         assert UNIX.issuperset(group)
 
@@ -296,14 +296,14 @@ def test_platform_logical_grouping():
 
     # All UNIX platforms are divided into BSD, Linux, and Unix families.
     assert UNIX.fullyintersects(
-        BSD | LINUX | LINUX_LAYERS | SYSTEM_V | UNIX_LAYERS | OTHER_UNIX
+        BSD | LINUX | LINUX_LAYERS | SYSTEM_V | UNIX_LAYERS | OTHER_POSIX
     )
     assert BSD.canonical
     assert LINUX.canonical
     assert LINUX_LAYERS.canonical
     assert SYSTEM_V.canonical
     assert UNIX_LAYERS.canonical
-    assert OTHER_UNIX.canonical
+    assert OTHER_POSIX.canonical
 
 
 def test_no_missing_platform_in_groups():

@@ -143,7 +143,7 @@ def test_not_in_github_actions():
 | [`@skip_openbsd`](pytest.md#extra_platforms.pytest.skip_openbsd)                           | [`@unless_openbsd`](pytest.md#extra_platforms.pytest.unless_openbsd)                           |  🐡  | [`OPENBSD`](platforms.md#extra_platforms.OPENBSD)                               |
 | [`@skip_opensuse`](pytest.md#extra_platforms.pytest.skip_opensuse)                         | [`@unless_opensuse`](pytest.md#extra_platforms.pytest.unless_opensuse)                         |  🦎  | [`OPENSUSE`](platforms.md#extra_platforms.OPENSUSE)                             |
 | [`@skip_oracle`](pytest.md#extra_platforms.pytest.skip_oracle)                             | [`@unless_oracle`](pytest.md#extra_platforms.pytest.unless_oracle)                             |  🦴  | [`ORACLE`](platforms.md#extra_platforms.ORACLE)                                 |
-| [`@skip_other_unix`](pytest.md#extra_platforms.pytest.skip_other_unix)                     | [`@unless_other_unix`](pytest.md#extra_platforms.pytest.unless_other_unix)                     |  ⊎   | [`OTHER_UNIX`](groups.md#extra_platforms.OTHER_UNIX)                            |
+| [`@skip_other_posix`](pytest.md#extra_platforms.pytest.skip_other_posix)                   | [`@unless_other_posix`](pytest.md#extra_platforms.pytest.unless_other_posix)                   |  ⊎   | [`OTHER_POSIX`](groups.md#extra_platforms.OTHER_POSIX)                          |
 | [`@skip_parallels`](pytest.md#extra_platforms.pytest.skip_parallels)                       | [`@unless_parallels`](pytest.md#extra_platforms.pytest.unless_parallels)                       |  ∥   | [`PARALLELS`](platforms.md#extra_platforms.PARALLELS)                           |
 | [`@skip_pidora`](pytest.md#extra_platforms.pytest.skip_pidora)                             | [`@unless_pidora`](pytest.md#extra_platforms.pytest.unless_pidora)                             |  🍓  | [`PIDORA`](platforms.md#extra_platforms.PIDORA)                                 |
 | [`@skip_powerpc`](pytest.md#extra_platforms.pytest.skip_powerpc)                           | [`@unless_powerpc`](pytest.md#extra_platforms.pytest.unless_powerpc)                           |  ⚡  | [`POWERPC`](groups.md#extra_platforms.POWERPC)                                  |
@@ -269,7 +269,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.skip_openbsd
 .. autodata:: extra_platforms.pytest.skip_opensuse
 .. autodata:: extra_platforms.pytest.skip_oracle
-.. autodata:: extra_platforms.pytest.skip_other_unix
+.. autodata:: extra_platforms.pytest.skip_other_posix
 .. autodata:: extra_platforms.pytest.skip_parallels
 .. autodata:: extra_platforms.pytest.skip_pidora
 .. autodata:: extra_platforms.pytest.skip_powerpc
@@ -390,7 +390,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.unless_openbsd
 .. autodata:: extra_platforms.pytest.unless_opensuse
 .. autodata:: extra_platforms.pytest.unless_oracle
-.. autodata:: extra_platforms.pytest.unless_other_unix
+.. autodata:: extra_platforms.pytest.unless_other_posix
 .. autodata:: extra_platforms.pytest.unless_parallels
 .. autodata:: extra_platforms.pytest.unless_pidora
 .. autodata:: extra_platforms.pytest.unless_powerpc

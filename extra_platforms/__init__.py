@@ -178,7 +178,7 @@ from .group_data import (  # noqa: E402
     LINUX_LIKE,
     LOONGARCH,
     NON_OVERLAPPING_GROUPS,
-    OTHER_UNIX,
+    OTHER_POSIX,
     POWERPC,
     RISCV,
     SYSTEM_V,
@@ -544,6 +544,7 @@ from ._deprecated import (  # noqa: E402
     ANY_MIPS,
     ANY_SPARC,
     ANY_WINDOWS,
+    OTHER_UNIX,
     UNKNOWN_LINUX,
     current_os,
     current_platforms,
@@ -553,6 +554,7 @@ from ._deprecated import (  # noqa: E402
     is_all_platforms_without_ci,
     is_all_traits,
     is_ci,
+    is_other_unix,
     is_unknown_linux,
     platforms_from_ids,
 )
@@ -713,7 +715,8 @@ __all__ = (  # noqa: F405
     "is_openbsd",
     "is_opensuse",
     "is_oracle",
-    "is_other_unix",  # noqa: F822
+    "is_other_posix",  # noqa: F822
+    "is_other_unix",
     "is_parallels",
     "is_pidora",
     "is_powerpc",  # noqa: F822
@@ -779,6 +782,7 @@ __all__ = (  # noqa: F405
     "OPENBSD",
     "OPENSUSE",
     "ORACLE",
+    "OTHER_POSIX",
     "OTHER_UNIX",
     "PARALLELS",
     "PIDORA",

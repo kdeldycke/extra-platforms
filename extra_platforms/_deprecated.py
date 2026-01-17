@@ -33,6 +33,7 @@ from . import (  # type: ignore[attr-defined]
     ALL_SPARC,
     ALL_TRAIT_IDS,
     ALL_WINDOWS,
+    OTHER_POSIX,
     UNKNOWN_PLATFORM,
     current_platform,
     current_traits,
@@ -280,6 +281,17 @@ Alias `is_all_traits()` → `is_any_trait()`.
 """
 
 
+is_other_unix = _make_deprecated_callable(
+    "is_other_unix()", "is_other_posix()", "is_other_posix"
+)
+"""
+Alias `is_other_unix()` → `is_other_posix()`.
+
+.. deprecated:: 7.0.0
+   Use `is_other_posix()` instead.
+"""
+
+
 # ================================================================
 # Deprecated group symbols
 # ================================================================
@@ -318,6 +330,15 @@ Alias `ANY_WINDOWS` → `ALL_WINDOWS`.
 
 .. deprecated:: 7.0.0
    Use `ALL_WINDOWS` instead.
+"""
+
+
+OTHER_UNIX = _make_deprecated_proxy(OTHER_POSIX, "OTHER_UNIX", "OTHER_POSIX")
+"""
+Alias `OTHER_UNIX` → `OTHER_POSIX`.
+
+.. deprecated:: 7.0.0
+   Use `OTHER_POSIX` instead.
 """
 
 

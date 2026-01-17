@@ -546,13 +546,13 @@ UNIX_LAYERS = Group(
 """
 
 
-OTHER_UNIX = Group(
-    "other_unix",
-    "Any other Unix",
+OTHER_POSIX = Group(
+    "other_posix",
+    "Any other POSIX-compliant platform",
     "⊎",
     tuple(UNIX - BSD - LINUX - LINUX_LAYERS - SYSTEM_V - UNIX_LAYERS),
 )
-"""All other Unix platforms.
+"""All other UNIX-like or POSIX-compliant platforms.
 
 .. note::
     Are considered of this family (`according Wikipedia
@@ -668,7 +668,7 @@ ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
         LINUX_LIKE,
         SYSTEM_V,
         UNIX_LAYERS,
-        OTHER_UNIX,
+        OTHER_POSIX,
     ),
 )
 """All groups whose members are platforms."""
@@ -702,7 +702,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         LINUX_LAYERS,
         SYSTEM_V,
         UNIX_LAYERS,
-        OTHER_UNIX,
+        OTHER_POSIX,
         # CI groups.
         ALL_CI,
         # Mixed groups.
