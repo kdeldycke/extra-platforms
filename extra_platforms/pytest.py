@@ -181,7 +181,7 @@ if TYPE_CHECKING:
     skip_azure_pipelines: MarkDecorator
     skip_bamboo: MarkDecorator
     skip_bsd: MarkDecorator
-    skip_bsd_without_macos: MarkDecorator
+    skip_bsd_not_macos: MarkDecorator
     skip_buildkite: MarkDecorator
     skip_buildroot: MarkDecorator
     skip_cachyos: MarkDecorator
@@ -259,7 +259,7 @@ if TYPE_CHECKING:
     skip_ultramarine: MarkDecorator
     skip_unix: MarkDecorator
     skip_unix_layers: MarkDecorator
-    skip_unix_without_macos: MarkDecorator
+    skip_unix_not_macos: MarkDecorator
     skip_unknown: MarkDecorator
     skip_unknown_architecture: MarkDecorator
     skip_unknown_ci: MarkDecorator
@@ -297,7 +297,7 @@ if TYPE_CHECKING:
     unless_azure_pipelines: MarkDecorator
     unless_bamboo: MarkDecorator
     unless_bsd: MarkDecorator
-    unless_bsd_without_macos: MarkDecorator
+    unless_bsd_not_macos: MarkDecorator
     unless_buildkite: MarkDecorator
     unless_buildroot: MarkDecorator
     unless_cachyos: MarkDecorator
@@ -375,7 +375,7 @@ if TYPE_CHECKING:
     unless_ultramarine: MarkDecorator
     unless_unix: MarkDecorator
     unless_unix_layers: MarkDecorator
-    unless_unix_without_macos: MarkDecorator
+    unless_unix_not_macos: MarkDecorator
     unless_unknown: MarkDecorator
     unless_unknown_architecture: MarkDecorator
     unless_unknown_ci: MarkDecorator

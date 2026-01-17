@@ -297,6 +297,28 @@ Alias `is_other_unix()` → `is_other_posix()`.
 """
 
 
+is_bsd_without_macos = _make_deprecated_callable(
+    "is_bsd_without_macos()", "is_bsd_not_macos()", "is_bsd_not_macos"
+)
+"""
+Alias `is_bsd_without_macos()` → `is_bsd_not_macos()`.
+
+.. deprecated:: 7.0.0
+   Use `is_bsd_not_macos()` instead.
+"""
+
+
+is_unix_without_macos = _make_deprecated_callable(
+    "is_unix_without_macos()", "is_unix_not_macos()", "is_unix_not_macos"
+)
+"""
+Alias `is_unix_without_macos()` → `is_unix_not_macos()`.
+
+.. deprecated:: 7.0.0
+   Use `is_unix_not_macos()` instead.
+"""
+
+
 # ================================================================
 # Deprecated group symbols
 # ================================================================

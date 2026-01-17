@@ -108,7 +108,7 @@ def test_pyproject_keywords():
     ideal_keywords.append("Windows Subsystem for Linux")
     # Manually add group names that are not platforms per se.
     ideal_keywords.extend((
-        UNIX.name.lstrip("Any "),
+        UNIX.name.split(" ", 1)[1],
         SYSTEM_V.name,
     ))
     # Manually add extra keywords.

@@ -95,7 +95,7 @@ def test_not_in_github_actions():
 | [`@skip_azure_pipelines`](pytest.md#extra_platforms.pytest.skip_azure_pipelines)           | [`@unless_azure_pipelines`](pytest.md#extra_platforms.pytest.unless_azure_pipelines)           |  ═   | [`AZURE_PIPELINES`](ci.md#extra_platforms.AZURE_PIPELINES)                      |
 | [`@skip_bamboo`](pytest.md#extra_platforms.pytest.skip_bamboo)                             | [`@unless_bamboo`](pytest.md#extra_platforms.pytest.unless_bamboo)                             |  ⟲   | [`BAMBOO`](ci.md#extra_platforms.BAMBOO)                                        |
 | [`@skip_bsd`](pytest.md#extra_platforms.pytest.skip_bsd)                                   | [`@unless_bsd`](pytest.md#extra_platforms.pytest.unless_bsd)                                   | 🅱️+  | [`BSD`](groups.md#extra_platforms.BSD)                                          |
-| [`@skip_bsd_without_macos`](pytest.md#extra_platforms.pytest.skip_bsd_without_macos)       | [`@unless_bsd_without_macos`](pytest.md#extra_platforms.pytest.unless_bsd_without_macos)       |  🅱️  | [`BSD_WITHOUT_MACOS`](groups.md#extra_platforms.BSD_WITHOUT_MACOS)              |
+| [`@skip_bsd_not_macos`](pytest.md#extra_platforms.pytest.skip_bsd_not_macos)               | [`@unless_bsd_not_macos`](pytest.md#extra_platforms.pytest.unless_bsd_not_macos)               |  🅱️  | [`BSD_WITHOUT_MACOS`](groups.md#extra_platforms.BSD_WITHOUT_MACOS)              |
 | [`@skip_buildkite`](pytest.md#extra_platforms.pytest.skip_buildkite)                       | [`@unless_buildkite`](pytest.md#extra_platforms.pytest.unless_buildkite)                       |  🪁  | [`BUILDKITE`](ci.md#extra_platforms.BUILDKITE)                                  |
 | [`@skip_buildroot`](pytest.md#extra_platforms.pytest.skip_buildroot)                       | [`@unless_buildroot`](pytest.md#extra_platforms.pytest.unless_buildroot)                       |  ⛑️  | [`BUILDROOT`](platforms.md#extra_platforms.BUILDROOT)                           |
 | [`@skip_cachyos`](pytest.md#extra_platforms.pytest.skip_cachyos)                           | [`@unless_cachyos`](pytest.md#extra_platforms.pytest.unless_cachyos)                           |  ⌬   | [`CACHYOS`](platforms.md#extra_platforms.CACHYOS)                               |
@@ -173,7 +173,7 @@ def test_not_in_github_actions():
 | [`@skip_ultramarine`](pytest.md#extra_platforms.pytest.skip_ultramarine)                   | [`@unless_ultramarine`](pytest.md#extra_platforms.pytest.unless_ultramarine)                   |  🌊  | [`ULTRAMARINE`](platforms.md#extra_platforms.ULTRAMARINE)                       |
 | [`@skip_unix`](pytest.md#extra_platforms.pytest.skip_unix)                                 | [`@unless_unix`](pytest.md#extra_platforms.pytest.unless_unix)                                 |  ⨷   | [`UNIX`](groups.md#extra_platforms.UNIX)                                        |
 | [`@skip_unix_layers`](pytest.md#extra_platforms.pytest.skip_unix_layers)                   | [`@unless_unix_layers`](pytest.md#extra_platforms.pytest.unless_unix_layers)                   |  ≛   | [`UNIX_LAYERS`](groups.md#extra_platforms.UNIX_LAYERS)                          |
-| [`@skip_unix_without_macos`](pytest.md#extra_platforms.pytest.skip_unix_without_macos)     | [`@unless_unix_without_macos`](pytest.md#extra_platforms.pytest.unless_unix_without_macos)     |  ⨂   | [`UNIX_WITHOUT_MACOS`](groups.md#extra_platforms.UNIX_WITHOUT_MACOS)            |
+| [`@skip_unix_not_macos`](pytest.md#extra_platforms.pytest.skip_unix_not_macos)             | [`@unless_unix_not_macos`](pytest.md#extra_platforms.pytest.unless_unix_not_macos)             |  ⨂   | [`UNIX_WITHOUT_MACOS`](groups.md#extra_platforms.UNIX_WITHOUT_MACOS)            |
 | [`@skip_unknown`](pytest.md#extra_platforms.pytest.skip_unknown)                           | [`@unless_unknown`](pytest.md#extra_platforms.pytest.unless_unknown)                           |  ❓  | [`UNKNOWN`](groups.md#extra_platforms.UNKNOWN)                                  |
 | [`@skip_unknown_architecture`](pytest.md#extra_platforms.pytest.skip_unknown_architecture) | [`@unless_unknown_architecture`](pytest.md#extra_platforms.pytest.unless_unknown_architecture) |  ❓  | [`UNKNOWN_ARCHITECTURE`](architectures.md#extra_platforms.UNKNOWN_ARCHITECTURE) |
 | [`@skip_unknown_ci`](pytest.md#extra_platforms.pytest.skip_unknown_ci)                     | [`@unless_unknown_ci`](pytest.md#extra_platforms.pytest.unless_unknown_ci)                     |  ❓  | [`UNKNOWN_CI`](ci.md#extra_platforms.UNKNOWN_CI)                                |
@@ -221,7 +221,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.skip_azure_pipelines
 .. autodata:: extra_platforms.pytest.skip_bamboo
 .. autodata:: extra_platforms.pytest.skip_bsd
-.. autodata:: extra_platforms.pytest.skip_bsd_without_macos
+.. autodata:: extra_platforms.pytest.skip_bsd_not_macos
 .. autodata:: extra_platforms.pytest.skip_buildkite
 .. autodata:: extra_platforms.pytest.skip_buildroot
 .. autodata:: extra_platforms.pytest.skip_cachyos
@@ -299,7 +299,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.skip_ultramarine
 .. autodata:: extra_platforms.pytest.skip_unix
 .. autodata:: extra_platforms.pytest.skip_unix_layers
-.. autodata:: extra_platforms.pytest.skip_unix_without_macos
+.. autodata:: extra_platforms.pytest.skip_unix_not_macos
 .. autodata:: extra_platforms.pytest.skip_unknown
 .. autodata:: extra_platforms.pytest.skip_unknown_architecture
 .. autodata:: extra_platforms.pytest.skip_unknown_ci
@@ -342,7 +342,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.unless_azure_pipelines
 .. autodata:: extra_platforms.pytest.unless_bamboo
 .. autodata:: extra_platforms.pytest.unless_bsd
-.. autodata:: extra_platforms.pytest.unless_bsd_without_macos
+.. autodata:: extra_platforms.pytest.unless_bsd_not_macos
 .. autodata:: extra_platforms.pytest.unless_buildkite
 .. autodata:: extra_platforms.pytest.unless_buildroot
 .. autodata:: extra_platforms.pytest.unless_cachyos
@@ -420,7 +420,7 @@ def test_not_in_github_actions():
 .. autodata:: extra_platforms.pytest.unless_ultramarine
 .. autodata:: extra_platforms.pytest.unless_unix
 .. autodata:: extra_platforms.pytest.unless_unix_layers
-.. autodata:: extra_platforms.pytest.unless_unix_without_macos
+.. autodata:: extra_platforms.pytest.unless_unix_not_macos
 .. autodata:: extra_platforms.pytest.unless_unknown
 .. autodata:: extra_platforms.pytest.unless_unknown_architecture
 .. autodata:: extra_platforms.pytest.unless_unknown_ci

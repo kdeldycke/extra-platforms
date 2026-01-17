@@ -569,8 +569,10 @@ from ._deprecated import (  # noqa: E402
     is_all_platforms,
     is_all_platforms_without_ci,
     is_all_traits,
+    is_bsd_without_macos,
     is_ci,
     is_other_unix,
+    is_unix_without_macos,
     is_unknown_linux,
     platforms_from_ids,
 )
@@ -682,7 +684,8 @@ __all__ = (  # noqa: F405
     "is_azure_pipelines",
     "is_bamboo",
     "is_bsd",  # noqa: F822
-    "is_bsd_without_macos",  # noqa: F822
+    "is_bsd_not_macos",  # noqa: F822
+    "is_bsd_without_macos",
     "is_buildkite",
     "is_buildroot",
     "is_cachyos",
@@ -762,7 +765,8 @@ __all__ = (  # noqa: F405
     "is_ultramarine",
     "is_unix",  # noqa: F822
     "is_unix_layers",  # noqa: F822
-    "is_unix_without_macos",  # noqa: F822
+    "is_unix_not_macos",  # noqa: F822
+    "is_unix_without_macos",  # Deprecated alias.
     "is_unknown",  # noqa: F822
     "is_unknown_architecture",
     "is_unknown_ci",

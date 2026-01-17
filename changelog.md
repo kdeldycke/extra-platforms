@@ -35,11 +35,16 @@
   - `is_all_ci()` → `is_any_ci()`
   - `is_all_traits()` → `is_any_trait()`
   - `is_unknown_linux()` → `is_unknown_platform()`
+  - `is_bsd_without_macos()` → `is_bsd_not_macos()`
+  - `is_unix_without_macos()` → `is_unix_not_macos()`
 - Re-introduce aliases removed in v6.0.0 for backward compatibility:
   - `Group._extract_platforms()` → `Group._extract_members()`
   - `is_all_platforms_without_ci()` → `is_any_platform()`
   - `is_ci()` → `is_any_ci()`
-- Rename `@skip/@unless_unknown_linux` decorators to `@skip/@unless_unknown_platform`.
+- Rename Pytest decorators:
+  - `@skip/@unless_unknown_linux` → `@skip/@unless_unknown_platform`
+  - `@skip/@unless_bsd_without_macos` → `@skip/@unless_bsd_not_macos`
+  - `@skip/@unless_unix_without_macos` → `@skip/@unless_unix_not_macos`
 - Deprecate renamed symbols and detection functions with aliases.
 - Pre-compute traits and groups metadata to enforce conventions for data definitions, detection functions, Pytest decorators and document generation.
 - Mark all canonical groups with the ⬥ symbol everywhere in the documentation.

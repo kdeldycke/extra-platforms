@@ -30,7 +30,7 @@
 | [`is_azure_pipelines()`](detection.md#extra_platforms.is_azure_pipelines)           |  ═   | [`AZURE_PIPELINES`](ci.md#extra_platforms.AZURE_PIPELINES)                      |
 | [`is_bamboo()`](detection.md#extra_platforms.is_bamboo)                             |  ⟲   | [`BAMBOO`](ci.md#extra_platforms.BAMBOO)                                        |
 | [`is_bsd()`](detection.md#extra_platforms.is_bsd)                                   | 🅱️+  | [`BSD`](groups.md#extra_platforms.BSD)                                          |
-| [`is_bsd_without_macos()`](detection.md#extra_platforms.is_bsd_without_macos)       |  🅱️  | [`BSD_WITHOUT_MACOS`](groups.md#extra_platforms.BSD_WITHOUT_MACOS)              |
+| [`is_bsd_not_macos()`](detection.md#extra_platforms.is_bsd_not_macos)               |  🅱️  | [`BSD_WITHOUT_MACOS`](groups.md#extra_platforms.BSD_WITHOUT_MACOS)              |
 | [`is_buildkite()`](detection.md#extra_platforms.is_buildkite)                       |  🪁  | [`BUILDKITE`](ci.md#extra_platforms.BUILDKITE)                                  |
 | [`is_buildroot()`](detection.md#extra_platforms.is_buildroot)                       |  ⛑️  | [`BUILDROOT`](platforms.md#extra_platforms.BUILDROOT)                           |
 | [`is_cachyos()`](detection.md#extra_platforms.is_cachyos)                           |  ⌬   | [`CACHYOS`](platforms.md#extra_platforms.CACHYOS)                               |
@@ -108,7 +108,7 @@
 | [`is_ultramarine()`](detection.md#extra_platforms.is_ultramarine)                   |  🌊  | [`ULTRAMARINE`](platforms.md#extra_platforms.ULTRAMARINE)                       |
 | [`is_unix()`](detection.md#extra_platforms.is_unix)                                 |  ⨷   | [`UNIX`](groups.md#extra_platforms.UNIX)                                        |
 | [`is_unix_layers()`](detection.md#extra_platforms.is_unix_layers)                   |  ≛   | [`UNIX_LAYERS`](groups.md#extra_platforms.UNIX_LAYERS)                          |
-| [`is_unix_without_macos()`](detection.md#extra_platforms.is_unix_without_macos)     |  ⨂   | [`UNIX_WITHOUT_MACOS`](groups.md#extra_platforms.UNIX_WITHOUT_MACOS)            |
+| [`is_unix_not_macos()`](detection.md#extra_platforms.is_unix_not_macos)             |  ⨂   | [`UNIX_WITHOUT_MACOS`](groups.md#extra_platforms.UNIX_WITHOUT_MACOS)            |
 | [`is_unknown()`](detection.md#extra_platforms.is_unknown)                           |  ❓  | [`UNKNOWN`](groups.md#extra_platforms.UNKNOWN)                                  |
 | [`is_unknown_architecture()`](detection.md#extra_platforms.is_unknown_architecture) |  ❓  | [`UNKNOWN_ARCHITECTURE`](architectures.md#extra_platforms.UNKNOWN_ARCHITECTURE) |
 | [`is_unknown_ci()`](detection.md#extra_platforms.is_unknown_ci)                     |  ❓  | [`UNKNOWN_CI`](ci.md#extra_platforms.UNKNOWN_CI)                                |
@@ -243,7 +243,7 @@ These functions are dynamically generated for each [group](groups.md) and test w
 .. autofunction:: extra_platforms.is_arch_32_bit
 .. autofunction:: extra_platforms.is_arch_64_bit
 .. autofunction:: extra_platforms.is_bsd
-.. autofunction:: extra_platforms.is_bsd_without_macos
+.. autofunction:: extra_platforms.is_bsd_not_macos
 .. autofunction:: extra_platforms.is_ibm_mainframe
 .. autofunction:: extra_platforms.is_linux
 .. autofunction:: extra_platforms.is_linux_layers
@@ -255,7 +255,7 @@ These functions are dynamically generated for each [group](groups.md) and test w
 .. autofunction:: extra_platforms.is_system_v
 .. autofunction:: extra_platforms.is_unix
 .. autofunction:: extra_platforms.is_unix_layers
-.. autofunction:: extra_platforms.is_unix_without_macos
+.. autofunction:: extra_platforms.is_unix_not_macos
 .. autofunction:: extra_platforms.is_unknown
 .. autofunction:: extra_platforms.is_webassembly
 .. autofunction:: extra_platforms.is_x86

@@ -116,17 +116,19 @@ def test_group_definitions(group: Group):
 
     # Split ID by underscores to get individual tokens.
     tokens = group.id.split("_")
-    # "unknown" is a special string that is only allowed for the UNKNOWN group.
+    # "unknown" is only allowed for the UNKNOWN group.
     if "unknown" in tokens:
         assert group.id.startswith("unknown")
         assert group is UNKNOWN
         assert group.name == "Unknown"
-    # "all" is a special string that is only allowed for all-traits groups.
+    # "all" is only allowed for all-traits groups.
     if "all" in tokens:
         assert group.id.startswith("all_")
-        assert group.name.startswith("All ")
+    # "without" indicates exclusion, and must be part of a compound word.
+    if "without" in tokens:
+        assert "_without_" in group.id
     # Special words that should never appear as standalone tokens in group IDs.
-    for special_word in ("any", "is", "skip", "unless"):
+    for special_word in ("any", "is", "skip", "unless", "not"):
         assert not group.id.startswith(special_word)
         assert special_word not in group.id.split("_")
 

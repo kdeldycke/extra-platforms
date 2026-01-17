@@ -103,6 +103,17 @@ class Group(_Identifiable):
             object.__setattr__(self, "detection_func_id", f"is_any_{suffix}")
             object.__setattr__(self, "unless_decorator_id", f"unless_any_{suffix}")
 
+        # Override IDs for groups with "_without_" to use "_not_" instead.
+        # This produces more natural function names like is_unix_not_macos() instead of
+        # is_unix_without_macos().
+        if "_without_" in self.id:
+            func_id = self.detection_func_id.replace("_without_", "_not_")
+            skip_id = self.skip_decorator_id.replace("_without_", "_not_")
+            unless_id = self.unless_decorator_id.replace("_without_", "_not_")
+            object.__setattr__(self, "detection_func_id", func_id)
+            object.__setattr__(self, "skip_decorator_id", skip_id)
+            object.__setattr__(self, "unless_decorator_id", unless_id)
+
         # Accept either a MappingProxyType, dict, or iterable of Traits.
         if isinstance(self.members, MappingProxyType):
             traits = self.members.values()

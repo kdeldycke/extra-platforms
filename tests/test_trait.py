@@ -102,7 +102,7 @@ def test_all_traits_generated_constants(trait):
 
     # Some special words can only be used as part of a compound word, never as
     # standalone tokens.
-    for special_word in ("all", "any", "is", "skip", "unless"):
+    for special_word in ("all", "any", "is", "skip", "unless", "without", "not"):
         assert not trait.id.startswith(special_word)
         assert special_word not in trait.id.split("_")
 
