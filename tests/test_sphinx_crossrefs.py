@@ -241,7 +241,7 @@ def test_crossref_links_to_correct_page(
     assert f'href="{expected_href}"' in html_output
 
     # Check that the link text is as expected.
-    assert f'>{expected_text}<' in html_output
+    assert f">{expected_text}<" in html_output
 
 
 @pytest.mark.parametrize(
@@ -370,15 +370,11 @@ def test_complex_document_crossrefs(
 
     # Check that all expected fragments are present.
     for fragment in expected_fragments:
-        assert (
-            fragment in html_output
-        ), f"Expected fragment not found: {fragment}"
+        assert fragment in html_output, f"Expected fragment not found: {fragment}"
 
     # Check that unexpected fragments are NOT present.
     for fragment in unexpected_fragments:
-        assert (
-            fragment not in html_output
-        ), f"Unexpected fragment found: {fragment}"
+        assert fragment not in html_output, f"Unexpected fragment found: {fragment}"
 
 
 def test_all_role_types_render_correctly(sphinx_app):
@@ -411,7 +407,4 @@ def test_all_role_types_render_correctly(sphinx_app):
     assert ">UBUNTU<" in html_output
 
     # Check module reference.
-    assert (
-        'href="detection.html#module-extra_platforms.detection"'
-        in html_output
-    )
+    assert 'href="detection.html#module-extra_platforms.detection"' in html_output
