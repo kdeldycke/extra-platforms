@@ -130,12 +130,6 @@ def is_armv7l() -> bool:
 
 
 @cache
-def is_armv5tel() -> bool:
-    """Return ``True`` if current architecture is `ARMV5TEL <architectures.html#extra_platforms.ARMV5TEL>`_."""
-    return platform.machine() == "armv5tel"
-
-
-@cache
 def is_armv8l() -> bool:
     """Return ``True`` if current architecture is `ARMV8L <architectures.html#extra_platforms.ARMV8L>`_."""
     return platform.machine() == "armv8l"
