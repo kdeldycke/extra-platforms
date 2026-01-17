@@ -95,23 +95,6 @@ def is_aarch64() -> bool:
 
 
 @cache
-def is_arm() -> bool:
-    """Return ``True`` if current architecture is `ARM <architectures.html#extra_platforms.ARM>`_.
-
-    This matches ARM architectures not covered by more specific variants.
-    """
-    if platform.machine().startswith("arm") and not any((
-        is_armv5tel(),
-        is_armv6l(),
-        is_armv7l(),
-        is_armv8l(),
-        is_aarch64(),
-    )):
-        return True
-    return False
-
-
-@cache
 def is_armv5tel() -> bool:
     """Return ``True`` if current architecture is `ARMV5TEL <architectures.html#extra_platforms.ARMV5TEL>`_."""
     return platform.machine() == "armv5tel"
@@ -133,6 +116,23 @@ def is_armv7l() -> bool:
 def is_armv8l() -> bool:
     """Return ``True`` if current architecture is `ARMV8L <architectures.html#extra_platforms.ARMV8L>`_."""
     return platform.machine() == "armv8l"
+
+
+@cache
+def is_arm() -> bool:
+    """Return ``True`` if current architecture is `ARM <architectures.html#extra_platforms.ARM>`_.
+
+    This matches ARM architectures not covered by more specific variants.
+    """
+    if platform.machine().startswith("arm") and not any((
+        is_armv5tel(),
+        is_armv6l(),
+        is_armv7l(),
+        is_armv8l(),
+        is_aarch64(),
+    )):
+        return True
+    return False
 
 
 @cache

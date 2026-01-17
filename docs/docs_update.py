@@ -314,7 +314,8 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     ]
     alignments = ["center", "left", "left", "left", "center"]
 
-    for group in sorted(groups, key=attrgetter("id")):
+    sorted_groups = sorted(groups, key=attrgetter("id"))
+    for group in sorted_groups:
         group_link = (
             f"[`{group.symbol_id}`](groups.md#extra_platforms.{group.symbol_id})"
         )
@@ -333,7 +334,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     table = _generate_markdown_table(table_data, headers, alignments)
 
     # Append hint block explaining canonical groups
-    if len(groups) > 1:
+    if len(sorted_groups) > 1:
         hint = dedent("""
             ```{hint}
             Canonical groups are non-overlapping groups that together cover all

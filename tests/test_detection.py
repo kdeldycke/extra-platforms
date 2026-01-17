@@ -26,7 +26,7 @@ from pathlib import Path
 import pytest
 
 import extra_platforms
-from extra_platforms import (  # type: ignore[attr-defined]
+from extra_platforms import (
     ALL_GROUPS,
     ALL_TRAITS,
     UNKNOWN,
@@ -67,7 +67,7 @@ def test_detection_trait_functions(obj: Trait | Group):
 
     # Verify the docstring contains an rST link to the symbol.
     # Format: `SYMBOL_ID <...#extra_platforms.SYMBOL_ID>`_
-    assert re.search(
+    assert check_func.__doc__ is not None and re.search(
         rf"`{re.escape(obj.symbol_id)} <.*#extra_platforms\.{re.escape(obj.symbol_id)}>`_",
         check_func.__doc__,
     )

@@ -71,6 +71,10 @@ class _DeferredCondition:
         result = self.condition()
         return not result if self.invert else result
 
+    def __call__(self) -> bool:
+        """Allow the condition to be called as a function."""
+        return bool(self)
+
 
 def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
     """Generate a reStructuredText docstring for a pytest decorator.
@@ -133,10 +137,10 @@ for _obj in chain(ALL_TRAITS, ALL_GROUPS):
     for _is_skip in [True, False]:
         _decorator_id = _obj.skip_decorator_id if _is_skip else _obj.unless_decorator_id
         _reason_prefix = "Skip" if _is_skip else "Requires"
-        _condition = _DeferredCondition(_func, invert=not _is_skip)  # type: ignore[arg-type]
+        _condition = _DeferredCondition(_func, invert=not _is_skip)
 
         _decorator = pytest.mark.skipif(
-            _condition,
+            _condition,  # type: ignore[arg-type]
             reason=f"{_reason_prefix} {_obj.short_desc}",
         )
 

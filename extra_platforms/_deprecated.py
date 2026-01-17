@@ -19,14 +19,16 @@ from __future__ import annotations
 
 import sys
 import warnings
+from collections.abc import Callable
 from functools import wraps
 from types import ModuleType
+from typing import Any
 
 # Dynamically generated detection functions are imported lazily to avoid
 # circular imports during module initialization.
 import extra_platforms as _ep
 
-from . import (  # type: ignore[attr-defined]
+from . import (
     ALL_ARM,
     ALL_MIPS,
     ALL_PLATFORMS,
@@ -37,7 +39,6 @@ from . import (  # type: ignore[attr-defined]
     UNKNOWN_PLATFORM,
     current_platform,
     current_traits,
-    is_unknown_platform,
     traits_from_ids,
 )
 from ._utils import _recursive_update, _remove_blanks
@@ -110,7 +111,9 @@ def _make_deprecated_proxy(target, name: str, replacement: str):
     return _DeprecatedProxy(target, name, replacement)
 
 
-def _make_deprecated_callable(name: str, replacement: str, func):
+def _make_deprecated_callable(
+    name: str, replacement: str, func: Callable[..., Any] | str
+) -> Callable[..., Any]:
     """Return a function wrapping `func` that emits a deprecation warning.
 
     The returned callable preserves the wrapped function metadata.
@@ -122,7 +125,7 @@ def _make_deprecated_callable(name: str, replacement: str, func):
     """
 
     @wraps(func) if callable(func) else (lambda f: f)
-    def _wrapper(*args, **kwargs):
+    def _wrapper(*args: Any, **kwargs: Any) -> Any:
         _warn_deprecated(name, replacement)
         target = func if callable(func) else getattr(_ep, func)
         return target(*args, **kwargs)
@@ -202,7 +205,9 @@ Alias `current_platforms()` → `current_traits()`.
 
 
 is_unknown_linux = _make_deprecated_callable(
-    "is_unknown_linux()", "is_unknown_platform()", is_unknown_platform
+    "is_unknown_linux()",
+    "is_unknown_platform()",
+    "is_unknown_platform",
 )
 """
 Alias `is_unknown_linux()` → `is_unknown_platform()`.

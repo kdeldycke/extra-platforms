@@ -156,12 +156,12 @@ def test_group_definitions(group: Group):
     assert len(group) > 0
 
     # Members are unique, in keys and values.
-    assert len(group.members) == len(group.member_ids)
-    assert tuple(group.members.keys()) == tuple(group.members)
-    assert len(set(group.members.keys())) == len(group.members)
-    assert len(set(group.members.values())) == len(group.members)
-    assert all(isinstance(m_id, str) for m_id in group.members.keys())
-    assert all(isinstance(m, Trait) for m in group.members.values())
+    assert len(group._members) == len(group.member_ids)
+    assert tuple(group._members.keys()) == tuple(group._members)
+    assert len(set(group._members.keys())) == len(group._members)
+    assert len(set(group._members.values())) == len(group._members)
+    assert all(isinstance(m_id, str) for m_id in group._members.keys())
+    assert all(isinstance(m, Trait) for m in group._members.values())
 
     # Canonical groups are self-canonical.
     assert group.canonical is (group in NON_OVERLAPPING_GROUPS)
@@ -180,8 +180,8 @@ def test_group_definitions(group: Group):
     # Each group is both a subset and a superset of itself.
     assert group.issubset(group)
     assert group.issuperset(group)
-    assert group.issubset(group.members.values())
-    assert group.issuperset(group.members.values())
+    assert group.issubset(group._members.values())
+    assert group.issuperset(group._members.values())
 
     # Test against empty iterables.
     assert group.issuperset(())
@@ -208,9 +208,9 @@ def test_group_definitions(group: Group):
 
     # A group cannot be disjoint from itself.
     assert not group.isdisjoint(group)
-    assert not group.isdisjoint(group.members.values())
+    assert not group.isdisjoint(group._members.values())
     assert group.fullyintersects(group)
-    assert group.fullyintersects(group.members.values())
+    assert group.fullyintersects(group._members.values())
 
     # Test union.
     assert group.union() == group
