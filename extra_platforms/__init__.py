@@ -274,7 +274,7 @@ from .operations import (  # noqa: E402
     traits_from_ids,
 )
 
-__version__ = "7.0.0"
+__version__ = "7.0.1"
 
 
 @cache
