@@ -67,7 +67,7 @@ jobs:
       - name: Install project
         # Install all extras, so we can check any incompatibility.
         run: |
-          uv --no-progress sync --frozen --all-extras --group test
+          uv --no-progress sync --frozen --all-extras --group test --group docs
 
       - name: Unittests
         env:
