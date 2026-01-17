@@ -24,8 +24,10 @@ import extra_platforms
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_GROUPS,
     ALL_TRAITS,
+    UNKNOWN,
     Group,
     Trait,
+    current_traits,
     is_any_architecture,
     is_any_ci,
     is_any_platform,
@@ -124,12 +126,12 @@ def test_type_annotations():
 
 @skip_unknown
 def test_skip_unknown():
-    assert is_unknown_architecture() or is_unknown_platform() or is_unknown_ci()
+    assert not current_traits().intersection(UNKNOWN)
 
 
 @unless_unknown
 def test_unless_unknown():
-    assert not (is_unknown_architecture() or is_unknown_platform() or is_unknown_ci())
+    assert current_traits().intersection(UNKNOWN)
 
 
 @skip_all_architectures
