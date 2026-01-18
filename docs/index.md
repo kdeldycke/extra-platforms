@@ -18,6 +18,7 @@ ci
 groups
 detection
 pytest
+sphinx
 ```
 
 ```{toctree}
