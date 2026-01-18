@@ -196,11 +196,13 @@ def test_crossref_links_to_correct_page(sphinx_app, role, expected_href, expecte
     link to their actual definition location, not to the root module page.
     For example, :func:`~extra_platforms.current_traits` should link to
     detection.html, not extra_platforms.html.
+
+    Also tests that both full-path and short-path syntax produce the same results.
     """
     # Create module stubs for cross-referencing.
     sphinx_app.create_module_stubs(MODULES_TO_STUB)
 
-    # Create a simple document with the cross-reference.
+    # Test with full-path syntax.
     content = dedent(f"""
         # Test Document
 
@@ -215,6 +217,26 @@ def test_crossref_links_to_correct_page(sphinx_app, role, expected_href, expecte
 
     # Check that the link text is as expected.
     assert f">{expected_text}<" in html_output
+
+    # Test with short-path syntax to ensure it produces the same results.
+    # Extract the short name from the role (e.g., "current_traits" from
+    # "{func}`~extra_platforms.current_traits`").
+    short_role = role.replace("extra_platforms.", "")
+    short_path_content = dedent(f"""
+        # Test Document
+
+        ```{{py:currentmodule}} extra_platforms
+        ```
+
+        Here is a reference: {short_role}
+    """)
+
+    short_path_html = sphinx_app.build_document(short_path_content)
+    assert short_path_html is not None
+
+    # Short-path syntax should produce the same href and text.
+    assert f'href="{expected_href}"' in short_path_html
+    assert f">{expected_text}<" in short_path_html
 
 
 @pytest.mark.parametrize(
