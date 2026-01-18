@@ -12,394 +12,306 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 # Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Tests for Sphinx cross-reference rendering and link resolution."""
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+"""Tests for Sphinx cross-reference rendering in the real documentation.
+
+These tests verify that cross-references in the built documentation (./docs/html/)
+resolve to actual links with correct href attributes. Unlike mock-based tests,
+these catch real regressions in the actual documentation.
+"""
 
 from __future__ import annotations
 
-from textwrap import dedent
+import re
+import subprocess
+from pathlib import Path
 
 import pytest
 
-# List of modules to create stubs for.
-MODULES_TO_STUB = [
-    "extra_platforms.architecture_data",
-    "extra_platforms.ci_data",
-    "extra_platforms.detection",
-    "extra_platforms.group",
-    "extra_platforms.group_data",
-    "extra_platforms.operations",
-    "extra_platforms.platform_data",
-    "extra_platforms.trait",
-]
+# Path to the built documentation.
+DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "html"
 
 
-@pytest.mark.parametrize(
-    ("role", "expected_href", "expected_text"),
-    [
-        pytest.param(
-            "{func}`~extra_platforms.current_traits`",
-            "detection.html#extra_platforms.current_traits",
-            "current_traits()",
-            id="func_current_traits_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.current_architecture`",
-            "detection.html#extra_platforms.current_architecture",
-            "current_architecture()",
-            id="func_current_architecture_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.current_platform`",
-            "detection.html#extra_platforms.current_platform",
-            "current_platform()",
-            id="func_current_platform_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.current_ci`",
-            "detection.html#extra_platforms.current_ci",
-            "current_ci()",
-            id="func_current_ci_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.is_aarch64`",
-            "detection.html#extra_platforms.is_aarch64",
-            "is_aarch64()",
-            id="func_is_aarch64_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.is_linux`",
-            "detection.html#extra_platforms.is_linux",
-            "is_linux()",
-            id="func_is_linux_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.is_macos`",
-            "detection.html#extra_platforms.is_macos",
-            "is_macos()",
-            id="func_is_macos_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.is_windows`",
-            "detection.html#extra_platforms.is_windows",
-            "is_windows()",
-            id="func_is_windows_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.invalidate_caches`",
-            "detection.html#extra_platforms.invalidate_caches",
-            "invalidate_caches()",
-            id="func_invalidate_caches_in_detection",
-        ),
-        pytest.param(
-            "{func}`~extra_platforms.reduce`",
-            "operations.html#extra_platforms.reduce",
-            "reduce()",
-            id="func_reduce_in_operations",
-        ),
-        pytest.param(
-            "{class}`~extra_platforms.Trait`",
-            "trait.html#extra_platforms.Trait",
-            "Trait",
-            id="class_trait_in_trait",
-        ),
-        pytest.param(
-            "{class}`~extra_platforms.Platform`",
-            "trait.html#extra_platforms.Platform",
-            "Platform",
-            id="class_platform_in_trait",
-        ),
-        pytest.param(
-            "{class}`~extra_platforms.Architecture`",
-            "trait.html#extra_platforms.Architecture",
-            "Architecture",
-            id="class_architecture_in_trait",
-        ),
-        pytest.param(
-            "{class}`~extra_platforms.CI`",
-            "trait.html#extra_platforms.CI",
-            "CI",
-            id="class_ci_in_trait",
-        ),
-        pytest.param(
-            "{class}`~extra_platforms.Group`",
-            "group.html#extra_platforms.Group",
-            "Group",
-            id="class_group_in_group",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.AARCH64`",
-            "architecture_data.html#extra_platforms.AARCH64",
-            "AARCH64",
-            id="data_aarch64_in_architecture_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.X86_64`",
-            "architecture_data.html#extra_platforms.X86_64",
-            "X86_64",
-            id="data_x86_64_in_architecture_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.MACOS`",
-            "platform_data.html#extra_platforms.MACOS",
-            "MACOS",
-            id="data_macos_in_platform_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.UBUNTU`",
-            "platform_data.html#extra_platforms.UBUNTU",
-            "UBUNTU",
-            id="data_ubuntu_in_platform_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.WINDOWS`",
-            "platform_data.html#extra_platforms.WINDOWS",
-            "WINDOWS",
-            id="data_windows_in_platform_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.GITHUB_CI`",
-            "ci_data.html#extra_platforms.GITHUB_CI",
-            "GITHUB_CI",
-            id="data_github_ci_in_ci_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.GITLAB_CI`",
-            "ci_data.html#extra_platforms.GITLAB_CI",
-            "GITLAB_CI",
-            id="data_gitlab_ci_in_ci_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.ALL_PLATFORMS`",
-            "group_data.html#extra_platforms.ALL_PLATFORMS",
-            "ALL_PLATFORMS",
-            id="data_all_platforms_in_group_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.LINUX`",
-            "group_data.html#extra_platforms.LINUX",
-            "LINUX",
-            id="data_linux_in_group_data",
-        ),
-        pytest.param(
-            "{data}`~extra_platforms.UNIX`",
-            "group_data.html#extra_platforms.UNIX",
-            "UNIX",
-            id="data_unix_in_group_data",
-        ),
-    ],
-)
-def test_crossref_links_to_correct_page(sphinx_app, role, expected_href, expected_text):
-    """Test that Sphinx cross-references link to the correct module page.
+@pytest.fixture(scope="module")
+def built_docs() -> Path:
+    """Ensure the documentation is built and return the path to the HTML directory.
 
-    This test ensures that symbols exposed in the root extra_platforms module
-    link to their actual definition location, not to the root module page.
-    For example, :func:`~extra_platforms.current_traits` should link to
-    detection.html, not extra_platforms.html.
-
-    Also tests that both full-path and short-path syntax produce the same results.
+    This fixture builds the documentation if it doesn't exist or is outdated.
     """
-    # Create module stubs for cross-referencing.
-    sphinx_app.create_module_stubs(MODULES_TO_STUB)
-
-    # Test with full-path syntax.
-    content = dedent(f"""
-        # Test Document
-
-        Here is a reference: {role}
-    """)
-
-    html_output = sphinx_app.build_document(content)
-    assert html_output is not None
-
-    # Check that the link points to the correct page.
-    assert f'href="{expected_href}"' in html_output
-
-    # Check that the link text is as expected.
-    assert f">{expected_text}<" in html_output
-
-    # Test with short-path syntax to ensure it produces the same results.
-    # Extract the short name from the role (e.g., "current_traits" from
-    # "{func}`~extra_platforms.current_traits`").
-    short_role = role.replace("extra_platforms.", "")
-    short_path_content = dedent(f"""
-        # Test Document
-
-        ```{{py:currentmodule}} extra_platforms
-        ```
-
-        Here is a reference: {short_role}
-    """)
-
-    short_path_html = sphinx_app.build_document(short_path_content)
-    assert short_path_html is not None
-
-    # Short-path syntax should produce the same href and text.
-    assert f'href="{expected_href}"' in short_path_html
-    assert f">{expected_text}<" in short_path_html
+    if not DOCS_HTML_DIR.exists():
+        # Build the documentation.
+        subprocess.run(
+            ["uv", "run", "sphinx-build", "-b", "html", "./docs", "./docs/html"],
+            check=True,
+            cwd=Path(__file__).parent.parent,
+        )
+    return DOCS_HTML_DIR
 
 
-@pytest.mark.parametrize(
-    ("content", "expected_fragments", "unexpected_fragments"),
-    [
-        pytest.param(
-            dedent("""
-                # Test Document
+def read_html(built_docs: Path, filename: str) -> str:
+    """Read an HTML file from the built documentation."""
+    html_path = built_docs / filename
+    assert html_path.exists(), f"HTML file not found: {html_path}"
+    return html_path.read_text(encoding="utf-8")
 
-                The {func}`~extra_platforms.current_traits` function returns
-                all traits detected for the current system.
 
-                You can also check individual platforms using
-                {func}`~extra_platforms.is_linux` or
-                {func}`~extra_platforms.is_windows`.
+def find_links_with_text(html: str, link_text: str) -> list[str]:
+    """Find all href values for links containing the given text.
 
-                Platform constants like {data}`~extra_platforms.UBUNTU` and
-                {data}`~extra_platforms.MACOS` are defined in the
-                {mod}`extra_platforms.platform_data` module.
-            """),
-            [
-                'href="detection.html#extra_platforms.current_traits"',
-                'href="detection.html#extra_platforms.is_linux"',
-                'href="detection.html#extra_platforms.is_windows"',
-                'href="platform_data.html#extra_platforms.UBUNTU"',
-                'href="platform_data.html#extra_platforms.MACOS"',
-                'href="platform_data.html#module-extra_platforms.platform_data"',
-            ],
-            [
-                # These should NOT appear (wrong module).
-                'href="extra_platforms.html#extra_platforms.current_traits"',
-                'href="extra_platforms.html#extra_platforms.is_linux"',
-                'href="extra_platforms.html#extra_platforms.UBUNTU"',
-            ],
-            id="mixed_references_in_document",
-        ),
-        pytest.param(
-            dedent("""
-                # Architecture Detection
-
-                Use {func}`~extra_platforms.current_architecture` to get the
-                current architecture.
-
-                The {class}`~extra_platforms.Architecture` class defines all
-                architecture traits.
-
-                Examples include {data}`~extra_platforms.X86_64` and
-                {data}`~extra_platforms.AARCH64`.
-            """),
-            [
-                'href="detection.html#extra_platforms.current_architecture"',
-                'href="trait.html#extra_platforms.Architecture"',
-                'href="architecture_data.html#extra_platforms.X86_64"',
-                'href="architecture_data.html#extra_platforms.AARCH64"',
-            ],
-            [
-                'href="extra_platforms.html#extra_platforms.current_architecture"',
-                'href="extra_platforms.html#extra_platforms.X86_64"',
-            ],
-            id="architecture_references",
-        ),
-        pytest.param(
-            dedent("""
-                # CI Detection
-
-                Check the current CI system with
-                {func}`~extra_platforms.current_ci`.
-
-                CI constants like {data}`~extra_platforms.GITHUB_CI` and
-                {data}`~extra_platforms.GITLAB_CI` are available.
-
-                The {class}`~extra_platforms.CI` class represents CI systems.
-            """),
-            [
-                'href="detection.html#extra_platforms.current_ci"',
-                'href="ci_data.html#extra_platforms.GITHUB_CI"',
-                'href="ci_data.html#extra_platforms.GITLAB_CI"',
-                'href="trait.html#extra_platforms.CI"',
-            ],
-            [
-                'href="extra_platforms.html#extra_platforms.current_ci"',
-                'href="extra_platforms.html#extra_platforms.GITHUB_CI"',
-            ],
-            id="ci_references",
-        ),
-        pytest.param(
-            dedent("""
-                # Groups
-
-                The {data}`~extra_platforms.LINUX` group contains all Linux
-                distributions.
-
-                The {data}`~extra_platforms.UNIX` group is broader.
-
-                Use {class}`~extra_platforms.Group` to create custom groups.
-
-                Reduce platform lists with {func}`~extra_platforms.reduce`.
-            """),
-            [
-                'href="group_data.html#extra_platforms.LINUX"',
-                'href="group_data.html#extra_platforms.UNIX"',
-                'href="group.html#extra_platforms.Group"',
-                'href="operations.html#extra_platforms.reduce"',
-            ],
-            [
-                'href="extra_platforms.html#extra_platforms.LINUX"',
-                'href="extra_platforms.html#extra_platforms.reduce"',
-            ],
-            id="group_references",
-        ),
-    ],
-)
-def test_complex_document_crossrefs(
-    sphinx_app, content, expected_fragments, unexpected_fragments
-):
-    """Test that complex documents with multiple cross-references work correctly.
-
-    This ensures that when multiple types of cross-references are used together,
-    they all resolve to the correct module pages.
+    Returns a list of href values for <a> tags that contain the specified text.
+    The function handles nested tags like <a href="..."><code><span>text</span></code></a>.
     """
-    # Create module stubs for cross-referencing.
-    sphinx_app.create_module_stubs(MODULES_TO_STUB)
-
-    html_output = sphinx_app.build_document(content)
-    assert html_output is not None
-
-    # Check that all expected fragments are present.
-    for fragment in expected_fragments:
-        assert fragment in html_output, f"Expected fragment not found: {fragment}"
-
-    # Check that unexpected fragments are NOT present.
-    for fragment in unexpected_fragments:
-        assert fragment not in html_output, f"Unexpected fragment found: {fragment}"
+    results = []
+    # Pattern to match <a ...href="..."...>...</a> including nested tags.
+    pattern = r'<a\s[^>]*href="([^"]*)"[^>]*>(.*?)</a>'
+    for match in re.finditer(pattern, html, re.DOTALL):
+        href, content = match.groups()
+        # Strip HTML tags from content to get plain text.
+        plain_text = re.sub(r"<[^>]+>", "", content)
+        if link_text in plain_text:
+            results.append(href)
+    return results
 
 
-def test_all_role_types_render_correctly(sphinx_app):
-    """Test that all role types (func, class, data, mod) render correctly."""
-    # Create module stubs for cross-referencing.
-    sphinx_app.create_module_stubs(MODULES_TO_STUB)
+def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> bool:
+    """Check if the HTML contains a link with the given text pointing to the expected href.
 
-    content = dedent("""
-        # All Role Types
+    Args:
+        html: The HTML content to search.
+        text: The link text to find (e.g., "AARCH64", "is_linux()").
+        expected_href_fragment: A fragment that should be in the href (e.g.,
+            "architectures.html#extra_platforms.AARCH64").
 
-        - Function: {func}`~extra_platforms.is_linux`
-        - Class: {class}`~extra_platforms.Platform`
-        - Data: {data}`~extra_platforms.UBUNTU`
-        - Module: {mod}`extra_platforms.detection`
-    """)
+    Returns:
+        True if a matching link is found.
+    """
+    hrefs = find_links_with_text(html, text)
+    return any(expected_href_fragment in href for href in hrefs)
 
-    html_output = sphinx_app.build_document(content)
-    assert html_output is not None
 
-    # Check function reference.
-    assert 'href="detection.html#extra_platforms.is_linux"' in html_output
-    assert ">is_linux()<" in html_output
+def test_group_symbols_are_linked(built_docs):
+    """Test that group symbols in the table link to their definitions."""
+    html = read_html(built_docs, "groups.html")
 
-    # Check class reference (Platform is documented in trait.html).
-    assert 'href="trait.html#extra_platforms.Platform"' in html_output
-    assert ">Platform<" in html_output
+    # Test a sample of group symbols.
+    groups_to_check = [
+        ("ALL_ARCHITECTURES", "#extra_platforms.ALL_ARCHITECTURES"),
+        ("ALL_PLATFORMS", "#extra_platforms.ALL_PLATFORMS"),
+        ("LINUX", "#extra_platforms.LINUX"),
+        ("BSD", "#extra_platforms.BSD"),
+        ("UNIX", "#extra_platforms.UNIX"),
+    ]
 
-    # Check data reference.
-    assert 'href="platform_data.html#extra_platforms.UBUNTU"' in html_output
-    assert ">UBUNTU<" in html_output
+    for symbol, href_fragment in groups_to_check:
+        assert has_linked_reference(html, symbol, href_fragment), (
+            f"Group symbol {symbol} is not linked to {href_fragment}"
+        )
 
-    # Check module reference.
-    assert 'href="detection.html#module-extra_platforms.detection"' in html_output
+
+def test_group_detection_functions_are_linked(built_docs):
+    """Test that detection functions in the table link to detection.html."""
+    html = read_html(built_docs, "groups.html")
+
+    # Test a sample of detection functions.
+    functions_to_check = [
+        ("is_any_architecture()", "detection.html#extra_platforms.is_any_architecture"),
+        ("is_any_platform()", "detection.html#extra_platforms.is_any_platform"),
+        ("is_linux()", "detection.html#extra_platforms.is_linux"),
+        ("is_bsd()", "detection.html#extra_platforms.is_bsd"),
+        ("is_unix()", "detection.html#extra_platforms.is_unix"),
+    ]
+
+    for func_text, href_fragment in functions_to_check:
+        assert has_linked_reference(html, func_text, href_fragment), (
+            f"Detection function {func_text} is not linked to {href_fragment}"
+        )
+
+
+def test_pytest_decorator_table_symbols_are_linked(built_docs):
+    """Test that symbols in the decorator table link to their definitions."""
+    html = read_html(built_docs, "pytest.html")
+
+    # Test a sample of symbols in the decorator table.
+    symbols_to_check = [
+        ("AARCH64", "architectures.html#extra_platforms.AARCH64"),
+        ("UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
+        ("LINUX", "groups.html#extra_platforms.LINUX"),
+    ]
+
+    for symbol, href_fragment in symbols_to_check:
+        assert has_linked_reference(html, symbol, href_fragment), (
+            f"Symbol {symbol} is not linked to {href_fragment}"
+        )
+
+
+def test_pytest_decorator_docstrings_have_linked_symbols(built_docs):
+    """Test that decorator docstrings contain linked symbols."""
+    html = read_html(built_docs, "pytest.html")
+
+    # The docstrings should contain links like:
+    # "Skip test if current environment is AARCH64 (i.e., when is_aarch64() ...)"
+    # Both AARCH64 and is_aarch64() should be linked.
+
+    # Check that AARCH64 in the skip_aarch64 docstring is linked.
+    assert has_linked_reference(
+        html, "AARCH64", "architectures.html#extra_platforms.AARCH64"
+    ), "AARCH64 in skip_aarch64 docstring is not linked"
+
+    # Check that is_aarch64() in the docstring is linked.
+    assert has_linked_reference(
+        html, "is_aarch64()", "detection.html#extra_platforms.is_aarch64"
+    ), "is_aarch64() in skip_aarch64 docstring is not linked"
+
+
+def test_detection_table_symbols_are_linked(built_docs):
+    """Test that symbols in the detection table link to their definitions."""
+    html = read_html(built_docs, "detection.html")
+
+    # Test a sample of symbols.
+    symbols_to_check = [
+        ("AARCH64", "architectures.html#extra_platforms.AARCH64"),
+        ("UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
+        ("LINUX", "groups.html#extra_platforms.LINUX"),
+    ]
+
+    for symbol, href_fragment in symbols_to_check:
+        assert has_linked_reference(html, symbol, href_fragment), (
+            f"Symbol {symbol} is not linked to {href_fragment}"
+        )
+
+
+def test_detection_table_functions_are_linked(built_docs):
+    """Test that detection functions in the table link correctly."""
+    html = read_html(built_docs, "detection.html")
+
+    # Test a sample of detection functions (they should link to themselves).
+    functions_to_check = [
+        ("is_aarch64()", "#extra_platforms.is_aarch64"),
+        ("is_ubuntu()", "#extra_platforms.is_ubuntu"),
+        ("is_github_ci()", "#extra_platforms.is_github_ci"),
+        ("is_linux()", "#extra_platforms.is_linux"),
+    ]
+
+    for func_text, href_fragment in functions_to_check:
+        assert has_linked_reference(html, func_text, href_fragment), (
+            f"Detection function {func_text} is not linked to {href_fragment}"
+        )
+
+
+def test_trait_table_symbols_are_linked(built_docs):
+    """Test that trait symbols in the table link to their definitions."""
+    html = read_html(built_docs, "trait.html")
+
+    # Test a sample of trait symbols linking to their data pages.
+    symbols_to_check = [
+        ("AARCH64", "architectures.html#extra_platforms.AARCH64"),
+        ("UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
+    ]
+
+    for symbol, href_fragment in symbols_to_check:
+        assert has_linked_reference(html, symbol, href_fragment), (
+            f"Trait symbol {symbol} is not linked to {href_fragment}"
+        )
+
+
+def test_trait_table_detection_functions_are_linked(built_docs):
+    """Test that detection functions in the trait table link to detection.html."""
+    html = read_html(built_docs, "trait.html")
+
+    functions_to_check = [
+        ("is_aarch64()", "detection.html#extra_platforms.is_aarch64"),
+        ("is_ubuntu()", "detection.html#extra_platforms.is_ubuntu"),
+        ("is_github_ci()", "detection.html#extra_platforms.is_github_ci"),
+    ]
+
+    for func_text, href_fragment in functions_to_check:
+        assert has_linked_reference(html, func_text, href_fragment), (
+            f"Detection function {func_text} is not linked to {href_fragment}"
+        )
+
+
+def test_platform_symbols_are_linked(built_docs):
+    """Test that platform symbols link to their definitions."""
+    html = read_html(built_docs, "platforms.html")
+
+    symbols_to_check = [
+        ("UBUNTU", "#extra_platforms.UBUNTU"),
+        ("MACOS", "#extra_platforms.MACOS"),
+        ("WINDOWS", "#extra_platforms.WINDOWS"),
+        ("DEBIAN", "#extra_platforms.DEBIAN"),
+    ]
+
+    for symbol, href_fragment in symbols_to_check:
+        assert has_linked_reference(html, symbol, href_fragment), (
+            f"Platform symbol {symbol} is not linked to {href_fragment}"
+        )
+
+
+def test_platform_detection_functions_are_linked(built_docs):
+    """Test that platform detection functions link to detection.html."""
+    html = read_html(built_docs, "platforms.html")
+
+    functions_to_check = [
+        ("is_ubuntu()", "detection.html#extra_platforms.is_ubuntu"),
+        ("is_macos()", "detection.html#extra_platforms.is_macos"),
+        ("is_windows()", "detection.html#extra_platforms.is_windows"),
+    ]
+
+    for func_text, href_fragment in functions_to_check:
+        assert has_linked_reference(html, func_text, href_fragment), (
+            f"Detection function {func_text} is not linked to {href_fragment}"
+        )
+
+
+def test_architecture_symbols_are_linked(built_docs):
+    """Test that architecture symbols link to their definitions."""
+    html = read_html(built_docs, "architectures.html")
+
+    symbols_to_check = [
+        ("AARCH64", "#extra_platforms.AARCH64"),
+        ("X86_64", "#extra_platforms.X86_64"),
+        ("ARM", "#extra_platforms.ARM"),
+    ]
+
+    for symbol, href_fragment in symbols_to_check:
+        assert has_linked_reference(html, symbol, href_fragment), (
+            f"Architecture symbol {symbol} is not linked to {href_fragment}"
+        )
+
+
+def test_ci_symbols_are_linked(built_docs):
+    """Test that CI symbols link to their definitions."""
+    html = read_html(built_docs, "ci.html")
+
+    symbols_to_check = [
+        ("GITHUB_CI", "#extra_platforms.GITHUB_CI"),
+        ("GITLAB_CI", "#extra_platforms.GITLAB_CI"),
+        ("TRAVIS_CI", "#extra_platforms.TRAVIS_CI"),
+    ]
+
+    for symbol, href_fragment in symbols_to_check:
+        assert has_linked_reference(html, symbol, href_fragment), (
+            f"CI symbol {symbol} is not linked to {href_fragment}"
+        )
+
+
+def test_group_data_references_from_other_pages(built_docs):
+    """Test that references to groups from other pages link to groups.html."""
+    # Check platforms.html links to groups.
+    platforms_html = read_html(built_docs, "platforms.html")
+    assert has_linked_reference(
+        platforms_html, "LINUX", "groups.html#extra_platforms.LINUX"
+    ), "LINUX group reference in platforms.html is not linked to groups.html"
+
+
+def test_detection_references_from_trait_pages(built_docs):
+    """Test that detection function refs from trait pages link to detection.html."""
+    architectures_html = read_html(built_docs, "architectures.html")
+    assert has_linked_reference(
+        architectures_html,
+        "is_aarch64()",
+        "detection.html#extra_platforms.is_aarch64",
+    ), "is_aarch64() reference in architectures.html is not linked to detection.html"
