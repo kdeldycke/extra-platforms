@@ -6,10 +6,14 @@ Sphinx provides several roles to create cross-references to Python symbols in th
 
 ### Available roles
 
-- [`{func}`](https://www.sphinx-doc.org/en/master/usage/domains/python.html#role-py-func) — Reference a function (e.g., {func}`~extra_platforms.is_linux()`, {func}`~extra_platforms.current_traits()`)
+- [`{func}`](https://www.sphinx-doc.org/en/master/usage/domains/python.html#role-py-func) — Reference a function (e.g., {func}`~extra_platforms.is_linux`, {func}`~extra_platforms.current_traits`)
+- [`{data}`](https://www.sphinx-doc.org/en/master/usage/domains/python.html#role-py-data) — Reference a module-level constant (e.g., {data}`~extra_platforms.UBUNTU`, {data}`~extra_platforms.pytest.skip_linux`)
 - [`{class}`](https://www.sphinx-doc.org/en/master/usage/domains/python.html#role-py-class) — Reference a class (e.g., {class}`~extra_platforms.Platform`, {class}`~extra_platforms.Architecture`, {class}`~extra_platforms.Group`)
-- [`{data}`](https://www.sphinx-doc.org/en/master/usage/domains/python.html#role-py-data) — Reference a module-level constant (e.g., {data}`~extra_platforms.UBUNTU`, {data}`~extra_platforms.AARCH64`, {data}`~extra_platforms.GITHUB_CI`)
 - [`{mod}`](https://www.sphinx-doc.org/en/master/usage/domains/python.html#role-py-mod) — Reference a module (e.g., {mod}`~extra_platforms.detection`)
+
+```{note}
+Pytest decorators like {data}`~extra_platforms.pytest.skip_linux` are `MarkDecorator` objects. Use `{data}` for inline cross-references. For API documentation, the built-in [`autodecorator`](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#directive-autodecorator) directive renders them with the `@` prefix (see [pytest.md](pytest.md)).
+```
 
 ### Syntax
 

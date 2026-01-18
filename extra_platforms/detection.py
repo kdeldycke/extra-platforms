@@ -86,7 +86,7 @@ import distro
 def is_aarch64() -> bool:
     """Return ``True`` if current architecture is :data:`~AARCH64`.
 
-    .. note::
+    .. caution::
         ``platform.machine()`` returns different values depending on the OS:
 
         - Linux: ``aarch64``
@@ -124,14 +124,18 @@ def is_armv8l() -> bool:
 def is_arm() -> bool:
     """Return ``True`` if current architecture is :data:`~ARM`.
 
-    This matches ARM architectures not covered by more specific variants.
+    .. hint::
+        This is a fallback detection for generic ARM architecture. It will return
+        ``True`` for any ARM architecture not specifically covered by the more precise
+        variants: :func:`~is_aarch64`, :func:`~is_armv5tel`, :func:`~is_armv6l`,
+        :func:`~is_armv7l` or :func:`~is_armv8l`.
     """
     if platform.machine().startswith("arm") and not any((
+        is_aarch64(),
         is_armv5tel(),
         is_armv6l(),
         is_armv7l(),
         is_armv8l(),
-        is_aarch64(),
     )):
         return True
     return False
@@ -159,7 +163,7 @@ def is_i686() -> bool:
 def is_x86_64() -> bool:
     """Return ``True`` if current architecture is :data:`~X86_64`.
 
-    .. note::
+    .. caution::
         Windows returns ``AMD64`` in uppercase, so we normalize to lowercase.
     """
     return platform.machine().lower() in ("x86_64", "amd64")
@@ -247,7 +251,7 @@ def is_loongarch64() -> bool:
 def is_wasm32() -> bool:
     """Return ``True`` if current architecture is :data:`~WASM32`.
 
-    .. note::
+    .. hint::
         WebAssembly detection is based on Emscripten's platform identifier.
     """
     return sys.platform == "emscripten" and platform.architecture()[0] == "32bit"
@@ -257,8 +261,8 @@ def is_wasm32() -> bool:
 def is_wasm64() -> bool:
     """Return ``True`` if current architecture is :data:`~WASM64`.
 
-    .. note::
-        WebAssembly 64-bit (memory64) is still experimental.
+    .. hint::
+        WebAssembly detection is based on Emscripten's platform identifier.
     """
     return sys.platform == "emscripten" and platform.architecture()[0] == "64bit"
 
@@ -290,7 +294,9 @@ def is_amzn() -> bool:
 def is_android() -> bool:
     """Return ``True`` if current platform is :data:`~ANDROID`.
 
-    Source: https://github.com/kivy/kivy/blob/master/kivy/utils.py#L429
+    .. seealso::
+        Source:
+        <https://github.com/kivy/kivy/blob/3c4b1dc84cdd930d352aab9be32c38e1c98bd5c6/kivy/utils.py#L435-L436>
     """
     return "ANDROID_ROOT" in environ or "P4A_BOOTSTRAP" in environ
 
@@ -383,8 +389,9 @@ def is_haiku() -> bool:
 def is_hurd() -> bool:
     """Return ``True`` if current platform is :data:`~HURD`.
 
-    ``sys.platform`` can returns ``GNU`` or ``gnu0``, see:
-    https://github.com/kdeldycke/extra-platforms/issues/308
+    .. caution::
+        ``sys.platform`` can returns ``GNU`` or ``gnu0``, see:
+        <https://github.com/kdeldycke/extra-platforms/issues/308>
     """
     return sys.platform.lower().startswith("gnu")
 
@@ -399,9 +406,11 @@ def is_ibm_powerkvm() -> bool:
 def is_illumos() -> bool:
     """Return ``True`` if current platform is :data:`~ILLUMOS`.
 
-    Illumos is a Unix OS derived from OpenSolaris. It shares ``sys.platform == 'sunos5'``
-    with Solaris, but can be distinguished by checking ``platform.uname().version`` which
-    contains "illumos" on Illumos-based systems (like OpenIndiana, SmartOS, OmniOS).
+    .. hint::
+        Illumos is a Unix OS derived from OpenSolaris. It shares
+        ``sys.platform == 'sunos5'`` with Solaris, but can be distinguished by checking
+        ``platform.uname().version`` which contains "illumos" on Illumos-based systems
+        (like OpenIndiana, SmartOS, OmniOS).
     """
     return "illumos" in platform.uname().version.lower()
 
@@ -608,8 +617,9 @@ def is_xenserver() -> bool:
 def is_azure_pipelines() -> bool:
     """Return ``True`` if current CI is :data:`~AZURE_PIPELINES`.
 
-    `Environment variables reference
-    <https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&viewFallbackFrom=vsts&tabs=yaml#system-variables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&viewFallbackFrom=vsts&tabs=yaml#system-variables>.
     """
     return "TF_BUILD" in environ
 
@@ -618,8 +628,9 @@ def is_azure_pipelines() -> bool:
 def is_bamboo() -> bool:
     """Return ``True`` if current CI is :data:`~BAMBOO`.
 
-    `Environment variables reference
-    <https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html#Bamboovariables-Build-specificvariables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html#Bamboovariables-Build-specificvariables>.
     """
     return "bamboo.buildKey" in environ
 
@@ -628,8 +639,9 @@ def is_bamboo() -> bool:
 def is_buildkite() -> bool:
     """Return ``True`` if current CI is :data:`~BUILDKITE`.
 
-    `Environment variables reference
-    <https://buildkite.com/docs/pipelines/environment-variables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://buildkite.com/docs/pipelines/environment-variables>.
     """
     return "BUILDKITE" in environ
 
@@ -638,8 +650,9 @@ def is_buildkite() -> bool:
 def is_circle_ci() -> bool:
     """Return ``True`` if current CI is :data:`~CIRCLE_CI`.
 
-    `Environment variables reference
-    <https://circleci.com/docs/2.0/env-vars/#built-in-environment-variables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://circleci.com/docs/reference/variables/#built-in-environment-variables>.
     """
     return "CIRCLECI" in environ
 
@@ -648,8 +661,9 @@ def is_circle_ci() -> bool:
 def is_cirrus_ci() -> bool:
     """Return ``True`` if current CI is :data:`~CIRRUS_CI`.
 
-    `Environment variables reference
-    <https://cirrus-ci.org/guide/writing-tasks/#environment-variables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://cirrus-ci.org/guide/writing-tasks/#environment-variables>.
     """
     return "CIRRUS_CI" in environ
 
@@ -658,8 +672,9 @@ def is_cirrus_ci() -> bool:
 def is_codebuild() -> bool:
     """Return ``True`` if current CI is :data:`~CODEBUILD`.
 
-    `Environment variables reference
-    <https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html>.
     """
     return "CODEBUILD_BUILD_ID" in environ
 
@@ -668,8 +683,9 @@ def is_codebuild() -> bool:
 def is_github_ci() -> bool:
     """Return ``True`` if current CI is :data:`~GITHUB_CI`.
 
-    `Environment variables reference
-    <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables>.
     """
     return "GITHUB_ACTIONS" in environ or "GITHUB_RUN_ID" in environ
 
@@ -678,8 +694,9 @@ def is_github_ci() -> bool:
 def is_gitlab_ci() -> bool:
     """Return ``True`` if current CI is :data:`~GITLAB_CI`.
 
-    `Environment variables reference
-    <https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables>.
     """
     return "GITLAB_CI" in environ
 
@@ -688,8 +705,9 @@ def is_gitlab_ci() -> bool:
 def is_heroku_ci() -> bool:
     """Return ``True`` if current CI is :data:`~HEROKU_CI`.
 
-    `Environment variables reference
-    <https://devcenter.heroku.com/articles/heroku-ci#immutable-environment-variables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://devcenter.heroku.com/articles/heroku-ci#immutable-environment-variables>.
     """
     return "HEROKU_TEST_RUN_ID" in environ
 
@@ -698,8 +716,9 @@ def is_heroku_ci() -> bool:
 def is_teamcity() -> bool:
     """Return ``True`` if current CI is :data:`~TEAMCITY`.
 
-    `Environment variables reference
-    <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#PredefinedBuildParameters-ServerBuildProperties>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#PredefinedBuildParameters-ServerBuildProperties>.
     """
     return "TEAMCITY_VERSION" in environ
 
@@ -708,7 +727,8 @@ def is_teamcity() -> bool:
 def is_travis_ci() -> bool:
     """Return ``True`` if current CI is :data:`~TRAVIS_CI`.
 
-    `Environment variables reference
-    <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>`_.
+    .. seealso::
+        Environment variables reference:
+        <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>.
     """
     return "TRAVIS" in environ

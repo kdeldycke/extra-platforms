@@ -617,16 +617,18 @@ def _generate_directive_section(section_name: str, objects: Iterable[str]) -> st
 
 
 def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
-    """Generate Sphinx autodata directives for pytest decorators.
+    """Generate Sphinx autodecorator directives for pytest decorators.
 
     Generates directives for both ``@skip_<id>`` and ``@unless_<id>`` decorators
     defined in the ``extra_platforms.pytest`` module, organized in separate sections.
+
+    Uses the built-in ``autodecorator`` directive which renders decorator names with @ prefix.
 
     Args:
         objects: The traits or groups whose decorators should be documented.
 
     Returns:
-        A string containing skip and unless decorator sections with autodata directives.
+        A string containing skip and unless decorator sections with autodecorator directives.
     """
     objects_list = list(objects)
     if not objects_list:
@@ -637,7 +639,7 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     skip_section = _generate_directive_section(
         "Skip decorators",
         (
-            f".. autodata:: extra_platforms.pytest.{obj.skip_decorator_id}"
+            f".. autodecorator:: extra_platforms.pytest.{obj.skip_decorator_id}"
             for obj in sorted_objects
         ),
     )
@@ -645,7 +647,7 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     unless_section = _generate_directive_section(
         "Unless decorators",
         (
-            f".. autodata:: extra_platforms.pytest.{obj.unless_decorator_id}"
+            f".. autodecorator:: extra_platforms.pytest.{obj.unless_decorator_id}"
             for obj in sorted_objects
         ),
     )
