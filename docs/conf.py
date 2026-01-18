@@ -166,8 +166,8 @@ def make_pytest_decorator_line(obj):
     """Create pytest decorator documentation line."""
     return (
         "- **Pytest decorators**: "
-        f":data:`~extra_platforms.pytest.{obj.skip_decorator_id}` / "
-        f":data:`~extra_platforms.pytest.{obj.unless_decorator_id}`"
+        f":data:`~pytest.{obj.skip_decorator_id}` / "
+        f":data:`~pytest.{obj.unless_decorator_id}`"
     )
 
 
@@ -200,10 +200,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
             f"- **Canonical**: ``{obj.canonical}`` {'⬥' if obj.canonical else ''}"
         )
 
-        lines.append(
-            "- **Detection function**: "
-            f":func:`~extra_platforms.{obj.detection_func_id}`"
-        )
+        lines.append(f"- **Detection function**: :func:`~{obj.detection_func_id}`")
 
         lines.append(make_pytest_decorator_line(obj))
 
@@ -220,12 +217,12 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
             type_counts[class_name]["count"] += 1
 
             # Create member link using Sphinx role.
-            member_links.append(f":data:`~extra_platforms.{member.symbol_id}`")
+            member_links.append(f":data:`~{member.symbol_id}`")
 
         if member_links:
             # Format type information with links.
             type_parts = [
-                f"{info['count']} :class:`~extra_platforms.{class_name}`"
+                f"{info['count']} :class:`~{class_name}`"
                 for class_name, info in sorted(type_counts.items())
             ]
             type_info = ", ".join(type_parts)
@@ -249,19 +246,13 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines.append(f"- **Icon**: {obj.icon}")
         lines.append(f"- **Reference**: <{obj.url}>_")
 
-        lines.append(
-            "- **Detection function**: "
-            f":func:`~extra_platforms.{obj.detection_func_id}`"
-        )
+        lines.append(f"- **Detection function**: :func:`~{obj.detection_func_id}`")
 
         lines.append(make_pytest_decorator_line(obj))
 
         # Add list of groups this trait belongs to.
         group_links = [
-            (
-                f":data:`~extra_platforms.{group.symbol_id}`"
-                + (" ⬥" if group.canonical else "")
-            )
+            f":data:`~{group.symbol_id}`" + (" ⬥" if group.canonical else "")
             for group in sorted(obj.groups, key=lambda g: g.id)
         ]
         lines.append(f"- **Groups** ({len(group_links)}): {', '.join(group_links)}")

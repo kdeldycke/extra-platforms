@@ -1,5 +1,8 @@
 # {octicon}`cpu` Architectures
 
+```{py:currentmodule} extra_platforms
+```
+
 Each architecture represents a CPU instruction set, and is associated with:
 
 - a unique architecture ID
@@ -44,38 +47,38 @@ Architecture(id='x86_64', name='x86-64 (AMD64)')
 
 <!-- architecture-table-start -->
 
-| Icon | Symbol                               | Name                           | Detection function                      |
-| :--: | :----------------------------------- | :----------------------------- | :-------------------------------------- |
-|  📱  | {data}`~extra_platforms.AARCH64`     | ARM64 (AArch64)                | {func}`~extra_platforms.is_aarch64`     |
-|  📱  | {data}`~extra_platforms.ARM`         | ARM (32-bit)                   | {func}`~extra_platforms.is_arm`         |
-|  📱  | {data}`~extra_platforms.ARMV5TEL`    | ARMv5TE (little-endian)        | {func}`~extra_platforms.is_armv5tel`    |
-|  📱  | {data}`~extra_platforms.ARMV6L`      | ARMv6 (little-endian)          | {func}`~extra_platforms.is_armv6l`      |
-|  📱  | {data}`~extra_platforms.ARMV7L`      | ARMv7 (little-endian)          | {func}`~extra_platforms.is_armv7l`      |
-|  📱  | {data}`~extra_platforms.ARMV8L`      | ARMv8 (32-bit, little-endian)  | {func}`~extra_platforms.is_armv8l`      |
-|  𝗶   | {data}`~extra_platforms.I386`        | Intel 80386 (i386)             | {func}`~extra_platforms.is_i386`        |
-|  𝗶   | {data}`~extra_platforms.I586`        | Intel Pentium (i586)           | {func}`~extra_platforms.is_i586`        |
-|  𝗶   | {data}`~extra_platforms.I686`        | Intel Pentium Pro (i686)       | {func}`~extra_platforms.is_i686`        |
-|  🐉  | {data}`~extra_platforms.LOONGARCH64` | LoongArch (64-bit)             | {func}`~extra_platforms.is_loongarch64` |
-|  🔲  | {data}`~extra_platforms.MIPS`        | MIPS (32-bit, big-endian)      | {func}`~extra_platforms.is_mips`        |
-|  🔲  | {data}`~extra_platforms.MIPS64`      | MIPS64 (big-endian)            | {func}`~extra_platforms.is_mips64`      |
-|  🔲  | {data}`~extra_platforms.MIPS64EL`    | MIPS64 (little-endian)         | {func}`~extra_platforms.is_mips64el`    |
-|  🔲  | {data}`~extra_platforms.MIPSEL`      | MIPS (32-bit, little-endian)   | {func}`~extra_platforms.is_mipsel`      |
-|  ⚡  | {data}`~extra_platforms.PPC`         | PowerPC (32-bit)               | {func}`~extra_platforms.is_ppc`         |
-|  ⚡  | {data}`~extra_platforms.PPC64`       | PowerPC 64-bit (big-endian)    | {func}`~extra_platforms.is_ppc64`       |
-|  ⚡  | {data}`~extra_platforms.PPC64LE`     | PowerPC 64-bit (little-endian) | {func}`~extra_platforms.is_ppc64le`     |
-|  Ⅴ   | {data}`~extra_platforms.RISCV32`     | RISC-V (32-bit)                | {func}`~extra_platforms.is_riscv32`     |
-|  Ⅴ   | {data}`~extra_platforms.RISCV64`     | RISC-V (64-bit)                | {func}`~extra_platforms.is_riscv64`     |
-|  🏢  | {data}`~extra_platforms.S390X`       | IBM z/Architecture (s390x)     | {func}`~extra_platforms.is_s390x`       |
-|  ☀️  | {data}`~extra_platforms.SPARC`       | SPARC (32-bit)                 | {func}`~extra_platforms.is_sparc`       |
-|  ☀️  | {data}`~extra_platforms.SPARC64`     | SPARC (64-bit)                 | {func}`~extra_platforms.is_sparc64`     |
-|  🌐  | {data}`~extra_platforms.WASM32`      | WebAssembly (32-bit)           | {func}`~extra_platforms.is_wasm32`      |
-|  🌐  | {data}`~extra_platforms.WASM64`      | WebAssembly (64-bit)           | {func}`~extra_platforms.is_wasm64`      |
-|  🖥️  | {data}`~extra_platforms.X86_64`      | x86-64 (AMD64)                 | {func}`~extra_platforms.is_x86_64`      |
+| Icon | Symbol               | Name                           | Detection function      |
+| :--: | :------------------- | :----------------------------- | :---------------------- |
+|  📱  | {data}`~AARCH64`     | ARM64 (AArch64)                | {func}`~is_aarch64`     |
+|  📱  | {data}`~ARM`         | ARM (32-bit)                   | {func}`~is_arm`         |
+|  📱  | {data}`~ARMV5TEL`    | ARMv5TE (little-endian)        | {func}`~is_armv5tel`    |
+|  📱  | {data}`~ARMV6L`      | ARMv6 (little-endian)          | {func}`~is_armv6l`      |
+|  📱  | {data}`~ARMV7L`      | ARMv7 (little-endian)          | {func}`~is_armv7l`      |
+|  📱  | {data}`~ARMV8L`      | ARMv8 (32-bit, little-endian)  | {func}`~is_armv8l`      |
+|  𝗶   | {data}`~I386`        | Intel 80386 (i386)             | {func}`~is_i386`        |
+|  𝗶   | {data}`~I586`        | Intel Pentium (i586)           | {func}`~is_i586`        |
+|  𝗶   | {data}`~I686`        | Intel Pentium Pro (i686)       | {func}`~is_i686`        |
+|  🐉  | {data}`~LOONGARCH64` | LoongArch (64-bit)             | {func}`~is_loongarch64` |
+|  🔲  | {data}`~MIPS`        | MIPS (32-bit, big-endian)      | {func}`~is_mips`        |
+|  🔲  | {data}`~MIPS64`      | MIPS64 (big-endian)            | {func}`~is_mips64`      |
+|  🔲  | {data}`~MIPS64EL`    | MIPS64 (little-endian)         | {func}`~is_mips64el`    |
+|  🔲  | {data}`~MIPSEL`      | MIPS (32-bit, little-endian)   | {func}`~is_mipsel`      |
+|  ⚡  | {data}`~PPC`         | PowerPC (32-bit)               | {func}`~is_ppc`         |
+|  ⚡  | {data}`~PPC64`       | PowerPC 64-bit (big-endian)    | {func}`~is_ppc64`       |
+|  ⚡  | {data}`~PPC64LE`     | PowerPC 64-bit (little-endian) | {func}`~is_ppc64le`     |
+|  Ⅴ   | {data}`~RISCV32`     | RISC-V (32-bit)                | {func}`~is_riscv32`     |
+|  Ⅴ   | {data}`~RISCV64`     | RISC-V (64-bit)                | {func}`~is_riscv64`     |
+|  🏢  | {data}`~S390X`       | IBM z/Architecture (s390x)     | {func}`~is_s390x`       |
+|  ☀️  | {data}`~SPARC`       | SPARC (32-bit)                 | {func}`~is_sparc`       |
+|  ☀️  | {data}`~SPARC64`     | SPARC (64-bit)                 | {func}`~is_sparc64`     |
+|  🌐  | {data}`~WASM32`      | WebAssembly (32-bit)           | {func}`~is_wasm32`      |
+|  🌐  | {data}`~WASM64`      | WebAssembly (64-bit)           | {func}`~is_wasm64`      |
+|  🖥️  | {data}`~X86_64`      | x86-64 (AMD64)                 | {func}`~is_x86_64`      |
 
 ```{hint}
-The {data}`~extra_platforms.UNKNOWN_ARCHITECTURE` trait represents an unrecognized
-architecture. It is not included in the {data}`~extra_platforms.ALL_ARCHITECTURES` group,
-and will be returned by {func}`~extra_platforms.current_architecture` if the current
+The {data}`~UNKNOWN_ARCHITECTURE` trait represents an unrecognized
+architecture. It is not included in the {data}`~ALL_ARCHITECTURES` group,
+and will be returned by {func}`~current_architecture` if the current
 architecture is not recognized.
 ```
 
@@ -87,20 +90,20 @@ architecture is not recognized.
 
 <!-- architecture-groups-table-start -->
 
-| Icon | Symbol                                     | Description          | [Detection](detection.md)                    | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :----------------------------------------- | :------------------- | :------------------------------------------- | :----------------------------------------------------------: |
-|  🏛️  | {data}`~extra_platforms.ALL_ARCHITECTURES` | All architectures    | {func}`~extra_platforms.is_any_architecture` |                                                              |
-|  📱  | {data}`~extra_platforms.ALL_ARM`           | ARM architectures    | {func}`~extra_platforms.is_any_arm`          |                              ⬥                               |
-|  🔲  | {data}`~extra_platforms.ALL_MIPS`          | MIPS architectures   | {func}`~extra_platforms.is_any_mips`         |                              ⬥                               |
-|  ☀️  | {data}`~extra_platforms.ALL_SPARC`         | SPARC architectures  | {func}`~extra_platforms.is_any_sparc`        |                              ⬥                               |
-|  ³²  | {data}`~extra_platforms.ARCH_32_BIT`       | 32-bit architectures | {func}`~extra_platforms.is_arch_32_bit`      |                                                              |
-|  ⁶⁴  | {data}`~extra_platforms.ARCH_64_BIT`       | 64-bit architectures | {func}`~extra_platforms.is_arch_64_bit`      |                                                              |
-|  🏢  | {data}`~extra_platforms.IBM_MAINFRAME`     | IBM mainframe        | {func}`~extra_platforms.is_ibm_mainframe`    |                              ⬥                               |
-|  🐉  | {data}`~extra_platforms.LOONGARCH`         | LoongArch            | {func}`~extra_platforms.is_loongarch`        |                              ⬥                               |
-|  ⚡  | {data}`~extra_platforms.POWERPC`           | PowerPC family       | {func}`~extra_platforms.is_powerpc`          |                              ⬥                               |
-|  Ⅴ   | {data}`~extra_platforms.RISCV`             | RISC-V family        | {func}`~extra_platforms.is_riscv`            |                              ⬥                               |
-|  🌐  | {data}`~extra_platforms.WEBASSEMBLY`       | WebAssembly          | {func}`~extra_platforms.is_webassembly`      |                              ⬥                               |
-|  𝘅   | {data}`~extra_platforms.X86`               | x86 family           | {func}`~extra_platforms.is_x86`              |                              ⬥                               |
+| Icon | Symbol                     | Description          | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
+| :--: | :------------------------- | :------------------- | :--------------------------- | :----------------------------------------------------------: |
+|  🏛️  | {data}`~ALL_ARCHITECTURES` | All architectures    | {func}`~is_any_architecture` |                                                              |
+|  📱  | {data}`~ALL_ARM`           | ARM architectures    | {func}`~is_any_arm`          |                              ⬥                               |
+|  🔲  | {data}`~ALL_MIPS`          | MIPS architectures   | {func}`~is_any_mips`         |                              ⬥                               |
+|  ☀️  | {data}`~ALL_SPARC`         | SPARC architectures  | {func}`~is_any_sparc`        |                              ⬥                               |
+|  ³²  | {data}`~ARCH_32_BIT`       | 32-bit architectures | {func}`~is_arch_32_bit`      |                                                              |
+|  ⁶⁴  | {data}`~ARCH_64_BIT`       | 64-bit architectures | {func}`~is_arch_64_bit`      |                                                              |
+|  🏢  | {data}`~IBM_MAINFRAME`     | IBM mainframe        | {func}`~is_ibm_mainframe`    |                              ⬥                               |
+|  🐉  | {data}`~LOONGARCH`         | LoongArch            | {func}`~is_loongarch`        |                              ⬥                               |
+|  ⚡  | {data}`~POWERPC`           | PowerPC family       | {func}`~is_powerpc`          |                              ⬥                               |
+|  Ⅴ   | {data}`~RISCV`             | RISC-V family        | {func}`~is_riscv`            |                              ⬥                               |
+|  🌐  | {data}`~WEBASSEMBLY`       | WebAssembly          | {func}`~is_webassembly`      |                              ⬥                               |
+|  𝘅   | {data}`~X86`               | x86 family           | {func}`~is_x86`              |                              ⬥                               |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all

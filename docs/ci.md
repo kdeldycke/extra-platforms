@@ -1,5 +1,8 @@
 # {octicon}`container` CI systems
 
+```{py:currentmodule} extra_platforms
+```
+
 Each CI system represents a continuous integration/delivery platform, and is associated with:
 
 - a unique CI ID
@@ -44,24 +47,24 @@ CI(id='unknown_ci', name='Unknown CI')
 
 <!-- ci-table-start -->
 
-| Icon | Symbol                                   | Name                  | Detection function                          |
-| :--: | :--------------------------------------- | :-------------------- | :------------------------------------------ |
-|  ═   | {data}`~extra_platforms.AZURE_PIPELINES` | Azure Pipelines       | {func}`~extra_platforms.is_azure_pipelines` |
-|  ⟲   | {data}`~extra_platforms.BAMBOO`          | Bamboo                | {func}`~extra_platforms.is_bamboo`          |
-|  🪁  | {data}`~extra_platforms.BUILDKITE`       | Buildkite             | {func}`~extra_platforms.is_buildkite`       |
-|  ⪾   | {data}`~extra_platforms.CIRCLE_CI`       | Circle CI             | {func}`~extra_platforms.is_circle_ci`       |
-|  ≋   | {data}`~extra_platforms.CIRRUS_CI`       | Cirrus CI             | {func}`~extra_platforms.is_cirrus_ci`       |
-|  ᚙ   | {data}`~extra_platforms.CODEBUILD`       | CodeBuild             | {func}`~extra_platforms.is_codebuild`       |
-|  🐙  | {data}`~extra_platforms.GITHUB_CI`       | GitHub Actions runner | {func}`~extra_platforms.is_github_ci`       |
-|  🦊  | {data}`~extra_platforms.GITLAB_CI`       | GitLab CI             | {func}`~extra_platforms.is_gitlab_ci`       |
-|  ⥁   | {data}`~extra_platforms.HEROKU_CI`       | Heroku CI             | {func}`~extra_platforms.is_heroku_ci`       |
-|  🏙️  | {data}`~extra_platforms.TEAMCITY`        | TeamCity              | {func}`~extra_platforms.is_teamcity`        |
-|  👷  | {data}`~extra_platforms.TRAVIS_CI`       | Travis CI             | {func}`~extra_platforms.is_travis_ci`       |
+| Icon | Symbol                   | Name                  | Detection function          |
+| :--: | :----------------------- | :-------------------- | :-------------------------- |
+|  ═   | {data}`~AZURE_PIPELINES` | Azure Pipelines       | {func}`~is_azure_pipelines` |
+|  ⟲   | {data}`~BAMBOO`          | Bamboo                | {func}`~is_bamboo`          |
+|  🪁  | {data}`~BUILDKITE`       | Buildkite             | {func}`~is_buildkite`       |
+|  ⪾   | {data}`~CIRCLE_CI`       | Circle CI             | {func}`~is_circle_ci`       |
+|  ≋   | {data}`~CIRRUS_CI`       | Cirrus CI             | {func}`~is_cirrus_ci`       |
+|  ᚙ   | {data}`~CODEBUILD`       | CodeBuild             | {func}`~is_codebuild`       |
+|  🐙  | {data}`~GITHUB_CI`       | GitHub Actions runner | {func}`~is_github_ci`       |
+|  🦊  | {data}`~GITLAB_CI`       | GitLab CI             | {func}`~is_gitlab_ci`       |
+|  ⥁   | {data}`~HEROKU_CI`       | Heroku CI             | {func}`~is_heroku_ci`       |
+|  🏙️  | {data}`~TEAMCITY`        | TeamCity              | {func}`~is_teamcity`        |
+|  👷  | {data}`~TRAVIS_CI`       | Travis CI             | {func}`~is_travis_ci`       |
 
 ```{hint}
-The {data}`~extra_platforms.UNKNOWN_CI` trait represents an unrecognized
-CI system. It is not included in the {data}`~extra_platforms.ALL_CI` group,
-and will be returned by {func}`~extra_platforms.current_ci` if the current
+The {data}`~UNKNOWN_CI` trait represents an unrecognized
+CI system. It is not included in the {data}`~ALL_CI` group,
+and will be returned by {func}`~current_ci` if the current
 CI system is not recognized.
 ```
 
@@ -73,9 +76,9 @@ There is only one group defined for CI systems: `ALL_CI`, which includes all rec
 
 <!-- ci-groups-table-start -->
 
-| Icon | Symbol                          | Description | [Detection](detection.md)          | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :------------------------------ | :---------- | :--------------------------------- | :----------------------------------------------------------: |
-|  ♺   | {data}`~extra_platforms.ALL_CI` | CI systems  | {func}`~extra_platforms.is_any_ci` |                              ⬥                               |
+| Icon | Symbol          | Description | [Detection](detection.md) | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
+| :--: | :-------------- | :---------- | :------------------------ | :----------------------------------------------------------: |
+|  ♺   | {data}`~ALL_CI` | CI systems  | {func}`~is_any_ci`        |                              ⬥                               |
 
 <!-- ci-groups-table-end -->
 

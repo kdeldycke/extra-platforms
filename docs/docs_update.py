@@ -249,9 +249,9 @@ def generate_all_traits_table(traits: Iterable[Trait]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             trait.icon,
-            f"{{data}}`~extra_platforms.{trait.symbol_id}`",
+            f"{{data}}`~{trait.symbol_id}`",
             trait.name,
-            f"{{func}}`~extra_platforms.{trait.detection_func_id}`",
+            f"{{func}}`~{trait.detection_func_id}`",
             type(trait).__name__,
         ])
 
@@ -281,9 +281,9 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         table_data.append([
             trait.icon,
-            f"{{data}}`~extra_platforms.{trait.symbol_id}`",
+            f"{{data}}`~{trait.symbol_id}`",
             trait.name,
-            f"{{func}}`~extra_platforms.{trait.detection_func_id}`",
+            f"{{func}}`~{trait.detection_func_id}`",
         ])
 
     table = _generate_markdown_table(table_data, headers, alignments)
@@ -291,9 +291,9 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
     # Append hint block explaining unknown trait if trait type was detected.
     hint = dedent(f"""
         ```{{hint}}
-        The {{data}}`~extra_platforms.{trait_class.unknown_symbol}` trait represents an unrecognized
-        {trait_class.type_name}. It is not included in the {{data}}`~extra_platforms.{trait_class.all_group}` group,
-        and will be returned by {{func}}`~extra_platforms.current_{trait_class.type_id}` if the current
+        The {{data}}`~{trait_class.unknown_symbol}` trait represents an unrecognized
+        {trait_class.type_name}. It is not included in the {{data}}`~{trait_class.all_group}` group,
+        and will be returned by {{func}}`~current_{trait_class.type_id}` if the current
         {trait_class.type_name} is not recognized.
         ```""")
     return f"{table}\n{hint}"
@@ -323,9 +323,9 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     for group in sorted_groups:
         table_data.append([
             group.icon,
-            f"{{data}}`~extra_platforms.{group.symbol_id}`",
+            f"{{data}}`~{group.symbol_id}`",
             group.name,
-            f"{{func}}`~extra_platforms.{group.detection_func_id}`",
+            f"{{func}}`~{group.detection_func_id}`",
             "⬥" if group.canonical else "",
         ])
 
@@ -507,10 +507,10 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
 
     for obj in sorted(objects, key=attrgetter("id")):
         table_data.append([
-            f"{{func}}`~extra_platforms.pytest.{obj.skip_decorator_id}`",
-            f"{{func}}`~extra_platforms.pytest.{obj.unless_decorator_id}`",
+            f"{{func}}`~pytest.{obj.skip_decorator_id}`",
+            f"{{func}}`~pytest.{obj.unless_decorator_id}`",
             obj.icon,
-            f"{{data}}`~extra_platforms.{obj.symbol_id}`",
+            f"{{data}}`~{obj.symbol_id}`",
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)
@@ -563,9 +563,9 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
 
     for obj in sorted(objects, key=attrgetter("detection_func_id")):
         table_data.append([
-            f"{{func}}`~extra_platforms.{obj.detection_func_id}`",
+            f"{{func}}`~{obj.detection_func_id}`",
             obj.icon,
-            f"{{data}}`~extra_platforms.{obj.symbol_id}`",
+            f"{{data}}`~{obj.symbol_id}`",
         ])
 
     return _generate_markdown_table(table_data, headers, alignments)

@@ -17,6 +17,8 @@
 
 Generates a pair of ready-to-use ``@skip_<id>`` and ``@unless_<id>`` decorators for
 each platform and group.
+
+.. currentmodule:: extra_platforms
 """
 
 from __future__ import annotations
@@ -89,7 +91,10 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
     Returns:
         A reStructuredText docstring.
     """
-    # Create reference links using Sphinx roles for concise cross-referencing.
+    # Create reference links using Sphinx roles with full paths.
+    # Full paths are required because this module is extra_platforms.pytest, so
+    # short references like :data:`~AARCH64` would be resolved relative to
+    # extra_platforms.pytest, not extra_platforms.
     symbol_link = f":data:`~extra_platforms.{obj.symbol_id}`"
     detection_link = f":func:`~extra_platforms.{obj.detection_func_id}`"
 

@@ -1,5 +1,8 @@
 # {octicon}`tag` Traits
 
+```{py:currentmodule} extra_platforms
+```
+
 All aspects of a system are represented as *traits*.
 
 There are three main types of traits:
@@ -120,97 +123,97 @@ All recognized traits and their properties:
 
 <!-- all-traits-table-start -->
 
-| Icon | Symbol                                        | Name                           | Detection function                               | Type         |
-| :--: | :-------------------------------------------- | :----------------------------- | :----------------------------------------------- | :----------- |
-|  📱  | {data}`~extra_platforms.AARCH64`              | ARM64 (AArch64)                | {func}`~extra_platforms.is_aarch64`              | Architecture |
-|  ➿  | {data}`~extra_platforms.AIX`                  | IBM AIX                        | {func}`~extra_platforms.is_aix`                  | Platform     |
-|  🐧  | {data}`~extra_platforms.ALTLINUX`             | ALT Linux                      | {func}`~extra_platforms.is_altlinux`             | Platform     |
-|  ⤻   | {data}`~extra_platforms.AMZN`                 | Amazon Linux                   | {func}`~extra_platforms.is_amzn`                 | Platform     |
-|  🤖  | {data}`~extra_platforms.ANDROID`              | Android                        | {func}`~extra_platforms.is_android`              | Platform     |
-|  🎗️  | {data}`~extra_platforms.ARCH`                 | Arch Linux                     | {func}`~extra_platforms.is_arch`                 | Platform     |
-|  📱  | {data}`~extra_platforms.ARM`                  | ARM (32-bit)                   | {func}`~extra_platforms.is_arm`                  | Architecture |
-|  📱  | {data}`~extra_platforms.ARMV5TEL`             | ARMv5TE (little-endian)        | {func}`~extra_platforms.is_armv5tel`             | Architecture |
-|  📱  | {data}`~extra_platforms.ARMV6L`               | ARMv6 (little-endian)          | {func}`~extra_platforms.is_armv6l`               | Architecture |
-|  📱  | {data}`~extra_platforms.ARMV7L`               | ARMv7 (little-endian)          | {func}`~extra_platforms.is_armv7l`               | Architecture |
-|  📱  | {data}`~extra_platforms.ARMV8L`               | ARMv8 (32-bit, little-endian)  | {func}`~extra_platforms.is_armv8l`               | Architecture |
-|  ═   | {data}`~extra_platforms.AZURE_PIPELINES`      | Azure Pipelines                | {func}`~extra_platforms.is_azure_pipelines`      | CI           |
-|  ⟲   | {data}`~extra_platforms.BAMBOO`               | Bamboo                         | {func}`~extra_platforms.is_bamboo`               | CI           |
-|  🪁  | {data}`~extra_platforms.BUILDKITE`            | Buildkite                      | {func}`~extra_platforms.is_buildkite`            | CI           |
-|  ⛑️  | {data}`~extra_platforms.BUILDROOT`            | Buildroot                      | {func}`~extra_platforms.is_buildroot`            | Platform     |
-|  ⌬   | {data}`~extra_platforms.CACHYOS`              | CachyOS                        | {func}`~extra_platforms.is_cachyos`              | Platform     |
-|  💠  | {data}`~extra_platforms.CENTOS`               | CentOS                         | {func}`~extra_platforms.is_centos`               | Platform     |
-|  ⪾   | {data}`~extra_platforms.CIRCLE_CI`            | Circle CI                      | {func}`~extra_platforms.is_circle_ci`            | CI           |
-|  ≋   | {data}`~extra_platforms.CIRRUS_CI`            | Cirrus CI                      | {func}`~extra_platforms.is_cirrus_ci`            | CI           |
-|  ꩜   | {data}`~extra_platforms.CLOUDLINUX`           | CloudLinux OS                  | {func}`~extra_platforms.is_cloudlinux`           | Platform     |
-|  ᚙ   | {data}`~extra_platforms.CODEBUILD`            | CodeBuild                      | {func}`~extra_platforms.is_codebuild`            | CI           |
-|  Ͼ   | {data}`~extra_platforms.CYGWIN`               | Cygwin                         | {func}`~extra_platforms.is_cygwin`               | Platform     |
-|  🌀  | {data}`~extra_platforms.DEBIAN`               | Debian                         | {func}`~extra_platforms.is_debian`               | Platform     |
-|  🪰  | {data}`~extra_platforms.DRAGONFLY_BSD`        | DragonFly BSD                  | {func}`~extra_platforms.is_dragonfly_bsd`        | Platform     |
-|  🐽  | {data}`~extra_platforms.EXHERBO`              | Exherbo Linux                  | {func}`~extra_platforms.is_exherbo`              | Platform     |
-|  🎩  | {data}`~extra_platforms.FEDORA`               | Fedora                         | {func}`~extra_platforms.is_fedora`               | Platform     |
-|  😈  | {data}`~extra_platforms.FREEBSD`              | FreeBSD                        | {func}`~extra_platforms.is_freebsd`              | Platform     |
-|  🗜️  | {data}`~extra_platforms.GENTOO`               | Gentoo Linux                   | {func}`~extra_platforms.is_gentoo`               | Platform     |
-|  🐙  | {data}`~extra_platforms.GITHUB_CI`            | GitHub Actions runner          | {func}`~extra_platforms.is_github_ci`            | CI           |
-|  🦊  | {data}`~extra_platforms.GITLAB_CI`            | GitLab CI                      | {func}`~extra_platforms.is_gitlab_ci`            | CI           |
-|  🐃  | {data}`~extra_platforms.GUIX`                 | Guix System                    | {func}`~extra_platforms.is_guix`                 | Platform     |
-|  🍂  | {data}`~extra_platforms.HAIKU`                | Haiku                          | {func}`~extra_platforms.is_haiku`                | Platform     |
-|  ⥁   | {data}`~extra_platforms.HEROKU_CI`            | Heroku CI                      | {func}`~extra_platforms.is_heroku_ci`            | CI           |
-|  🐃  | {data}`~extra_platforms.HURD`                 | GNU/Hurd                       | {func}`~extra_platforms.is_hurd`                 | Platform     |
-|  𝗶   | {data}`~extra_platforms.I386`                 | Intel 80386 (i386)             | {func}`~extra_platforms.is_i386`                 | Architecture |
-|  𝗶   | {data}`~extra_platforms.I586`                 | Intel Pentium (i586)           | {func}`~extra_platforms.is_i586`                 | Architecture |
-|  𝗶   | {data}`~extra_platforms.I686`                 | Intel Pentium Pro (i686)       | {func}`~extra_platforms.is_i686`                 | Architecture |
-|  🤹  | {data}`~extra_platforms.IBM_POWERKVM`         | IBM PowerKVM                   | {func}`~extra_platforms.is_ibm_powerkvm`         | Platform     |
-|  🔥  | {data}`~extra_platforms.ILLUMOS`              | illumos                        | {func}`~extra_platforms.is_illumos`              | Platform     |
-|  🤹  | {data}`~extra_platforms.KVMIBM`               | KVM for IBM z Systems          | {func}`~extra_platforms.is_kvmibm`               | Platform     |
-|  🌿  | {data}`~extra_platforms.LINUXMINT`            | Linux Mint                     | {func}`~extra_platforms.is_linuxmint`            | Platform     |
-|  🐉  | {data}`~extra_platforms.LOONGARCH64`          | LoongArch (64-bit)             | {func}`~extra_platforms.is_loongarch64`          | Architecture |
-|  🍎  | {data}`~extra_platforms.MACOS`                | macOS                          | {func}`~extra_platforms.is_macos`                | Platform     |
-|  ⍥   | {data}`~extra_platforms.MAGEIA`               | Mageia                         | {func}`~extra_platforms.is_mageia`               | Platform     |
-|  💫  | {data}`~extra_platforms.MANDRIVA`             | Mandriva Linux                 | {func}`~extra_platforms.is_mandriva`             | Platform     |
-|  🌘  | {data}`~extra_platforms.MIDNIGHTBSD`          | MidnightBSD                    | {func}`~extra_platforms.is_midnightbsd`          | Platform     |
-|  🔲  | {data}`~extra_platforms.MIPS`                 | MIPS (32-bit, big-endian)      | {func}`~extra_platforms.is_mips`                 | Architecture |
-|  🔲  | {data}`~extra_platforms.MIPS64`               | MIPS64 (big-endian)            | {func}`~extra_platforms.is_mips64`               | Architecture |
-|  🔲  | {data}`~extra_platforms.MIPS64EL`             | MIPS64 (little-endian)         | {func}`~extra_platforms.is_mips64el`             | Architecture |
-|  🔲  | {data}`~extra_platforms.MIPSEL`               | MIPS (32-bit, little-endian)   | {func}`~extra_platforms.is_mipsel`               | Architecture |
-|  🚩  | {data}`~extra_platforms.NETBSD`               | NetBSD                         | {func}`~extra_platforms.is_netbsd`               | Platform     |
-|     | {data}`~extra_platforms.NOBARA`               | Nobara                         | {func}`~extra_platforms.is_nobara`               | Platform     |
-|  🐡  | {data}`~extra_platforms.OPENBSD`              | OpenBSD                        | {func}`~extra_platforms.is_openbsd`              | Platform     |
-|  🦎  | {data}`~extra_platforms.OPENSUSE`             | openSUSE                       | {func}`~extra_platforms.is_opensuse`             | Platform     |
-|  🦴  | {data}`~extra_platforms.ORACLE`               | Oracle Linux                   | {func}`~extra_platforms.is_oracle`               | Platform     |
-|  ∥   | {data}`~extra_platforms.PARALLELS`            | Parallels                      | {func}`~extra_platforms.is_parallels`            | Platform     |
-|  🍓  | {data}`~extra_platforms.PIDORA`               | Pidora                         | {func}`~extra_platforms.is_pidora`               | Platform     |
-|  ⚡  | {data}`~extra_platforms.PPC`                  | PowerPC (32-bit)               | {func}`~extra_platforms.is_ppc`                  | Architecture |
-|  ⚡  | {data}`~extra_platforms.PPC64`                | PowerPC 64-bit (big-endian)    | {func}`~extra_platforms.is_ppc64`                | Architecture |
-|  ⚡  | {data}`~extra_platforms.PPC64LE`              | PowerPC 64-bit (little-endian) | {func}`~extra_platforms.is_ppc64le`              | Architecture |
-|  🍓  | {data}`~extra_platforms.RASPBIAN`             | Raspbian                       | {func}`~extra_platforms.is_raspbian`             | Platform     |
-|  🎩  | {data}`~extra_platforms.RHEL`                 | RedHat Enterprise Linux        | {func}`~extra_platforms.is_rhel`                 | Platform     |
-|  Ⅴ   | {data}`~extra_platforms.RISCV32`              | RISC-V (32-bit)                | {func}`~extra_platforms.is_riscv32`              | Architecture |
-|  Ⅴ   | {data}`~extra_platforms.RISCV64`              | RISC-V (64-bit)                | {func}`~extra_platforms.is_riscv64`              | Architecture |
-|  ⛰️  | {data}`~extra_platforms.ROCKY`                | Rocky Linux                    | {func}`~extra_platforms.is_rocky`                | Platform     |
-|  🏢  | {data}`~extra_platforms.S390X`                | IBM z/Architecture (s390x)     | {func}`~extra_platforms.is_s390x`                | Architecture |
-|  ⚛️  | {data}`~extra_platforms.SCIENTIFIC`           | Scientific Linux               | {func}`~extra_platforms.is_scientific`           | Platform     |
-|  🚬  | {data}`~extra_platforms.SLACKWARE`            | Slackware                      | {func}`~extra_platforms.is_slackware`            | Platform     |
-|  🦎  | {data}`~extra_platforms.SLES`                 | SUSE Linux Enterprise Server   | {func}`~extra_platforms.is_sles`                 | Platform     |
-|  🌞  | {data}`~extra_platforms.SOLARIS`              | Solaris                        | {func}`~extra_platforms.is_solaris`              | Platform     |
-|  ☀️  | {data}`~extra_platforms.SPARC`                | SPARC (32-bit)                 | {func}`~extra_platforms.is_sparc`                | Architecture |
-|  ☀️  | {data}`~extra_platforms.SPARC64`              | SPARC (64-bit)                 | {func}`~extra_platforms.is_sparc64`              | Architecture |
-|  ☀️  | {data}`~extra_platforms.SUNOS`                | SunOS                          | {func}`~extra_platforms.is_sunos`                | Platform     |
-|  🏙️  | {data}`~extra_platforms.TEAMCITY`             | TeamCity                       | {func}`~extra_platforms.is_teamcity`             | CI           |
-|  👷  | {data}`~extra_platforms.TRAVIS_CI`            | Travis CI                      | {func}`~extra_platforms.is_travis_ci`            | CI           |
-|  ↻   | {data}`~extra_platforms.TUMBLEWEED`           | openSUSE Tumbleweed            | {func}`~extra_platforms.is_tumbleweed`           | Platform     |
-|  🤵  | {data}`~extra_platforms.TUXEDO`               | Tuxedo OS                      | {func}`~extra_platforms.is_tuxedo`               | Platform     |
-|  🎯  | {data}`~extra_platforms.UBUNTU`               | Ubuntu                         | {func}`~extra_platforms.is_ubuntu`               | Platform     |
-|  🌊  | {data}`~extra_platforms.ULTRAMARINE`          | Ultramarine                    | {func}`~extra_platforms.is_ultramarine`          | Platform     |
-|  ❓  | {data}`~extra_platforms.UNKNOWN_ARCHITECTURE` | Unknown architecture           | {func}`~extra_platforms.is_unknown_architecture` | Architecture |
-|  ❓  | {data}`~extra_platforms.UNKNOWN_CI`           | Unknown CI                     | {func}`~extra_platforms.is_unknown_ci`           | CI           |
-|  ❓  | {data}`~extra_platforms.UNKNOWN_PLATFORM`     | Unknown platform               | {func}`~extra_platforms.is_unknown_platform`     | Platform     |
-|  🌐  | {data}`~extra_platforms.WASM32`               | WebAssembly (32-bit)           | {func}`~extra_platforms.is_wasm32`               | Architecture |
-|  🌐  | {data}`~extra_platforms.WASM64`               | WebAssembly (64-bit)           | {func}`~extra_platforms.is_wasm64`               | Architecture |
-|  🪟  | {data}`~extra_platforms.WINDOWS`              | Windows                        | {func}`~extra_platforms.is_windows`              | Platform     |
-|  ⊞   | {data}`~extra_platforms.WSL1`                 | Windows Subsystem for Linux v1 | {func}`~extra_platforms.is_wsl1`                 | Platform     |
-|  ⊞   | {data}`~extra_platforms.WSL2`                 | Windows Subsystem for Linux v2 | {func}`~extra_platforms.is_wsl2`                 | Platform     |
-|  🖥️  | {data}`~extra_platforms.X86_64`               | x86-64 (AMD64)                 | {func}`~extra_platforms.is_x86_64`               | Architecture |
-|  Ⓧ   | {data}`~extra_platforms.XENSERVER`            | XenServer                      | {func}`~extra_platforms.is_xenserver`            | Platform     |
+| Icon | Symbol                        | Name                           | Detection function               | Type         |
+| :--: | :---------------------------- | :----------------------------- | :------------------------------- | :----------- |
+|  📱  | {data}`~AARCH64`              | ARM64 (AArch64)                | {func}`~is_aarch64`              | Architecture |
+|  ➿  | {data}`~AIX`                  | IBM AIX                        | {func}`~is_aix`                  | Platform     |
+|  🐧  | {data}`~ALTLINUX`             | ALT Linux                      | {func}`~is_altlinux`             | Platform     |
+|  ⤻   | {data}`~AMZN`                 | Amazon Linux                   | {func}`~is_amzn`                 | Platform     |
+|  🤖  | {data}`~ANDROID`              | Android                        | {func}`~is_android`              | Platform     |
+|  🎗️  | {data}`~ARCH`                 | Arch Linux                     | {func}`~is_arch`                 | Platform     |
+|  📱  | {data}`~ARM`                  | ARM (32-bit)                   | {func}`~is_arm`                  | Architecture |
+|  📱  | {data}`~ARMV5TEL`             | ARMv5TE (little-endian)        | {func}`~is_armv5tel`             | Architecture |
+|  📱  | {data}`~ARMV6L`               | ARMv6 (little-endian)          | {func}`~is_armv6l`               | Architecture |
+|  📱  | {data}`~ARMV7L`               | ARMv7 (little-endian)          | {func}`~is_armv7l`               | Architecture |
+|  📱  | {data}`~ARMV8L`               | ARMv8 (32-bit, little-endian)  | {func}`~is_armv8l`               | Architecture |
+|  ═   | {data}`~AZURE_PIPELINES`      | Azure Pipelines                | {func}`~is_azure_pipelines`      | CI           |
+|  ⟲   | {data}`~BAMBOO`               | Bamboo                         | {func}`~is_bamboo`               | CI           |
+|  🪁  | {data}`~BUILDKITE`            | Buildkite                      | {func}`~is_buildkite`            | CI           |
+|  ⛑️  | {data}`~BUILDROOT`            | Buildroot                      | {func}`~is_buildroot`            | Platform     |
+|  ⌬   | {data}`~CACHYOS`              | CachyOS                        | {func}`~is_cachyos`              | Platform     |
+|  💠  | {data}`~CENTOS`               | CentOS                         | {func}`~is_centos`               | Platform     |
+|  ⪾   | {data}`~CIRCLE_CI`            | Circle CI                      | {func}`~is_circle_ci`            | CI           |
+|  ≋   | {data}`~CIRRUS_CI`            | Cirrus CI                      | {func}`~is_cirrus_ci`            | CI           |
+|  ꩜   | {data}`~CLOUDLINUX`           | CloudLinux OS                  | {func}`~is_cloudlinux`           | Platform     |
+|  ᚙ   | {data}`~CODEBUILD`            | CodeBuild                      | {func}`~is_codebuild`            | CI           |
+|  Ͼ   | {data}`~CYGWIN`               | Cygwin                         | {func}`~is_cygwin`               | Platform     |
+|  🌀  | {data}`~DEBIAN`               | Debian                         | {func}`~is_debian`               | Platform     |
+|  🪰  | {data}`~DRAGONFLY_BSD`        | DragonFly BSD                  | {func}`~is_dragonfly_bsd`        | Platform     |
+|  🐽  | {data}`~EXHERBO`              | Exherbo Linux                  | {func}`~is_exherbo`              | Platform     |
+|  🎩  | {data}`~FEDORA`               | Fedora                         | {func}`~is_fedora`               | Platform     |
+|  😈  | {data}`~FREEBSD`              | FreeBSD                        | {func}`~is_freebsd`              | Platform     |
+|  🗜️  | {data}`~GENTOO`               | Gentoo Linux                   | {func}`~is_gentoo`               | Platform     |
+|  🐙  | {data}`~GITHUB_CI`            | GitHub Actions runner          | {func}`~is_github_ci`            | CI           |
+|  🦊  | {data}`~GITLAB_CI`            | GitLab CI                      | {func}`~is_gitlab_ci`            | CI           |
+|  🐃  | {data}`~GUIX`                 | Guix System                    | {func}`~is_guix`                 | Platform     |
+|  🍂  | {data}`~HAIKU`                | Haiku                          | {func}`~is_haiku`                | Platform     |
+|  ⥁   | {data}`~HEROKU_CI`            | Heroku CI                      | {func}`~is_heroku_ci`            | CI           |
+|  🐃  | {data}`~HURD`                 | GNU/Hurd                       | {func}`~is_hurd`                 | Platform     |
+|  𝗶   | {data}`~I386`                 | Intel 80386 (i386)             | {func}`~is_i386`                 | Architecture |
+|  𝗶   | {data}`~I586`                 | Intel Pentium (i586)           | {func}`~is_i586`                 | Architecture |
+|  𝗶   | {data}`~I686`                 | Intel Pentium Pro (i686)       | {func}`~is_i686`                 | Architecture |
+|  🤹  | {data}`~IBM_POWERKVM`         | IBM PowerKVM                   | {func}`~is_ibm_powerkvm`         | Platform     |
+|  🔥  | {data}`~ILLUMOS`              | illumos                        | {func}`~is_illumos`              | Platform     |
+|  🤹  | {data}`~KVMIBM`               | KVM for IBM z Systems          | {func}`~is_kvmibm`               | Platform     |
+|  🌿  | {data}`~LINUXMINT`            | Linux Mint                     | {func}`~is_linuxmint`            | Platform     |
+|  🐉  | {data}`~LOONGARCH64`          | LoongArch (64-bit)             | {func}`~is_loongarch64`          | Architecture |
+|  🍎  | {data}`~MACOS`                | macOS                          | {func}`~is_macos`                | Platform     |
+|  ⍥   | {data}`~MAGEIA`               | Mageia                         | {func}`~is_mageia`               | Platform     |
+|  💫  | {data}`~MANDRIVA`             | Mandriva Linux                 | {func}`~is_mandriva`             | Platform     |
+|  🌘  | {data}`~MIDNIGHTBSD`          | MidnightBSD                    | {func}`~is_midnightbsd`          | Platform     |
+|  🔲  | {data}`~MIPS`                 | MIPS (32-bit, big-endian)      | {func}`~is_mips`                 | Architecture |
+|  🔲  | {data}`~MIPS64`               | MIPS64 (big-endian)            | {func}`~is_mips64`               | Architecture |
+|  🔲  | {data}`~MIPS64EL`             | MIPS64 (little-endian)         | {func}`~is_mips64el`             | Architecture |
+|  🔲  | {data}`~MIPSEL`               | MIPS (32-bit, little-endian)   | {func}`~is_mipsel`               | Architecture |
+|  🚩  | {data}`~NETBSD`               | NetBSD                         | {func}`~is_netbsd`               | Platform     |
+|     | {data}`~NOBARA`               | Nobara                         | {func}`~is_nobara`               | Platform     |
+|  🐡  | {data}`~OPENBSD`              | OpenBSD                        | {func}`~is_openbsd`              | Platform     |
+|  🦎  | {data}`~OPENSUSE`             | openSUSE                       | {func}`~is_opensuse`             | Platform     |
+|  🦴  | {data}`~ORACLE`               | Oracle Linux                   | {func}`~is_oracle`               | Platform     |
+|  ∥   | {data}`~PARALLELS`            | Parallels                      | {func}`~is_parallels`            | Platform     |
+|  🍓  | {data}`~PIDORA`               | Pidora                         | {func}`~is_pidora`               | Platform     |
+|  ⚡  | {data}`~PPC`                  | PowerPC (32-bit)               | {func}`~is_ppc`                  | Architecture |
+|  ⚡  | {data}`~PPC64`                | PowerPC 64-bit (big-endian)    | {func}`~is_ppc64`                | Architecture |
+|  ⚡  | {data}`~PPC64LE`              | PowerPC 64-bit (little-endian) | {func}`~is_ppc64le`              | Architecture |
+|  🍓  | {data}`~RASPBIAN`             | Raspbian                       | {func}`~is_raspbian`             | Platform     |
+|  🎩  | {data}`~RHEL`                 | RedHat Enterprise Linux        | {func}`~is_rhel`                 | Platform     |
+|  Ⅴ   | {data}`~RISCV32`              | RISC-V (32-bit)                | {func}`~is_riscv32`              | Architecture |
+|  Ⅴ   | {data}`~RISCV64`              | RISC-V (64-bit)                | {func}`~is_riscv64`              | Architecture |
+|  ⛰️  | {data}`~ROCKY`                | Rocky Linux                    | {func}`~is_rocky`                | Platform     |
+|  🏢  | {data}`~S390X`                | IBM z/Architecture (s390x)     | {func}`~is_s390x`                | Architecture |
+|  ⚛️  | {data}`~SCIENTIFIC`           | Scientific Linux               | {func}`~is_scientific`           | Platform     |
+|  🚬  | {data}`~SLACKWARE`            | Slackware                      | {func}`~is_slackware`            | Platform     |
+|  🦎  | {data}`~SLES`                 | SUSE Linux Enterprise Server   | {func}`~is_sles`                 | Platform     |
+|  🌞  | {data}`~SOLARIS`              | Solaris                        | {func}`~is_solaris`              | Platform     |
+|  ☀️  | {data}`~SPARC`                | SPARC (32-bit)                 | {func}`~is_sparc`                | Architecture |
+|  ☀️  | {data}`~SPARC64`              | SPARC (64-bit)                 | {func}`~is_sparc64`              | Architecture |
+|  ☀️  | {data}`~SUNOS`                | SunOS                          | {func}`~is_sunos`                | Platform     |
+|  🏙️  | {data}`~TEAMCITY`             | TeamCity                       | {func}`~is_teamcity`             | CI           |
+|  👷  | {data}`~TRAVIS_CI`            | Travis CI                      | {func}`~is_travis_ci`            | CI           |
+|  ↻   | {data}`~TUMBLEWEED`           | openSUSE Tumbleweed            | {func}`~is_tumbleweed`           | Platform     |
+|  🤵  | {data}`~TUXEDO`               | Tuxedo OS                      | {func}`~is_tuxedo`               | Platform     |
+|  🎯  | {data}`~UBUNTU`               | Ubuntu                         | {func}`~is_ubuntu`               | Platform     |
+|  🌊  | {data}`~ULTRAMARINE`          | Ultramarine                    | {func}`~is_ultramarine`          | Platform     |
+|  ❓  | {data}`~UNKNOWN_ARCHITECTURE` | Unknown architecture           | {func}`~is_unknown_architecture` | Architecture |
+|  ❓  | {data}`~UNKNOWN_CI`           | Unknown CI                     | {func}`~is_unknown_ci`           | CI           |
+|  ❓  | {data}`~UNKNOWN_PLATFORM`     | Unknown platform               | {func}`~is_unknown_platform`     | Platform     |
+|  🌐  | {data}`~WASM32`               | WebAssembly (32-bit)           | {func}`~is_wasm32`               | Architecture |
+|  🌐  | {data}`~WASM64`               | WebAssembly (64-bit)           | {func}`~is_wasm64`               | Architecture |
+|  🪟  | {data}`~WINDOWS`              | Windows                        | {func}`~is_windows`              | Platform     |
+|  ⊞   | {data}`~WSL1`                 | Windows Subsystem for Linux v1 | {func}`~is_wsl1`                 | Platform     |
+|  ⊞   | {data}`~WSL2`                 | Windows Subsystem for Linux v2 | {func}`~is_wsl2`                 | Platform     |
+|  🖥️  | {data}`~X86_64`               | x86-64 (AMD64)                 | {func}`~is_x86_64`               | Architecture |
+|  Ⓧ   | {data}`~XENSERVER`            | XenServer                      | {func}`~is_xenserver`            | Platform     |
 
 <!-- all-traits-table-end -->
 

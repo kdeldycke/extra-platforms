@@ -1,12 +1,15 @@
 # {octicon}`codespaces` Platforms
 
+```{py:currentmodule} extra_platforms
+```
+
 Each platform represents an operating system or OS-like environment, and is associated with:
 
 - a unique platform ID
 - a human-readable name
 - an icon (emoji / unicode character)
 - a [detection function](detection.md)
-- various metadata in its `info()` method
+- various metadata in its [`info()` method](trait.md#extra_platforms.Platform.info)
 
 ## Platform usage
 
@@ -44,63 +47,63 @@ Platform(id='macos', name='macOS')
 
 <!-- platform-table-start -->
 
-| Icon | Symbol                                 | Name                           | Detection function                        |
-| :--: | :------------------------------------- | :----------------------------- | :---------------------------------------- |
-|  ➿  | {data}`~extra_platforms.AIX`           | IBM AIX                        | {func}`~extra_platforms.is_aix`           |
-|  🐧  | {data}`~extra_platforms.ALTLINUX`      | ALT Linux                      | {func}`~extra_platforms.is_altlinux`      |
-|  ⤻   | {data}`~extra_platforms.AMZN`          | Amazon Linux                   | {func}`~extra_platforms.is_amzn`          |
-|  🤖  | {data}`~extra_platforms.ANDROID`       | Android                        | {func}`~extra_platforms.is_android`       |
-|  🎗️  | {data}`~extra_platforms.ARCH`          | Arch Linux                     | {func}`~extra_platforms.is_arch`          |
-|  ⛑️  | {data}`~extra_platforms.BUILDROOT`     | Buildroot                      | {func}`~extra_platforms.is_buildroot`     |
-|  ⌬   | {data}`~extra_platforms.CACHYOS`       | CachyOS                        | {func}`~extra_platforms.is_cachyos`       |
-|  💠  | {data}`~extra_platforms.CENTOS`        | CentOS                         | {func}`~extra_platforms.is_centos`        |
-|  ꩜   | {data}`~extra_platforms.CLOUDLINUX`    | CloudLinux OS                  | {func}`~extra_platforms.is_cloudlinux`    |
-|  Ͼ   | {data}`~extra_platforms.CYGWIN`        | Cygwin                         | {func}`~extra_platforms.is_cygwin`        |
-|  🌀  | {data}`~extra_platforms.DEBIAN`        | Debian                         | {func}`~extra_platforms.is_debian`        |
-|  🪰  | {data}`~extra_platforms.DRAGONFLY_BSD` | DragonFly BSD                  | {func}`~extra_platforms.is_dragonfly_bsd` |
-|  🐽  | {data}`~extra_platforms.EXHERBO`       | Exherbo Linux                  | {func}`~extra_platforms.is_exherbo`       |
-|  🎩  | {data}`~extra_platforms.FEDORA`        | Fedora                         | {func}`~extra_platforms.is_fedora`        |
-|  😈  | {data}`~extra_platforms.FREEBSD`       | FreeBSD                        | {func}`~extra_platforms.is_freebsd`       |
-|  🗜️  | {data}`~extra_platforms.GENTOO`        | Gentoo Linux                   | {func}`~extra_platforms.is_gentoo`        |
-|  🐃  | {data}`~extra_platforms.GUIX`          | Guix System                    | {func}`~extra_platforms.is_guix`          |
-|  🍂  | {data}`~extra_platforms.HAIKU`         | Haiku                          | {func}`~extra_platforms.is_haiku`         |
-|  🐃  | {data}`~extra_platforms.HURD`          | GNU/Hurd                       | {func}`~extra_platforms.is_hurd`          |
-|  🤹  | {data}`~extra_platforms.IBM_POWERKVM`  | IBM PowerKVM                   | {func}`~extra_platforms.is_ibm_powerkvm`  |
-|  🔥  | {data}`~extra_platforms.ILLUMOS`       | illumos                        | {func}`~extra_platforms.is_illumos`       |
-|  🤹  | {data}`~extra_platforms.KVMIBM`        | KVM for IBM z Systems          | {func}`~extra_platforms.is_kvmibm`        |
-|  🌿  | {data}`~extra_platforms.LINUXMINT`     | Linux Mint                     | {func}`~extra_platforms.is_linuxmint`     |
-|  🍎  | {data}`~extra_platforms.MACOS`         | macOS                          | {func}`~extra_platforms.is_macos`         |
-|  ⍥   | {data}`~extra_platforms.MAGEIA`        | Mageia                         | {func}`~extra_platforms.is_mageia`        |
-|  💫  | {data}`~extra_platforms.MANDRIVA`      | Mandriva Linux                 | {func}`~extra_platforms.is_mandriva`      |
-|  🌘  | {data}`~extra_platforms.MIDNIGHTBSD`   | MidnightBSD                    | {func}`~extra_platforms.is_midnightbsd`   |
-|  🚩  | {data}`~extra_platforms.NETBSD`        | NetBSD                         | {func}`~extra_platforms.is_netbsd`        |
-|     | {data}`~extra_platforms.NOBARA`        | Nobara                         | {func}`~extra_platforms.is_nobara`        |
-|  🐡  | {data}`~extra_platforms.OPENBSD`       | OpenBSD                        | {func}`~extra_platforms.is_openbsd`       |
-|  🦎  | {data}`~extra_platforms.OPENSUSE`      | openSUSE                       | {func}`~extra_platforms.is_opensuse`      |
-|  🦴  | {data}`~extra_platforms.ORACLE`        | Oracle Linux                   | {func}`~extra_platforms.is_oracle`        |
-|  ∥   | {data}`~extra_platforms.PARALLELS`     | Parallels                      | {func}`~extra_platforms.is_parallels`     |
-|  🍓  | {data}`~extra_platforms.PIDORA`        | Pidora                         | {func}`~extra_platforms.is_pidora`        |
-|  🍓  | {data}`~extra_platforms.RASPBIAN`      | Raspbian                       | {func}`~extra_platforms.is_raspbian`      |
-|  🎩  | {data}`~extra_platforms.RHEL`          | RedHat Enterprise Linux        | {func}`~extra_platforms.is_rhel`          |
-|  ⛰️  | {data}`~extra_platforms.ROCKY`         | Rocky Linux                    | {func}`~extra_platforms.is_rocky`         |
-|  ⚛️  | {data}`~extra_platforms.SCIENTIFIC`    | Scientific Linux               | {func}`~extra_platforms.is_scientific`    |
-|  🚬  | {data}`~extra_platforms.SLACKWARE`     | Slackware                      | {func}`~extra_platforms.is_slackware`     |
-|  🦎  | {data}`~extra_platforms.SLES`          | SUSE Linux Enterprise Server   | {func}`~extra_platforms.is_sles`          |
-|  🌞  | {data}`~extra_platforms.SOLARIS`       | Solaris                        | {func}`~extra_platforms.is_solaris`       |
-|  ☀️  | {data}`~extra_platforms.SUNOS`         | SunOS                          | {func}`~extra_platforms.is_sunos`         |
-|  ↻   | {data}`~extra_platforms.TUMBLEWEED`    | openSUSE Tumbleweed            | {func}`~extra_platforms.is_tumbleweed`    |
-|  🤵  | {data}`~extra_platforms.TUXEDO`        | Tuxedo OS                      | {func}`~extra_platforms.is_tuxedo`        |
-|  🎯  | {data}`~extra_platforms.UBUNTU`        | Ubuntu                         | {func}`~extra_platforms.is_ubuntu`        |
-|  🌊  | {data}`~extra_platforms.ULTRAMARINE`   | Ultramarine                    | {func}`~extra_platforms.is_ultramarine`   |
-|  🪟  | {data}`~extra_platforms.WINDOWS`       | Windows                        | {func}`~extra_platforms.is_windows`       |
-|  ⊞   | {data}`~extra_platforms.WSL1`          | Windows Subsystem for Linux v1 | {func}`~extra_platforms.is_wsl1`          |
-|  ⊞   | {data}`~extra_platforms.WSL2`          | Windows Subsystem for Linux v2 | {func}`~extra_platforms.is_wsl2`          |
-|  Ⓧ   | {data}`~extra_platforms.XENSERVER`     | XenServer                      | {func}`~extra_platforms.is_xenserver`     |
+| Icon | Symbol                 | Name                           | Detection function        |
+| :--: | :--------------------- | :----------------------------- | :------------------------ |
+|  ➿  | {data}`~AIX`           | IBM AIX                        | {func}`~is_aix`           |
+|  🐧  | {data}`~ALTLINUX`      | ALT Linux                      | {func}`~is_altlinux`      |
+|  ⤻   | {data}`~AMZN`          | Amazon Linux                   | {func}`~is_amzn`          |
+|  🤖  | {data}`~ANDROID`       | Android                        | {func}`~is_android`       |
+|  🎗️  | {data}`~ARCH`          | Arch Linux                     | {func}`~is_arch`          |
+|  ⛑️  | {data}`~BUILDROOT`     | Buildroot                      | {func}`~is_buildroot`     |
+|  ⌬   | {data}`~CACHYOS`       | CachyOS                        | {func}`~is_cachyos`       |
+|  💠  | {data}`~CENTOS`        | CentOS                         | {func}`~is_centos`        |
+|  ꩜   | {data}`~CLOUDLINUX`    | CloudLinux OS                  | {func}`~is_cloudlinux`    |
+|  Ͼ   | {data}`~CYGWIN`        | Cygwin                         | {func}`~is_cygwin`        |
+|  🌀  | {data}`~DEBIAN`        | Debian                         | {func}`~is_debian`        |
+|  🪰  | {data}`~DRAGONFLY_BSD` | DragonFly BSD                  | {func}`~is_dragonfly_bsd` |
+|  🐽  | {data}`~EXHERBO`       | Exherbo Linux                  | {func}`~is_exherbo`       |
+|  🎩  | {data}`~FEDORA`        | Fedora                         | {func}`~is_fedora`        |
+|  😈  | {data}`~FREEBSD`       | FreeBSD                        | {func}`~is_freebsd`       |
+|  🗜️  | {data}`~GENTOO`        | Gentoo Linux                   | {func}`~is_gentoo`        |
+|  🐃  | {data}`~GUIX`          | Guix System                    | {func}`~is_guix`          |
+|  🍂  | {data}`~HAIKU`         | Haiku                          | {func}`~is_haiku`         |
+|  🐃  | {data}`~HURD`          | GNU/Hurd                       | {func}`~is_hurd`          |
+|  🤹  | {data}`~IBM_POWERKVM`  | IBM PowerKVM                   | {func}`~is_ibm_powerkvm`  |
+|  🔥  | {data}`~ILLUMOS`       | illumos                        | {func}`~is_illumos`       |
+|  🤹  | {data}`~KVMIBM`        | KVM for IBM z Systems          | {func}`~is_kvmibm`        |
+|  🌿  | {data}`~LINUXMINT`     | Linux Mint                     | {func}`~is_linuxmint`     |
+|  🍎  | {data}`~MACOS`         | macOS                          | {func}`~is_macos`         |
+|  ⍥   | {data}`~MAGEIA`        | Mageia                         | {func}`~is_mageia`        |
+|  💫  | {data}`~MANDRIVA`      | Mandriva Linux                 | {func}`~is_mandriva`      |
+|  🌘  | {data}`~MIDNIGHTBSD`   | MidnightBSD                    | {func}`~is_midnightbsd`   |
+|  🚩  | {data}`~NETBSD`        | NetBSD                         | {func}`~is_netbsd`        |
+|     | {data}`~NOBARA`        | Nobara                         | {func}`~is_nobara`        |
+|  🐡  | {data}`~OPENBSD`       | OpenBSD                        | {func}`~is_openbsd`       |
+|  🦎  | {data}`~OPENSUSE`      | openSUSE                       | {func}`~is_opensuse`      |
+|  🦴  | {data}`~ORACLE`        | Oracle Linux                   | {func}`~is_oracle`        |
+|  ∥   | {data}`~PARALLELS`     | Parallels                      | {func}`~is_parallels`     |
+|  🍓  | {data}`~PIDORA`        | Pidora                         | {func}`~is_pidora`        |
+|  🍓  | {data}`~RASPBIAN`      | Raspbian                       | {func}`~is_raspbian`      |
+|  🎩  | {data}`~RHEL`          | RedHat Enterprise Linux        | {func}`~is_rhel`          |
+|  ⛰️  | {data}`~ROCKY`         | Rocky Linux                    | {func}`~is_rocky`         |
+|  ⚛️  | {data}`~SCIENTIFIC`    | Scientific Linux               | {func}`~is_scientific`    |
+|  🚬  | {data}`~SLACKWARE`     | Slackware                      | {func}`~is_slackware`     |
+|  🦎  | {data}`~SLES`          | SUSE Linux Enterprise Server   | {func}`~is_sles`          |
+|  🌞  | {data}`~SOLARIS`       | Solaris                        | {func}`~is_solaris`       |
+|  ☀️  | {data}`~SUNOS`         | SunOS                          | {func}`~is_sunos`         |
+|  ↻   | {data}`~TUMBLEWEED`    | openSUSE Tumbleweed            | {func}`~is_tumbleweed`    |
+|  🤵  | {data}`~TUXEDO`        | Tuxedo OS                      | {func}`~is_tuxedo`        |
+|  🎯  | {data}`~UBUNTU`        | Ubuntu                         | {func}`~is_ubuntu`        |
+|  🌊  | {data}`~ULTRAMARINE`   | Ultramarine                    | {func}`~is_ultramarine`   |
+|  🪟  | {data}`~WINDOWS`       | Windows                        | {func}`~is_windows`       |
+|  ⊞   | {data}`~WSL1`          | Windows Subsystem for Linux v1 | {func}`~is_wsl1`          |
+|  ⊞   | {data}`~WSL2`          | Windows Subsystem for Linux v2 | {func}`~is_wsl2`          |
+|  Ⓧ   | {data}`~XENSERVER`     | XenServer                      | {func}`~is_xenserver`     |
 
 ```{hint}
-The {data}`~extra_platforms.UNKNOWN_PLATFORM` trait represents an unrecognized
-platform. It is not included in the {data}`~extra_platforms.ALL_PLATFORMS` group,
-and will be returned by {func}`~extra_platforms.current_platform` if the current
+The {data}`~UNKNOWN_PLATFORM` trait represents an unrecognized
+platform. It is not included in the {data}`~ALL_PLATFORMS` group,
+and will be returned by {func}`~current_platform` if the current
 platform is not recognized.
 ```
 
@@ -112,20 +115,20 @@ platform is not recognized.
 
 <!-- platform-groups-table-start -->
 
-| Icon | Symbol                                      | Description                      | [Detection](detection.md)                  | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :------------------------------------------ | :------------------------------- | :----------------------------------------- | :----------------------------------------------------------: |
-|  ⚙️  | {data}`~extra_platforms.ALL_PLATFORMS`      | All platforms                    | {func}`~extra_platforms.is_any_platform`   |                                                              |
-|  🪟  | {data}`~extra_platforms.ALL_WINDOWS`        | All Windows                      | {func}`~extra_platforms.is_any_windows`    |                              ⬥                               |
-| 🅱️+  | {data}`~extra_platforms.BSD`                | All BSD                          | {func}`~extra_platforms.is_bsd`            |                              ⬥                               |
-|  🅱️  | {data}`~extra_platforms.BSD_WITHOUT_MACOS`  | All BSD excluding macOS          | {func}`~extra_platforms.is_bsd_not_macos`  |                                                              |
-|  🐧  | {data}`~extra_platforms.LINUX`              | Linux distributions              | {func}`~extra_platforms.is_linux`          |                              ⬥                               |
-|  ≚   | {data}`~extra_platforms.LINUX_LAYERS`       | Linux compatibility layers       | {func}`~extra_platforms.is_linux_layers`   |                              ⬥                               |
-| 🐧+  | {data}`~extra_platforms.LINUX_LIKE`         | All Linux & compatibility layers | {func}`~extra_platforms.is_linux_like`     |                                                              |
-|  🅟   | {data}`~extra_platforms.OTHER_POSIX`        | Other POSIX-compliant platforms  | {func}`~extra_platforms.is_other_posix`    |                              ⬥                               |
-|  𝐕   | {data}`~extra_platforms.SYSTEM_V`           | AT&T System Five                 | {func}`~extra_platforms.is_system_v`       |                              ⬥                               |
-|  ⨷   | {data}`~extra_platforms.UNIX`               | All Unix                         | {func}`~extra_platforms.is_unix`           |                                                              |
-|  ≛   | {data}`~extra_platforms.UNIX_LAYERS`        | Unix compatibility layers        | {func}`~extra_platforms.is_unix_layers`    |                              ⬥                               |
-|  ⨂   | {data}`~extra_platforms.UNIX_WITHOUT_MACOS` | All Unix excluding macOS         | {func}`~extra_platforms.is_unix_not_macos` |                                                              |
+| Icon | Symbol                      | Description                      | [Detection](detection.md)  | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
+| :--: | :-------------------------- | :------------------------------- | :------------------------- | :----------------------------------------------------------: |
+|  ⚙️  | {data}`~ALL_PLATFORMS`      | All platforms                    | {func}`~is_any_platform`   |                                                              |
+|  🪟  | {data}`~ALL_WINDOWS`        | All Windows                      | {func}`~is_any_windows`    |                              ⬥                               |
+| 🅱️+  | {data}`~BSD`                | All BSD                          | {func}`~is_bsd`            |                              ⬥                               |
+|  🅱️  | {data}`~BSD_WITHOUT_MACOS`  | All BSD excluding macOS          | {func}`~is_bsd_not_macos`  |                                                              |
+|  🐧  | {data}`~LINUX`              | Linux distributions              | {func}`~is_linux`          |                              ⬥                               |
+|  ≚   | {data}`~LINUX_LAYERS`       | Linux compatibility layers       | {func}`~is_linux_layers`   |                              ⬥                               |
+| 🐧+  | {data}`~LINUX_LIKE`         | All Linux & compatibility layers | {func}`~is_linux_like`     |                                                              |
+|  🅟   | {data}`~OTHER_POSIX`        | Other POSIX-compliant platforms  | {func}`~is_other_posix`    |                              ⬥                               |
+|  𝐕   | {data}`~SYSTEM_V`           | AT&T System Five                 | {func}`~is_system_v`       |                              ⬥                               |
+|  ⨷   | {data}`~UNIX`               | All Unix                         | {func}`~is_unix`           |                                                              |
+|  ≛   | {data}`~UNIX_LAYERS`        | Unix compatibility layers        | {func}`~is_unix_layers`    |                              ⬥                               |
+|  ⨂   | {data}`~UNIX_WITHOUT_MACOS` | All Unix excluding macOS         | {func}`~is_unix_not_macos` |                                                              |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all

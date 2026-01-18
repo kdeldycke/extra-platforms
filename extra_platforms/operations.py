@@ -13,7 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Operations on a mix of Groups and Platforms."""
+"""Operations on a mix of Groups and Platforms.
+
+.. currentmodule:: extra_platforms
+"""
 
 from __future__ import annotations
 
@@ -41,7 +44,7 @@ ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS - {UNKNOWN})
 """Set of all recognized group IDs.
 
 .. attention::
-    This collection does not contain the :data:`~extra_platforms.UNKNOWN` group.
+    This collection does not contain the :data:`~UNKNOWN` group.
 """
 
 ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
@@ -49,7 +52,7 @@ ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
 
 .. attention::
     This collection does not contain all the ``UNKNOWN_*`` traits and the
-    :data:`~extra_platforms.UNKNOWN` group.
+    :data:`~UNKNOWN` group.
 """
 
 

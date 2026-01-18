@@ -306,7 +306,7 @@ def _unrecognized_message() -> str:
 def current_architecture(strict: bool = False) -> Architecture:
     """Returns the ``Architecture`` matching the current environment.
 
-    Returns :data:`~extra_platforms.UNKNOWN_ARCHITECTURE` if not running inside a
+    Returns :data:`~UNKNOWN_ARCHITECTURE` if not running inside a
     recognized architecture. To raise an error instead, set ``strict`` to ``True``.
 
     .. important::
@@ -341,7 +341,7 @@ def current_architecture(strict: bool = False) -> Architecture:
 def current_platform(strict: bool = False) -> Platform:
     """Always returns the best matching ``Platform`` for the current environment.
 
-    Returns :data:`~extra_platforms.UNKNOWN_PLATFORM` if not running inside a recognized
+    Returns :data:`~UNKNOWN_PLATFORM` if not running inside a recognized
     platform. To raise an error instead, set ``strict`` to ``True``.
 
     .. important::
@@ -388,7 +388,7 @@ def current_platform(strict: bool = False) -> Platform:
 def current_ci(strict: bool = False) -> CI:
     """Returns the ``CI`` system matching the current environment.
 
-    Returns :data:`~extra_platforms.UNKNOWN_CI` if not running inside a recognized CI
+    Returns :data:`~UNKNOWN_CI` if not running inside a recognized CI
     system. To raise an error instead, set ``strict`` to ``True``.
 
     .. important::
@@ -426,7 +426,7 @@ def current_traits() -> set[Trait]:
     This includes platforms, architectures and CI systems.
 
     .. caution::
-        Never returns :data:`~extra_platforms.UNKNOWN` traits.
+        Never returns :data:`~UNKNOWN` traits.
 
     Raises an error if the current environment is not recognized at all.
 
@@ -448,7 +448,7 @@ def current_traits() -> set[Trait]:
 @cache
 def is_unknown_architecture() -> bool:
     """Return ``True`` if current architecture is
-    :data:`~extra_platforms.UNKNOWN_ARCHITECTURE`.
+    :data:`~UNKNOWN_ARCHITECTURE`.
     """
     return current_architecture() is UNKNOWN_ARCHITECTURE
 
@@ -456,14 +456,14 @@ def is_unknown_architecture() -> bool:
 @cache
 def is_unknown_platform() -> bool:
     """Return ``True`` if current platform is
-    :data:`~extra_platforms.UNKNOWN_PLATFORM`.
+    :data:`~UNKNOWN_PLATFORM`.
     """
     return current_platform() is UNKNOWN_PLATFORM
 
 
 @cache
 def is_unknown_ci() -> bool:
-    """Return ``True`` if current CI is :data:`~extra_platforms.UNKNOWN_CI`."""
+    """Return ``True`` if current CI is :data:`~UNKNOWN_CI`."""
     return current_ci() is UNKNOWN_CI
 
 
@@ -489,8 +489,8 @@ def _initialize_group_detection_functions() -> list[str]:
             return any(t in _group for t in current_traits())
 
         group_membership_check.__doc__ = (
-            "Return ``True`` if at least one :func:`~extra_platforms.current_traits` is "
-            f"found in the :data:`~extra_platforms.{group.symbol_id}` group."
+            "Return ``True`` if at least one :func:`~current_traits` is "
+            f"found in the :data:`~{group.symbol_id}` group."
         )
 
         assert func_id not in locals(), (
