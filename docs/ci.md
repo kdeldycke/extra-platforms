@@ -13,7 +13,7 @@ Each CI system represents a continuous integration/delivery platform, and is ass
 
 ## CI usage
 
-Each CI system is materialized by a [`CI` object](trait.md#extra_platforms.trait.CI), from which you can access various metadata:
+Each CI system is materialized by a {class}`~CI` object, from which you can access various metadata:
 
 ```pycon
 >>> from extra_platforms import GITHUB_CI

@@ -51,8 +51,8 @@ _T = TypeVar("_T")
 _TRef = Trait | Group | str | None
 """All types that can be used to reference a trait or a group:
 
-- a ``Trait`` object itself
-- a ``Group`` object representing a collection of traits
+- a :class:`~extra_platforms.Trait` object itself
+- a :class:`~extra_platforms.Group` object representing a collection of traits
 - a string representing a trait ID or a group ID
 - ``None`` to represent an empty set of traits
 """

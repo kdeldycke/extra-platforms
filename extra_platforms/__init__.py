@@ -304,7 +304,7 @@ def _unrecognized_message() -> str:
 
 @cache
 def current_architecture(strict: bool = False) -> Architecture:
-    """Returns the ``Architecture`` matching the current environment.
+    """Returns the :class:`~extra_platforms.Architecture` matching the current environment.
 
     Returns :data:`~UNKNOWN_ARCHITECTURE` if not running inside a
     recognized architecture. To raise an error instead, set ``strict`` to ``True``.
@@ -339,7 +339,7 @@ def current_architecture(strict: bool = False) -> Architecture:
 
 @cache
 def current_platform(strict: bool = False) -> Platform:
-    """Always returns the best matching ``Platform`` for the current environment.
+    """Always returns the best matching :class:`~extra_platforms.Platform` for the current environment.
 
     Returns :data:`~UNKNOWN_PLATFORM` if not running inside a recognized
     platform. To raise an error instead, set ``strict`` to ``True``.
@@ -386,7 +386,7 @@ def current_platform(strict: bool = False) -> Platform:
 
 @cache
 def current_ci(strict: bool = False) -> CI:
-    """Returns the ``CI`` system matching the current environment.
+    """Returns the :class:`~extra_platforms.CI` system matching the current environment.
 
     Returns :data:`~UNKNOWN_CI` if not running inside a recognized CI
     system. To raise an error instead, set ``strict`` to ``True``.

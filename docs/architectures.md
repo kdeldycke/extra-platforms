@@ -13,7 +13,7 @@ Each architecture represents a CPU instruction set, and is associated with:
 
 ## Architecture usage
 
-Each architecture is materialized by an [`Architecture` object](trait.md#extra_platforms.trait.Architecture), from which you can access various metadata:
+Each architecture is materialized by an {class}`~Architecture` object, from which you can access various metadata:
 
 ```pycon
 >>> from extra_platforms import X86_64

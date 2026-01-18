@@ -45,8 +45,9 @@ if TYPE_CHECKING:
 class _Identifiable:
     """Base class for identifiable objects with common documentation fields.
 
-    Provides the common fields and initialization logic shared by both ``Trait``
-    and ``Group`` classes:
+    Provides the common fields and initialization logic shared by both
+    :class:`~extra_platforms.Trait` and :class:`~extra_platforms.Group`
+    classes:
 
     - ``id``: Unique identifier
     - ``name``: Human-readable name
@@ -192,7 +193,7 @@ class Trait(_Identifiable, ABC):
     - ``url``: A link to official documentation or website for the trait.
     - ``current``: A boolean indicating if the current environment matches this trait.
     - ``info()``: A method returning a dictionary of gathered attributes about the trait.
-    - ``groups``: A set of ``Group`` objects that include this trait as a member.
+    - ``groups``: A set of :class:`~extra_platforms.Group` objects that include this trait as a member.
     """
 
     url: str = field(repr=False, default="")
@@ -220,7 +221,7 @@ class Trait(_Identifiable, ABC):
         Uses dynamic import to avoid circular dependency with group_data module.
 
         Returns:
-            A frozenset of Group objects that contain this trait as a member.
+            A frozenset of :class:`~extra_platforms.Group` objects that contain this trait as a member.
         """
         # Avoid circular import by importing here.
         from .group_data import ALL_GROUPS
@@ -238,7 +239,7 @@ class Trait(_Identifiable, ABC):
 
         .. hint::
             This is a property to avoid calling all detection heuristics on
-            ``Trait`` objects creation, which happens at module import time.
+            :class:`~extra_platforms.Trait` object creation, which happens at module import time.
         """
         func = getattr(extra_platforms, self.detection_func_id, None)
         if not func:

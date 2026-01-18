@@ -13,7 +13,7 @@ Each platform represents an operating system or OS-like environment, and is asso
 
 ## Platform usage
 
-Each platform is materialized by a [`Platform` object](trait.md#extra_platforms.trait.Platform), from which you can access various metadata:
+Each platform is materialized by a {class}`~Platform` object, from which you can access various metadata:
 
 ```pycon
 >>> from extra_platforms import DEBIAN

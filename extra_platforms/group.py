@@ -49,14 +49,14 @@ def _flatten(items: Iterable) -> Iterator:
 
 @dataclass(frozen=True)
 class Group(_Identifiable):
-    """A ``Group`` identifies a collection of ``Trait`` members.
+    """A :class:`~extra_platforms.Group` identifies a collection of :class:`~extra_platforms.Trait` members.
 
-    Additionally of the common fields inherited from ``_Identifiable``, each trait provides:
+    Additionally of the common fields inherited from ``_Identifiable``, each group provides:
 
-    - ``members``: An iterable of ``Trait`` instances that belong to this group.
-    - ``member_ids``: A frozenset of member IDs for quick lookup.
-    - ``canonical``: A boolean indicating if the group is canonical (non-overlapping).
-    - various `set`-like operations (union, intersection, difference, etc.).
+    - ``members``: An iterable of :class:`~extra_platforms.Trait` instances that belong to this group.
+    - ``member_ids``: A :class:`frozenset` of member IDs for quick lookup.
+    - ``canonical``: A :class:`bool` indicating if the group is canonical (non-overlapping).
+    - various :class:`set`-like operations (union, intersection, difference, etc.).
     """
 
     unknown_symbol = "UNKNOWN"
@@ -170,7 +170,7 @@ class Group(_Identifiable):
         return len(self._members) > 0
 
     def __contains__(self, item: Trait | str) -> bool:
-        """Test if ``Trait`` object or its ID is part of the group."""
+        """Test if :class:`~extra_platforms.Trait` object or its ID is part of the group."""
         if isinstance(item, str):
             return item in self._members
         return item.id in self._members and self._members[item.id] == item
@@ -190,8 +190,9 @@ class Group(_Identifiable):
     def _extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
         """Returns all traits found in ``other``.
 
-        ``other`` can be an arbitrarily nested ``Iterable`` of ``Group``, ``Trait``, or
-        their IDs. ``None`` values and empty iterables are silently ignored.
+        ``other`` can be an arbitrarily nested ``Iterable`` of :class:`~extra_platforms.Group`,
+        :class:`~extra_platforms.Trait`, or their IDs. ``None`` values and empty iterables are
+        silently ignored.
 
         .. caution::
             Can returns duplicates.
@@ -230,7 +231,8 @@ class Group(_Identifiable):
 
         Groups are disjoint if and only if their intersection is an empty set.
 
-        ``other`` can be an arbitrarily nested ``Iterable`` of ``Group`` and ``Trait``.
+        ``other`` can be an arbitrarily nested ``Iterable`` of :class:`~extra_platforms.Group`
+        and :class:`~extra_platforms.Trait`.
         """
         return set(self._members.values()).isdisjoint(self._extract_members(other))
 

@@ -127,9 +127,9 @@ def reduce(
 ) -> frozenset[Group | Trait]:
     """Reduce a collection of traits to a minimal set.
 
-    Returns a deduplicated set of ``Group`` and ``Trait`` that covers the same exact
-    traits as the original input, but group as much traits as possible, to reduce
-    the number of items.
+    Returns a deduplicated set of :class:`~extra_platforms.Group` and
+    :class:`~extra_platforms.Trait` that covers the same exact traits as the original
+    input, but group as much traits as possible, to reduce the number of items.
 
     Only the groups defined in the ``target_pool`` are considered for the reduction.
     If no reference pool is provided, use all known groups.

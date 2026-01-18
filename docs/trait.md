@@ -57,7 +57,7 @@ Platform(id='debian', name='Debian')
 CI(id='github_ci', name='GitHub Actions runner')
 ```
 
-They all inherit from the [`Trait` base class](#extra_platforms.trait.Trait), and share a common interface.
+They all inherit from the {class}`~Trait` base class, and share a common interface.
 
 ### Current property
 
