@@ -544,9 +544,7 @@ def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
     return output
 
 
-def generate_all_detection_function_table(
-    objects: Iterable[Trait | Group],
-) -> str:
+def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> str:
     """Generate a combined Markdown table for all detection functions.
 
     This produces a single table listing all detection functions for both
@@ -573,9 +571,7 @@ def generate_all_detection_function_table(
     return _generate_markdown_table(table_data, headers, alignments)
 
 
-def generate_detection_autofunction(
-    objects: Iterable[Trait | Group],
-) -> str:
+def generate_detection_autofunction(objects: Iterable[Trait | Group]) -> str:
     """Generate Sphinx autofunction directives for detection functions.
 
     Generates directives for both trait detection functions (``is_<trait>()``)
@@ -596,13 +592,7 @@ def generate_detection_autofunction(
     # Generate autofunction directives with associated symbol links
     directives = []
     for obj in sorted(objects_list, key=attrgetter("id")):
-        # Use detection_func_id if available (groups), otherwise construct for traits
-        func_id = (
-            obj.detection_func_id
-            if hasattr(obj, "detection_func_id")
-            else f"is_{obj.id}"
-        )
-        directives.append(f".. autofunction:: extra_platforms.{func_id}")
+        directives.append(f".. autofunction:: extra_platforms.{obj.detection_func_id}")
 
     output = "```{eval-rst}\n"
     output += "\n".join(directives)
@@ -610,10 +600,7 @@ def generate_detection_autofunction(
     return output
 
 
-def _generate_directive_section(
-    section_name: str,
-    objects: Iterable[str],
-) -> str:
+def _generate_directive_section(section_name: str, objects: Iterable[str]) -> str:
     """Generate a MyST code block with Sphinx directives for a section.
 
     Args:

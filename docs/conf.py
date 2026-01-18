@@ -259,9 +259,8 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         # Add list of groups this trait belongs to.
         group_links = [
             (
-                f":data:`~extra_platforms.{group.symbol_id}`" + " ⬥"
-                if group.canonical
-                else ""
+                f":data:`~extra_platforms.{group.symbol_id}`"
+                + (" ⬥" if group.canonical else "")
             )
             for group in sorted(obj.groups, key=lambda g: g.id)
         ]
