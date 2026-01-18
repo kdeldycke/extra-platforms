@@ -345,10 +345,15 @@ class Platform(Trait):
     }
     """Maps macOS ``(major, minor)`` version parts to release code name.
 
-    See:
+    .. seealso::
+        - https://en.wikipedia.org/wiki/Template:MacOS_versions
+        - https://docs.python.org/3/library/platform.html#platform.mac_ver
 
-    - https://en.wikipedia.org/wiki/Template:MacOS_versions
-    - https://docs.python.org/3/library/platform.html#platform.mac_ver
+    .. hint::
+        There is this oddity where some beta release of macOS Tahoe report major
+        version as ``16`` instead of ``15`` or ``26``. We choose to not handle this case
+        for now, as we consider this a glitch in macOS history, and do not have a proper
+        way to detect beta versions at this time.
     """
 
     @classmethod
