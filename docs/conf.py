@@ -259,14 +259,37 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
 
 
 def autodoc_skip_member(app, what, name, obj, skip, options):
-    """Force inclusion of Trait instances and Groups.
+    """Force inclusion of Trait instances and Groups, skip detection functions from main module.
 
     By default, autodoc skips module-level constants without docstrings.
     Since our trait instances have dynamically generated docstrings, we need
     to explicitly include them.
+
+    Also skip detection functions (is_*) when documenting the main extra_platforms
+    module, since they're already documented in detection.md. This prevents duplicate
+    documentation and ensures cross-references point to detection.html.
     """
     if isinstance(obj, (Trait, Group)):
         return False  # Don't skip - include in documentation
+
+    # Skip detection functions when documenting the root module via RST.
+    # Detection functions fall into two categories:
+    # 1. Trait detection functions (is_<trait>, current_*) defined in
+    #    extra_platforms.detection
+    # 2. Group detection functions (is_<group>) dynamically generated in
+    #    extra_platforms.__init__
+    #
+    # All of these are explicitly documented in detection.md and should not appear
+    # in extra_platforms.html to avoid duplicate documentation.
+    if what == "module":
+        obj_module = getattr(obj, "__module__", None)
+        # Skip all detection functions (both from detection module and dynamically
+        # generated group detection functions)
+        if obj_module in ("extra_platforms.detection", "extra_platforms") and name.startswith(
+            ("is_", "current_")
+        ):
+            return True  # Skip - already documented in detection.md
+
     return None  # Use default behavior for everything else
 
 

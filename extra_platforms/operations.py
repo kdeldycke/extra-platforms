@@ -34,21 +34,21 @@ if TYPE_CHECKING:
 
 
 ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS - UNKNOWN))
-"""Set of all recognized traits IDs.
+"""A :class:`frozenset` of all recognized traits IDs.
 
 .. attention::
     This collection does not contain all the ``UNKNOWN_*`` traits.
 """
 
 ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS - {UNKNOWN}))
-"""Set of all recognized group IDs.
+"""A :class:`frozenset` of all recognized group IDs.
 
 .. attention::
     This collection does not contain the :data:`~UNKNOWN` group.
 """
 
 ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
-"""Set of all recognized traits and group IDs.
+"""A :class:`frozenset` of all recognized traits and group IDs.
 
 .. attention::
     This collection does not contain all the ``UNKNOWN_*`` traits and the
@@ -57,27 +57,27 @@ ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
 
 
 def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
-    """Return a tuple with duplicates removed, preserving order.
+    """Return a :class:`tuple` with duplicates removed, preserving order.
 
-    This uses ``dict.fromkeys()`` which:
+    This uses :meth:`dict.fromkeys` which:
 
     - Preserves insertion order (guaranteed since Python 3.7)
-    - Removes duplicates (dict keys are unique)
+    - Removes duplicates (:class:`dict` keys are unique)
     """
     return tuple(dict.fromkeys(items))
 
 
 def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
-    """Returns a deduplicated tuple of traits matching the provided IDs.
+    """Returns a deduplicated :class:`tuple` of traits matching the provided IDs.
 
     IDs are case-insensitive, and can refer to any traits or groups. Matching groups
-    will be expanded to the traits they contain.
+    will be expanded to the :class:`~extra_platforms.Trait` instances they contain.
 
     Order of the returned traits matches the order of the provided IDs.
 
     .. tip::
         If you want to reduce the returned set and removes as much overlaps as
-        possible, you can use the ``extra_platforms.reduce()`` function on the results.
+        possible, you can use the :func:`~extra_platforms.reduce` function on the results.
     """
     ids = _unique((s.lower() for s in trait_and_group_ids))
     unrecognized_ids = set(ids) - ALL_IDS
@@ -97,15 +97,16 @@ def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
 
 
 def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
-    """Returns a deduplicated tuple of groups matching the provided IDs.
+    """Returns a deduplicated :class:`tuple` of groups matching the provided IDs.
 
     IDs are case-insensitive.
 
-    Order of the returned groups matches the order of the provided IDs.
+    Order of the returned :class:`~extra_platforms.Group` instances matches the order of
+    the provided IDs.
 
     .. tip::
         If you want to reduce the returned set and removes as much overlaps as
-        possible, you can use the ``extra_platforms.reduce()`` function on the results.
+        possible, you can use the :func:`~extra_platforms.reduce` function on the results.
     """
     ids = _unique((s.lower() for s in group_ids))
     unrecognized_ids = set(ids) - ALL_GROUP_IDS

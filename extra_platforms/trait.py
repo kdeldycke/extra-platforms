@@ -218,10 +218,11 @@ class Trait(_Identifiable, ABC):
     def groups(self) -> frozenset:
         """Returns the set of groups this trait belongs to.
 
-        Uses dynamic import to avoid circular dependency with group_data module.
+        Uses dynamic import to avoid circular dependency with ``group_data`` module.
 
         Returns:
-            A frozenset of :class:`~extra_platforms.Group` objects that contain this trait as a member.
+            A :class:`frozenset` of :class:`~extra_platforms.Group` objects that contain this
+            trait as a member.
         """
         # Avoid circular import by importing here.
         from .group_data import ALL_GROUPS
@@ -235,7 +236,7 @@ class Trait(_Identifiable, ABC):
         The detection function is dynamically looked up based on the trait ID, and is
         expected to be found at the root of the ``extra_platforms`` module.
 
-        Raises ``NotImplementedError`` if a detection function cannot be found.
+        Raises :exc:`NotImplementedError` if a detection function cannot be found.
 
         .. hint::
             This is a property to avoid calling all detection heuristics on
@@ -252,7 +253,8 @@ class Trait(_Identifiable, ABC):
     def info(self) -> dict:
         """Returns all trait attributes that can be gathered.
 
-        Subclasses should override this to include trait-specific information.
+        Returns a :class:`dict` of metadata. Subclasses should override this to include
+        trait-specific information.
         """
         ...
 

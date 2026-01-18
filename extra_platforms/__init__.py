@@ -423,12 +423,13 @@ def current_ci(strict: bool = False) -> CI:
 def current_traits() -> set[Trait]:
     """Returns all traits matching the current environment.
 
-    This includes platforms, architectures and CI systems.
+    This includes :class:`~extra_platforms.Platform`, :class:`~extra_platforms.Architecture`,
+    and :class:`~extra_platforms.CI` systems.
 
     .. caution::
         Never returns :data:`~UNKNOWN` traits.
 
-    Raises an error if the current environment is not recognized at all.
+    Raises :exc:`SystemError` if the current environment is not recognized at all.
 
     .. attention::
         At this point it is too late to worry about caching. This function has no
@@ -447,23 +448,19 @@ def current_traits() -> set[Trait]:
 
 @cache
 def is_unknown_architecture() -> bool:
-    """Return ``True`` if current architecture is
-    :data:`~UNKNOWN_ARCHITECTURE`.
-    """
+    """Return :data:`True` if current architecture is :data:`~UNKNOWN_ARCHITECTURE`."""
     return current_architecture() is UNKNOWN_ARCHITECTURE
 
 
 @cache
 def is_unknown_platform() -> bool:
-    """Return ``True`` if current platform is
-    :data:`~UNKNOWN_PLATFORM`.
-    """
+    """Return :data:`True` if current platform is :data:`~UNKNOWN_PLATFORM`."""
     return current_platform() is UNKNOWN_PLATFORM
 
 
 @cache
 def is_unknown_ci() -> bool:
-    """Return ``True`` if current CI is :data:`~UNKNOWN_CI`."""
+    """Return :data:`True` if current CI is :data:`~UNKNOWN_CI`."""
     return current_ci() is UNKNOWN_CI
 
 

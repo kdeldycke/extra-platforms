@@ -65,17 +65,17 @@ class Group(_Identifiable):
     members: Iterable[Trait] = field(repr=False, default_factory=tuple)
     """Traits in this group.
 
-    Normalized to ``MappingProxyType[str, Trait]`` at init, providing O(1) lookup by ID.
+    Normalized to :class:`~types.MappingProxyType` at init, providing O(1) lookup by ID.
     """
 
     @property
     def _members(self) -> _MembersMapping:
-        """Typed access to members as ``MappingProxyType[str, Trait]``.
+        """Typed access to members as :class:`~types.MappingProxyType`.
 
         .. warning::
-            The ``members`` field is typed as ``Iterable[Trait]`` to accept any
+            The ``members`` field is typed as :class:`~collections.abc.Iterable` to accept any
             iterable at construction time. After ``__post_init__``, it is always a
-            ``MappingProxyType[str, Trait]``. This property provides a ``cast()`` to
+            :class:`~types.MappingProxyType`. This property provides a :func:`~typing.cast` to
             that type, avoiding ``# type: ignore`` comments throughout the class.
         """
         return cast(_MembersMapping, self.members)
@@ -132,7 +132,7 @@ class Group(_Identifiable):
 
     @property
     def member_ids(self) -> frozenset[str]:
-        """Set of member IDs that belong to this group."""
+        """A :class:`frozenset` of member IDs that belong to this group."""
         return frozenset(self._members.keys())
 
     def __hash__(self) -> int:
@@ -141,7 +141,7 @@ class Group(_Identifiable):
 
     @cached_property
     def canonical(self) -> bool:
-        """Returns `True` if the group is canonical (non-overlapping), `False` otherwise.
+        """Returns :data:`True` if the group is canonical (non-overlapping), :data:`False` otherwise.
 
         A canonical group is one that does not share any members with other canonical
         groups. All canonical groups are non-overlapping.
@@ -166,7 +166,7 @@ class Group(_Identifiable):
         return len(self._members)
 
     def __bool__(self) -> bool:
-        """Return `True` if the group has members, `False` otherwise."""
+        """Return :data:`True` if the group has members, :data:`False` otherwise."""
         return len(self._members) > 0
 
     def __contains__(self, item: Trait | str) -> bool:
@@ -227,17 +227,17 @@ class Group(_Identifiable):
         return Group._extract_members(*other)
 
     def isdisjoint(self, other: _TNestedReferences) -> bool:
-        """Return `True` if the group has no members in common with ``other``.
+        """Return :data:`True` if the group has no members in common with ``other``.
 
-        Groups are disjoint if and only if their intersection is an empty set.
+        Groups are disjoint if and only if their intersection is an empty :class:`set`.
 
-        ``other`` can be an arbitrarily nested ``Iterable`` of :class:`~extra_platforms.Group`
-        and :class:`~extra_platforms.Trait`.
+        ``other`` can be an arbitrarily nested :class:`~collections.abc.Iterable` of
+        :class:`~extra_platforms.Group` and :class:`~extra_platforms.Trait`.
         """
         return set(self._members.values()).isdisjoint(self._extract_members(other))
 
     def fullyintersects(self, other: _TNestedReferences) -> bool:
-        """Return `True` if the group has all members in common with ``other``."""
+        """Return :data:`True` if the group has all members in common with ``other``."""
         return set(self._members.values()) == set(self._extract_members(other))
 
     def issubset(self, other: _TNestedReferences) -> bool:
@@ -265,11 +265,11 @@ class Group(_Identifiable):
         )
 
     def union(self, *others: _TNestedReferences) -> Group:
-        """Return a new ``Group`` with members from the group and all others.
+        """Return a new :class:`~extra_platforms.Group` with members from the group and all others.
 
         .. caution::
-            The new ``Group`` will inherits the metadata of the first one. All other
-            groups' metadata will be ignored.
+            The new :class:`~extra_platforms.Group` will inherits the metadata of the first one.
+            All other groups' metadata will be ignored.
         """
         return Group(
             self.id,
@@ -286,11 +286,11 @@ class Group(_Identifiable):
     __ior__ = union
 
     def intersection(self, *others: _TNestedReferences) -> Group:
-        """Return a new ``Group`` with members common to the group and all others.
+        """Return a new :class:`~extra_platforms.Group` with members common to the group and all others.
 
         .. caution::
-            The new ``Group`` will inherits the metadata of the first one. All other
-            groups' metadata will be ignored.
+            The new :class:`~extra_platforms.Group` will inherits the metadata of the first one.
+            All other groups' metadata will be ignored.
         """
         return Group(
             self.id,
@@ -307,11 +307,11 @@ class Group(_Identifiable):
     __iand__ = intersection
 
     def difference(self, *others: _TNestedReferences) -> Group:
-        """Return a new ``Group`` with members in the group that are not in the others.
+        """Return a new :class:`~extra_platforms.Group` with members in the group that are not in the others.
 
         .. caution::
-            The new ``Group`` will inherits the metadata of the first one. All other
-            groups' metadata will be ignored.
+            The new :class:`~extra_platforms.Group` will inherits the metadata of the first one.
+            All other groups' metadata will be ignored.
         """
         return Group(
             self.id,
@@ -328,11 +328,11 @@ class Group(_Identifiable):
     __isub__ = difference
 
     def symmetric_difference(self, other: _TNestedReferences) -> Group:
-        """Return a new ``Group`` with members in either the group or other but not both.
+        """Return a new :class:`~extra_platforms.Group` with members in either the group or other but not both.
 
         .. caution::
-            The new ``Group`` will inherits the metadata of the first one. All other
-            groups' metadata will be ignored.
+            The new :class:`~extra_platforms.Group` will inherits the metadata of the first one.
+            All other groups' metadata will be ignored.
         """
         return Group(
             self.id,
@@ -363,15 +363,15 @@ class Group(_Identifiable):
         return replace(self, **kwargs)
 
     def add(self, member: Trait | str) -> Group:
-        """Return a new ``Group`` with the specified trait added.
+        """Return a new :class:`~extra_platforms.Group` with the specified trait added.
 
         If the trait is already in the group, returns a copy unchanged.
 
         Args:
-            member: A ``Trait`` object or trait ID string to add.
+            member: A :class:`~extra_platforms.Trait` object or trait ID string to add.
 
         Returns:
-            A new ``Group`` instance with the trait added.
+            A new :class:`~extra_platforms.Group` instance with the trait added.
 
         Raises:
             ValueError: If the trait ID is not recognized.
@@ -394,15 +394,15 @@ class Group(_Identifiable):
         )
 
     def remove(self, member: Trait | str) -> Group:
-        """Return a new ``Group`` with the specified trait removed.
+        """Return a new :class:`~extra_platforms.Group` with the specified trait removed.
 
-        Raises ``KeyError`` if the trait is not in the group.
+        Raises :exc:`KeyError` if the trait is not in the group.
 
         Args:
-            member: A ``Trait`` object or trait ID string to remove.
+            member: A :class:`~extra_platforms.Trait` object or trait ID string to remove.
 
         Returns:
-            A new ``Group`` instance with the trait removed.
+            A new :class:`~extra_platforms.Group` instance with the trait removed.
 
         Raises:
             KeyError: If the trait is not in the group.
@@ -424,15 +424,16 @@ class Group(_Identifiable):
         )
 
     def discard(self, member: Trait | str) -> Group:
-        """Return a new ``Group`` with the specified trait removed if present.
+        """Return a new :class:`~extra_platforms.Group` with the specified trait removed if present.
 
-        Unlike ``remove()``, this does not raise an error if the trait is not found.
+        Unlike :meth:`remove`, this does not raise an error if the trait is not found.
 
         Args:
-            member: A ``Trait`` object or trait ID string to remove.
+            member: A :class:`~extra_platforms.Trait` object or trait ID string to remove.
 
         Returns:
-            A new ``Group`` instance with the trait removed, or a copy if not present.
+            A new :class:`~extra_platforms.Group` instance with the trait removed, or a copy if
+            not present.
         """
         member_id = member.id if isinstance(member, Trait) else member
 
@@ -458,7 +459,8 @@ class Group(_Identifiable):
                 trait (specifically, the first one in iteration order).
 
         Returns:
-            A tuple of (removed_trait, new_group).
+            A :class:`tuple` of (removed :class:`~extra_platforms.Trait`,
+            new :class:`~extra_platforms.Group`).
 
         Raises:
             KeyError: If ``member_id`` is provided but not found in the group.
@@ -489,10 +491,11 @@ class Group(_Identifiable):
         return popped_trait, new_group
 
     def clear(self) -> Group:
-        """Return a new empty ``Group`` with the same metadata.
+        """Return a new empty :class:`~extra_platforms.Group` with the same metadata.
 
         Returns:
-            A new ``Group`` instance with no members but same id, name, and icon.
+            A new :class:`~extra_platforms.Group` instance with no members but same id, name,
+            and icon.
         """
         return Group(
             self.id,
