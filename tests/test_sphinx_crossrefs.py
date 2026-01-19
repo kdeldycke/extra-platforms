@@ -707,7 +707,7 @@ def _get_all_public_symbols() -> Iterator[str]:
         yield symbol_name
 
     # Add all symbols exposed in extra_platforms.pytest.
-    for symbol_name in dir(extra_platforms.pytest):
+    for symbol_name in dir(extra_platforms.pytest):  # type: ignore[attr-defined]
         if not symbol_name.startswith("_"):
             yield f"pytest.{symbol_name}"
 
