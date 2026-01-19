@@ -626,7 +626,8 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
         # Group class is documented in groups.html
         if symbol_clean == "Group":
             return "groups.html"
-        # All trait-related classes (Trait, Platform, Architecture, CI) are documented in trait.html
+        # All trait-related classes (Trait, Platform, Architecture, CI) are
+        # documented in trait.html
         if symbol_clean in ("Trait", "Platform", "Architecture", "CI"):
             return "trait.html"
         # Default to trait.html for other trait-related classes
@@ -674,21 +675,21 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
             return "groups.html"
 
         # Deprecated platform aliases go to platforms.html
-        if symbol_clean in (
-            "UNKNOWN_LINUX",
-        ):
+        if symbol_clean in ("UNKNOWN_LINUX",):
             return "platforms.html"
 
         # Find the trait by symbol_id and use its doc_page
         for trait in ALL_TRAITS:
             if trait.symbol_id == symbol_clean:
-                # Convert doc_page from .md to .html (e.g., "platforms.md" -> "platforms.html")
+                # Convert doc_page from .md to .html (e.g., "platforms.md" ->
+                # "platforms.html")
                 return trait.doc_page.replace(".md", ".html")
 
         # Find the group by symbol_id and use Group.doc_page
         for group in ALL_GROUPS:
             if group.symbol_id == symbol_clean:
-                # All groups are documented in the same page (Group.doc_page = "groups.md")
+                # All groups are documented in the same page (Group.doc_page =
+                # "groups.md")
                 return Group.doc_page.replace(".md", ".html")
 
     # Default to extra_platforms.html
@@ -790,7 +791,8 @@ def test_all_crossreferences_point_to_correct_pages(
     The previous monolithic test iterated over all refs; this parametrized variant
     runs the same checks per-reference so failures are reported per-item.
     """
-    # Skip documentation examples showing Sphinx role syntax (not actual cross-references)
+    # Skip documentation examples showing Sphinx role syntax (not actual
+    # cross-references)
     if (
         "https://" in symbol
         or "http://" in symbol
