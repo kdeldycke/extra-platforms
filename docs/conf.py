@@ -328,9 +328,10 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
 
         # Skip all detection functions (both from detection module and dynamically
         # generated group detection functions)
-        if obj_module in ("extra_platforms.detection", "extra_platforms") and name.startswith(
-            ("is_", "current_")
-        ):
+        if obj_module in (
+            "extra_platforms.detection",
+            "extra_platforms",
+        ) and name.startswith(("is_", "current_")):
             return True  # Skip - already documented in detection.md
 
         # Skip invalidate_caches - documented in detection.md
@@ -349,9 +350,10 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
             return True  # Skip - already documented in groups.md
 
         # Skip main trait and group classes - they're documented in their own pages
-        if obj_module in ("extra_platforms.trait", "extra_platforms.group") and name in (
-            "Trait", "Platform", "Architecture", "CI", "Group"
-        ):
+        if obj_module in (
+            "extra_platforms.trait",
+            "extra_platforms.group",
+        ) and name in ("Trait", "Platform", "Architecture", "CI", "Group"):
             return True  # Skip - already documented in trait.md or groups.md
 
     return None  # Use default behavior for everything else
