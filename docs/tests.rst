@@ -9,14 +9,6 @@ tests package
 Submodules
 ----------
 
-tests.conftest module
----------------------
-
-.. automodule:: tests.conftest
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
 tests.test\_architecture\_data module
 -------------------------------------
 
