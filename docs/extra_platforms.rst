@@ -49,14 +49,6 @@ extra\_platforms.group\_data module
    :show-inheritance:
    :undoc-members:
 
-extra\_platforms.operations module
-----------------------------------
-
-.. automodule:: extra_platforms.operations
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
 extra\_platforms.platform\_data module
 --------------------------------------
 

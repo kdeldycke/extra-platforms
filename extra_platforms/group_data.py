@@ -748,3 +748,32 @@ ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
     This collection contains both canonical and non-canonical groups, including the
     :data:`~UNKNOWN` group.
 """
+
+
+# =============================================================================
+# ID collections
+# =============================================================================
+
+ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS - UNKNOWN))
+"""A :class:`frozenset` of all recognized traits IDs.
+
+.. attention::
+    This collection does not contain all the ``UNKNOWN_*`` traits.
+"""
+
+
+ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS - {UNKNOWN}))
+"""A :class:`frozenset` of all recognized group IDs.
+
+.. attention::
+    This collection does not contain the :data:`~UNKNOWN` group.
+"""
+
+
+ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
+"""A :class:`frozenset` of all recognized traits and group IDs.
+
+.. attention::
+    This collection does not contain all the ``UNKNOWN_*`` traits and the
+    :data:`~UNKNOWN` group.
+"""

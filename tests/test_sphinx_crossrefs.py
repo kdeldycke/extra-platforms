@@ -525,7 +525,7 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
         ("{class}`~CI`", "CI", "trait.html#extra_platforms.CI"),
         ("{class}`~Group`", "Group", "groups.html#extra_platforms.Group"),
         # Utilities
-        ("{func}`~reduce`", "reduce()", "detection.html#extra_platforms.reduce"),
+        ("{func}`~reduce`", "reduce()", "groups.html#extra_platforms.reduce"),
         (
             "{func}`~invalidate_caches`",
             "invalidate_caches()",
@@ -610,16 +610,21 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     if role == "func" and symbol_clean == "invalidate_caches":
         return "detection.html"
 
-    # Trait and group operations functions go to detection.html
+    # Deprecated detection functions stay in detection.html
+    if role == "func" and symbol_clean in (
+        "current_os",  # Deprecated alias
+        "current_platforms",  # Deprecated alias
+    ):
+        return "detection.html"
+
+    # Trait and group operations functions go to groups.html
     if role == "func" and symbol_clean in (
         "groups_from_ids",
         "traits_from_ids",
         "reduce",
         "platforms_from_ids",  # Deprecated alias
-        "current_os",  # Deprecated alias
-        "current_platforms",  # Deprecated alias
     ):
-        return "detection.html"
+        return "groups.html"
 
     # Classes - the base classes are documented in trait.html or groups.html
     if role == "class":
@@ -654,14 +659,14 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
         ):
             return "groups.html"
 
-        # ID collections go to detection.html
+        # ID collections go to groups.html
         if symbol_clean in (
             "ALL_GROUP_IDS",
             "ALL_TRAIT_IDS",
             "ALL_IDS",
             "ALL_PLATFORM_IDS",  # Deprecated alias for ALL_TRAIT_IDS
         ):
-            return "detection.html"
+            return "groups.html"
 
         # Deprecated group aliases go to groups.html
         if symbol_clean in (

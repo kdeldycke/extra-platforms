@@ -188,9 +188,9 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
 
     Since autodata directives use ``extra_platforms.X`` paths but the attribute
     docstrings (string literals following assignments) are defined in submodules
-    like ``platform_data.py``, ``group_data.py``, and ``operations.py``, this hook
-    fetches those docstrings from the source files using AST parsing and injects them
-    into the documentation along with additional metadata.
+    like ``platform_data.py`` and ``group_data.py``, this hook fetches those
+    docstrings from the source files using AST parsing and injects them into the
+    documentation along with additional metadata.
     """
     if isinstance(obj, Group):
         # Fetch attribute docstring from source module since autodata uses
@@ -279,9 +279,9 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
             "ALL_CI_GROUPS": "group_data",
             "EXTRA_GROUPS": "group_data",
             "NON_OVERLAPPING_GROUPS": "group_data",
-            "ALL_GROUP_IDS": "operations",
-            "ALL_TRAIT_IDS": "operations",
-            "ALL_IDS": "operations",
+            "ALL_GROUP_IDS": "group_data",
+            "ALL_TRAIT_IDS": "group_data",
+            "ALL_IDS": "group_data",
         }
 
         # Extract the symbol name from the full qualified name.
@@ -341,8 +341,8 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
         ):
             return True  # Skip - already documented in detection.md
 
-        # Skip operations functions - documented in groups.md
-        if obj_module == "extra_platforms.operations" and name in (
+        # Skip group utility functions - documented in groups.md
+        if obj_module == "extra_platforms.group" and name in (
             "groups_from_ids",
             "traits_from_ids",
             "reduce",

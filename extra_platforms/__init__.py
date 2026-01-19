@@ -22,6 +22,8 @@ import platform as stdlib_platform
 import sys
 from functools import cache
 
+import distro as distro_module
+
 from . import detection  # noqa: E402
 from .architecture_data import (  # noqa: E402
     AARCH64,
@@ -153,18 +155,21 @@ from .detection import (  # noqa: E402
     is_x86_64,
     is_xenserver,
 )
-from .group import Group  # noqa: E402
+from .group import Group, groups_from_ids, reduce, traits_from_ids  # noqa: E402
 from .group_data import (  # noqa: E402
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
     ALL_ARM,
     ALL_CI,
     ALL_CI_GROUPS,
+    ALL_GROUP_IDS,
     ALL_GROUPS,
+    ALL_IDS,
     ALL_MIPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
     ALL_SPARC,
+    ALL_TRAIT_IDS,
     ALL_TRAITS,
     ALL_WINDOWS,
     ARCH_32_BIT,
@@ -265,15 +270,6 @@ from .trait import (  # noqa: E402
 """
 
 
-from .operations import (  # noqa: E402
-    ALL_GROUP_IDS,
-    ALL_IDS,
-    ALL_TRAIT_IDS,
-    groups_from_ids,
-    reduce,
-    traits_from_ids,
-)
-
 __version__ = "7.0.1"
 
 
@@ -285,8 +281,6 @@ def _unrecognized_message() -> str:
         This message must contain all the primitives used in the ``detection`` module so
         maintainers can debug heuristics from user reports.
     """
-    import distro as distro_module
-
     return (
         "Environment:\n"
         f"  sys.platform:          {sys.platform!r}\n"

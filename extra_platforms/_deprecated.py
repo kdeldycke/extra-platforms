@@ -38,12 +38,12 @@ from . import (
     ALL_WINDOWS,
     OTHER_POSIX,
     UNKNOWN_PLATFORM,
+    Platform,
     current_platform,
     current_traits,
     traits_from_ids,
 )
 from ._utils import _recursive_update, _remove_blanks
-from .trait import Platform
 
 
 def _warn_deprecated(name: str, replacement: str) -> None:
@@ -479,3 +479,79 @@ class _DeprecatedPlatformModule(ModuleType):
 
 # Register the fake module in sys.modules.
 sys.modules["extra_platforms.platform"] = _DeprecatedPlatformModule()
+
+
+# ================================================================
+# Deprecated module: extra_platforms.operations
+# ================================================================
+
+# Simulate the deprecated `extra_platforms.operations` module by injecting a fake
+# module into sys.modules. This allows `from extra_platforms.operations import reduce`
+# to work while issuing a deprecation warning, without needing a separate file.
+
+
+class _DeprecatedOperationsModule(ModuleType):
+    """A fake module that warns on attribute access.
+
+    .. deprecated:: 8.0.0
+       The ``extra_platforms.operations`` module is deprecated.
+       Import from ``extra_platforms`` or ``extra_platforms.group`` instead.
+    """
+
+    def __init__(self):
+        super().__init__("extra_platforms.operations")
+        self.__doc__ = (
+            "Backward-compatible module for deprecated imports.\n\n"
+            ".. deprecated:: 8.0.0\n"
+            "    This module is deprecated. Import from ``extra_platforms`` or"
+            " ``extra_platforms.group`` instead."
+        )
+        self.__file__ = __file__
+        self.__all__ = [
+            "ALL_GROUP_IDS",
+            "ALL_IDS",
+            "ALL_TRAIT_IDS",
+            "groups_from_ids",
+            "reduce",
+            "traits_from_ids",
+        ]
+
+    def __getattr__(self, name: str):
+        warnings.warn(
+            "The 'extra_platforms.operations' module is deprecated. "
+            "Import from 'extra_platforms' or 'extra_platforms.group' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        # Import lazily to avoid circular imports.
+        if name == "ALL_GROUP_IDS":
+            from .group_data import ALL_GROUP_IDS
+
+            return ALL_GROUP_IDS
+        if name == "ALL_IDS":
+            from .group_data import ALL_IDS
+
+            return ALL_IDS
+        if name == "ALL_TRAIT_IDS":
+            from .group_data import ALL_TRAIT_IDS
+
+            return ALL_TRAIT_IDS
+        if name == "groups_from_ids":
+            from .group import groups_from_ids
+
+            return groups_from_ids
+        if name == "reduce":
+            from .group import reduce
+
+            return reduce
+        if name == "traits_from_ids":
+            from .group import traits_from_ids
+
+            return traits_from_ids
+        raise AttributeError(
+            f"module 'extra_platforms.operations' has no attribute {name!r}"
+        )
+
+
+# Register the fake module in sys.modules.
+sys.modules["extra_platforms.operations"] = _DeprecatedOperationsModule()

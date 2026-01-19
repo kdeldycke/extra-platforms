@@ -283,27 +283,9 @@ These functions retrieve the currently detected traits:
 .. autofunction:: extra_platforms.invalidate_caches
 ```
 
-## Trait and group operations
-
-```{eval-rst}
-.. autofunction:: extra_platforms.traits_from_ids
-.. autofunction:: extra_platforms.groups_from_ids
-.. autofunction:: extra_platforms.reduce
-```
-
-## ID collections
-
-```{eval-rst}
-.. autodata:: extra_platforms.ALL_TRAIT_IDS
-.. autodata:: extra_platforms.ALL_GROUP_IDS
-.. autodata:: extra_platforms.ALL_IDS
-```
-
 ## Deprecated detection functions
 
 ```{eval-rst}
 .. autofunction:: extra_platforms.current_os
 .. autofunction:: extra_platforms.current_platforms
-.. autofunction:: extra_platforms.platforms_from_ids
-.. autodata:: extra_platforms.ALL_PLATFORM_IDS
 ```

@@ -5,6 +5,15 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Move `extra_platforms.operations` module content to `extra_platforms.group` and
+  `extra_platforms.group_data`:
+  - `traits_from_ids()`, `groups_from_ids()`, and `reduce()` functions now live in
+    `extra_platforms.group`.
+  - `ALL_TRAIT_IDS`, `ALL_GROUP_IDS`, and `ALL_IDS` constants now live in
+    `extra_platforms.group_data`.
+  - The `extra_platforms.operations` module is deprecated and will be removed in the next
+    major version. A compatibility shim is provided that emits deprecation warnings.
+
 ## [7.0.0 (2026-01-17)](https://github.com/kdeldycke/extra-platforms/compare/v6.0.0...v7.0.0)
 
 - Add new `ARMV5TEL` architecture.
