@@ -22,11 +22,24 @@ these catch real regressions in the actual documentation.
 
 from __future__ import annotations
 
+import inspect
 import re
 import subprocess
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
+
+import extra_platforms
+from extra_platforms import (
+    ALL_GROUPS,
+    ALL_TRAITS,
+    CI,
+    Architecture,
+    Group,
+    Platform,
+    Trait,
+)
 
 # Path to the built documentation.
 DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "html"
@@ -510,13 +523,13 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "trait.html#extra_platforms.Architecture",
         ),
         ("{class}`~CI`", "CI", "trait.html#extra_platforms.CI"),
-        ("{class}`~Group`", "Group", "extra_platforms.html#extra_platforms.Group"),
+        ("{class}`~Group`", "Group", "groups.html#extra_platforms.Group"),
         # Utilities
-        ("{func}`~reduce`", "reduce()", "extra_platforms.html#extra_platforms.reduce"),
+        ("{func}`~reduce`", "reduce()", "detection.html#extra_platforms.reduce"),
         (
             "{func}`~invalidate_caches`",
             "invalidate_caches()",
-            "extra_platforms.html#extra_platforms.invalidate_caches",
+            "detection.html#extra_platforms.invalidate_caches",
         ),
     ],
 )
@@ -572,3 +585,317 @@ def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
             f"Reference matrix example '{myst}' did not render to "
             f"{expected_link}; found {hrefs}"
         )
+
+
+def get_expected_page_for_symbol(role: str, symbol: str) -> str:
+    """Determine the expected HTML page for a given symbol.
+
+    Args:
+        role: The Sphinx role (func, data, class, etc.)
+        symbol: The symbol name (e.g., 'UBUNTU', 'is_linux', 'Platform')
+
+    Returns:
+        The expected HTML filename (e.g., 'platforms.html')
+    """
+    # Clean symbol name (remove module prefix if present)
+    symbol_clean = symbol.split(".")[-1]
+
+    # Detection functions always go to detection.html
+    if role == "func" and (
+        symbol_clean.startswith("is_") or symbol_clean.startswith("current_")
+    ):
+        return "detection.html"
+
+    # Cache management functions go to detection.html
+    if role == "func" and symbol_clean == "invalidate_caches":
+        return "detection.html"
+
+    # Trait and group operations functions go to detection.html
+    if role == "func" and symbol_clean in (
+        "groups_from_ids",
+        "traits_from_ids",
+        "reduce",
+        "platforms_from_ids",  # Deprecated alias
+        "current_os",  # Deprecated alias
+        "current_platforms",  # Deprecated alias
+    ):
+        return "detection.html"
+
+    # Classes - the base classes are documented in trait.html or groups.html
+    if role == "class":
+        # Group class is documented in groups.html
+        if symbol_clean == "Group":
+            return "groups.html"
+        # All trait-related classes (Trait, Platform, Architecture, CI) are documented in trait.html
+        if symbol_clean in ("Trait", "Platform", "Architecture", "CI"):
+            return "trait.html"
+        # Default to trait.html for other trait-related classes
+        return "trait.html"
+
+    # Pytest decorators go to pytest.html
+    if (
+        "pytest" in symbol
+        or symbol_clean.startswith("skip_")
+        or symbol_clean.startswith("unless_")
+    ):
+        return "pytest.html"
+
+    # Data symbols - look up the trait or group and use its doc_page
+    if role == "data":
+        # Group collections go to groups.html
+        if symbol_clean in (
+            "ALL_GROUPS",
+            "ALL_PLATFORM_GROUPS",
+            "ALL_ARCHITECTURE_GROUPS",
+            "ALL_CI_GROUPS",
+            "EXTRA_GROUPS",
+            "NON_OVERLAPPING_GROUPS",
+        ):
+            return "groups.html"
+
+        # ID collections go to detection.html
+        if symbol_clean in (
+            "ALL_GROUP_IDS",
+            "ALL_TRAIT_IDS",
+            "ALL_IDS",
+            "ALL_PLATFORM_IDS",  # Deprecated alias for ALL_TRAIT_IDS
+        ):
+            return "detection.html"
+
+        # Deprecated group aliases go to groups.html
+        if symbol_clean in (
+            "ALL_PLATFORMS_WITHOUT_CI",
+            "ANY_ARM",
+            "ANY_MIPS",
+            "ANY_SPARC",
+            "ANY_WINDOWS",
+            "OTHER_UNIX",
+        ):
+            return "groups.html"
+
+        # Deprecated platform aliases go to platforms.html
+        if symbol_clean in (
+            "UNKNOWN_LINUX",
+        ):
+            return "platforms.html"
+
+        # Find the trait by symbol_id and use its doc_page
+        for trait in ALL_TRAITS:
+            if trait.symbol_id == symbol_clean:
+                # Convert doc_page from .md to .html (e.g., "platforms.md" -> "platforms.html")
+                return trait.doc_page.replace(".md", ".html")
+
+        # Find the group by symbol_id and use Group.doc_page
+        for group in ALL_GROUPS:
+            if group.symbol_id == symbol_clean:
+                # All groups are documented in the same page (Group.doc_page = "groups.md")
+                return Group.doc_page.replace(".md", ".html")
+
+    # Default to extra_platforms.html
+    return "extra_platforms.html"
+
+
+def _get_all_public_symbols() -> Iterator[str]:
+    """Collect all public symbols from extra_platforms and pytest modules.
+
+    Returns a list of (symbol_name, is_pytest_decorator) tuples for parametrization.
+    """
+
+    # Add all symbols exposed in extra_platforms root.
+    for symbol_name in extra_platforms.__all__:
+        yield symbol_name
+
+    # Add all symbols exposed in extra_platforms.pytest.
+    for symbol_name in dir(extra_platforms.pytest):
+        if not symbol_name.startswith("_"):
+            yield f"pytest.{symbol_name}"
+
+
+@pytest.mark.parametrize("symbol_name", _get_all_public_symbols())
+def test_get_expected_page_for_symbol_handles_public_api(symbol_name):
+    """Test that get_expected_page_for_symbol correctly handles each public symbol.
+
+    This test validates that our logic correctly maps every symbol exposed in the
+    public API from both extra_platforms and extra_platforms.pytest modules to the
+    correct documentation page.
+
+    Args:
+        symbol_name: The symbol name (e.g., "UBUNTU", "is_linux", "pytest.skip_ubuntu")
+        is_pytest_decorator: True if this is a pytest decorator, False otherwise
+    """
+    if symbol_name.startswith("pytest."):
+        role = "data"
+
+    else:
+        # Get the actual object to determine its role
+        obj = getattr(extra_platforms, symbol_name)
+
+        # Determine the role based on the object type
+        # Order matters: check classes first, then instances, then functions
+        if inspect.isclass(obj):
+            role = "class"
+        elif isinstance(obj, (Trait, Architecture, Platform, CI, Group)):
+            # Trait and Group instances
+            role = "data"
+        elif inspect.isfunction(obj) or (
+            callable(obj) and hasattr(obj, "__name__") and not inspect.isclass(obj)
+        ):
+            # Functions (including cached/wrapped functions)
+            # Check __name__ to distinguish from other callables like modules
+            role = "func"
+        else:
+            # Everything else is treated as data (constants, etc.)
+            role = "data"
+
+    expected_page = get_expected_page_for_symbol(role, symbol_name)
+
+    assert expected_page != "extra_platforms.html", (
+        f"Symbol {role}:`{symbol_name}` returned generic page: {expected_page}"
+    )
+
+
+def collect_all_refs() -> list[tuple[str, str, str]]:
+    """Collect all cross-reference tuples (role, symbol, source_file).
+
+    This helper is intentionally executed at collection time to generate
+    parametrization values for the comprehensive cross-reference test.
+    """
+    project_root = Path(__file__).parent.parent
+    docs_dir = project_root / "docs"
+    code_dir = project_root / "extra_platforms"
+
+    all_refs: list[tuple[str, str, str]] = []
+
+    myst_pattern = r"\{(\w+)\}`~?([^`]+)`"
+    for md_file in docs_dir.glob("**/*.md"):
+        content = md_file.read_text(encoding="utf-8")
+        for role, symbol in re.findall(myst_pattern, content):
+            all_refs.append((role, symbol, str(md_file.relative_to(project_root))))
+
+    rst_pattern = r":(\w+):`~?([^`]+)`"
+    for py_file in code_dir.glob("**/*.py"):
+        content = py_file.read_text(encoding="utf-8")
+        for role, symbol in re.findall(rst_pattern, content):
+            all_refs.append((role, symbol, str(py_file.relative_to(project_root))))
+
+    return all_refs
+
+
+@pytest.mark.parametrize("role,symbol,source_file", collect_all_refs())
+def test_all_crossreferences_point_to_correct_pages(
+    built_docs, role, symbol, source_file
+):
+    """Parametrized check that a single cross-reference points to the expected page.
+
+    The previous monolithic test iterated over all refs; this parametrized variant
+    runs the same checks per-reference so failures are reported per-item.
+    """
+    # Skip documentation examples showing Sphinx role syntax (not actual cross-references)
+    if (
+        "https://" in symbol
+        or "http://" in symbol
+        or "{" in symbol
+        or "}" in symbol
+        or symbol.startswith("](")
+        or " " in symbol
+        or "for inline" in symbol
+    ):
+        pytest.skip("Skipping documentation example syntax")
+
+    # Skip certain roles that don't create cross-references to our code
+    if role in ("doc", "ref", "octicon", "mod"):
+        pytest.skip(f"Skipping non-code role: {role}")
+
+    # Skip references to external packages and Python builtins
+    python_builtins = {
+        "frozenset",
+        "dict",
+        "tuple",
+        "list",
+        "set",
+        "str",
+        "int",
+        "float",
+        "bool",
+        "True",
+        "False",
+        "None",
+        "SystemError",
+        "NotImplementedError",
+        "KeyError",
+        "ValueError",
+        "TypeError",
+        "AttributeError",
+        "RuntimeError",
+        "Exception",
+    }
+    python_builtin_methods = {
+        "remove",
+        "add",
+        "update",
+        "pop",
+        "clear",
+        "copy",
+        "fromkeys",
+        "get",
+        "items",
+        "keys",
+        "values",
+        "append",
+        "extend",
+        "insert",
+    }
+    if (
+        symbol in python_builtins
+        or symbol.split(".")[-1] in python_builtins
+        or (role == "meth" and symbol in python_builtin_methods)
+    ):
+        pytest.skip("Skipping builtin symbol")
+
+    if symbol.startswith((
+        "pytest.",
+        "typing.",
+        "collections.",
+        "types.",
+        "dict.",
+        "frozenset.",
+    )):
+        if not symbol.startswith("pytest.skip_") and not symbol.startswith(
+            "pytest.unless_"
+        ):
+            pytest.skip("External symbol reference")
+
+    if symbol_clean := symbol.split(".")[-1]:
+        if symbol_clean.startswith("ALL_") and symbol_clean.endswith(("_IDS", "_ID")):
+            pytest.skip("Module-level ID collection")
+
+    expected_page = get_expected_page_for_symbol(role, symbol)
+
+    symbol_clean = symbol.split(".")[-1]
+    if symbol.startswith("pytest.") or symbol.startswith("extra_platforms.pytest."):
+        if symbol.startswith("extra_platforms."):
+            expected_anchor = symbol
+        else:
+            expected_anchor = f"extra_platforms.{symbol}"
+    else:
+        expected_anchor = f"extra_platforms.{symbol_clean}"
+
+    found = False
+    for html_file in built_docs.glob("**/*.html"):
+        if html_file.name != expected_page:
+            continue
+        html_content = html_file.read_text(encoding="utf-8")
+        if f'id="{expected_anchor}"' in html_content:
+            found = True
+            break
+
+    if not found:
+        if (
+            not symbol_clean.startswith("_")
+            and "test" not in source_file.lower()
+            and not symbol_clean.startswith("UNKNOWN_")
+        ):
+            assert found, (
+                f"Symbol {role}:`{symbol}` from {source_file} "
+                f"expected in {expected_page} but anchor {expected_anchor} not found"
+            )

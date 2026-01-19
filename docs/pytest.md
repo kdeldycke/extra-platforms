@@ -193,11 +193,9 @@ def test_not_in_github_actions():
 
 <!-- decorators-table-end -->
 
-## Decorator reference
-
 <!-- pytest-decorators-autodata-start -->
 
-### Skip decorators
+## Skip decorators
 
 ```{eval-rst}
 .. autodecorator:: extra_platforms.pytest.skip_aarch64
@@ -318,7 +316,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_xenserver
 ```
 
-### Unless decorators
+## Unless decorators
 
 ```{eval-rst}
 .. autodecorator:: extra_platforms.pytest.unless_aarch64

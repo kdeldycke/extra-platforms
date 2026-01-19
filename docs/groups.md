@@ -91,11 +91,37 @@ with canonical groups.
 
 <!-- group-data-autodata-end -->
 
-```{todo}
-List and document group collections: `ALL_GROUP_IDS`, `ALL_TRAIT_IDS`, `ALL_IDS`, ...
+## Group collections
+
+```{eval-rst}
+.. autodata:: extra_platforms.ALL_GROUPS
+.. autodata:: extra_platforms.ALL_PLATFORM_GROUPS
+.. autodata:: extra_platforms.ALL_ARCHITECTURE_GROUPS
+.. autodata:: extra_platforms.ALL_CI_GROUPS
+.. autodata:: extra_platforms.EXTRA_GROUPS
+.. autodata:: extra_platforms.NON_OVERLAPPING_GROUPS
+```
+
+## Deprecated groups
+
+```{eval-rst}
+.. autodata:: extra_platforms.ALL_PLATFORMS_WITHOUT_CI
+.. autodata:: extra_platforms.ANY_ARM
+.. autodata:: extra_platforms.ANY_MIPS
+.. autodata:: extra_platforms.ANY_SPARC
+.. autodata:: extra_platforms.ANY_WINDOWS
+.. autodata:: extra_platforms.OTHER_UNIX
 ```
 
 ## Group implementation
+
+```{eval-rst}
+.. autoclass:: extra_platforms.Group
+   :members:
+   :private-members:
+   :special-members:
+   :show-inheritance:
+```
 
 ```{eval-rst}
 .. autoclasstree:: extra_platforms.group

@@ -538,10 +538,8 @@ def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
     for trait in sorted(traits_list, key=attrgetter("id")):
         directives.append(f".. autodata:: extra_platforms.{trait.symbol_id}")
 
-    output = "```{eval-rst}\n"
-    output += "\n".join(directives)
-    output += "\n```"
-    return output
+    joined = "\n".join(directives)
+    return f"```{{eval-rst}}\n{joined}\n```"
 
 
 def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> str:
@@ -600,22 +598,6 @@ def generate_detection_autofunction(objects: Iterable[Trait | Group]) -> str:
     return output
 
 
-def _generate_directive_section(section_name: str, objects: Iterable[str]) -> str:
-    """Generate a MyST code block with Sphinx directives for a section.
-
-    Args:
-        section_name: The section header name (e.g., "Skip decorators").
-        objects: An iterable of directive strings (e.g., autodata directives).
-
-    Returns:
-        A formatted MyST-compatible code block with directives.
-    """
-    directives = list(objects)
-    if not directives:
-        return ""
-    return f"### {section_name}\n\n```{{eval-rst}}\n" + "\n".join(directives) + "\n```"
-
-
 def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     """Generate Sphinx autodecorator directives for pytest decorators.
 
@@ -623,36 +605,30 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     defined in the ``extra_platforms.pytest`` module, organized in separate sections.
 
     Uses the built-in ``autodecorator`` directive which renders decorator names with @ prefix.
-
-    Args:
-        objects: The traits or groups whose decorators should be documented.
-
-    Returns:
-        A string containing skip and unless decorator sections with autodecorator directives.
     """
-    objects_list = list(objects)
-    if not objects_list:
-        return ""
+    sorted_objects = sorted(objects, key=attrgetter("id"))
 
-    sorted_objects = sorted(objects_list, key=attrgetter("id"))
-
-    skip_section = _generate_directive_section(
-        "Skip decorators",
-        (
-            f".. autodecorator:: extra_platforms.pytest.{obj.skip_decorator_id}"
-            for obj in sorted_objects
-        ),
+    pairs = (
+        ("Skip decorators", "skip_decorator_id"),
+        ("Unless decorators", "unless_decorator_id"),
     )
 
-    unless_section = _generate_directive_section(
-        "Unless decorators",
-        (
-            f".. autodecorator:: extra_platforms.pytest.{obj.unless_decorator_id}"
-            for obj in sorted_objects
-        ),
+    def _directive_section(title: str, directives: Iterable[str]) -> str:
+        joined = "\n".join(directives)
+        return f"## {title}\n\n```{{eval-rst}}\n{joined}\n```"
+
+    sections = (
+        _directive_section(
+            name,
+            (
+                f".. autodecorator:: extra_platforms.pytest.{getattr(o, attr)}"
+                for o in sorted_objects
+            ),
+        )
+        for name, attr in pairs
     )
 
-    return f"{skip_section}\n\n{unless_section}"
+    return "\n\n".join(sections)
 
 
 def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:

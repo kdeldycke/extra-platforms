@@ -354,3 +354,9 @@ mindmap
 ```
 
 <!-- platform-data-autodata-end -->
+
+## Deprecated platforms
+
+```{eval-rst}
+.. autodata:: extra_platforms.UNKNOWN_LINUX
+```

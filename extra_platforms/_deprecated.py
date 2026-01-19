@@ -21,6 +21,7 @@ import sys
 import warnings
 from collections.abc import Callable
 from functools import wraps
+from textwrap import dedent
 from types import ModuleType
 from typing import Any
 
@@ -103,16 +104,25 @@ class _DeprecatedProxy:
         return repr(self._target)
 
 
-def _make_deprecated_proxy(target, name: str, replacement: str):
+def _make_deprecated_proxy(target, name: str, replacement: str, docstring: str = ""):
     """Convenience factory returning a deprecated proxy for ``target``.
 
     Keeps call-sites concise and avoids repeating the proxy class.
+
+    Args:
+        target: The object to proxy to.
+        name: Deprecated name.
+        replacement: Suggested replacement.
+        docstring: Documentation string for the proxy.
     """
-    return _DeprecatedProxy(target, name, replacement)
+    proxy = _DeprecatedProxy(target, name, replacement)
+    if docstring:
+        proxy.__doc__ = docstring
+    return proxy
 
 
 def _make_deprecated_callable(
-    name: str, replacement: str, func: Callable[..., Any] | str
+    name: str, replacement: str, func: Callable[..., Any] | str, docstring: str = ""
 ) -> Callable[..., Any]:
     """Return a function wrapping ``func`` that emits a deprecation warning.
 
@@ -122,6 +132,12 @@ def _make_deprecated_callable(
     as the name of a function to look up lazily in ``extra_platforms`` module.
     This allows wrapping dynamically generated functions that don't exist yet at
     module load time.
+
+    Args:
+        name: Deprecated name.
+        replacement: Suggested replacement.
+        func: The callable to wrap or string name to look up.
+        docstring: Documentation string for the wrapper.
     """
 
     @wraps(func) if callable(func) else (lambda f: f)
@@ -129,6 +145,9 @@ def _make_deprecated_callable(
         _warn_deprecated(name, replacement)
         target = func if callable(func) else getattr(_ep, func)
         return target(*args, **kwargs)
+
+    if docstring:
+        _wrapper.__doc__ = docstring
 
     return _wrapper
 
@@ -139,36 +158,42 @@ def _make_deprecated_callable(
 
 
 ALL_PLATFORM_IDS = _make_deprecated_proxy(
-    ALL_TRAIT_IDS, "ALL_PLATFORM_IDS", "ALL_TRAIT_IDS"
-)
-"""
-Alias `ALL_PLATFORM_IDS` → :data:`~ALL_TRAIT_IDS`.
+    ALL_TRAIT_IDS,
+    "ALL_PLATFORM_IDS",
+    "ALL_TRAIT_IDS",
+    dedent("""\
+        Alias ``ALL_PLATFORM_IDS`` → :data:`~ALL_TRAIT_IDS`.
 
-.. deprecated:: 6.0.0
-   Use :data:`~ALL_TRAIT_IDS` instead.
-"""
+        .. deprecated:: 6.0.0
+           Use :data:`~ALL_TRAIT_IDS` instead.
+        """),
+)
 
 
 ALL_PLATFORMS_WITHOUT_CI = _make_deprecated_proxy(
-    ALL_PLATFORMS, "ALL_PLATFORMS_WITHOUT_CI", "ALL_PLATFORMS"
-)
-"""
-Alias `ALL_PLATFORMS_WITHOUT_CI` → :data:`~ALL_PLATFORMS`.
+    ALL_PLATFORMS,
+    "ALL_PLATFORMS_WITHOUT_CI",
+    "ALL_PLATFORMS",
+    dedent("""\
+        Alias ``ALL_PLATFORMS_WITHOUT_CI`` → :data:`~ALL_PLATFORMS`.
 
-.. deprecated:: 6.0.0
-   Use :data:`~ALL_PLATFORMS` instead.
-"""
+        .. deprecated:: 6.0.0
+           Use :data:`~ALL_PLATFORMS` instead.
+        """),
+)
 
 
 UNKNOWN_LINUX = _make_deprecated_proxy(
-    UNKNOWN_PLATFORM, "UNKNOWN_LINUX", "UNKNOWN_PLATFORM"
-)
-"""
-Alias `UNKNOWN_LINUX` → :data:`~UNKNOWN_PLATFORM`.
+    UNKNOWN_PLATFORM,
+    "UNKNOWN_LINUX",
+    "UNKNOWN_PLATFORM",
+    dedent("""\
+        Alias ``UNKNOWN_LINUX`` → :data:`~UNKNOWN_PLATFORM`.
 
-.. deprecated:: 7.0.0
-   Use :data:`~UNKNOWN_PLATFORM` instead.
-"""
+        .. deprecated:: 7.0.0
+           Use :data:`~UNKNOWN_PLATFORM` instead.
+        """),
+)
 
 
 # ================================================================
@@ -180,13 +205,14 @@ current_os = _make_deprecated_callable(
     "current_os()",
     "current_platform()",
     current_platform,  # type: ignore[has-type]
-)
-"""
-Alias `current_os()` → :func:`~current_platform`.
+    dedent(
+        """Alias ``current_os()`` → :func:`~current_platform`.
 
-.. deprecated:: 6.0.0
-   Use :func:`~current_platform` instead.
-"""
+        .. deprecated:: 6.0.0
+           Use :func:`~current_platform` instead.
+        """
+    ),
+)
 
 
 def _current_platforms_impl() -> tuple[Platform, ...]:
@@ -194,14 +220,17 @@ def _current_platforms_impl() -> tuple[Platform, ...]:
 
 
 current_platforms = _make_deprecated_callable(
-    "current_platforms()", "current_traits()", _current_platforms_impl
-)
-"""
-Alias `current_platforms()` → :func:`~current_traits`.
+    "current_platforms()",
+    "current_traits()",
+    _current_platforms_impl,
+    dedent(
+        """Alias ``current_platforms()`` → :func:`~current_traits`.
 
-.. deprecated:: 6.0.0
-   Use :func:`~current_traits` instead.
-"""
+        .. deprecated:: 6.0.0
+           Use :func:`~current_traits` instead.
+        """
+    ),
+)
 
 
 is_unknown_linux = _make_deprecated_callable(
@@ -209,8 +238,7 @@ is_unknown_linux = _make_deprecated_callable(
     "is_unknown_platform()",
     "is_unknown_platform",
 )
-"""
-Alias `is_unknown_linux()` → :func:`~is_unknown_platform`.
+"""Alias ``is_unknown_linux()`` → :func:`~is_unknown_platform`.
 
 .. deprecated:: 7.0.0
    Use :func:`~is_unknown_platform` instead.
@@ -227,8 +255,7 @@ is_all_platforms_without_ci = _make_deprecated_callable(
     "is_any_platform()",
     "is_any_platform",
 )
-"""
-Alias `is_all_platforms_without_ci()` → :func:`~is_any_platform`.
+"""Alias ``is_all_platforms_without_ci()`` → :func:`~is_any_platform`.
 
 .. deprecated:: 6.0.0
    Use :func:`~is_any_platform` instead.
@@ -236,19 +263,17 @@ Alias `is_all_platforms_without_ci()` → :func:`~is_any_platform`.
 
 
 is_ci = _make_deprecated_callable("is_ci()", "is_any_ci()", "is_any_ci")
-"""
-Alias `is_ci()` → :func:`~is_any_ci`.
+"""Alias ``is_ci()`` → :func:`~is_any_ci`.
 
 .. deprecated:: 6.0.0
-   Use :func:`~is_any_ci` instead.
+    Use :func:`~is_any_ci` instead.
 """
 
 
 is_all_architectures = _make_deprecated_callable(
     "is_all_architectures()", "is_any_architecture()", "is_any_architecture"
 )
-"""
-Alias `is_all_architectures()` → :func:`~is_any_architecture`.
+"""Alias ``is_all_architectures()`` → :func:`~is_any_architecture`.
 
 .. deprecated:: 7.0.0
    Use :func:`~is_any_architecture` instead.
@@ -258,8 +283,7 @@ Alias `is_all_architectures()` → :func:`~is_any_architecture`.
 is_all_platforms = _make_deprecated_callable(
     "is_all_platforms()", "is_any_platform()", "is_any_platform"
 )
-"""
-Alias `is_all_platforms()` → :func:`~is_any_platform`.
+"""Alias ``is_all_platforms()`` → :func:`~is_any_platform`.
 
 .. deprecated:: 7.0.0
    Use :func:`~is_any_platform` instead.
@@ -267,19 +291,17 @@ Alias `is_all_platforms()` → :func:`~is_any_platform`.
 
 
 is_all_ci = _make_deprecated_callable("is_all_ci()", "is_any_ci()", "is_any_ci")
-"""
-Alias `is_all_ci()` → :func:`~is_any_ci`.
+"""Alias ``is_all_ci()`` → :func:`~is_any_ci`.
 
 .. deprecated:: 7.0.0
-   Use :func:`~is_any_ci` instead.
+    Use :func:`~is_any_ci` instead.
 """
 
 
 is_all_traits = _make_deprecated_callable(
     "is_all_traits()", "is_any_trait()", "is_any_trait"
 )
-"""
-Alias `is_all_traits()` → :func:`~is_any_trait`.
+"""Alias ``is_all_traits()`` → :func:`~is_any_trait`.
 
 .. deprecated:: 7.0.0
    Use :func:`~is_any_trait` instead.
@@ -289,8 +311,7 @@ Alias `is_all_traits()` → :func:`~is_any_trait`.
 is_other_unix = _make_deprecated_callable(
     "is_other_unix()", "is_other_posix()", "is_other_posix"
 )
-"""
-Alias `is_other_unix()` → :func:`~is_other_posix`.
+"""Alias ``is_other_unix()`` → :func:`~is_other_posix`.
 
 .. deprecated:: 7.0.0
    Use :func:`~is_other_posix` instead.
@@ -300,8 +321,7 @@ Alias `is_other_unix()` → :func:`~is_other_posix`.
 is_bsd_without_macos = _make_deprecated_callable(
     "is_bsd_without_macos()", "is_bsd_not_macos()", "is_bsd_not_macos"
 )
-"""
-Alias `is_bsd_without_macos()` → :func:`~is_bsd_not_macos`.
+"""Alias ``is_bsd_without_macos()`` → :func:`~is_bsd_not_macos`.
 
 .. deprecated:: 7.0.0
    Use :func:`~is_bsd_not_macos` instead.
@@ -311,8 +331,7 @@ Alias `is_bsd_without_macos()` → :func:`~is_bsd_not_macos`.
 is_unix_without_macos = _make_deprecated_callable(
     "is_unix_without_macos()", "is_unix_not_macos()", "is_unix_not_macos"
 )
-"""
-Alias `is_unix_without_macos()` → :func:`~is_unix_not_macos`.
+"""Alias ``is_unix_without_macos()`` → :func:`~is_unix_not_macos`.
 
 .. deprecated:: 7.0.0
    Use :func:`~is_unix_not_macos` instead.
@@ -324,49 +343,69 @@ Alias `is_unix_without_macos()` → :func:`~is_unix_not_macos`.
 # ================================================================
 
 
-ANY_ARM = _make_deprecated_proxy(ALL_ARM, "ANY_ARM", "ALL_ARM")
-"""
-Alias `ANY_ARM` → :data:`~ALL_ARM`.
+ANY_ARM = _make_deprecated_proxy(
+    ALL_ARM,
+    "ANY_ARM",
+    "ALL_ARM",
+    dedent("""\
+        Alias ``ANY_ARM`` → :data:`~ALL_ARM`.
 
-.. deprecated:: 7.0.0
-   Use :data:`~ALL_ARM` instead.
-"""
-
-
-ANY_MIPS = _make_deprecated_proxy(ALL_MIPS, "ANY_MIPS", "ALL_MIPS")
-"""
-Alias `ANY_MIPS` → :data:`~ALL_MIPS`.
-
-.. deprecated:: 7.0.0
-   Use :data:`~ALL_MIPS` instead.
-"""
+        .. deprecated:: 7.0.0
+           Use :data:`~ALL_ARM` instead.
+        """),
+)
 
 
-ANY_SPARC = _make_deprecated_proxy(ALL_SPARC, "ANY_SPARC", "ALL_SPARC")
-"""
-Alias `ANY_SPARC` → :data:`~ALL_SPARC`.
+ANY_MIPS = _make_deprecated_proxy(
+    ALL_MIPS,
+    "ANY_MIPS",
+    "ALL_MIPS",
+    dedent("""\
+        Alias ``ANY_MIPS`` → :data:`~ALL_MIPS`.
 
-.. deprecated:: 7.0.0
-   Use :data:`~ALL_SPARC` instead.
-"""
-
-
-ANY_WINDOWS = _make_deprecated_proxy(ALL_WINDOWS, "ANY_WINDOWS", "ALL_WINDOWS")
-"""
-Alias `ANY_WINDOWS` → :data:`~ALL_WINDOWS`.
-
-.. deprecated:: 7.0.0
-   Use :data:`~ALL_WINDOWS` instead.
-"""
+        .. deprecated:: 7.0.0
+           Use :data:`~ALL_MIPS` instead.
+        """),
+)
 
 
-OTHER_UNIX = _make_deprecated_proxy(OTHER_POSIX, "OTHER_UNIX", "OTHER_POSIX")
-"""
-Alias `OTHER_UNIX` → :data:`~OTHER_POSIX`.
+ANY_SPARC = _make_deprecated_proxy(
+    ALL_SPARC,
+    "ANY_SPARC",
+    "ALL_SPARC",
+    dedent("""\
+        Alias ``ANY_SPARC`` → :data:`~ALL_SPARC`.
 
-.. deprecated:: 7.0.0
-   Use :data:`~OTHER_POSIX` instead.
-"""
+        .. deprecated:: 7.0.0
+           Use :data:`~ALL_SPARC` instead.
+        """),
+)
+
+
+ANY_WINDOWS = _make_deprecated_proxy(
+    ALL_WINDOWS,
+    "ANY_WINDOWS",
+    "ALL_WINDOWS",
+    dedent("""\
+        Alias ``ANY_WINDOWS`` → :data:`~ALL_WINDOWS`.
+
+        .. deprecated:: 7.0.0
+           Use :data:`~ALL_WINDOWS` instead.
+        """),
+)
+
+
+OTHER_UNIX = _make_deprecated_proxy(
+    OTHER_POSIX,
+    "OTHER_UNIX",
+    "OTHER_POSIX",
+    dedent("""\
+        Alias ``OTHER_UNIX`` → :data:`~OTHER_POSIX`.
+
+        .. deprecated:: 7.0.0
+           Use :data:`~OTHER_POSIX` instead.
+        """),
+)
 
 
 # ================================================================
@@ -375,14 +414,17 @@ Alias `OTHER_UNIX` → :data:`~OTHER_POSIX`.
 
 
 platforms_from_ids = _make_deprecated_callable(
-    "platforms_from_ids", "traits_from_ids", traits_from_ids
-)
-"""
-Alias `platforms_from_ids` → :func:`~traits_from_ids`.
+    "platforms_from_ids",
+    "traits_from_ids",
+    traits_from_ids,
+    dedent(
+        """Alias ``platforms_from_ids`` → :func:`~traits_from_ids`.
 
-.. deprecated:: 6.0.0
-   Use :func:`~traits_from_ids` instead.
-"""
+        .. deprecated:: 6.0.0
+           Use :func:`~traits_from_ids` instead.
+        """
+    ),
+)
 
 
 # ================================================================

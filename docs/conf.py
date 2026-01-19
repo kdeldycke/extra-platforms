@@ -37,8 +37,9 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
         source = Path(source_file).read_text(encoding="utf-8")
         tree = ast.parse(source)
 
-        # Look for assignment followed by a string literal (attribute docstring).
+        # Look for assignment (or annotated assignment) followed by a string literal.
         for i, node in enumerate(tree.body):
+            # Handle both regular assignments and annotated assignments
             if isinstance(node, ast.Assign):
                 for target in node.targets:
                     if isinstance(target, ast.Name) and target.id == attr_name:
@@ -50,6 +51,17 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
                             ):
                                 if isinstance(next_node.value.value, str):
                                     return next_node.value.value
+            elif isinstance(node, ast.AnnAssign):
+                # Handle annotated assignments like: x: type = value
+                if isinstance(node.target, ast.Name) and node.target.id == attr_name:
+                    # Check if the next statement is a string expression.
+                    if i + 1 < len(tree.body):
+                        next_node = tree.body[i + 1]
+                        if isinstance(next_node, ast.Expr) and isinstance(
+                            next_node.value, ast.Constant
+                        ):
+                            if isinstance(next_node.value.value, str):
+                                return next_node.value.value
         return None
     except Exception:
         return None
@@ -172,13 +184,13 @@ def make_pytest_decorator_line(obj):
 
 
 def autodoc_process_docstring(app, what, name, obj, options, lines):
-    """Generate docstrings for Trait instances and Groups.
+    """Generate docstrings for Trait instances, Groups, and frozenset collections.
 
     Since autodata directives use ``extra_platforms.X`` paths but the attribute
     docstrings (string literals following assignments) are defined in submodules
-    like ``platform_data.py``, this hook fetches those docstrings from the source
-    files using AST parsing and injects them into the documentation along with
-    additional metadata.
+    like ``platform_data.py``, ``group_data.py``, and ``operations.py``, this hook
+    fetches those docstrings from the source files using AST parsing and injects them
+    into the documentation along with additional metadata.
     """
     if isinstance(obj, Group):
         # Fetch attribute docstring from source module since autodata uses
@@ -257,6 +269,34 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         ]
         lines.append(f"- **Groups** ({len(group_links)}): {', '.join(group_links)}")
 
+    elif isinstance(obj, frozenset):
+        # Handle frozenset collections - fetch their docstrings from source modules.
+        # Map collection names to their source modules.
+        collection_modules = {
+            "ALL_GROUPS": "group_data",
+            "ALL_PLATFORM_GROUPS": "group_data",
+            "ALL_ARCHITECTURE_GROUPS": "group_data",
+            "ALL_CI_GROUPS": "group_data",
+            "EXTRA_GROUPS": "group_data",
+            "NON_OVERLAPPING_GROUPS": "group_data",
+            "ALL_GROUP_IDS": "operations",
+            "ALL_TRAIT_IDS": "operations",
+            "ALL_IDS": "operations",
+        }
+
+        # Extract the symbol name from the full qualified name.
+        symbol_name = name.split(".")[-1]
+
+        if symbol_name in collection_modules:
+            source_module = collection_modules[symbol_name]
+            source_docstring = get_attribute_docstring(
+                f"extra_platforms.{source_module}", symbol_name
+            )
+            if source_docstring:
+                # Clear the generic frozenset docstring and replace with the actual one.
+                lines.clear()
+                lines.extend(source_docstring.strip().split("\n"))
+
 
 def autodoc_skip_member(app, what, name, obj, skip, options):
     """Force inclusion of Trait instances and Groups, skip detection functions from main module.
@@ -272,23 +312,47 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
     if isinstance(obj, (Trait, Group)):
         return False  # Don't skip - include in documentation
 
-    # Skip detection functions when documenting the root module via RST.
+    # Skip detection functions, operations functions, and main classes when
+    # documenting the root module via RST.
     # Detection functions fall into two categories:
     # 1. Trait detection functions (is_<trait>, current_*) defined in
     #    extra_platforms.detection
     # 2. Group detection functions (is_<group>) dynamically generated in
     #    extra_platforms.__init__
     #
-    # All of these are explicitly documented in detection.md and should not appear
-    # in extra_platforms.html to avoid duplicate documentation.
+    # Main classes (Trait, Group, Platform, Architecture, CI) are explicitly
+    # documented in their respective pages (trait.md, groups.md) and should not
+    # appear in extra_platforms.html to avoid duplicate documentation.
     if what == "module":
         obj_module = getattr(obj, "__module__", None)
+
         # Skip all detection functions (both from detection module and dynamically
         # generated group detection functions)
         if obj_module in ("extra_platforms.detection", "extra_platforms") and name.startswith(
             ("is_", "current_")
         ):
             return True  # Skip - already documented in detection.md
+
+        # Skip invalidate_caches - documented in detection.md
+        if name == "invalidate_caches" and obj_module in (
+            "extra_platforms.detection",
+            "extra_platforms",
+        ):
+            return True  # Skip - already documented in detection.md
+
+        # Skip operations functions - documented in groups.md
+        if obj_module == "extra_platforms.operations" and name in (
+            "groups_from_ids",
+            "traits_from_ids",
+            "reduce",
+        ):
+            return True  # Skip - already documented in groups.md
+
+        # Skip main trait and group classes - they're documented in their own pages
+        if obj_module in ("extra_platforms.trait", "extra_platforms.group") and name in (
+            "Trait", "Platform", "Architecture", "CI", "Group"
+        ):
+            return True  # Skip - already documented in trait.md or groups.md
 
     return None  # Use default behavior for everything else
 
