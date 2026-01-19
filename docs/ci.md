@@ -137,6 +137,7 @@ mindmap
 
 ```{eval-rst}
 .. automodule:: extra_platforms.ci_data
+   :no-index:
 ```
 
 <!-- ci-data-autodata-start -->

@@ -495,7 +495,7 @@ class _DeprecatedOperationsModule(ModuleType):
 
     .. deprecated:: 8.0.0
        The ``extra_platforms.operations`` module is deprecated.
-       Import from ``extra_platforms`` or ``extra_platforms.group`` instead.
+       Import from ``extra_platforms`` instead.
     """
 
     def __init__(self):
@@ -503,8 +503,7 @@ class _DeprecatedOperationsModule(ModuleType):
         self.__doc__ = (
             "Backward-compatible module for deprecated imports.\n\n"
             ".. deprecated:: 8.0.0\n"
-            "    This module is deprecated. Import from ``extra_platforms`` or"
-            " ``extra_platforms.group`` instead."
+            "    This module is deprecated. Import from ``extra_platforms`` instead."
         )
         self.__file__ = __file__
         self.__all__ = [
@@ -519,7 +518,7 @@ class _DeprecatedOperationsModule(ModuleType):
     def __getattr__(self, name: str):
         warnings.warn(
             "The 'extra_platforms.operations' module is deprecated. "
-            "Import from 'extra_platforms' or 'extra_platforms.group' instead.",
+            "Import from 'extra_platforms' instead.",
             DeprecationWarning,
             stacklevel=2,
         )

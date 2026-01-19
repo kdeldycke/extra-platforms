@@ -308,6 +308,7 @@ mindmap
 
 ```{eval-rst}
 .. automodule:: extra_platforms.architecture_data
+   :no-index:
 ```
 
 <!-- architecture-data-autodata-start -->

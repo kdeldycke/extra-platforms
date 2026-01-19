@@ -126,6 +126,31 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 nitpicky = True
 
+# Suppress specific warnings that are unavoidable or cosmetic.
+suppress_warnings = [
+    # Example: "WARNING: Cannot resolve forward reference in type annotations of
+    # "extra_platforms.pytest.skip_aarch64": name 'Mark' is not defined"
+    # Explanation: Pytest decorators are dynamically generated at import time, and the
+    # pytest.Mark type is not available during Sphinx documentation build. These are
+    # cosmetic warnings that don't affect the generated documentation.
+    "sphinx_autodoc_typehints.forward_reference",
+
+    # Example: "/Users/kde/code/extra-platforms/docs/architectures.md:305: WARNING:
+    # Ignoring "mermaid" directive without content. [docutils]"
+    # Explanation: The autoclasstree extension sometimes generates empty mermaid
+    # directives for certain module structures. These are harmless and don't affect
+    # the documentation output.
+    "myst.directive",
+
+    # Example: "/Users/kde/code/extra-platforms/tests/test_sphinx_crossrefs.py:docstring
+    # of tests.test_sphinx_crossrefs.has_linked_reference:9: ERROR: Unexpected
+    # indentation. [docutils]"
+    # Explanation: Some code examples in docstrings may have indentation that triggers
+    # reStructuredText parsing warnings. These are typically in test files and don't
+    # affect the main documentation.
+    "docutils",
+]
+
 # Concatenates the docstrings of the class and the __init__ method.
 autoclass_content = "both"
 # Keep the same ordering as in original source code.
@@ -340,6 +365,10 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
             "extra_platforms",
         ):
             return True  # Skip - already documented in detection.md
+
+        # Skip internal implementation functions that are wrapped
+        if name == "_current_platforms_impl" and obj_module == "extra_platforms._deprecated":
+            return True  # Skip - internal implementation detail
 
         # Skip group utility functions - documented in groups.md
         if obj_module == "extra_platforms.group" and name in (
