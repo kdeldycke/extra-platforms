@@ -135,16 +135,21 @@ def reduce(
     Only the groups defined in the ``target_pool`` are considered for the reduction.
     If no reference pool is provided, use all known groups.
 
-    .. hint::
-        Maybe this could be solved with some `Euler diagram
-        <https://en.wikipedia.org/wiki/Euler_diagram>`_ algorithms, like those
-        implemented in `eule <https://github.com/trouchet/eule>`_.
+    .. note::
+        The algorithm is a variant of the `Set Cover Problem
+        <https://en.wikipedia.org/wiki/Set_cover_problem>`_, which is NP-hard. However,
+        this implementation adds a constraint that selected groups must be disjoint
+        (non-overlapping), making it closer to an `Exact Cover Problem
+        <https://en.wikipedia.org/wiki/Exact_cover>`_.
 
-        This is being discussed upstream at `trouchet/eule#120
-        <https://github.com/trouchet/eule/issues/120>`_.
+        The current implementation uses brute-force enumeration of all group combinations,
+        which is acceptable given the small number of predefined groups (< 30). For larger
+        inputs, a `greedy approximation
+        <https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm>`_ would be more
+        efficient, achieving O(log n) approximation in polynomial time.
 
     .. todo::
-        Should we rename or alias this method to `collapse()`? Cannot decide if it is
+        Should we rename or alias this method to ``collapse()``? Cannot decide if it is
         more descriptive or not...
     """
     # Collect all traits.
