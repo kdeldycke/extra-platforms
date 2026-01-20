@@ -263,73 +263,51 @@ def test_current_funcs():
         assert current_ci_result in current_traits_results
 
 
-def test_current_architecture_strict(monkeypatch):
-    """Test that ``current_architecture(strict=True)`` raises an error when unrecognized."""
-    # First verify that without mocking, current_architecture works normally.
-    invalidate_caches()
-    arch = current_architecture()
-    assert arch in ALL_ARCHITECTURES
-    assert arch is not UNKNOWN_ARCHITECTURE
+@pytest.mark.parametrize(
+    "current_func,all_collection,unknown_constant,trait_type,error_message",
+    [
+        (
+            current_architecture,
+            ALL_ARCHITECTURES,
+            UNKNOWN_ARCHITECTURE,
+            "architecture",
+            "Unrecognized architecture",
+        ),
+        (
+            current_platform,
+            ALL_PLATFORMS,
+            UNKNOWN_PLATFORM,
+            "platform",
+            "Unrecognized platform",
+        ),
+        (current_ci, ALL_CI, UNKNOWN_CI, "CI", "Unrecognized CI"),
+    ],
+)
+def test_current_strict_mode(
+    current_func, all_collection, unknown_constant, trait_type, error_message, monkeypatch
+):
+    """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
+    # First verify that without mocking, current_* works normally.
+    # Skip this check for CI since it may legitimately be UNKNOWN_CI in some environments.
+    if trait_type != "CI":
+        invalidate_caches()
+        result = current_func()
+        assert result in all_collection
+        assert result is not unknown_constant
 
-    # Now mock all architectures to not match.
+    # Now mock all traits to not match.
     invalidate_caches()
-    for arch in ALL_ARCHITECTURES:
-        monkeypatch.setattr(type(arch), "current", property(lambda self: False))
+    for trait in all_collection:
+        monkeypatch.setattr(type(trait), "current", property(lambda self: False))
 
-    # Without strict mode, we get UNKNOWN_ARCHITECTURE.
-    result = current_architecture(strict=False)
-    assert result is UNKNOWN_ARCHITECTURE
+    # Without strict mode, we get UNKNOWN_*.
+    result = current_func(strict=False)
+    assert result is unknown_constant
 
     # With strict mode, we get a SystemError.
     invalidate_caches()
-    with pytest.raises(SystemError, match="Unrecognized architecture"):
-        current_architecture(strict=True)
-
-    # Cleanup: restore the original property.
-    invalidate_caches()
-
-
-def test_current_platform_strict(monkeypatch):
-    """Test that ``current_platform(strict=True)`` raises an error when unrecognized."""
-    # First verify that without mocking, current_platform works normally.
-    invalidate_caches()
-    platform = current_platform()
-    assert platform in ALL_PLATFORMS
-    assert platform is not UNKNOWN_PLATFORM
-
-    # Now mock all platforms to not match.
-    invalidate_caches()
-    for platform in ALL_PLATFORMS:
-        monkeypatch.setattr(type(platform), "current", property(lambda self: False))
-
-    # Without strict mode, we get UNKNOWN_PLATFORM.
-    result = current_platform(strict=False)
-    assert result is UNKNOWN_PLATFORM
-
-    # With strict mode, we get a SystemError.
-    invalidate_caches()
-    with pytest.raises(SystemError, match="Unrecognized platform"):
-        current_platform(strict=True)
-
-    # Cleanup: restore the original property.
-    invalidate_caches()
-
-
-def test_current_ci_strict(monkeypatch):
-    """Test that ``current_ci(strict=True)`` raises an error when unrecognized."""
-    # Now mock all CI systems to not match.
-    invalidate_caches()
-    for ci in ALL_CI:
-        monkeypatch.setattr(type(ci), "current", property(lambda self: False))
-
-    # Without strict mode, we get UNKNOWN_CI.
-    result = current_ci(strict=False)
-    assert result is UNKNOWN_CI
-
-    # With strict mode, we get a SystemError.
-    invalidate_caches()
-    with pytest.raises(SystemError, match="Unrecognized CI"):
-        current_ci(strict=True)
+    with pytest.raises(SystemError, match=error_message):
+        current_func(strict=True)
 
     # Cleanup: restore the original property.
     invalidate_caches()

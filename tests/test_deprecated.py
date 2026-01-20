@@ -61,79 +61,99 @@ from extra_platforms._deprecated import (
 )
 
 
-def test_deprecated_proxy_getattr():
-    """Test that _DeprecatedProxy delegates attribute access."""
-    target = {"key": "value"}
-    proxy = _DeprecatedProxy(target, "old_name", "new_name")
+@pytest.mark.parametrize(
+    "operation,target,old_name,new_name,operation_func,expected,expects_warning",
+    [
+        # Test attribute access (getattr).
+        (
+            "getattr",
+            {"key": "value"},
+            "old_name",
+            "new_name",
+            lambda p: p.keys(),
+            lambda r: r is not None,
+            True,
+        ),
+        # Test iteration.
+        (
+            "iter",
+            [1, 2, 3],
+            "old_list",
+            "new_list",
+            lambda p: list(p),
+            lambda r: r == [1, 2, 3],
+            True,
+        ),
+        # Test len().
+        (
+            "len",
+            [1, 2, 3, 4],
+            "old_list",
+            "new_list",
+            lambda p: len(p),
+            lambda r: r == 4,
+            True,
+        ),
+        # Test 'in' operator (contains).
+        (
+            "contains",
+            {1, 2, 3},
+            "old_set",
+            "new_set",
+            lambda p: 2 in p,
+            lambda r: r is True,
+            True,
+        ),
+        # Test function call.
+        (
+            "call",
+            lambda x, y: x + y,
+            "old_func()",
+            "new_func()",
+            lambda p: p(3, 5),
+            lambda r: r == 8,
+            True,
+        ),
+        # Test item access (getitem).
+        (
+            "getitem",
+            {"a": 1, "b": 2},
+            "old_dict",
+            "new_dict",
+            lambda p: p["a"],
+            lambda r: r == 1,
+            True,
+        ),
+        # Test repr() - should not trigger warning.
+        (
+            "repr",
+            [1, 2, 3],
+            "old_list",
+            "new_list",
+            lambda p: repr(p),
+            lambda r: r == "[1, 2, 3]",
+            False,
+        ),
+    ],
+)
+def test_deprecated_proxy_operations(
+    operation, target, old_name, new_name, operation_func, expected, expects_warning
+):
+    """Test that _DeprecatedProxy delegates various operations."""
+    proxy = _DeprecatedProxy(target, old_name, new_name)
 
-    with pytest.warns(DeprecationWarning, match="old_name.*deprecated.*new_name"):
-        result = proxy.keys()
-    assert result is not None
-
-
-def test_deprecated_proxy_iter():
-    """Test that _DeprecatedProxy delegates iteration."""
-    target = [1, 2, 3]
-    proxy = _DeprecatedProxy(target, "old_list", "new_list")
-
-    with pytest.warns(DeprecationWarning, match="old_list.*deprecated.*new_list"):
-        result = list(proxy)
-    assert result == [1, 2, 3]
-
-
-def test_deprecated_proxy_len():
-    """Test that _DeprecatedProxy delegates len()."""
-    target = [1, 2, 3, 4]
-    proxy = _DeprecatedProxy(target, "old_list", "new_list")
-
-    with pytest.warns(DeprecationWarning, match="old_list.*deprecated.*new_list"):
-        result = len(proxy)
-    assert result == 4
-
-
-def test_deprecated_proxy_contains():
-    """Test that _DeprecatedProxy delegates 'in' operator."""
-    target = {1, 2, 3}
-    proxy = _DeprecatedProxy(target, "old_set", "new_set")
-
-    with pytest.warns(DeprecationWarning, match="old_set.*deprecated.*new_set"):
-        result = 2 in proxy
-    assert result is True
-
-
-def test_deprecated_proxy_call():
-    """Test that _DeprecatedProxy delegates function calls."""
-
-    def target_func(x, y):
-        return x + y
-
-    proxy = _DeprecatedProxy(target_func, "old_func()", "new_func()")
-
-    with pytest.warns(DeprecationWarning, match="old_func.*deprecated.*new_func"):
-        result = proxy(3, 5)
-    assert result == 8
-
-
-def test_deprecated_proxy_getitem():
-    """Test that _DeprecatedProxy delegates item access."""
-    target = {"a": 1, "b": 2}
-    proxy = _DeprecatedProxy(target, "old_dict", "new_dict")
-
-    with pytest.warns(DeprecationWarning, match="old_dict.*deprecated.*new_dict"):
-        result = proxy["a"]
-    assert result == 1
-
-
-def test_deprecated_proxy_repr():
-    """Test that _DeprecatedProxy delegates repr()."""
-    target = [1, 2, 3]
-    proxy = _DeprecatedProxy(target, "old_list", "new_list")
-
-    # repr() should not trigger a warning, it's just for display.
-    with warnings.catch_warnings():
-        warnings.simplefilter("error")
-        result = repr(proxy)
-    assert result == "[1, 2, 3]"
+    if expects_warning:
+        with pytest.warns(
+            DeprecationWarning, match=f"{old_name}.*deprecated.*{new_name}"
+        ):
+            result = operation_func(proxy)
+        assert expected(result)
+    else:
+        # repr() should not trigger a warning, it's just for display.
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            result = operation_func(proxy)
+        assert expected(result)
 
 
 def test_make_deprecated_proxy():
