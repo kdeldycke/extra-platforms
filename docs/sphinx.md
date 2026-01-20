@@ -62,8 +62,8 @@ Which renders as:
 > See the {mod}`extra_platforms.detection` module for detection functions.
 
 The tilde (`~`) prefix displays only the symbol name without the full module path:
-- `` `{func}`~extra_platforms.is_linux` `` renders as {func}`~extra_platforms.is_linux`
-- `` `{func}`extra_platforms.is_linux` `` renders as {func}`extra_platforms.is_linux`
+- `` {func}`~extra_platforms.is_linux `` renders as {func}`~extra_platforms.is_linux`
+- `` {func}`extra_platforms.is_linux `` renders as {func}`extra_platforms.is_linux`
 
 ### Setting a default module
 
