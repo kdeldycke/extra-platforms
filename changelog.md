@@ -13,6 +13,18 @@
     `extra_platforms.group_data`.
   - The `extra_platforms.operations` module is deprecated and will be removed in the next
     major version. A compatibility shim is provided that emits deprecation warnings.
+- Add new `extract_members()` public function to extract traits from arbitrarily nested
+  structures of Groups, Traits, and string IDs. Deprecate `Group._extract_members()` in
+  favor of it.
+- Simplify `reduce()` algorithm from brute-force enumeration to a greedy approximation
+  for better performance.
+- Move `current_architecture()`, `current_platform()`, `current_ci()`, `current_traits()`,
+  `is_unknown_architecture()`, `is_unknown_platform()`, and `is_unknown_ci()` functions
+  to `detection.py` module. They remain accessible from the package root.
+- Create new `platform_info.py` module with macOS/Windows specific version info gathering
+  code (`macos_info()`, `windows_info()`, `get_macos_codename()`, `MACOS_CODENAMES`).
+- Add generic `_make_deprecated_module()` factory in `_deprecated.py` to create deprecated
+  module shims with consistent warning behavior.
 
 ## [7.0.0 (2026-01-17)](https://github.com/kdeldycke/extra-platforms/compare/v6.0.0...v7.0.0)
 

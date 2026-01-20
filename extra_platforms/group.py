@@ -20,7 +20,6 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
 from functools import cached_property
-from itertools import combinations
 from types import MappingProxyType
 from typing import cast
 
@@ -47,6 +46,30 @@ def _flatten(items: Iterable) -> Iterator:
             yield from _flatten(item)
         else:
             yield item
+
+
+def extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
+    """Returns all traits found in ``other``.
+
+    ``other`` can be an arbitrarily nested :class:`~collections.abc.Iterable` of
+    :class:`~extra_platforms.Group`, :class:`~extra_platforms.Trait`, or their IDs.
+    ``None`` values and empty iterables are silently ignored.
+
+    .. caution::
+        Can returns duplicates.
+    """
+    for item in _flatten(other):
+        match item:
+            case None:
+                continue
+            case Trait():
+                yield item
+            case Group():
+                yield from item._members.values()
+            case str():
+                yield from traits_from_ids(item)
+            case _:
+                raise TypeError(f"Unsupported type: {type(item)}")
 
 
 @dataclass(frozen=True)
@@ -190,40 +213,29 @@ class Group(_Identifiable):
 
     @staticmethod
     def _extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
-        """Returns all traits found in ``other``.
+        """Deprecated alias for :func:`~extra_platforms.extract_members`.
 
-        ``other`` can be an arbitrarily nested ``Iterable`` of :class:`~extra_platforms.Group`,
-        :class:`~extra_platforms.Trait`, or their IDs. ``None`` values and empty iterables are
-        silently ignored.
-
-        .. caution::
-            Can returns duplicates.
-        """
-        for item in _flatten(other):
-            match item:
-                case None:
-                    continue
-                case Trait():
-                    yield item
-                case Group():
-                    yield from item._members.values()
-                case str():
-                    yield from traits_from_ids(item)
-                case _:
-                    raise TypeError(f"Unsupported type: {type(item)}")
-
-    @staticmethod
-    def _extract_platforms(*other: _TNestedReferences) -> Iterator[Trait]:
-        """Deprecated alias for `_extract_members()`.
-
-        .. deprecated:: 6.0.0
-           Use `_extract_members()` instead.
+        .. deprecated:: 8.0.0
+           Use :func:`~extra_platforms.extract_members` instead.
         """
         # Prevent circular import.
         from ._deprecated import _warn_deprecated
 
-        _warn_deprecated("Group._extract_platforms()", "Group._extract_members()")
-        return Group._extract_members(*other)
+        _warn_deprecated("Group._extract_members()", "extract_members()")
+        return extract_members(*other)
+
+    @staticmethod
+    def _extract_platforms(*other: _TNestedReferences) -> Iterator[Trait]:
+        """Deprecated alias for :func:`~extra_platforms.extract_members`.
+
+        .. deprecated:: 6.0.0
+           Use :func:`~extra_platforms.extract_members` instead.
+        """
+        # Prevent circular import.
+        from ._deprecated import _warn_deprecated
+
+        _warn_deprecated("Group._extract_platforms()", "extract_members()")
+        return extract_members(*other)
 
     def isdisjoint(self, other: _TNestedReferences) -> bool:
         """Return :data:`True` if the group has no members in common with ``other``.
@@ -233,34 +245,34 @@ class Group(_Identifiable):
         ``other`` can be an arbitrarily nested :class:`~collections.abc.Iterable` of
         :class:`~extra_platforms.Group` and :class:`~extra_platforms.Trait`.
         """
-        return set(self._members.values()).isdisjoint(self._extract_members(other))
+        return set(self._members.values()).isdisjoint(extract_members(other))
 
     def fullyintersects(self, other: _TNestedReferences) -> bool:
         """Return :data:`True` if the group has all members in common with ``other``."""
-        return set(self._members.values()) == set(self._extract_members(other))
+        return set(self._members.values()) == set(extract_members(other))
 
     def issubset(self, other: _TNestedReferences) -> bool:
         """Test whether every member in the group is in other."""
-        return set(self._members.values()).issubset(self._extract_members(other))
+        return set(self._members.values()).issubset(extract_members(other))
 
     __le__ = issubset
 
     def __lt__(self, other: _TNestedReferences) -> bool:
         """Test whether every member in the group is in other, but not all."""
         return self <= other and set(self._members.values()) != set(
-            self._extract_members(other)
+            extract_members(other)
         )
 
     def issuperset(self, other: _TNestedReferences) -> bool:
         """Test whether every member in other is in the group."""
-        return set(self._members.values()).issuperset(self._extract_members(other))
+        return set(self._members.values()).issuperset(extract_members(other))
 
     __ge__ = issuperset
 
     def __gt__(self, other: _TNestedReferences) -> bool:
         """Test whether every member in other is in the group, but not all."""
         return self >= other and set(self._members.values()) != set(
-            self._extract_members(other)
+            extract_members(other)
         )
 
     def union(self, *others: _TNestedReferences) -> Group:
@@ -276,7 +288,7 @@ class Group(_Identifiable):
             self.icon,
             tuple(
                 set(self._members.values()).union(
-                    *(self._extract_members(other) for other in others)
+                    *(extract_members(other) for other in others)
                 )
             ),
         )
@@ -297,7 +309,7 @@ class Group(_Identifiable):
             self.icon,
             tuple(
                 set(self._members.values()).intersection(
-                    *(self._extract_members(other) for other in others)
+                    *(extract_members(other) for other in others)
                 )
             ),
         )
@@ -318,7 +330,7 @@ class Group(_Identifiable):
             self.icon,
             tuple(
                 set(self._members.values()).difference(
-                    *(self._extract_members(other) for other in others)
+                    *(extract_members(other) for other in others)
                 )
             ),
         )
@@ -338,9 +350,7 @@ class Group(_Identifiable):
             self.name,
             self.icon,
             tuple(
-                set(self._members.values()).symmetric_difference(
-                    self._extract_members(other)
-                )
+                set(self._members.values()).symmetric_difference(extract_members(other))
             ),
         )
 
@@ -593,16 +603,10 @@ def reduce(
 
     .. note::
         The algorithm is a variant of the `Set Cover Problem
-        <https://en.wikipedia.org/wiki/Set_cover_problem>`_, which is NP-hard. However,
-        this implementation adds a constraint that selected groups must be disjoint
-        (non-overlapping), making it closer to an `Exact Cover Problem
-        <https://en.wikipedia.org/wiki/Exact_cover>`_.
-
-        The current implementation uses brute-force enumeration of all group combinations,
-        which is acceptable given the small number of predefined groups (< 30). For larger
-        inputs, a `greedy approximation
-        <https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm>`_ would be more
-        efficient, achieving O(log n) approximation in polynomial time.
+        <https://en.wikipedia.org/wiki/Set_cover_problem>`_, which is NP-hard. This
+        implementation uses a `greedy approximation
+        <https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm>`_ that
+        iteratively selects the largest group fitting the remaining uncovered traits.
 
     .. todo::
         Should we rename or alias this method to ``collapse()``? Cannot decide if it is
@@ -612,53 +616,30 @@ def reduce(
     from .group_data import ALL_GROUPS
 
     # Collect all traits.
-    traits = frozenset(Group._extract_members(items))
+    uncovered = set(extract_members(items))
+    if not uncovered:
+        return frozenset()
 
-    # List all groups overlapping the set of input traits.
+    # Build candidate groups: those that are subsets of the input traits.
     if target_pool is None:
         target_pool = ALL_GROUPS
-    overlapping_groups = frozenset(
-        g for g in target_pool if isinstance(g, Group) and g.issubset(traits)
-    )
+    candidates = [
+        g for g in target_pool if isinstance(g, Group) and g.issubset(uncovered)
+    ]
 
-    # Test all combination of groups to find the smallest set of groups + traits.
-    min_items = 0
-    results: list[frozenset[Group | Trait]] = []
-    # Serialize group sets for deterministic lookups. Sort them by trait count.
-    groups = tuple(sorted(overlapping_groups, key=len, reverse=True))
-    for subset_size in range(1, len(groups) + 1):
-        # If we already have a solution that involves less items than the current
-        # subset of groups we're going to evaluates, there is no point in continuing.
-        if min_items and subset_size > min_items:
-            break
+    # Greedy selection: repeatedly pick the largest group that fits remaining traits.
+    # Sort candidates by size (descending), then by ID for determinism.
+    candidates.sort(key=lambda g: (-len(g), g.id))
 
-        for group_subset in combinations(groups, subset_size):
-            # If any group overlaps another, there is no point in exploring this subset.
-            if not all(g[0].isdisjoint(g[1]) for g in combinations(group_subset, 2)):
-                continue
+    result: set[Group | Trait] = set()
+    for group in candidates:
+        # Only select if the group's members are all still uncovered.
+        group_members = set(group)
+        if group_members <= uncovered:
+            result.add(group)
+            uncovered -= group_members
 
-            # Remove all traits covered by the groups.
-            ungrouped_traits = set(traits.copy())
-            ungrouped_traits.difference_update(*group_subset)
+    # Add any remaining uncovered traits individually.
+    result.update(uncovered)
 
-            # Merge the groups and the remaining traits.
-            reduction = frozenset(ungrouped_traits.union(group_subset))
-            reduction_size = len(reduction)
-
-            # Reset the results if we have a new solution that is better than the
-            # previous ones.
-            if not results or reduction_size < min_items:
-                results = [reduction]
-                min_items = reduction_size
-            # If the solution is as good as the previous one, add it to the results.
-            elif reduction_size == min_items:
-                results.append(reduction)
-
-    if len(results) > 1:
-        raise RuntimeError(f"Multiple solutions found: {results}")
-
-    # If no reduced solution was found, return the original traits.
-    if not results:
-        return traits
-
-    return results.pop()
+    return frozenset(result)

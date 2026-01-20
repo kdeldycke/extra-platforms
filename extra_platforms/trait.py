@@ -35,6 +35,7 @@ import distro
 
 import extra_platforms
 from extra_platforms._utils import _recursive_update, _remove_blanks
+from extra_platforms.platform_info import macos_info, windows_info
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -315,113 +316,12 @@ class Platform(Trait):
 
             # Add extra macOS infos.
             if self.id == "macos":
-                info = _recursive_update(info, self._macos_infos(), strict=True)
+                info = _recursive_update(info, macos_info(), strict=True)
             # Add extra Windows infos.
             elif self.id == "windows":
-                info = _recursive_update(info, self._windows_infos(), strict=True)
+                info = _recursive_update(info, windows_info(), strict=True)
 
         return info
-
-    _MACOS_CODENAMES = {
-        ("10", "0"): "Cheetah",
-        ("10", "1"): "Puma",
-        ("10", "2"): "Jaguar",
-        ("10", "3"): "Panther",
-        ("10", "4"): "Tiger",
-        ("10", "5"): "Leopard",
-        ("10", "6"): "Snow Leopard",
-        ("10", "7"): "Lion",
-        ("10", "8"): "Mountain Lion",
-        ("10", "9"): "Mavericks",
-        ("10", "10"): "Yosemite",
-        ("10", "11"): "El Capitan",
-        ("10", "12"): "Sierra",
-        ("10", "13"): "High Sierra",
-        ("10", "14"): "Mojave",
-        ("10", "15"): "Catalina",
-        ("11", None): "Big Sur",
-        ("12", None): "Monterey",
-        ("13", None): "Ventura",
-        ("14", None): "Sonoma",
-        ("15", None): "Sequoia",
-        ("26", None): "Tahoe",
-    }
-    """Maps macOS ``(major, minor)`` version parts to release code name.
-
-    .. seealso::
-        - https://en.wikipedia.org/wiki/Template:MacOS_versions
-        - https://docs.python.org/3/library/platform.html#platform.mac_ver
-
-    .. hint::
-        There is this oddity where some beta release of macOS Tahoe report major
-        version as ``16`` instead of ``15`` or ``26``. We choose to not handle this case
-        for now, as we consider this a glitch in macOS history, and do not have a proper
-        way to detect beta versions at this time.
-    """
-
-    @classmethod
-    def _get_macos_codename(
-        cls, major: str | None = None, minor: str | None = None
-    ) -> str:
-        matches = set()
-        for (major_key, minor_key), codename in cls._MACOS_CODENAMES.items():
-            if minor_key is not None and minor_key != minor:
-                continue
-            if major_key == major:
-                matches.add(codename)
-        if not matches:
-            raise ValueError(f"No macOS codename match version ({major!r}, {minor!r})")
-        if len(matches) != 1:
-            raise ValueError(
-                f"Version {major}.{minor} match multiple codenames: {matches!r}"
-            )
-        return matches.pop()
-
-    @classmethod
-    def _macos_infos(cls) -> dict[str, Any]:
-        """Fetch extra macOS infos.
-
-        Returns the same dict structure as ``distro.info()``.
-        """
-        release, _versioninfo, _machine = platform.mac_ver()
-        parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
-        major = parts.get("major")
-        minor = parts.get("minor")
-        build_number = parts.get("build_number")
-        return {
-            "version": release,
-            "version_parts": {
-                "major": major,
-                "minor": minor,
-                "build_number": build_number,
-            },
-            "codename": cls._get_macos_codename(major, minor),
-        }
-
-    @classmethod
-    def _windows_infos(cls) -> dict[str, Any]:
-        """Fetch extra Windows infos.
-
-        Returns the same dict structure as ``distro.info()``.
-
-        .. todo:
-            Get even more details for windows version? See inspirations from:
-            https://github.com/saltstack/salt/blob/246d066/salt/grains/core.py#L1432-L1488
-        """
-        release, _version, _csd, _ptype = platform.win32_ver()
-        parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
-        major = parts.get("major")
-        minor = parts.get("minor")
-        build_number = parts.get("build_number")
-        return {
-            "version": release,
-            "version_parts": {
-                "major": major,
-                "minor": minor,
-                "build_number": build_number,
-            },
-            "codename": " ".join((release, platform.win32_edition())),
-        }
 
 
 @dataclass(frozen=True)

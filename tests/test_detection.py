@@ -49,13 +49,8 @@ from extra_platforms import detection as detection_module
 def test_detection_trait_functions(obj: Trait | Group):
     # All traits must implement a real function in the detection module.
     if isinstance(obj, Trait):
-        # Unknown traits detection functions are implemented at the root level.
-        if obj.id.startswith("unknown_"):
-            assert not hasattr(detection_module, obj.detection_func_id)
-            check_func = getattr(extra_platforms, obj.detection_func_id)
-        else:
-            check_func = getattr(detection_module, obj.detection_func_id)
-            assert hasattr(extra_platforms, obj.detection_func_id)
+        check_func = getattr(detection_module, obj.detection_func_id)
+        assert hasattr(extra_platforms, obj.detection_func_id)
         # current property is aligned with detection function.
         assert check_func() == obj.current
 
@@ -129,7 +124,8 @@ def test_detection_heuristics_sorting():
                 ci_heuristics.append(func_id)
 
     # Check there is no extra "is_" function.
-    assert {f"is_{p.id}" for p in ALL_TRAITS - UNKNOWN} == set(all_heuristic_ids)
+    # All traits, including UNKNOWN traits, must have detection functions.
+    assert {f"is_{p.id}" for p in ALL_TRAITS} == set(all_heuristic_ids)
 
     # We only allow one generic "is_unknown*()" detection heuristics per category.
     for heuristics in [arch_heuristics, platform_heuristics, ci_heuristics]:

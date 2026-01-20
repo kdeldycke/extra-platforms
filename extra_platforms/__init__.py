@@ -17,12 +17,9 @@
 
 from __future__ import annotations
 
-import logging
 import platform as stdlib_platform
 import sys
 from functools import cache
-
-import distro as distro_module
 
 from . import detection  # noqa: E402
 from .architecture_data import (  # noqa: E402
@@ -68,6 +65,10 @@ from .ci_data import (  # noqa: E402
     UNKNOWN_CI,
 )
 from .detection import (  # noqa: E402
+    current_architecture,
+    current_ci,
+    current_platform,
+    current_traits,
     is_aarch64,
     is_aix,
     is_altlinux,
@@ -147,6 +148,9 @@ from .detection import (  # noqa: E402
     is_tuxedo,
     is_ubuntu,
     is_ultramarine,
+    is_unknown_architecture,
+    is_unknown_ci,
+    is_unknown_platform,
     is_wasm32,
     is_wasm64,
     is_windows,
@@ -155,7 +159,13 @@ from .detection import (  # noqa: E402
     is_x86_64,
     is_xenserver,
 )
-from .group import Group, groups_from_ids, reduce, traits_from_ids  # noqa: E402
+from .group import (  # noqa: E402
+    Group,
+    extract_members,
+    groups_from_ids,
+    reduce,
+    traits_from_ids,
+)
 from .group_data import (  # noqa: E402
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
@@ -260,202 +270,13 @@ from .trait import (  # noqa: E402
     unique and unambiguous ID. This constraint is enforced at the data-level and
     checked in unittests.
 
-.. caution::
-    The content of ``pytest.py`` file is not imported here at package level like this:
-
-    .. code-block:: python
-        from .pytest import *
-
-    That is to make dependency on Pytest optional.
+.. hint::
+    The content of ``pytest.py`` file is not imported here to make dependency on
+    Pytest optional.
 """
 
 
 __version__ = "8.0.0"
-
-
-@cache
-def _unrecognized_message() -> str:
-    """Generate a consistent message for unrecognized environments.
-
-    .. important::
-        This message must contain all the primitives used in the ``detection`` module so
-        maintainers can debug heuristics from user reports.
-    """
-    return (
-        "Environment:\n"
-        f"  sys.platform:          {sys.platform!r}\n"
-        "  platform.platform:     "
-        f"{stdlib_platform.platform(aliased=True, terse=True)!r}\n"
-        f"  platform.release:      {stdlib_platform.release()!r}\n"
-        f"  platform.uname:        {stdlib_platform.uname()!r}\n"
-        f"  platform.machine:      {stdlib_platform.machine()!r}\n"
-        f"  platform.architecture: {stdlib_platform.architecture()!r}\n"
-        f"  distro.id:             {distro_module.id()!r}\n"
-        "\nPlease report this at https://github.com/kdeldycke/extra-platforms/issues to "
-        "improve detection heuristics."
-    )
-
-
-@cache
-def current_architecture(strict: bool = False) -> Architecture:
-    """Returns the :class:`~extra_platforms.Architecture` matching the current environment.
-
-    Returns :data:`~UNKNOWN_ARCHITECTURE` if not running inside a
-    recognized architecture. To raise an error instead, set ``strict`` to ``True``.
-
-    .. important::
-        Always raises an error if multiple architectures match.
-    """
-    matching = set()
-    # Iterate over all recognized architectures.
-    for arch in ALL_ARCHITECTURES:
-        if arch.current:
-            # Assert to please type checkers.
-            assert isinstance(arch, Architecture)
-            matching.add(arch)
-
-    # Return the only matching architecture.
-    if len(matching) == 1:
-        return matching.pop()
-
-    if len(matching) > 1:
-        raise RuntimeError(
-            f"Multiple architectures matches: {matching!r}. {_unrecognized_message()}"
-        )
-
-    # No matching architecture found.
-    msg = f"Unrecognized architecture: {_unrecognized_message()}"
-    if strict:
-        raise SystemError(msg)
-    logging.warning(msg)
-    return UNKNOWN_ARCHITECTURE
-
-
-@cache
-def current_platform(strict: bool = False) -> Platform:
-    """Always returns the best matching :class:`~extra_platforms.Platform` for the current environment.
-
-    Returns :data:`~UNKNOWN_PLATFORM` if not running inside a recognized
-    platform. To raise an error instead, set ``strict`` to ``True``.
-
-    .. important::
-        If multiple platforms match the current environment, this function will try to
-        select the best, informative one. Raises an error if we can't decide on a single,
-        appropriate platform.
-    """
-    matching = set()
-    for platform in ALL_PLATFORMS:
-        if platform.current:
-            # Assert to please type checkers.
-            assert isinstance(platform, Platform)
-            matching.add(platform)
-
-    # Return the only matching platform.
-    if len(matching) == 1:
-        return matching.pop()
-
-    # Removes some generic platforms from the matching, until we have a single match.
-    # Starts by removing the least specific WSL1, then WSL2: WSL is a generic platform,
-    # so we should prefer the remaining, more specific platform matches like Ubuntu. See:
-    # - https://github.com/kdeldycke/extra-platforms/issues/158
-    # - https://github.com/kdeldycke/meta-package-manager/issues/944
-    for wsl in (WSL1, WSL2):
-        if wsl in matching:
-            matching.remove(wsl)
-            if len(matching) == 1:
-                return matching.pop()
-
-    if len(matching) > 1:
-        raise RuntimeError(
-            f"Multiple platforms matches: {matching!r}. {_unrecognized_message()}"
-        )
-
-    # No matching platform found.
-    msg = f"Unrecognized platform: {_unrecognized_message()}"
-    if strict:
-        raise SystemError(msg)
-    logging.warning(msg)
-    return UNKNOWN_PLATFORM
-
-
-@cache
-def current_ci(strict: bool = False) -> CI:
-    """Returns the :class:`~extra_platforms.CI` system matching the current environment.
-
-    Returns :data:`~UNKNOWN_CI` if not running inside a recognized CI
-    system. To raise an error instead, set ``strict`` to ``True``.
-
-    .. important::
-        Always raises an error if multiple CI systems match.
-    """
-    matching = set()
-    # Iterate over all recognized CI systems.
-    for ci in ALL_CI:
-        if ci.current:
-            # Assert to please type checkers.
-            assert isinstance(ci, CI)
-            matching.add(ci)
-
-    # Return the only matching CI system.
-    if len(matching) == 1:
-        return matching.pop()
-
-    if len(matching) > 1:
-        raise RuntimeError(
-            f"Multiple CI matches: {matching!r}. {_unrecognized_message()}"
-        )
-
-    # No matching CI system found.
-    msg = f"Unrecognized CI: {_unrecognized_message()}"
-    if strict:
-        raise SystemError(msg)
-    logging.warning(msg)
-    return UNKNOWN_CI
-
-
-@cache
-def current_traits() -> set[Trait]:
-    """Returns all traits matching the current environment.
-
-    This includes :class:`~extra_platforms.Platform`, :class:`~extra_platforms.Architecture`,
-    and :class:`~extra_platforms.CI` systems.
-
-    .. caution::
-        Never returns :data:`~UNKNOWN` traits.
-
-    Raises :exc:`SystemError` if the current environment is not recognized at all.
-
-    .. attention::
-        At this point it is too late to worry about caching. This function has no
-        choice but to evaluate all detection heuristics.
-    """
-    matching = set()
-    for trait in ALL_TRAITS - UNKNOWN:
-        if trait.current:
-            matching.add(trait)
-
-    if not matching:
-        raise SystemError(f"Unrecognized environment: {_unrecognized_message()}")
-
-    return matching
-
-
-@cache
-def is_unknown_architecture() -> bool:
-    """Return :data:`True` if current architecture is :data:`~UNKNOWN_ARCHITECTURE`."""
-    return current_architecture() is UNKNOWN_ARCHITECTURE
-
-
-@cache
-def is_unknown_platform() -> bool:
-    """Return :data:`True` if current platform is :data:`~UNKNOWN_PLATFORM`."""
-    return current_platform() is UNKNOWN_PLATFORM
-
-
-@cache
-def is_unknown_ci() -> bool:
-    """Return :data:`True` if current CI is :data:`~UNKNOWN_CI`."""
-    return current_ci() is UNKNOWN_CI
 
 
 def _initialize_group_detection_functions() -> list[str]:
@@ -622,6 +443,7 @@ __all__ = (  # noqa: F405
     "DRAGONFLY_BSD",
     "EXHERBO",
     "EXTRA_GROUPS",
+    "extract_members",
     "FEDORA",
     "FREEBSD",
     "GENTOO",

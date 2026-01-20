@@ -46,7 +46,6 @@ from extra_platforms import (  # type: ignore[attr-defined]
     WSL1,
     WSL2,
     X86_64,
-    _unrecognized_message,
     current_architecture,
     current_ci,
     current_platform,
@@ -71,6 +70,7 @@ from extra_platforms import group_data as group_data_module
 from extra_platforms import operations as operations_module
 from extra_platforms import platform_data as platform_data_module
 from extra_platforms import trait as trait_module
+from extra_platforms.detection import _unrecognized_message
 
 from .test_ci_data import github_runner_os
 

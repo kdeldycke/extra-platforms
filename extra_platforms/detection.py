@@ -70,12 +70,42 @@ For all other traits, we either rely on:
 
 from __future__ import annotations
 
+import logging
 import platform
 import sys
 from functools import cache
 from os import environ
 
 import distro
+import distro as distro_module
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from .trait import CI, Architecture, Platform, Trait
+
+
+@cache
+def _unrecognized_message() -> str:
+    """Generate a consistent message for unrecognized environments.
+
+    .. important::
+        This message must contain all the primitives used in the ``detection`` module so
+        maintainers can debug heuristics from user reports.
+    """
+    return (
+        "Environment:\n"
+        f"  sys.platform:          {sys.platform!r}\n"
+        "  platform.platform:     "
+        f"{platform.platform(aliased=True, terse=True)!r}\n"
+        f"  platform.release:      {platform.release()!r}\n"
+        f"  platform.uname:        {platform.uname()!r}\n"
+        f"  platform.machine:      {platform.machine()!r}\n"
+        f"  platform.architecture: {platform.architecture()!r}\n"
+        f"  distro.id:             {distro_module.id()!r}\n"
+        "\nPlease report this at https://github.com/kdeldycke/extra-platforms/issues to "
+        "improve detection heuristics."
+    )
+
 
 # =============================================================================
 # Architecture detection heuristics
@@ -265,6 +295,15 @@ def is_wasm64() -> bool:
         WebAssembly detection is based on Emscripten's platform identifier.
     """
     return sys.platform == "emscripten" and platform.architecture()[0] == "64bit"
+
+
+@cache
+def is_unknown_architecture() -> bool:
+    """Return :data:`True` if current architecture is :data:`~UNKNOWN_ARCHITECTURE`."""
+    # Lazy import to avoid circular dependencies.
+    from .architecture_data import UNKNOWN_ARCHITECTURE
+
+    return current_architecture() is UNKNOWN_ARCHITECTURE
 
 
 # =============================================================================
@@ -608,6 +647,15 @@ def is_xenserver() -> bool:
     return distro.id() == "xenserver"
 
 
+@cache
+def is_unknown_platform() -> bool:
+    """Return :data:`True` if current platform is :data:`~UNKNOWN_PLATFORM`."""
+    # Lazy import to avoid circular dependencies.
+    from .platform_data import UNKNOWN_PLATFORM
+
+    return current_platform() is UNKNOWN_PLATFORM
+
+
 # =============================================================================
 # CI/CD detection heuristics
 # =============================================================================
@@ -732,3 +780,179 @@ def is_travis_ci() -> bool:
         <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>.
     """
     return "TRAVIS" in environ
+
+
+@cache
+def is_unknown_ci() -> bool:
+    """Return :data:`True` if current CI is :data:`~UNKNOWN_CI`."""
+    # Lazy import to avoid circular dependencies.
+    from .ci_data import UNKNOWN_CI
+
+    return current_ci() is UNKNOWN_CI
+
+
+# =============================================================================
+# Current environment detection
+# =============================================================================
+
+
+@cache
+def current_architecture(strict: bool = False) -> Architecture:
+    """Returns the :class:`~extra_platforms.Architecture` matching the current environment.
+
+    Returns :data:`~UNKNOWN_ARCHITECTURE` if not running inside a
+    recognized architecture. To raise an error instead, set ``strict`` to ``True``.
+
+    .. important::
+        Always raises an error if multiple architectures match.
+    """
+    # Lazy imports to avoid circular dependencies.
+    from .architecture_data import UNKNOWN_ARCHITECTURE
+    from .group_data import ALL_ARCHITECTURES
+    from .trait import Architecture
+
+    matching = set()
+    # Iterate over all recognized architectures.
+    for arch in ALL_ARCHITECTURES:
+        if arch.current:
+            # Assert to please type checkers.
+            assert isinstance(arch, Architecture)
+            matching.add(arch)
+
+    # Return the only matching architecture.
+    if len(matching) == 1:
+        return matching.pop()
+
+    if len(matching) > 1:
+        raise RuntimeError(
+            f"Multiple architectures matches: {matching!r}. {_unrecognized_message()}"
+        )
+
+    # No matching architecture found.
+    msg = f"Unrecognized architecture: {_unrecognized_message()}"
+    if strict:
+        raise SystemError(msg)
+    logging.warning(msg)
+    return UNKNOWN_ARCHITECTURE
+
+
+@cache
+def current_platform(strict: bool = False) -> Platform:
+    """Always returns the best matching :class:`~extra_platforms.Platform` for the current environment.
+
+    Returns :data:`~UNKNOWN_PLATFORM` if not running inside a recognized
+    platform. To raise an error instead, set ``strict`` to ``True``.
+
+    .. important::
+        If multiple platforms match the current environment, this function will try to
+        select the best, informative one. Raises an error if we can't decide on a single,
+        appropriate platform.
+    """
+    # Lazy imports to avoid circular dependencies.
+    from .group_data import ALL_PLATFORMS
+    from .platform_data import UNKNOWN_PLATFORM, WSL1, WSL2
+    from .trait import Platform
+
+    matching = set()
+    for plat in ALL_PLATFORMS:
+        if plat.current:
+            # Assert to please type checkers.
+            assert isinstance(plat, Platform)
+            matching.add(plat)
+
+    # Return the only matching platform.
+    if len(matching) == 1:
+        return matching.pop()
+
+    # Removes some generic platforms from the matching, until we have a single match.
+    # Starts by removing the least specific WSL1, then WSL2: WSL is a generic platform,
+    # so we should prefer the remaining, more specific platform matches like Ubuntu. See:
+    # - https://github.com/kdeldycke/extra-platforms/issues/158
+    # - https://github.com/kdeldycke/meta-package-manager/issues/944
+    for wsl in (WSL1, WSL2):
+        if wsl in matching:
+            matching.remove(wsl)
+            if len(matching) == 1:
+                return matching.pop()
+
+    if len(matching) > 1:
+        raise RuntimeError(
+            f"Multiple platforms matches: {matching!r}. {_unrecognized_message()}"
+        )
+
+    # No matching platform found.
+    msg = f"Unrecognized platform: {_unrecognized_message()}"
+    if strict:
+        raise SystemError(msg)
+    logging.warning(msg)
+    return UNKNOWN_PLATFORM
+
+
+@cache
+def current_ci(strict: bool = False) -> CI:
+    """Returns the :class:`~extra_platforms.CI` system matching the current environment.
+
+    Returns :data:`~UNKNOWN_CI` if not running inside a recognized CI
+    system. To raise an error instead, set ``strict`` to ``True``.
+
+    .. important::
+        Always raises an error if multiple CI systems match.
+    """
+    # Lazy imports to avoid circular dependencies.
+    from .ci_data import UNKNOWN_CI
+    from .group_data import ALL_CI
+    from .trait import CI
+
+    matching = set()
+    # Iterate over all recognized CI systems.
+    for ci in ALL_CI:
+        if ci.current:
+            # Assert to please type checkers.
+            assert isinstance(ci, CI)
+            matching.add(ci)
+
+    # Return the only matching CI system.
+    if len(matching) == 1:
+        return matching.pop()
+
+    if len(matching) > 1:
+        raise RuntimeError(
+            f"Multiple CI matches: {matching!r}. {_unrecognized_message()}"
+        )
+
+    # No matching CI system found.
+    msg = f"Unrecognized CI: {_unrecognized_message()}"
+    if strict:
+        raise SystemError(msg)
+    logging.warning(msg)
+    return UNKNOWN_CI
+
+
+@cache
+def current_traits() -> set[Trait]:
+    """Returns all traits matching the current environment.
+
+    This includes :class:`~extra_platforms.Platform`, :class:`~extra_platforms.Architecture`,
+    and :class:`~extra_platforms.CI` systems.
+
+    .. caution::
+        Never returns :data:`~UNKNOWN` traits.
+
+    Raises :exc:`SystemError` if the current environment is not recognized at all.
+
+    .. attention::
+        At this point it is too late to worry about caching. This function has no
+        choice but to evaluate all detection heuristics.
+    """
+    # Lazy imports to avoid circular dependencies.
+    from .group_data import ALL_TRAITS, UNKNOWN
+
+    matching = set()
+    for trait in ALL_TRAITS - UNKNOWN:
+        if trait.current:
+            matching.add(trait)
+
+    if not matching:
+        raise SystemError(f"Unrecognized environment: {_unrecognized_message()}")
+
+    return matching

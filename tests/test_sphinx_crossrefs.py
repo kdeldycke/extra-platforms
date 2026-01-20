@@ -619,6 +619,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
 
     # Trait and group operations functions go to groups.html
     if role == "func" and symbol_clean in (
+        "extract_members",
         "groups_from_ids",
         "traits_from_ids",
         "reduce",

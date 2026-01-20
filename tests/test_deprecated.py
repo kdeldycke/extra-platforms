@@ -32,6 +32,7 @@ from extra_platforms import (
     Group,
     current_platform,
     current_traits,
+    extract_members,
     is_unknown_platform,
     traits_from_ids,
 )
@@ -254,10 +255,9 @@ def test_is_unknown_linux_alias():
 
 def test_group_extract_platforms_deprecated():
     """Test Group._extract_platforms() deprecated method."""
-    with pytest.warns(DeprecationWarning, match="_extract_platforms.*_extract_members"):
+    with pytest.warns(DeprecationWarning, match="_extract_platforms.*extract_members"):
         result = list(Group._extract_platforms(LINUX))
-    # Should return the same as _extract_members.
-    expected = list(Group._extract_members(LINUX))
+    expected = list(extract_members(LINUX))
     assert result == expected
 
 

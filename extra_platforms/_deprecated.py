@@ -152,6 +152,70 @@ def _make_deprecated_callable(
     return _wrapper
 
 
+def _make_deprecated_module(
+    module_name: str,
+    version: str,
+    replacement: str,
+    symbols: dict[str, Any],
+) -> ModuleType:
+    """Create a deprecated module shim that warns on attribute access.
+
+    This factory generates a fake module that can be injected into ``sys.modules``
+    to provide backward-compatible imports while issuing deprecation warnings.
+
+    Args:
+        module_name: Full module path (e.g., "extra_platforms.platform").
+        version: Version when the module was deprecated (e.g., "7.0.0").
+        replacement: Suggested replacement module (e.g., "extra_platforms.trait").
+        symbols: Dictionary mapping symbol names to their values or import paths.
+            Values can be:
+            - Direct objects (e.g., ``Platform`` class)
+            - Tuples of ``(module_path, symbol_name)`` for lazy imports
+
+    Returns:
+        A :class:`~types.ModuleType` subclass instance that warns on attribute access.
+    """
+
+    class _DeprecatedModule(ModuleType):
+        def __init__(self):
+            super().__init__(module_name)
+            self.__doc__ = (
+                "Backward-compatible module for deprecated imports.\n\n"
+                f".. deprecated:: {version}\n"
+                f"    This module is deprecated. Import from ``{replacement}`` instead."
+            )
+            self.__file__ = __file__
+            self.__all__ = list(symbols.keys())
+            # Store symbols without triggering __setattr__ warning.
+            object.__setattr__(self, "_symbols", symbols)
+
+        def __getattr__(self, name: str):
+            # Block private attributes unless explicitly listed in symbols.
+            if name.startswith("_") and name not in self._symbols:
+                raise AttributeError(
+                    f"module {module_name!r} has no attribute {name!r}"
+                )
+            if name in self._symbols:
+                warnings.warn(
+                    f"The {module_name!r} module is deprecated. "
+                    f"Import from {replacement!r} instead.",
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+                value = self._symbols[name]
+                # Handle lazy imports specified as (module_path, symbol_name) tuples.
+                if isinstance(value, tuple) and len(value) == 2:
+                    mod_path, sym_name = value
+                    import importlib
+
+                    mod = importlib.import_module(mod_path, package="extra_platforms")
+                    return getattr(mod, sym_name)
+                return value
+            raise AttributeError(f"module {module_name!r} has no attribute {name!r}")
+
+    return _DeprecatedModule()
+
+
 # ================================================================
 # Data aliases
 # ================================================================
@@ -428,129 +492,32 @@ platforms_from_ids = _make_deprecated_callable(
 
 
 # ================================================================
-# Deprecated module: extra_platforms.platform
+# Deprecated modules
 # ================================================================
 
-# Simulate the deprecated `extra_platforms.platform` module by injecting a fake
-# module into sys.modules. This allows `from extra_platforms.platform import Platform`
-# to work while issuing a deprecation warning, without needing a separate file.
+
+sys.modules["extra_platforms.platform"] = _make_deprecated_module(
+    module_name="extra_platforms.platform",
+    version="7.0.0",
+    replacement="extra_platforms.trait",
+    symbols={
+        "Platform": Platform,
+        "_recursive_update": _recursive_update,
+        "_remove_blanks": _remove_blanks,
+    },
+)
 
 
-class _DeprecatedPlatformModule(ModuleType):
-    """A fake module that warns on attribute access.
-
-    .. deprecated:: 7.0.0
-       The ``extra_platforms.platform`` module is deprecated.
-       Import from ``extra_platforms.trait`` instead.
-    """
-
-    def __init__(self):
-        super().__init__("extra_platforms.platform")
-        self.__doc__ = (
-            "Backward-compatible module for deprecated imports.\n\n"
-            ".. deprecated:: 7.0.0\n"
-            "    This module is deprecated. Import from ``extra_platforms.trait``"
-            " instead."
-        )
-        self.__file__ = __file__
-        self.__all__ = ["Platform", "_recursive_update", "_remove_blanks"]
-        # Store actual values without triggering __setattr__ warning.
-        object.__setattr__(self, "_Platform", Platform)
-        object.__setattr__(self, "_recursive_update", _recursive_update)
-        object.__setattr__(self, "_remove_blanks", _remove_blanks)
-
-    def __getattr__(self, name: str):
-        warnings.warn(
-            "The 'extra_platforms.platform' module is deprecated. "
-            "Import from 'extra_platforms.trait' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        if name == "Platform":
-            return self._Platform
-        if name == "_recursive_update":
-            return self._recursive_update
-        if name == "_remove_blanks":
-            return self._remove_blanks
-        raise AttributeError(
-            f"module 'extra_platforms.platform' has no attribute {name!r}"
-        )
-
-
-# Register the fake module in sys.modules.
-sys.modules["extra_platforms.platform"] = _DeprecatedPlatformModule()
-
-
-# ================================================================
-# Deprecated module: extra_platforms.operations
-# ================================================================
-
-# Simulate the deprecated `extra_platforms.operations` module by injecting a fake
-# module into sys.modules. This allows `from extra_platforms.operations import reduce`
-# to work while issuing a deprecation warning, without needing a separate file.
-
-
-class _DeprecatedOperationsModule(ModuleType):
-    """A fake module that warns on attribute access.
-
-    .. deprecated:: 8.0.0
-       The ``extra_platforms.operations`` module is deprecated.
-       Import from ``extra_platforms`` instead.
-    """
-
-    def __init__(self):
-        super().__init__("extra_platforms.operations")
-        self.__doc__ = (
-            "Backward-compatible module for deprecated imports.\n\n"
-            ".. deprecated:: 8.0.0\n"
-            "    This module is deprecated. Import from ``extra_platforms`` instead."
-        )
-        self.__file__ = __file__
-        self.__all__ = [
-            "ALL_GROUP_IDS",
-            "ALL_IDS",
-            "ALL_TRAIT_IDS",
-            "groups_from_ids",
-            "reduce",
-            "traits_from_ids",
-        ]
-
-    def __getattr__(self, name: str):
-        warnings.warn(
-            "The 'extra_platforms.operations' module is deprecated. "
-            "Import from 'extra_platforms' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        # Import lazily to avoid circular imports.
-        if name == "ALL_GROUP_IDS":
-            from .group_data import ALL_GROUP_IDS
-
-            return ALL_GROUP_IDS
-        if name == "ALL_IDS":
-            from .group_data import ALL_IDS
-
-            return ALL_IDS
-        if name == "ALL_TRAIT_IDS":
-            from .group_data import ALL_TRAIT_IDS
-
-            return ALL_TRAIT_IDS
-        if name == "groups_from_ids":
-            from .group import groups_from_ids
-
-            return groups_from_ids
-        if name == "reduce":
-            from .group import reduce
-
-            return reduce
-        if name == "traits_from_ids":
-            from .group import traits_from_ids
-
-            return traits_from_ids
-        raise AttributeError(
-            f"module 'extra_platforms.operations' has no attribute {name!r}"
-        )
-
-
-# Register the fake module in sys.modules.
-sys.modules["extra_platforms.operations"] = _DeprecatedOperationsModule()
+sys.modules["extra_platforms.operations"] = _make_deprecated_module(
+    module_name="extra_platforms.operations",
+    version="8.0.0",
+    replacement="extra_platforms",
+    symbols={
+        "ALL_GROUP_IDS": (".group_data", "ALL_GROUP_IDS"),
+        "ALL_IDS": (".group_data", "ALL_IDS"),
+        "ALL_TRAIT_IDS": (".group_data", "ALL_TRAIT_IDS"),
+        "groups_from_ids": (".group", "groups_from_ids"),
+        "reduce": (".group", "reduce"),
+        "traits_from_ids": (".group", "traits_from_ids"),
+    },
+)

@@ -113,6 +113,7 @@ with canonical groups.
 ## Trait and group operations
 
 ```{eval-rst}
+.. autofunction:: extra_platforms.extract_members
 .. autofunction:: extra_platforms.traits_from_ids
 .. autofunction:: extra_platforms.groups_from_ids
 .. autofunction:: extra_platforms.reduce

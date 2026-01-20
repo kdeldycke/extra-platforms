@@ -17,7 +17,7 @@ Extra Platforms detects the runtime architecture, operating system (including Li
 - Grouping and API primitives: predefined families, `is_*()` predicates, `current_*()` accessors, and `Group` membership helpers.
 - Testing helpers: Pytest decorators and markers such as `@skip_<id>` and `@unless_<id>` for concise platform-aware tests.
 - Extensible and CI-friendly: designed to be lightweight, easy to extend, and suitable for CI-aware workflows.
-- Fixes/workarounds for Windows and macOS detection (see [`distro#177`](https://github.com/python-distro/distro/issues/177)).
+- Extend [`distro`](https://github.com/python-distro/distro) project with Windows and macOS detection.
 
 ## Quick start
 
