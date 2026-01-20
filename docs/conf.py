@@ -81,7 +81,6 @@ author = ", ".join(author["name"] for author in toml_config["project"]["authors"
 
 # Title-case each word of the project ID.
 project = " ".join(word.title() for word in project_id.split("-"))
-htmlhelp_basename = project_id
 
 # Addons.
 extensions = [
@@ -120,8 +119,6 @@ myst_fence_as_directive = ["mermaid"]
 
 mermaid_d3_zoom = True
 
-master_doc = "index"
-
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 nitpicky = True
@@ -155,7 +152,11 @@ suppress_warnings = [
 autoclass_content = "both"
 # Keep the same ordering as in original source code.
 autodoc_member_order = "bysource"
-autodoc_default_flags = ["members", "undoc-members", "show-inheritance"]
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "show-inheritance": True,
+}
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
