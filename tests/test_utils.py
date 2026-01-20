@@ -104,91 +104,86 @@ def test_recursive_update_preserves_original():
     assert a["key"] == "updated"
 
 
-def test_remove_blanks_removes_none():
-    """Test removing None values."""
-    tree = {
-        "key1": "value",
-        "key2": None,
-        "key3": {
-            "nested": None,
-            "other": "keep",
-        },
-    }
-
-    result = _remove_blanks(tree, remove_none=True)
-
-    assert "key1" in result
-    assert "key2" not in result
-    assert "nested" not in result["key3"]
-    assert result["key3"]["other"] == "keep"
-
-
-def test_remove_blanks_keeps_none():
-    """Test keeping None values when remove_none=False."""
-    tree = {"key1": "value", "key2": None}
-
-    result = _remove_blanks(tree, remove_none=False)
-
-    assert "key2" in result
-    assert result["key2"] is None
-
-
-def test_remove_blanks_removes_empty_strings():
-    """Test removing empty strings."""
-    tree = {
-        "key1": "value",
-        "key2": "",
-        "key3": {
-            "nested": "",
-            "other": "keep",
-        },
-    }
-
-    result = _remove_blanks(tree, remove_str=True)
-
-    assert "key1" in result
-    assert "key2" not in result
-    assert "nested" not in result["key3"]
-    assert result["key3"]["other"] == "keep"
-
-
-def test_remove_blanks_keeps_empty_strings():
-    """Test keeping empty strings when remove_str=False."""
-    tree = {"key1": "value", "key2": ""}
-
-    result = _remove_blanks(tree, remove_str=False)
-
-    assert "key2" in result
-    assert result["key2"] == ""
-
-
-def test_remove_blanks_removes_empty_dicts():
-    """Test removing empty dicts."""
-    tree = {
-        "key1": "value",
-        "key2": {},
-        "key3": {
-            "nested": {},
-            "other": "keep",
-        },
-    }
-
-    result = _remove_blanks(tree, remove_dicts=True)
+@pytest.mark.parametrize(
+    "blank_type,tree,remove_kwargs,should_remove",
+    [
+        # Test removing None values
+        (
+            "none",
+            {
+                "key1": "value",
+                "key2": None,
+                "key3": {"nested": None, "other": "keep"},
+            },
+            {"remove_none": True},
+            True,
+        ),
+        # Test keeping None values
+        (
+            "none",
+            {"key1": "value", "key2": None},
+            {"remove_none": False},
+            False,
+        ),
+        # Test removing empty strings
+        (
+            "empty_string",
+            {
+                "key1": "value",
+                "key2": "",
+                "key3": {"nested": "", "other": "keep"},
+            },
+            {"remove_str": True},
+            True,
+        ),
+        # Test keeping empty strings
+        (
+            "empty_string",
+            {"key1": "value", "key2": ""},
+            {"remove_str": False},
+            False,
+        ),
+        # Test removing empty dicts
+        (
+            "empty_dict",
+            {
+                "key1": "value",
+                "key2": {},
+                "key3": {"nested": {}, "other": "keep"},
+            },
+            {"remove_dicts": True},
+            True,
+        ),
+        # Test keeping empty dicts
+        (
+            "empty_dict",
+            {"key1": "value", "key2": {}},
+            {"remove_dicts": False},
+            False,
+        ),
+    ],
+)
+def test_remove_blanks_options(blank_type, tree, remove_kwargs, should_remove):
+    """Test removing or keeping different types of blank values."""
+    result = _remove_blanks(tree, **remove_kwargs)
 
     assert "key1" in result
-    assert "key2" not in result
-    assert "nested" not in result["key3"]
-    assert result["key3"]["other"] == "keep"
 
-
-def test_remove_blanks_keeps_empty_dicts():
-    """Test keeping empty dicts when remove_dicts=False."""
-    tree = {"key1": "value", "key2": {}}
-
-    result = _remove_blanks(tree, remove_dicts=False)
-
-    assert "key2" in result
-    assert result["key2"] == {}
+    if should_remove:
+        # When removing, blank values should be gone
+        assert "key2" not in result
+        if "key3" in tree:
+            assert "nested" not in result["key3"]
+            assert result["key3"]["other"] == "keep"
+    else:
+        # When keeping, blank values should remain
+        assert "key2" in result
+        if blank_type == "none":
+            assert result["key2"] is None
+        elif blank_type == "empty_string":
+            assert result["key2"] == ""
+        elif blank_type == "empty_dict":
+            assert result["key2"] == {}
 
 
 def test_remove_blanks_mixed_scenario():
