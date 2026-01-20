@@ -106,7 +106,12 @@ class Group(_Identifiable):
         return cast(_MembersMapping, self.members)
 
     def __post_init__(self):
-        """Normalize members to a sorted, deduplicated mapping."""
+        """Normalize members to a sorted, deduplicated mapping.
+
+        .. hint::
+            Docstring generation is deferred to avoid circular imports during module
+            initialization. See _docstrings._initialize_all_docstrings().
+        """
         super().__post_init__()
 
         # Override detection_func_id and unless_decorator_id for groups with "all_" prefix.
@@ -154,6 +159,62 @@ class Group(_Identifiable):
             "members",
             MappingProxyType({t.id: t for t in sorted_traits}),
         )
+
+    def generate_docstring(self) -> str:
+        """Generate comprehensive docstring for this group instance.
+
+        Combines the attribute docstring from the source module with various metadata.
+        """
+        from extra_platforms._docstrings import get_attribute_docstring
+
+        lines = []
+
+        # Fetch attribute docstring from source module.
+        source_docstring = get_attribute_docstring(
+            f"extra_platforms.{self.data_module_id}", self.symbol_id
+        )
+        if source_docstring:
+            lines.extend(source_docstring.strip().split("\n"))
+            lines.append("")
+
+        # Add metadata.
+        lines.append(f"- **ID**: ``{self.id}``")
+        lines.append(f"- **Name**: {self.name}")
+        lines.append(f"- **Icon**: {self.icon}")
+        lines.append(
+            f"- **Canonical**: ``{self.canonical}`` {'⬥' if self.canonical else ''}"
+        )
+        lines.append(f"- **Detection function**: :func:`~{self.detection_func_id}`")
+        lines.append(
+            f"- **Pytest decorators**: :data:`~pytest.{self.skip_decorator_id}` / "
+            f":data:`~pytest.{self.unless_decorator_id}`"
+        )
+
+        # Add list of members with links to their definitions.
+        member_links = []
+        type_counts = {}
+
+        for _, member in self.items():
+            class_name = type(member).__name__
+
+            # Count types.
+            if class_name not in type_counts:
+                type_counts[class_name] = {"count": 0}
+            type_counts[class_name]["count"] += 1
+
+            # Create member link using Sphinx role.
+            member_links.append(f":data:`~{member.symbol_id}`")
+
+        if member_links:
+            # Format type information with links.
+            type_parts = [
+                f"{info['count']} :class:`~{class_name}`"
+                for class_name, info in sorted(type_counts.items())
+            ]
+            type_info = ", ".join(type_parts)
+            lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
+
+        return "\n".join(lines)
 
     @property
     def member_ids(self) -> frozenset[str]:

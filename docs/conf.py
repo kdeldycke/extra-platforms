@@ -1,70 +1,15 @@
 from __future__ import annotations
 
-import ast
-import importlib
-import inspect
 import sys
 from pathlib import Path
+
+from extra_platforms import Group, Trait
+from extra_platforms._docstrings import get_attribute_docstring
 
 if sys.version_info >= (3, 11):
     import tomllib
 else:
     import tomli as tomllib  # type: ignore[import-not-found]
-
-from extra_platforms import Group
-from extra_platforms.trait import Trait
-
-
-def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
-    """Extract attribute docstring from a module's source file.
-
-    Attribute docstrings are string literals that immediately follow an assignment.
-    This function parses the source file using AST to find such docstrings.
-
-    Args:
-        module_name: The full module name (e.g., 'extra_platforms.platform_data').
-        attr_name: The attribute name to look for (e.g., 'NOBARA').
-
-    Returns:
-        The attribute docstring if found, or None.
-    """
-    try:
-        module = importlib.import_module(module_name)
-        source_file = inspect.getsourcefile(module)
-        if not source_file:
-            return None
-
-        source = Path(source_file).read_text(encoding="utf-8")
-        tree = ast.parse(source)
-
-        # Look for assignment (or annotated assignment) followed by a string literal.
-        for i, node in enumerate(tree.body):
-            # Handle both regular assignments and annotated assignments
-            if isinstance(node, ast.Assign):
-                for target in node.targets:
-                    if isinstance(target, ast.Name) and target.id == attr_name:
-                        # Check if the next statement is a string expression.
-                        if i + 1 < len(tree.body):
-                            next_node = tree.body[i + 1]
-                            if isinstance(next_node, ast.Expr) and isinstance(
-                                next_node.value, ast.Constant
-                            ):
-                                if isinstance(next_node.value.value, str):
-                                    return next_node.value.value
-            elif isinstance(node, ast.AnnAssign):
-                # Handle annotated assignments like: x: type = value
-                if isinstance(node.target, ast.Name) and node.target.id == attr_name:
-                    # Check if the next statement is a string expression.
-                    if i + 1 < len(tree.body):
-                        next_node = tree.body[i + 1]
-                        if isinstance(next_node, ast.Expr) and isinstance(
-                            next_node.value, ast.Constant
-                        ):
-                            if isinstance(next_node.value.value, str):
-                                return next_node.value.value
-        return None
-    except Exception:
-        return None
 
 
 project_path = Path(__file__).parent.parent.resolve()
@@ -131,14 +76,12 @@ suppress_warnings = [
     # pytest.Mark type is not available during Sphinx documentation build. These are
     # cosmetic warnings that don't affect the generated documentation.
     "sphinx_autodoc_typehints.forward_reference",
-
     # Example: "/Users/kde/code/extra-platforms/docs/architectures.md:305: WARNING:
     # Ignoring "mermaid" directive without content. [docutils]"
     # Explanation: The autoclasstree extension sometimes generates empty mermaid
     # directives for certain module structures. These are harmless and don't affect
     # the documentation output.
     "myst.directive",
-
     # Example: "/Users/kde/code/extra-platforms/tests/test_sphinx_crossrefs.py:docstring
     # of tests.test_sphinx_crossrefs.has_linked_reference:9: ERROR: Unexpected
     # indentation. [docutils]"
@@ -200,102 +143,14 @@ html_show_copyright = True
 html_show_sphinx = False
 
 
-def make_pytest_decorator_line(obj):
-    """Create pytest decorator documentation line."""
-    return (
-        "- **Pytest decorators**: "
-        f":data:`~pytest.{obj.skip_decorator_id}` / "
-        f":data:`~pytest.{obj.unless_decorator_id}`"
-    )
-
-
 def autodoc_process_docstring(app, what, name, obj, options, lines):
-    """Generate docstrings for Trait instances, Groups, and frozenset collections.
+    """Process docstrings for Trait instances, Groups, and frozenset collections.
 
-    Since autodata directives use ``extra_platforms.X`` paths but the attribute
-    docstrings (string literals following assignments) are defined in submodules
-    like ``platform_data.py`` and ``group_data.py``, this hook fetches those
-    docstrings from the source files using AST parsing and injects them into the
-    documentation along with additional metadata.
+    Trait and Group instances have their docstrings generated at creation time
+    via their generate_docstring() methods. This hook only needs to handle
+    frozenset collections, which need their docstrings fetched from source files.
     """
-    if isinstance(obj, Group):
-        # Fetch attribute docstring from source module since autodata uses
-        # extra_platforms.X but docstrings are in the submodules.
-        source_docstring = get_attribute_docstring(
-            f"extra_platforms.{obj.data_module_id}", obj.symbol_id
-        )
-        if source_docstring:
-            # Clear any existing content and add the source docstring.
-            lines.clear()
-            lines.extend(source_docstring.strip().split("\n"))
-
-        lines.append("")
-
-        lines.append(f"- **ID**: ``{obj.id}``")
-        lines.append(f"- **Name**: {obj.name}")
-        lines.append(f"- **Icon**: {obj.icon}")
-        lines.append(
-            f"- **Canonical**: ``{obj.canonical}`` {'⬥' if obj.canonical else ''}"
-        )
-
-        lines.append(f"- **Detection function**: :func:`~{obj.detection_func_id}`")
-
-        lines.append(make_pytest_decorator_line(obj))
-
-        # Add list of members with links to their definitions.
-        member_links = []
-        type_counts = {}
-
-        for _, member in obj.items():
-            class_name = type(member).__name__
-
-            # Count types.
-            if class_name not in type_counts:
-                type_counts[class_name] = {"count": 0}
-            type_counts[class_name]["count"] += 1
-
-            # Create member link using Sphinx role.
-            member_links.append(f":data:`~{member.symbol_id}`")
-
-        if member_links:
-            # Format type information with links.
-            type_parts = [
-                f"{info['count']} :class:`~{class_name}`"
-                for class_name, info in sorted(type_counts.items())
-            ]
-            type_info = ", ".join(type_parts)
-            lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
-
-    elif isinstance(obj, Trait):
-        # Fetch attribute docstring from source module since autodata uses
-        # extra_platforms.X but docstrings are in the submodules.
-        source_docstring = get_attribute_docstring(
-            f"extra_platforms.{obj.data_module_id}", obj.symbol_id
-        )
-        if source_docstring:
-            # Clear any existing content and add the source docstring.
-            lines.clear()
-            lines.extend(source_docstring.strip().split("\n"))
-
-        lines.append("")
-
-        lines.append(f"- **ID**: ``{obj.id}``")
-        lines.append(f"- **Name**: {obj.name}")
-        lines.append(f"- **Icon**: {obj.icon}")
-        lines.append(f"- **Reference**: <{obj.url}>_")
-
-        lines.append(f"- **Detection function**: :func:`~{obj.detection_func_id}`")
-
-        lines.append(make_pytest_decorator_line(obj))
-
-        # Add list of groups this trait belongs to.
-        group_links = [
-            f":data:`~{group.symbol_id}`" + (" ⬥" if group.canonical else "")
-            for group in sorted(obj.groups, key=lambda g: g.id)
-        ]
-        lines.append(f"- **Groups** ({len(group_links)}): {', '.join(group_links)}")
-
-    elif isinstance(obj, frozenset):
+    if isinstance(obj, frozenset):
         # Handle frozenset collections - fetch their docstrings from source modules.
         # Map collection names to their source modules.
         collection_modules = {
@@ -368,7 +223,10 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
             return True  # Skip - already documented in detection.md
 
         # Skip internal implementation functions that are wrapped
-        if name == "_current_platforms_impl" and obj_module == "extra_platforms._deprecated":
+        if (
+            name == "_current_platforms_impl"
+            and obj_module == "extra_platforms._deprecated"
+        ):
             return True  # Skip - internal implementation detail
 
         # Skip group utility functions - documented in groups.md

@@ -22,6 +22,7 @@ import sys
 from functools import cache
 
 from . import detection  # noqa: E402
+from ._docstrings import _initialize_all_docstrings
 from .architecture_data import (  # noqa: E402
     AARCH64,
     ARM,
@@ -670,3 +671,8 @@ __all__ = (  # noqa: F405
     Test Ruff's ``__all__`` formatting capabilities. And if good enough, remove
     ``__all__`` checks in unittests.
 """
+
+# Initialize docstrings for all trait and group instances after all imports
+# are complete. This avoids circular import issues during module initialization.
+
+_initialize_all_docstrings(ALL_TRAITS, ALL_GROUPS)

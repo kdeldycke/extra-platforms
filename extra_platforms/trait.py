@@ -204,16 +204,53 @@ class Trait(_Identifiable, ABC):
         """Validate and normalize trait fields.
 
         - Ensure the URL is not empty and starts with ``https://``.
-        - Populate the docstring.
+        - Populate the docstring (deferred until after module initialization).
+
+        .. hint::
+            Docstring generation is deferred to avoid circular imports during module
+            initialization. See _docstrings._initialize_all_docstrings().
         """
         super().__post_init__()
 
         assert self.url, f"{self.__class__.__name__} URL cannot be empty."
         assert self.url.startswith("https://"), "URL must start with https://."
 
-        # Generate docstring using type_name for context (e.g., "Predefined ARM64
-        # architecture.").
-        object.__setattr__(self, "__doc__", f"Predefined {self.name} {self.type_name}.")
+    def generate_docstring(self) -> str:
+        """Generate comprehensive docstring for this trait instance.
+
+        Combines the attribute docstring from the source module with various metadata.
+        """
+        from extra_platforms._docstrings import get_attribute_docstring
+
+        lines = []
+
+        # Fetch attribute docstring from source module.
+        source_docstring = get_attribute_docstring(
+            f"extra_platforms.{self.data_module_id}", self.symbol_id
+        )
+        if source_docstring:
+            lines.extend(source_docstring.strip().split("\n"))
+            lines.append("")
+
+        # Add metadata.
+        lines.append(f"- **ID**: ``{self.id}``")
+        lines.append(f"- **Name**: {self.name}")
+        lines.append(f"- **Icon**: {self.icon}")
+        lines.append(f"- **Reference**: <{self.url}>_")
+        lines.append(f"- **Detection function**: :func:`~{self.detection_func_id}`")
+        lines.append(
+            f"- **Pytest decorators**: :data:`~pytest.{self.skip_decorator_id}` / "
+            f":data:`~pytest.{self.unless_decorator_id}`"
+        )
+
+        # Add list of groups this trait belongs to.
+        group_links = [
+            f":data:`~{group.symbol_id}`" + (" ⬥" if group.canonical else "")
+            for group in sorted(self.groups, key=lambda g: g.id)
+        ]
+        lines.append(f"- **Groups** ({len(group_links)}): {', '.join(group_links)}")
+
+        return "\n".join(lines)
 
     @cached_property
     def groups(self) -> frozenset:
