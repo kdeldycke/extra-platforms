@@ -663,14 +663,65 @@ def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
         ```""")
 
 
+def generate_group_automodule() -> str:
+    """Generate the extra_platforms.group automodule directive with excluded members.
+
+    This excludes utility functions that are documented in groups.md.
+
+    Returns:
+        An rST automodule directive with exclude-members.
+    """
+    # Exclude utility functions documented in groups.md.
+    exclude_list = [
+        "groups_from_ids",
+        "reduce",
+        "traits_from_ids",
+    ]
+
+    exclude_members = ", ".join(sorted(exclude_list))
+
+    return dedent(f"""\
+        .. automodule:: extra_platforms.group
+           :members:
+           :show-inheritance:
+           :undoc-members:
+           :exclude-members: {exclude_members}""")
+
+
+def generate_trait_automodule() -> str:
+    """Generate the extra_platforms.trait automodule directive with excluded members.
+
+    This excludes core classes that are documented in trait.md.
+
+    Returns:
+        An rST automodule directive with exclude-members.
+    """
+    # Exclude core classes documented in trait.md.
+    exclude_list = [
+        "Architecture",
+        "CI",
+        "Platform",
+        "Trait",
+    ]
+
+    exclude_members = ", ".join(sorted(exclude_list))
+
+    return dedent(f"""\
+        .. automodule:: extra_platforms.trait
+           :members:
+           :show-inheritance:
+           :undoc-members:
+           :exclude-members: {exclude_members}""")
+
+
 def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str:
     """Generate the extra_platforms automodule directive with excluded members.
 
     This excludes detection functions, utility functions, and core classes from the
     automodule output, since they are documented in other files:
     - Detection functions in detection.md ({{func}} → detection.html)
-    - Utility functions in detection.md ({{func}} → detection.html)
-    - Core classes in trait.md ({{class}} → trait.html)
+    - Utility functions in detection.md and groups.md ({{func}} → detection.html, groups.html)
+    - Core classes in trait.md and groups.md ({{class}} → trait.html, groups.html)
 
     Args:
         objects: The traits and groups whose detection functions should be excluded.
@@ -689,14 +740,25 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
     exclude_list.extend([
         "current_architecture",
         "current_ci",
+        "current_os",
         "current_platform",
+        "current_platforms",
         "current_traits",
+        "invalidate_caches",
     ])
 
-    # Also exclude core classes documented in trait.md.
+    # Also exclude group utility functions documented in groups.md.
+    exclude_list.extend([
+        "groups_from_ids",
+        "reduce",
+        "traits_from_ids",
+    ])
+
+    # Also exclude core classes documented in trait.md and groups.md.
     exclude_list.extend([
         "Architecture",
         "CI",
+        "Group",
         "Platform",
         "Trait",
     ])
@@ -887,6 +949,18 @@ def update_docs() -> None:
             "extra-platforms-automodule-start",
             "extra-platforms-automodule-end",
             generate_extra_platforms_automodule(chain(ALL_TRAITS, ALL_GROUPS)),
+        ),
+        # Group automodule directive (excludes utility functions).
+        (
+            "group-automodule-start",
+            "group-automodule-end",
+            generate_group_automodule(),
+        ),
+        # Trait automodule directive (excludes core classes).
+        (
+            "trait-automodule-start",
+            "trait-automodule-end",
+            generate_trait_automodule(),
         ),
     ]
 

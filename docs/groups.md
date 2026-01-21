@@ -94,20 +94,20 @@ with canonical groups.
 ## Group collections
 
 ```{eval-rst}
-.. autodata:: extra_platforms.ALL_GROUPS
-.. autodata:: extra_platforms.ALL_PLATFORM_GROUPS
-.. autodata:: extra_platforms.ALL_ARCHITECTURE_GROUPS
-.. autodata:: extra_platforms.ALL_CI_GROUPS
-.. autodata:: extra_platforms.EXTRA_GROUPS
-.. autodata:: extra_platforms.NON_OVERLAPPING_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_ARCHITECTURE_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_CI_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_PLATFORM_GROUPS
+.. autodata:: extra_platforms.group_data.EXTRA_GROUPS
+.. autodata:: extra_platforms.group_data.NON_OVERLAPPING_GROUPS
 ```
 
 ## ID collections
 
 ```{eval-rst}
-.. autodata:: extra_platforms.ALL_TRAIT_IDS
-.. autodata:: extra_platforms.ALL_GROUP_IDS
-.. autodata:: extra_platforms.ALL_IDS
+.. autodata:: extra_platforms.group_data.ALL_GROUP_IDS
+.. autodata:: extra_platforms.group_data.ALL_IDS
+.. autodata:: extra_platforms.group_data.ALL_TRAIT_IDS
 ```
 
 ## Trait and group operations

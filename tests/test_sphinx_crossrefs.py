@@ -907,3 +907,130 @@ def test_all_crossreferences_point_to_correct_pages(
                 f"Symbol {role}:`{symbol}` from {source_file} "
                 f"expected in {expected_page} but anchor {expected_anchor} not found"
             )
+
+
+def extract_docstring_from_html(html: str, symbol_id: str) -> str:
+    """Extract the docstring text for a symbol from HTML content.
+
+    This function is used to verify that custom docstrings are properly rendered
+    in the generated HTML documentation, particularly for frozenset collections
+    where Sphinx's autodoc would normally show the generic frozenset description.
+
+    Args:
+        html: The HTML content to search.
+        symbol_id: The symbol ID (e.g., "extra_platforms.ALL_GROUPS" or
+            "extra_platforms.group_data.ALL_GROUPS").
+
+    Returns:
+        The docstring text (stripped of HTML tags), or empty string if not found.
+    """
+    # Find the anchor for this symbol.
+    pattern = rf'<dt[^>]*id="{re.escape(symbol_id)}"[^>]*>(.*?)</dt>\s*<dd>(.*?)</dd>'
+    match = re.search(pattern, html, re.DOTALL)
+    if not match:
+        return ""
+
+    dd_content = match.group(2)
+
+    # Extract text content, removing HTML tags.
+    # First remove <script> and <style> tags entirely.
+    dd_content = re.sub(r"<script[^>]*>.*?</script>", "", dd_content, flags=re.DOTALL)
+    dd_content = re.sub(r"<style[^>]*>.*?</style>", "", dd_content, flags=re.DOTALL)
+
+    # Remove HTML tags but preserve text content.
+    text = re.sub(r"<[^>]+>", " ", dd_content)
+
+    # Clean up whitespace.
+    text = re.sub(r"\s+", " ", text).strip()
+
+    return text
+
+
+@pytest.mark.parametrize(
+    "symbol_name,expected_text_fragment",
+    [
+        ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are architectures"),
+        ("ALL_PLATFORM_GROUPS", "All groups whose members are platforms"),
+        ("ALL_CI_GROUPS", "All groups whose members are CI systems"),
+        ("NON_OVERLAPPING_GROUPS", "Non-overlapping groups"),
+        ("EXTRA_GROUPS", "Overlapping groups, defined for convenience"),
+        ("ALL_GROUPS", "All predefined groups"),
+        ("ALL_TRAIT_IDS", "frozenset of all recognized traits IDs"),
+        ("ALL_GROUP_IDS", "frozenset of all recognized group IDs"),
+        ("ALL_IDS", "frozenset of all recognized traits and group IDs"),
+    ],
+)
+def test_frozenset_docstrings_are_custom(
+    built_docs, symbol_name, expected_text_fragment
+):
+    """Test that frozenset collections have custom docstrings, not the generic one.
+
+    This test verifies that the frozenset collections (ALL_GROUPS, ALL_TRAIT_IDS,
+    etc.) are documented with their custom docstrings extracted from #: comments
+    rather than the generic frozenset description.
+    """
+    # In extra_platforms.html, frozensets use the full module path.
+    symbol_id = f"extra_platforms.group_data.{symbol_name}"
+
+    # Check extra_platforms.html.
+    extra_platforms_html = read_html(built_docs, "extra_platforms.html")
+    docstring = extract_docstring_from_html(extra_platforms_html, symbol_id)
+
+    # Verify we found a docstring.
+    assert docstring, (
+        f"No docstring found for {symbol_name} in extra_platforms.html"
+    )
+
+    # Verify it doesn't contain the generic frozenset description.
+    assert "Build an immutable unordered collection of unique elements" not in docstring, (
+        f"{symbol_name} in extra_platforms.html has generic frozenset docstring"
+    )
+
+    # Verify it contains the expected custom text.
+    assert expected_text_fragment in docstring, (
+        f"{symbol_name} in extra_platforms.html missing expected text: "
+        f"'{expected_text_fragment}'. Got: {docstring[:200]}"
+    )
+
+
+@pytest.mark.parametrize(
+    "symbol_name,expected_text_fragment",
+    [
+        ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are architectures"),
+        ("ALL_PLATFORM_GROUPS", "All groups whose members are platforms"),
+        ("ALL_CI_GROUPS", "All groups whose members are CI systems"),
+        ("NON_OVERLAPPING_GROUPS", "Non-overlapping groups"),
+        ("EXTRA_GROUPS", "Overlapping groups, defined for convenience"),
+        ("ALL_GROUPS", "All predefined groups"),
+        ("ALL_TRAIT_IDS", "frozenset of all recognized traits IDs"),
+        ("ALL_GROUP_IDS", "frozenset of all recognized group IDs"),
+        ("ALL_IDS", "frozenset of all recognized traits and group IDs"),
+    ],
+)
+def test_frozenset_docstrings_consistent_across_pages(
+    built_docs, symbol_name, expected_text_fragment
+):
+    """Test that frozenset docstrings are consistent in groups.html.
+
+    This test verifies that the same custom docstrings appear in groups.html
+    as in extra_platforms.html.
+    """
+    symbol_id = f"extra_platforms.group_data.{symbol_name}"
+
+    # Check groups.html.
+    groups_html = read_html(built_docs, "groups.html")
+    docstring = extract_docstring_from_html(groups_html, symbol_id)
+
+    # Verify we found a docstring.
+    assert docstring, f"No docstring found for {symbol_name} in groups.html"
+
+    # Verify it doesn't contain the generic frozenset description.
+    assert "Build an immutable unordered collection of unique elements" not in docstring, (
+        f"{symbol_name} in groups.html has generic frozenset docstring"
+    )
+
+    # Verify it contains the expected custom text.
+    assert expected_text_fragment in docstring, (
+        f"{symbol_name} in groups.html missing expected text: "
+        f"'{expected_text_fragment}'. Got: {docstring[:200]}"
+    )

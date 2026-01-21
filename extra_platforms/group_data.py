@@ -13,7 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Definitions of ready-to-use groups."""
+"""Definitions of ready-to-use groups.
+
+This module contains all predefined :class:`~extra_platforms.Group` instances and
+frozenset collections that organize traits into logical categories.
+"""
 
 from __future__ import annotations
 
@@ -636,6 +640,7 @@ ALL_TRAITS = Group(
 # Collections of groups
 # =============================================================================
 
+#: All groups whose members are architectures.
 ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_ARCHITECTURES,
@@ -652,9 +657,9 @@ ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
         ARCH_32_BIT,
     ),
 )
-"""All groups whose members are architectures."""
 
 
+#: All groups whose members are platforms.
 ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_PLATFORMS,
@@ -671,18 +676,23 @@ ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
         OTHER_POSIX,
     ),
 )
-"""All groups whose members are platforms."""
 
 
+#: All groups whose members are CI systems.
+#:
+#: .. note::
+#:     Not that useful currently, but provided for symmetry with architecture and platform
+#:     groups.
 ALL_CI_GROUPS: frozenset[Group] = frozenset((ALL_CI,))
-"""All groups whose members are CI systems.
-
-.. note::
-    Not that useful currently, but provided for symmetry with architecture and platform
-    groups.
-"""
 
 
+#: Non-overlapping groups.
+#:
+#: .. hint::
+#:     These groups together cover all predefined architectures, platforms, and CI systems,
+#:     including traits from the :data:`~UNKNOWN` group.
+#:
+#:     All groups in this collection are marked as canonical.
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
         # Architecture groups.
@@ -709,16 +719,12 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         UNKNOWN,
     ),
 )
-"""Non-overlapping groups.
-
-.. hint::
-    These groups together cover all predefined architectures, platforms, and CI systems,
-    including traits from the :data:`~UNKNOWN` group.
-
-    All groups in this collection are marked as canonical.
-"""
 
 
+#: Overlapping groups, defined for convenience.
+#:
+#: .. hint::
+#:     None of these groups are marked as canonical.
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_TRAITS,
@@ -734,46 +740,37 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         LINUX_LIKE,
     ),
 )
-"""Overlapping groups, defined for convenience.
-
-.. hint::
-    None of these groups are marked as canonical.
-"""
 
 
+#: All predefined groups.
+#:
+#: .. hint::
+#:     This collection contains both canonical and non-canonical groups, including the
+#:     :data:`~UNKNOWN` group.
 ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
-"""All predefined groups.
-
-.. hint::
-    This collection contains both canonical and non-canonical groups, including the
-    :data:`~UNKNOWN` group.
-"""
 
 
 # =============================================================================
 # ID collections
 # =============================================================================
 
+#: A :class:`frozenset` of all recognized traits IDs.
+#:
+#: .. attention::
+#:     This collection does not contain all the ``UNKNOWN_*`` traits.
 ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS - UNKNOWN))
-"""A :class:`frozenset` of all recognized traits IDs.
-
-.. attention::
-    This collection does not contain all the ``UNKNOWN_*`` traits.
-"""
 
 
+#: A :class:`frozenset` of all recognized group IDs.
+#:
+#: .. attention::
+#:     This collection does not contain the :data:`~UNKNOWN` group.
 ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS - {UNKNOWN}))
-"""A :class:`frozenset` of all recognized group IDs.
-
-.. attention::
-    This collection does not contain the :data:`~UNKNOWN` group.
-"""
 
 
+#: A :class:`frozenset` of all recognized traits and group IDs.
+#:
+#: .. attention::
+#:     This collection does not contain all the ``UNKNOWN_*`` traits and the
+#:     :data:`~UNKNOWN` group.
 ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS
-"""A :class:`frozenset` of all recognized traits and group IDs.
-
-.. attention::
-    This collection does not contain all the ``UNKNOWN_*`` traits and the
-    :data:`~UNKNOWN` group.
-"""
