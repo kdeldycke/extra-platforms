@@ -1,9 +1,6 @@
 # Changelog
 
-## [8.0.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v7.0.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [8.0.0 (2026-01-21)](https://github.com/kdeldycke/extra-platforms/compare/v7.0.0...v8.0.0)
 
 - Remove `operations.py` and move content to `group` and `group_data` modules.
 - Rename `Group._extract_members()` to `extract_members()` and make it public.
