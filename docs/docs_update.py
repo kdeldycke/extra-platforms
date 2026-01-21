@@ -1038,7 +1038,8 @@ def update_docs() -> None:
             "group-module-automodule-end",
             generate_group_module_automodule(),
         ),
-        # Group data module automodule for groups.md (excludes all groups and collections).
+        # Group data module automodule for groups.md (excludes all groups and
+        # collections).
         (
             "group-data-module-automodule-start",
             "group-data-module-automodule-end",
