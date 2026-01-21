@@ -714,6 +714,76 @@ def generate_trait_automodule() -> str:
            :exclude-members: {exclude_members}""")
 
 
+def generate_group_module_automodule() -> str:
+    """Generate the extra_platforms.group automodule for groups.md.
+
+    Excludes Group class and utility functions that are documented separately
+    in the same file.
+
+    Returns:
+        A MyST-compatible code block containing the automodule directive.
+    """
+    # Exclude Group class (documented via autoclass) and utility functions
+    # (documented in "Trait and group operations" section).
+    exclude_list = [
+        "Group",
+        "extract_members",
+        "groups_from_ids",
+        "reduce",
+        "traits_from_ids",
+    ]
+
+    exclude_members = ", ".join(sorted(exclude_list))
+
+    return dedent(f"""\
+        ```{{eval-rst}}
+        .. automodule:: extra_platforms.group
+           :members:
+           :undoc-members:
+           :show-inheritance:
+           :exclude-members: {exclude_members}
+        ```""")
+
+
+def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
+    """Generate the extra_platforms.group_data automodule for groups.md.
+
+    Excludes all Group instances and frozenset collections that are documented
+    separately in the same file.
+
+    Args:
+        groups: All predefined groups to exclude.
+
+    Returns:
+        A MyST-compatible code block containing the automodule directive.
+    """
+    # Exclude all Group instances (documented in "Predefined groups" section).
+    # Group IDs are lowercase but Python symbols are uppercase.
+    exclude_list = [g.id.upper() for g in groups]
+
+    # Exclude frozenset collections (documented in "Group collections" and
+    # "ID collections" sections).
+    exclude_list.extend([
+        "ALL_ARCHITECTURE_GROUPS",
+        "ALL_CI_GROUPS",
+        "ALL_GROUPS",
+        "ALL_GROUP_IDS",
+        "ALL_IDS",
+        "ALL_PLATFORM_GROUPS",
+        "ALL_TRAIT_IDS",
+        "EXTRA_GROUPS",
+        "NON_OVERLAPPING_GROUPS",
+    ])
+
+    exclude_members = ", ".join(sorted(exclude_list))
+
+    return dedent(f"""\
+        ```{{eval-rst}}
+        .. automodule:: extra_platforms.group_data
+           :exclude-members: {exclude_members}
+        ```""")
+
+
 def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str:
     """Generate the extra_platforms automodule directive with excluded members.
 
@@ -961,6 +1031,18 @@ def update_docs() -> None:
             "trait-automodule-start",
             "trait-automodule-end",
             generate_trait_automodule(),
+        ),
+        # Group module automodule for groups.md (excludes Group class and utilities).
+        (
+            "group-module-automodule-start",
+            "group-module-automodule-end",
+            generate_group_module_automodule(),
+        ),
+        # Group data module automodule for groups.md (excludes all groups and collections).
+        (
+            "group-data-module-automodule-start",
+            "group-data-module-automodule-end",
+            generate_group_data_module_automodule(ALL_GROUPS),
         ),
     ]
 

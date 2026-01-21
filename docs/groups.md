@@ -152,18 +152,28 @@ with canonical groups.
    :strict:
 ```
 
+<!-- group-module-automodule-start -->
+
 ```{eval-rst}
 .. automodule:: extra_platforms.group
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: Group, extract_members, groups_from_ids, reduce, traits_from_ids
 ```
+
+<!-- group-module-automodule-end -->
 
 ```{eval-rst}
 .. autoclasstree:: extra_platforms.group_data
    :strict:
 ```
 
+<!-- group-data-module-automodule-start -->
+
 ```{eval-rst}
 .. automodule:: extra_platforms.group_data
+   :exclude-members: ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, ALL_ARM, ALL_CI, ALL_CI_GROUPS, ALL_GROUPS, ALL_GROUP_IDS, ALL_IDS, ALL_MIPS, ALL_PLATFORMS, ALL_PLATFORM_GROUPS, ALL_SPARC, ALL_TRAITS, ALL_TRAIT_IDS, ALL_WINDOWS, ARCH_32_BIT, ARCH_64_BIT, BSD, BSD_WITHOUT_MACOS, EXTRA_GROUPS, IBM_MAINFRAME, LINUX, LINUX_LAYERS, LINUX_LIKE, LOONGARCH, NON_OVERLAPPING_GROUPS, OTHER_POSIX, POWERPC, RISCV, SYSTEM_V, UNIX, UNIX_LAYERS, UNIX_WITHOUT_MACOS, UNKNOWN, WEBASSEMBLY, X86
 ```
+
+<!-- group-data-module-automodule-end -->
