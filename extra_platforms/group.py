@@ -23,7 +23,7 @@ from functools import cached_property
 from types import MappingProxyType
 from typing import cast
 
-from .trait import Trait, _Identifiable
+from .trait import Trait, _Identifiable, _resolve_alias
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -347,10 +347,8 @@ class Group(_Identifiable):
             self.id,
             self.name,
             self.icon,
-            tuple(
-                set(self._members.values()).union(
-                    *(extract_members(other) for other in others)
-                )
+            set(self._members.values()).union(
+                *(extract_members(other) for other in others)
             ),
         )
 
@@ -368,10 +366,8 @@ class Group(_Identifiable):
             self.id,
             self.name,
             self.icon,
-            tuple(
-                set(self._members.values()).intersection(
-                    *(extract_members(other) for other in others)
-                )
+            set(self._members.values()).intersection(
+                *(extract_members(other) for other in others)
             ),
         )
 
@@ -389,10 +385,8 @@ class Group(_Identifiable):
             self.id,
             self.name,
             self.icon,
-            tuple(
-                set(self._members.values()).difference(
-                    *(extract_members(other) for other in others)
-                )
+            set(self._members.values()).difference(
+                *(extract_members(other) for other in others)
             ),
         )
 
@@ -410,9 +404,7 @@ class Group(_Identifiable):
             self.id,
             self.name,
             self.icon,
-            tuple(
-                set(self._members.values()).symmetric_difference(extract_members(other))
-            ),
+            set(self._members.values()).symmetric_difference(extract_members(other)),
         )
 
     __xor__ = symmetric_difference
@@ -457,7 +449,7 @@ class Group(_Identifiable):
             self.id,
             self.name,
             self.icon,
-            tuple(set(self._members.values()) | {member}),
+            set(self._members.values()) | {member},
         )
 
     def remove(self, member: Trait | str) -> Group:
@@ -594,6 +586,9 @@ def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
     IDs are case-insensitive, and can refer to any traits or groups. Matching groups
     will be expanded to the :class:`~extra_platforms.Trait` instances they contain.
 
+    Aliases are automatically resolved to their canonical IDs, with a warning emitted
+    to encourage using the canonical ID directly.
+
     Order of the returned traits matches the order of the provided IDs.
 
     .. tip::
@@ -603,7 +598,10 @@ def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
     # Avoid circular import.
     from .group_data import ALL_IDS, ALL_TRAIT_IDS, ALL_TRAITS
 
-    ids = _unique((s.lower() for s in trait_and_group_ids))
+    # Normalize to lowercase and resolve aliases.
+    ids = _unique((_resolve_alias(s.lower()) for s in trait_and_group_ids))
+
+    # Check for unrecognized IDs (aliases have already been resolved).
     unrecognized_ids = set(ids) - ALL_IDS
     if unrecognized_ids:
         raise ValueError(

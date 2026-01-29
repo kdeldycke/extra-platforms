@@ -28,7 +28,7 @@ from __future__ import annotations
 import platform
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from functools import cached_property
+from functools import cached_property, lru_cache
 from typing import ClassVar
 
 import distro
@@ -200,10 +200,22 @@ class Trait(_Identifiable, ABC):
     url: str = field(repr=False, default="")
     """URL to the trait's official website or documentation."""
 
+    aliases: frozenset[str] = field(repr=False, default_factory=frozenset)
+    """Alternative IDs for this trait.
+
+    Aliases are alternative identifiers that resolve to the same trait. When an
+    alias is used, a warning is emitted to encourage using the canonical ID.
+
+    .. note::
+        Aliases do not generate their own symbols, detection functions, or pytest
+        decorators. Only the canonical ``id`` produces these artifacts.
+    """
+
     def __post_init__(self) -> None:
         """Validate and normalize trait fields.
 
         - Ensure the URL is not empty and starts with ``https://``.
+        - Validate aliases are lowercase and distinct from the canonical ID.
         - Populate the docstring (deferred until after module initialization).
 
         .. hint::
@@ -214,6 +226,14 @@ class Trait(_Identifiable, ABC):
 
         assert self.url, f"{self.__class__.__name__} URL cannot be empty."
         assert self.url.startswith("https://"), "URL must start with https://."
+
+        # Validate aliases.
+        for alias in self.aliases:
+            assert alias, f"{self.__class__.__name__} alias cannot be empty."
+            assert (
+                alias == alias.lower()
+            ), f"Alias '{alias}' must be lowercase for {self.id}."
+            assert alias != self.id, f"Alias '{alias}' cannot be the same as ID."
 
     def generate_docstring(self) -> str:
         """Generate comprehensive docstring for this trait instance.
@@ -234,6 +254,11 @@ class Trait(_Identifiable, ABC):
 
         # Add metadata.
         lines.append(f"- **ID**: ``{self.id}``")
+        if self.aliases:
+            alias_list = ", ".join(f"``{a}``" for a in sorted(self.aliases))
+        else:
+            alias_list = "-"
+        lines.append(f"- **Aliases**: {alias_list}")
         lines.append(f"- **Name**: {self.name}")
         lines.append(f"- **Icon**: {self.icon}")
         lines.append(f"- **Reference**: <{self.url}>_")
@@ -382,3 +407,27 @@ class CI(Trait):
     def info(self) -> dict[str, str | bool | None]:
         """Returns all CI attributes we can gather."""
         return {**self._base_info()}
+
+
+@lru_cache(maxsize=128)
+def _resolve_alias(id_: str) -> str:
+    """Resolve an alias to its canonical ID, emitting a warning if an alias is used.
+
+    Results are cached, so the warning is only emitted once per alias.
+
+    Args:
+        id_: The ID to resolve (already lowercased).
+
+    Returns:
+        The canonical ID if ``id_`` is an alias, otherwise ``id_`` unchanged.
+    """
+    # Avoid circular import.
+    from .group_data import ALL_TRAITS
+
+    for trait in ALL_TRAITS:
+        if id_ in trait.aliases:
+            from ._deprecated import _warn_alias_used
+
+            _warn_alias_used(id_, trait.id)
+            return trait.id
+    return id_

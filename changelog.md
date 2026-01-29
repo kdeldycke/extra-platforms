@@ -5,6 +5,15 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add `aliases` field to `Trait` class, allowing alternative IDs that resolve to the canonical ID.
+- Add aliases for common architecture names:
+  - `arm64` → `aarch64`
+  - `amd64` → `x86_64`
+  - `armhf`, `armv7` → `armv7l`
+  - `i486` → `i386`
+  - `powerpc64le`, `ppc64el` → `ppc64le`
+- Emit a `UserWarning` when an alias is used, encouraging use of the canonical ID.
+- Change `Trait.aliases` type from `tuple` to `frozenset` for better semantics.
 - Remove `operations.py` and move content to `group` and `group_data` modules.
 - Rename `Group._extract_members()` to `extract_members()` and make it public.
 - Simplify `reduce()` algorithm from brute-force enumeration to a greedy approximation for better performance.

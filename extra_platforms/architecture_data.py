@@ -40,14 +40,12 @@ AARCH64 = Architecture(
     "ARM64 (AArch64)",
     "📱",
     "https://en.wikipedia.org/wiki/AArch64",
+    aliases=frozenset({"arm64"}),
 )
 """
-.. warning::
+.. hint::
     Although ``aarch64`` is the canonical ID for this architecture, some
     platforms may use the alias ``arm64`` instead (e.g., macOS on Apple Silicon).
-
-.. todo::
-    Consider adding ``arm64`` as an alias in the future.
 """
 
 ARM = Architecture(
@@ -64,7 +62,7 @@ ARMV5TEL = Architecture(
     "https://en.wikipedia.org/wiki/ARM11",
 )
 """
-.. note::
+.. hint::
     ARMv5TE includes Thumb and DSP extensions. This architecture is found on
     older ARM devices and may appear in embedded systems or legacy platforms.
 """
@@ -81,12 +79,8 @@ ARMV7L = Architecture(
     "ARMv7 (little-endian)",
     "📱",
     "https://en.wikipedia.org/wiki/ARM_Cortex-A",
+    aliases=frozenset({"armhf", "armv7"}),
 )
-"""
-.. note::
-    This architecture is commonly referred to as ``armhf`` (ARM hard-float) in
-    Debian-based distributions, or simply ``armv7`` in other contexts.
-"""
 
 ARMV8L = Architecture(
     "armv8l",
@@ -100,11 +94,8 @@ I386 = Architecture(
     "Intel 80386 (i386)",
     "𝗶",
     "https://en.wikipedia.org/wiki/Intel_80386",
+    aliases=frozenset({"i486"}),
 )
-"""
-.. todo::
-    Alias this to ``i486``.
-"""
 
 I586 = Architecture(
     "i586",
@@ -174,11 +165,8 @@ PPC64LE = Architecture(
     "PowerPC 64-bit (little-endian)",
     "⚡",
     "https://en.wikipedia.org/wiki/Ppc64",
+    aliases=frozenset({"powerpc64le", "ppc64el"}),
 )
-"""
-.. note::
-    Also known as ``powerpc64le`` or ``ppc64el`` in some distributions.
-"""
 
 RISCV32 = Architecture(
     "riscv32",
@@ -241,12 +229,10 @@ X86_64 = Architecture(
     "x86-64 (AMD64)",
     "🖥️",
     "https://en.wikipedia.org/wiki/X86-64",
+    aliases=frozenset({"amd64"}),
 )
 """
-.. warning::
+.. hint::
     Although ``x86_64`` is the canonical ID for this architecture, some
     platforms may use the alias ``amd64`` instead (e.g., Windows on x86-64).
-
-.. todo::
-    Consider adding ``amd64`` as an alias in the future.
 """

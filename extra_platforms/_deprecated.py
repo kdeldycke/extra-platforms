@@ -60,6 +60,21 @@ def _warn_deprecated(name: str, replacement: str) -> None:
     )
 
 
+def _warn_alias_used(alias: str, canonical_id: str) -> None:
+    """Issue a warning when an alias is used instead of the canonical ID.
+
+    Args:
+        alias: The alias that was used.
+        canonical_id: The canonical ID that should be used instead.
+    """
+    warnings.warn(
+        f"'{alias}' is an alias for '{canonical_id}'. "
+        f"Use the canonical ID '{canonical_id}' instead.",
+        UserWarning,
+        stacklevel=4,
+    )
+
+
 class _DeprecatedProxy:
     """Generic deprecated proxy that delegates to a target and warns on use.
 

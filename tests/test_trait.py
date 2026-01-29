@@ -164,3 +164,35 @@ def test_detection_function_missing(caplog):
         match=r"Detection function is_dummy_trait\(\) is not implemented\.",
     ):
         _ = trait.current
+
+
+def test_aliases_do_not_conflict_with_trait_ids():
+    """Verify no alias conflicts with a canonical trait ID."""
+    for trait in ALL_TRAITS:
+        for alias in trait.aliases:
+            assert alias not in ALL_TRAIT_IDS, (
+                f"Alias '{alias}' for trait '{trait.id}' conflicts with "
+                f"an existing canonical trait ID."
+            )
+
+
+def test_aliases_do_not_conflict_with_group_ids():
+    """Verify no alias conflicts with a group ID."""
+    for trait in ALL_TRAITS:
+        for alias in trait.aliases:
+            assert alias not in ALL_GROUP_IDS, (
+                f"Alias '{alias}' for trait '{trait.id}' conflicts with "
+                f"an existing group ID."
+            )
+
+
+def test_aliases_are_unique_across_traits():
+    """Verify no alias is defined by multiple traits."""
+    seen_aliases: dict[str, str] = {}
+    for trait in ALL_TRAITS:
+        for alias in trait.aliases:
+            assert alias not in seen_aliases, (
+                f"Alias '{alias}' is defined multiple times: "
+                f"by trait '{seen_aliases[alias]}' and trait '{trait.id}'."
+            )
+            seen_aliases[alias] = trait.id
