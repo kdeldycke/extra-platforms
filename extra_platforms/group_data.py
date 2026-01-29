@@ -287,6 +287,51 @@ ARCH_32_BIT = Group(
 """All 32-bit architectures."""
 
 
+BIG_ENDIAN = Group(
+    "big_endian",
+    "Big-endian architectures",
+    "⬆️",
+    (
+        MIPS,
+        MIPS64,
+        PPC,
+        PPC64,
+        S390X,
+        SPARC,
+        SPARC64,
+    ),
+)
+"""All big-endian architectures."""
+
+
+LITTLE_ENDIAN = Group(
+    "little_endian",
+    "Little-endian architectures",
+    "⬇️",
+    (
+        AARCH64,
+        ARM,
+        ARMV5TEL,
+        ARMV6L,
+        ARMV7L,
+        ARMV8L,
+        I386,
+        I586,
+        I686,
+        LOONGARCH64,
+        MIPS64EL,
+        MIPSEL,
+        PPC64LE,
+        RISCV32,
+        RISCV64,
+        WASM32,
+        WASM64,
+        X86_64,
+    ),
+)
+"""All little-endian architectures."""
+
+
 # =============================================================================
 # Platform groups
 # =============================================================================
@@ -655,6 +700,8 @@ ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
         WEBASSEMBLY,
         ARCH_64_BIT,
         ARCH_32_BIT,
+        BIG_ENDIAN,
+        LITTLE_ENDIAN,
     ),
 )
 
@@ -732,6 +779,8 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         ALL_ARCHITECTURES,
         ARCH_64_BIT,
         ARCH_32_BIT,
+        BIG_ENDIAN,
+        LITTLE_ENDIAN,
         # Platform groups.
         ALL_PLATFORMS,
         UNIX,

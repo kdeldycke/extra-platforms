@@ -14,6 +14,7 @@
   - `powerpc64le`, `ppc64el` → `ppc64le`
 - Emit a `UserWarning` when an alias is used, encouraging use of the canonical ID.
 - Change `Trait.aliases` type from `tuple` to `frozenset` for better semantics.
+- Add new `BIG_ENDIAN` and `LITTLE_ENDIAN` groups to classify architectures by endianness, with `is_big_endian()` and `is_little_endian()` detection functions.
 - Remove `operations.py` and move content to `group` and `group_data` modules.
 - Rename `Group._extract_members()` to `extract_members()` and make it public.
 - Simplify `reduce()` algorithm from brute-force enumeration to a greedy approximation for better performance.

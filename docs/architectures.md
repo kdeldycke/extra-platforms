@@ -90,20 +90,22 @@ architecture is not recognized.
 
 <!-- architecture-groups-table-start -->
 
-| Icon | Symbol                     | Description          | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :------------------------- | :------------------- | :--------------------------- | :----------------------------------------------------------: |
-|  🏛️  | {data}`~ALL_ARCHITECTURES` | All architectures    | {func}`~is_any_architecture` |                                                              |
-|  📱  | {data}`~ALL_ARM`           | ARM architectures    | {func}`~is_any_arm`          |                              ⬥                               |
-|  🔲  | {data}`~ALL_MIPS`          | MIPS architectures   | {func}`~is_any_mips`         |                              ⬥                               |
-|  ☀️  | {data}`~ALL_SPARC`         | SPARC architectures  | {func}`~is_any_sparc`        |                              ⬥                               |
-|  ³²  | {data}`~ARCH_32_BIT`       | 32-bit architectures | {func}`~is_arch_32_bit`      |                                                              |
-|  ⁶⁴  | {data}`~ARCH_64_BIT`       | 64-bit architectures | {func}`~is_arch_64_bit`      |                                                              |
-|  🏢  | {data}`~IBM_MAINFRAME`     | IBM mainframe        | {func}`~is_ibm_mainframe`    |                              ⬥                               |
-|  🐉  | {data}`~LOONGARCH`         | LoongArch            | {func}`~is_loongarch`        |                              ⬥                               |
-|  ⚡  | {data}`~POWERPC`           | PowerPC family       | {func}`~is_powerpc`          |                              ⬥                               |
-|  Ⅴ   | {data}`~RISCV`             | RISC-V family        | {func}`~is_riscv`            |                              ⬥                               |
-|  🌐  | {data}`~WEBASSEMBLY`       | WebAssembly          | {func}`~is_webassembly`      |                              ⬥                               |
-|  𝘅   | {data}`~X86`               | x86 family           | {func}`~is_x86`              |                              ⬥                               |
+| Icon | Symbol                     | Description                 | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
+| :--: | :------------------------- | :-------------------------- | :--------------------------- | :----------------------------------------------------------: |
+|  🏛️  | {data}`~ALL_ARCHITECTURES` | All architectures           | {func}`~is_any_architecture` |                                                              |
+|  📱  | {data}`~ALL_ARM`           | ARM architectures           | {func}`~is_any_arm`          |                              ⬥                               |
+|  🔲  | {data}`~ALL_MIPS`          | MIPS architectures          | {func}`~is_any_mips`         |                              ⬥                               |
+|  ☀️  | {data}`~ALL_SPARC`         | SPARC architectures         | {func}`~is_any_sparc`        |                              ⬥                               |
+|  ³²  | {data}`~ARCH_32_BIT`       | 32-bit architectures        | {func}`~is_arch_32_bit`      |                                                              |
+|  ⁶⁴  | {data}`~ARCH_64_BIT`       | 64-bit architectures        | {func}`~is_arch_64_bit`      |                                                              |
+|  ⬆️  | {data}`~BIG_ENDIAN`        | Big-endian architectures    | {func}`~is_big_endian`       |                                                              |
+|  🏢  | {data}`~IBM_MAINFRAME`     | IBM mainframe               | {func}`~is_ibm_mainframe`    |                              ⬥                               |
+|  ⬇️  | {data}`~LITTLE_ENDIAN`     | Little-endian architectures | {func}`~is_little_endian`    |                                                              |
+|  🐉  | {data}`~LOONGARCH`         | LoongArch                   | {func}`~is_loongarch`        |                              ⬥                               |
+|  ⚡  | {data}`~POWERPC`           | PowerPC family              | {func}`~is_powerpc`          |                              ⬥                               |
+|  Ⅴ   | {data}`~RISCV`             | RISC-V family               | {func}`~is_riscv`            |                              ⬥                               |
+|  🌐  | {data}`~WEBASSEMBLY`       | WebAssembly                 | {func}`~is_webassembly`      |                              ⬥                               |
+|  𝘅   | {data}`~X86`               | x86 family                  | {func}`~is_x86`              |                              ⬥                               |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all
@@ -298,6 +300,90 @@ mindmap
 ```
 
 <!-- architecture-bitness-mindmap-end -->
+
+### Endianness groups
+
+Architectures are also grouped by endianness (big-endian vs little-endian), visualized as a Sankey diagram:
+
+<!-- architecture-endianness-sankey-start -->
+
+```mermaid
+---
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
+---
+sankey-beta
+
+ALL_ARCHITECTURES,LITTLE_ENDIAN,18
+ALL_ARCHITECTURES,BIG_ENDIAN,7
+BIG_ENDIAN,MIPS,1
+BIG_ENDIAN,MIPS64,1
+BIG_ENDIAN,PPC,1
+BIG_ENDIAN,PPC64,1
+BIG_ENDIAN,S390X,1
+BIG_ENDIAN,SPARC,1
+BIG_ENDIAN,SPARC64,1
+LITTLE_ENDIAN,AARCH64,1
+LITTLE_ENDIAN,ARM,1
+LITTLE_ENDIAN,ARMV5TEL,1
+LITTLE_ENDIAN,ARMV6L,1
+LITTLE_ENDIAN,ARMV7L,1
+LITTLE_ENDIAN,ARMV8L,1
+LITTLE_ENDIAN,I386,1
+LITTLE_ENDIAN,I586,1
+LITTLE_ENDIAN,I686,1
+LITTLE_ENDIAN,LOONGARCH64,1
+LITTLE_ENDIAN,MIPS64EL,1
+LITTLE_ENDIAN,MIPSEL,1
+LITTLE_ENDIAN,PPC64LE,1
+LITTLE_ENDIAN,RISCV32,1
+LITTLE_ENDIAN,RISCV64,1
+LITTLE_ENDIAN,WASM32,1
+LITTLE_ENDIAN,WASM64,1
+LITTLE_ENDIAN,X86_64,1
+```
+
+<!-- architecture-endianness-sankey-end -->
+
+And the same endianness groups visualized as a mindmap:
+
+<!-- architecture-endianness-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((🏛️ ALL_ARCHITECTURES))
+        )⬇️ LITTLE_ENDIAN(
+            (📱 AARCH64)
+            (📱 ARM)
+            (📱 ARMV5TEL)
+            (📱 ARMV6L)
+            (📱 ARMV7L)
+            (📱 ARMV8L)
+            (𝗶 I386)
+            (𝗶 I586)
+            (𝗶 I686)
+            (🐉 LOONGARCH64)
+            (🔲 MIPS64EL)
+            (🔲 MIPSEL)
+            (⚡ PPC64LE)
+            (Ⅴ RISCV32)
+            (Ⅴ RISCV64)
+            (🌐 WASM32)
+            (🌐 WASM64)
+            (🖥️ X86_64)
+        )⬆️ BIG_ENDIAN(
+            (🔲 MIPS)
+            (🔲 MIPS64)
+            (⚡ PPC)
+            (⚡ PPC64)
+            (🏢 S390X)
+            (☀️ SPARC)
+            (☀️ SPARC64)
+```
+
+<!-- architecture-endianness-mindmap-end -->
 
 ## Predefined architectures
 

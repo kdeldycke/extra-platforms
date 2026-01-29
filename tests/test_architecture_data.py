@@ -30,7 +30,9 @@ from extra_platforms import (  # type: ignore[attr-defined]
     ALL_TRAITS,
     ARCH_32_BIT,
     ARCH_64_BIT,
+    BIG_ENDIAN,
     IBM_MAINFRAME,
+    LITTLE_ENDIAN,
     LOONGARCH,
     NON_OVERLAPPING_GROUPS,
     POWERPC,
@@ -187,6 +189,11 @@ def test_architecture_logical_grouping():
     assert ARCH_32_BIT.isdisjoint(ARCH_64_BIT)
     assert ARCH_64_BIT.isdisjoint(ARCH_32_BIT)
     assert ALL_ARCHITECTURES.fullyintersects(ARCH_32_BIT | ARCH_64_BIT)
+
+    # All architectures are divided by endianness.
+    assert BIG_ENDIAN.isdisjoint(LITTLE_ENDIAN)
+    assert LITTLE_ENDIAN.isdisjoint(BIG_ENDIAN)
+    assert ALL_ARCHITECTURES.fullyintersects(BIG_ENDIAN | LITTLE_ENDIAN)
 
 
 def test_no_missing_architecture_in_groups():

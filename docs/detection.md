@@ -32,6 +32,7 @@
 | {func}`~is_armv8l`               |  📱  | {data}`~ARMV8L`               |
 | {func}`~is_azure_pipelines`      |  ═   | {data}`~AZURE_PIPELINES`      |
 | {func}`~is_bamboo`               |  ⟲   | {data}`~BAMBOO`               |
+| {func}`~is_big_endian`           |  ⬆️  | {data}`~BIG_ENDIAN`           |
 | {func}`~is_bsd`                  | 🅱️+  | {data}`~BSD`                  |
 | {func}`~is_bsd_not_macos`        |  🅱️  | {data}`~BSD_WITHOUT_MACOS`    |
 | {func}`~is_buildkite`            |  🪁  | {data}`~BUILDKITE`            |
@@ -66,6 +67,7 @@
 | {func}`~is_linux_layers`         |  ≚   | {data}`~LINUX_LAYERS`         |
 | {func}`~is_linux_like`           | 🐧+  | {data}`~LINUX_LIKE`           |
 | {func}`~is_linuxmint`            |  🌿  | {data}`~LINUXMINT`            |
+| {func}`~is_little_endian`        |  ⬇️  | {data}`~LITTLE_ENDIAN`        |
 | {func}`~is_loongarch`            |  🐉  | {data}`~LOONGARCH`            |
 | {func}`~is_loongarch64`          |  🐉  | {data}`~LOONGARCH64`          |
 | {func}`~is_macos`                |  🍎  | {data}`~MACOS`                |
@@ -245,12 +247,14 @@ These functions are dynamically generated for each [group](groups.md) and test w
 .. autofunction:: extra_platforms.is_any_windows
 .. autofunction:: extra_platforms.is_arch_32_bit
 .. autofunction:: extra_platforms.is_arch_64_bit
+.. autofunction:: extra_platforms.is_big_endian
 .. autofunction:: extra_platforms.is_bsd
 .. autofunction:: extra_platforms.is_bsd_not_macos
 .. autofunction:: extra_platforms.is_ibm_mainframe
 .. autofunction:: extra_platforms.is_linux
 .. autofunction:: extra_platforms.is_linux_layers
 .. autofunction:: extra_platforms.is_linux_like
+.. autofunction:: extra_platforms.is_little_endian
 .. autofunction:: extra_platforms.is_loongarch
 .. autofunction:: extra_platforms.is_other_posix
 .. autofunction:: extra_platforms.is_powerpc

@@ -97,6 +97,7 @@ def test_not_in_github_actions():
 | {func}`~pytest.skip_armv8l`               | {func}`~pytest.unless_armv8l`               |  📱  | {data}`~ARMV8L`               |
 | {func}`~pytest.skip_azure_pipelines`      | {func}`~pytest.unless_azure_pipelines`      |  ═   | {data}`~AZURE_PIPELINES`      |
 | {func}`~pytest.skip_bamboo`               | {func}`~pytest.unless_bamboo`               |  ⟲   | {data}`~BAMBOO`               |
+| {func}`~pytest.skip_big_endian`           | {func}`~pytest.unless_big_endian`           |  ⬆️  | {data}`~BIG_ENDIAN`           |
 | {func}`~pytest.skip_bsd`                  | {func}`~pytest.unless_bsd`                  | 🅱️+  | {data}`~BSD`                  |
 | {func}`~pytest.skip_bsd_not_macos`        | {func}`~pytest.unless_bsd_not_macos`        |  🅱️  | {data}`~BSD_WITHOUT_MACOS`    |
 | {func}`~pytest.skip_buildkite`            | {func}`~pytest.unless_buildkite`            |  🪁  | {data}`~BUILDKITE`            |
@@ -131,6 +132,7 @@ def test_not_in_github_actions():
 | {func}`~pytest.skip_linux_layers`         | {func}`~pytest.unless_linux_layers`         |  ≚   | {data}`~LINUX_LAYERS`         |
 | {func}`~pytest.skip_linux_like`           | {func}`~pytest.unless_linux_like`           | 🐧+  | {data}`~LINUX_LIKE`           |
 | {func}`~pytest.skip_linuxmint`            | {func}`~pytest.unless_linuxmint`            |  🌿  | {data}`~LINUXMINT`            |
+| {func}`~pytest.skip_little_endian`        | {func}`~pytest.unless_little_endian`        |  ⬇️  | {data}`~LITTLE_ENDIAN`        |
 | {func}`~pytest.skip_loongarch`            | {func}`~pytest.unless_loongarch`            |  🐉  | {data}`~LOONGARCH`            |
 | {func}`~pytest.skip_loongarch64`          | {func}`~pytest.unless_loongarch64`          |  🐉  | {data}`~LOONGARCH64`          |
 | {func}`~pytest.skip_macos`                | {func}`~pytest.unless_macos`                |  🍎  | {data}`~MACOS`                |
@@ -221,6 +223,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_armv8l
 .. autodecorator:: extra_platforms.pytest.skip_azure_pipelines
 .. autodecorator:: extra_platforms.pytest.skip_bamboo
+.. autodecorator:: extra_platforms.pytest.skip_big_endian
 .. autodecorator:: extra_platforms.pytest.skip_bsd
 .. autodecorator:: extra_platforms.pytest.skip_bsd_not_macos
 .. autodecorator:: extra_platforms.pytest.skip_buildkite
@@ -255,6 +258,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_linux_layers
 .. autodecorator:: extra_platforms.pytest.skip_linux_like
 .. autodecorator:: extra_platforms.pytest.skip_linuxmint
+.. autodecorator:: extra_platforms.pytest.skip_little_endian
 .. autodecorator:: extra_platforms.pytest.skip_loongarch
 .. autodecorator:: extra_platforms.pytest.skip_loongarch64
 .. autodecorator:: extra_platforms.pytest.skip_macos
@@ -342,6 +346,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_armv8l
 .. autodecorator:: extra_platforms.pytest.unless_azure_pipelines
 .. autodecorator:: extra_platforms.pytest.unless_bamboo
+.. autodecorator:: extra_platforms.pytest.unless_big_endian
 .. autodecorator:: extra_platforms.pytest.unless_bsd
 .. autodecorator:: extra_platforms.pytest.unless_bsd_not_macos
 .. autodecorator:: extra_platforms.pytest.unless_buildkite
@@ -376,6 +381,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_linux_layers
 .. autodecorator:: extra_platforms.pytest.unless_linux_like
 .. autodecorator:: extra_platforms.pytest.unless_linuxmint
+.. autodecorator:: extra_platforms.pytest.unless_little_endian
 .. autodecorator:: extra_platforms.pytest.unless_loongarch
 .. autodecorator:: extra_platforms.pytest.unless_loongarch64
 .. autodecorator:: extra_platforms.pytest.unless_macos

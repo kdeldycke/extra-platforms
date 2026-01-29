@@ -179,6 +179,7 @@ if TYPE_CHECKING:
     skip_armv8l: MarkDecorator
     skip_azure_pipelines: MarkDecorator
     skip_bamboo: MarkDecorator
+    skip_big_endian: MarkDecorator
     skip_bsd: MarkDecorator
     skip_bsd_not_macos: MarkDecorator
     skip_buildkite: MarkDecorator
@@ -213,6 +214,7 @@ if TYPE_CHECKING:
     skip_linux_layers: MarkDecorator
     skip_linux_like: MarkDecorator
     skip_linuxmint: MarkDecorator
+    skip_little_endian: MarkDecorator
     skip_loongarch: MarkDecorator
     skip_loongarch64: MarkDecorator
     skip_macos: MarkDecorator
@@ -295,6 +297,7 @@ if TYPE_CHECKING:
     unless_armv8l: MarkDecorator
     unless_azure_pipelines: MarkDecorator
     unless_bamboo: MarkDecorator
+    unless_big_endian: MarkDecorator
     unless_bsd: MarkDecorator
     unless_bsd_not_macos: MarkDecorator
     unless_buildkite: MarkDecorator
@@ -329,6 +332,7 @@ if TYPE_CHECKING:
     unless_linux_layers: MarkDecorator
     unless_linux_like: MarkDecorator
     unless_linuxmint: MarkDecorator
+    unless_little_endian: MarkDecorator
     unless_loongarch: MarkDecorator
     unless_loongarch64: MarkDecorator
     unless_macos: MarkDecorator

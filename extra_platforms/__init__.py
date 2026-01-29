@@ -185,6 +185,7 @@ from .group_data import (  # noqa: E402
     ALL_WINDOWS,
     ARCH_32_BIT,
     ARCH_64_BIT,
+    BIG_ENDIAN,
     BSD,
     BSD_WITHOUT_MACOS,
     EXTRA_GROUPS,
@@ -192,6 +193,7 @@ from .group_data import (  # noqa: E402
     LINUX,
     LINUX_LAYERS,
     LINUX_LIKE,
+    LITTLE_ENDIAN,
     LOONGARCH,
     NON_OVERLAPPING_GROUPS,
     OTHER_POSIX,
@@ -422,6 +424,7 @@ __all__ = (  # noqa: F405
     "ARMV8L",
     "AZURE_PIPELINES",
     "BAMBOO",
+    "BIG_ENDIAN",
     "BSD",
     "BSD_WITHOUT_MACOS",
     "BUILDKITE",
@@ -491,6 +494,7 @@ __all__ = (  # noqa: F405
     "is_armv8l",
     "is_azure_pipelines",
     "is_bamboo",
+    "is_big_endian",  # noqa: F822
     "is_bsd",  # noqa: F822
     "is_bsd_not_macos",  # noqa: F822
     "is_bsd_without_macos",  # Deprecated alias.
@@ -527,6 +531,7 @@ __all__ = (  # noqa: F405
     "is_linux_layers",  # noqa: F822
     "is_linux_like",  # noqa: F822
     "is_linuxmint",
+    "is_little_endian",  # noqa: F822
     "is_loongarch",  # noqa: F822
     "is_loongarch64",
     "is_macos",
@@ -594,6 +599,7 @@ __all__ = (  # noqa: F405
     "LINUX_LAYERS",
     "LINUX_LIKE",
     "LINUXMINT",
+    "LITTLE_ENDIAN",
     "LOONGARCH",
     "LOONGARCH64",
     "MACOS",
