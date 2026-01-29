@@ -434,11 +434,9 @@ def generate_sankey(groups: Iterable[Group]) -> str:
         intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
     ):
         for member in group._members.values():
-            # XXX Sankey diagrams do not support emoji icons yet.
-            # table.append(
-            #     f'"{html.escape(group.icon)} {group.id}",'
-            #     f'"{html.escape(member.icon)} {member_id}",1'
-            # )
+            # XXX Sankey diagrams does not supports emoji labels
+            # https://github.com/mermaid-js/mermaid/issues/1995
+            # https://github.com/mermaid-js/mermaid/issues/5308
             table.append(f"{group.symbol_id},{member.symbol_id},1")
 
     # Third layer: superset -> missing traits (weight = 1 each), placed at the end.
