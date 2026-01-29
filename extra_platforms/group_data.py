@@ -807,14 +807,14 @@ ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
 #:
 #: .. attention::
 #:     This collection does not contain all the ``UNKNOWN_*`` traits.
-ALL_TRAIT_IDS: frozenset[str] = frozenset((p.id for p in ALL_TRAITS - UNKNOWN))
+ALL_TRAIT_IDS: frozenset[str] = frozenset(p.id for p in ALL_TRAITS - UNKNOWN)
 
 
 #: A :class:`frozenset` of all recognized group IDs.
 #:
 #: .. attention::
 #:     This collection does not contain the :data:`~UNKNOWN` group.
-ALL_GROUP_IDS: frozenset[str] = frozenset((p.id for p in ALL_GROUPS - {UNKNOWN}))
+ALL_GROUP_IDS: frozenset[str] = frozenset(p.id for p in ALL_GROUPS - {UNKNOWN})
 
 
 #: A :class:`frozenset` of all recognized traits and group IDs.

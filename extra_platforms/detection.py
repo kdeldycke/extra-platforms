@@ -809,15 +809,11 @@ def current_architecture(strict: bool = False) -> Architecture:
     # Lazy imports to avoid circular dependencies.
     from .architecture_data import UNKNOWN_ARCHITECTURE
     from .group_data import ALL_ARCHITECTURES
-    from .trait import Architecture
 
-    matching = set()
-    # Iterate over all recognized architectures.
-    for arch in ALL_ARCHITECTURES:
-        if arch.current:
-            # Assert to please type checkers.
-            assert isinstance(arch, Architecture)
-            matching.add(arch)
+    # Collect all matching architectures.
+    matching: set[Architecture] = {
+        arch for arch in ALL_ARCHITECTURES if arch.current  # type: ignore[misc]
+    }
 
     # Return the only matching architecture.
     if len(matching) == 1:
@@ -851,14 +847,11 @@ def current_platform(strict: bool = False) -> Platform:
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_PLATFORMS
     from .platform_data import UNKNOWN_PLATFORM, WSL1, WSL2
-    from .trait import Platform
 
-    matching = set()
-    for plat in ALL_PLATFORMS:
-        if plat.current:
-            # Assert to please type checkers.
-            assert isinstance(plat, Platform)
-            matching.add(plat)
+    # Collect all matching platforms.
+    matching: set[Platform] = {
+        plat for plat in ALL_PLATFORMS if plat.current  # type: ignore[misc]
+    }
 
     # Return the only matching platform.
     if len(matching) == 1:
@@ -901,15 +894,9 @@ def current_ci(strict: bool = False) -> CI:
     # Lazy imports to avoid circular dependencies.
     from .ci_data import UNKNOWN_CI
     from .group_data import ALL_CI
-    from .trait import CI
 
-    matching = set()
-    # Iterate over all recognized CI systems.
-    for ci in ALL_CI:
-        if ci.current:
-            # Assert to please type checkers.
-            assert isinstance(ci, CI)
-            matching.add(ci)
+    # Collect all matching CI systems.
+    matching: set[CI] = {ci for ci in ALL_CI if ci.current}  # type: ignore[misc]
 
     # Return the only matching CI system.
     if len(matching) == 1:
@@ -947,10 +934,8 @@ def current_traits() -> set[Trait]:
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_TRAITS, UNKNOWN
 
-    matching = set()
-    for trait in ALL_TRAITS - UNKNOWN:
-        if trait.current:
-            matching.add(trait)
+    # Collect all matching traits.
+    matching = {trait for trait in ALL_TRAITS - UNKNOWN if trait.current}
 
     if not matching:
         raise SystemError(f"Unrecognized environment: {_unrecognized_message()}")

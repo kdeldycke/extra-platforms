@@ -17,6 +17,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
 from functools import cached_property
@@ -191,25 +192,14 @@ class Group(_Identifiable):
         )
 
         # Add list of members with links to their definitions.
-        member_links = []
-        type_counts = {}
-
-        for _, member in self.items():
-            class_name = type(member).__name__
-
-            # Count types.
-            if class_name not in type_counts:
-                type_counts[class_name] = {"count": 0}
-            type_counts[class_name]["count"] += 1
-
-            # Create member link using Sphinx role.
-            member_links.append(f":data:`~{member.symbol_id}`")
+        member_links = [f":data:`~{m.symbol_id}`" for m in self]
+        type_counts = Counter(type(m).__name__ for m in self)
 
         if member_links:
             # Format type information with links.
             type_parts = [
-                f"{info['count']} :class:`~{class_name}`"
-                for class_name, info in sorted(type_counts.items())
+                f"{count} :class:`~{class_name}`"
+                for class_name, count in sorted(type_counts.items())
             ]
             type_info = ", ".join(type_parts)
             lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
@@ -320,9 +310,9 @@ class Group(_Identifiable):
 
     def __lt__(self, other: _TNestedReferences) -> bool:
         """Test whether every member in the group is in other, but not all."""
-        return self <= other and set(self._members.values()) != set(
-            extract_members(other)
-        )
+        other_members = set(extract_members(other))
+        self_members = set(self._members.values())
+        return self_members < other_members
 
     def issuperset(self, other: _TNestedReferences) -> bool:
         """Test whether every member in other is in the group."""
@@ -332,9 +322,9 @@ class Group(_Identifiable):
 
     def __gt__(self, other: _TNestedReferences) -> bool:
         """Test whether every member in other is in the group, but not all."""
-        return self >= other and set(self._members.values()) != set(
-            extract_members(other)
-        )
+        other_members = set(extract_members(other))
+        self_members = set(self._members.values())
+        return self_members > other_members
 
     def union(self, *others: _TNestedReferences) -> Group:
         """Return a new :class:`~extra_platforms.Group` with members from the group and all others.
@@ -639,12 +629,9 @@ def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
         raise ValueError(
             "Unrecognized group IDs: " + ", ".join(sorted(unrecognized_ids))
         )
-    groups = []
-    for group_id in ids:
-        for group in ALL_GROUPS:
-            if group.id == group_id:
-                groups.append(group)
-    return _unique(groups)
+    # Build lookup dict for O(1) access instead of O(n) iteration per ID.
+    group_by_id = {g.id: g for g in ALL_GROUPS}
+    return _unique(group_by_id[gid] for gid in ids)
 
 
 def reduce(
