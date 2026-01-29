@@ -15,6 +15,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Architecture definitions and metadata.
 
+.. hint::
+    Architecture's canonical IDs are inspired by those `used in the auditwheel
+    <https://github.com/pypa/auditwheel/blob/78e3a6f8b00aeeffdb4a5c4e81cbf833dbc64e35/src/auditwheel/architecture.py#L13-L24>`_
+    project to encode the `manylinux policies
+    <https://github.com/pypa/auditwheel/blob/6.6.0/src/auditwheel/policy/manylinux-policy.json>`_.
+
 .. seealso::
     Architecture variants from `Rust's target-lexicon
     <https://docs.rs/target-lexicon/latest/target_lexicon/enum.Architecture.html#variants>`_.
