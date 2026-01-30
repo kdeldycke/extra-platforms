@@ -977,14 +977,12 @@ def test_frozenset_docstrings_are_custom(
     docstring = extract_docstring_from_html(extra_platforms_html, symbol_id)
 
     # Verify we found a docstring.
-    assert docstring, (
-        f"No docstring found for {symbol_name} in extra_platforms.html"
-    )
+    assert docstring, f"No docstring found for {symbol_name} in extra_platforms.html"
 
     # Verify it doesn't contain the generic frozenset description.
-    assert "Build an immutable unordered collection of unique elements" not in docstring, (
-        f"{symbol_name} in extra_platforms.html has generic frozenset docstring"
-    )
+    assert (
+        "Build an immutable unordered collection of unique elements" not in docstring
+    ), f"{symbol_name} in extra_platforms.html has generic frozenset docstring"
 
     # Verify it contains the expected custom text.
     assert expected_text_fragment in docstring, (
@@ -1025,9 +1023,9 @@ def test_frozenset_docstrings_consistent_across_pages(
     assert docstring, f"No docstring found for {symbol_name} in groups.html"
 
     # Verify it doesn't contain the generic frozenset description.
-    assert "Build an immutable unordered collection of unique elements" not in docstring, (
-        f"{symbol_name} in groups.html has generic frozenset docstring"
-    )
+    assert (
+        "Build an immutable unordered collection of unique elements" not in docstring
+    ), f"{symbol_name} in groups.html has generic frozenset docstring"
 
     # Verify it contains the expected custom text.
     assert expected_text_fragment in docstring, (

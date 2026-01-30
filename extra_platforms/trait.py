@@ -230,9 +230,9 @@ class Trait(_Identifiable, ABC):
         # Validate aliases.
         for alias in self.aliases:
             assert alias, f"{self.__class__.__name__} alias cannot be empty."
-            assert (
-                alias == alias.lower()
-            ), f"Alias '{alias}' must be lowercase for {self.id}."
+            assert alias == alias.lower(), (
+                f"Alias '{alias}' must be lowercase for {self.id}."
+            )
             assert alias != self.id, f"Alias '{alias}' cannot be the same as ID."
 
     def generate_docstring(self) -> str:
