@@ -12,6 +12,12 @@ It provides:
 - Grouping of platforms into families (e.g., `LINUX`, `BSD`, `UNIX`)
 - Pytest decorators for conditional test skipping (`@skip_<id>`, `@unless_<id>`)
 
+## Upstream conventions
+
+This repository uses reusable workflows from [`kdeldycke/workflows`](https://github.com/kdeldycke/workflows) and follows the conventions established there. For code style, documentation, testing, and design principles, refer to the upstream `claude.md` as the canonical reference.
+
+**Contributing upstream:** If you spot inefficiencies, improvements, or missing features in the reusable workflows, propose changes via a pull request or issue at [`kdeldycke/workflows`](https://github.com/kdeldycke/workflows/issues).
+
 ## Commands
 
 ### Testing
@@ -84,6 +90,15 @@ Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trai
 - `__init__.py` generates `is_<group_id>()` functions for all groups at import time
 - `pytest.py` generates `skip_<id>` and `unless_<id>` decorators for all traits and groups
 
+## Documentation requirements
+
+### Changelog and readme updates
+
+Always update documentation when making changes:
+
+- **`changelog.md`**: Add a bullet point describing user-facing changes (new features, bug fixes, behavior changes).
+- **`readme.md`**: Update relevant sections when adding/modifying public API, classes, or functions.
+
 ## Code style
 
 ### Comments and docstrings
@@ -91,8 +106,32 @@ Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trai
 - All comments in Python files must end with a period.
 - Docstrings use reStructuredText format (vanilla style, not Google/NumPy).
 - Documentation in `./docs/` uses MyST markdown format where possible. Fallback to reStructuredText if necessary.
-- Keep lines within 88 characters.
+- Keep lines within 88 characters in Python files, including docstrings and comments (ruff default). Markdown files have no line-length limit.
 - Titles in markdown use sentence case.
+
+### Documenting code decisions
+
+Document design decisions, trade-offs, and non-obvious implementation choices directly in the code:
+
+- Use **docstring admonitions** for important notes:
+
+  ```python
+  """Extract metadata from repository.
+
+  .. warning::
+      This method temporarily modifies repository state during execution.
+
+  .. note::
+      The commit range is inclusive on both ends.
+  """
+  ```
+
+- Use **inline comments** for explaining specific code blocks:
+
+  ```python
+  # We use a frozenset for O(1) lookups and immutability.
+  SKIP_BRANCHES: Final[frozenset[str]] = frozenset(("branch-a", "branch-b"))
+  ```
 
 ### Type checking
 
@@ -118,6 +157,16 @@ if TYPE_CHECKING:
 - Enforce naming conventions for traits and groups via tests.
 
 ## Design principles
+
+### Philosophy
+
+1. Create something that works (to provide business value).
+2. Create something that's beautiful (to lower maintenance costs).
+3. Work on performance.
+
+### Linting and formatting
+
+Linting and formatting are automated via GitHub workflows. Developers don't need to run these manually during development, but are still expected to do best effort. Push your changes and the workflows will catch any issues.
 
 ### Data registry priority
 
