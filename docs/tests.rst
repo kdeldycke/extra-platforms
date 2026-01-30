@@ -57,14 +57,6 @@ tests.test\_group\_data module
    :show-inheritance:
    :undoc-members:
 
-tests.test\_operations module
------------------------------
-
-.. automodule:: tests.test_operations
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
 tests.test\_platform\_data module
 ---------------------------------
 
