@@ -7,12 +7,10 @@ name: Changelog & versions
     paths:
       - changelog.md
       - "**/pyproject.toml"
-      - "*requirements.txt"
-      - "requirements/*.txt"
       # Trigger on any workflow change to make sure version gets hard-coded everywhere.
       - .github/workflows/*.yaml
 
 jobs:
 
   changelog:
-    uses: kdeldycke/workflows/.github/workflows/changelog.yaml@v4.25.5
+    uses: kdeldycke/workflows/.github/workflows/changelog.yaml@v5.5.1
