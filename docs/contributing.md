@@ -12,4 +12,3 @@ To add a new Linux distribution, you can get inspiration from these pull request
 start-line: 2
 ---
 ```
-
