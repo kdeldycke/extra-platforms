@@ -1,179 +1,183 @@
+[build-system]
+build-backend = "uv_build"
+requires = [ "uv-build>=0.9" ]
+
 [project]
 # Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 name = "extra-platforms"
 version = "8.0.0"
-# Python versions and their status: https://devguide.python.org/versions/
-requires-python = ">= 3.10"
 description = "🔎 Detect architectures, platforms, and CI systems, grouped by family"
-authors = [{ name = "Kevin Deldycke", email = "kevin@deldycke.com" }]
 readme = "readme.md"
-license-files = ["license"]
 keywords = [
-    "ALT Linux",
-    "Amazon Linux",
-    "Android",
-    "Arch Linux",
-    "Architecture detection",
-    "ARM (32-bit)",
-    "ARM64 (AArch64)",
-    "ARMv5TE (little-endian)",
-    "ARMv6 (little-endian)",
-    "ARMv7 (little-endian)",
-    "ARMv8 (32-bit, little-endian)",
-    "AT&T System Five",
-    "Azure Pipelines",
-    "Bamboo",
-    "Buildkite",
-    "Buildroot",
-    "CachyOS",
-    "CentOS",
-    "Circle CI",
-    "Cirrus CI",
-    "CloudLinux OS",
-    "CodeBuild",
-    "Cygwin",
-    "Debian",
-    "DragonFly BSD",
-    "Exherbo Linux",
-    "Fedora",
-    "FreeBSD",
-    "Gentoo Linux",
-    "GitHub Actions runner",
-    "GitLab CI",
-    "GNU/Hurd",
-    "Guix System",
-    "Haiku",
-    "Heroku CI",
-    "IBM AIX",
-    "IBM PowerKVM",
-    "IBM z/Architecture (s390x)",
-    "illumos",
-    "Intel 80386 (i386)",
-    "Intel Pentium (i586)",
-    "Intel Pentium Pro (i686)",
-    "KVM for IBM z Systems",
-    "Linux Mint",
-    "LoongArch (64-bit)",
-    "macOS",
-    "Mageia",
-    "Mandriva Linux",
-    "MidnightBSD",
-    "MIPS (32-bit, big-endian)",
-    "MIPS (32-bit, little-endian)",
-    "MIPS64 (big-endian)",
-    "MIPS64 (little-endian)",
-    "multiplatform",
-    "NetBSD",
-    "Nobara",
-    "OpenBSD",
-    "openSUSE",
-    "openSUSE Tumbleweed",
-    "Oracle Linux",
-    "OS detection",
-    "Parallels",
-    "Pidora",
-    "Platform detection",
-    "PowerPC (32-bit)",
-    "PowerPC 64-bit (big-endian)",
-    "PowerPC 64-bit (little-endian)",
-    "Pytest",
-    "Raspbian",
-    "RedHat Enterprise Linux",
-    "RISC-V (32-bit)",
-    "RISC-V (64-bit)",
-    "Rocky Linux",
-    "Scientific Linux",
-    "Slackware",
-    "Solaris",
-    "SPARC (32-bit)",
-    "SPARC (64-bit)",
-    "SunOS",
-    "SUSE Linux Enterprise Server",
-    "TeamCity",
-    "Travis CI",
-    "Tuxedo OS",
-    "Ubuntu",
-    "Ultramarine",
-    "Unix",
-    "WebAssembly (32-bit)",
-    "WebAssembly (64-bit)",
-    "Windows",
-    "Windows Subsystem for Linux",
-    "x86-64 (AMD64)",
-    "XenServer",
+  "ALT Linux",
+  "Amazon Linux",
+  "Android",
+  "Arch Linux",
+  "Architecture detection",
+  "ARM (32-bit)",
+  "ARM64 (AArch64)",
+  "ARMv5TE (little-endian)",
+  "ARMv6 (little-endian)",
+  "ARMv7 (little-endian)",
+  "ARMv8 (32-bit, little-endian)",
+  "AT&T System Five",
+  "Azure Pipelines",
+  "Bamboo",
+  "Buildkite",
+  "Buildroot",
+  "CachyOS",
+  "CentOS",
+  "Circle CI",
+  "Cirrus CI",
+  "CloudLinux OS",
+  "CodeBuild",
+  "Cygwin",
+  "Debian",
+  "DragonFly BSD",
+  "Exherbo Linux",
+  "Fedora",
+  "FreeBSD",
+  "Gentoo Linux",
+  "GitHub Actions runner",
+  "GitLab CI",
+  "GNU/Hurd",
+  "Guix System",
+  "Haiku",
+  "Heroku CI",
+  "IBM AIX",
+  "IBM PowerKVM",
+  "IBM z/Architecture (s390x)",
+  "illumos",
+  "Intel 80386 (i386)",
+  "Intel Pentium (i586)",
+  "Intel Pentium Pro (i686)",
+  "KVM for IBM z Systems",
+  "Linux Mint",
+  "LoongArch (64-bit)",
+  "macOS",
+  "Mageia",
+  "Mandriva Linux",
+  "MidnightBSD",
+  "MIPS (32-bit, big-endian)",
+  "MIPS (32-bit, little-endian)",
+  "MIPS64 (big-endian)",
+  "MIPS64 (little-endian)",
+  "multiplatform",
+  "NetBSD",
+  "Nobara",
+  "OpenBSD",
+  "openSUSE",
+  "openSUSE Tumbleweed",
+  "Oracle Linux",
+  "OS detection",
+  "Parallels",
+  "Pidora",
+  "Platform detection",
+  "PowerPC (32-bit)",
+  "PowerPC 64-bit (big-endian)",
+  "PowerPC 64-bit (little-endian)",
+  "Pytest",
+  "Raspbian",
+  "RedHat Enterprise Linux",
+  "RISC-V (32-bit)",
+  "RISC-V (64-bit)",
+  "Rocky Linux",
+  "Scientific Linux",
+  "Slackware",
+  "Solaris",
+  "SPARC (32-bit)",
+  "SPARC (64-bit)",
+  "SunOS",
+  "SUSE Linux Enterprise Server",
+  "TeamCity",
+  "Travis CI",
+  "Tuxedo OS",
+  "Ubuntu",
+  "Ultramarine",
+  "Unix",
+  "WebAssembly (32-bit)",
+  "WebAssembly (64-bit)",
+  "Windows",
+  "Windows Subsystem for Linux",
+  "x86-64 (AMD64)",
+  "XenServer",
 ]
+license-files = [ "license" ]
+authors = [ { name = "Kevin Deldycke", email = "kevin@deldycke.com" } ]
+# Python versions and their status: https://devguide.python.org/versions/
+requires-python = ">=3.10"
 # See: https://pypi.org/pypi?%3Aaction=list_classifiers
 classifiers = [
-    'Development Status :: 5 - Production/Stable',
-    'Environment :: Console',
-    "Environment :: MacOS X",
-    "Environment :: WebAssembly",
-    "Environment :: WebAssembly :: Emscripten",
-    "Environment :: WebAssembly :: WASI",
-    "Environment :: Win32 (MS Windows)",
-    'Framework :: Pytest',
-    'Intended Audience :: Developers',
-    'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
-    # This is a copy of the full "Operating System" hierarchy as we aim to be able to detect all platforms.
-    "Operating System :: Android",
-    "Operating System :: BeOS",
-    "Operating System :: MacOS",
-    "Operating System :: MacOS :: MacOS 9",
-    "Operating System :: MacOS :: MacOS X",
-    "Operating System :: Microsoft",
-    "Operating System :: Microsoft :: MS-DOS",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: Microsoft :: Windows :: Windows 3.1 or Earlier",
-    "Operating System :: Microsoft :: Windows :: Windows 7",
-    "Operating System :: Microsoft :: Windows :: Windows 8",
-    "Operating System :: Microsoft :: Windows :: Windows 8.1",
-    "Operating System :: Microsoft :: Windows :: Windows 10",
-    "Operating System :: Microsoft :: Windows :: Windows 11",
-    "Operating System :: Microsoft :: Windows :: Windows 95/98/2000",
-    "Operating System :: Microsoft :: Windows :: Windows CE",
-    "Operating System :: Microsoft :: Windows :: Windows NT/2000",
-    "Operating System :: Microsoft :: Windows :: Windows Server 2003",
-    "Operating System :: Microsoft :: Windows :: Windows Server 2008",
-    "Operating System :: Microsoft :: Windows :: Windows Vista",
-    "Operating System :: Microsoft :: Windows :: Windows XP",
-    "Operating System :: OS Independent",
-    "Operating System :: OS/2",
-    "Operating System :: Other OS",
-    "Operating System :: PDA Systems",
-    "Operating System :: POSIX",
-    "Operating System :: POSIX :: AIX",
-    "Operating System :: POSIX :: BSD",
-    "Operating System :: POSIX :: BSD :: BSD/OS",
-    "Operating System :: POSIX :: BSD :: FreeBSD",
-    "Operating System :: POSIX :: BSD :: NetBSD",
-    "Operating System :: POSIX :: BSD :: OpenBSD",
-    "Operating System :: POSIX :: GNU Hurd",
-    "Operating System :: POSIX :: HP-UX",
-    "Operating System :: POSIX :: IRIX",
-    "Operating System :: POSIX :: Linux",
-    "Operating System :: POSIX :: Other",
-    "Operating System :: POSIX :: SCO",
-    "Operating System :: POSIX :: SunOS/Solaris",
-    "Operating System :: PalmOS",
-    "Operating System :: RISC OS",
-    "Operating System :: Unix",
-    "Operating System :: iOS",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    'Programming Language :: Python :: Implementation :: CPython',
-    'Topic :: Software Development :: Libraries :: Python Modules',
-    "Topic :: System :: Hardware",
-    "Topic :: System :: Operating System",
-    "Topic :: System :: Operating System Kernels",
-    "Topic :: System :: Operating System Kernels :: BSD",
-    "Topic :: System :: Operating System Kernels :: GNU Hurd",
-    "Topic :: System :: Operating System Kernels :: Linux",
-    'Topic :: Utilities',
-    'Typing :: Typed',
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Environment :: MacOS X",
+  "Environment :: WebAssembly",
+  "Environment :: WebAssembly :: Emscripten",
+  "Environment :: WebAssembly :: WASI",
+  "Environment :: Win32 (MS Windows)",
+  "Framework :: Pytest",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+  # This is a copy of the full "Operating System" hierarchy as we aim to be able to detect all platforms.
+  "Operating System :: Android",
+  "Operating System :: BeOS",
+  "Operating System :: iOS",
+  "Operating System :: MacOS",
+  "Operating System :: MacOS :: MacOS 9",
+  "Operating System :: MacOS :: MacOS X",
+  "Operating System :: Microsoft",
+  "Operating System :: Microsoft :: MS-DOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: Microsoft :: Windows :: Windows 3.1 or Earlier",
+  "Operating System :: Microsoft :: Windows :: Windows 7",
+  "Operating System :: Microsoft :: Windows :: Windows 8",
+  "Operating System :: Microsoft :: Windows :: Windows 8.1",
+  "Operating System :: Microsoft :: Windows :: Windows 10",
+  "Operating System :: Microsoft :: Windows :: Windows 11",
+  "Operating System :: Microsoft :: Windows :: Windows 95/98/2000",
+  "Operating System :: Microsoft :: Windows :: Windows CE",
+  "Operating System :: Microsoft :: Windows :: Windows NT/2000",
+  "Operating System :: Microsoft :: Windows :: Windows Server 2003",
+  "Operating System :: Microsoft :: Windows :: Windows Server 2008",
+  "Operating System :: Microsoft :: Windows :: Windows Vista",
+  "Operating System :: Microsoft :: Windows :: Windows XP",
+  "Operating System :: OS Independent",
+  "Operating System :: OS/2",
+  "Operating System :: Other OS",
+  "Operating System :: PalmOS",
+  "Operating System :: PDA Systems",
+  "Operating System :: POSIX",
+  "Operating System :: POSIX :: AIX",
+  "Operating System :: POSIX :: BSD",
+  "Operating System :: POSIX :: BSD :: BSD/OS",
+  "Operating System :: POSIX :: BSD :: FreeBSD",
+  "Operating System :: POSIX :: BSD :: NetBSD",
+  "Operating System :: POSIX :: BSD :: OpenBSD",
+  "Operating System :: POSIX :: GNU Hurd",
+  "Operating System :: POSIX :: HP-UX",
+  "Operating System :: POSIX :: IRIX",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: POSIX :: Other",
+  "Operating System :: POSIX :: SCO",
+  "Operating System :: POSIX :: SunOS/Solaris",
+  "Operating System :: RISC OS",
+  "Operating System :: Unix",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: System :: Hardware",
+  "Topic :: System :: Operating System",
+  "Topic :: System :: Operating System Kernels",
+  "Topic :: System :: Operating System Kernels :: BSD",
+  "Topic :: System :: Operating System Kernels :: GNU Hurd",
+  "Topic :: System :: Operating System Kernels :: Linux",
+  "Topic :: Utilities",
+  "Typing :: Typed",
 ]
 # Semantic versioning works in theory. In practice, it is hard to guarantee.
 # That's why we rely on >= specifier instead of ~= to relax constraints. This gives more freedom to packagers to
@@ -185,106 +189,89 @@ classifiers = [
 # - aligns minimal Python requirements to ours,
 # - adds new explicit support Python version.
 dependencies = [
-    # distro 1.9.0 adds support for ALT Linux.
-    "distro >= 1.9.0",
+  # distro 1.9.0 adds support for ALT Linux.
+  "distro>=1.9",
 ]
+optional-dependencies.pytest = [
+  # pytest 8.2.1 is the first version to support Python 3.13.
+  "pytest>=8.2.1",
+]
+urls."Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
+urls."Documentation" = "https://kdeldycke.github.io/extra-platforms"
+urls."Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v8.0.0"
+urls."Funding" = "https://github.com/sponsors/kdeldycke"
 # Package referenced above and also featured in [project.optional-dependencies] or [dependency-groups]
 # will be set without version specifier as they are already constrained.
 
-[project.optional-dependencies]
-pytest = [
-    # pytest 8.2.1 is the first version to support Python 3.13.
-    "pytest >= 8.2.1",
-]
+urls."Homepage" = "https://github.com/kdeldycke/extra-platforms"
+urls."Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
+urls."Repository" = "https://github.com/kdeldycke/extra-platforms"
+# Make additional fixtures available to pytest.
+# See: https://docs.pytest.org/en/latest/how-to/writing_plugins.html#making-your-plugin-installable-by-others
+entry-points.pytest11.extra-platforms = "extra_platforms.pytest"
 
 [dependency-groups]
 test = [
-    # coverage 7.11.0 is the first version to drop support for Python 3.9.
-    "coverage [toml] >= 7.11.0",
-    "pytest",
-    # pytest-cov 7.0.0 is the first version to be repackaged with pyproject-metadata.
-    "pytest-cov >= 7.0.0",
-    # pytest-github-actions-annotate-failures 0.3.0 is the first version to support Python 3.13.
-    "pytest-github-actions-annotate-failures >= 0.3.0",
-    # pytest-randomly 4.0.0 is the first version to support Python 3.14.
-    "pytest-randomly >= 4.0.0",
-    # pytest-xdist 3.7.0 is the first version to support Python 3.13.
-    "pytest-xdist [psutil] >= 3.7.0",
-    # requests 2.32.5 is the first version to drop support for Python 3.8.
-    "requests >= 2.32.5",
-    "tomli >= 2.3.0 ; python_version < '3.11'",
-]
-typing = [
-    "types-requests >= 2.32.4.20250611",
-    # Only to please the [docs] group below.
-    "types-tabulate >= 0.9.0.2",
+  # coverage 7.11.0 is the first version to drop support for Python 3.9.
+  "coverage[toml]>=7.11",
+  "pytest",
+  # pytest-cov 7.0.0 is the first version to be repackaged with pyproject-metadata.
+  "pytest-cov>=7",
+  # pytest-github-actions-annotate-failures 0.3.0 is the first version to support Python 3.13.
+  "pytest-github-actions-annotate-failures>=0.3",
+  # pytest-randomly 4.0.0 is the first version to support Python 3.14.
+  "pytest-randomly>=4",
+  # pytest-xdist 3.7.0 is the first version to support Python 3.13.
+  "pytest-xdist[psutil]>=3.7",
+  # requests 2.32.5 is the first version to drop support for Python 3.8.
+  "requests>=2.32.5",
+  "tomli>=2.3; python_version<'3.11'",
 ]
 docs = [
-    "click-extra [sphinx] >= 7.3.0",
-    "furo >= 2025.9.25",
-    "myst-parser >= 4.0.0",
-    # Sphinx version is constrained by Click Extra.
-    "sphinx",
-    "sphinx-autodoc-typehints >= 2.4.0",
-    "sphinx-copybutton >= 0.5.2",
-    "sphinx-design >= 0.6.0",
-    "sphinx-issues >= 5.0.0",
-    "sphinxcontrib-mermaid >= 1.2.2",
-    "sphinxext-opengraph >= 0.13.0",
-    # tabulate 0.9 is the first to add `*grid` and `*outline` formats.
-    "tabulate [widechars] >= 0.9",
-    "tomli >= 2.3.0 ; python_version < '3.11'",
-    # wcmatch 10.0 fix some inconsistencies in globbing and symlinks.
-    "wcmatch >= 10.0",
+  "click-extra[sphinx]>=7.3",
+  "furo>=2025.9.25",
+  "myst-parser>=4",
+  # Sphinx version is constrained by Click Extra.
+  "sphinx",
+  "sphinx-autodoc-typehints>=2.4",
+  "sphinx-copybutton>=0.5.2",
+  "sphinx-design>=0.6",
+  "sphinx-issues>=5",
+  "sphinxcontrib-mermaid>=1.2.2",
+  "sphinxext-opengraph>=0.13",
+  # tabulate 0.9 is the first to add `*grid` and `*outline` formats.
+  "tabulate[widechars]>=0.9",
+  "tomli>=2.3; python_version<'3.11'",
+  # wcmatch 10.0 fix some inconsistencies in globbing and symlinks.
+  "wcmatch>=10",
 ]
-
-[project.urls]
-"Homepage" = "https://github.com/kdeldycke/extra-platforms"
-"Documentation" = "https://kdeldycke.github.io/extra-platforms"
-"Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v8.0.0"
-"Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
-"Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
-"Repository" = "https://github.com/kdeldycke/extra-platforms"
-"Funding" = "https://github.com/sponsors/kdeldycke"
-
-[build-system]
-requires = ["uv_build >= 0.9.0"]
-build-backend = "uv_build"
-
-[tool.uv.build-backend]
-# Package is at root level, not in "./src/".
-module-root = ""
+typing = [
+  "types-requests>=2.32.4.20250611",
+  # Only to please the [docs] group below.
+  "types-tabulate>=0.9.0.2",
+]
 
 [tool.uv]
 # Cooldown period.
 exclude-newer = "1 week"
 
-[project.entry-points.pytest11]
-# Make additional fixtures available to pytest.
-# See: https://docs.pytest.org/en/latest/how-to/writing_plugins.html#making-your-plugin-installable-by-others
-extra-platforms = "extra_platforms.pytest"
-
-[tool.mypy]
-warn_unused_configs = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
-warn_unreachable = true
-pretty = true
+[tool.uv.build-backend]
+# Package is at root level, not in "./src/".
+module-root = ""
 
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 addopts = [
-    "--durations=10",
-    "--cov=extra_platforms",
-    "--cov-branch",
-    "--cov-precision=2",
-    "--cov-report=term",
-    "--cov-report=xml",
-    # Codecov.io's test analytics requires a JUnit XML file:
-    # https://docs.codecov.com/docs/test-analytics#1-output-a-junit-xml-file-in-your-ci
-    "--junitxml=junit.xml",
-    "--override-ini=junit_family=legacy",
+  "--durations=10",
+  "--cov=extra_platforms",
+  "--cov-branch",
+  "--cov-precision=2",
+  "--cov-report=term",
+  "--cov-report=xml",
+  # Codecov.io's test analytics requires a JUnit XML file:
+  # https://docs.codecov.com/docs/test-analytics#1-output-a-junit-xml-file-in-your-ci
+  "--junitxml=junit.xml",
+  "--override-ini=junit_family=legacy",
 ]
 # Make sure tests that are expected to fail do not resurect and start working all of a sudden.
 xfail_strict = true
@@ -331,24 +318,32 @@ regex = true
 search = "date-released: \\d{{4}}-\\d{{2}}-\\d{{2}}"
 replace = "date-released: {utcnow:%Y-%m-%d}"
 
+[tool.mypy]
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+pretty = true
+
 [tool.typos]
 default.extend-ignore-identifiers-re = [
-    # error: `Tru` should be `Thru`, `True`
-    #     ╭▸ ./extra_platforms/group_data.py:345:8
-    #     │
-    # 345 │     - `Tru64`
-    #     ╰╴       ━━━
-    "Tru64",
-    # error: `PASE` should be `PASS`, `PACE`, `PARSE`, `PHASE`
-    #     ╭▸ ./extra_platforms/group_data.py:371:8
-    #     │
-    # 371 │     - `PASE`
-    #     ╰╴       ━━━━
-    "PASE",
-    # error: `Sur` should be `Sure`
-    #    ╭▸ ./extra_platforms/platform.py:57:24
-    #    │
-    # 57 │     ("11", None): "Big Sur",
-    #    ╰╴                       ━━━
-    "Sur",
+  # error: `Tru` should be `Thru`, `True`
+  #     ╭▸ ./extra_platforms/group_data.py:345:8
+  #     │
+  # 345 │     - `Tru64`
+  #     ╰╴       ━━━
+  "Tru64",
+  # error: `PASE` should be `PASS`, `PACE`, `PARSE`, `PHASE`
+  #     ╭▸ ./extra_platforms/group_data.py:371:8
+  #     │
+  # 371 │     - `PASE`
+  #     ╰╴       ━━━━
+  "PASE",
+  # error: `Sur` should be `Sure`
+  #    ╭▸ ./extra_platforms/platform.py:57:24
+  #    │
+  # 57 │     ("11", None): "Big Sur",
+  #    ╰╴                       ━━━
+  "Sur",
 ]
