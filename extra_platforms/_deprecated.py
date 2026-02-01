@@ -283,7 +283,7 @@ UNKNOWN_LINUX = _make_deprecated_proxy(
 current_os = _make_deprecated_callable(
     "current_os()",
     "current_platform()",
-    current_platform,  # type: ignore[has-type]
+    current_platform,
     dedent(
         """Alias ``current_os()`` → :func:`~current_platform`.
 

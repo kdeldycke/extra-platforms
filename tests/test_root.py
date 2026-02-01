@@ -67,7 +67,6 @@ from extra_platforms import ci_data as ci_data_module
 from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
-from extra_platforms import operations as operations_module
 from extra_platforms import platform_data as platform_data_module
 from extra_platforms import trait as trait_module
 from extra_platforms.detection import _unrecognized_message
@@ -184,7 +183,6 @@ def test_module_root_declarations():
     group_members = fetch_module_implements(group_module)
     group_data_members = fetch_module_implements(group_data_module)
     platform_data_members = fetch_module_implements(platform_data_module)
-    operations_members = fetch_module_implements(operations_module)
     trait_members = fetch_module_implements(trait_module)
     deprecated_members = fetch_module_implements(deprecated_module)
     root_members = fetch_module_implements(extra_platforms)
@@ -207,7 +205,6 @@ def test_module_root_declarations():
     assert group_members <= set(extra_platforms_members)
     assert group_data_members <= set(extra_platforms_members)
     assert platform_data_members <= set(extra_platforms_members)
-    assert operations_members <= set(extra_platforms_members)
     assert trait_members <= set(extra_platforms_members)
     assert deprecated_members <= set(extra_platforms_members)
 
@@ -218,7 +215,6 @@ def test_module_root_declarations():
         .union(ci_data_members)
         .union(group_data_members)
         .union(platform_data_members)
-        .union(operations_members)
         .union(trait_members)
         .union(deprecated_members)
         .union(root_members),
