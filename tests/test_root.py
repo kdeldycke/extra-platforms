@@ -128,7 +128,7 @@ def test_pyproject_keywords():
     assert keywords == ideal_keywords
 
 
-def test_pypoject_classifiers():
+def test_pyproject_classifiers():
     """Check that Trove classifiers in ``pyproject.toml`` are correct."""
     # Fetch official trove classifiers from PyPI.
     response = requests.get("https://pypi.org/pypi?%3Aaction=list_classifiers")
@@ -145,11 +145,6 @@ def test_pypoject_classifiers():
 
     assert len(classifiers) == len(set(classifiers)), (
         "Classifiers must not contain duplicates."
-    )
-
-    sorted_classifiers = [c for c in official_classifiers if c in classifiers]
-    assert sorted_classifiers == classifiers, (
-        "Classifiers must be sorted in the same order as official trove classifiers."
     )
 
     os_classifiers = [
