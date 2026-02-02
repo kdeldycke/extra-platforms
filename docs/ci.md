@@ -76,9 +76,9 @@ There is only one group defined for CI systems: `ALL_CI`, which includes all rec
 
 <!-- ci-groups-table-start -->
 
-| Icon | Symbol          | Description | [Detection](detection.md) | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :-------------- | :---------- | :------------------------ | :----------------------------------------------------------: |
-|  ♺   | {data}`~ALL_CI` | CI systems  | {func}`~is_any_ci`        |                              ⬥                               |
+| Icon | Symbol          | Description | [Detection](detection.md) | [Canonical](groups.md#extra_platforms.Group.canonical) |
+| :--: | :-------------- | :---------- | :------------------------ | :----------------------------------------------------: |
+|  ♺   | {data}`~ALL_CI` | CI systems  | {func}`~is_any_ci`        |                           ⬥                            |
 
 <!-- ci-groups-table-end -->
 

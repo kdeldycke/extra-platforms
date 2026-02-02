@@ -90,22 +90,22 @@ architecture is not recognized.
 
 <!-- architecture-groups-table-start -->
 
-| Icon | Symbol                     | Description                 | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.group.Group.canonical) |
-| :--: | :------------------------- | :-------------------------- | :--------------------------- | :----------------------------------------------------------: |
-|  🏛️  | {data}`~ALL_ARCHITECTURES` | All architectures           | {func}`~is_any_architecture` |                                                              |
-|  📱  | {data}`~ALL_ARM`           | ARM architectures           | {func}`~is_any_arm`          |                              ⬥                               |
-|  🔲  | {data}`~ALL_MIPS`          | MIPS architectures          | {func}`~is_any_mips`         |                              ⬥                               |
-|  ☀️  | {data}`~ALL_SPARC`         | SPARC architectures         | {func}`~is_any_sparc`        |                              ⬥                               |
-|  ³²  | {data}`~ARCH_32_BIT`       | 32-bit architectures        | {func}`~is_arch_32_bit`      |                                                              |
-|  ⁶⁴  | {data}`~ARCH_64_BIT`       | 64-bit architectures        | {func}`~is_arch_64_bit`      |                                                              |
-|  ⬆️  | {data}`~BIG_ENDIAN`        | Big-endian architectures    | {func}`~is_big_endian`       |                                                              |
-|  🏢  | {data}`~IBM_MAINFRAME`     | IBM mainframe               | {func}`~is_ibm_mainframe`    |                              ⬥                               |
-|  ⬇️  | {data}`~LITTLE_ENDIAN`     | Little-endian architectures | {func}`~is_little_endian`    |                                                              |
-|  🐉  | {data}`~LOONGARCH`         | LoongArch                   | {func}`~is_loongarch`        |                              ⬥                               |
-|  ⚡  | {data}`~POWERPC`           | PowerPC family              | {func}`~is_powerpc`          |                              ⬥                               |
-|  Ⅴ   | {data}`~RISCV`             | RISC-V family               | {func}`~is_riscv`            |                              ⬥                               |
-|  🌐  | {data}`~WEBASSEMBLY`       | WebAssembly                 | {func}`~is_webassembly`      |                              ⬥                               |
-|  𝘅   | {data}`~X86`               | x86 family                  | {func}`~is_x86`              |                              ⬥                               |
+| Icon | Symbol                     | Description                 | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.Group.canonical) |
+| :--: | :------------------------- | :-------------------------- | :--------------------------- | :----------------------------------------------------: |
+|  🏛️  | {data}`~ALL_ARCHITECTURES` | All architectures           | {func}`~is_any_architecture` |                                                        |
+|  📱  | {data}`~ALL_ARM`           | ARM architectures           | {func}`~is_any_arm`          |                           ⬥                            |
+|  🔲  | {data}`~ALL_MIPS`          | MIPS architectures          | {func}`~is_any_mips`         |                           ⬥                            |
+|  ☀️  | {data}`~ALL_SPARC`         | SPARC architectures         | {func}`~is_any_sparc`        |                           ⬥                            |
+|  ³²  | {data}`~ARCH_32_BIT`       | 32-bit architectures        | {func}`~is_arch_32_bit`      |                                                        |
+|  ⁶⁴  | {data}`~ARCH_64_BIT`       | 64-bit architectures        | {func}`~is_arch_64_bit`      |                                                        |
+|  ⬆️  | {data}`~BIG_ENDIAN`        | Big-endian architectures    | {func}`~is_big_endian`       |                                                        |
+|  🏢  | {data}`~IBM_MAINFRAME`     | IBM mainframe               | {func}`~is_ibm_mainframe`    |                           ⬥                            |
+|  ⬇️  | {data}`~LITTLE_ENDIAN`     | Little-endian architectures | {func}`~is_little_endian`    |                                                        |
+|  🐉  | {data}`~LOONGARCH`         | LoongArch                   | {func}`~is_loongarch`        |                           ⬥                            |
+|  ⚡  | {data}`~POWERPC`           | PowerPC family              | {func}`~is_powerpc`          |                           ⬥                            |
+|  Ⅴ   | {data}`~RISCV`             | RISC-V family               | {func}`~is_riscv`            |                           ⬥                            |
+|  🌐  | {data}`~WEBASSEMBLY`       | WebAssembly                 | {func}`~is_webassembly`      |                           ⬥                            |
+|  𝘅   | {data}`~X86`               | x86 family                  | {func}`~is_x86`              |                           ⬥                            |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all
