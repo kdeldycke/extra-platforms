@@ -67,19 +67,19 @@ Group - Collection of Traits with set-like operations (group.py)
 
 ### Module layout
 
-| Module | Purpose |
-|--------|---------|
-| `trait.py` | Base classes: `Trait`, `Platform`, `Architecture`, `CI` |
-| `detection.py` | All `is_<id>()` detection functions |
-| `group.py` | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()` |
-| `platform_data.py` | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.) |
-| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.) |
-| `ci_data.py` | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.) |
-| `group_data.py` | All `Group` instances and ID collections |
-| `pytest.py` | Generates `@skip_<id>` and `@unless_<id>` decorators |
-| `_deprecated.py` | Backward-compatible aliases for renamed symbols |
-| `_utils.py` | Internal utilities |
-| `_types.py` | Type aliases |
+| Module                 | Purpose                                                             |
+| ---------------------- | ------------------------------------------------------------------- |
+| `trait.py`             | Base classes: `Trait`, `Platform`, `Architecture`, `CI`             |
+| `detection.py`         | All `is_<id>()` detection functions                                 |
+| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()` |
+| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)             |
+| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                |
+| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                     |
+| `group_data.py`        | All `Group` instances and ID collections                            |
+| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                |
+| `_deprecated.py`       | Backward-compatible aliases for renamed symbols                     |
+| `_utils.py`            | Internal utilities                                                  |
+| `_types.py`            | Type aliases                                                        |
 
 ### Detection pattern
 
@@ -161,8 +161,8 @@ if TYPE_CHECKING:
 ### Philosophy
 
 1. Create something that works (to provide business value).
-2. Create something that's beautiful (to lower maintenance costs).
-3. Work on performance.
+1. Create something that's beautiful (to lower maintenance costs).
+1. Work on performance.
 
 ### Linting and formatting
 
