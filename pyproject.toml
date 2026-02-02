@@ -259,6 +259,28 @@ exclude-newer = "1 week"
 # Package is at root level, not in "./src/".
 module-root = ""
 
+[tool.typos]
+default.extend-ignore-identifiers-re = [
+  # error: `Tru` should be `Thru`, `True`
+  #     ╭▸ ./extra_platforms/group_data.py:345:8
+  #     │
+  # 345 │     - `Tru64`
+  #     ╰╴       ━━━
+  "Tru64",
+  # error: `PASE` should be `PASS`, `PACE`, `PARSE`, `PHASE`
+  #     ╭▸ ./extra_platforms/group_data.py:371:8
+  #     │
+  # 371 │     - `PASE`
+  #     ╰╴       ━━━━
+  "PASE",
+  # error: `Sur` should be `Sure`
+  #    ╭▸ ./extra_platforms/platform.py:57:24
+  #    │
+  # 57 │     ("11", None): "Big Sur",
+  #    ╰╴                       ━━━
+  "Sur",
+]
+
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 addopts = [
@@ -325,25 +347,3 @@ warn_unused_ignores = true
 warn_return_any = true
 warn_unreachable = true
 pretty = true
-
-[tool.typos]
-default.extend-ignore-identifiers-re = [
-  # error: `Tru` should be `Thru`, `True`
-  #     ╭▸ ./extra_platforms/group_data.py:345:8
-  #     │
-  # 345 │     - `Tru64`
-  #     ╰╴       ━━━
-  "Tru64",
-  # error: `PASE` should be `PASS`, `PACE`, `PARSE`, `PHASE`
-  #     ╭▸ ./extra_platforms/group_data.py:371:8
-  #     │
-  # 371 │     - `PASE`
-  #     ╰╴       ━━━━
-  "PASE",
-  # error: `Sur` should be `Sure`
-  #    ╭▸ ./extra_platforms/platform.py:57:24
-  #    │
-  # 57 │     ("11", None): "Big Sur",
-  #    ╰╴                       ━━━
-  "Sur",
-]
