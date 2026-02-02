@@ -286,10 +286,3 @@ These functions retrieve the currently detected traits:
 ```{eval-rst}
 .. autofunction:: extra_platforms.invalidate_caches
 ```
-
-## Deprecated detection functions
-
-```{eval-rst}
-.. autofunction:: extra_platforms.current_os
-.. autofunction:: extra_platforms.current_platforms
-```

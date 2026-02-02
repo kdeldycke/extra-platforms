@@ -6,6 +6,25 @@
 > This version is not released yet and is under active development.
 
 - Drop support for Python 3.10.
+- Remove all deprecated backward-compatibility aliases:
+  - Remove `ALL_PLATFORM_IDS` (use `ALL_TRAIT_IDS`).
+  - Remove `ALL_PLATFORMS_WITHOUT_CI` (use `ALL_PLATFORMS`).
+  - Remove `UNKNOWN_LINUX` (use `UNKNOWN_PLATFORM`).
+  - Remove `ANY_ARM`, `ANY_MIPS`, `ANY_SPARC`, `ANY_WINDOWS` (use `ALL_ARM`, `ALL_MIPS`, `ALL_SPARC`, `ALL_WINDOWS`).
+  - Remove `OTHER_UNIX` (use `OTHER_POSIX`).
+  - Remove `current_os()` (use `current_platform()`).
+  - Remove `current_platforms()` (use `current_traits()`).
+  - Remove `platforms_from_ids()` (use `traits_from_ids()`).
+  - Remove `is_unknown_linux()` (use `is_unknown_platform()`).
+  - Remove `is_all_architectures()`, `is_all_platforms()`, `is_all_ci()`, `is_all_traits()` (use `is_any_architecture()`, `is_any_platform()`, `is_any_ci()`, `is_any_trait()`).
+  - Remove `is_all_platforms_without_ci()` (use `is_any_platform()`).
+  - Remove `is_ci()` (use `is_any_ci()`).
+  - Remove `is_other_unix()` (use `is_other_posix()`).
+  - Remove `is_bsd_without_macos()` (use `is_bsd_not_macos()`).
+  - Remove `is_unix_without_macos()` (use `is_unix_not_macos()`).
+  - Remove `Group._extract_members()` and `Group._extract_platforms()` (use `extract_members()`).
+  - Remove deprecated module shims for `extra_platforms.platform` and `extra_platforms.operations`.
+- Remove `_deprecated.py` module.
 
 ## [8.0.0 (2026-02-02)](https://github.com/kdeldycke/extra-platforms/compare/v7.0.0...v8.0.0)
 

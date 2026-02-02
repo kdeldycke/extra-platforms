@@ -262,32 +262,6 @@ class Group(_Identifiable):
         """Iterate over the traits of the group as key-value pairs."""
         yield from self._members.items()
 
-    @staticmethod
-    def _extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
-        """Deprecated alias for :func:`~extra_platforms.extract_members`.
-
-        .. deprecated:: 8.0.0
-           Use :func:`~extra_platforms.extract_members` instead.
-        """
-        # Prevent circular import.
-        from ._deprecated import _warn_deprecated
-
-        _warn_deprecated("Group._extract_members()", "extract_members()")
-        return extract_members(*other)
-
-    @staticmethod
-    def _extract_platforms(*other: _TNestedReferences) -> Iterator[Trait]:
-        """Deprecated alias for :func:`~extra_platforms.extract_members`.
-
-        .. deprecated:: 6.0.0
-           Use :func:`~extra_platforms.extract_members` instead.
-        """
-        # Prevent circular import.
-        from ._deprecated import _warn_deprecated
-
-        _warn_deprecated("Group._extract_platforms()", "extract_members()")
-        return extract_members(*other)
-
     def isdisjoint(self, other: _TNestedReferences) -> bool:
         """Return :data:`True` if the group has no members in common with ``other``.
 

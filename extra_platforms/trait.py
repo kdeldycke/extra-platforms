@@ -30,6 +30,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property, lru_cache
 from typing import ClassVar
+import warnings
 
 import distro
 
@@ -426,8 +427,11 @@ def _resolve_alias(id_: str) -> str:
 
     for trait in ALL_TRAITS:
         if id_ in trait.aliases:
-            from ._deprecated import _warn_alias_used
-
-            _warn_alias_used(id_, trait.id)
+            warnings.warn(
+                f"'{id_}' is an alias for '{trait.id}'. "
+                f"Use the canonical ID '{trait.id}' instead.",
+                UserWarning,
+                stacklevel=4,
+            )
             return trait.id
     return id_

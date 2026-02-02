@@ -808,9 +808,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
     exclude_list.extend([
         "current_architecture",
         "current_ci",
-        "current_os",
         "current_platform",
-        "current_platforms",
         "current_traits",
         "invalidate_caches",
     ])

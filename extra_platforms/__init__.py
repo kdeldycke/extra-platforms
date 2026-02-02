@@ -362,30 +362,6 @@ def invalidate_caches():
         globals()[func_id].cache_clear()
 
 
-from ._deprecated import (  # noqa: E402
-    ALL_PLATFORM_IDS,
-    ALL_PLATFORMS_WITHOUT_CI,
-    ANY_ARM,
-    ANY_MIPS,
-    ANY_SPARC,
-    ANY_WINDOWS,
-    OTHER_UNIX,
-    UNKNOWN_LINUX,
-    current_os,
-    current_platforms,
-    is_all_architectures,
-    is_all_ci,
-    is_all_platforms,
-    is_all_platforms_without_ci,
-    is_all_traits,
-    is_bsd_without_macos,
-    is_ci,
-    is_other_unix,
-    is_unix_without_macos,
-    is_unknown_linux,
-    platforms_from_ids,
-)
-
 __all__ = (  # noqa: F405
     "AARCH64",
     "AIX",
@@ -399,9 +375,7 @@ __all__ = (  # noqa: F405
     "ALL_IDS",
     "ALL_MIPS",
     "ALL_PLATFORM_GROUPS",
-    "ALL_PLATFORM_IDS",  # Deprecated alias.
     "ALL_PLATFORMS",
-    "ALL_PLATFORMS_WITHOUT_CI",  # Deprecated alias.
     "ALL_SPARC",
     "ALL_TRAIT_IDS",
     "ALL_TRAITS",
@@ -409,10 +383,6 @@ __all__ = (  # noqa: F405
     "ALTLINUX",
     "AMZN",
     "ANDROID",
-    "ANY_ARM",  # Deprecated alias.
-    "ANY_MIPS",  # Deprecated alias.
-    "ANY_SPARC",  # Deprecated alias.
-    "ANY_WINDOWS",  # Deprecated alias.
     "ARCH",
     "ARCH_32_BIT",
     "ARCH_64_BIT",
@@ -438,9 +408,7 @@ __all__ = (  # noqa: F405
     "CODEBUILD",
     "current_architecture",
     "current_ci",
-    "current_os",  # Deprecated alias.
     "current_platform",
-    "current_platforms",  # Deprecated alias.
     "current_traits",
     "CYGWIN",
     "DEBIAN",
@@ -468,11 +436,6 @@ __all__ = (  # noqa: F405
     "invalidate_caches",
     "is_aarch64",
     "is_aix",
-    "is_all_architectures",  # Deprecated alias.
-    "is_all_ci",  # Deprecated alias.
-    "is_all_platforms",  # Deprecated alias.
-    "is_all_platforms_without_ci",  # Deprecated alias.
-    "is_all_traits",  # Deprecated alias.
     "is_altlinux",
     "is_amzn",
     "is_android",
@@ -497,12 +460,10 @@ __all__ = (  # noqa: F405
     "is_big_endian",  # noqa: F822
     "is_bsd",  # noqa: F822
     "is_bsd_not_macos",  # noqa: F822
-    "is_bsd_without_macos",  # Deprecated alias.
     "is_buildkite",
     "is_buildroot",
     "is_cachyos",
     "is_centos",
-    "is_ci",  # Deprecated alias.
     "is_circle_ci",
     "is_cirrus_ci",
     "is_cloudlinux",
@@ -548,7 +509,6 @@ __all__ = (  # noqa: F405
     "is_opensuse",
     "is_oracle",
     "is_other_posix",  # noqa: F822
-    "is_other_unix",  # Deprecated alias.
     "is_parallels",
     "is_pidora",
     "is_powerpc",  # noqa: F822
@@ -579,11 +539,9 @@ __all__ = (  # noqa: F405
     "is_unix",  # noqa: F822
     "is_unix_layers",  # noqa: F822
     "is_unix_not_macos",  # noqa: F822
-    "is_unix_without_macos",  # Deprecated alias.
     "is_unknown",  # noqa: F822
     "is_unknown_architecture",
     "is_unknown_ci",
-    "is_unknown_linux",  # Deprecated alias.
     "is_unknown_platform",
     "is_wasm32",
     "is_wasm64",
@@ -617,11 +575,9 @@ __all__ = (  # noqa: F405
     "OPENSUSE",
     "ORACLE",
     "OTHER_POSIX",
-    "OTHER_UNIX",  # Deprecated alias.
     "PARALLELS",
     "PIDORA",
     "Platform",
-    "platforms_from_ids",  # Deprecated alias.
     "POWERPC",
     "PPC",
     "PPC64",
@@ -656,7 +612,6 @@ __all__ = (  # noqa: F405
     "UNKNOWN",
     "UNKNOWN_ARCHITECTURE",
     "UNKNOWN_CI",
-    "UNKNOWN_LINUX",  # Deprecated alias.
     "UNKNOWN_PLATFORM",
     "WASM32",
     "WASM64",

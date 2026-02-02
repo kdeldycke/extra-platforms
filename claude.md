@@ -77,7 +77,6 @@ Group - Collection of Traits with set-like operations (group.py)
 | `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                     |
 | `group_data.py`        | All `Group` instances and ID collections                            |
 | `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                |
-| `_deprecated.py`       | Backward-compatible aliases for renamed symbols                     |
 | `_utils.py`            | Internal utilities                                                  |
 | `_types.py`            | Type aliases                                                        |
 

@@ -62,7 +62,6 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_ubuntu,
     is_windows,
 )
-from extra_platforms import _deprecated as deprecated_module
 from extra_platforms import architecture_data as architecture_data_module
 from extra_platforms import ci_data as ci_data_module
 from extra_platforms import detection as detection_module
@@ -181,7 +180,6 @@ def test_module_root_declarations():
     group_data_members = fetch_module_implements(group_data_module)
     platform_data_members = fetch_module_implements(platform_data_module)
     trait_members = fetch_module_implements(trait_module)
-    deprecated_members = fetch_module_implements(deprecated_module)
     root_members = fetch_module_implements(extra_platforms)
     # Update root members with auto-generated group detection function names.
     root_members.update((g.detection_func_id for g in ALL_GROUPS))
@@ -203,7 +201,6 @@ def test_module_root_declarations():
     assert group_data_members <= set(extra_platforms_members)
     assert platform_data_members <= set(extra_platforms_members)
     assert trait_members <= set(extra_platforms_members)
-    assert deprecated_members <= set(extra_platforms_members)
 
     expected_members = sorted(
         detection_members
@@ -213,7 +210,6 @@ def test_module_root_declarations():
         .union(group_data_members)
         .union(platform_data_members)
         .union(trait_members)
-        .union(deprecated_members)
         .union(root_members),
         key=lambda m: (m.lower(), m),
     )

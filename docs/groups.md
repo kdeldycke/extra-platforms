@@ -123,24 +123,6 @@ with canonical groups.
 .. autofunction:: extra_platforms.reduce
 ```
 
-## Deprecated groups
-
-```{eval-rst}
-.. autodata:: extra_platforms.ALL_PLATFORMS_WITHOUT_CI
-.. autodata:: extra_platforms.ANY_ARM
-.. autodata:: extra_platforms.ANY_MIPS
-.. autodata:: extra_platforms.ANY_SPARC
-.. autodata:: extra_platforms.ANY_WINDOWS
-.. autodata:: extra_platforms.OTHER_UNIX
-```
-
-## Deprecated group utilities
-
-```{eval-rst}
-.. autofunction:: extra_platforms.platforms_from_ids
-.. autodata:: extra_platforms.ALL_PLATFORM_IDS
-```
-
 ## Group implementation
 
 ```{eval-rst}
