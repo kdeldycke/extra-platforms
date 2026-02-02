@@ -105,7 +105,7 @@ keywords = [
 license-files = [ "license" ]
 authors = [ { name = "Kevin Deldycke", email = "kevin@deldycke.com" } ]
 # Python versions and their status: https://devguide.python.org/versions/
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 # See: https://pypi.org/pypi?%3Aaction=list_classifiers
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -163,7 +163,6 @@ classifiers = [
   "Operating System :: RISC OS",
   "Operating System :: Unix",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -225,14 +224,13 @@ test = [
   "pytest-xdist[psutil]>=3.7",
   # requests 2.32.5 is the first version to drop support for Python 3.8.
   "requests>=2.32.5",
-  "tomli>=2.3; python_version<'3.11'",
 ]
 docs = [
   "click-extra[sphinx]>=7.3",
   "furo>=2025.9.25",
-  "myst-parser>=4",
-  # Sphinx version is constrained by Click Extra.
-  "sphinx",
+  "myst-parser>=5",
+  # We hard code links with a format that Sphinx only supports from 9.0 onwards.
+  "sphinx>=9",
   "sphinx-autodoc-typehints>=2.4",
   "sphinx-copybutton>=0.5.2",
   "sphinx-design>=0.6",
@@ -241,7 +239,6 @@ docs = [
   "sphinxext-opengraph>=0.13",
   # tabulate 0.9 is the first to add `*grid` and `*outline` formats.
   "tabulate[widechars]>=0.9",
-  "tomli>=2.3; python_version<'3.11'",
   # wcmatch 10.0 fix some inconsistencies in globbing and symlinks.
   "wcmatch>=10",
 ]

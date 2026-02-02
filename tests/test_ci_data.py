@@ -22,7 +22,6 @@ import functools
 import inspect
 import json
 import os
-import sys
 from pathlib import Path
 
 from extra_platforms import (  # type: ignore[attr-defined]
@@ -140,10 +139,7 @@ def test_github_runner_detection():
         "macos-15-intel",
         "windows-2025",
         "windows-2022",
-    } or (
-        # XXX Python <= 3.10.x on Windows ARM runners reports x86_64.
-        github_runner_os() == "windows-11-arm" and sys.version_info < (3, 11)
-    ):
+    }:
         assert current_architecture() is X86_64
         assert X86_64 in current_traits()
         assert is_x86_64()

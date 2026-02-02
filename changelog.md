@@ -5,6 +5,8 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Drop support for Python 3.10.
+
 ## [8.0.0 (2026-02-02)](https://github.com/kdeldycke/extra-platforms/compare/v7.0.0...v8.0.0)
 
 - Add `aliases` field to `Trait` class, allowing alternative IDs that resolve to the canonical ID.
