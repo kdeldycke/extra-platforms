@@ -61,7 +61,7 @@ They all inherit from the {class}`~Trait` base class, and share a common interfa
 
 ### Current property
 
-Each trait has a [`current` property](#extra_platforms.trait.Trait.current) that calls the corresponding [detection function](detection.md):
+Each trait has a [`current` property](#extra_platforms.Trait.current) that calls the corresponding [detection function](detection.md):
 
 ```pycon
 >>> X86_64.current
@@ -92,7 +92,7 @@ False
 
 Traits are combined into [groups](groups.md) for easier detection of related traits.
 
-You can get all groups a trait belongs to via the [`groups` property](#extra_platforms.trait.Trait.groups):
+You can get all groups a trait belongs to via the [`groups` property](#extra_platforms.Trait.groups):
 
 ```pycon
 >>> X86_64.groups
@@ -105,7 +105,7 @@ frozenset({
 
 ### Additional information
 
-Each trait provides an [`info()` method](#extra_platforms.trait.Trait.info) that returns a dictionary containing all available metadata about that trait:
+Each trait provides an [`info()` method](#extra_platforms.Trait.info) that returns a dictionary containing all available metadata about that trait:
 
 ```pycon
 >>> from extra_platforms import AARCH64, MACOS
