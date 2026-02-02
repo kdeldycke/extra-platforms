@@ -37,7 +37,7 @@ from pathlib import Path
 from textwrap import dedent, indent
 from typing import Iterable
 
-import wcwidth  # type: ignore[import-untyped]
+import wcwidth
 from wcmatch import glob as wcglob
 
 from extra_platforms import (
