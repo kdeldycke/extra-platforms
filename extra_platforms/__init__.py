@@ -279,7 +279,7 @@ from .trait import (  # noqa: E402
 """
 
 
-__version__ = "8.0.0"
+__version__ = "8.0.1"
 
 
 def _initialize_group_detection_functions() -> list[str]:

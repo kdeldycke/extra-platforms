@@ -5,7 +5,7 @@ requires = [ "uv-build>=0.9" ]
 [project]
 # Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 name = "extra-platforms"
-version = "8.0.0"
+version = "8.0.1"
 description = "🔎 Detect architectures, platforms, and CI systems, grouped by family"
 readme = "readme.md"
 keywords = [
@@ -198,7 +198,7 @@ optional-dependencies.pytest = [
 ]
 urls."Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
 urls."Documentation" = "https://kdeldycke.github.io/extra-platforms"
-urls."Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v8.0.0"
+urls."Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v8.0.1"
 urls."Funding" = "https://github.com/sponsors/kdeldycke"
 # Package referenced above and also featured in [project.optional-dependencies] or [dependency-groups]
 # will be set without version specifier as they are already constrained.
@@ -299,7 +299,7 @@ addopts = [
 xfail_strict = true
 
 [tool.bumpversion]
-current_version = "8.0.0"
+current_version = "8.0.1"
 allow_dirty = true
 
 # TODO: Reuse the same search and replace patterns available in the reused workflows' pyproject.toml.
