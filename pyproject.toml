@@ -253,7 +253,7 @@ typing = [
 
 [tool.uv]
 # Cooldown period.
-exclude-newer = "1 week"
+exclude-newer = "2026-01-26T00:00:00Z"
 
 [tool.uv.build-backend]
 # Package is at root level, not in "./src/".
