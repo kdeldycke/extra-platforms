@@ -133,7 +133,7 @@ Document design decisions, trade-offs, and non-obvious implementation choices di
   SKIP_BRANCHES: Final[frozenset[str]] = frozenset(("branch-a", "branch-b"))
   ```
 
-### Type checking
+### `TYPE_CHECKING` block
 
 Place a module-level `TYPE_CHECKING` block immediately after the module docstring:
 
