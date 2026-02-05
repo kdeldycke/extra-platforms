@@ -37,7 +37,7 @@ from pathlib import Path
 from textwrap import dedent, indent
 from typing import Iterable
 
-import wcwidth
+from click_extra.table import TableFormat, render_table
 from wcmatch import glob as wcglob
 
 from extra_platforms import (
@@ -67,16 +67,6 @@ PROJECT_ROOT = DOCS_ROOT.parent
 
 README_PATH = PROJECT_ROOT / "readme.md"
 """The path to the ``readme.md`` file."""
-
-
-def _visible_width(s: str) -> int:
-    """Return the display width of a string, accounting for unicode characters.
-
-    Uses wcwidth to calculate the proper display width of unicode and emoji characters.
-    """
-    width = wcwidth.wcswidth(s)
-    # wcswidth returns -1 for control characters; fall back to len() in that case.
-    return len(s) if width < 0 else width
 
 
 def replace_content(
@@ -152,90 +142,6 @@ def replace_content(
         )
 
 
-def _generate_markdown_table(
-    table_data: list[list[str]],
-    headers: list[str],
-    alignments: list[str],
-) -> str:
-    """Generate a Markdown table using tabulate with custom alignment separators.
-
-    This is a shared helper function that both generate_trait_table() and
-    generate_group_table() use to render tables with proper Markdown alignment hints.
-
-    Uses display width (not character count) for proper unicode/emoji padding,
-    matching the behavior of mdformat linter.
-
-    Args:
-        table_data: List of rows, where each row is a list of cell values.
-        headers: List of column header names.
-        alignments: List of alignment hints ("left", "right", "center") for each column.
-
-    Returns:
-        A formatted Markdown table string with proper alignment separators.
-    """
-    # Calculate column widths based on display width (for proper unicode/emoji handling).
-    # This matches the behavior of mdformat linter.
-    col_widths = []
-    for col_index, header in enumerate(headers):
-        cells = [row[col_index] for row in table_data] + [header]
-        col_widths.append(max(_visible_width(c) for c in cells))
-
-    # Build separator row with proper alignment hints.
-    # https://github.com/astanin/python-tabulate/pull/261
-    # https://github.com/astanin/python-tabulate/issues/53
-    separators = []
-    for col_index, width in enumerate(col_widths):
-        align = alignments[col_index]
-        if align == "left":
-            sep = f":{'-' * (width - 1)}"
-        elif align == "center":
-            sep = f":{'-' * (width - 2)}:"
-        elif align == "right":
-            sep = f"{'-' * (width - 1)}:"
-        else:
-            sep = "-" * width
-        separators.append(sep)
-
-    # Build all rows with proper display-width-based padding.
-    def pad_cell(content: str, width: int, align: str) -> str:
-        """Pad a cell to the target display width with proper alignment."""
-        content_width: int = _visible_width(content)
-        padding_needed: int = width - content_width
-        if align == "center":
-            left_pad: int = padding_needed // 2
-            right_pad: int = padding_needed - left_pad
-            result: str = " " * left_pad + content + " " * right_pad
-            return result
-        elif align == "right":
-            result = " " * padding_needed + content
-            return result
-        else:  # left or default
-            result = content + " " * padding_needed
-            return result
-
-    # Build header row.
-    header_cells = [
-        pad_cell(h, col_widths[i], alignments[i]) for i, h in enumerate(headers)
-    ]
-
-    # Build data rows.
-    data_rows = []
-    for row in table_data:
-        row_cells = [
-            pad_cell(cell, col_widths[i], alignments[i]) for i, cell in enumerate(row)
-        ]
-        data_rows.append(row_cells)
-
-    # Assemble the table.
-    lines = []
-    lines.append("| " + " | ".join(header_cells) + " |")
-    lines.append("| " + " | ".join(separators) + " |")
-    for row_cells in data_rows:
-        lines.append("| " + " | ".join(row_cells) + " |")
-
-    return "\n".join(lines)
-
-
 def generate_all_traits_table(traits: Iterable[Trait]) -> str:
     """Produce a simple Markdown table for a collection of traits.
 
@@ -255,7 +161,7 @@ def generate_all_traits_table(traits: Iterable[Trait]) -> str:
             type(trait).__name__,
         ])
 
-    return _generate_markdown_table(table_data, headers, alignments)
+    return render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
 
 
 def generate_trait_table(traits: Iterable[Trait]) -> str:
@@ -286,7 +192,7 @@ def generate_trait_table(traits: Iterable[Trait]) -> str:
             f"{{func}}`~{trait.detection_func_id}`",
         ])
 
-    table = _generate_markdown_table(table_data, headers, alignments)
+    table = render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
 
     # Append hint block explaining unknown trait if trait type was detected.
     hint = dedent(f"""
@@ -329,7 +235,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
             "⬥" if group.canonical else "",
         ])
 
-    table = _generate_markdown_table(table_data, headers, alignments)
+    table = render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
 
     # Append hint block explaining canonical groups
     if len(sorted_groups) > 1:
@@ -511,7 +417,7 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
             f"{{data}}`~{obj.symbol_id}`",
         ])
 
-    return _generate_markdown_table(table_data, headers, alignments)
+    return render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
 
 
 def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
@@ -564,7 +470,7 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
             f"{{data}}`~{obj.symbol_id}`",
         ])
 
-    return _generate_markdown_table(table_data, headers, alignments)
+    return render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
 
 
 def generate_detection_autofunction(objects: Iterable[Trait | Group]) -> str:

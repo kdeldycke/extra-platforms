@@ -9,6 +9,9 @@ resolution-markers = [
 [options]
 exclude-newer = "2026-01-26T00:00:00Z"
 
+[options.exclude-newer-package]
+click-extra = { timestamp = "2026-02-05T16:01:36.152471Z", span = "PT0S" }
+
 [[package]]
 name = "accessible-pygments"
 version = "0.0.5"
@@ -166,7 +169,7 @@ wheels = [
 
 [[package]]
 name = "click-extra"
-version = "7.4.0"
+version = "7.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "boltons" },
@@ -178,9 +181,9 @@ dependencies = [
     { name = "tabulate", extra = ["widechars"] },
     { name = "wcmatch" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/50/2a/79e85d7683fd97037326dbdad60524c075ef01dad2adad0a6d6fa40c41a4/click_extra-7.4.0.tar.gz", hash = "sha256:869cd811074a4c5049fb241087e55242bf36ee328133ae932f37730833d9b9d9", size = 86763, upload-time = "2025-12-08T05:06:28.587Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ef/04/a56c9840217b015aa66d1c4390e946c3dffd8c54bc78ac0d32ceab10fb97/click_extra-7.5.0.tar.gz", hash = "sha256:eef123b7af6a036a17176f4a0865171b4ae8167ff73885204652e737eebbc20e", size = 94943, upload-time = "2026-02-03T10:21:51.347Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5f/8e/61d484461ead9f2c971ba11a9ee591aed0c0e707b2e4ac28ddc26e65e486/click_extra-7.4.0-py3-none-any.whl", hash = "sha256:f827066818b8f41e83189793e64dcd67425b228f62332597e02d3ec9cf4711b5", size = 102505, upload-time = "2025-12-08T05:06:27.164Z" },
+    { url = "https://files.pythonhosted.org/packages/78/c4/d936654baa075360e28ad4b48ea1a4a86639e1bed4842b9531c2242f812d/click_extra-7.5.0-py3-none-any.whl", hash = "sha256:4e442bdd81404a7e77227476717bcf492d2531915916a240fad87d8db037233a", size = 111199, upload-time = "2026-02-03T10:21:52.331Z" },
 ]
 
 [package.optional-dependencies]
@@ -394,7 +397,7 @@ provides-extras = ["pytest"]
 
 [package.metadata.requires-dev]
 docs = [
-    { name = "click-extra", extras = ["sphinx"], specifier = ">=7.3" },
+    { name = "click-extra", extras = ["sphinx"], specifier = ">=7.5" },
     { name = "furo", specifier = ">=2025.9.25" },
     { name = "myst-parser", specifier = ">=5" },
     { name = "sphinx", specifier = ">=9" },

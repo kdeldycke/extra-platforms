@@ -226,7 +226,8 @@ test = [
   "requests>=2.32.5",
 ]
 docs = [
-  "click-extra[sphinx]>=7.3",
+  # We need Click Extra 7.5 to render Markdown table properly.
+  "click-extra[sphinx]>=7.5",
   "furo>=2025.9.25",
   "myst-parser>=5",
   # We hard code links with a format that Sphinx only supports from 9.0 onwards.
@@ -251,6 +252,8 @@ typing = [
 [tool.uv]
 # Cooldown period.
 exclude-newer = "2026-01-26T00:00:00Z"
+# XXX Disable exclusion of brand new click-extra releases.
+exclude-newer-package = { "click-extra" = "0 day" }
 
 [tool.uv.build-backend]
 # Package is at root level, not in "./src/".
