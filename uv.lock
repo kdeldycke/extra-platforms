@@ -10,7 +10,7 @@ resolution-markers = [
 exclude-newer = "2026-01-26T00:00:00Z"
 
 [options.exclude-newer-package]
-click-extra = { timestamp = "2026-02-05T16:01:36.152471Z", span = "PT0S" }
+click-extra = { timestamp = "2026-02-05T16:19:44.514397Z", span = "PT0S" }
 
 [[package]]
 name = "accessible-pygments"
@@ -371,7 +371,6 @@ docs = [
     { name = "sphinx-issues" },
     { name = "sphinxcontrib-mermaid" },
     { name = "sphinxext-opengraph" },
-    { name = "tabulate", extra = ["widechars"] },
     { name = "wcmatch" },
 ]
 test = [
@@ -385,7 +384,6 @@ test = [
 ]
 typing = [
     { name = "types-requests" },
-    { name = "types-tabulate" },
 ]
 
 [package.metadata]
@@ -407,7 +405,6 @@ docs = [
     { name = "sphinx-issues", specifier = ">=5" },
     { name = "sphinxcontrib-mermaid", specifier = ">=1.2.2" },
     { name = "sphinxext-opengraph", specifier = ">=0.13" },
-    { name = "tabulate", extras = ["widechars"], specifier = ">=0.9" },
     { name = "wcmatch", specifier = ">=10" },
 ]
 test = [
@@ -419,10 +416,7 @@ test = [
     { name = "pytest-xdist", extras = ["psutil"], specifier = ">=3.7" },
     { name = "requests", specifier = ">=2.32.5" },
 ]
-typing = [
-    { name = "types-requests", specifier = ">=2.32.4.20250611" },
-    { name = "types-tabulate", specifier = ">=0.9.0.2" },
-]
+typing = [{ name = "types-requests", specifier = ">=2.32.4.20250611" }]
 
 [[package]]
 name = "furo"
@@ -1145,15 +1139,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/0f/f3/a0663907082280664d745929205a89d41dffb29e89a50f753af7d57d0a96/types_requests-2.32.4.20260107.tar.gz", hash = "sha256:018a11ac158f801bfa84857ddec1650750e393df8a004a8a9ae2a9bec6fcb24f", size = 23165, upload-time = "2026-01-07T03:20:54.091Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1c/12/709ea261f2bf91ef0a26a9eed20f2623227a8ed85610c1e54c5805692ecb/types_requests-2.32.4.20260107-py3-none-any.whl", hash = "sha256:b703fe72f8ce5b31ef031264fe9395cac8f46a04661a79f7ed31a80fb308730d", size = 20676, upload-time = "2026-01-07T03:20:52.929Z" },
-]
-
-[[package]]
-name = "types-tabulate"
-version = "0.9.0.20241207"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/3f/43/16030404a327e4ff8c692f2273854019ed36718667b2993609dc37d14dd4/types_tabulate-0.9.0.20241207.tar.gz", hash = "sha256:ac1ac174750c0a385dfd248edc6279fa328aaf4ea317915ab879a2ec47833230", size = 8195, upload-time = "2024-12-07T02:54:42.554Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5e/86/a9ebfd509cbe74471106dffed320e208c72537f9aeb0a55eaa6b1b5e4d17/types_tabulate-0.9.0.20241207-py3-none-any.whl", hash = "sha256:b8dad1343c2a8ba5861c5441370c3e35908edd234ff036d4298708a1d4cf8a85", size = 8307, upload-time = "2024-12-07T02:54:41.031Z" },
 ]
 
 [[package]]
