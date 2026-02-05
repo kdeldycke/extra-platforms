@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Fix crash in compiled binaries (Nuitka, PyInstaller, cx_Freeze) caused by missing source files for docstring extraction.
 - Drop support for Python 3.10.
 - Remove all deprecated backward-compatibility aliases:
   - Remove `ALL_PLATFORM_IDS` (use `ALL_TRAIT_IDS`).
