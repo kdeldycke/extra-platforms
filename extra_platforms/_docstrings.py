@@ -44,17 +44,30 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
     assignment. This function parses the source file using AST to find such
     docstrings.
 
+    .. note::
+        Returns ``None`` if source files are unavailable, which happens in
+        compiled environments (e.g., Nuitka, PyInstaller, cx_Freeze). This
+        graceful degradation allows the library to function without docstrings
+        in compiled binaries.
+
     :param module_name: The full module name (e.g.,
         'extra_platforms.platform_data').
     :param attr_name: The attribute name to look for (e.g., 'NOBARA').
-    :returns: The attribute docstring if found, or None.
+    :returns: The attribute docstring if found, or ``None`` if not found or
+        source is unavailable.
     """
     module = importlib.import_module(module_name)
     source_file = inspect.getsourcefile(module)
     if not source_file:
-        raise FileNotFoundError(f"Cannot find source file for module {module_name}")
+        # Source file not available (e.g., compiled module).
+        return None
 
-    source = Path(source_file).read_text(encoding="utf-8")
+    try:
+        source = Path(source_file).read_text(encoding="utf-8")
+    except (FileNotFoundError, OSError):
+        # Source file doesn't exist on disk (e.g., Nuitka-compiled binary).
+        return None
+
     tree = ast.parse(source)
 
     # Look for assignment (or annotated assignment) followed by a string
