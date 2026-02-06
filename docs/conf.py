@@ -135,5 +135,4 @@ html_theme_options = {
 # Footer content.
 html_last_updated_fmt = "%Y-%m-%d"
 copyright = f"{author} and contributors"
-html_show_copyright = True
 html_show_sphinx = False
