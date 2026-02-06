@@ -104,6 +104,7 @@ from extra_platforms import (
     Group,
     Platform,
     Trait,
+    extract_members,
     groups_from_ids,
     reduce,
     traits_from_ids,
@@ -175,7 +176,7 @@ def test_membership():
     ],
 )
 def test_extract_members(items, expected):
-    assert tuple(Group._extract_members(items)) == tuple(expected)
+    assert tuple(extract_members(items)) == tuple(expected)
 
 
 @pytest.mark.parametrize(
@@ -183,7 +184,7 @@ def test_extract_members(items, expected):
 )
 def test_extract_members_bad_type(item):
     with pytest.raises(TypeError):
-        tuple(Group._extract_members(item))
+        tuple(extract_members(item))
 
 
 def test_canonical_property():
@@ -706,10 +707,10 @@ def test_set_operations_with_new_methods():
 
 
 def test_extract_members_with_unsupported_type():
-    """Test that _extract_members raises TypeError for unsupported types."""
+    """Test that extract_members raises TypeError for unsupported types."""
     # Pass an unsupported type.
     with pytest.raises(TypeError, match="Unsupported type"):
-        list(Group._extract_members(123))
+        list(extract_members(123))
 
 
 def test_getitem_with_missing_key():
@@ -795,15 +796,15 @@ def test_group_items():
 
 
 def test_group_extract_members_with_none():
-    """Test that _extract_members ignores None values."""
-    result = list(Group._extract_members(UBUNTU, None, None))
+    """Test that extract_members ignores None values."""
+    result = list(extract_members(UBUNTU, None, None))
     assert result == [UBUNTU]
 
 
 def test_group_extract_members_nested():
-    """Test that _extract_members handles nested structures."""
+    """Test that extract_members handles nested structures."""
     # Nested list of groups and traits.
-    result = list(Group._extract_members([LINUX, [UBUNTU]]))
+    result = list(extract_members([LINUX, [UBUNTU]]))
     # Should include all members of LINUX plus UBUNTU.
     assert UBUNTU in result
     # LINUX members should also be in result.

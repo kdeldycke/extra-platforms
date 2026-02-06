@@ -102,214 +102,112 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
     return any(expected_href_fragment in href for href in hrefs)
 
 
-def test_group_symbols_are_linked(built_docs):
-    """Test that group symbols in the table link to their definitions."""
-    html = read_html(built_docs, "groups.html")
-
-    # Test a sample of group symbols.
-    groups_to_check = [
-        ("ALL_ARCHITECTURES", "#extra_platforms.ALL_ARCHITECTURES"),
-        ("ALL_PLATFORMS", "#extra_platforms.ALL_PLATFORMS"),
-        ("LINUX", "#extra_platforms.LINUX"),
-        ("BSD", "#extra_platforms.BSD"),
-        ("UNIX", "#extra_platforms.UNIX"),
-    ]
-
-    for symbol, href_fragment in groups_to_check:
-        assert has_linked_reference(html, symbol, href_fragment), (
-            f"Group symbol {symbol} is not linked to {href_fragment}"
-        )
-
-
-def test_group_detection_functions_are_linked(built_docs):
-    """Test that detection functions in the table link to detection.html."""
-    html = read_html(built_docs, "groups.html")
-
-    # Test a sample of detection functions.
-    functions_to_check = [
-        ("is_any_architecture()", "detection.html#extra_platforms.is_any_architecture"),
-        ("is_any_platform()", "detection.html#extra_platforms.is_any_platform"),
-        ("is_linux()", "detection.html#extra_platforms.is_linux"),
-        ("is_bsd()", "detection.html#extra_platforms.is_bsd"),
-        ("is_unix()", "detection.html#extra_platforms.is_unix"),
-    ]
-
-    for func_text, href_fragment in functions_to_check:
-        assert has_linked_reference(html, func_text, href_fragment), (
-            f"Detection function {func_text} is not linked to {href_fragment}"
-        )
-
-
-def test_pytest_decorator_table_symbols_are_linked(built_docs):
-    """Test that symbols in the decorator table link to their definitions."""
-    html = read_html(built_docs, "pytest.html")
-
-    # Test a sample of symbols in the decorator table.
-    symbols_to_check = [
-        ("AARCH64", "architectures.html#extra_platforms.AARCH64"),
-        ("UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
-        ("GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
-        ("LINUX", "groups.html#extra_platforms.LINUX"),
-    ]
-
-    for symbol, href_fragment in symbols_to_check:
-        assert has_linked_reference(html, symbol, href_fragment), (
-            f"Symbol {symbol} is not linked to {href_fragment}"
-        )
-
-
-def test_pytest_decorator_docstrings_have_linked_symbols(built_docs):
-    """Test that decorator docstrings contain linked symbols."""
-    html = read_html(built_docs, "pytest.html")
-
-    # The docstrings should contain links like:
-    # "Skip test if current environment is AARCH64 (i.e., when is_aarch64() ...)"
-    # Both AARCH64 and is_aarch64() should be linked.
-
-    # Check that AARCH64 in the skip_aarch64 docstring is linked.
-    assert has_linked_reference(
-        html, "AARCH64", "architectures.html#extra_platforms.AARCH64"
-    ), "AARCH64 in skip_aarch64 docstring is not linked"
-
-    # Check that is_aarch64() in the docstring is linked.
-    assert has_linked_reference(
-        html, "is_aarch64()", "detection.html#extra_platforms.is_aarch64"
-    ), "is_aarch64() in skip_aarch64 docstring is not linked"
-
-
-def test_detection_table_symbols_are_linked(built_docs):
-    """Test that symbols in the detection table link to their definitions."""
-    html = read_html(built_docs, "detection.html")
-
-    # Test a sample of symbols.
-    symbols_to_check = [
-        ("AARCH64", "architectures.html#extra_platforms.AARCH64"),
-        ("UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
-        ("GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
-        ("LINUX", "groups.html#extra_platforms.LINUX"),
-    ]
-
-    for symbol, href_fragment in symbols_to_check:
-        assert has_linked_reference(html, symbol, href_fragment), (
-            f"Symbol {symbol} is not linked to {href_fragment}"
-        )
-
-
-def test_trait_table_symbols_are_linked(built_docs):
-    """Test that trait symbols in the table link to their definitions."""
-    html = read_html(built_docs, "trait.html")
-
-    # Test a sample of trait symbols linking to their data pages.
-    symbols_to_check = [
-        ("AARCH64", "architectures.html#extra_platforms.AARCH64"),
-        ("UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
-        ("GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
-    ]
-
-    for symbol, href_fragment in symbols_to_check:
-        assert has_linked_reference(html, symbol, href_fragment), (
-            f"Trait symbol {symbol} is not linked to {href_fragment}"
-        )
-
-
-def test_trait_table_detection_functions_are_linked(built_docs):
-    """Test that detection functions in the trait table link to detection.html."""
-    html = read_html(built_docs, "trait.html")
-
-    functions_to_check = [
-        ("is_aarch64()", "detection.html#extra_platforms.is_aarch64"),
-        ("is_ubuntu()", "detection.html#extra_platforms.is_ubuntu"),
-        ("is_github_ci()", "detection.html#extra_platforms.is_github_ci"),
-    ]
-
-    for func_text, href_fragment in functions_to_check:
-        assert has_linked_reference(html, func_text, href_fragment), (
-            f"Detection function {func_text} is not linked to {href_fragment}"
-        )
-
-
-def test_platform_symbols_are_linked(built_docs):
-    """Test that platform symbols link to their definitions."""
-    html = read_html(built_docs, "platforms.html")
-
-    symbols_to_check = [
-        ("UBUNTU", "#extra_platforms.UBUNTU"),
-        ("MACOS", "#extra_platforms.MACOS"),
-        ("WINDOWS", "#extra_platforms.WINDOWS"),
-        ("DEBIAN", "#extra_platforms.DEBIAN"),
-    ]
-
-    for symbol, href_fragment in symbols_to_check:
-        assert has_linked_reference(html, symbol, href_fragment), (
-            f"Platform symbol {symbol} is not linked to {href_fragment}"
-        )
-
-
-def test_platform_detection_functions_are_linked(built_docs):
-    """Test that platform detection functions link to detection.html."""
-    html = read_html(built_docs, "platforms.html")
-
-    functions_to_check = [
-        ("is_ubuntu()", "detection.html#extra_platforms.is_ubuntu"),
-        ("is_macos()", "detection.html#extra_platforms.is_macos"),
-        ("is_windows()", "detection.html#extra_platforms.is_windows"),
-    ]
-
-    for func_text, href_fragment in functions_to_check:
-        assert has_linked_reference(html, func_text, href_fragment), (
-            f"Detection function {func_text} is not linked to {href_fragment}"
-        )
-
-
-def test_architecture_symbols_are_linked(built_docs):
-    """Test that architecture symbols link to their definitions."""
-    html = read_html(built_docs, "architectures.html")
-
-    symbols_to_check = [
-        ("AARCH64", "#extra_platforms.AARCH64"),
-        ("X86_64", "#extra_platforms.X86_64"),
-        ("ARM", "#extra_platforms.ARM"),
-    ]
-
-    for symbol, href_fragment in symbols_to_check:
-        assert has_linked_reference(html, symbol, href_fragment), (
-            f"Architecture symbol {symbol} is not linked to {href_fragment}"
-        )
-
-
-def test_ci_symbols_are_linked(built_docs):
-    """Test that CI symbols link to their definitions."""
-    html = read_html(built_docs, "ci.html")
-
-    symbols_to_check = [
-        ("GITHUB_CI", "#extra_platforms.GITHUB_CI"),
-        ("GITLAB_CI", "#extra_platforms.GITLAB_CI"),
-        ("TRAVIS_CI", "#extra_platforms.TRAVIS_CI"),
-    ]
-
-    for symbol, href_fragment in symbols_to_check:
-        assert has_linked_reference(html, symbol, href_fragment), (
-            f"CI symbol {symbol} is not linked to {href_fragment}"
-        )
-
-
-def test_group_data_references_from_other_pages(built_docs):
-    """Test that references to groups from other pages link to groups.html."""
-    # Check platforms.html links to groups.
-    platforms_html = read_html(built_docs, "platforms.html")
-    assert has_linked_reference(
-        platforms_html, "LINUX", "groups.html#extra_platforms.LINUX"
-    ), "LINUX group reference in platforms.html is not linked to groups.html"
-
-
-def test_detection_references_from_trait_pages(built_docs):
-    """Test that detection function refs from trait pages link to detection.html."""
-    architectures_html = read_html(built_docs, "architectures.html")
-    assert has_linked_reference(
-        architectures_html,
-        "is_aarch64()",
-        "detection.html#extra_platforms.is_aarch64",
-    ), "is_aarch64() reference in architectures.html is not linked to detection.html"
+@pytest.mark.parametrize(
+    ("page", "link_text", "href_fragment"),
+    [
+        # Group symbols on groups.html.
+        ("groups.html", "ALL_ARCHITECTURES", "#extra_platforms.ALL_ARCHITECTURES"),
+        ("groups.html", "ALL_PLATFORMS", "#extra_platforms.ALL_PLATFORMS"),
+        ("groups.html", "LINUX", "#extra_platforms.LINUX"),
+        ("groups.html", "BSD", "#extra_platforms.BSD"),
+        ("groups.html", "UNIX", "#extra_platforms.UNIX"),
+        # Group detection functions on groups.html.
+        (
+            "groups.html",
+            "is_any_architecture()",
+            "detection.html#extra_platforms.is_any_architecture",
+        ),
+        (
+            "groups.html",
+            "is_any_platform()",
+            "detection.html#extra_platforms.is_any_platform",
+        ),
+        ("groups.html", "is_linux()", "detection.html#extra_platforms.is_linux"),
+        ("groups.html", "is_bsd()", "detection.html#extra_platforms.is_bsd"),
+        ("groups.html", "is_unix()", "detection.html#extra_platforms.is_unix"),
+        # Pytest decorator table symbols.
+        ("pytest.html", "AARCH64", "architectures.html#extra_platforms.AARCH64"),
+        ("pytest.html", "UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("pytest.html", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
+        ("pytest.html", "LINUX", "groups.html#extra_platforms.LINUX"),
+        # Pytest decorator docstrings.
+        ("pytest.html", "AARCH64", "architectures.html#extra_platforms.AARCH64"),
+        (
+            "pytest.html",
+            "is_aarch64()",
+            "detection.html#extra_platforms.is_aarch64",
+        ),
+        # Detection table symbols.
+        (
+            "detection.html",
+            "AARCH64",
+            "architectures.html#extra_platforms.AARCH64",
+        ),
+        ("detection.html", "UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("detection.html", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
+        ("detection.html", "LINUX", "groups.html#extra_platforms.LINUX"),
+        # Trait table symbols.
+        ("trait.html", "AARCH64", "architectures.html#extra_platforms.AARCH64"),
+        ("trait.html", "UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("trait.html", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
+        # Trait table detection functions.
+        (
+            "trait.html",
+            "is_aarch64()",
+            "detection.html#extra_platforms.is_aarch64",
+        ),
+        ("trait.html", "is_ubuntu()", "detection.html#extra_platforms.is_ubuntu"),
+        (
+            "trait.html",
+            "is_github_ci()",
+            "detection.html#extra_platforms.is_github_ci",
+        ),
+        # Platform symbols.
+        ("platforms.html", "UBUNTU", "#extra_platforms.UBUNTU"),
+        ("platforms.html", "MACOS", "#extra_platforms.MACOS"),
+        ("platforms.html", "WINDOWS", "#extra_platforms.WINDOWS"),
+        ("platforms.html", "DEBIAN", "#extra_platforms.DEBIAN"),
+        # Platform detection functions.
+        (
+            "platforms.html",
+            "is_ubuntu()",
+            "detection.html#extra_platforms.is_ubuntu",
+        ),
+        (
+            "platforms.html",
+            "is_macos()",
+            "detection.html#extra_platforms.is_macos",
+        ),
+        (
+            "platforms.html",
+            "is_windows()",
+            "detection.html#extra_platforms.is_windows",
+        ),
+        # Architecture symbols.
+        ("architectures.html", "AARCH64", "#extra_platforms.AARCH64"),
+        ("architectures.html", "X86_64", "#extra_platforms.X86_64"),
+        ("architectures.html", "ARM", "#extra_platforms.ARM"),
+        # CI symbols.
+        ("ci.html", "GITHUB_CI", "#extra_platforms.GITHUB_CI"),
+        ("ci.html", "GITLAB_CI", "#extra_platforms.GITLAB_CI"),
+        ("ci.html", "TRAVIS_CI", "#extra_platforms.TRAVIS_CI"),
+        # Cross-page references.
+        ("platforms.html", "LINUX", "groups.html#extra_platforms.LINUX"),
+        (
+            "architectures.html",
+            "is_aarch64()",
+            "detection.html#extra_platforms.is_aarch64",
+        ),
+    ],
+)
+def test_rendered_links_point_to_correct_targets(
+    built_docs, page, link_text, href_fragment
+):
+    """Smoke test: verify that specific rendered links point to expected targets."""
+    html = read_html(built_docs, page)
+    assert has_linked_reference(html, link_text, href_fragment), (
+        f"{link_text} on {page} is not linked to {href_fragment}"
+    )
 
 
 def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
@@ -990,52 +888,9 @@ def test_frozenset_docstrings_are_custom(
     assert docstring, f"No docstring found for {symbol_name} in groups.html"
 
     # Verify it doesn't contain the generic frozenset description.
-    assert "Build an immutable unordered collection of unique elements" not in docstring, (
-        f"{symbol_name} in groups.html has generic frozenset docstring"
-    )
-
-    # Verify it contains the expected custom text.
-    assert expected_text_fragment in docstring, (
-        f"{symbol_name} in groups.html missing expected text: "
-        f"'{expected_text_fragment}'. Got: {docstring[:200]}"
-    )
-
-
-@pytest.mark.parametrize(
-    "symbol_name,expected_text_fragment",
-    [
-        ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are Architecture"),
-        ("ALL_PLATFORM_GROUPS", "All groups whose members are Platform"),
-        ("ALL_CI_GROUPS", "All groups whose members are CI"),
-        ("NON_OVERLAPPING_GROUPS", "Non-overlapping groups"),
-        ("EXTRA_GROUPS", "Overlapping groups, defined for convenience"),
-        ("ALL_GROUPS", "All predefined groups"),
-        ("ALL_TRAIT_IDS", "frozenset of all recognized traits IDs"),
-        ("ALL_GROUP_IDS", "frozenset of all recognized group IDs"),
-        ("ALL_IDS", "frozenset of all recognized traits and group IDs"),
-    ],
-)
-def test_frozenset_docstrings_consistent_across_pages(
-    built_docs, symbol_name, expected_text_fragment
-):
-    """Test that frozenset docstrings are consistent in groups.html.
-
-    This test verifies that the same custom docstrings appear in groups.html
-    as in extra_platforms.html.
-    """
-    symbol_id = f"extra_platforms.group_data.{symbol_name}"
-
-    # Check groups.html.
-    groups_html = read_html(built_docs, "groups.html")
-    docstring = extract_docstring_from_html(groups_html, symbol_id)
-
-    # Verify we found a docstring.
-    assert docstring, f"No docstring found for {symbol_name} in groups.html"
-
-    # Verify it doesn't contain the generic frozenset description.
-    assert "Build an immutable unordered collection of unique elements" not in docstring, (
-        f"{symbol_name} in groups.html has generic frozenset docstring"
-    )
+    assert (
+        "Build an immutable unordered collection of unique elements" not in docstring
+    ), f"{symbol_name} in groups.html has generic frozenset docstring"
 
     # Verify it contains the expected custom text.
     assert expected_text_fragment in docstring, (
@@ -1093,7 +948,7 @@ def test_no_links_to_generic_api_page(built_docs, page):
 
 
 def test_generic_api_page_no_stolen_targets(built_docs):
-    """Test that extra_platforms.html does not steal targets from specialized pages.
+    """Enforce the policy that extra_platforms.html does not steal targets from specialized pages.
 
     The ``extra_platforms.rst`` file uses ``:noindex:`` on all submodule
     ``automodule`` directives and ``:exclude-members:`` to avoid registering
