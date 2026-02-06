@@ -685,7 +685,7 @@ ALL_TRAITS = Group(
 # Collections of groups
 # =============================================================================
 
-#: All groups whose members are architectures.
+#: All groups whose members are :class:`~extra_platforms.Architecture`.
 ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_ARCHITECTURES,
@@ -706,7 +706,7 @@ ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
 )
 
 
-#: All groups whose members are platforms.
+#: All groups whose members are :class:`~extra_platforms.Platform`.
 ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_PLATFORMS,
@@ -725,21 +725,22 @@ ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
 )
 
 
-#: All groups whose members are CI systems.
+#: All groups whose members are :class:`~extra_platforms.CI`.
 #:
 #: .. note::
-#:     Not that useful currently, but provided for symmetry with architecture and platform
-#:     groups.
+#:     Not that useful as there is only one CI group, but provided for symmetry with
+#:     :data:`ALL_ARCHITECTURE_GROUPS` and :data:`ALL_PLATFORM_GROUPS`.
 ALL_CI_GROUPS: frozenset[Group] = frozenset((ALL_CI,))
 
 
 #: Non-overlapping groups.
 #:
 #: .. hint::
-#:     These groups together cover all predefined architectures, platforms, and CI systems,
-#:     including traits from the :data:`~UNKNOWN` group.
+#:     These groups together cover all :class:`~extra_platforms.Architecture`,
+#:     :class:`~extra_platforms.Platform`, and :class:`~extra_platforms.CI` traits,
+#:     including traits from the :data:`~extra_platforms.UNKNOWN` group.
 #:
-#:     All groups in this collection are marked as canonical.
+#:     All groups in this collection are marked as :attr:`~extra_platforms.Group.canonical`.
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
         # Architecture groups.
@@ -771,7 +772,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 #: Overlapping groups, defined for convenience.
 #:
 #: .. hint::
-#:     None of these groups are marked as canonical.
+#:     None of these groups are marked as :attr:`~extra_platforms.Group.canonical`.
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_TRAITS,
@@ -794,8 +795,8 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
 #: All predefined groups.
 #:
 #: .. hint::
-#:     This collection contains both canonical and non-canonical groups, including the
-#:     :data:`~UNKNOWN` group.
+#:     This collection contains both :attr:`~extra_platforms.Group.canonical` and
+#:     non-canonical groups, including the :data:`~extra_platforms.UNKNOWN` group.
 ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
 
 
@@ -813,7 +814,7 @@ ALL_TRAIT_IDS: frozenset[str] = frozenset(p.id for p in ALL_TRAITS - UNKNOWN)
 #: A :class:`frozenset` of all recognized group IDs.
 #:
 #: .. attention::
-#:     This collection does not contain the :data:`~UNKNOWN` group.
+#:     This collection does not contain the :data:`~extra_platforms.UNKNOWN` group.
 ALL_GROUP_IDS: frozenset[str] = frozenset(p.id for p in ALL_GROUPS - {UNKNOWN})
 
 
@@ -821,5 +822,5 @@ ALL_GROUP_IDS: frozenset[str] = frozenset(p.id for p in ALL_GROUPS - {UNKNOWN})
 #:
 #: .. attention::
 #:     This collection does not contain all the ``UNKNOWN_*`` traits and the
-#:     :data:`~UNKNOWN` group.
+#:     :data:`~extra_platforms.UNKNOWN` group.
 ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS

@@ -299,7 +299,7 @@ def is_wasm64() -> bool:
 
 @cache
 def is_unknown_architecture() -> bool:
-    """Return :data:`True` if current architecture is :data:`~UNKNOWN_ARCHITECTURE`."""
+    """Return :data:`True` if current architecture is :data:`UNKNOWN_ARCHITECTURE`."""
     # Lazy import to avoid circular dependencies.
     from .architecture_data import UNKNOWN_ARCHITECTURE
 
@@ -649,7 +649,7 @@ def is_xenserver() -> bool:
 
 @cache
 def is_unknown_platform() -> bool:
-    """Return :data:`True` if current platform is :data:`~UNKNOWN_PLATFORM`."""
+    """Return :data:`True` if current platform is :data:`UNKNOWN_PLATFORM`."""
     # Lazy import to avoid circular dependencies.
     from .platform_data import UNKNOWN_PLATFORM
 
@@ -784,7 +784,7 @@ def is_travis_ci() -> bool:
 
 @cache
 def is_unknown_ci() -> bool:
-    """Return :data:`True` if current CI is :data:`~UNKNOWN_CI`."""
+    """Return :data:`True` if current CI is :data:`UNKNOWN_CI`."""
     # Lazy import to avoid circular dependencies.
     from .ci_data import UNKNOWN_CI
 
@@ -800,7 +800,7 @@ def is_unknown_ci() -> bool:
 def current_architecture(strict: bool = False) -> Architecture:
     """Returns the :class:`~extra_platforms.Architecture` matching the current environment.
 
-    Returns :data:`~UNKNOWN_ARCHITECTURE` if not running inside a
+    Returns :data:`UNKNOWN_ARCHITECTURE` if not running inside a
     recognized architecture. To raise an error instead, set ``strict`` to ``True``.
 
     .. important::
@@ -836,7 +836,7 @@ def current_architecture(strict: bool = False) -> Architecture:
 def current_platform(strict: bool = False) -> Platform:
     """Always returns the best matching :class:`~extra_platforms.Platform` for the current environment.
 
-    Returns :data:`~UNKNOWN_PLATFORM` if not running inside a recognized
+    Returns :data:`UNKNOWN_PLATFORM` if not running inside a recognized
     platform. To raise an error instead, set ``strict`` to ``True``.
 
     .. important::
@@ -885,7 +885,7 @@ def current_platform(strict: bool = False) -> Platform:
 def current_ci(strict: bool = False) -> CI:
     """Returns the :class:`~extra_platforms.CI` system matching the current environment.
 
-    Returns :data:`~UNKNOWN_CI` if not running inside a recognized CI
+    Returns :data:`UNKNOWN_CI` if not running inside a recognized CI
     system. To raise an error instead, set ``strict`` to ``True``.
 
     .. important::
