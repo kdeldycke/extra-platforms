@@ -226,17 +226,18 @@ mindmap
             (🐉 LOONGARCH64)
         )🏢 IBM_MAINFRAME(
             (🏢 S390X)
-        )☀️ ANY_SPARC(
+        )☀️ ALL_SPARC(
             (☀️ SPARC)
             (☀️ SPARC64)
-        )🔲 ANY_MIPS(
+        )🔲 ALL_MIPS(
             (🔲 MIPS)
             (🔲 MIPS64)
             (🔲 MIPS64EL)
             (🔲 MIPSEL)
-        )📱 ANY_ARM(
+        )📱 ALL_ARM(
             (📱 AARCH64)
             (📱 ARM)
+            (📱 ARMV5TEL)
             (📱 ARMV6L)
             (📱 ARMV7L)
             (📱 ARMV8L)

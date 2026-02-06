@@ -51,13 +51,15 @@ from extra_platforms import (
     ALL_TRAITS,
     ARCH_32_BIT,
     ARCH_64_BIT,
+    BIG_ENDIAN,
+    LITTLE_ENDIAN,
     NON_OVERLAPPING_GROUPS,
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
     Group,
+    Trait,
 )
-from extra_platforms.trait import Trait
 
 DOCS_ROOT = Path(__file__).parent
 """The root path of Sphinx documentation."""
@@ -142,67 +144,66 @@ def replace_content(
         )
 
 
-def generate_all_traits_table(traits: Iterable[Trait]) -> str:
-    """Produce a simple Markdown table for a collection of traits.
-
-    Similar to group tables, contains icon, symbol, type, name, and detection function.
-    """
-    table_data = []
-    headers = ["Icon", "Symbol", "Name", "Detection function", "Type"]
-    alignments = ["center", "left", "left", "left", "left"]
-
-    traits_list = list(traits)
-    for trait in sorted(traits_list, key=attrgetter("id")):
-        table_data.append([
-            trait.icon,
-            f"{{data}}`~{trait.symbol_id}`",
-            trait.name,
-            f"{{func}}`~{trait.detection_func_id}`",
-            type(trait).__name__,
-        ])
-
-    return render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
-
-
-def generate_trait_table(traits: Iterable[Trait]) -> str:
+def generate_trait_table(
+    traits: Iterable[Trait],
+    *,
+    include_type: bool = False,
+    include_hint: bool = True,
+) -> str:
     """Produce a Markdown table for a collection of traits.
 
-    The table contains the icon, the symbol constant name (linked to its full definition),
-    a linked name, and a linked detection function for each trait. A hint block is appended
-    after the table explaining the unknown trait for this trait type.
+    :param traits: The traits to include in the table.
+    :param include_type: If ``True``, add a "Type" column showing each trait's
+        class name.
+    :param include_hint: If ``True``, append a hint block explaining the unknown
+        trait for this trait type.  Requires all traits to be of the same class.
     """
     table_data = []
     headers = ["Icon", "Symbol", "Name", "Detection function"]
     alignments = ["center", "left", "left", "left"]
+    if include_type:
+        headers.append("Type")
+        alignments.append("left")
 
-    # Get metadata from the first trait (all traits in the table should be the
-    # same type).
     traits_list = list(traits)
-    all_classes = {type(trait) for trait in traits_list}
-    assert len(all_classes) == 1, (
-        "All traits must be of the same class to generate a trait table."
-    )
-    trait_class = all_classes.pop()
+
+    if include_hint:
+        # All traits must be of the same class to produce the hint block.
+        all_classes = {type(trait) for trait in traits_list}
+        assert len(all_classes) == 1, (
+            "All traits must be of the same class to generate a trait table."
+        )
+        trait_class = all_classes.pop()
 
     for trait in sorted(traits_list, key=attrgetter("id")):
-        table_data.append([
+        row = [
             trait.icon,
             f"{{data}}`~{trait.symbol_id}`",
             trait.name,
             f"{{func}}`~{trait.detection_func_id}`",
-        ])
+        ]
+        if include_type:
+            row.append(type(trait).__name__)
+        table_data.append(row)
 
-    table = render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
+    table = render_table(
+        table_data,
+        headers,
+        table_format=TableFormat.GITHUB,
+        colalign=alignments,
+    )
 
-    # Append hint block explaining unknown trait if trait type was detected.
-    hint = dedent(f"""
-        ```{{hint}}
-        The {{data}}`~{trait_class.unknown_symbol}` trait represents an unrecognized
-        {trait_class.type_name}. It is not included in the {{data}}`~{trait_class.all_group}` group,
-        and will be returned by {{func}}`~current_{trait_class.type_id}` if the current
-        {trait_class.type_name} is not recognized.
-        ```""")
-    return f"{table}\n{hint}"
+    if include_hint:
+        hint = dedent(f"""
+            ```{{hint}}
+            The {{data}}`~{trait_class.unknown_symbol}` trait represents an unrecognized
+            {trait_class.type_name}. It is not included in the {{data}}`~{trait_class.all_group}` group,
+            and will be returned by {{func}}`~current_{trait_class.type_id}` if the current
+            {trait_class.type_name} is not recognized.
+            ```""")
+        table = f"{table}\n{hint}"
+
+    return table
 
 
 def generate_group_table(groups: Iterable[Group]) -> str:
@@ -420,27 +421,31 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     return render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
 
 
-def generate_autodata_directives(traits: Iterable[Trait | Group]) -> str:
-    """Generate Sphinx autodata directives for a collection of traits or groups.
+def generate_sphinx_directives(
+    objects: Iterable[Trait | Group],
+    directive: str,
+    attr: str,
+) -> str:
+    """Generate Sphinx directives for a collection of traits or groups.
 
-    This produces a code block with ``.. autodata::`` directives for each trait,
-    allowing Sphinx to document module-level constants with their dynamic docstrings.
+    Produces a MyST ``{eval-rst}`` block with one directive line per object,
+    using the given directive type and attribute name.
 
-    The module name is automatically determined from the trait type.
-
-    Args:
-        traits: The traits or groups to generate directives for.
-
-    Returns:
-        A MyST-compatible code block containing the autodata directives.
+    :param objects: The traits or groups to generate directives for.
+    :param directive: The Sphinx directive name (e.g. ``"autodata"``,
+        ``"autofunction"``).
+    :param attr: The attribute name on each object that provides the qualified
+        identifier (e.g. ``"symbol_id"``, ``"detection_func_id"``).
     """
-    traits_list = list(traits)
-    if not traits_list:
+    objects_list = list(objects)
+    if not objects_list:
         return "```{eval-rst}\n```"
 
     directives = []
-    for trait in sorted(traits_list, key=attrgetter("id")):
-        directives.append(f".. autodata:: extra_platforms.{trait.symbol_id}")
+    for obj in sorted(objects_list, key=attrgetter("id")):
+        directives.append(
+            f".. {directive}:: extra_platforms.{getattr(obj, attr)}"
+        )
 
     joined = "\n".join(directives)
     return f"```{{eval-rst}}\n{joined}\n```"
@@ -471,35 +476,6 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
         ])
 
     return render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
-
-
-def generate_detection_autofunction(objects: Iterable[Trait | Group]) -> str:
-    """Generate Sphinx autofunction directives for detection functions.
-
-    Generates directives for both trait detection functions (``is_<trait>()``)
-    defined in the ``detection`` module and group detection functions
-    (``is_<group>()``) dynamically generated in the ``extra_platforms`` package.
-
-    Args:
-        objects: The traits or groups whose detection functions should be documented.
-
-    Returns:
-        A MyST-compatible code block containing the autofunction directives with
-        links to their associated symbols.
-    """
-    objects_list = list(objects)
-    if not objects_list:
-        return "```{eval-rst}\n```"
-
-    # Generate autofunction directives with associated symbol links
-    directives = []
-    for obj in sorted(objects_list, key=attrgetter("id")):
-        directives.append(f".. autofunction:: extra_platforms.{obj.detection_func_id}")
-
-    output = "```{eval-rst}\n"
-    output += "\n".join(directives)
-    output += "\n```"
-    return output
 
 
 def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
@@ -535,66 +511,14 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     return "\n\n".join(sections)
 
 
-def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
-    """Generate the pytest automodule directive with dynamically excluded members.
+def generate_noindex_automodule(module: str) -> str:
+    """Generate a no-members automodule directive for a submodule section.
 
-    This excludes all dynamically generated decorators from the automodule output,
-    since they are documented separately via autodata directives in a dedicated section.
-
-    Args:
-        objects: The traits or groups whose decorators should be excluded.
-
-    Returns:
-        A MyST-compatible code block containing the automodule directive.
+    All public members are documented in dedicated pages, so only the module
+    docstring is rendered on ``extra_platforms.html``.
     """
-    objects_list = list(objects)
-
-    exclude_list = [
-        decorator_id
-        for obj in sorted(objects_list, key=attrgetter("id"))
-        for decorator_id in (obj.skip_decorator_id, obj.unless_decorator_id)
-    ]
-
-    exclude_members = ", ".join(exclude_list)
-
     return dedent(f"""\
-        ```{{eval-rst}}
-        .. automodule:: extra_platforms.pytest
-           :members:
-           :undoc-members:
-           :show-inheritance:
-           :exclude-members: {exclude_members}
-        ```""")
-
-
-def generate_group_automodule() -> str:
-    """Generate the extra_platforms.group automodule directive without members.
-
-    All public members (Group class and utility functions) are documented in
-    ``groups.md``, so the submodule section on ``extra_platforms.html`` only
-    shows the module docstring.
-
-    Returns:
-        An rST automodule directive with no-members.
-    """
-    return dedent("""\
-        .. automodule:: extra_platforms.group
-           :noindex:
-           :no-members:""")
-
-
-def generate_trait_automodule() -> str:
-    """Generate the extra_platforms.trait automodule directive without members.
-
-    All public members (core classes) are documented in ``trait.md``, so the
-    submodule section on ``extra_platforms.html`` only shows the module
-    docstring.
-
-    Returns:
-        An rST automodule directive with no-members.
-    """
-    return dedent("""\
-        .. automodule:: extra_platforms.trait
+        .. automodule:: {module}
            :noindex:
            :no-members:""")
 
@@ -764,7 +688,9 @@ def update_docs() -> None:
         (
             "all-traits-table-start",
             "all-traits-table-end",
-            generate_all_traits_table(ALL_TRAITS),
+            generate_trait_table(
+                ALL_TRAITS, include_type=True, include_hint=False
+            ),
         ),
         # Sankey diagrams.
         (
@@ -779,6 +705,11 @@ def update_docs() -> None:
             "architecture-bitness-sankey-start",
             "architecture-bitness-sankey-end",
             generate_sankey([ARCH_32_BIT, ARCH_64_BIT, ALL_ARCHITECTURES]),
+        ),
+        (
+            "architecture-endianness-sankey-start",
+            "architecture-endianness-sankey-end",
+            generate_sankey([BIG_ENDIAN, LITTLE_ENDIAN, ALL_ARCHITECTURES]),
         ),
         (
             "platform-multi-level-sankey-start",
@@ -802,9 +733,24 @@ def update_docs() -> None:
             ),
         ),
         (
+            "architecture-mindmap-start",
+            "architecture-mindmap-end",
+            generate_traits_mindmap(
+                list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
+                + [ALL_ARCHITECTURES]
+            ),
+        ),
+        (
             "architecture-bitness-mindmap-start",
             "architecture-bitness-mindmap-end",
             generate_traits_mindmap([ARCH_32_BIT, ARCH_64_BIT, ALL_ARCHITECTURES]),
+        ),
+        (
+            "architecture-endianness-mindmap-start",
+            "architecture-endianness-mindmap-end",
+            generate_traits_mindmap(
+                [BIG_ENDIAN, LITTLE_ENDIAN, ALL_ARCHITECTURES]
+            ),
         ),
         (
             "platform-mindmap-start",
@@ -851,24 +797,38 @@ def update_docs() -> None:
         (
             "architecture-data-autodata-start",
             "architecture-data-autodata-end",
-            generate_autodata_directives(
-                list(ALL_ARCHITECTURES) + [UNKNOWN_ARCHITECTURE]
+            generate_sphinx_directives(
+                list(ALL_ARCHITECTURES) + [UNKNOWN_ARCHITECTURE],
+                "autodata",
+                "symbol_id",
             ),
         ),
         (
             "platform-data-autodata-start",
             "platform-data-autodata-end",
-            generate_autodata_directives(list(ALL_PLATFORMS) + [UNKNOWN_PLATFORM]),
+            generate_sphinx_directives(
+                list(ALL_PLATFORMS) + [UNKNOWN_PLATFORM],
+                "autodata",
+                "symbol_id",
+            ),
         ),
         (
             "ci-data-autodata-start",
             "ci-data-autodata-end",
-            generate_autodata_directives(list(ALL_CI) + [UNKNOWN_CI]),
+            generate_sphinx_directives(
+                list(ALL_CI) + [UNKNOWN_CI],
+                "autodata",
+                "symbol_id",
+            ),
         ),
         (
             "group-data-autodata-start",
             "group-data-autodata-end",
-            generate_autodata_directives([g for g in ALL_GROUPS]),
+            generate_sphinx_directives(
+                [g for g in ALL_GROUPS],
+                "autodata",
+                "symbol_id",
+            ),
         ),
         # Autofunction directives for all detection functions (traits and groups).
         (
@@ -879,18 +839,16 @@ def update_docs() -> None:
         (
             "trait-detection-autofunction-start",
             "trait-detection-autofunction-end",
-            generate_detection_autofunction(ALL_TRAITS),
+            generate_sphinx_directives(
+                ALL_TRAITS, "autofunction", "detection_func_id"
+            ),
         ),
         (
             "group-detection-autofunction-start",
             "group-detection-autofunction-end",
-            generate_detection_autofunction(ALL_GROUPS),
-        ),
-        # Pytest automodule directive (excludes dynamically generated decorators).
-        (
-            "pytest-automodule-start",
-            "pytest-automodule-end",
-            generate_pytest_automodule(chain(ALL_TRAITS, ALL_GROUPS)),
+            generate_sphinx_directives(
+                ALL_GROUPS, "autofunction", "detection_func_id"
+            ),
         ),
         # Pytest decorator autodata directives.
         (
@@ -908,13 +866,13 @@ def update_docs() -> None:
         (
             "group-automodule-start",
             "group-automodule-end",
-            generate_group_automodule(),
+            generate_noindex_automodule("extra_platforms.group"),
         ),
         # Trait automodule directive (excludes core classes).
         (
             "trait-automodule-start",
             "trait-automodule-end",
-            generate_trait_automodule(),
+            generate_noindex_automodule("extra_platforms.trait"),
         ),
         # Group module automodule for groups.md (excludes Group class and utilities).
         (
