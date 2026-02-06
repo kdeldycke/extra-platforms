@@ -810,8 +810,11 @@ def test_all_crossreferences_point_to_correct_pages(
     ):
         pytest.skip("Skipping documentation example syntax")
 
-    # Skip certain roles that don't create cross-references to our code
-    if role in ("doc", "ref", "octicon", "mod"):
+    # Skip certain roles that don't create cross-references to our code.
+    # The ``attr`` role is skipped because attribute anchors include the class
+    # name (e.g. ``extra_platforms.Group.canonical``) and the general anchor
+    # construction logic does not handle that.
+    if role in ("doc", "ref", "octicon", "mod", "attr"):
         pytest.skip(f"Skipping non-code role: {role}")
 
     # Skip references to external packages and Python builtins
@@ -888,12 +891,19 @@ def test_all_crossreferences_point_to_correct_pages(
     else:
         expected_anchor = f"extra_platforms.{symbol_clean}"
 
+    # Symbols documented via automodule may have module-qualified anchors
+    # (e.g. ``extra_platforms.group_data.ALL_GROUPS`` instead of
+    # ``extra_platforms.ALL_GROUPS``).
+    possible_anchors = [expected_anchor]
+    if "group_data" in source_file:
+        possible_anchors.append(f"extra_platforms.group_data.{symbol_clean}")
+
     found = False
     for html_file in built_docs.glob("**/*.html"):
         if html_file.name != expected_page:
             continue
         html_content = html_file.read_text(encoding="utf-8")
-        if f'id="{expected_anchor}"' in html_content:
+        if any(f'id="{anchor}"' in html_content for anchor in possible_anchors):
             found = True
             break
 
@@ -949,9 +959,9 @@ def extract_docstring_from_html(html: str, symbol_id: str) -> str:
 @pytest.mark.parametrize(
     "symbol_name,expected_text_fragment",
     [
-        ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are architectures"),
-        ("ALL_PLATFORM_GROUPS", "All groups whose members are platforms"),
-        ("ALL_CI_GROUPS", "All groups whose members are CI systems"),
+        ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are Architecture"),
+        ("ALL_PLATFORM_GROUPS", "All groups whose members are Platform"),
+        ("ALL_CI_GROUPS", "All groups whose members are CI"),
         ("NON_OVERLAPPING_GROUPS", "Non-overlapping groups"),
         ("EXTRA_GROUPS", "Overlapping groups, defined for convenience"),
         ("ALL_GROUPS", "All predefined groups"),
@@ -968,27 +978,25 @@ def test_frozenset_docstrings_are_custom(
     This test verifies that the frozenset collections (ALL_GROUPS, ALL_TRAIT_IDS,
     etc.) are documented with their custom docstrings extracted from #: comments
     rather than the generic frozenset description.
+
+    The canonical location for these symbols is ``groups.html``.
     """
-    # In extra_platforms.html, frozensets use the full module path.
     symbol_id = f"extra_platforms.group_data.{symbol_name}"
 
-    # Check extra_platforms.html.
-    extra_platforms_html = read_html(built_docs, "extra_platforms.html")
-    docstring = extract_docstring_from_html(extra_platforms_html, symbol_id)
+    groups_html = read_html(built_docs, "groups.html")
+    docstring = extract_docstring_from_html(groups_html, symbol_id)
 
     # Verify we found a docstring.
-    assert docstring, (
-        f"No docstring found for {symbol_name} in extra_platforms.html"
-    )
+    assert docstring, f"No docstring found for {symbol_name} in groups.html"
 
     # Verify it doesn't contain the generic frozenset description.
     assert "Build an immutable unordered collection of unique elements" not in docstring, (
-        f"{symbol_name} in extra_platforms.html has generic frozenset docstring"
+        f"{symbol_name} in groups.html has generic frozenset docstring"
     )
 
     # Verify it contains the expected custom text.
     assert expected_text_fragment in docstring, (
-        f"{symbol_name} in extra_platforms.html missing expected text: "
+        f"{symbol_name} in groups.html missing expected text: "
         f"'{expected_text_fragment}'. Got: {docstring[:200]}"
     )
 
@@ -996,9 +1004,9 @@ def test_frozenset_docstrings_are_custom(
 @pytest.mark.parametrize(
     "symbol_name,expected_text_fragment",
     [
-        ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are architectures"),
-        ("ALL_PLATFORM_GROUPS", "All groups whose members are platforms"),
-        ("ALL_CI_GROUPS", "All groups whose members are CI systems"),
+        ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are Architecture"),
+        ("ALL_PLATFORM_GROUPS", "All groups whose members are Platform"),
+        ("ALL_CI_GROUPS", "All groups whose members are CI"),
         ("NON_OVERLAPPING_GROUPS", "Non-overlapping groups"),
         ("EXTRA_GROUPS", "Overlapping groups, defined for convenience"),
         ("ALL_GROUPS", "All predefined groups"),
@@ -1033,4 +1041,52 @@ def test_frozenset_docstrings_consistent_across_pages(
     assert expected_text_fragment in docstring, (
         f"{symbol_name} in groups.html missing expected text: "
         f"'{expected_text_fragment}'. Got: {docstring[:200]}"
+    )
+
+
+#: Specialized documentation pages that should never leak links to the generic
+#: auto-generated ``extra_platforms.html`` page.
+SPECIALIZED_PAGES = (
+    "architectures.html",
+    "ci.html",
+    "detection.html",
+    "groups.html",
+    "platforms.html",
+    "pytest.html",
+    "sphinx.html",
+    "trait.html",
+)
+
+
+@pytest.mark.parametrize("page", SPECIALIZED_PAGES)
+def test_no_links_to_generic_api_page(built_docs, page):
+    """Test that specialized doc pages never link to the generic extra_platforms.html.
+
+    All cross-references from hand-written documentation pages should resolve to
+    other specialized pages (e.g. ``architectures.html``, ``groups.html``,
+    ``detection.html``), never to the catch-all ``extra_platforms.html`` produced
+    by ``automodule``.
+    """
+    html = read_html(built_docs, page)
+
+    # Find all internal links pointing to extra_platforms.html.
+    pattern = r'href="(extra_platforms\.html#[^"]*)"'
+    leaks = [
+        href
+        for href in re.findall(pattern, html)
+        # Submodule references (e.g. :mod:`detection`) can only resolve to
+        # extra_platforms.html because that is where automodule registers them.
+        if "#module-" not in href
+    ]
+
+    assert not leaks, (
+        f"{page} contains {len(leaks)} link(s) leaking to the generic "
+        f"extra_platforms.html page:\n"
+        + "\n".join(
+            f"  - {href} ({count}x)"
+            for href, count in sorted(
+                {href: leaks.count(href) for href in set(leaks)}.items(),
+                key=lambda item: -item[1],
+            )
+        )
     )

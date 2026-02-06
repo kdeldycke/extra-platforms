@@ -18,25 +18,19 @@ extra\_platforms.architecture\_data module
 ------------------------------------------
 
 .. automodule:: extra_platforms.architecture_data
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   :noindex:
 
 extra\_platforms.ci\_data module
 --------------------------------
 
 .. automodule:: extra_platforms.ci_data
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   :noindex:
 
 extra\_platforms.detection module
 ---------------------------------
 
 .. automodule:: extra_platforms.detection
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   :noindex:
 
 extra\_platforms.group module
 -----------------------------
@@ -44,10 +38,8 @@ extra\_platforms.group module
 .. group-automodule-start
 
 .. automodule:: extra_platforms.group
-   :members:
-   :show-inheritance:
-   :undoc-members:
-   :exclude-members: groups_from_ids, reduce, traits_from_ids
+   :noindex:
+   :exclude-members: Group, extract_members, groups_from_ids, reduce, traits_from_ids
 
 .. group-automodule-end
 
@@ -55,25 +47,19 @@ extra\_platforms.group\_data module
 -----------------------------------
 
 .. automodule:: extra_platforms.group_data
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   :noindex:
 
 extra\_platforms.platform\_data module
 --------------------------------------
 
 .. automodule:: extra_platforms.platform_data
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   :noindex:
 
 extra\_platforms.pytest module
 ------------------------------
 
 .. automodule:: extra_platforms.pytest
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   :noindex:
 
 extra\_platforms.trait module
 -----------------------------
@@ -81,9 +67,7 @@ extra\_platforms.trait module
 .. trait-automodule-start
 
 .. automodule:: extra_platforms.trait
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   :noindex:
    :exclude-members: Architecture, CI, Platform, Trait
 
 .. trait-automodule-end

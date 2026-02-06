@@ -1,5 +1,10 @@
 # {octicon}`pulse` Detection
 
+```{py:module} extra_platforms.detection
+:no-typesetting:
+:no-contents-entry:
+```
+
 ```{py:currentmodule} extra_platforms
 ```
 

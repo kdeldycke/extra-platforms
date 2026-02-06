@@ -1,5 +1,10 @@
 # {octicon}`meter` Pytest
 
+```{py:module} extra_platforms.pytest
+:no-typesetting:
+:no-contents-entry:
+```
+
 ```{py:currentmodule} extra_platforms
 ```
 

@@ -570,13 +570,17 @@ def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
 def generate_group_automodule() -> str:
     """Generate the extra_platforms.group automodule directive with excluded members.
 
-    This excludes utility functions that are documented in groups.md.
+    This excludes the Group class and utility functions that are documented in
+    groups.md, so that the canonical documentation target for these symbols lives
+    in ``groups.html`` rather than the generic ``extra_platforms.html``.
 
     Returns:
         An rST automodule directive with exclude-members.
     """
-    # Exclude utility functions documented in groups.md.
+    # Exclude Group class and utility functions documented in groups.md.
     exclude_list = [
+        "Group",
+        "extract_members",
         "groups_from_ids",
         "reduce",
         "traits_from_ids",
@@ -586,9 +590,7 @@ def generate_group_automodule() -> str:
 
     return dedent(f"""\
         .. automodule:: extra_platforms.group
-           :members:
-           :show-inheritance:
-           :undoc-members:
+           :noindex:
            :exclude-members: {exclude_members}""")
 
 
@@ -612,9 +614,7 @@ def generate_trait_automodule() -> str:
 
     return dedent(f"""\
         .. automodule:: extra_platforms.trait
-           :members:
-           :show-inheritance:
-           :undoc-members:
+           :noindex:
            :exclude-members: {exclude_members}""")
 
 

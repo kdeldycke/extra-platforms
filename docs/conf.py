@@ -89,6 +89,8 @@ suppress_warnings = [
 autoclass_content = "both"
 # Keep the same ordering as in original source code.
 autodoc_member_order = "bysource"
+always_use_bars_union = True
+
 autodoc_default_options = {
     "members": True,
     "undoc-members": True,
