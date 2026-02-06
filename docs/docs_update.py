@@ -721,6 +721,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
 
     # Also exclude group utility functions documented in groups.md.
     exclude_list.extend([
+        "extract_members",
         "groups_from_ids",
         "reduce",
         "traits_from_ids",

@@ -1090,3 +1090,51 @@ def test_no_links_to_generic_api_page(built_docs, page):
             )
         )
     )
+
+
+def test_generic_api_page_no_stolen_targets(built_docs):
+    """Test that extra_platforms.html does not steal targets from specialized pages.
+
+    The ``extra_platforms.rst`` file uses ``:noindex:`` on all submodule
+    ``automodule`` directives and ``:exclude-members:`` to avoid registering
+    anchors that belong to specialized pages. This test verifies that no anchors
+    in ``extra_platforms.html`` correspond to symbols documented in specialized
+    pages.
+    """
+    html = read_html(built_docs, "extra_platforms.html")
+
+    # Extract all id attributes that look like extra_platforms symbols.
+    all_anchors = re.findall(r'id="(extra_platforms\.[^"]+)"', html)
+
+    stolen = []
+    for anchor in all_anchors:
+        # Skip module anchors (e.g. module-extra_platforms.detection).
+        if anchor.startswith("module-"):
+            continue
+
+        # Determine the symbol and role from the anchor.
+        symbol = anchor.removeprefix("extra_platforms.")
+
+        # Skip submodule-qualified anchors (e.g. extra_platforms.group_data.X).
+        # These are registered by :noindex: automodule directives and are
+        # harmless because they don't conflict with the short-form anchors
+        # in specialized pages.
+        if "." in symbol:
+            continue
+
+        # Use existing logic to determine where this symbol should live.
+        # Try common roles in priority order.
+        for role in ("data", "func", "class", "deco"):
+            expected_page = get_expected_page_for_symbol(role, symbol)
+            if expected_page != "extra_platforms.html":
+                stolen.append((anchor, expected_page, role))
+                break
+
+    assert not stolen, (
+        f"extra_platforms.html contains {len(stolen)} stolen target(s) that "
+        f"belong to specialized pages:\n"
+        + "\n".join(
+            f"  - {anchor} → should be in {page} (role: {role})"
+            for anchor, page, role in sorted(stolen)
+        )
+    )
