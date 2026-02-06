@@ -5,8 +5,118 @@
 
 ## Group usage
 
-```{todo}
-Explain high-level usage of groups here. Including membership testing and set operations. And how to create custom groups (from scratch or by combining existing groups).
+A {class}`~Group` is a collection of {class}`~Trait` instances (platforms, architectures, or CI systems). Groups support membership testing, iteration, and set-like operations.
+
+### Membership testing
+
+Check whether the current environment matches any member of a group:
+
+```pycon
+>>> from extra_platforms import is_linux
+>>> is_linux()
+True
+```
+
+Test if a specific trait belongs to a group. You can you both {class}`~Trait` instances and their string IDs:
+
+```pycon
+>>> from extra_platforms import LINUX, UBUNTU, MACOS
+>>> UBUNTU in LINUX
+True
+>>> MACOS in LINUX
+False
+>>> "ubuntu" in LINUX
+True
+```
+
+### Iteration
+
+Groups are iterable and sized:
+
+```pycon
+>>> from extra_platforms import BSD
+>>> len(BSD)
+7
+>>> for platform in BSD:
+...     print(platform.id)
+dragonfly_bsd
+freebsd
+macos
+midnightbsd
+netbsd
+openbsd
+sunos
+```
+
+### Set operations
+
+Groups support standard set operations, returning new {class}`~Group` instances:
+
+```pycon
+>>> from extra_platforms import BSD, BSD_WITHOUT_MACOS, LINUX, MACOS
+>>> only_macos = BSD.difference(BSD_WITHOUT_MACOS)
+>>> only_macos.member_ids
+frozenset({'macos'})
+>>> combined = BSD.union(LINUX)
+>>> MACOS in combined
+True
+```
+
+Set operations also have operator overloads for more concise syntax:
+
+```pycon
+>>> from extra_platforms import BSD, BSD_WITHOUT_MACOS, LINUX, MACOS
+>>> only_macos = BSD - BSD_WITHOUT_MACOS
+>>> only_macos.member_ids
+frozenset({'macos'})
+>>> combined = BSD | LINUX
+>>> MACOS in combined
+True
+```
+
+Available operations: {meth}`~Group.union` (`|`), {meth}`~Group.intersection` (`&`), {meth}`~Group.difference` (`-`), {meth}`~Group.symmetric_difference` (`^`), {meth}`~Group.issubset`, {meth}`~Group.issuperset`, and {meth}`~Group.isdisjoint`.
+
+### Mutating-style operations
+
+Groups are immutable (frozen dataclasses), but provide methods that return new instances:
+
+```pycon
+>>> from extra_platforms import BSD, AIX
+>>> extended = BSD.add(AIX)
+>>> AIX in extended
+True
+>>> AIX in BSD
+False
+>>> shrunk = BSD.remove("macos")
+>>> "macos" in shrunk
+False
+```
+
+See also: {meth}`~Group.discard`, {meth}`~Group.pop`, {meth}`~Group.clear`, and {meth}`~Group.copy`.
+
+### Creating custom groups
+
+Build new groups from scratch or by combining existing ones:
+
+```pycon
+>>> from extra_platforms import Group, UBUNTU, DEBIAN, MACOS
+>>> my_targets = Group("my_targets", "My Targets", "🎯", (UBUNTU, DEBIAN, MACOS))
+>>> len(my_targets)
+3
+```
+
+```{hint}
+You can check my other Meta Package Manager project for a real life example, where I use {class}`~Group` to [manage families of target platforms](https://github.com/kdeldycke/meta-package-manager/blob/2c68ae19b4d3e5fee57c880168ca6c268f834275/meta_package_manager/inventory.py#L42-L62) for software packaging.
+```
+
+### Reducing traits to groups
+
+The {func}`~reduce` function finds the minimal set of groups and traits that covers a given collection:
+
+```pycon
+>>> from extra_platforms import reduce, FREEBSD, NETBSD, OPENBSD, MACOS
+>>> reduce([FREEBSD, NETBSD, OPENBSD, MACOS])
+frozenset({BSD})
 ```
 
 ## All groups
