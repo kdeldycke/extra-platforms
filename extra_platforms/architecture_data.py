@@ -32,8 +32,6 @@
     - https://github.com/pypa/manylinux
 """
 
-from __future__ import annotations
-
 from .trait import Architecture
 
 AARCH64 = Architecture(

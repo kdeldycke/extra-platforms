@@ -36,19 +36,12 @@ Inspired by `how tomllib does it in the stdlib
     <https://github.com/python/mypy/blob/6aa44da/mypy/reachability.py#L152>`_.
 """
 
-from __future__ import annotations
-
 from collections.abc import Iterable
-from typing import TypeVar
 
 from .group import Group
 from .trait import Trait
 
-_T = TypeVar("_T")
-"""Generic type variable."""
-
-
-_TRef = Trait | Group | str | None
+type _TRef = Trait | Group | str | None
 """All types that can be used to reference a trait or a group:
 
 - a :class:`~extra_platforms.Trait` object itself
@@ -57,5 +50,5 @@ _TRef = Trait | Group | str | None
 - ``None`` to represent an empty set of traits
 """
 
-_TNestedReferences = _TRef | Iterable[_TRef | Iterable["_TNestedReferences"]]
+type _TNestedReferences = _TRef | Iterable[_TRef | Iterable[_TNestedReferences]]
 """Type for arbitrary nested references to traits and groups."""

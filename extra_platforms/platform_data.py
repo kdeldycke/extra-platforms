@@ -24,8 +24,6 @@
     NerdFonts <https://www.nerdfonts.com/cheat-sheet>`_.
 """
 
-from __future__ import annotations
-
 from .trait import Platform
 
 AIX = Platform("aix", "IBM AIX", "➿", "https://ibm.com/products/aix/")

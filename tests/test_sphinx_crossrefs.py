@@ -20,8 +20,6 @@ resolve to actual links with correct href attributes. Unlike mock-based tests,
 these catch real regressions in the actual documentation.
 """
 
-from __future__ import annotations
-
 import inspect
 import re
 import subprocess

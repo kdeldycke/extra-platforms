@@ -15,8 +15,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Internal utility functions."""
 
-from __future__ import annotations
-
 from typing import Any
 
 

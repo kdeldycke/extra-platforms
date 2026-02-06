@@ -15,8 +15,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """Test all CI definitions, detection and CI-specific groups."""
 
-from __future__ import annotations
-
 import ast
 import functools
 import inspect
