@@ -37,9 +37,8 @@ jobs:
           - windows-2025     # x86
           - windows-2022     # x86
         python-version:
-          - "3.11"
+          - "3.12"
           # Ignore intermediate versions to reduce CI load.
-          # - "3.12"
           # - "3.13"
           - "3.14"
           - "3.14t"
