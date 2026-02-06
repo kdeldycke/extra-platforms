@@ -27,7 +27,6 @@ import extra_platforms
 from extra_platforms import (
     ALL_GROUPS,
     ALL_TRAITS,
-    UNKNOWN,
     Group,
     Trait,
     invalidate_caches,

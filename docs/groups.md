@@ -39,6 +39,7 @@ Groups are iterable and sized:
 7
 >>> for platform in BSD:
 ...     print(platform.id)
+...
 dragonfly_bsd
 freebsd
 macos

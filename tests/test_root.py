@@ -72,7 +72,6 @@ from extra_platforms.detection import _unrecognized_message
 from .test_ci_data import github_runner_os
 
 
-
 PROJECT_ROOT = Path(__file__).parent.parent
 """The root path of the project."""
 
@@ -266,11 +265,17 @@ def test_current_funcs():
     ],
 )
 def test_current_strict_mode(
-    current_func, all_collection, unknown_constant, trait_type, error_message, monkeypatch
+    current_func,
+    all_collection,
+    unknown_constant,
+    trait_type,
+    error_message,
+    monkeypatch,
 ):
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
-    # Skip this check for CI since it may legitimately be UNKNOWN_CI in some environments.
+    # Skip this check for CI since it may legitimately be UNKNOWN_CI in some
+    # environments.
     if trait_type != "CI":
         invalidate_caches()
         result = current_func()

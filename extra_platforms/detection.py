@@ -812,7 +812,9 @@ def current_architecture(strict: bool = False) -> Architecture:
 
     # Collect all matching architectures.
     matching: set[Architecture] = {
-        arch for arch in ALL_ARCHITECTURES if arch.current  # type: ignore[misc]
+        arch
+        for arch in ALL_ARCHITECTURES
+        if arch.current  # type: ignore[misc]
     }
 
     # Return the only matching architecture.
@@ -850,7 +852,9 @@ def current_platform(strict: bool = False) -> Platform:
 
     # Collect all matching platforms.
     matching: set[Platform] = {
-        plat for plat in ALL_PLATFORMS if plat.current  # type: ignore[misc]
+        plat
+        for plat in ALL_PLATFORMS
+        if plat.current  # type: ignore[misc]
     }
 
     # Return the only matching platform.
