@@ -411,8 +411,8 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
 
     for obj in sorted(objects, key=attrgetter("id")):
         table_data.append([
-            f"{{func}}`~pytest.{obj.skip_decorator_id}`",
-            f"{{func}}`~pytest.{obj.unless_decorator_id}`",
+            f"{{deco}}`~pytest.{obj.skip_decorator_id}`",
+            f"{{deco}}`~pytest.{obj.unless_decorator_id}`",
             obj.icon,
             f"{{data}}`~{obj.symbol_id}`",
         ])

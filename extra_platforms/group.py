@@ -187,8 +187,8 @@ class Group(_Identifiable):
         )
         lines.append(f"- **Detection function**: :func:`~{self.detection_func_id}`")
         lines.append(
-            f"- **Pytest decorators**: :data:`~pytest.{self.skip_decorator_id}` / "
-            f":data:`~pytest.{self.unless_decorator_id}`"
+            f"- **Pytest decorators**: :deco:`~pytest.{self.skip_decorator_id}` / "
+            f":deco:`~pytest.{self.unless_decorator_id}`"
         )
 
         # Add list of members with links to their definitions.
