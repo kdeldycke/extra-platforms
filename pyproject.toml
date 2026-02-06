@@ -229,6 +229,8 @@ docs = [
   "click-extra[sphinx]>=7.5",
   "furo>=2025.9.25",
   "myst-parser>=5",
+  # Required so autodoc can import extra_platforms.pytest and document decorators.
+  "pytest>=8.2.1",
   # We hard code links with a format that Sphinx only supports from 9.1 onwards.
   "sphinx>=9.1",
   "sphinx-autodoc-typehints>=2.4",

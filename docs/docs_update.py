@@ -568,54 +568,35 @@ def generate_pytest_automodule(objects: Iterable[Trait | Group]) -> str:
 
 
 def generate_group_automodule() -> str:
-    """Generate the extra_platforms.group automodule directive with excluded members.
+    """Generate the extra_platforms.group automodule directive without members.
 
-    This excludes the Group class and utility functions that are documented in
-    groups.md, so that the canonical documentation target for these symbols lives
-    in ``groups.html`` rather than the generic ``extra_platforms.html``.
+    All public members (Group class and utility functions) are documented in
+    ``groups.md``, so the submodule section on ``extra_platforms.html`` only
+    shows the module docstring.
 
     Returns:
-        An rST automodule directive with exclude-members.
+        An rST automodule directive with no-members.
     """
-    # Exclude Group class and utility functions documented in groups.md.
-    exclude_list = [
-        "Group",
-        "extract_members",
-        "groups_from_ids",
-        "reduce",
-        "traits_from_ids",
-    ]
-
-    exclude_members = ", ".join(sorted(exclude_list))
-
-    return dedent(f"""\
+    return dedent("""\
         .. automodule:: extra_platforms.group
            :noindex:
-           :exclude-members: {exclude_members}""")
+           :no-members:""")
 
 
 def generate_trait_automodule() -> str:
-    """Generate the extra_platforms.trait automodule directive with excluded members.
+    """Generate the extra_platforms.trait automodule directive without members.
 
-    This excludes core classes that are documented in trait.md.
+    All public members (core classes) are documented in ``trait.md``, so the
+    submodule section on ``extra_platforms.html`` only shows the module
+    docstring.
 
     Returns:
-        An rST automodule directive with exclude-members.
+        An rST automodule directive with no-members.
     """
-    # Exclude core classes documented in trait.md.
-    exclude_list = [
-        "Architecture",
-        "CI",
-        "Platform",
-        "Trait",
-    ]
-
-    exclude_members = ", ".join(sorted(exclude_list))
-
-    return dedent(f"""\
+    return dedent("""\
         .. automodule:: extra_platforms.trait
            :noindex:
-           :exclude-members: {exclude_members}""")
+           :no-members:""")
 
 
 def generate_group_module_automodule() -> str:

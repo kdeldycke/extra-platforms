@@ -535,6 +535,10 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
         # Default to trait.html for other trait-related classes
         return "trait.html"
 
+    # Group methods go to groups.html.
+    if role == "meth" and symbol.startswith("Group."):
+        return "groups.html"
+
     # Pytest decorators go to pytest.html
     if (
         "pytest" in symbol
@@ -784,6 +788,10 @@ def test_all_crossreferences_point_to_correct_pages(
             expected_anchor = symbol
         else:
             expected_anchor = f"extra_platforms.{symbol}"
+    elif role == "meth" and "." in symbol:
+        # Method references like Group.union have anchors like
+        # extra_platforms.Group.union.
+        expected_anchor = f"extra_platforms.{symbol}"
     else:
         expected_anchor = f"extra_platforms.{symbol_clean}"
 
@@ -948,15 +956,15 @@ def test_no_links_to_generic_api_page(built_docs, page):
 def test_generic_api_page_no_stolen_targets(built_docs):
     """Enforce the policy that extra_platforms.html does not steal targets from specialized pages.
 
-    The ``extra_platforms.rst`` file uses ``:noindex:`` on all submodule
-    ``automodule`` directives and ``:exclude-members:`` to avoid registering
-    anchors that belong to specialized pages. This test verifies that no anchors
-    in ``extra_platforms.html`` correspond to symbols documented in specialized
-    pages.
+    The ``extra_platforms.rst`` file uses ``:noindex:`` and ``:no-members:``
+    on all submodule ``automodule`` directives to prevent members documented
+    in specialized pages from appearing on the generic page. This test checks
+    both anchors (``id=``) and rendered member signatures (``sig-name``) to
+    catch leaks even when ``:noindex:`` suppresses the anchor.
     """
     html = read_html(built_docs, "extra_platforms.html")
 
-    # Extract all id attributes that look like extra_platforms symbols.
+    # Check 1: No anchored symbols that belong to specialized pages.
     all_anchors = re.findall(r'id="(extra_platforms\.[^"]+)"', html)
 
     stolen = []
@@ -968,17 +976,14 @@ def test_generic_api_page_no_stolen_targets(built_docs):
         # Determine the symbol and role from the anchor.
         symbol = anchor.removeprefix("extra_platforms.")
 
-        # Skip submodule-qualified anchors (e.g. extra_platforms.group_data.X).
-        # These are registered by :noindex: automodule directives and are
-        # harmless because they don't conflict with the short-form anchors
-        # in specialized pages.
-        if "." in symbol:
-            continue
+        # For submodule-qualified anchors (e.g. extra_platforms.group_data.X),
+        # use the leaf name for the page lookup.
+        symbol_clean = symbol.split(".")[-1]
 
         # Use existing logic to determine where this symbol should live.
         # Try common roles in priority order.
         for role in ("data", "func", "class", "deco"):
-            expected_page = get_expected_page_for_symbol(role, symbol)
+            expected_page = get_expected_page_for_symbol(role, symbol_clean)
             if expected_page != "extra_platforms.html":
                 stolen.append((anchor, expected_page, role))
                 break
@@ -989,5 +994,28 @@ def test_generic_api_page_no_stolen_targets(built_docs):
         + "\n".join(
             f"  - {anchor} → should be in {page} (role: {role})"
             for anchor, page, role in sorted(stolen)
+        )
+    )
+
+    # Check 2: No rendered member signatures from submodule automodules.
+    # With :noindex:, Sphinx omits the id= attribute but still renders
+    # visible content. Detect leaked members by their sig-name spans.
+    sig_pattern = (
+        r'<span class="sig-prename descclassname">'
+        r'<span class="pre">extra_platforms\.(\w+)\.</span></span>'
+        r'<span class="sig-name descname">'
+        r'<span class="pre">(\w+)</span></span>'
+    )
+    leaked = []
+    for submodule, name in re.findall(sig_pattern, html):
+        expected_page = get_expected_page_for_symbol("data", name)
+        if expected_page != "extra_platforms.html":
+            leaked.append((f"extra_platforms.{submodule}.{name}", expected_page))
+
+    assert not leaked, (
+        f"extra_platforms.html renders {len(leaked)} member(s) from submodule "
+        f"automodules that belong to specialized pages:\n"
+        + "\n".join(
+            f"  - {symbol} → should be in {page}" for symbol, page in sorted(leaked)
         )
     )

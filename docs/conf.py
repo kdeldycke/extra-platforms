@@ -83,6 +83,19 @@ suppress_warnings = [
     # reStructuredText parsing warnings. These are typically in test files and don't
     # affect the main documentation.
     "docutils",
+    # Example: "local id not found in doc 'groups': 'extra_platforms.Group.canonical'"
+    # Explanation: MyST validates cross-reference anchors before autodoc has generated
+    # them. These are false positives — the anchors exist in the final output.
+    "myst.xref_missing",
+    # Example: "Domain 'click_extra.sphinx.click::click' has not implemented a
+    # `resolve_any_xref` method"
+    # Explanation: Upstream limitation in the click-extra Sphinx extension.
+    "myst.domains",
+]
+
+nitpick_ignore = [
+    # Private base class, excluded from public documentation.
+    ("py:class", "extra_platforms.trait._Identifiable"),
 ]
 
 # Concatenates the docstrings of the class and the __init__ method.

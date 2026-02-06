@@ -19,18 +19,21 @@ extra\_platforms.architecture\_data module
 
 .. automodule:: extra_platforms.architecture_data
    :noindex:
+   :no-members:
 
 extra\_platforms.ci\_data module
 --------------------------------
 
 .. automodule:: extra_platforms.ci_data
    :noindex:
+   :no-members:
 
 extra\_platforms.detection module
 ---------------------------------
 
 .. automodule:: extra_platforms.detection
    :noindex:
+   :no-members:
 
 extra\_platforms.group module
 -----------------------------
@@ -39,7 +42,7 @@ extra\_platforms.group module
 
 .. automodule:: extra_platforms.group
    :noindex:
-   :exclude-members: Group, extract_members, groups_from_ids, reduce, traits_from_ids
+   :no-members:
 
 .. group-automodule-end
 
@@ -48,18 +51,21 @@ extra\_platforms.group\_data module
 
 .. automodule:: extra_platforms.group_data
    :noindex:
+   :no-members:
 
 extra\_platforms.platform\_data module
 --------------------------------------
 
 .. automodule:: extra_platforms.platform_data
    :noindex:
+   :no-members:
 
 extra\_platforms.pytest module
 ------------------------------
 
 .. automodule:: extra_platforms.pytest
    :noindex:
+   :no-members:
 
 extra\_platforms.trait module
 -----------------------------
@@ -68,6 +74,6 @@ extra\_platforms.trait module
 
 .. automodule:: extra_platforms.trait
    :noindex:
-   :exclude-members: Architecture, CI, Platform, Trait
+   :no-members:
 
 .. trait-automodule-end

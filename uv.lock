@@ -6,7 +6,7 @@ requires-python = ">=3.12"
 exclude-newer = "2026-01-26T00:00:00Z"
 
 [options.exclude-newer-package]
-click-extra = { timestamp = "2026-02-06T14:04:48.708458Z", span = "PT0S" }
+click-extra = { timestamp = "2026-02-06T15:18:22.220081Z", span = "PT0S" }
 
 [[package]]
 name = "accessible-pygments"
@@ -323,6 +323,7 @@ docs = [
     { name = "click-extra", extra = ["sphinx"] },
     { name = "furo" },
     { name = "myst-parser" },
+    { name = "pytest" },
     { name = "sphinx" },
     { name = "sphinx-autodoc-typehints" },
     { name = "sphinx-copybutton" },
@@ -357,6 +358,7 @@ docs = [
     { name = "click-extra", extras = ["sphinx"], specifier = ">=7.5" },
     { name = "furo", specifier = ">=2025.9.25" },
     { name = "myst-parser", specifier = ">=5" },
+    { name = "pytest", specifier = ">=8.2.1" },
     { name = "sphinx", specifier = ">=9.1" },
     { name = "sphinx-autodoc-typehints", specifier = ">=2.4" },
     { name = "sphinx-copybutton", specifier = ">=0.5.2" },

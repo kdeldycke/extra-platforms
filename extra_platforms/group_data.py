@@ -155,7 +155,7 @@ ALL_ARCHITECTURES: Group = Group(
 """All recognized architectures.
 
 .. caution::
-    This group does not contain the :data:`UNKNOWN_ARCHITECTURE` trait.
+    This group does not contain the :data:`~extra_platforms.UNKNOWN_ARCHITECTURE` trait.
 """
 
 
@@ -394,7 +394,7 @@ ALL_PLATFORMS: Group = Group(
 """All recognized platforms.
 
 .. caution::
-    This group does not contain the :data:`UNKNOWN_PLATFORM` trait.
+    This group does not contain the :data:`~extra_platforms.UNKNOWN_PLATFORM` trait.
 """
 
 
@@ -645,7 +645,7 @@ ALL_CI = Group(
 """All recognized Continuous Integration systems.
 
 .. caution::
-    This group does not contain the :data:`UNKNOWN_CI` trait.
+    This group does not contain the :data:`~extra_platforms.UNKNOWN_CI` trait.
 
 .. seealso::
     `List of known CI systems
