@@ -6,7 +6,7 @@ requires-python = ">=3.12"
 exclude-newer = "2026-01-26T00:00:00Z"
 
 [options.exclude-newer-package]
-click-extra = { timestamp = "2026-02-06T15:18:22.220081Z", span = "PT0S" }
+click-extra = { timestamp = "2026-02-06T15:33:09.901107012Z", span = "PT0S" }
 
 [[package]]
 name = "accessible-pygments"
@@ -307,7 +307,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "9.0.0"
+version = "9.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "distro" },
