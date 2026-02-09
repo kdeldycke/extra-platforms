@@ -105,7 +105,7 @@ keywords = [
 license-files = [ "license" ]
 authors = [ { name = "Kevin Deldycke", email = "kevin@deldycke.com" } ]
 # Python versions and their status: https://devguide.python.org/versions/
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 # See: https://pypi.org/pypi?%3Aaction=list_classifiers
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -163,6 +163,8 @@ classifiers = [
   "Operating System :: RISC OS",
   "Operating System :: Unix",
   "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
@@ -223,6 +225,7 @@ test = [
   "pytest-xdist[psutil]>=3.7",
   # requests 2.32.5 is the first version to drop support for Python 3.8.
   "requests>=2.32.5",
+  "tomli>=2.3; python_version<'3.11'",
 ]
 docs = [
   # We need Click Extra 7.5 to render Markdown table properly.
@@ -245,6 +248,9 @@ docs = [
 typing = [
   "types-requests>=2.32.4.20250611",
 ]
+
+[tool.uv.dependency-groups]
+docs = { requires-python = ">= 3.12" }
 
 [tool.uv]
 # Cooldown period.

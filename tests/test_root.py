@@ -14,11 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+from __future__ import annotations
+
 import ast
 import inspect
 import sys
 from pathlib import Path
-import tomllib
 
 import pytest
 import requests
@@ -71,6 +72,10 @@ from extra_platforms.detection import _unrecognized_message
 
 from .test_ci_data import github_runner_os
 
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib  # type: ignore[import-not-found]
 
 
 PROJECT_ROOT = Path(__file__).parent.parent

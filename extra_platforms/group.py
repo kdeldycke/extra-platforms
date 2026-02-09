@@ -30,7 +30,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-    from ._types import _TNestedReferences
+    from ._types import _T, _TNestedReferences
 
 
 _MembersMapping = MappingProxyType[str, Trait]
@@ -533,7 +533,7 @@ class Group(_Identifiable):
 # =============================================================================
 
 
-def _unique[_T](items: Iterable[_T]) -> tuple[_T, ...]:
+def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
     """Return a :class:`tuple` with duplicates removed, preserving order.
 
     This uses :meth:`dict.fromkeys` which:

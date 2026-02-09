@@ -19,6 +19,8 @@ This module contains all predefined :class:`~extra_platforms.Group` instances an
 frozenset collections that organize traits into logical categories.
 """
 
+from __future__ import annotations
+
 from .architecture_data import (
     AARCH64,
     ARM,
