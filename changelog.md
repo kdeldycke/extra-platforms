@@ -1,5 +1,10 @@
 # Changelog
 
+## [9.0.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v9.0.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [9.0.0 (2026-02-11)](https://github.com/kdeldycke/extra-platforms/compare/v8.0.0...v9.0.0)
 
 - Add new `Shell` trait type for detecting command-line interpreters.

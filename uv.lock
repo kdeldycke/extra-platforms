@@ -10,7 +10,7 @@ resolution-markers = [
 exclude-newer = "2026-02-02T00:00:00Z"
 
 [options.exclude-newer-package]
-click-extra = { timestamp = "2026-02-09T17:27:01.663763911Z", span = "PT0S" }
+click-extra = { timestamp = "2026-02-11T20:34:55.318120329Z", span = "PT0S" }
 
 [[package]]
 name = "accessible-pygments"
@@ -385,7 +385,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "9.0.0"
+version = "9.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "distro" },
