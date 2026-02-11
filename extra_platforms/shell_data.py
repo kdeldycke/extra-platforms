@@ -78,14 +78,14 @@ NUSHELL = Shell(
 POWERSHELL = Shell(
     "powershell",
     "PowerShell",
-    "⚡",
+    "🔷",
     "https://learn.microsoft.com/en-us/powershell/",
 )
 
 TCSH = Shell(
     "tcsh",
     "tcsh",
-    "🌊",
+    "©",
     "https://www.tcsh.org",
 )
 
@@ -99,7 +99,7 @@ UNKNOWN_SHELL = Shell(
 XONSH = Shell(
     "xonsh",
     "Xonsh",
-    "🐚",
+    "🐍",
     "https://xon.sh",
 )
 

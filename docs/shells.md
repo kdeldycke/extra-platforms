@@ -57,9 +57,9 @@ Shell(id='unknown_shell', name='Unknown shell')
 |  🐟  | {data}`~FISH`       | Fish           | {func}`~is_fish`       |
 |  𝐊   | {data}`~KSH`        | Korn shell     | {func}`~is_ksh`        |
 |  𝜈   | {data}`~NUSHELL`    | Nushell        | {func}`~is_nushell`    |
-|  ⚡  | {data}`~POWERSHELL` | PowerShell     | {func}`~is_powershell` |
-|  🌊  | {data}`~TCSH`       | tcsh           | {func}`~is_tcsh`       |
-|  🐚  | {data}`~XONSH`      | Xonsh          | {func}`~is_xonsh`      |
+|  🔷  | {data}`~POWERSHELL` | PowerShell     | {func}`~is_powershell` |
+|  ©   | {data}`~TCSH`       | tcsh           | {func}`~is_tcsh`       |
+|  🐍  | {data}`~XONSH`      | Xonsh          | {func}`~is_xonsh`      |
 |  ℤ   | {data}`~ZSH`        | Zsh            | {func}`~is_zsh`        |
 
 ```{hint}
@@ -78,10 +78,10 @@ shell is not recognized.
 | Icon | Symbol                  | Description              | [Detection](detection.md)  | [Canonical](groups.md#extra_platforms.Group.canonical) |
 | :--: | :---------------------- | :----------------------- | :------------------------- | :----------------------------------------------------: |
 |  🐚  | {data}`~ALL_SHELLS`     | All shells               | {func}`~is_any_shell`      |                                                        |
-| 🐚+  | {data}`~BOURNE_SHELLS`  | Bourne-compatible shells | {func}`~is_bourne_shells`  |                           ⬥                            |
+|  💲  | {data}`~BOURNE_SHELLS`  | Bourne-compatible shells | {func}`~is_bourne_shells`  |                           ⬥                            |
 |  🅲   | {data}`~C_SHELLS`       | C shells                 | {func}`~is_c_shells`       |                           ⬥                            |
-|  🔮  | {data}`~OTHER_SHELLS`   | Other shells             | {func}`~is_other_shells`   |                           ⬥                            |
-| 🪟+  | {data}`~WINDOWS_SHELLS` | Windows shells           | {func}`~is_windows_shells` |                           ⬥                            |
+|  ◇   | {data}`~OTHER_SHELLS`   | Other shells             | {func}`~is_other_shells`   |                           ⬥                            |
+|  ⌨️  | {data}`~WINDOWS_SHELLS` | Windows shells           | {func}`~is_windows_shells` |                           ⬥                            |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all
@@ -129,17 +129,17 @@ config: {"mindmap": {"padding": 5}}
 ---
 mindmap
     ((🐚 ALL_SHELLS))
-        )🪟+ WINDOWS_SHELLS(
+        )⌨️ WINDOWS_SHELLS(
             (▶ CMD)
-            (⚡ POWERSHELL)
-        )🔮 OTHER_SHELLS(
+            (🔷 POWERSHELL)
+        )◇ OTHER_SHELLS(
             (🐟 FISH)
             (𝜈 NUSHELL)
-            (🐚 XONSH)
+            (🐍 XONSH)
         )🅲 C_SHELLS(
             (© CSH)
-            (🌊 TCSH)
-        )🐚+ BOURNE_SHELLS(
+            (© TCSH)
+        )💲 BOURNE_SHELLS(
             (🪶 ASH)
             (＃ BASH)
             (💨 DASH)

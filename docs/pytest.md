@@ -90,7 +90,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_all_sparc`            | {deco}`~pytest.unless_any_sparc`            |  ☀️  | {data}`~ALL_SPARC`            |
 | {deco}`~pytest.skip_all_traits`           | {deco}`~pytest.unless_any_trait`            |  ⁕   | {data}`~ALL_TRAITS`           |
 | {deco}`~pytest.skip_all_windows`          | {deco}`~pytest.unless_any_windows`          |  🪟  | {data}`~ALL_WINDOWS`          |
-| {deco}`~pytest.skip_altlinux`             | {deco}`~pytest.unless_altlinux`             |  🐧  | {data}`~ALTLINUX`             |
+| {deco}`~pytest.skip_altlinux`             | {deco}`~pytest.unless_altlinux`             |  Δ   | {data}`~ALTLINUX`             |
 | {deco}`~pytest.skip_amzn`                 | {deco}`~pytest.unless_amzn`                 |  ⤻   | {data}`~AMZN`                 |
 | {deco}`~pytest.skip_android`              | {deco}`~pytest.unless_android`              |  🤖  | {data}`~ANDROID`              |
 | {deco}`~pytest.skip_arch`                 | {deco}`~pytest.unless_arch`                 |  🎗️  | {data}`~ARCH`                 |
@@ -106,8 +106,8 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_bamboo`               | {deco}`~pytest.unless_bamboo`               |  ⟲   | {data}`~BAMBOO`               |
 | {deco}`~pytest.skip_bash`                 | {deco}`~pytest.unless_bash`                 |  ＃  | {data}`~BASH`                 |
 | {deco}`~pytest.skip_big_endian`           | {deco}`~pytest.unless_big_endian`           |  ⬆️  | {data}`~BIG_ENDIAN`           |
-| {deco}`~pytest.skip_bourne_shells`        | {deco}`~pytest.unless_bourne_shells`        | 🐚+  | {data}`~BOURNE_SHELLS`        |
-| {deco}`~pytest.skip_bsd`                  | {deco}`~pytest.unless_bsd`                  | 🅱️+  | {data}`~BSD`                  |
+| {deco}`~pytest.skip_bourne_shells`        | {deco}`~pytest.unless_bourne_shells`        |  💲  | {data}`~BOURNE_SHELLS`        |
+| {deco}`~pytest.skip_bsd`                  | {deco}`~pytest.unless_bsd`                  |  Ⓑ   | {data}`~BSD`                  |
 | {deco}`~pytest.skip_bsd_not_macos`        | {deco}`~pytest.unless_bsd_not_macos`        |  🅱️  | {data}`~BSD_WITHOUT_MACOS`    |
 | {deco}`~pytest.skip_buildkite`            | {deco}`~pytest.unless_buildkite`            |  🪁  | {data}`~BUILDKITE`            |
 | {deco}`~pytest.skip_buildroot`            | {deco}`~pytest.unless_buildroot`            |  ⛑️  | {data}`~BUILDROOT`            |
@@ -134,7 +134,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_guix`                 | {deco}`~pytest.unless_guix`                 |  🐃  | {data}`~GUIX`                 |
 | {deco}`~pytest.skip_haiku`                | {deco}`~pytest.unless_haiku`                |  🍂  | {data}`~HAIKU`                |
 | {deco}`~pytest.skip_heroku_ci`            | {deco}`~pytest.unless_heroku_ci`            |  ⥁   | {data}`~HEROKU_CI`            |
-| {deco}`~pytest.skip_hurd`                 | {deco}`~pytest.unless_hurd`                 |  🐃  | {data}`~HURD`                 |
+| {deco}`~pytest.skip_hurd`                 | {deco}`~pytest.unless_hurd`                 |  🦬  | {data}`~HURD`                 |
 | {deco}`~pytest.skip_i386`                 | {deco}`~pytest.unless_i386`                 |  𝗶   | {data}`~I386`                 |
 | {deco}`~pytest.skip_i586`                 | {deco}`~pytest.unless_i586`                 |  𝗶   | {data}`~I586`                 |
 | {deco}`~pytest.skip_i686`                 | {deco}`~pytest.unless_i686`                 |  𝗶   | {data}`~I686`                 |
@@ -145,7 +145,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_kvmibm`               | {deco}`~pytest.unless_kvmibm`               |  🤹  | {data}`~KVMIBM`               |
 | {deco}`~pytest.skip_linux`                | {deco}`~pytest.unless_linux`                |  🐧  | {data}`~LINUX`                |
 | {deco}`~pytest.skip_linux_layers`         | {deco}`~pytest.unless_linux_layers`         |  ≚   | {data}`~LINUX_LAYERS`         |
-| {deco}`~pytest.skip_linux_like`           | {deco}`~pytest.unless_linux_like`           | 🐧+  | {data}`~LINUX_LIKE`           |
+| {deco}`~pytest.skip_linux_like`           | {deco}`~pytest.unless_linux_like`           |  🐣  | {data}`~LINUX_LIKE`           |
 | {deco}`~pytest.skip_linuxmint`            | {deco}`~pytest.unless_linuxmint`            |  🌿  | {data}`~LINUXMINT`            |
 | {deco}`~pytest.skip_little_endian`        | {deco}`~pytest.unless_little_endian`        |  ⬇️  | {data}`~LITTLE_ENDIAN`        |
 | {deco}`~pytest.skip_loongarch`            | {deco}`~pytest.unless_loongarch`            |  🐉  | {data}`~LOONGARCH`            |
@@ -165,11 +165,11 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_opensuse`             | {deco}`~pytest.unless_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {deco}`~pytest.skip_oracle`               | {deco}`~pytest.unless_oracle`               |  🦴  | {data}`~ORACLE`               |
 | {deco}`~pytest.skip_other_posix`          | {deco}`~pytest.unless_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
-| {deco}`~pytest.skip_other_shells`         | {deco}`~pytest.unless_other_shells`         |  🔮  | {data}`~OTHER_SHELLS`         |
+| {deco}`~pytest.skip_other_shells`         | {deco}`~pytest.unless_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
 | {deco}`~pytest.skip_parallels`            | {deco}`~pytest.unless_parallels`            |  ∥   | {data}`~PARALLELS`            |
 | {deco}`~pytest.skip_pidora`               | {deco}`~pytest.unless_pidora`               |  🍓  | {data}`~PIDORA`               |
 | {deco}`~pytest.skip_powerpc`              | {deco}`~pytest.unless_powerpc`              |  ⚡  | {data}`~POWERPC`              |
-| {deco}`~pytest.skip_powershell`           | {deco}`~pytest.unless_powershell`           |  ⚡  | {data}`~POWERSHELL`           |
+| {deco}`~pytest.skip_powershell`           | {deco}`~pytest.unless_powershell`           |  🔷  | {data}`~POWERSHELL`           |
 | {deco}`~pytest.skip_ppc`                  | {deco}`~pytest.unless_ppc`                  |  ⚡  | {data}`~PPC`                  |
 | {deco}`~pytest.skip_ppc64`                | {deco}`~pytest.unless_ppc64`                |  ⚡  | {data}`~PPC64`                |
 | {deco}`~pytest.skip_ppc64le`              | {deco}`~pytest.unless_ppc64le`              |  ⚡  | {data}`~PPC64LE`              |
@@ -186,9 +186,9 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_solaris`              | {deco}`~pytest.unless_solaris`              |  🌞  | {data}`~SOLARIS`              |
 | {deco}`~pytest.skip_sparc`                | {deco}`~pytest.unless_sparc`                |  ☀️  | {data}`~SPARC`                |
 | {deco}`~pytest.skip_sparc64`              | {deco}`~pytest.unless_sparc64`              |  ☀️  | {data}`~SPARC64`              |
-| {deco}`~pytest.skip_sunos`                | {deco}`~pytest.unless_sunos`                |  ☀️  | {data}`~SUNOS`                |
+| {deco}`~pytest.skip_sunos`                | {deco}`~pytest.unless_sunos`                |  🌅  | {data}`~SUNOS`                |
 | {deco}`~pytest.skip_system_v`             | {deco}`~pytest.unless_system_v`             |  𝐕   | {data}`~SYSTEM_V`             |
-| {deco}`~pytest.skip_tcsh`                 | {deco}`~pytest.unless_tcsh`                 |  🌊  | {data}`~TCSH`                 |
+| {deco}`~pytest.skip_tcsh`                 | {deco}`~pytest.unless_tcsh`                 |  ©   | {data}`~TCSH`                 |
 | {deco}`~pytest.skip_teamcity`             | {deco}`~pytest.unless_teamcity`             |  🏙️  | {data}`~TEAMCITY`             |
 | {deco}`~pytest.skip_travis_ci`            | {deco}`~pytest.unless_travis_ci`            |  👷  | {data}`~TRAVIS_CI`            |
 | {deco}`~pytest.skip_tumbleweed`           | {deco}`~pytest.unless_tumbleweed`           |  ↻   | {data}`~TUMBLEWEED`           |
@@ -207,13 +207,13 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_wasm64`               | {deco}`~pytest.unless_wasm64`               |  🌐  | {data}`~WASM64`               |
 | {deco}`~pytest.skip_webassembly`          | {deco}`~pytest.unless_webassembly`          |  🌐  | {data}`~WEBASSEMBLY`          |
 | {deco}`~pytest.skip_windows`              | {deco}`~pytest.unless_windows`              |  🪟  | {data}`~WINDOWS`              |
-| {deco}`~pytest.skip_windows_shells`       | {deco}`~pytest.unless_windows_shells`       | 🪟+  | {data}`~WINDOWS_SHELLS`       |
+| {deco}`~pytest.skip_windows_shells`       | {deco}`~pytest.unless_windows_shells`       |  ⌨️  | {data}`~WINDOWS_SHELLS`       |
 | {deco}`~pytest.skip_wsl1`                 | {deco}`~pytest.unless_wsl1`                 |  ⊞   | {data}`~WSL1`                 |
 | {deco}`~pytest.skip_wsl2`                 | {deco}`~pytest.unless_wsl2`                 |  ⊞   | {data}`~WSL2`                 |
 | {deco}`~pytest.skip_x86`                  | {deco}`~pytest.unless_x86`                  |  𝘅   | {data}`~X86`                  |
 | {deco}`~pytest.skip_x86_64`               | {deco}`~pytest.unless_x86_64`               |  🖥️  | {data}`~X86_64`               |
 | {deco}`~pytest.skip_xenserver`            | {deco}`~pytest.unless_xenserver`            |  Ⓧ   | {data}`~XENSERVER`            |
-| {deco}`~pytest.skip_xonsh`                | {deco}`~pytest.unless_xonsh`                |  🐚  | {data}`~XONSH`                |
+| {deco}`~pytest.skip_xonsh`                | {deco}`~pytest.unless_xonsh`                |  🐍  | {data}`~XONSH`                |
 | {deco}`~pytest.skip_zsh`                  | {deco}`~pytest.unless_zsh`                  |  ℤ   | {data}`~ZSH`                  |
 
 <!-- decorators-table-end -->

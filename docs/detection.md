@@ -16,7 +16,7 @@
 | :------------------------------- | :--: | :---------------------------- |
 | {func}`~is_aarch64`              |  📱  | {data}`~AARCH64`              |
 | {func}`~is_aix`                  |  ➿  | {data}`~AIX`                  |
-| {func}`~is_altlinux`             |  🐧  | {data}`~ALTLINUX`             |
+| {func}`~is_altlinux`             |  Δ   | {data}`~ALTLINUX`             |
 | {func}`~is_amzn`                 |  ⤻   | {data}`~AMZN`                 |
 | {func}`~is_android`              |  🤖  | {data}`~ANDROID`              |
 | {func}`~is_any_architecture`     |  🏛️  | {data}`~ALL_ARCHITECTURES`    |
@@ -41,8 +41,8 @@
 | {func}`~is_bamboo`               |  ⟲   | {data}`~BAMBOO`               |
 | {func}`~is_bash`                 |  ＃  | {data}`~BASH`                 |
 | {func}`~is_big_endian`           |  ⬆️  | {data}`~BIG_ENDIAN`           |
-| {func}`~is_bourne_shells`        | 🐚+  | {data}`~BOURNE_SHELLS`        |
-| {func}`~is_bsd`                  | 🅱️+  | {data}`~BSD`                  |
+| {func}`~is_bourne_shells`        |  💲  | {data}`~BOURNE_SHELLS`        |
+| {func}`~is_bsd`                  |  Ⓑ   | {data}`~BSD`                  |
 | {func}`~is_bsd_not_macos`        |  🅱️  | {data}`~BSD_WITHOUT_MACOS`    |
 | {func}`~is_buildkite`            |  🪁  | {data}`~BUILDKITE`            |
 | {func}`~is_buildroot`            |  ⛑️  | {data}`~BUILDROOT`            |
@@ -69,7 +69,7 @@
 | {func}`~is_guix`                 |  🐃  | {data}`~GUIX`                 |
 | {func}`~is_haiku`                |  🍂  | {data}`~HAIKU`                |
 | {func}`~is_heroku_ci`            |  ⥁   | {data}`~HEROKU_CI`            |
-| {func}`~is_hurd`                 |  🐃  | {data}`~HURD`                 |
+| {func}`~is_hurd`                 |  🦬  | {data}`~HURD`                 |
 | {func}`~is_i386`                 |  𝗶   | {data}`~I386`                 |
 | {func}`~is_i586`                 |  𝗶   | {data}`~I586`                 |
 | {func}`~is_i686`                 |  𝗶   | {data}`~I686`                 |
@@ -80,7 +80,7 @@
 | {func}`~is_kvmibm`               |  🤹  | {data}`~KVMIBM`               |
 | {func}`~is_linux`                |  🐧  | {data}`~LINUX`                |
 | {func}`~is_linux_layers`         |  ≚   | {data}`~LINUX_LAYERS`         |
-| {func}`~is_linux_like`           | 🐧+  | {data}`~LINUX_LIKE`           |
+| {func}`~is_linux_like`           |  🐣  | {data}`~LINUX_LIKE`           |
 | {func}`~is_linuxmint`            |  🌿  | {data}`~LINUXMINT`            |
 | {func}`~is_little_endian`        |  ⬇️  | {data}`~LITTLE_ENDIAN`        |
 | {func}`~is_loongarch`            |  🐉  | {data}`~LOONGARCH`            |
@@ -100,11 +100,11 @@
 | {func}`~is_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {func}`~is_oracle`               |  🦴  | {data}`~ORACLE`               |
 | {func}`~is_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
-| {func}`~is_other_shells`         |  🔮  | {data}`~OTHER_SHELLS`         |
+| {func}`~is_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
 | {func}`~is_parallels`            |  ∥   | {data}`~PARALLELS`            |
 | {func}`~is_pidora`               |  🍓  | {data}`~PIDORA`               |
 | {func}`~is_powerpc`              |  ⚡  | {data}`~POWERPC`              |
-| {func}`~is_powershell`           |  ⚡  | {data}`~POWERSHELL`           |
+| {func}`~is_powershell`           |  🔷  | {data}`~POWERSHELL`           |
 | {func}`~is_ppc`                  |  ⚡  | {data}`~PPC`                  |
 | {func}`~is_ppc64`                |  ⚡  | {data}`~PPC64`                |
 | {func}`~is_ppc64le`              |  ⚡  | {data}`~PPC64LE`              |
@@ -121,9 +121,9 @@
 | {func}`~is_solaris`              |  🌞  | {data}`~SOLARIS`              |
 | {func}`~is_sparc`                |  ☀️  | {data}`~SPARC`                |
 | {func}`~is_sparc64`              |  ☀️  | {data}`~SPARC64`              |
-| {func}`~is_sunos`                |  ☀️  | {data}`~SUNOS`                |
+| {func}`~is_sunos`                |  🌅  | {data}`~SUNOS`                |
 | {func}`~is_system_v`             |  𝐕   | {data}`~SYSTEM_V`             |
-| {func}`~is_tcsh`                 |  🌊  | {data}`~TCSH`                 |
+| {func}`~is_tcsh`                 |  ©   | {data}`~TCSH`                 |
 | {func}`~is_teamcity`             |  🏙️  | {data}`~TEAMCITY`             |
 | {func}`~is_travis_ci`            |  👷  | {data}`~TRAVIS_CI`            |
 | {func}`~is_tumbleweed`           |  ↻   | {data}`~TUMBLEWEED`           |
@@ -142,13 +142,13 @@
 | {func}`~is_wasm64`               |  🌐  | {data}`~WASM64`               |
 | {func}`~is_webassembly`          |  🌐  | {data}`~WEBASSEMBLY`          |
 | {func}`~is_windows`              |  🪟  | {data}`~WINDOWS`              |
-| {func}`~is_windows_shells`       | 🪟+  | {data}`~WINDOWS_SHELLS`       |
+| {func}`~is_windows_shells`       |  ⌨️  | {data}`~WINDOWS_SHELLS`       |
 | {func}`~is_wsl1`                 |  ⊞   | {data}`~WSL1`                 |
 | {func}`~is_wsl2`                 |  ⊞   | {data}`~WSL2`                 |
 | {func}`~is_x86`                  |  𝘅   | {data}`~X86`                  |
 | {func}`~is_x86_64`               |  🖥️  | {data}`~X86_64`               |
 | {func}`~is_xenserver`            |  Ⓧ   | {data}`~XENSERVER`            |
-| {func}`~is_xonsh`                |  🐚  | {data}`~XONSH`                |
+| {func}`~is_xonsh`                |  🐍  | {data}`~XONSH`                |
 | {func}`~is_zsh`                  |  ℤ   | {data}`~ZSH`                  |
 
 <!-- all-detection-function-table-end -->

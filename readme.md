@@ -265,12 +265,12 @@ mindmap
             (🌞 SOLARIS)
         )🅟 OTHER_POSIX(
             (🍂 HAIKU)
-            (🐃 HURD)
+            (🦬 HURD)
         )≚ LINUX_LAYERS(
             (⊞ WSL1)
             (⊞ WSL2)
         )🐧 LINUX(
-            (🐧 ALTLINUX)
+            (Δ ALTLINUX)
             (⤻ AMZN)
             (🤖 ANDROID)
             (🎗️ ARCH)
@@ -304,14 +304,14 @@ mindmap
             (🎯 UBUNTU)
             (🌊 ULTRAMARINE)
             (Ⓧ XENSERVER)
-        )🅱️+ BSD(
+        )Ⓑ BSD(
             (🪰 DRAGONFLY_BSD)
             (😈 FREEBSD)
             (🍎 MACOS)
             (🌘 MIDNIGHTBSD)
             (🚩 NETBSD)
             (🐡 OPENBSD)
-            (☀️ SUNOS)
+            (🌅 SUNOS)
         )🪟 ALL_WINDOWS(
             (🪟 WINDOWS)
 ```
@@ -320,6 +320,38 @@ mindmap
 
 > [!TIP]
 > More groups exist beyond those shown in the diagram, and more utilities are available for each platform. See the [platform documentation](https://kdeldycke.github.io/extra-platforms/platforms.html#groups-of-platforms) for details.
+
+## Shells
+
+All recognized shells:
+
+<!-- shell-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((🐚 ALL_SHELLS))
+        )⌨️ WINDOWS_SHELLS(
+            (▶ CMD)
+            (🔷 POWERSHELL)
+        )◇ OTHER_SHELLS(
+            (🐟 FISH)
+            (𝜈 NUSHELL)
+            (🐍 XONSH)
+        )🅲 C_SHELLS(
+            (© CSH)
+            (© TCSH)
+        )💲 BOURNE_SHELLS(
+            (🪶 ASH)
+            (＃ BASH)
+            (💨 DASH)
+            (𝐊 KSH)
+            (ℤ ZSH)
+```
+
+<!-- shell-mindmap-end -->
 
 ## CI systems
 

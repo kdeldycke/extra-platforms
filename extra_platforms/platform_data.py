@@ -30,7 +30,7 @@ from .trait import Platform
 
 AIX = Platform("aix", "IBM AIX", "➿", "https://ibm.com/products/aix/")
 
-ALTLINUX = Platform("altlinux", "ALT Linux", "🐧", "https://altlinux.org")
+ALTLINUX = Platform("altlinux", "ALT Linux", "Δ", "https://altlinux.org")
 
 AMZN = Platform("amzn", "Amazon Linux", "⤻", "https://aws.amazon.com/amazon-linux-ami/")
 
@@ -66,7 +66,7 @@ GUIX = Platform("guix", "Guix System", "🐃", "https://guix.gnu.org")
 
 HAIKU = Platform("haiku", "Haiku", "🍂", "https://www.haiku-os.org")
 
-HURD = Platform("hurd", "GNU/Hurd", "🐃", "https://gnu.org/software/hurd/")
+HURD = Platform("hurd", "GNU/Hurd", "🦬", "https://gnu.org/software/hurd/")
 
 IBM_POWERKVM = Platform(
     "ibm_powerkvm",
@@ -148,7 +148,7 @@ SLES = Platform(
 
 SOLARIS = Platform("solaris", "Solaris", "🌞", "https://oracle.com/solaris")
 
-SUNOS = Platform("sunos", "SunOS", "☀️", "https://wikipedia.org/wiki/SunOS")
+SUNOS = Platform("sunos", "SunOS", "🌅", "https://wikipedia.org/wiki/SunOS")
 
 TUMBLEWEED = Platform(
     "tumbleweed", "openSUSE Tumbleweed", "↻", "https://get.opensuse.org/tumbleweed/"

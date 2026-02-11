@@ -50,7 +50,7 @@ Platform(id='macos', name='macOS')
 | Icon | Symbol                 | Name                           | Detection function        |
 | :--: | :--------------------- | :----------------------------- | :------------------------ |
 |  ➿  | {data}`~AIX`           | IBM AIX                        | {func}`~is_aix`           |
-|  🐧  | {data}`~ALTLINUX`      | ALT Linux                      | {func}`~is_altlinux`      |
+|  Δ   | {data}`~ALTLINUX`      | ALT Linux                      | {func}`~is_altlinux`      |
 |  ⤻   | {data}`~AMZN`          | Amazon Linux                   | {func}`~is_amzn`          |
 |  🤖  | {data}`~ANDROID`       | Android                        | {func}`~is_android`       |
 |  🎗️  | {data}`~ARCH`          | Arch Linux                     | {func}`~is_arch`          |
@@ -67,7 +67,7 @@ Platform(id='macos', name='macOS')
 |  🗜️  | {data}`~GENTOO`        | Gentoo Linux                   | {func}`~is_gentoo`        |
 |  🐃  | {data}`~GUIX`          | Guix System                    | {func}`~is_guix`          |
 |  🍂  | {data}`~HAIKU`         | Haiku                          | {func}`~is_haiku`         |
-|  🐃  | {data}`~HURD`          | GNU/Hurd                       | {func}`~is_hurd`          |
+|  🦬  | {data}`~HURD`          | GNU/Hurd                       | {func}`~is_hurd`          |
 |  🤹  | {data}`~IBM_POWERKVM`  | IBM PowerKVM                   | {func}`~is_ibm_powerkvm`  |
 |  🔥  | {data}`~ILLUMOS`       | illumos                        | {func}`~is_illumos`       |
 |  🤹  | {data}`~KVMIBM`        | KVM for IBM z Systems          | {func}`~is_kvmibm`        |
@@ -90,7 +90,7 @@ Platform(id='macos', name='macOS')
 |  🚬  | {data}`~SLACKWARE`     | Slackware                      | {func}`~is_slackware`     |
 |  🦎  | {data}`~SLES`          | SUSE Linux Enterprise Server   | {func}`~is_sles`          |
 |  🌞  | {data}`~SOLARIS`       | Solaris                        | {func}`~is_solaris`       |
-|  ☀️  | {data}`~SUNOS`         | SunOS                          | {func}`~is_sunos`         |
+|  🌅  | {data}`~SUNOS`         | SunOS                          | {func}`~is_sunos`         |
 |  ↻   | {data}`~TUMBLEWEED`    | openSUSE Tumbleweed            | {func}`~is_tumbleweed`    |
 |  🤵  | {data}`~TUXEDO`        | Tuxedo OS                      | {func}`~is_tuxedo`        |
 |  🎯  | {data}`~UBUNTU`        | Ubuntu                         | {func}`~is_ubuntu`        |
@@ -119,11 +119,11 @@ platform is not recognized.
 | :--: | :-------------------------- | :------------------------------- | :------------------------- | :----------------------------------------------------: |
 |  ⚙️  | {data}`~ALL_PLATFORMS`      | All platforms                    | {func}`~is_any_platform`   |                                                        |
 |  🪟  | {data}`~ALL_WINDOWS`        | All Windows                      | {func}`~is_any_windows`    |                           ⬥                            |
-| 🅱️+  | {data}`~BSD`                | All BSD                          | {func}`~is_bsd`            |                           ⬥                            |
+|  Ⓑ   | {data}`~BSD`                | All BSD                          | {func}`~is_bsd`            |                           ⬥                            |
 |  🅱️  | {data}`~BSD_WITHOUT_MACOS`  | All BSD excluding macOS          | {func}`~is_bsd_not_macos`  |                                                        |
 |  🐧  | {data}`~LINUX`              | Linux distributions              | {func}`~is_linux`          |                           ⬥                            |
 |  ≚   | {data}`~LINUX_LAYERS`       | Linux compatibility layers       | {func}`~is_linux_layers`   |                           ⬥                            |
-| 🐧+  | {data}`~LINUX_LIKE`         | All Linux & compatibility layers | {func}`~is_linux_like`     |                                                        |
+|  🐣  | {data}`~LINUX_LIKE`         | All Linux & compatibility layers | {func}`~is_linux_like`     |                                                        |
 |  🅟   | {data}`~OTHER_POSIX`        | Other POSIX-compliant platforms  | {func}`~is_other_posix`    |                           ⬥                            |
 |  𝐕   | {data}`~SYSTEM_V`           | AT&T System Five                 | {func}`~is_system_v`       |                           ⬥                            |
 |  ⨷   | {data}`~UNIX`               | All Unix                         | {func}`~is_unix`           |                                                        |
@@ -233,12 +233,12 @@ mindmap
             (🌞 SOLARIS)
         )🅟 OTHER_POSIX(
             (🍂 HAIKU)
-            (🐃 HURD)
+            (🦬 HURD)
         )≚ LINUX_LAYERS(
             (⊞ WSL1)
             (⊞ WSL2)
         )🐧 LINUX(
-            (🐧 ALTLINUX)
+            (Δ ALTLINUX)
             (⤻ AMZN)
             (🤖 ANDROID)
             (🎗️ ARCH)
@@ -272,14 +272,14 @@ mindmap
             (🎯 UBUNTU)
             (🌊 ULTRAMARINE)
             (Ⓧ XENSERVER)
-        )🅱️+ BSD(
+        )Ⓑ BSD(
             (🪰 DRAGONFLY_BSD)
             (😈 FREEBSD)
             (🍎 MACOS)
             (🌘 MIDNIGHTBSD)
             (🚩 NETBSD)
             (🐡 OPENBSD)
-            (☀️ SUNOS)
+            (🌅 SUNOS)
         )🪟 ALL_WINDOWS(
             (🪟 WINDOWS)
 ```

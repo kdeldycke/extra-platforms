@@ -171,6 +171,30 @@ Linting and formatting are automated via GitHub workflows. Developers don't need
 
 The `*_data.py` files (trait and group definitions) should be clean and easy to maintain. It's acceptable to use indirections elsewhere (like function-level imports) to achieve this.
 
+### Icon conventions
+
+Icons are inspired by [Starship](https://starship.rs/) and [NerdFonts](https://www.nerdfonts.com/). Each trait and group has a single-glyph icon (1–2 Python `len()` characters, accounting for variation selectors like `U+FE0F`).
+
+**General rules:**
+
+- Icons must be unique across all traits and groups, with one exception: a canonical group may share its icon with its members, but only if *all* members use that same icon (e.g., all ARM architectures share `📱` with the `ALL_ARM` group).
+- Never use a multi-character suffix like `+` to derive a group icon from a related icon.
+- When proposing a new icon, always check for conflicts against existing traits *and* groups.
+
+**Traits** use pictographic, brand-representative icons:
+
+- Prefer mascots, logos, or symbols associated with the project (e.g., `🍎` macOS, `😈` FreeBSD, `🐙` GitHub Actions, `🎩` Fedora/RHEL).
+- Fall back to a thematic pictographic emoji when no obvious brand symbol exists (e.g., `🌅` SunOS, `🦬` GNU/Hurd).
+- Traits in the same canonical group may share the same icon when they are closely related variants (e.g., `📱` for all ARM architectures, `🔲` for all MIPS, `☀️` for SPARC/SPARC64).
+
+**Groups** use boxy, abstract, or geometric icons:
+
+- Prefer enclosed/squared letters and geometric symbols: `🅱️`, `🅲`, `🅟`, `Ⓑ`, `⊞`.
+- Arrows and mathematical symbols work well: `⬆️`, `⬇️`, `⨷`, `⨂`, `≚`, `≛`, `♺`.
+- Superscript/subscript characters for numeric concepts: `⁶⁴`, `³²`.
+- Stylized letters for named families: `𝐕` (System V), `𝘅` (x86), `Ⅴ` (RISC-V).
+- Emoji are acceptable for top-level "all" groups: `🏛️` (all architectures), `⚙️` (all platforms), `🐚` (all shells).
+
 ### Ordering and uniqueness
 
 - All IDs must be unique across traits and groups.

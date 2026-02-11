@@ -133,7 +133,7 @@ All recognized traits and their properties:
 | :--: | :---------------------------- | :----------------------------- | :------------------------------- | :----------- |
 |  📱  | {data}`~AARCH64`              | ARM64 (AArch64)                | {func}`~is_aarch64`              | Architecture |
 |  ➿  | {data}`~AIX`                  | IBM AIX                        | {func}`~is_aix`                  | Platform     |
-|  🐧  | {data}`~ALTLINUX`             | ALT Linux                      | {func}`~is_altlinux`             | Platform     |
+|  Δ   | {data}`~ALTLINUX`             | ALT Linux                      | {func}`~is_altlinux`             | Platform     |
 |  ⤻   | {data}`~AMZN`                 | Amazon Linux                   | {func}`~is_amzn`                 | Platform     |
 |  🤖  | {data}`~ANDROID`              | Android                        | {func}`~is_android`              | Platform     |
 |  🎗️  | {data}`~ARCH`                 | Arch Linux                     | {func}`~is_arch`                 | Platform     |
@@ -170,7 +170,7 @@ All recognized traits and their properties:
 |  🐃  | {data}`~GUIX`                 | Guix System                    | {func}`~is_guix`                 | Platform     |
 |  🍂  | {data}`~HAIKU`                | Haiku                          | {func}`~is_haiku`                | Platform     |
 |  ⥁   | {data}`~HEROKU_CI`            | Heroku CI                      | {func}`~is_heroku_ci`            | CI           |
-|  🐃  | {data}`~HURD`                 | GNU/Hurd                       | {func}`~is_hurd`                 | Platform     |
+|  🦬  | {data}`~HURD`                 | GNU/Hurd                       | {func}`~is_hurd`                 | Platform     |
 |  𝗶   | {data}`~I386`                 | Intel 80386 (i386)             | {func}`~is_i386`                 | Architecture |
 |  𝗶   | {data}`~I586`                 | Intel Pentium (i586)           | {func}`~is_i586`                 | Architecture |
 |  𝗶   | {data}`~I686`                 | Intel Pentium Pro (i686)       | {func}`~is_i686`                 | Architecture |
@@ -196,7 +196,7 @@ All recognized traits and their properties:
 |  🦴  | {data}`~ORACLE`               | Oracle Linux                   | {func}`~is_oracle`               | Platform     |
 |  ∥   | {data}`~PARALLELS`            | Parallels                      | {func}`~is_parallels`            | Platform     |
 |  🍓  | {data}`~PIDORA`               | Pidora                         | {func}`~is_pidora`               | Platform     |
-|  ⚡  | {data}`~POWERSHELL`           | PowerShell                     | {func}`~is_powershell`           | Shell        |
+|  🔷  | {data}`~POWERSHELL`           | PowerShell                     | {func}`~is_powershell`           | Shell        |
 |  ⚡  | {data}`~PPC`                  | PowerPC (32-bit)               | {func}`~is_ppc`                  | Architecture |
 |  ⚡  | {data}`~PPC64`                | PowerPC 64-bit (big-endian)    | {func}`~is_ppc64`                | Architecture |
 |  ⚡  | {data}`~PPC64LE`              | PowerPC 64-bit (little-endian) | {func}`~is_ppc64le`              | Architecture |
@@ -212,8 +212,8 @@ All recognized traits and their properties:
 |  🌞  | {data}`~SOLARIS`              | Solaris                        | {func}`~is_solaris`              | Platform     |
 |  ☀️  | {data}`~SPARC`                | SPARC (32-bit)                 | {func}`~is_sparc`                | Architecture |
 |  ☀️  | {data}`~SPARC64`              | SPARC (64-bit)                 | {func}`~is_sparc64`              | Architecture |
-|  ☀️  | {data}`~SUNOS`                | SunOS                          | {func}`~is_sunos`                | Platform     |
-|  🌊  | {data}`~TCSH`                 | tcsh                           | {func}`~is_tcsh`                 | Shell        |
+|  🌅  | {data}`~SUNOS`                | SunOS                          | {func}`~is_sunos`                | Platform     |
+|  ©   | {data}`~TCSH`                 | tcsh                           | {func}`~is_tcsh`                 | Shell        |
 |  🏙️  | {data}`~TEAMCITY`             | TeamCity                       | {func}`~is_teamcity`             | CI           |
 |  👷  | {data}`~TRAVIS_CI`            | Travis CI                      | {func}`~is_travis_ci`            | CI           |
 |  ↻   | {data}`~TUMBLEWEED`           | openSUSE Tumbleweed            | {func}`~is_tumbleweed`           | Platform     |
@@ -231,7 +231,7 @@ All recognized traits and their properties:
 |  ⊞   | {data}`~WSL2`                 | Windows Subsystem for Linux v2 | {func}`~is_wsl2`                 | Platform     |
 |  🖥️  | {data}`~X86_64`               | x86-64 (AMD64)                 | {func}`~is_x86_64`               | Architecture |
 |  Ⓧ   | {data}`~XENSERVER`            | XenServer                      | {func}`~is_xenserver`            | Platform     |
-|  🐚  | {data}`~XONSH`                | Xonsh                          | {func}`~is_xonsh`                | Shell        |
+|  🐍  | {data}`~XONSH`                | Xonsh                          | {func}`~is_xonsh`                | Shell        |
 |  ℤ   | {data}`~ZSH`                  | Zsh                            | {func}`~is_zsh`                  | Shell        |
 
 <!-- all-traits-table-end -->

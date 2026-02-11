@@ -157,7 +157,7 @@ def test_group_definitions(group: Group):
 
     # Icon.
     assert group.icon
-    assert 3 >= len(group.icon) >= 1
+    assert 2 >= len(group.icon) >= 1
 
     # Members.
     assert len(group) > 0

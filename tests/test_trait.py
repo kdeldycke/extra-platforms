@@ -26,12 +26,15 @@ import pytest
 import extra_platforms
 from extra_platforms import (
     ALL_GROUP_IDS,
+    ALL_GROUPS,
     ALL_IDS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
     CI,
+    NON_OVERLAPPING_GROUPS,
     UNKNOWN,
     Architecture,
+    Group,
     Platform,
     Shell,
     Trait,
@@ -197,3 +200,60 @@ def test_aliases_are_unique_across_traits():
                 f"by trait '{seen_aliases[alias]}' and trait '{trait.id}'."
             )
             seen_aliases[alias] = trait.id
+
+
+def test_shared_icons_belong_to_same_canonical_group():
+    """Icons must be unique across all traits and groups, with one exception.
+
+    A canonical group may share its icon with its members, but only if *all*
+    members of that group use the same icon as the group itself.
+    """
+    # Collect every (icon, owner) pair for traits and groups.
+    icon_owners: dict[str, list[Trait | Group]] = {}
+    for trait in ALL_TRAITS:
+        icon_owners.setdefault(trait.icon, []).append(trait)
+    for group in ALL_GROUPS:
+        icon_owners.setdefault(group.icon, []).append(group)
+
+    # Build a lookup: icon -> canonical group whose members all share that icon.
+    allowed_icon: dict[str, Group] = {}
+    for group in NON_OVERLAPPING_GROUPS:
+        if all(member.icon == group.icon for member in group):
+            allowed_icon[group.icon] = group
+
+    for icon, owners in icon_owners.items():
+        if len(owners) < 2:
+            continue
+
+        # If a canonical group claims this icon, all owners must be that group
+        # or one of its members.
+        canonical = allowed_icon.get(icon)
+        if canonical is not None:
+            for owner in owners:
+                assert owner is canonical or owner in canonical, (
+                    f"Icon {icon!r} is reserved for canonical group "
+                    f"{canonical.id!r} and its members, but is also used by "
+                    f"{owner.id!r}."
+                )
+            continue
+
+        # Otherwise, no sharing is allowed: all owners must be in the same
+        # canonical group and no group may use this icon.
+        traits = [o for o in owners if isinstance(o, Trait)]
+        groups = [o for o in owners if isinstance(o, Group)]
+        assert not groups, (
+            f"Icon {icon!r} is shared between group(s) "
+            f"{[g.id for g in groups]} and other owners "
+            f"{[o.id for o in owners if o not in groups]}, but the group's "
+            f"members do not all share this icon."
+        )
+        canonical_groups = set()
+        for trait in traits:
+            for group in NON_OVERLAPPING_GROUPS:
+                if trait in group:
+                    canonical_groups.add(group.id)
+        trait_ids = [t.id for t in traits]
+        assert len(canonical_groups) == 1, (
+            f"Traits sharing icon {icon!r} span multiple canonical groups: "
+            f"traits={trait_ids}, canonical_groups={canonical_groups}"
+        )

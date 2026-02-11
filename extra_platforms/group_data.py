@@ -448,7 +448,7 @@ This is useful to avoid macOS-specific workarounds on Unix platforms.
 BSD = Group(
     "bsd",
     "All BSD",
-    "🅱️+",
+    "Ⓑ",
     (DRAGONFLY_BSD, FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS),
 )
 """All BSD platforms.
@@ -549,7 +549,7 @@ LINUX_LAYERS = Group(
 LINUX_LIKE = Group(
     "linux_like",
     "All Linux & compatibility layers",
-    "🐧+",
+    "🐣",
     tuple(LINUX | LINUX_LAYERS),
 )
 """Sum of all Linux distributions and Linux compatibility layers."""
@@ -657,7 +657,7 @@ ALL_SHELLS: Group = Group(
 BOURNE_SHELLS = Group(
     "bourne_shells",
     "Bourne-compatible shells",
-    "🐚+",
+    "💲",
     (ASH, BASH, DASH, KSH, ZSH),
 )
 """All Bourne-compatible shells."""
@@ -675,7 +675,7 @@ C_SHELLS = Group(
 OTHER_SHELLS = Group(
     "other_shells",
     "Other shells",
-    "🔮",
+    "◇",
     (FISH, NUSHELL, XONSH),
 )
 """Other non-traditional shells."""
@@ -684,7 +684,7 @@ OTHER_SHELLS = Group(
 WINDOWS_SHELLS = Group(
     "windows_shells",
     "Windows shells",
-    "🪟+",
+    "⌨️",
     (CMD, POWERSHELL),
 )
 """Windows-native shells."""
