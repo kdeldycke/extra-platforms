@@ -1005,9 +1005,9 @@ def current_architecture(strict: bool = False) -> Architecture:
 
     # Collect all matching architectures.
     matching: set[Architecture] = {
-        arch
+        arch  # type: ignore[misc]
         for arch in ALL_ARCHITECTURES
-        if arch.current  # type: ignore[misc]
+        if arch.current
     }
 
     # Return the only matching architecture.
@@ -1045,9 +1045,9 @@ def current_platform(strict: bool = False) -> Platform:
 
     # Collect all matching platforms.
     matching: set[Platform] = {
-        plat
+        plat  # type: ignore[misc]
         for plat in ALL_PLATFORMS
-        if plat.current  # type: ignore[misc]
+        if plat.current
     }
 
     # Return the only matching platform.
@@ -1107,9 +1107,9 @@ def current_shell(strict: bool = False) -> Shell:
 
     # Collect all matching shells.
     matching: set[Shell] = {
-        shell
+        shell  # type: ignore[misc]
         for shell in ALL_SHELLS
-        if shell.current  # type: ignore[misc]
+        if shell.current
     }
 
     # Return the only matching shell.

@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import tomllib
+import tomllib  # type: ignore[import-not-found]  # stdlib >=3.11; docs require >=3.12.
 
 
 project_path = Path(__file__).parent.parent.resolve()
