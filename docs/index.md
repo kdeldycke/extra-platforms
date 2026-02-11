@@ -14,6 +14,7 @@ install
 trait
 architectures
 platforms
+shells
 ci
 groups
 detection

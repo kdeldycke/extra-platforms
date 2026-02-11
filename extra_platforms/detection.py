@@ -75,13 +75,13 @@ import platform
 import sys
 from functools import cache
 from os import environ
+from pathlib import PurePosixPath
 
 import distro
-import distro as distro_module
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from .trait import CI, Architecture, Platform, Trait
+    from .trait import CI, Architecture, Platform, Shell, Trait
 
 
 @cache
@@ -101,7 +101,7 @@ def _unrecognized_message() -> str:
         f"  platform.uname:        {platform.uname()!r}\n"
         f"  platform.machine:      {platform.machine()!r}\n"
         f"  platform.architecture: {platform.architecture()!r}\n"
-        f"  distro.id:             {distro_module.id()!r}\n"
+        f"  distro.id:             {distro.id()!r}\n"
         "\nPlease report this at https://github.com/kdeldycke/extra-platforms/issues to "
         "improve detection heuristics."
     )
@@ -657,6 +657,199 @@ def is_unknown_platform() -> bool:
 
 
 # =============================================================================
+# Shell detection heuristics
+# =============================================================================
+
+
+@cache
+def _parse_shell_from_path(shell_path: str) -> str | None:
+    """Extract shell ID from a shell executable path.
+
+    Parses the ``SHELL`` environment variable or process path to identify
+    the shell.
+    """
+    stem = PurePosixPath(shell_path).stem.lower()
+    return {
+        "ash": "ash",
+        "bash": "bash",
+        "csh": "csh",
+        "dash": "dash",
+        "fish": "fish",
+        "ksh": "ksh",
+        "nu": "nushell",
+        "powershell": "powershell",
+        "powershell_ise": "powershell",
+        "pwsh": "powershell",
+        "tcsh": "tcsh",
+        "xonsh": "xonsh",
+        "zsh": "zsh",
+    }.get(stem)
+
+
+@cache
+def is_ash() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.ASH`.
+
+    .. hint::
+        Detected via the ``SHELL`` environment variable path, as Almquist
+        Shell does not set its own version variable.
+    """
+    return _parse_shell_from_path(environ.get("SHELL", "")) == "ash"
+
+
+@cache
+def is_bash() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.BASH`.
+
+    .. hint::
+        Detected via the ``BASH_VERSION`` environment variable (set by Bash
+        on startup), or via the ``SHELL`` path as a fallback.
+    """
+    return "BASH_VERSION" in environ or (
+        _parse_shell_from_path(environ.get("SHELL", "")) == "bash"
+    )
+
+
+@cache
+def is_cmd() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.CMD`.
+
+    .. hint::
+        Detected on Windows when the ``PROMPT`` environment variable is set
+        and ``PSModulePath`` is not (to exclude PowerShell).
+    """
+    return (
+        sys.platform == "win32"
+        and "PROMPT" in environ
+        and "PSModulePath" not in environ
+    )
+
+
+@cache
+def is_csh() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.CSH`.
+
+    .. hint::
+        Detected via the ``SHELL`` environment variable path.
+    """
+    return _parse_shell_from_path(environ.get("SHELL", "")) == "csh"
+
+
+@cache
+def is_dash() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.DASH`.
+
+    .. hint::
+        Detected via the ``SHELL`` environment variable path, as Dash does
+        not set its own version variable.
+    """
+    return _parse_shell_from_path(environ.get("SHELL", "")) == "dash"
+
+
+@cache
+def is_fish() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.FISH`.
+
+    .. hint::
+        Detected via the ``FISH_VERSION`` environment variable (set by Fish
+        on startup), or via the ``SHELL`` path as a fallback.
+    """
+    return "FISH_VERSION" in environ or (
+        _parse_shell_from_path(environ.get("SHELL", "")) == "fish"
+    )
+
+
+@cache
+def is_ksh() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.KSH`.
+
+    .. hint::
+        Detected via the ``KSH_VERSION`` environment variable (set by Korn
+        shell on startup), or via the ``SHELL`` path as a fallback.
+    """
+    return "KSH_VERSION" in environ or (
+        _parse_shell_from_path(environ.get("SHELL", "")) == "ksh"
+    )
+
+
+@cache
+def is_nushell() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.NUSHELL`.
+
+    .. hint::
+        Detected via the ``NU_VERSION`` environment variable, which is set
+        by Nushell on startup.
+    """
+    return "NU_VERSION" in environ
+
+
+@cache
+def is_powershell() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.POWERSHELL`.
+
+    .. caution::
+        ``PSModulePath`` can leak into non-PowerShell child processes via two
+        vectors:
+
+        1. **Process-level inheritance** (all platforms): PowerShell modifies
+           ``PSModulePath`` at startup, and `all non-PowerShell children inherit
+           it <https://github.com/PowerShell/PowerShell/issues/9957>`_.
+        2. **System-wide registry variable** (Windows only): ``PSModulePath``
+           is a `persistent machine-level environment variable
+           <https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath>`_
+           visible to all processes.
+
+        Because of this, ``PSModulePath`` is checked last among environment
+        variable-based shells. If another shell is also detected, prefer that
+        shell.
+    """
+    return "PSModulePath" in environ
+
+
+@cache
+def is_tcsh() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.TCSH`.
+
+    .. hint::
+        Detected via the ``SHELL`` environment variable path.
+    """
+    return _parse_shell_from_path(environ.get("SHELL", "")) == "tcsh"
+
+
+@cache
+def is_xonsh() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.XONSH`.
+
+    .. hint::
+        Detected via the ``XONSH_VERSION`` environment variable, which is set
+        by Xonsh on startup.
+    """
+    return "XONSH_VERSION" in environ
+
+
+@cache
+def is_zsh() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.ZSH`.
+
+    .. hint::
+        Detected via the ``ZSH_VERSION`` environment variable (set by Zsh on
+        startup), or via the ``SHELL`` path as a fallback.
+    """
+    return "ZSH_VERSION" in environ or (
+        _parse_shell_from_path(environ.get("SHELL", "")) == "zsh"
+    )
+
+
+@cache
+def is_unknown_shell() -> bool:
+    """Return :data:`True` if current shell is :data:`~extra_platforms.UNKNOWN_SHELL`."""
+    # Lazy import to avoid circular dependencies.
+    from .shell_data import UNKNOWN_SHELL
+
+    return current_shell() is UNKNOWN_SHELL
+
+
+# =============================================================================
 # CI/CD detection heuristics
 # =============================================================================
 
@@ -812,7 +1005,9 @@ def current_architecture(strict: bool = False) -> Architecture:
 
     # Collect all matching architectures.
     matching: set[Architecture] = {
-        arch for arch in ALL_ARCHITECTURES if arch.current  # type: ignore[misc]
+        arch
+        for arch in ALL_ARCHITECTURES
+        if arch.current  # type: ignore[misc]
     }
 
     # Return the only matching architecture.
@@ -850,7 +1045,9 @@ def current_platform(strict: bool = False) -> Platform:
 
     # Collect all matching platforms.
     matching: set[Platform] = {
-        plat for plat in ALL_PLATFORMS if plat.current  # type: ignore[misc]
+        plat
+        for plat in ALL_PLATFORMS
+        if plat.current  # type: ignore[misc]
     }
 
     # Return the only matching platform.
@@ -879,6 +1076,63 @@ def current_platform(strict: bool = False) -> Platform:
         raise SystemError(msg)
     logging.warning(msg)
     return UNKNOWN_PLATFORM
+
+
+@cache
+def current_shell(strict: bool = False) -> Shell:
+    """Returns the :class:`~extra_platforms.Shell` matching the current environment.
+
+    Uses a tiered detection strategy:
+
+    1. Shell-specific environment variables (detects active shell).
+    2. ``SHELL`` environment variable (detects login shell on Unix).
+    3. Windows defaults (``PROMPT`` → :data:`~extra_platforms.CMD`, else → :data:`~extra_platforms.POWERSHELL`).
+
+    Returns :data:`~extra_platforms.UNKNOWN_SHELL` if not running inside a
+    recognized shell. To raise an error instead, set ``strict`` to ``True``.
+
+    .. important::
+        If both :data:`~extra_platforms.POWERSHELL` and another shell are detected (because
+        ``PSModulePath`` `leaks into child processes
+        <https://github.com/PowerShell/PowerShell/issues/9957>`_), the other
+        shell is preferred.
+
+    .. seealso::
+        Inspired by `UV's cross-platform shell detection
+        <https://github.com/astral-sh/uv/blob/0.10.2/crates/uv-shell/src/lib.rs>`_.
+    """
+    # Lazy imports to avoid circular dependencies.
+    from .group_data import ALL_SHELLS
+    from .shell_data import POWERSHELL, UNKNOWN_SHELL
+
+    # Collect all matching shells.
+    matching: set[Shell] = {
+        shell
+        for shell in ALL_SHELLS
+        if shell.current  # type: ignore[misc]
+    }
+
+    # Return the only matching shell.
+    if len(matching) == 1:
+        return matching.pop()
+
+    # If PowerShell is detected alongside another shell, prefer the other.
+    if POWERSHELL in matching and len(matching) > 1:
+        matching.discard(POWERSHELL)
+        if len(matching) == 1:
+            return matching.pop()
+
+    if len(matching) > 1:
+        raise RuntimeError(
+            f"Multiple shells matches: {matching!r}. {_unrecognized_message()}"
+        )
+
+    # No matching shell found.
+    msg = f"Unrecognized shell: {_unrecognized_message()}"
+    if strict:
+        raise SystemError(msg)
+    logging.warning(msg)
+    return UNKNOWN_SHELL
 
 
 @cache

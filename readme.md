@@ -10,9 +10,9 @@
 
 ## What is Extra Platforms?
 
-Extra Platforms detects the runtime architecture, operating system (including Linux distribution), and CI environment, and exposes rich, cacheable metadata (version, codename, icon, canonical URL). It also groups platforms and architectures into reusable families.
+Extra Platforms detects the runtime architecture, operating system (including Linux distribution), shell & CI environment, and exposes rich, cacheable metadata (version, codename, icon, canonical URL). It also groups them into reusable families.
 
-- Accurate detection of architecture, OS/distribution, and CI systems using lightweight, cacheable heuristics.
+- Accurate detection of architecture, OS/distribution, shell, and CI systems using lightweight, cacheable heuristics.
 - Rich metadata for platforms: version, codename, icon, canonical URL, and "like" relationships.
 - Grouping and API primitives: predefined families, `is_*()` predicates, `current_*()` accessors, and `Group` membership helpers.
 - Testing helpers: Pytest decorators and markers such as `@skip_<id>` and `@unless_<id>` for concise platform-aware tests.

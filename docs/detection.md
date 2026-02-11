@@ -24,6 +24,7 @@
 | {func}`~is_any_ci`               |  ♺   | {data}`~ALL_CI`               |
 | {func}`~is_any_mips`             |  🔲  | {data}`~ALL_MIPS`             |
 | {func}`~is_any_platform`         |  ⚙️  | {data}`~ALL_PLATFORMS`        |
+| {func}`~is_any_shell`            |  🐚  | {data}`~ALL_SHELLS`           |
 | {func}`~is_any_sparc`            |  ☀️  | {data}`~ALL_SPARC`            |
 | {func}`~is_any_trait`            |  ⁕   | {data}`~ALL_TRAITS`           |
 | {func}`~is_any_windows`          |  🪟  | {data}`~ALL_WINDOWS`          |
@@ -35,24 +36,32 @@
 | {func}`~is_armv6l`               |  📱  | {data}`~ARMV6L`               |
 | {func}`~is_armv7l`               |  📱  | {data}`~ARMV7L`               |
 | {func}`~is_armv8l`               |  📱  | {data}`~ARMV8L`               |
+| {func}`~is_ash`                  |  🪶  | {data}`~ASH`                  |
 | {func}`~is_azure_pipelines`      |  ═   | {data}`~AZURE_PIPELINES`      |
 | {func}`~is_bamboo`               |  ⟲   | {data}`~BAMBOO`               |
+| {func}`~is_bash`                 |  ＃  | {data}`~BASH`                 |
 | {func}`~is_big_endian`           |  ⬆️  | {data}`~BIG_ENDIAN`           |
+| {func}`~is_bourne_shells`        | 🐚+  | {data}`~BOURNE_SHELLS`        |
 | {func}`~is_bsd`                  | 🅱️+  | {data}`~BSD`                  |
 | {func}`~is_bsd_not_macos`        |  🅱️  | {data}`~BSD_WITHOUT_MACOS`    |
 | {func}`~is_buildkite`            |  🪁  | {data}`~BUILDKITE`            |
 | {func}`~is_buildroot`            |  ⛑️  | {data}`~BUILDROOT`            |
+| {func}`~is_c_shells`             |  🅲   | {data}`~C_SHELLS`             |
 | {func}`~is_cachyos`              |  ⌬   | {data}`~CACHYOS`              |
 | {func}`~is_centos`               |  💠  | {data}`~CENTOS`               |
 | {func}`~is_circle_ci`            |  ⪾   | {data}`~CIRCLE_CI`            |
 | {func}`~is_cirrus_ci`            |  ≋   | {data}`~CIRRUS_CI`            |
 | {func}`~is_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
+| {func}`~is_cmd`                  |  ▶   | {data}`~CMD`                  |
 | {func}`~is_codebuild`            |  ᚙ   | {data}`~CODEBUILD`            |
+| {func}`~is_csh`                  |  ©   | {data}`~CSH`                  |
 | {func}`~is_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
+| {func}`~is_dash`                 |  💨  | {data}`~DASH`                 |
 | {func}`~is_debian`               |  🌀  | {data}`~DEBIAN`               |
 | {func}`~is_dragonfly_bsd`        |  🪰  | {data}`~DRAGONFLY_BSD`        |
 | {func}`~is_exherbo`              |  🐽  | {data}`~EXHERBO`              |
 | {func}`~is_fedora`               |  🎩  | {data}`~FEDORA`               |
+| {func}`~is_fish`                 |  🐟  | {data}`~FISH`                 |
 | {func}`~is_freebsd`              |  😈  | {data}`~FREEBSD`              |
 | {func}`~is_gentoo`               |  🗜️  | {data}`~GENTOO`               |
 | {func}`~is_github_ci`            |  🐙  | {data}`~GITHUB_CI`            |
@@ -67,6 +76,7 @@
 | {func}`~is_ibm_mainframe`        |  🏢  | {data}`~IBM_MAINFRAME`        |
 | {func}`~is_ibm_powerkvm`         |  🤹  | {data}`~IBM_POWERKVM`         |
 | {func}`~is_illumos`              |  🔥  | {data}`~ILLUMOS`              |
+| {func}`~is_ksh`                  |  𝐊   | {data}`~KSH`                  |
 | {func}`~is_kvmibm`               |  🤹  | {data}`~KVMIBM`               |
 | {func}`~is_linux`                |  🐧  | {data}`~LINUX`                |
 | {func}`~is_linux_layers`         |  ≚   | {data}`~LINUX_LAYERS`         |
@@ -85,13 +95,16 @@
 | {func}`~is_mipsel`               |  🔲  | {data}`~MIPSEL`               |
 | {func}`~is_netbsd`               |  🚩  | {data}`~NETBSD`               |
 | {func}`~is_nobara`               |     | {data}`~NOBARA`               |
+| {func}`~is_nushell`              |  𝜈   | {data}`~NUSHELL`              |
 | {func}`~is_openbsd`              |  🐡  | {data}`~OPENBSD`              |
 | {func}`~is_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {func}`~is_oracle`               |  🦴  | {data}`~ORACLE`               |
 | {func}`~is_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
+| {func}`~is_other_shells`         |  🔮  | {data}`~OTHER_SHELLS`         |
 | {func}`~is_parallels`            |  ∥   | {data}`~PARALLELS`            |
 | {func}`~is_pidora`               |  🍓  | {data}`~PIDORA`               |
 | {func}`~is_powerpc`              |  ⚡  | {data}`~POWERPC`              |
+| {func}`~is_powershell`           |  ⚡  | {data}`~POWERSHELL`           |
 | {func}`~is_ppc`                  |  ⚡  | {data}`~PPC`                  |
 | {func}`~is_ppc64`                |  ⚡  | {data}`~PPC64`                |
 | {func}`~is_ppc64le`              |  ⚡  | {data}`~PPC64LE`              |
@@ -110,6 +123,7 @@
 | {func}`~is_sparc64`              |  ☀️  | {data}`~SPARC64`              |
 | {func}`~is_sunos`                |  ☀️  | {data}`~SUNOS`                |
 | {func}`~is_system_v`             |  𝐕   | {data}`~SYSTEM_V`             |
+| {func}`~is_tcsh`                 |  🌊  | {data}`~TCSH`                 |
 | {func}`~is_teamcity`             |  🏙️  | {data}`~TEAMCITY`             |
 | {func}`~is_travis_ci`            |  👷  | {data}`~TRAVIS_CI`            |
 | {func}`~is_tumbleweed`           |  ↻   | {data}`~TUMBLEWEED`           |
@@ -123,15 +137,19 @@
 | {func}`~is_unknown_architecture` |  ❓  | {data}`~UNKNOWN_ARCHITECTURE` |
 | {func}`~is_unknown_ci`           |  ❓  | {data}`~UNKNOWN_CI`           |
 | {func}`~is_unknown_platform`     |  ❓  | {data}`~UNKNOWN_PLATFORM`     |
+| {func}`~is_unknown_shell`        |  ❓  | {data}`~UNKNOWN_SHELL`        |
 | {func}`~is_wasm32`               |  🌐  | {data}`~WASM32`               |
 | {func}`~is_wasm64`               |  🌐  | {data}`~WASM64`               |
 | {func}`~is_webassembly`          |  🌐  | {data}`~WEBASSEMBLY`          |
 | {func}`~is_windows`              |  🪟  | {data}`~WINDOWS`              |
+| {func}`~is_windows_shells`       | 🪟+  | {data}`~WINDOWS_SHELLS`       |
 | {func}`~is_wsl1`                 |  ⊞   | {data}`~WSL1`                 |
 | {func}`~is_wsl2`                 |  ⊞   | {data}`~WSL2`                 |
 | {func}`~is_x86`                  |  𝘅   | {data}`~X86`                  |
 | {func}`~is_x86_64`               |  🖥️  | {data}`~X86_64`               |
 | {func}`~is_xenserver`            |  Ⓧ   | {data}`~XENSERVER`            |
+| {func}`~is_xonsh`                |  🐚  | {data}`~XONSH`                |
+| {func}`~is_zsh`                  |  ℤ   | {data}`~ZSH`                  |
 
 <!-- all-detection-function-table-end -->
 
@@ -151,8 +169,10 @@
 .. autofunction:: extra_platforms.is_armv6l
 .. autofunction:: extra_platforms.is_armv7l
 .. autofunction:: extra_platforms.is_armv8l
+.. autofunction:: extra_platforms.is_ash
 .. autofunction:: extra_platforms.is_azure_pipelines
 .. autofunction:: extra_platforms.is_bamboo
+.. autofunction:: extra_platforms.is_bash
 .. autofunction:: extra_platforms.is_buildkite
 .. autofunction:: extra_platforms.is_buildroot
 .. autofunction:: extra_platforms.is_cachyos
@@ -160,12 +180,16 @@
 .. autofunction:: extra_platforms.is_circle_ci
 .. autofunction:: extra_platforms.is_cirrus_ci
 .. autofunction:: extra_platforms.is_cloudlinux
+.. autofunction:: extra_platforms.is_cmd
 .. autofunction:: extra_platforms.is_codebuild
+.. autofunction:: extra_platforms.is_csh
 .. autofunction:: extra_platforms.is_cygwin
+.. autofunction:: extra_platforms.is_dash
 .. autofunction:: extra_platforms.is_debian
 .. autofunction:: extra_platforms.is_dragonfly_bsd
 .. autofunction:: extra_platforms.is_exherbo
 .. autofunction:: extra_platforms.is_fedora
+.. autofunction:: extra_platforms.is_fish
 .. autofunction:: extra_platforms.is_freebsd
 .. autofunction:: extra_platforms.is_gentoo
 .. autofunction:: extra_platforms.is_github_ci
@@ -179,6 +203,7 @@
 .. autofunction:: extra_platforms.is_i686
 .. autofunction:: extra_platforms.is_ibm_powerkvm
 .. autofunction:: extra_platforms.is_illumos
+.. autofunction:: extra_platforms.is_ksh
 .. autofunction:: extra_platforms.is_kvmibm
 .. autofunction:: extra_platforms.is_linuxmint
 .. autofunction:: extra_platforms.is_loongarch64
@@ -192,11 +217,13 @@
 .. autofunction:: extra_platforms.is_mipsel
 .. autofunction:: extra_platforms.is_netbsd
 .. autofunction:: extra_platforms.is_nobara
+.. autofunction:: extra_platforms.is_nushell
 .. autofunction:: extra_platforms.is_openbsd
 .. autofunction:: extra_platforms.is_opensuse
 .. autofunction:: extra_platforms.is_oracle
 .. autofunction:: extra_platforms.is_parallels
 .. autofunction:: extra_platforms.is_pidora
+.. autofunction:: extra_platforms.is_powershell
 .. autofunction:: extra_platforms.is_ppc
 .. autofunction:: extra_platforms.is_ppc64
 .. autofunction:: extra_platforms.is_ppc64le
@@ -213,6 +240,7 @@
 .. autofunction:: extra_platforms.is_sparc
 .. autofunction:: extra_platforms.is_sparc64
 .. autofunction:: extra_platforms.is_sunos
+.. autofunction:: extra_platforms.is_tcsh
 .. autofunction:: extra_platforms.is_teamcity
 .. autofunction:: extra_platforms.is_travis_ci
 .. autofunction:: extra_platforms.is_tumbleweed
@@ -222,6 +250,7 @@
 .. autofunction:: extra_platforms.is_unknown_architecture
 .. autofunction:: extra_platforms.is_unknown_ci
 .. autofunction:: extra_platforms.is_unknown_platform
+.. autofunction:: extra_platforms.is_unknown_shell
 .. autofunction:: extra_platforms.is_wasm32
 .. autofunction:: extra_platforms.is_wasm64
 .. autofunction:: extra_platforms.is_windows
@@ -229,6 +258,8 @@
 .. autofunction:: extra_platforms.is_wsl2
 .. autofunction:: extra_platforms.is_x86_64
 .. autofunction:: extra_platforms.is_xenserver
+.. autofunction:: extra_platforms.is_xonsh
+.. autofunction:: extra_platforms.is_zsh
 ```
 
 <!-- trait-detection-autofunction-end -->
@@ -247,14 +278,17 @@ These functions are dynamically generated for each [group](groups.md) and test w
 .. autofunction:: extra_platforms.is_any_ci
 .. autofunction:: extra_platforms.is_any_mips
 .. autofunction:: extra_platforms.is_any_platform
+.. autofunction:: extra_platforms.is_any_shell
 .. autofunction:: extra_platforms.is_any_sparc
 .. autofunction:: extra_platforms.is_any_trait
 .. autofunction:: extra_platforms.is_any_windows
 .. autofunction:: extra_platforms.is_arch_32_bit
 .. autofunction:: extra_platforms.is_arch_64_bit
 .. autofunction:: extra_platforms.is_big_endian
+.. autofunction:: extra_platforms.is_bourne_shells
 .. autofunction:: extra_platforms.is_bsd
 .. autofunction:: extra_platforms.is_bsd_not_macos
+.. autofunction:: extra_platforms.is_c_shells
 .. autofunction:: extra_platforms.is_ibm_mainframe
 .. autofunction:: extra_platforms.is_linux
 .. autofunction:: extra_platforms.is_linux_layers
@@ -262,6 +296,7 @@ These functions are dynamically generated for each [group](groups.md) and test w
 .. autofunction:: extra_platforms.is_little_endian
 .. autofunction:: extra_platforms.is_loongarch
 .. autofunction:: extra_platforms.is_other_posix
+.. autofunction:: extra_platforms.is_other_shells
 .. autofunction:: extra_platforms.is_powerpc
 .. autofunction:: extra_platforms.is_riscv
 .. autofunction:: extra_platforms.is_system_v
@@ -270,6 +305,7 @@ These functions are dynamically generated for each [group](groups.md) and test w
 .. autofunction:: extra_platforms.is_unix_not_macos
 .. autofunction:: extra_platforms.is_unknown
 .. autofunction:: extra_platforms.is_webassembly
+.. autofunction:: extra_platforms.is_windows_shells
 .. autofunction:: extra_platforms.is_x86
 ```
 
@@ -283,6 +319,7 @@ These functions retrieve the currently detected traits:
 .. autofunction:: extra_platforms.current_traits
 .. autofunction:: extra_platforms.current_architecture
 .. autofunction:: extra_platforms.current_platform
+.. autofunction:: extra_platforms.current_shell
 .. autofunction:: extra_platforms.current_ci
 ```
 

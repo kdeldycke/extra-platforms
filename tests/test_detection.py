@@ -29,7 +29,6 @@ import extra_platforms
 from extra_platforms import (
     ALL_GROUPS,
     ALL_TRAITS,
-    UNKNOWN,
     Group,
     Trait,
     invalidate_caches,
@@ -83,6 +82,7 @@ def test_detection_heuristics_sorting():
     # Find section boundaries by looking for comment markers.
     arch_section_start = None
     platform_section_start = None
+    shell_section_start = None
     ci_section_start = None
 
     for i, line in enumerate(source_lines, start=1):
@@ -90,20 +90,25 @@ def test_detection_heuristics_sorting():
             arch_section_start = i
         elif "Platform detection heuristics" in line:
             platform_section_start = i
+        elif "Shell detection heuristics" in line:
+            shell_section_start = i
         elif "CI/CD detection heuristics" in line:
             ci_section_start = i
 
     assert arch_section_start is not None, "Architecture section not found"
     assert platform_section_start is not None, "Platform section not found"
+    assert shell_section_start is not None, "Shell section not found"
     assert ci_section_start is not None, "CI/CD section not found"
 
     assert arch_section_start < platform_section_start
-    assert platform_section_start < ci_section_start
+    assert platform_section_start < shell_section_start
+    assert shell_section_start < ci_section_start
 
     # Collect heuristic functions by section.
     all_heuristic_ids = []
     arch_heuristics = []
     platform_heuristics = []
+    shell_heuristics = []
     ci_heuristics = []
 
     for node in tree.body:
@@ -115,8 +120,10 @@ def test_detection_heuristics_sorting():
             line_no = node.lineno
             if line_no >= arch_section_start and line_no < platform_section_start:
                 arch_heuristics.append(func_id)
-            elif line_no >= platform_section_start and line_no < ci_section_start:
+            elif line_no >= platform_section_start and line_no < shell_section_start:
                 platform_heuristics.append(func_id)
+            elif line_no >= shell_section_start and line_no < ci_section_start:
+                shell_heuristics.append(func_id)
             elif line_no >= ci_section_start:
                 ci_heuristics.append(func_id)
 
@@ -125,7 +132,12 @@ def test_detection_heuristics_sorting():
     assert {f"is_{p.id}" for p in ALL_TRAITS} == set(all_heuristic_ids)
 
     # We only allow one generic "is_unknown*()" detection heuristics per category.
-    for heuristics in [arch_heuristics, platform_heuristics, ci_heuristics]:
+    for heuristics in [
+        arch_heuristics,
+        platform_heuristics,
+        shell_heuristics,
+        ci_heuristics,
+    ]:
         non_generic_func_ids = [
             func_id for func_id in heuristics if func_id.startswith("is_unknown")
         ]

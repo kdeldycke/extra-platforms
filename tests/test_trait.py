@@ -33,12 +33,13 @@ from extra_platforms import (
     UNKNOWN,
     Architecture,
     Platform,
+    Shell,
     Trait,
 )
 
 
 @pytest.mark.parametrize(
-    "klass", (Architecture, Platform, CI), ids=attrgetter("__name__")
+    "klass", (Architecture, Platform, Shell, CI), ids=attrgetter("__name__")
 )
 def test_trait_class_metadata(klass):
     class_id = klass.__name__.lower()

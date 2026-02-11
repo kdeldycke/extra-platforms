@@ -117,6 +117,21 @@ from .platform_data import (
     WSL2,
     XENSERVER,
 )
+from .shell_data import (
+    ASH,
+    BASH,
+    CMD,
+    CSH,
+    DASH,
+    FISH,
+    KSH,
+    NUSHELL,
+    POWERSHELL,
+    TCSH,
+    UNKNOWN_SHELL,
+    XONSH,
+    ZSH,
+)
 
 # =============================================================================
 # Architecture groups
@@ -623,6 +638,59 @@ OTHER_POSIX = Group(
 
 
 # =============================================================================
+# Shell groups
+# =============================================================================
+
+ALL_SHELLS: Group = Group(
+    "all_shells",
+    "All shells",
+    "🐚",
+    (ASH, BASH, CMD, CSH, DASH, FISH, KSH, NUSHELL, POWERSHELL, TCSH, XONSH, ZSH),
+)
+"""All recognized shells.
+
+.. caution::
+    This group does not contain the :data:`~extra_platforms.UNKNOWN_SHELL` trait.
+"""
+
+
+BOURNE_SHELLS = Group(
+    "bourne_shells",
+    "Bourne-compatible shells",
+    "🐚+",
+    (ASH, BASH, DASH, KSH, ZSH),
+)
+"""All Bourne-compatible shells."""
+
+
+C_SHELLS = Group(
+    "c_shells",
+    "C shells",
+    "🅲",
+    (CSH, TCSH),
+)
+"""C shell family."""
+
+
+OTHER_SHELLS = Group(
+    "other_shells",
+    "Other shells",
+    "🔮",
+    (FISH, NUSHELL, XONSH),
+)
+"""Other non-traditional shells."""
+
+
+WINDOWS_SHELLS = Group(
+    "windows_shells",
+    "Windows shells",
+    "🪟+",
+    (CMD, POWERSHELL),
+)
+"""Windows-native shells."""
+
+
+# =============================================================================
 # CI groups
 # =============================================================================
 
@@ -663,18 +731,18 @@ UNKNOWN = Group(
     "unknown",
     "Unknown",
     "❓",
-    (UNKNOWN_ARCHITECTURE, UNKNOWN_CI, UNKNOWN_PLATFORM),
+    (UNKNOWN_ARCHITECTURE, UNKNOWN_PLATFORM, UNKNOWN_SHELL, UNKNOWN_CI),
 )
 """Unknown or unrecognized traits."""
 
 
 ALL_TRAITS = Group(
     "all_traits",
-    "All architectures, platforms and CI systems",
+    "All architectures, platforms, shells, and CI systems",
     "⁕",
-    tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_CI | UNKNOWN),
+    tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_SHELLS | ALL_CI | UNKNOWN),
 )
-"""All predefined architectures, platforms and CI systems.
+"""All predefined architectures, platforms, shells, and CI systems.
 
 .. hint::
     This group includes all ``UNKNOWN_*`` traits.
@@ -725,6 +793,18 @@ ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
 )
 
 
+#: All groups whose members are :class:`~extra_platforms.Shell`.
+ALL_SHELL_GROUPS: frozenset[Group] = frozenset(
+    (
+        ALL_SHELLS,
+        BOURNE_SHELLS,
+        C_SHELLS,
+        OTHER_SHELLS,
+        WINDOWS_SHELLS,
+    ),
+)
+
+
 #: All groups whose members are :class:`~extra_platforms.CI`.
 #:
 #: .. note::
@@ -761,6 +841,11 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         SYSTEM_V,
         UNIX_LAYERS,
         OTHER_POSIX,
+        # Shell groups.
+        BOURNE_SHELLS,
+        C_SHELLS,
+        OTHER_SHELLS,
+        WINDOWS_SHELLS,
         # CI groups.
         ALL_CI,
         # Mixed groups.
@@ -788,6 +873,8 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         UNIX_WITHOUT_MACOS,
         BSD_WITHOUT_MACOS,
         LINUX_LIKE,
+        # Shell groups.
+        ALL_SHELLS,
     ),
 )
 

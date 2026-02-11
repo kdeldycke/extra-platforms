@@ -5,6 +5,11 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add new `Shell` trait type for detecting command-line interpreters.
+- Add 12 shell definitions: `ASH`, `BASH`, `CMD`, `CSH`, `DASH`, `FISH`, `KSH`, `NUSHELL`, `POWERSHELL`, `TCSH`, `XONSH`, `ZSH`.
+- Add `current_shell()` detection function.
+- Add shell groups: `ALL_SHELLS`, `BOURNE_SHELLS`, `C_SHELLS`, `OTHER_SHELLS`, `WINDOWS_SHELLS`.
+- Add `@skip_<shell>` and `@unless_<shell>` pytest decorators for all shells and shell groups.
 - Fix crash in compiled binaries (Nuitka, PyInstaller, cx_Freeze) caused by missing source files for docstring extraction.
 - Force Sphinx documentation builds to use Python >= 3.12 via `[tool.uv.dependency-groups]`.
 - Remove all deprecated backward-compatibility aliases:

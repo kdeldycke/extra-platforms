@@ -163,6 +163,7 @@ if TYPE_CHECKING:
     skip_all_ci: MarkDecorator
     skip_all_mips: MarkDecorator
     skip_all_platforms: MarkDecorator
+    skip_all_shells: MarkDecorator
     skip_all_sparc: MarkDecorator
     skip_all_traits: MarkDecorator
     skip_all_windows: MarkDecorator
@@ -177,24 +178,32 @@ if TYPE_CHECKING:
     skip_armv6l: MarkDecorator
     skip_armv7l: MarkDecorator
     skip_armv8l: MarkDecorator
+    skip_ash: MarkDecorator
     skip_azure_pipelines: MarkDecorator
     skip_bamboo: MarkDecorator
+    skip_bash: MarkDecorator
     skip_big_endian: MarkDecorator
+    skip_bourne_shells: MarkDecorator
     skip_bsd: MarkDecorator
     skip_bsd_not_macos: MarkDecorator
     skip_buildkite: MarkDecorator
     skip_buildroot: MarkDecorator
+    skip_c_shells: MarkDecorator
     skip_cachyos: MarkDecorator
     skip_centos: MarkDecorator
     skip_circle_ci: MarkDecorator
     skip_cirrus_ci: MarkDecorator
     skip_cloudlinux: MarkDecorator
+    skip_cmd: MarkDecorator
     skip_codebuild: MarkDecorator
+    skip_csh: MarkDecorator
     skip_cygwin: MarkDecorator
+    skip_dash: MarkDecorator
     skip_debian: MarkDecorator
     skip_dragonfly_bsd: MarkDecorator
     skip_exherbo: MarkDecorator
     skip_fedora: MarkDecorator
+    skip_fish: MarkDecorator
     skip_freebsd: MarkDecorator
     skip_gentoo: MarkDecorator
     skip_github_ci: MarkDecorator
@@ -209,6 +218,7 @@ if TYPE_CHECKING:
     skip_ibm_mainframe: MarkDecorator
     skip_ibm_powerkvm: MarkDecorator
     skip_illumos: MarkDecorator
+    skip_ksh: MarkDecorator
     skip_kvmibm: MarkDecorator
     skip_linux: MarkDecorator
     skip_linux_layers: MarkDecorator
@@ -227,13 +237,16 @@ if TYPE_CHECKING:
     skip_mipsel: MarkDecorator
     skip_netbsd: MarkDecorator
     skip_nobara: MarkDecorator
+    skip_nushell: MarkDecorator
     skip_openbsd: MarkDecorator
     skip_opensuse: MarkDecorator
     skip_oracle: MarkDecorator
     skip_other_posix: MarkDecorator
+    skip_other_shells: MarkDecorator
     skip_parallels: MarkDecorator
     skip_pidora: MarkDecorator
     skip_powerpc: MarkDecorator
+    skip_powershell: MarkDecorator
     skip_ppc: MarkDecorator
     skip_ppc64: MarkDecorator
     skip_ppc64le: MarkDecorator
@@ -252,6 +265,7 @@ if TYPE_CHECKING:
     skip_sparc64: MarkDecorator
     skip_sunos: MarkDecorator
     skip_system_v: MarkDecorator
+    skip_tcsh: MarkDecorator
     skip_teamcity: MarkDecorator
     skip_travis_ci: MarkDecorator
     skip_tumbleweed: MarkDecorator
@@ -265,15 +279,19 @@ if TYPE_CHECKING:
     skip_unknown_architecture: MarkDecorator
     skip_unknown_ci: MarkDecorator
     skip_unknown_platform: MarkDecorator
+    skip_unknown_shell: MarkDecorator
     skip_wasm32: MarkDecorator
     skip_wasm64: MarkDecorator
     skip_webassembly: MarkDecorator
     skip_windows: MarkDecorator
+    skip_windows_shells: MarkDecorator
     skip_wsl1: MarkDecorator
     skip_wsl2: MarkDecorator
     skip_x86: MarkDecorator
     skip_x86_64: MarkDecorator
     skip_xenserver: MarkDecorator
+    skip_xonsh: MarkDecorator
+    skip_zsh: MarkDecorator
     unless_aarch64: MarkDecorator
     unless_aix: MarkDecorator
     unless_altlinux: MarkDecorator
@@ -284,6 +302,7 @@ if TYPE_CHECKING:
     unless_any_ci: MarkDecorator
     unless_any_mips: MarkDecorator
     unless_any_platform: MarkDecorator
+    unless_any_shell: MarkDecorator
     unless_any_sparc: MarkDecorator
     unless_any_trait: MarkDecorator
     unless_any_windows: MarkDecorator
@@ -295,24 +314,32 @@ if TYPE_CHECKING:
     unless_armv6l: MarkDecorator
     unless_armv7l: MarkDecorator
     unless_armv8l: MarkDecorator
+    unless_ash: MarkDecorator
     unless_azure_pipelines: MarkDecorator
     unless_bamboo: MarkDecorator
+    unless_bash: MarkDecorator
     unless_big_endian: MarkDecorator
+    unless_bourne_shells: MarkDecorator
     unless_bsd: MarkDecorator
     unless_bsd_not_macos: MarkDecorator
     unless_buildkite: MarkDecorator
     unless_buildroot: MarkDecorator
+    unless_c_shells: MarkDecorator
     unless_cachyos: MarkDecorator
     unless_centos: MarkDecorator
     unless_circle_ci: MarkDecorator
     unless_cirrus_ci: MarkDecorator
     unless_cloudlinux: MarkDecorator
+    unless_cmd: MarkDecorator
     unless_codebuild: MarkDecorator
+    unless_csh: MarkDecorator
     unless_cygwin: MarkDecorator
+    unless_dash: MarkDecorator
     unless_debian: MarkDecorator
     unless_dragonfly_bsd: MarkDecorator
     unless_exherbo: MarkDecorator
     unless_fedora: MarkDecorator
+    unless_fish: MarkDecorator
     unless_freebsd: MarkDecorator
     unless_gentoo: MarkDecorator
     unless_github_ci: MarkDecorator
@@ -327,6 +354,7 @@ if TYPE_CHECKING:
     unless_ibm_mainframe: MarkDecorator
     unless_ibm_powerkvm: MarkDecorator
     unless_illumos: MarkDecorator
+    unless_ksh: MarkDecorator
     unless_kvmibm: MarkDecorator
     unless_linux: MarkDecorator
     unless_linux_layers: MarkDecorator
@@ -345,13 +373,16 @@ if TYPE_CHECKING:
     unless_mipsel: MarkDecorator
     unless_netbsd: MarkDecorator
     unless_nobara: MarkDecorator
+    unless_nushell: MarkDecorator
     unless_openbsd: MarkDecorator
     unless_opensuse: MarkDecorator
     unless_oracle: MarkDecorator
     unless_other_posix: MarkDecorator
+    unless_other_shells: MarkDecorator
     unless_parallels: MarkDecorator
     unless_pidora: MarkDecorator
     unless_powerpc: MarkDecorator
+    unless_powershell: MarkDecorator
     unless_ppc: MarkDecorator
     unless_ppc64: MarkDecorator
     unless_ppc64le: MarkDecorator
@@ -370,6 +401,7 @@ if TYPE_CHECKING:
     unless_sparc64: MarkDecorator
     unless_sunos: MarkDecorator
     unless_system_v: MarkDecorator
+    unless_tcsh: MarkDecorator
     unless_teamcity: MarkDecorator
     unless_travis_ci: MarkDecorator
     unless_tumbleweed: MarkDecorator
@@ -383,12 +415,16 @@ if TYPE_CHECKING:
     unless_unknown_architecture: MarkDecorator
     unless_unknown_ci: MarkDecorator
     unless_unknown_platform: MarkDecorator
+    unless_unknown_shell: MarkDecorator
     unless_wasm32: MarkDecorator
     unless_wasm64: MarkDecorator
     unless_webassembly: MarkDecorator
     unless_windows: MarkDecorator
+    unless_windows_shells: MarkDecorator
     unless_wsl1: MarkDecorator
     unless_wsl2: MarkDecorator
     unless_x86: MarkDecorator
     unless_x86_64: MarkDecorator
     unless_xenserver: MarkDecorator
+    unless_xonsh: MarkDecorator
+    unless_zsh: MarkDecorator

@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Trait base class for architectures, platforms, CI systems, and more.
+"""Trait base class for architectures, platforms, shells, CI systems, and more.
 
 A trait represents a distinguishing characteristic of a runtime environment.
 Each trait has a unique ID, a human-readable name, an icon, and the ability
@@ -30,13 +30,14 @@ import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property, lru_cache
+from os import environ
 from typing import ClassVar
 
 import distro
 
-import extra_platforms
-from extra_platforms._utils import _recursive_update, _remove_blanks
-from extra_platforms.platform_info import macos_info, windows_info
+from ._docstrings import get_attribute_docstring
+from ._utils import _recursive_update, _remove_blanks
+from .platform_info import macos_info, windows_info
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -241,8 +242,6 @@ class Trait(_Identifiable, ABC):
 
         Combines the attribute docstring from the source module with various metadata.
         """
-        from extra_platforms._docstrings import get_attribute_docstring
-
         lines = []
 
         # Fetch attribute docstring from source module.
@@ -306,6 +305,8 @@ class Trait(_Identifiable, ABC):
             This is a property to avoid calling all detection heuristics on
             :class:`~extra_platforms.Trait` object creation, which happens at module import time.
         """
+        import extra_platforms
+
         func = getattr(extra_platforms, self.detection_func_id, None)
         if not func:
             raise NotImplementedError(
@@ -385,6 +386,43 @@ class Platform(Trait):
                 info = _recursive_update(info, windows_info(), strict=True)
 
         return info
+
+
+@dataclass(frozen=True)
+class Shell(Trait):
+    """A shell identifies a command-line interpreter.
+
+    .. seealso::
+        Inspired by `UV's cross-platform shell detection
+        <https://github.com/astral-sh/uv/pull/17870>`_.
+    """
+
+    def info(self) -> dict[str, str | bool | None]:
+        """Returns all shell attributes we can gather."""
+        info: dict[str, str | bool | None] = {
+            **self._base_info(),
+            "version": None,
+            "path": None,
+        }
+        if self.current:
+            info["version"] = self._detect_version()
+            info["path"] = environ.get("SHELL")
+        return info
+
+    def _detect_version(self) -> str | None:
+        """Return the shell version from environment if available."""
+        version_vars = {
+            "bash": "BASH_VERSION",
+            "zsh": "ZSH_VERSION",
+            "fish": "FISH_VERSION",
+            "ksh": "KSH_VERSION",
+            "nushell": "NU_VERSION",
+            "xonsh": "XONSH_VERSION",
+        }
+        env_var = version_vars.get(self.id)
+        if env_var:
+            return environ.get(env_var)
+        return None
 
 
 @dataclass(frozen=True)

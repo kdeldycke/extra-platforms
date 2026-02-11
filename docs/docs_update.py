@@ -48,6 +48,8 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
+    ALL_SHELL_GROUPS,
+    ALL_SHELLS,
     ALL_TRAITS,
     ARCH_32_BIT,
     ARCH_64_BIT,
@@ -57,6 +59,7 @@ from extra_platforms import (
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
+    UNKNOWN_SHELL,
     Group,
     Trait,
 )
@@ -579,6 +582,7 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
         "ALL_GROUP_IDS",
         "ALL_IDS",
         "ALL_PLATFORM_GROUPS",
+        "ALL_SHELL_GROUPS",
         "ALL_TRAIT_IDS",
         "EXTRA_GROUPS",
         "NON_OVERLAPPING_GROUPS",
@@ -620,6 +624,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
         "current_architecture",
         "current_ci",
         "current_platform",
+        "current_shell",
         "current_traits",
         "invalidate_caches",
     ])
@@ -638,6 +643,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
         "CI",
         "Group",
         "Platform",
+        "Shell",
         "Trait",
     ])
 
@@ -684,6 +690,11 @@ def update_docs() -> None:
             "ci-table-end",
             generate_trait_table(ALL_CI),
         ),
+        (
+            "shell-table-start",
+            "shell-table-end",
+            generate_trait_table(ALL_SHELLS),
+        ),
         # All traits table (for trait.md) - merged table of all traits.
         (
             "all-traits-table-start",
@@ -722,6 +733,14 @@ def update_docs() -> None:
             "ci-sankey-start",
             "ci-sankey-end",
             generate_sankey(ALL_CI_GROUPS),
+        ),
+        (
+            "shell-sankey-start",
+            "shell-sankey-end",
+            generate_sankey(
+                list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS)
+                + [ALL_SHELLS]
+            ),
         ),
         # Mindmap diagrams.
         (
@@ -766,6 +785,14 @@ def update_docs() -> None:
                 list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
             ),
         ),
+        (
+            "shell-mindmap-start",
+            "shell-mindmap-end",
+            generate_traits_mindmap(
+                list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS)
+                + [ALL_SHELLS]
+            ),
+        ),
         # Group tables.
         (
             "architecture-groups-table-start",
@@ -781,6 +808,11 @@ def update_docs() -> None:
             "ci-groups-table-start",
             "ci-groups-table-end",
             generate_group_table(ALL_CI_GROUPS),
+        ),
+        (
+            "shell-groups-table-start",
+            "shell-groups-table-end",
+            generate_group_table(ALL_SHELL_GROUPS),
         ),
         (
             "groups-table-start",
@@ -817,6 +849,15 @@ def update_docs() -> None:
             "ci-data-autodata-end",
             generate_sphinx_directives(
                 list(ALL_CI) + [UNKNOWN_CI],
+                "autodata",
+                "symbol_id",
+            ),
+        ),
+        (
+            "shell-data-autodata-start",
+            "shell-data-autodata-end",
+            generate_sphinx_directives(
+                list(ALL_SHELLS) + [UNKNOWN_SHELL],
                 "autodata",
                 "symbol_id",
             ),

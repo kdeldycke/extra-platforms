@@ -36,6 +36,8 @@ from extra_platforms import (
     ALL_IDS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
+    ALL_SHELL_GROUPS,
+    ALL_SHELLS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
     CI,
@@ -45,6 +47,7 @@ from extra_platforms import (
     Architecture,
     Group,
     Platform,
+    Shell,
     Trait,
 )
 from extra_platforms import group_data as group_data_module
@@ -287,6 +290,7 @@ def test_sets_of_groups():
     for group_set in (
         ALL_ARCHITECTURE_GROUPS,
         ALL_PLATFORM_GROUPS,
+        ALL_SHELL_GROUPS,
         ALL_CI_GROUPS,
         NON_OVERLAPPING_GROUPS,
         EXTRA_GROUPS,
@@ -302,11 +306,14 @@ def test_sets_of_groups():
         assert all(isinstance(m, Architecture) for m in architecture_group)
     for platform_group in ALL_PLATFORM_GROUPS:
         assert all(isinstance(m, Platform) for m in platform_group)
+    for shell_group in ALL_SHELL_GROUPS:
+        assert all(isinstance(m, Shell) for m in shell_group)
     for ci_group in ALL_CI_GROUPS:
         assert all(isinstance(m, CI) for m in ci_group)
 
     assert ALL_ARCHITECTURES.fullyintersects(ALL_ARCHITECTURE_GROUPS)
     assert ALL_PLATFORMS.fullyintersects(ALL_PLATFORM_GROUPS)
+    assert ALL_SHELLS.fullyintersects(ALL_SHELL_GROUPS)
     assert ALL_CI.fullyintersects(ALL_CI_GROUPS)
 
     # Non-overlapping groups and overlapping groups don't overlap.
@@ -317,6 +324,7 @@ def test_sets_of_groups():
         ALL_GROUPS
         == ALL_ARCHITECTURE_GROUPS
         | ALL_PLATFORM_GROUPS
+        | ALL_SHELL_GROUPS
         | ALL_CI_GROUPS
         | {ALL_TRAITS}
         | {UNKNOWN}

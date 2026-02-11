@@ -31,6 +31,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     ALL_CI,
     ALL_GROUPS,
     ALL_PLATFORMS,
+    ALL_SHELLS,
     ALL_TRAITS,
     GITHUB_CI,
     GITLAB_CI,
@@ -42,6 +43,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
+    UNKNOWN_SHELL,
     WINDOWS,
     WSL1,
     WSL2,
@@ -49,6 +51,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     current_architecture,
     current_ci,
     current_platform,
+    current_shell,
     current_traits,
     invalidate_caches,
     is_aarch64,
@@ -59,6 +62,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_linux,
     is_macos,
     is_ubuntu,
+    is_unknown_shell,
     is_windows,
 )
 from extra_platforms import architecture_data as architecture_data_module
@@ -67,6 +71,7 @@ from extra_platforms import detection as detection_module
 from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
 from extra_platforms import platform_data as platform_data_module
+from extra_platforms import shell_data as shell_data_module
 from extra_platforms import trait as trait_module
 from extra_platforms.detection import _unrecognized_message
 
@@ -182,6 +187,7 @@ def test_module_root_declarations():
     group_members = fetch_module_implements(group_module)
     group_data_members = fetch_module_implements(group_data_module)
     platform_data_members = fetch_module_implements(platform_data_module)
+    shell_data_members = fetch_module_implements(shell_data_module)
     trait_members = fetch_module_implements(trait_module)
     root_members = fetch_module_implements(extra_platforms)
     # Update root members with auto-generated group detection function names.
@@ -203,6 +209,7 @@ def test_module_root_declarations():
     assert group_members <= set(extra_platforms_members)
     assert group_data_members <= set(extra_platforms_members)
     assert platform_data_members <= set(extra_platforms_members)
+    assert shell_data_members <= set(extra_platforms_members)
     assert trait_members <= set(extra_platforms_members)
 
     expected_members = sorted(
@@ -212,6 +219,7 @@ def test_module_root_declarations():
         .union(ci_data_members)
         .union(group_data_members)
         .union(platform_data_members)
+        .union(shell_data_members)
         .union(trait_members)
         .union(root_members),
         key=lambda m: (m.lower(), m),
@@ -225,13 +233,16 @@ def test_current_funcs():
 
     # 1 platform + 1 architecture = 2 traits.
     detected_traits = 2
+    # Shell detection may or may not match.
+    if not is_unknown_shell():
+        detected_traits += 1
     if is_github_ci():
         if github_runner_os() == "ubuntu-slim":
-            # 1 platform + 2 architectures (Ubuntu + WSL) + 1 CI = 4 traits.
-            detected_traits = 4
+            # +2 architectures (Ubuntu + WSL) + 1 CI.
+            detected_traits += 2
         else:
-            # 1 platform + 1 architecture + 1 CI = 3 traits.
-            detected_traits = 3
+            # +1 CI.
+            detected_traits += 1
     assert len(current_traits_results) == detected_traits
 
     current_architecture_result = current_architecture()
@@ -243,6 +254,11 @@ def test_current_funcs():
     assert current_platform_result in ALL_PLATFORMS
     assert current_platform_result in current_traits_results
     assert current_platform_result is not UNKNOWN_PLATFORM
+
+    current_shell_result = current_shell()
+    assert current_shell_result in ALL_SHELLS | {UNKNOWN_SHELL}
+    if current_shell_result is not UNKNOWN_SHELL:
+        assert current_shell_result in current_traits_results
 
     current_ci_result = current_ci()
     assert current_ci_result in ALL_CI | {UNKNOWN_CI}
@@ -267,16 +283,22 @@ def test_current_funcs():
             "platform",
             "Unrecognized platform",
         ),
+        (current_shell, ALL_SHELLS, UNKNOWN_SHELL, "shell", "Unrecognized shell"),
         (current_ci, ALL_CI, UNKNOWN_CI, "CI", "Unrecognized CI"),
     ],
 )
 def test_current_strict_mode(
-    current_func, all_collection, unknown_constant, trait_type, error_message, monkeypatch
+    current_func,
+    all_collection,
+    unknown_constant,
+    trait_type,
+    error_message,
+    monkeypatch,
 ):
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
-    # Skip this check for CI since it may legitimately be UNKNOWN_CI in some environments.
-    if trait_type != "CI":
+    # Skip this check for CI and shell since they may legitimately be unknown.
+    if trait_type not in ("CI", "shell"):
         invalidate_caches()
         result = current_func()
         assert result in all_collection

@@ -10,10 +10,11 @@
 
 All aspects of a system are represented as *traits*.
 
-There are three main types of traits:
+There are four main types of traits:
 
 - **[Architectures](architectures.md)**: CPU architectures (e.g., x86_64, ARM64)
 - **[Platforms](platforms.md)**: Operating systems (e.g., Windows, macOS, Ubuntu)
+- **[Shells](shells.md)**: Command-line interpreters (e.g., Bash, Zsh, Fish)
 - **[CI systems](ci.md)**: Continuous Integration environments (e.g., GitHub Actions, Travis CI)
 
 ## Trait usage
@@ -141,8 +142,10 @@ All recognized traits and their properties:
 |  📱  | {data}`~ARMV6L`               | ARMv6 (little-endian)          | {func}`~is_armv6l`               | Architecture |
 |  📱  | {data}`~ARMV7L`               | ARMv7 (little-endian)          | {func}`~is_armv7l`               | Architecture |
 |  📱  | {data}`~ARMV8L`               | ARMv8 (32-bit, little-endian)  | {func}`~is_armv8l`               | Architecture |
+|  🪶  | {data}`~ASH`                  | Almquist Shell                 | {func}`~is_ash`                  | Shell        |
 |  ═   | {data}`~AZURE_PIPELINES`      | Azure Pipelines                | {func}`~is_azure_pipelines`      | CI           |
 |  ⟲   | {data}`~BAMBOO`               | Bamboo                         | {func}`~is_bamboo`               | CI           |
+|  ＃  | {data}`~BASH`                 | Bash                           | {func}`~is_bash`                 | Shell        |
 |  🪁  | {data}`~BUILDKITE`            | Buildkite                      | {func}`~is_buildkite`            | CI           |
 |  ⛑️  | {data}`~BUILDROOT`            | Buildroot                      | {func}`~is_buildroot`            | Platform     |
 |  ⌬   | {data}`~CACHYOS`              | CachyOS                        | {func}`~is_cachyos`              | Platform     |
@@ -150,12 +153,16 @@ All recognized traits and their properties:
 |  ⪾   | {data}`~CIRCLE_CI`            | Circle CI                      | {func}`~is_circle_ci`            | CI           |
 |  ≋   | {data}`~CIRRUS_CI`            | Cirrus CI                      | {func}`~is_cirrus_ci`            | CI           |
 |  ꩜   | {data}`~CLOUDLINUX`           | CloudLinux OS                  | {func}`~is_cloudlinux`           | Platform     |
+|  ▶   | {data}`~CMD`                  | Command Prompt                 | {func}`~is_cmd`                  | Shell        |
 |  ᚙ   | {data}`~CODEBUILD`            | CodeBuild                      | {func}`~is_codebuild`            | CI           |
+|  ©   | {data}`~CSH`                  | C shell                        | {func}`~is_csh`                  | Shell        |
 |  Ͼ   | {data}`~CYGWIN`               | Cygwin                         | {func}`~is_cygwin`               | Platform     |
+|  💨  | {data}`~DASH`                 | Dash                           | {func}`~is_dash`                 | Shell        |
 |  🌀  | {data}`~DEBIAN`               | Debian                         | {func}`~is_debian`               | Platform     |
 |  🪰  | {data}`~DRAGONFLY_BSD`        | DragonFly BSD                  | {func}`~is_dragonfly_bsd`        | Platform     |
 |  🐽  | {data}`~EXHERBO`              | Exherbo Linux                  | {func}`~is_exherbo`              | Platform     |
 |  🎩  | {data}`~FEDORA`               | Fedora                         | {func}`~is_fedora`               | Platform     |
+|  🐟  | {data}`~FISH`                 | Fish                           | {func}`~is_fish`                 | Shell        |
 |  😈  | {data}`~FREEBSD`              | FreeBSD                        | {func}`~is_freebsd`              | Platform     |
 |  🗜️  | {data}`~GENTOO`               | Gentoo Linux                   | {func}`~is_gentoo`               | Platform     |
 |  🐙  | {data}`~GITHUB_CI`            | GitHub Actions runner          | {func}`~is_github_ci`            | CI           |
@@ -169,6 +176,7 @@ All recognized traits and their properties:
 |  𝗶   | {data}`~I686`                 | Intel Pentium Pro (i686)       | {func}`~is_i686`                 | Architecture |
 |  🤹  | {data}`~IBM_POWERKVM`         | IBM PowerKVM                   | {func}`~is_ibm_powerkvm`         | Platform     |
 |  🔥  | {data}`~ILLUMOS`              | illumos                        | {func}`~is_illumos`              | Platform     |
+|  𝐊   | {data}`~KSH`                  | Korn shell                     | {func}`~is_ksh`                  | Shell        |
 |  🤹  | {data}`~KVMIBM`               | KVM for IBM z Systems          | {func}`~is_kvmibm`               | Platform     |
 |  🌿  | {data}`~LINUXMINT`            | Linux Mint                     | {func}`~is_linuxmint`            | Platform     |
 |  🐉  | {data}`~LOONGARCH64`          | LoongArch (64-bit)             | {func}`~is_loongarch64`          | Architecture |
@@ -182,11 +190,13 @@ All recognized traits and their properties:
 |  🔲  | {data}`~MIPSEL`               | MIPS (32-bit, little-endian)   | {func}`~is_mipsel`               | Architecture |
 |  🚩  | {data}`~NETBSD`               | NetBSD                         | {func}`~is_netbsd`               | Platform     |
 |     | {data}`~NOBARA`               | Nobara                         | {func}`~is_nobara`               | Platform     |
+|  𝜈   | {data}`~NUSHELL`              | Nushell                        | {func}`~is_nushell`              | Shell        |
 |  🐡  | {data}`~OPENBSD`              | OpenBSD                        | {func}`~is_openbsd`              | Platform     |
 |  🦎  | {data}`~OPENSUSE`             | openSUSE                       | {func}`~is_opensuse`             | Platform     |
 |  🦴  | {data}`~ORACLE`               | Oracle Linux                   | {func}`~is_oracle`               | Platform     |
 |  ∥   | {data}`~PARALLELS`            | Parallels                      | {func}`~is_parallels`            | Platform     |
 |  🍓  | {data}`~PIDORA`               | Pidora                         | {func}`~is_pidora`               | Platform     |
+|  ⚡  | {data}`~POWERSHELL`           | PowerShell                     | {func}`~is_powershell`           | Shell        |
 |  ⚡  | {data}`~PPC`                  | PowerPC (32-bit)               | {func}`~is_ppc`                  | Architecture |
 |  ⚡  | {data}`~PPC64`                | PowerPC 64-bit (big-endian)    | {func}`~is_ppc64`                | Architecture |
 |  ⚡  | {data}`~PPC64LE`              | PowerPC 64-bit (little-endian) | {func}`~is_ppc64le`              | Architecture |
@@ -203,6 +213,7 @@ All recognized traits and their properties:
 |  ☀️  | {data}`~SPARC`                | SPARC (32-bit)                 | {func}`~is_sparc`                | Architecture |
 |  ☀️  | {data}`~SPARC64`              | SPARC (64-bit)                 | {func}`~is_sparc64`              | Architecture |
 |  ☀️  | {data}`~SUNOS`                | SunOS                          | {func}`~is_sunos`                | Platform     |
+|  🌊  | {data}`~TCSH`                 | tcsh                           | {func}`~is_tcsh`                 | Shell        |
 |  🏙️  | {data}`~TEAMCITY`             | TeamCity                       | {func}`~is_teamcity`             | CI           |
 |  👷  | {data}`~TRAVIS_CI`            | Travis CI                      | {func}`~is_travis_ci`            | CI           |
 |  ↻   | {data}`~TUMBLEWEED`           | openSUSE Tumbleweed            | {func}`~is_tumbleweed`           | Platform     |
@@ -212,6 +223,7 @@ All recognized traits and their properties:
 |  ❓  | {data}`~UNKNOWN_ARCHITECTURE` | Unknown architecture           | {func}`~is_unknown_architecture` | Architecture |
 |  ❓  | {data}`~UNKNOWN_CI`           | Unknown CI                     | {func}`~is_unknown_ci`           | CI           |
 |  ❓  | {data}`~UNKNOWN_PLATFORM`     | Unknown platform               | {func}`~is_unknown_platform`     | Platform     |
+|  ❓  | {data}`~UNKNOWN_SHELL`        | Unknown shell                  | {func}`~is_unknown_shell`        | Shell        |
 |  🌐  | {data}`~WASM32`               | WebAssembly (32-bit)           | {func}`~is_wasm32`               | Architecture |
 |  🌐  | {data}`~WASM64`               | WebAssembly (64-bit)           | {func}`~is_wasm64`               | Architecture |
 |  🪟  | {data}`~WINDOWS`              | Windows                        | {func}`~is_windows`              | Platform     |
@@ -219,6 +231,8 @@ All recognized traits and their properties:
 |  ⊞   | {data}`~WSL2`                 | Windows Subsystem for Linux v2 | {func}`~is_wsl2`                 | Platform     |
 |  🖥️  | {data}`~X86_64`               | x86-64 (AMD64)                 | {func}`~is_x86_64`               | Architecture |
 |  Ⓧ   | {data}`~XENSERVER`            | XenServer                      | {func}`~is_xenserver`            | Platform     |
+|  🐚  | {data}`~XONSH`                | Xonsh                          | {func}`~is_xonsh`                | Shell        |
+|  ℤ   | {data}`~ZSH`                  | Zsh                            | {func}`~is_zsh`                  | Shell        |
 
 <!-- all-traits-table-end -->
 
@@ -243,6 +257,12 @@ All recognized traits and their properties:
    :show-inheritance:
 
 .. autoclass:: extra_platforms.Architecture
+   :members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: extra_platforms.Shell
    :members:
    :private-members:
    :undoc-members:
