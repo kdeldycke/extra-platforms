@@ -263,7 +263,7 @@ typing = [
 
 [tool.uv]
 # Cooldown period.
-exclude-newer = "2026-02-02T00:00:00Z"
+exclude-newer = "2026-02-04T00:00:00Z"
 # XXX Disable exclusion of brand new click-extra releases.
 exclude-newer-package = { "click-extra" = "0 day" }
 
