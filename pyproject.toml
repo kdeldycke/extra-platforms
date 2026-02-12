@@ -6,7 +6,7 @@ requires = [ "uv-build>=0.9" ]
 # Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 name = "extra-platforms"
 version = "9.0.1"
-description = "🔎 Detect architectures, platforms, and CI systems, grouped by family"
+description = "🔎 Detect architectures, platforms, shells and CI systems, grouped by family"
 readme = "readme.md"
 keywords = [
   "Almquist Shell",
@@ -209,6 +209,8 @@ dependencies = [
 ]
 
 [project.entry-points]
+# Make additional fixtures available to pytest.
+# See: https://docs.pytest.org/en/latest/how-to/writing_plugins.html#making-your-plugin-installable-by-others
 pytest11.extra-platforms = "extra_platforms.pytest"
 
 [project.optional-dependencies]
@@ -303,9 +305,6 @@ default.extend-ignore-identifiers-re = [
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 ini_options.addopts = [
   "--durations=10",
-  "--cov=extra_platforms",
-  "--cov-branch",
-  "--cov-precision=2",
   "--cov-report=term",
   "--cov-report=xml",
   # Codecov.io's test analytics requires a JUnit XML file:
@@ -316,10 +315,15 @@ ini_options.addopts = [
 # Make sure tests that are expected to fail do not resurect and start working all of a sudden.
 ini_options.xfail_strict = true
 
+[tool.coverage]
+# https://coverage.readthedocs.io/en/latest/config.html
+run.branch = true
+run.source = [ "extra_platforms" ]
+report.precision = 2
+
 [tool.bumpversion]
 current_version = "9.0.1"
 allow_dirty = true
-# TODO: Reuse the same search and replace patterns available in the reused workflows' pyproject.toml.
 
 [[tool.bumpversion.files]]
 # Update Python package version in any __init__.py file.
