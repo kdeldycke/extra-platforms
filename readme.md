@@ -21,7 +21,31 @@ Extra Platforms detects the runtime architecture, operating system (including Li
 
 ## Quick start
 
-If you want to play with this library without contaminating your system, you can [use `uv`](https://docs.astral.sh/uv/guides/tools/#running-tools):
+Quickly inspect your current environment without installing anything, thanks to [`uvx`](https://docs.astral.sh/uv/guides/tools/#running-tools):
+
+```shell-session
+$ uvx extra-platforms
+extra-platforms 9.0.1
+
+── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]────────────
+            id: aarch64
+          (...)
+
+── Platform ── 🍎 macOS ──[MACOS]────────────────────────────
+            id: macos
+          (...)
+
+── Shell ── ℤ Zsh ──[ZSH]───────────────────────────────────
+            id: zsh
+          (...)
+
+── CI ── ❓ Unknown CI ──[UNKNOWN_CI]────────────────────────
+          (...)
+```
+
+The same output is available via `python -m extra_platforms`.
+
+Or if you want to explore usage of the library in a Python REPL:
 
 ```shell-session
 $ uvx --with extra-platforms python
@@ -30,7 +54,7 @@ $ uvx --with extra-platforms python
 ```pycon
 >>> import extra_platforms
 >>> extra_platforms.__version__
-'6.0.0'
+'9.0.1'
 ```
 
 ## Examples
