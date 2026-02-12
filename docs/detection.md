@@ -16,6 +16,7 @@
 | :------------------------------- | :--: | :---------------------------- |
 | {func}`~is_aarch64`              |  📱  | {data}`~AARCH64`              |
 | {func}`~is_aix`                  |  ➿  | {data}`~AIX`                  |
+| {func}`~is_alpine`               |  🏔️  | {data}`~ALPINE`               |
 | {func}`~is_altlinux`             |  Δ   | {data}`~ALTLINUX`             |
 | {func}`~is_amzn`                 |  ⤻   | {data}`~AMZN`                 |
 | {func}`~is_android`              |  🤖  | {data}`~ANDROID`              |
@@ -76,6 +77,7 @@
 | {func}`~is_ibm_mainframe`        |  🏢  | {data}`~IBM_MAINFRAME`        |
 | {func}`~is_ibm_powerkvm`         |  🤹  | {data}`~IBM_POWERKVM`         |
 | {func}`~is_illumos`              |  🔥  | {data}`~ILLUMOS`              |
+| {func}`~is_kali`                 |  🔱  | {data}`~KALI`                 |
 | {func}`~is_ksh`                  |  𝐊   | {data}`~KSH`                  |
 | {func}`~is_kvmibm`               |  🤹  | {data}`~KVMIBM`               |
 | {func}`~is_linux`                |  🐧  | {data}`~LINUX`                |
@@ -88,6 +90,7 @@
 | {func}`~is_macos`                |  🍎  | {data}`~MACOS`                |
 | {func}`~is_mageia`               |  ⍥   | {data}`~MAGEIA`               |
 | {func}`~is_mandriva`             |  💫  | {data}`~MANDRIVA`             |
+| {func}`~is_manjaro`              |  ▲   | {data}`~MANJARO`              |
 | {func}`~is_midnightbsd`          |  🌘  | {data}`~MIDNIGHTBSD`          |
 | {func}`~is_mips`                 |  🔲  | {data}`~MIPS`                 |
 | {func}`~is_mips64`               |  🔲  | {data}`~MIPS64`               |
@@ -98,6 +101,7 @@
 | {func}`~is_nushell`              |  𝜈   | {data}`~NUSHELL`              |
 | {func}`~is_openbsd`              |  🐡  | {data}`~OPENBSD`              |
 | {func}`~is_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
+| {func}`~is_openwrt`              |  📶  | {data}`~OPENWRT`              |
 | {func}`~is_oracle`               |  🦴  | {data}`~ORACLE`               |
 | {func}`~is_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
 | {func}`~is_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
@@ -160,6 +164,7 @@
 ```{eval-rst}
 .. autofunction:: extra_platforms.is_aarch64
 .. autofunction:: extra_platforms.is_aix
+.. autofunction:: extra_platforms.is_alpine
 .. autofunction:: extra_platforms.is_altlinux
 .. autofunction:: extra_platforms.is_amzn
 .. autofunction:: extra_platforms.is_android
@@ -203,6 +208,7 @@
 .. autofunction:: extra_platforms.is_i686
 .. autofunction:: extra_platforms.is_ibm_powerkvm
 .. autofunction:: extra_platforms.is_illumos
+.. autofunction:: extra_platforms.is_kali
 .. autofunction:: extra_platforms.is_ksh
 .. autofunction:: extra_platforms.is_kvmibm
 .. autofunction:: extra_platforms.is_linuxmint
@@ -210,6 +216,7 @@
 .. autofunction:: extra_platforms.is_macos
 .. autofunction:: extra_platforms.is_mageia
 .. autofunction:: extra_platforms.is_mandriva
+.. autofunction:: extra_platforms.is_manjaro
 .. autofunction:: extra_platforms.is_midnightbsd
 .. autofunction:: extra_platforms.is_mips
 .. autofunction:: extra_platforms.is_mips64
@@ -220,6 +227,7 @@
 .. autofunction:: extra_platforms.is_nushell
 .. autofunction:: extra_platforms.is_openbsd
 .. autofunction:: extra_platforms.is_opensuse
+.. autofunction:: extra_platforms.is_openwrt
 .. autofunction:: extra_platforms.is_oracle
 .. autofunction:: extra_platforms.is_parallels
 .. autofunction:: extra_platforms.is_pidora

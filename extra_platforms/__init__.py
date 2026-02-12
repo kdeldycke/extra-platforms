@@ -427,6 +427,7 @@ __all__ = (  # noqa: F405
     "ALL_TRAIT_IDS",
     "ALL_TRAITS",
     "ALL_WINDOWS",
+    "ALPINE",
     "ALTLINUX",
     "AMZN",
     "ANDROID",
@@ -492,6 +493,7 @@ __all__ = (  # noqa: F405
     "invalidate_caches",
     "is_aarch64",
     "is_aix",
+    "is_alpine",
     "is_altlinux",
     "is_amzn",
     "is_android",
@@ -552,6 +554,7 @@ __all__ = (  # noqa: F405
     "is_ibm_mainframe",  # noqa: F822
     "is_ibm_powerkvm",
     "is_illumos",
+    "is_kali",
     "is_ksh",
     "is_kvmibm",
     "is_linux",  # noqa: F822
@@ -564,6 +567,7 @@ __all__ = (  # noqa: F405
     "is_macos",
     "is_mageia",
     "is_mandriva",
+    "is_manjaro",
     "is_midnightbsd",
     "is_mips",
     "is_mips64",
@@ -574,6 +578,7 @@ __all__ = (  # noqa: F405
     "is_nushell",
     "is_openbsd",
     "is_opensuse",
+    "is_openwrt",
     "is_oracle",
     "is_other_posix",  # noqa: F822
     "is_other_shells",  # noqa: F822
@@ -626,6 +631,7 @@ __all__ = (  # noqa: F405
     "is_xenserver",
     "is_xonsh",
     "is_zsh",
+    "KALI",
     "KSH",
     "KVMIBM",
     "LINUX",
@@ -638,6 +644,7 @@ __all__ = (  # noqa: F405
     "MACOS",
     "MAGEIA",
     "MANDRIVA",
+    "MANJARO",
     "MIDNIGHTBSD",
     "MIPS",
     "MIPS64",
@@ -649,6 +656,7 @@ __all__ = (  # noqa: F405
     "NUSHELL",
     "OPENBSD",
     "OPENSUSE",
+    "OPENWRT",
     "ORACLE",
     "OTHER_POSIX",
     "OTHER_SHELLS",

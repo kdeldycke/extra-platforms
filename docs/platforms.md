@@ -50,6 +50,7 @@ Platform(id='macos', name='macOS')
 | Icon | Symbol                 | Name                           | Detection function        |
 | :--: | :--------------------- | :----------------------------- | :------------------------ |
 |  ➿  | {data}`~AIX`           | IBM AIX                        | {func}`~is_aix`           |
+|  🏔️  | {data}`~ALPINE`        | Alpine Linux                   | {func}`~is_alpine`        |
 |  Δ   | {data}`~ALTLINUX`      | ALT Linux                      | {func}`~is_altlinux`      |
 |  ⤻   | {data}`~AMZN`          | Amazon Linux                   | {func}`~is_amzn`          |
 |  🤖  | {data}`~ANDROID`       | Android                        | {func}`~is_android`       |
@@ -70,16 +71,19 @@ Platform(id='macos', name='macOS')
 |  🦬  | {data}`~HURD`          | GNU/Hurd                       | {func}`~is_hurd`          |
 |  🤹  | {data}`~IBM_POWERKVM`  | IBM PowerKVM                   | {func}`~is_ibm_powerkvm`  |
 |  🔥  | {data}`~ILLUMOS`       | illumos                        | {func}`~is_illumos`       |
+|  🔱  | {data}`~KALI`          | Kali Linux                     | {func}`~is_kali`          |
 |  🤹  | {data}`~KVMIBM`        | KVM for IBM z Systems          | {func}`~is_kvmibm`        |
 |  🌿  | {data}`~LINUXMINT`     | Linux Mint                     | {func}`~is_linuxmint`     |
 |  🍎  | {data}`~MACOS`         | macOS                          | {func}`~is_macos`         |
 |  ⍥   | {data}`~MAGEIA`        | Mageia                         | {func}`~is_mageia`        |
 |  💫  | {data}`~MANDRIVA`      | Mandriva Linux                 | {func}`~is_mandriva`      |
+|  ▲   | {data}`~MANJARO`       | Manjaro Linux                  | {func}`~is_manjaro`       |
 |  🌘  | {data}`~MIDNIGHTBSD`   | MidnightBSD                    | {func}`~is_midnightbsd`   |
 |  🚩  | {data}`~NETBSD`        | NetBSD                         | {func}`~is_netbsd`        |
 |     | {data}`~NOBARA`        | Nobara                         | {func}`~is_nobara`        |
 |  🐡  | {data}`~OPENBSD`       | OpenBSD                        | {func}`~is_openbsd`       |
 |  🦎  | {data}`~OPENSUSE`      | openSUSE                       | {func}`~is_opensuse`      |
+|  📶  | {data}`~OPENWRT`       | OpenWrt                        | {func}`~is_openwrt`       |
 |  🦴  | {data}`~ORACLE`        | Oracle Linux                   | {func}`~is_oracle`        |
 |  ∥   | {data}`~PARALLELS`     | Parallels                      | {func}`~is_parallels`     |
 |  🍓  | {data}`~PIDORA`        | Pidora                         | {func}`~is_pidora`        |
@@ -154,13 +158,14 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,34
+ALL_PLATFORMS,LINUX,38
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,OTHER_POSIX,2
 ALL_PLATFORMS,LINUX_LAYERS,2
 ALL_PLATFORMS,UNIX_LAYERS,1
 ALL_PLATFORMS,ALL_WINDOWS,1
+LINUX,ALPINE,1
 LINUX,ALTLINUX,1
 LINUX,AMZN,1
 LINUX,ANDROID,1
@@ -175,12 +180,15 @@ LINUX,FEDORA,1
 LINUX,GENTOO,1
 LINUX,GUIX,1
 LINUX,IBM_POWERKVM,1
+LINUX,KALI,1
 LINUX,KVMIBM,1
 LINUX,LINUXMINT,1
 LINUX,MAGEIA,1
 LINUX,MANDRIVA,1
+LINUX,MANJARO,1
 LINUX,NOBARA,1
 LINUX,OPENSUSE,1
+LINUX,OPENWRT,1
 LINUX,ORACLE,1
 LINUX,PARALLELS,1
 LINUX,PIDORA,1
@@ -238,6 +246,7 @@ mindmap
             (⊞ WSL1)
             (⊞ WSL2)
         )🐧 LINUX(
+            (🏔️ ALPINE)
             (Δ ALTLINUX)
             (⤻ AMZN)
             (🤖 ANDROID)
@@ -252,12 +261,15 @@ mindmap
             (🗜️ GENTOO)
             (🐃 GUIX)
             (🤹 IBM_POWERKVM)
+            (🔱 KALI)
             (🤹 KVMIBM)
             (🌿 LINUXMINT)
             (⍥ MAGEIA)
             (💫 MANDRIVA)
+            (▲ MANJARO)
             ( NOBARA)
             (🦎 OPENSUSE)
+            (📶 OPENWRT)
             (🦴 ORACLE)
             (∥ PARALLELS)
             (🍓 PIDORA)
@@ -301,6 +313,7 @@ mindmap
 
 ```{eval-rst}
 .. autodata:: extra_platforms.AIX
+.. autodata:: extra_platforms.ALPINE
 .. autodata:: extra_platforms.ALTLINUX
 .. autodata:: extra_platforms.AMZN
 .. autodata:: extra_platforms.ANDROID
@@ -321,16 +334,19 @@ mindmap
 .. autodata:: extra_platforms.HURD
 .. autodata:: extra_platforms.IBM_POWERKVM
 .. autodata:: extra_platforms.ILLUMOS
+.. autodata:: extra_platforms.KALI
 .. autodata:: extra_platforms.KVMIBM
 .. autodata:: extra_platforms.LINUXMINT
 .. autodata:: extra_platforms.MACOS
 .. autodata:: extra_platforms.MAGEIA
 .. autodata:: extra_platforms.MANDRIVA
+.. autodata:: extra_platforms.MANJARO
 .. autodata:: extra_platforms.MIDNIGHTBSD
 .. autodata:: extra_platforms.NETBSD
 .. autodata:: extra_platforms.NOBARA
 .. autodata:: extra_platforms.OPENBSD
 .. autodata:: extra_platforms.OPENSUSE
+.. autodata:: extra_platforms.OPENWRT
 .. autodata:: extra_platforms.ORACLE
 .. autodata:: extra_platforms.PARALLELS
 .. autodata:: extra_platforms.PIDORA

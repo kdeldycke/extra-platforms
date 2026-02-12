@@ -45,6 +45,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     UNKNOWN_PLATFORM,
     UNKNOWN_SHELL,
     WINDOWS,
+    TUMBLEWEED,
     WSL1,
     WSL2,
     X86_64,
@@ -103,6 +104,8 @@ def test_pyproject_keywords():
             # Remove versioned WSL platforms.
             - WSL1
             - WSL2
+            # Remove Tumbleweed, subsumed by openSUSE.
+            - TUMBLEWEED
             # Remove UNKNOWN_* traits.
             - UNKNOWN
         )

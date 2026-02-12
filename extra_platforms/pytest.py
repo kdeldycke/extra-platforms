@@ -167,6 +167,7 @@ if TYPE_CHECKING:
     skip_all_sparc: MarkDecorator
     skip_all_traits: MarkDecorator
     skip_all_windows: MarkDecorator
+    skip_alpine: MarkDecorator
     skip_altlinux: MarkDecorator
     skip_amzn: MarkDecorator
     skip_android: MarkDecorator
@@ -218,6 +219,7 @@ if TYPE_CHECKING:
     skip_ibm_mainframe: MarkDecorator
     skip_ibm_powerkvm: MarkDecorator
     skip_illumos: MarkDecorator
+    skip_kali: MarkDecorator
     skip_ksh: MarkDecorator
     skip_kvmibm: MarkDecorator
     skip_linux: MarkDecorator
@@ -230,6 +232,7 @@ if TYPE_CHECKING:
     skip_macos: MarkDecorator
     skip_mageia: MarkDecorator
     skip_mandriva: MarkDecorator
+    skip_manjaro: MarkDecorator
     skip_midnightbsd: MarkDecorator
     skip_mips: MarkDecorator
     skip_mips64: MarkDecorator
@@ -240,6 +243,7 @@ if TYPE_CHECKING:
     skip_nushell: MarkDecorator
     skip_openbsd: MarkDecorator
     skip_opensuse: MarkDecorator
+    skip_openwrt: MarkDecorator
     skip_oracle: MarkDecorator
     skip_other_posix: MarkDecorator
     skip_other_shells: MarkDecorator
@@ -294,6 +298,7 @@ if TYPE_CHECKING:
     skip_zsh: MarkDecorator
     unless_aarch64: MarkDecorator
     unless_aix: MarkDecorator
+    unless_alpine: MarkDecorator
     unless_altlinux: MarkDecorator
     unless_amzn: MarkDecorator
     unless_android: MarkDecorator
@@ -354,6 +359,7 @@ if TYPE_CHECKING:
     unless_ibm_mainframe: MarkDecorator
     unless_ibm_powerkvm: MarkDecorator
     unless_illumos: MarkDecorator
+    unless_kali: MarkDecorator
     unless_ksh: MarkDecorator
     unless_kvmibm: MarkDecorator
     unless_linux: MarkDecorator
@@ -366,6 +372,7 @@ if TYPE_CHECKING:
     unless_macos: MarkDecorator
     unless_mageia: MarkDecorator
     unless_mandriva: MarkDecorator
+    unless_manjaro: MarkDecorator
     unless_midnightbsd: MarkDecorator
     unless_mips: MarkDecorator
     unless_mips64: MarkDecorator
@@ -376,6 +383,7 @@ if TYPE_CHECKING:
     unless_nushell: MarkDecorator
     unless_openbsd: MarkDecorator
     unless_opensuse: MarkDecorator
+    unless_openwrt: MarkDecorator
     unless_oracle: MarkDecorator
     unless_other_posix: MarkDecorator
     unless_other_shells: MarkDecorator

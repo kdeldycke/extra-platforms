@@ -133,6 +133,7 @@ All recognized traits and their properties:
 | :--: | :---------------------------- | :----------------------------- | :------------------------------- | :----------- |
 |  📱  | {data}`~AARCH64`              | ARM64 (AArch64)                | {func}`~is_aarch64`              | Architecture |
 |  ➿  | {data}`~AIX`                  | IBM AIX                        | {func}`~is_aix`                  | Platform     |
+|  🏔️  | {data}`~ALPINE`               | Alpine Linux                   | {func}`~is_alpine`               | Platform     |
 |  Δ   | {data}`~ALTLINUX`             | ALT Linux                      | {func}`~is_altlinux`             | Platform     |
 |  ⤻   | {data}`~AMZN`                 | Amazon Linux                   | {func}`~is_amzn`                 | Platform     |
 |  🤖  | {data}`~ANDROID`              | Android                        | {func}`~is_android`              | Platform     |
@@ -176,6 +177,7 @@ All recognized traits and their properties:
 |  𝗶   | {data}`~I686`                 | Intel Pentium Pro (i686)       | {func}`~is_i686`                 | Architecture |
 |  🤹  | {data}`~IBM_POWERKVM`         | IBM PowerKVM                   | {func}`~is_ibm_powerkvm`         | Platform     |
 |  🔥  | {data}`~ILLUMOS`              | illumos                        | {func}`~is_illumos`              | Platform     |
+|  🔱  | {data}`~KALI`                 | Kali Linux                     | {func}`~is_kali`                 | Platform     |
 |  𝐊   | {data}`~KSH`                  | Korn shell                     | {func}`~is_ksh`                  | Shell        |
 |  🤹  | {data}`~KVMIBM`               | KVM for IBM z Systems          | {func}`~is_kvmibm`               | Platform     |
 |  🌿  | {data}`~LINUXMINT`            | Linux Mint                     | {func}`~is_linuxmint`            | Platform     |
@@ -183,6 +185,7 @@ All recognized traits and their properties:
 |  🍎  | {data}`~MACOS`                | macOS                          | {func}`~is_macos`                | Platform     |
 |  ⍥   | {data}`~MAGEIA`               | Mageia                         | {func}`~is_mageia`               | Platform     |
 |  💫  | {data}`~MANDRIVA`             | Mandriva Linux                 | {func}`~is_mandriva`             | Platform     |
+|  ▲   | {data}`~MANJARO`              | Manjaro Linux                  | {func}`~is_manjaro`              | Platform     |
 |  🌘  | {data}`~MIDNIGHTBSD`          | MidnightBSD                    | {func}`~is_midnightbsd`          | Platform     |
 |  🔲  | {data}`~MIPS`                 | MIPS (32-bit, big-endian)      | {func}`~is_mips`                 | Architecture |
 |  🔲  | {data}`~MIPS64`               | MIPS64 (big-endian)            | {func}`~is_mips64`               | Architecture |
@@ -193,6 +196,7 @@ All recognized traits and their properties:
 |  𝜈   | {data}`~NUSHELL`              | Nushell                        | {func}`~is_nushell`              | Shell        |
 |  🐡  | {data}`~OPENBSD`              | OpenBSD                        | {func}`~is_openbsd`              | Platform     |
 |  🦎  | {data}`~OPENSUSE`             | openSUSE                       | {func}`~is_opensuse`             | Platform     |
+|  📶  | {data}`~OPENWRT`              | OpenWrt                        | {func}`~is_openwrt`              | Platform     |
 |  🦴  | {data}`~ORACLE`               | Oracle Linux                   | {func}`~is_oracle`               | Platform     |
 |  ∥   | {data}`~PARALLELS`            | Parallels                      | {func}`~is_parallels`            | Platform     |
 |  🍓  | {data}`~PIDORA`               | Pidora                         | {func}`~is_pidora`               | Platform     |

@@ -90,6 +90,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_all_sparc`            | {deco}`~pytest.unless_any_sparc`            |  ☀️  | {data}`~ALL_SPARC`            |
 | {deco}`~pytest.skip_all_traits`           | {deco}`~pytest.unless_any_trait`            |  ⁕   | {data}`~ALL_TRAITS`           |
 | {deco}`~pytest.skip_all_windows`          | {deco}`~pytest.unless_any_windows`          |  🪟  | {data}`~ALL_WINDOWS`          |
+| {deco}`~pytest.skip_alpine`               | {deco}`~pytest.unless_alpine`               |  🏔️  | {data}`~ALPINE`               |
 | {deco}`~pytest.skip_altlinux`             | {deco}`~pytest.unless_altlinux`             |  Δ   | {data}`~ALTLINUX`             |
 | {deco}`~pytest.skip_amzn`                 | {deco}`~pytest.unless_amzn`                 |  ⤻   | {data}`~AMZN`                 |
 | {deco}`~pytest.skip_android`              | {deco}`~pytest.unless_android`              |  🤖  | {data}`~ANDROID`              |
@@ -141,6 +142,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_ibm_mainframe`        | {deco}`~pytest.unless_ibm_mainframe`        |  🏢  | {data}`~IBM_MAINFRAME`        |
 | {deco}`~pytest.skip_ibm_powerkvm`         | {deco}`~pytest.unless_ibm_powerkvm`         |  🤹  | {data}`~IBM_POWERKVM`         |
 | {deco}`~pytest.skip_illumos`              | {deco}`~pytest.unless_illumos`              |  🔥  | {data}`~ILLUMOS`              |
+| {deco}`~pytest.skip_kali`                 | {deco}`~pytest.unless_kali`                 |  🔱  | {data}`~KALI`                 |
 | {deco}`~pytest.skip_ksh`                  | {deco}`~pytest.unless_ksh`                  |  𝐊   | {data}`~KSH`                  |
 | {deco}`~pytest.skip_kvmibm`               | {deco}`~pytest.unless_kvmibm`               |  🤹  | {data}`~KVMIBM`               |
 | {deco}`~pytest.skip_linux`                | {deco}`~pytest.unless_linux`                |  🐧  | {data}`~LINUX`                |
@@ -153,6 +155,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_macos`                | {deco}`~pytest.unless_macos`                |  🍎  | {data}`~MACOS`                |
 | {deco}`~pytest.skip_mageia`               | {deco}`~pytest.unless_mageia`               |  ⍥   | {data}`~MAGEIA`               |
 | {deco}`~pytest.skip_mandriva`             | {deco}`~pytest.unless_mandriva`             |  💫  | {data}`~MANDRIVA`             |
+| {deco}`~pytest.skip_manjaro`              | {deco}`~pytest.unless_manjaro`              |  ▲   | {data}`~MANJARO`              |
 | {deco}`~pytest.skip_midnightbsd`          | {deco}`~pytest.unless_midnightbsd`          |  🌘  | {data}`~MIDNIGHTBSD`          |
 | {deco}`~pytest.skip_mips`                 | {deco}`~pytest.unless_mips`                 |  🔲  | {data}`~MIPS`                 |
 | {deco}`~pytest.skip_mips64`               | {deco}`~pytest.unless_mips64`               |  🔲  | {data}`~MIPS64`               |
@@ -163,6 +166,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_nushell`              | {deco}`~pytest.unless_nushell`              |  𝜈   | {data}`~NUSHELL`              |
 | {deco}`~pytest.skip_openbsd`              | {deco}`~pytest.unless_openbsd`              |  🐡  | {data}`~OPENBSD`              |
 | {deco}`~pytest.skip_opensuse`             | {deco}`~pytest.unless_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
+| {deco}`~pytest.skip_openwrt`              | {deco}`~pytest.unless_openwrt`              |  📶  | {data}`~OPENWRT`              |
 | {deco}`~pytest.skip_oracle`               | {deco}`~pytest.unless_oracle`               |  🦴  | {data}`~ORACLE`               |
 | {deco}`~pytest.skip_other_posix`          | {deco}`~pytest.unless_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
 | {deco}`~pytest.skip_other_shells`         | {deco}`~pytest.unless_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
@@ -234,6 +238,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_all_sparc
 .. autodecorator:: extra_platforms.pytest.skip_all_traits
 .. autodecorator:: extra_platforms.pytest.skip_all_windows
+.. autodecorator:: extra_platforms.pytest.skip_alpine
 .. autodecorator:: extra_platforms.pytest.skip_altlinux
 .. autodecorator:: extra_platforms.pytest.skip_amzn
 .. autodecorator:: extra_platforms.pytest.skip_android
@@ -285,6 +290,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_ibm_mainframe
 .. autodecorator:: extra_platforms.pytest.skip_ibm_powerkvm
 .. autodecorator:: extra_platforms.pytest.skip_illumos
+.. autodecorator:: extra_platforms.pytest.skip_kali
 .. autodecorator:: extra_platforms.pytest.skip_ksh
 .. autodecorator:: extra_platforms.pytest.skip_kvmibm
 .. autodecorator:: extra_platforms.pytest.skip_linux
@@ -297,6 +303,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_macos
 .. autodecorator:: extra_platforms.pytest.skip_mageia
 .. autodecorator:: extra_platforms.pytest.skip_mandriva
+.. autodecorator:: extra_platforms.pytest.skip_manjaro
 .. autodecorator:: extra_platforms.pytest.skip_midnightbsd
 .. autodecorator:: extra_platforms.pytest.skip_mips
 .. autodecorator:: extra_platforms.pytest.skip_mips64
@@ -307,6 +314,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_nushell
 .. autodecorator:: extra_platforms.pytest.skip_openbsd
 .. autodecorator:: extra_platforms.pytest.skip_opensuse
+.. autodecorator:: extra_platforms.pytest.skip_openwrt
 .. autodecorator:: extra_platforms.pytest.skip_oracle
 .. autodecorator:: extra_platforms.pytest.skip_other_posix
 .. autodecorator:: extra_platforms.pytest.skip_other_shells
@@ -375,6 +383,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_any_sparc
 .. autodecorator:: extra_platforms.pytest.unless_any_trait
 .. autodecorator:: extra_platforms.pytest.unless_any_windows
+.. autodecorator:: extra_platforms.pytest.unless_alpine
 .. autodecorator:: extra_platforms.pytest.unless_altlinux
 .. autodecorator:: extra_platforms.pytest.unless_amzn
 .. autodecorator:: extra_platforms.pytest.unless_android
@@ -426,6 +435,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_ibm_mainframe
 .. autodecorator:: extra_platforms.pytest.unless_ibm_powerkvm
 .. autodecorator:: extra_platforms.pytest.unless_illumos
+.. autodecorator:: extra_platforms.pytest.unless_kali
 .. autodecorator:: extra_platforms.pytest.unless_ksh
 .. autodecorator:: extra_platforms.pytest.unless_kvmibm
 .. autodecorator:: extra_platforms.pytest.unless_linux
@@ -438,6 +448,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_macos
 .. autodecorator:: extra_platforms.pytest.unless_mageia
 .. autodecorator:: extra_platforms.pytest.unless_mandriva
+.. autodecorator:: extra_platforms.pytest.unless_manjaro
 .. autodecorator:: extra_platforms.pytest.unless_midnightbsd
 .. autodecorator:: extra_platforms.pytest.unless_mips
 .. autodecorator:: extra_platforms.pytest.unless_mips64
@@ -448,6 +459,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_nushell
 .. autodecorator:: extra_platforms.pytest.unless_openbsd
 .. autodecorator:: extra_platforms.pytest.unless_opensuse
+.. autodecorator:: extra_platforms.pytest.unless_openwrt
 .. autodecorator:: extra_platforms.pytest.unless_oracle
 .. autodecorator:: extra_platforms.pytest.unless_other_posix
 .. autodecorator:: extra_platforms.pytest.unless_other_shells

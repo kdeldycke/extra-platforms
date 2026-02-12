@@ -10,6 +10,7 @@ description = "🔎 Detect architectures, platforms, and CI systems, grouped by 
 readme = "readme.md"
 keywords = [
   "Almquist Shell",
+  "Alpine Linux",
   "ALT Linux",
   "Amazon Linux",
   "Android",
@@ -57,6 +58,7 @@ keywords = [
   "Intel 80386 (i386)",
   "Intel Pentium (i586)",
   "Intel Pentium Pro (i686)",
+  "Kali Linux",
   "Korn shell",
   "KVM for IBM z Systems",
   "Linux Mint",
@@ -64,6 +66,7 @@ keywords = [
   "macOS",
   "Mageia",
   "Mandriva Linux",
+  "Manjaro Linux",
   "MidnightBSD",
   "MIPS (32-bit, big-endian)",
   "MIPS (32-bit, little-endian)",
@@ -75,7 +78,7 @@ keywords = [
   "Nushell",
   "OpenBSD",
   "openSUSE",
-  "openSUSE Tumbleweed",
+  "OpenWrt",
   "Oracle Linux",
   "OS detection",
   "Parallels",
