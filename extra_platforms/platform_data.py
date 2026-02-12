@@ -30,6 +30,8 @@ from .trait import Platform
 
 AIX = Platform("aix", "IBM AIX", "➿", "https://ibm.com/products/aix/")
 
+ALPINE = Platform("alpine", "Alpine Linux", "🏔️", "https://alpinelinux.org")
+
 ALTLINUX = Platform("altlinux", "ALT Linux", "Δ", "https://altlinux.org")
 
 AMZN = Platform("amzn", "Amazon Linux", "⤻", "https://aws.amazon.com/amazon-linux-ami/")
@@ -77,6 +79,8 @@ IBM_POWERKVM = Platform(
 
 ILLUMOS = Platform("illumos", "illumos", "🔥", "https://illumos.org")
 
+KALI = Platform("kali", "Kali Linux", "🔱", "https://kali.org")
+
 KVMIBM = Platform(
     "kvmibm", "KVM for IBM z Systems", "🤹", "https://ibm.com/products/kvm/"
 )
@@ -93,6 +97,8 @@ MANDRIVA = Platform(
     "💫",
     "https://web.archive.org/web/20150522203942/https://mandriva.com/en/mbs/",
 )
+
+MANJARO = Platform("manjaro", "Manjaro Linux", "▲", "https://manjaro.org")
 
 MIDNIGHTBSD = Platform("midnightbsd", "MidnightBSD", "🌘", "https://midnightbsd.org")
 
@@ -118,6 +124,8 @@ NOBARA = Platform("nobara", "Nobara", "", "https://nobaraproject.org")
 OPENBSD = Platform("openbsd", "OpenBSD", "🐡", "https://openbsd.org")
 
 OPENSUSE = Platform("opensuse", "openSUSE", "🦎", "https://opensuse.org")
+
+OPENWRT = Platform("openwrt", "OpenWrt", "📶", "https://openwrt.org")
 
 ORACLE = Platform("oracle", "Oracle Linux", "🦴", "https://oracle.com/linux/")
 

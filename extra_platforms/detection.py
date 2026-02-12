@@ -318,6 +318,12 @@ def is_aix() -> bool:
 
 
 @cache
+def is_alpine() -> bool:
+    """Return :data:`True` if current platform is :data:`~extra_platforms.ALPINE`."""
+    return distro.id() == "alpine"
+
+
+@cache
 def is_altlinux() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.ALTLINUX`."""
     return distro.id() == "altlinux"
@@ -455,6 +461,12 @@ def is_illumos() -> bool:
 
 
 @cache
+def is_kali() -> bool:
+    """Return :data:`True` if current platform is :data:`~extra_platforms.KALI`."""
+    return distro.id() == "kali"
+
+
+@cache
 def is_kvmibm() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.KVMIBM`."""
     return distro.id() == "kvmibm"
@@ -485,6 +497,12 @@ def is_mandriva() -> bool:
 
 
 @cache
+def is_manjaro() -> bool:
+    """Return :data:`True` if current platform is :data:`~extra_platforms.MANJARO`."""
+    return distro.id() == "manjaro"
+
+
+@cache
 def is_midnightbsd() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.MIDNIGHTBSD`."""
     return sys.platform.startswith("midnightbsd") or distro.id() == "midnightbsd"
@@ -512,6 +530,12 @@ def is_openbsd() -> bool:
 def is_opensuse() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.OPENSUSE`."""
     return distro.id() == "opensuse"
+
+
+@cache
+def is_openwrt() -> bool:
+    """Return :data:`True` if current platform is :data:`~extra_platforms.OPENWRT`."""
+    return distro.id() == "openwrt"
 
 
 @cache
@@ -693,6 +717,12 @@ def is_ash() -> bool:
     .. hint::
         Detected via the ``SHELL`` environment variable path, as Almquist
         Shell does not set its own version variable.
+
+    .. note::
+        `BusyBox <https://busybox.net>`_'s built-in shell is an :data:`~extra_platforms.ASH`
+        derivative. On BusyBox-based systems (:data:`~extra_platforms.ALPINE`,
+        :data:`~extra_platforms.OPENWRT`), ``$SHELL`` typically resolves to ``/bin/ash``,
+        so BusyBox environments are detected as :data:`~extra_platforms.ASH`.
     """
     return _parse_shell_from_path(environ.get("SHELL", "")) == "ash"
 
