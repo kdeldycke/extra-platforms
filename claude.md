@@ -8,7 +8,7 @@ Extra Platforms is a Python library for detecting and managing platform/OS infor
 
 It provides:
 
-- Detection of architectures, platforms (operating systems), and CI systems
+- Detection of architectures, platforms (operating systems), shells, and CI systems
 - Grouping of platforms into families (e.g., `LINUX`, `BSD`, `UNIX`)
 - Pytest decorators for conditional test skipping (`@skip_<id>`, `@unless_<id>`)
 
@@ -58,8 +58,9 @@ All core classes are defined in `trait.py`:
 
 ```
 Trait (ABC) - Base class for all detectable traits
-├── Platform - Operating systems
 ├── Architecture - CPU architectures
+├── Platform - Operating systems
+├── Shell - Command-line shells
 └── CI - CI/CD systems
 
 Group - Collection of Traits with set-like operations (group.py)
@@ -69,11 +70,12 @@ Group - Collection of Traits with set-like operations (group.py)
 
 | Module                 | Purpose                                                             |
 | ---------------------- | ------------------------------------------------------------------- |
-| `trait.py`             | Base classes: `Trait`, `Platform`, `Architecture`, `CI`             |
+| `trait.py`             | Base classes: `Trait`, `Architecture`, `Platform`, `Shell`, `CI`    |
 | `detection.py`         | All `is_<id>()` detection functions                                 |
 | `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()` |
-| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)             |
 | `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                |
+| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)             |
+| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                      |
 | `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                     |
 | `group_data.py`        | All `Group` instances and ID collections                            |
 | `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                |
@@ -197,6 +199,7 @@ Icons are inspired by [Starship](https://starship.rs/) and [NerdFonts](https://w
 
 ### Ordering and uniqueness
 
+- **Trait category ordering**: When trait categories appear together (in code sections, imports, collections, documentation, tests, etc.), they must follow this canonical order: **Architecture → Platform → Shell → CI**. This applies to class definitions, detection function sections, group collections, `__all__` exports, documentation pages, and test files.
 - All IDs must be unique across traits and groups.
 - High-level objects in data files must be sorted alphabetically by ID.
 - Tests should verify this ordering.
