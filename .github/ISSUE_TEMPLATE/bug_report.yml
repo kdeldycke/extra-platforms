@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a bug or detection issue
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting!
+
+        Please paste the output of `extra-platforms` below so we can reproduce your environment.
+
+  - type: textarea
+    id: cli-output
+    attributes:
+      label: "`extra-platforms` output"
+      description: |
+        Run **one** of the following commands and paste the full output:
+
+        Stable release:
+        ```shell-session
+        $ uvx extra-platforms
+        ```
+
+        Development release (latest from `main`):
+        ```shell-session
+        $ uvx --from 'extra-platforms @ git+https://github.com/kdeldycke/extra-platforms.git' extra-platforms
+        ```
+
+        The development version may already include a fix or improved detection for your issue.
+      render: text
+    validations:
+      required: true
