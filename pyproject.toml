@@ -207,24 +207,27 @@ dependencies = [
   # distro 1.9.0 adds support for ALT Linux.
   "distro>=1.9",
 ]
-optional-dependencies.pytest = [
+
+[project.entry-points]
+pytest11.extra-platforms = "extra_platforms.pytest"
+
+[project.optional-dependencies]
+pytest = [
   # pytest 8.2.1 is the first version to support Python 3.13.
   "pytest>=8.2.1",
 ]
-urls."Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
-urls."Documentation" = "https://kdeldycke.github.io/extra-platforms"
-urls."Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v9.0.1"
-urls."Funding" = "https://github.com/sponsors/kdeldycke"
-# Package referenced above and also featured in [project.optional-dependencies] or [dependency-groups]
-# will be set without version specifier as they are already constrained.
 
-urls."Homepage" = "https://github.com/kdeldycke/extra-platforms"
-urls."Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
-urls."Repository" = "https://github.com/kdeldycke/extra-platforms"
-# Make additional fixtures available to pytest.
-# See: https://docs.pytest.org/en/latest/how-to/writing_plugins.html#making-your-plugin-installable-by-others
-entry-points.pytest11.extra-platforms = "extra_platforms.pytest"
-scripts.extra-platforms = "extra_platforms.__main__:main"
+[project.scripts]
+extra-platforms = "extra_platforms.__main__:main"
+
+[project.urls]
+"Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
+"Documentation" = "https://kdeldycke.github.io/extra-platforms"
+"Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v9.0.1"
+"Funding" = "https://github.com/sponsors/kdeldycke"
+"Homepage" = "https://github.com/kdeldycke/extra-platforms"
+"Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
+"Repository" = "https://github.com/kdeldycke/extra-platforms"
 
 [dependency-groups]
 test = [
@@ -266,17 +269,13 @@ typing = [
 ]
 
 [tool.uv]
+dependency-groups.docs = { requires-python = ">= 3.12" }
 # Cooldown period.
 exclude-newer = "2026-02-04T00:00:00Z"
 # XXX Disable exclusion of brand new click-extra releases.
 exclude-newer-package = { "click-extra" = "0 day" }
-
-[tool.uv.build-backend]
 # Package is at root level, not in "./src/".
-module-root = ""
-
-[tool.uv.dependency-groups]
-docs = { requires-python = ">= 3.12" }
+build-backend.module-root = ""
 
 [tool.typos]
 default.extend-ignore-identifiers-re = [
@@ -300,9 +299,9 @@ default.extend-ignore-identifiers-re = [
   "Sur",
 ]
 
-[tool.pytest.ini_options]
+[tool.pytest]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
-addopts = [
+ini_options.addopts = [
   "--durations=10",
   "--cov=extra_platforms",
   "--cov-branch",
@@ -315,12 +314,11 @@ addopts = [
   "--override-ini=junit_family=legacy",
 ]
 # Make sure tests that are expected to fail do not resurect and start working all of a sudden.
-xfail_strict = true
+ini_options.xfail_strict = true
 
 [tool.bumpversion]
 current_version = "9.0.1"
 allow_dirty = true
-
 # TODO: Reuse the same search and replace patterns available in the reused workflows' pyproject.toml.
 
 [[tool.bumpversion.files]]
@@ -337,8 +335,8 @@ replace = 'version = "{new_version}"'
 [[tool.bumpversion.files]]
 # Update version in download URL.
 filename = "./pyproject.toml"
-search = 'releases/tag/v{current_version}'
-replace = 'releases/tag/v{new_version}'
+search = "releases/tag/v{current_version}"
+replace = "releases/tag/v{new_version}"
 
 [[tool.bumpversion.files]]
 # Update the version in Markdown changelog.
