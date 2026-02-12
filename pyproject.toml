@@ -274,8 +274,6 @@ typing = [
 dependency-groups.docs = { requires-python = ">= 3.12" }
 # Cooldown period.
 exclude-newer = "2026-02-04T00:00:00Z"
-# XXX Disable exclusion of brand new click-extra releases.
-exclude-newer-package = { "click-extra" = "0 day" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 
