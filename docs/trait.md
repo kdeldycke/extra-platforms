@@ -156,7 +156,7 @@ All recognized traits and their properties:
 |  ꩜   | {data}`~CLOUDLINUX`           | CloudLinux OS                  | {func}`~is_cloudlinux`           | Platform     |
 |  ▶   | {data}`~CMD`                  | Command Prompt                 | {func}`~is_cmd`                  | Shell        |
 |  ᚙ   | {data}`~CODEBUILD`            | CodeBuild                      | {func}`~is_codebuild`            | CI           |
-|  ©   | {data}`~CSH`                  | C shell                        | {func}`~is_csh`                  | Shell        |
+|  𝐂   | {data}`~CSH`                  | C shell                        | {func}`~is_csh`                  | Shell        |
 |  Ͼ   | {data}`~CYGWIN`               | Cygwin                         | {func}`~is_cygwin`               | Platform     |
 |  💨  | {data}`~DASH`                 | Dash                           | {func}`~is_dash`                 | Shell        |
 |  🌀  | {data}`~DEBIAN`               | Debian                         | {func}`~is_debian`               | Platform     |
@@ -217,7 +217,7 @@ All recognized traits and their properties:
 |  ☀️  | {data}`~SPARC`                | SPARC (32-bit)                 | {func}`~is_sparc`                | Architecture |
 |  ☀️  | {data}`~SPARC64`              | SPARC (64-bit)                 | {func}`~is_sparc64`              | Architecture |
 |  🌅  | {data}`~SUNOS`                | SunOS                          | {func}`~is_sunos`                | Platform     |
-|  ©   | {data}`~TCSH`                 | tcsh                           | {func}`~is_tcsh`                 | Shell        |
+|  𝐓   | {data}`~TCSH`                 | tcsh                           | {func}`~is_tcsh`                 | Shell        |
 |  🏙️  | {data}`~TEAMCITY`             | TeamCity                       | {func}`~is_teamcity`             | CI           |
 |  👷  | {data}`~TRAVIS_CI`            | Travis CI                      | {func}`~is_travis_ci`            | CI           |
 |  ↻   | {data}`~TUMBLEWEED`           | openSUSE Tumbleweed            | {func}`~is_tumbleweed`           | Platform     |

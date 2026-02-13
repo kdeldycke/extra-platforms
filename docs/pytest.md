@@ -120,7 +120,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_cloudlinux`           | {deco}`~pytest.unless_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {deco}`~pytest.skip_cmd`                  | {deco}`~pytest.unless_cmd`                  |  ▶   | {data}`~CMD`                  |
 | {deco}`~pytest.skip_codebuild`            | {deco}`~pytest.unless_codebuild`            |  ᚙ   | {data}`~CODEBUILD`            |
-| {deco}`~pytest.skip_csh`                  | {deco}`~pytest.unless_csh`                  |  ©   | {data}`~CSH`                  |
+| {deco}`~pytest.skip_csh`                  | {deco}`~pytest.unless_csh`                  |  𝐂   | {data}`~CSH`                  |
 | {deco}`~pytest.skip_cygwin`               | {deco}`~pytest.unless_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
 | {deco}`~pytest.skip_dash`                 | {deco}`~pytest.unless_dash`                 |  💨  | {data}`~DASH`                 |
 | {deco}`~pytest.skip_debian`               | {deco}`~pytest.unless_debian`               |  🌀  | {data}`~DEBIAN`               |
@@ -192,7 +192,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_sparc64`              | {deco}`~pytest.unless_sparc64`              |  ☀️  | {data}`~SPARC64`              |
 | {deco}`~pytest.skip_sunos`                | {deco}`~pytest.unless_sunos`                |  🌅  | {data}`~SUNOS`                |
 | {deco}`~pytest.skip_system_v`             | {deco}`~pytest.unless_system_v`             |  𝐕   | {data}`~SYSTEM_V`             |
-| {deco}`~pytest.skip_tcsh`                 | {deco}`~pytest.unless_tcsh`                 |  ©   | {data}`~TCSH`                 |
+| {deco}`~pytest.skip_tcsh`                 | {deco}`~pytest.unless_tcsh`                 |  𝐓   | {data}`~TCSH`                 |
 | {deco}`~pytest.skip_teamcity`             | {deco}`~pytest.unless_teamcity`             |  🏙️  | {data}`~TEAMCITY`             |
 | {deco}`~pytest.skip_travis_ci`            | {deco}`~pytest.unless_travis_ci`            |  👷  | {data}`~TRAVIS_CI`            |
 | {deco}`~pytest.skip_tumbleweed`           | {deco}`~pytest.unless_tumbleweed`           |  ↻   | {data}`~TUMBLEWEED`           |

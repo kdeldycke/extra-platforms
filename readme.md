@@ -369,8 +369,8 @@ mindmap
             (𝜈 NUSHELL)
             (🐍 XONSH)
         )🅲 C_SHELLS(
-            (© CSH)
-            (© TCSH)
+            (𝐂 CSH)
+            (𝐓 TCSH)
         )💲 BOURNE_SHELLS(
             (🪶 ASH)
             (＃ BASH)

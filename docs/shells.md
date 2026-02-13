@@ -52,13 +52,13 @@ Shell(id='unknown_shell', name='Unknown shell')
 |  🪶  | {data}`~ASH`        | Almquist Shell | {func}`~is_ash`        |
 |  ＃  | {data}`~BASH`       | Bash           | {func}`~is_bash`       |
 |  ▶   | {data}`~CMD`        | Command Prompt | {func}`~is_cmd`        |
-|  ©   | {data}`~CSH`        | C shell        | {func}`~is_csh`        |
+|  𝐂   | {data}`~CSH`        | C shell        | {func}`~is_csh`        |
 |  💨  | {data}`~DASH`       | Dash           | {func}`~is_dash`       |
 |  🐟  | {data}`~FISH`       | Fish           | {func}`~is_fish`       |
 |  𝐊   | {data}`~KSH`        | Korn shell     | {func}`~is_ksh`        |
 |  𝜈   | {data}`~NUSHELL`    | Nushell        | {func}`~is_nushell`    |
 |  🔷  | {data}`~POWERSHELL` | PowerShell     | {func}`~is_powershell` |
-|  ©   | {data}`~TCSH`       | tcsh           | {func}`~is_tcsh`       |
+|  𝐓   | {data}`~TCSH`       | tcsh           | {func}`~is_tcsh`       |
 |  🐍  | {data}`~XONSH`      | Xonsh          | {func}`~is_xonsh`      |
 |  ℤ   | {data}`~ZSH`        | Zsh            | {func}`~is_zsh`        |
 
@@ -137,8 +137,8 @@ mindmap
             (𝜈 NUSHELL)
             (🐍 XONSH)
         )🅲 C_SHELLS(
-            (© CSH)
-            (© TCSH)
+            (𝐂 CSH)
+            (𝐓 TCSH)
         )💲 BOURNE_SHELLS(
             (🪶 ASH)
             (＃ BASH)

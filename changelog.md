@@ -8,6 +8,7 @@
 - Add `extra-platforms` CLI command.
 - Add new `ALPINE`, `KALI`, `MANJARO`, `OPENWRT` platform definitions.
 - Add issue template with detection results reporting.
+- Tweak some icons.
 
 ## [9.0.0 (2026-02-11)](https://github.com/kdeldycke/extra-platforms/compare/v8.0.0...v9.0.0)
 

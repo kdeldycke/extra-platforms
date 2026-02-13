@@ -43,7 +43,7 @@ CMD = Shell(
 CSH = Shell(
     "csh",
     "C shell",
-    "©",
+    "𝐂",
     "https://en.wikipedia.org/wiki/C_shell",
 )
 
@@ -85,7 +85,7 @@ POWERSHELL = Shell(
 TCSH = Shell(
     "tcsh",
     "tcsh",
-    "©",
+    "𝐓",
     "https://www.tcsh.org",
 )
 

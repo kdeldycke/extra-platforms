@@ -55,7 +55,7 @@
 | {func}`~is_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {func}`~is_cmd`                  |  ▶   | {data}`~CMD`                  |
 | {func}`~is_codebuild`            |  ᚙ   | {data}`~CODEBUILD`            |
-| {func}`~is_csh`                  |  ©   | {data}`~CSH`                  |
+| {func}`~is_csh`                  |  𝐂   | {data}`~CSH`                  |
 | {func}`~is_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
 | {func}`~is_dash`                 |  💨  | {data}`~DASH`                 |
 | {func}`~is_debian`               |  🌀  | {data}`~DEBIAN`               |
@@ -127,7 +127,7 @@
 | {func}`~is_sparc64`              |  ☀️  | {data}`~SPARC64`              |
 | {func}`~is_sunos`                |  🌅  | {data}`~SUNOS`                |
 | {func}`~is_system_v`             |  𝐕   | {data}`~SYSTEM_V`             |
-| {func}`~is_tcsh`                 |  ©   | {data}`~TCSH`                 |
+| {func}`~is_tcsh`                 |  𝐓   | {data}`~TCSH`                 |
 | {func}`~is_teamcity`             |  🏙️  | {data}`~TEAMCITY`             |
 | {func}`~is_travis_ci`            |  👷  | {data}`~TRAVIS_CI`            |
 | {func}`~is_tumbleweed`           |  ↻   | {data}`~TUMBLEWEED`           |
