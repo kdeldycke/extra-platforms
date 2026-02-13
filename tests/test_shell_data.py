@@ -25,7 +25,10 @@ from extra_platforms import (
     ALL_SHELL_GROUPS,
     ALL_SHELLS,
     ALL_TRAITS,
+    BOURNE_SHELLS,
+    C_SHELLS,
     NON_OVERLAPPING_GROUPS,
+    OTHER_SHELLS,
     UNKNOWN_SHELL,
     current_shell,
     is_unknown_shell,
@@ -69,6 +72,16 @@ def test_shell_logical_grouping():
     """All shell groups are subsets of ALL_SHELLS."""
     for group in ALL_SHELL_GROUPS:
         assert group.issubset(ALL_SHELLS)
+
+    # All shells are divided into families.
+    assert ALL_SHELLS.fullyintersects(
+        BOURNE_SHELLS | C_SHELLS | OTHER_SHELLS | WINDOWS_SHELLS
+    )
+    assert not ALL_SHELLS.canonical
+    assert BOURNE_SHELLS.canonical
+    assert C_SHELLS.canonical
+    assert OTHER_SHELLS.canonical
+    assert WINDOWS_SHELLS.canonical
 
 
 def test_no_missing_shell_in_groups():

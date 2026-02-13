@@ -37,6 +37,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     GITLAB_CI,
     MACOS,
     SYSTEM_V,
+    TUMBLEWEED,
     UBUNTU,
     UNIX,
     UNKNOWN,
@@ -45,7 +46,6 @@ from extra_platforms import (  # type: ignore[attr-defined]
     UNKNOWN_PLATFORM,
     UNKNOWN_SHELL,
     WINDOWS,
-    TUMBLEWEED,
     WSL1,
     WSL2,
     X86_64,
@@ -63,7 +63,6 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_linux,
     is_macos,
     is_ubuntu,
-    is_unknown_shell,
     is_windows,
 )
 from extra_platforms import architecture_data as architecture_data_module
@@ -234,11 +233,8 @@ def test_current_funcs():
     current_traits_results = current_traits()
     assert ALL_TRAITS.issuperset(current_traits_results)
 
-    # 1 platform + 1 architecture = 2 traits.
-    detected_traits = 2
-    # Shell detection may or may not match.
-    if not is_unknown_shell():
-        detected_traits += 1
+    # 1 architecture + 1 platform + 1 shell = 3 traits.
+    detected_traits = 3
     if is_github_ci():
         if github_runner_os() == "ubuntu-slim":
             # +2 architectures (Ubuntu + WSL) + 1 CI.
@@ -259,9 +255,9 @@ def test_current_funcs():
     assert current_platform_result is not UNKNOWN_PLATFORM
 
     current_shell_result = current_shell()
-    assert current_shell_result in ALL_SHELLS | {UNKNOWN_SHELL}
-    if current_shell_result is not UNKNOWN_SHELL:
-        assert current_shell_result in current_traits_results
+    assert current_shell_result in ALL_SHELLS
+    assert current_shell_result in current_traits_results
+    assert current_shell_result is not UNKNOWN_SHELL
 
     current_ci_result = current_ci()
     assert current_ci_result in ALL_CI | {UNKNOWN_CI}
@@ -417,6 +413,20 @@ def test_multiple_platforms_match_non_wsl(monkeypatch):
 
     with pytest.raises(RuntimeError, match="Multiple platforms matches"):
         current_platform()
+
+    invalidate_caches()
+
+
+def test_multiple_shells_match(monkeypatch):
+    """Test RuntimeError when multiple shells match."""
+    invalidate_caches()
+
+    # Mock two shells to both return True.
+    monkeypatch.setattr(type(BASH), "current", property(lambda self: True))
+    monkeypatch.setattr(type(POWERSHELL), "current", property(lambda self: True))
+
+    with pytest.raises(RuntimeError, match="Multiple shells matches"):
+        current_shell()
 
     invalidate_caches()
 

@@ -105,6 +105,7 @@ def test_architecture_detection():
 
     # Architecture bitness.
     assert is_arch_32_bit() or is_arch_64_bit()
+    assert is_little_endian() or is_big_endian()
 
     if is_x86_64():
         assert not is_i386()
@@ -163,7 +164,7 @@ def test_architecture_logical_grouping():
     for group in ALL_ARCHITECTURE_GROUPS:
         assert group.issubset(ALL_ARCHITECTURES)
 
-    # All architectures are divided by Unix families.
+    # All architectures are divided into families.
     assert ALL_ARCHITECTURES.fullyintersects(
         ALL_ARM
         | ALL_MIPS
@@ -175,6 +176,7 @@ def test_architecture_logical_grouping():
         | WEBASSEMBLY
         | X86
     )
+    assert not ALL_ARCHITECTURES.canonical
     assert ALL_ARM.canonical
     assert ALL_MIPS.canonical
     assert ALL_SPARC.canonical

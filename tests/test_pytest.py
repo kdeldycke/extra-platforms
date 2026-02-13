@@ -33,41 +33,56 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_any_architecture,
     is_any_ci,
     is_any_platform,
+    is_any_shell,
     is_any_windows,
+    is_bash,
     is_github_ci,
     is_linux,
     is_macos,
+    is_powershell,
     is_ubuntu,
     is_unknown_architecture,
     is_unknown_ci,
     is_unknown_platform,
+    is_unknown_shell,
     is_windows,
+    is_x86_64,
 )
 from extra_platforms.pytest import (
     _DeferredCondition,
+    skip_aarch64,
     skip_all_architectures,
     skip_all_ci,
     skip_all_platforms,
+    skip_all_shells,
+    skip_bash,
     skip_github_ci,
     skip_linux,
     skip_macos,
+    skip_powershell,
     skip_ubuntu,
     skip_unknown,
     skip_unknown_architecture,
     skip_unknown_ci,
     skip_unknown_platform,
+    skip_unknown_shell,
     skip_windows,
+    skip_x86_64,
     unless_any_architecture,
     unless_any_ci,
     unless_any_platform,
+    unless_any_shell,
+    unless_bash,
     unless_github_ci,
     unless_linux,
     unless_macos,
+    unless_powershell,
     unless_ubuntu,
     unless_unknown,
     unless_unknown_architecture,
     unless_unknown_ci,
     unless_unknown_platform,
+    unless_unknown_shell,
     unless_windows,
 )
 
@@ -170,6 +185,20 @@ def test_unless_any_platform():
     )
 
 
+@skip_all_shells
+def test_skip_all_shells():
+    assert is_unknown_shell()
+    assert False, (
+        "This test should always be skipped as we expect to always detect a shell."
+    )
+
+
+@unless_any_shell
+def test_unless_any_shell():
+    assert not is_unknown_shell()
+    assert True, "This test should always be run as we expect to always detect a shell."
+
+
 @skip_all_ci
 def test_skip_all_ci():
     assert is_unknown_ci()
@@ -187,6 +216,8 @@ def test_skip_unknown_architecture():
 
     assert is_any_platform() or is_unknown_platform()
 
+    assert is_any_shell() or is_unknown_shell()
+
     assert is_any_ci() or is_unknown_ci()
 
 
@@ -196,6 +227,8 @@ def test_unless_unknown_architecture():
     assert is_unknown_architecture()
 
     assert is_any_platform() or is_unknown_platform()
+
+    assert is_any_shell() or is_unknown_shell()
 
     assert is_any_ci() or is_unknown_ci()
 
@@ -207,6 +240,8 @@ def test_skip_unknown_platform():
     assert is_any_platform()
     assert not is_unknown_platform()
 
+    assert is_any_shell() or is_unknown_shell()
+
     assert is_any_ci() or is_unknown_ci()
 
 
@@ -217,6 +252,32 @@ def test_unless_unknown_platform():
     assert not is_any_platform()
     assert is_unknown_platform()
 
+    assert is_any_shell() or is_unknown_shell()
+
+    assert is_any_ci() or is_unknown_ci()
+
+
+@skip_unknown_shell
+def test_skip_unknown_shell():
+    assert is_any_architecture() or is_unknown_architecture()
+
+    assert is_any_platform() or is_unknown_platform()
+
+    assert is_any_shell()
+    assert not is_unknown_shell()
+
+    assert is_any_ci() or is_unknown_ci()
+
+
+@unless_unknown_shell
+def test_unless_unknown_shell():
+    assert is_any_architecture() or is_unknown_architecture()
+
+    assert is_any_platform() or is_unknown_platform()
+
+    assert not is_any_shell()
+    assert is_unknown_shell()
+
     assert is_any_ci() or is_unknown_ci()
 
 
@@ -225,6 +286,8 @@ def test_skip_unknown_ci():
     assert is_any_architecture() or is_unknown_architecture()
 
     assert is_any_platform() or is_unknown_platform()
+
+    assert is_any_shell() or is_unknown_shell()
 
     assert is_any_ci()
     assert not is_unknown_ci()
@@ -236,8 +299,38 @@ def test_unless_unknown_ci():
 
     assert is_any_platform() or is_unknown_platform()
 
+    assert is_any_shell() or is_unknown_shell()
+
     assert not is_any_ci()
     assert is_unknown_ci()
+
+
+@skip_aarch64
+def test_skip_aarch64():
+    assert is_any_architecture()
+    assert not is_aarch64()
+    assert not is_x86_64()
+
+
+@unless_aarch64
+def test_unless_aarch64():
+    assert is_any_architecture()
+    assert is_aarch64()
+    assert not is_x86_64()
+
+
+@skip_x86_64
+def test_skip_x86_64():
+    assert is_any_architecture()
+    assert not is_x86_64()
+    assert not is_aarch64()
+
+
+@unless_x86_64
+def test_unless_x86_64():
+    assert is_any_architecture()
+    assert is_x86_64()
+    assert not is_aarch64()
 
 
 @skip_linux
@@ -308,6 +401,34 @@ def test_unless_windows():
     assert not is_macos()
     assert not is_ubuntu()
     assert is_windows()
+
+
+@skip_bash
+def test_skip_bash():
+    assert is_any_shell()
+    assert not is_bash()
+    assert not is_powershell()
+
+
+@unless_bash
+def test_unless_bash():
+    assert is_any_shell()
+    assert is_bash()
+    assert not is_powershell()
+
+
+@skip_powershell
+def test_skip_powershell():
+    assert is_any_shell()
+    assert not is_bash()
+    assert not is_powershell()
+
+
+@unless_powershell
+def test_unless_powershell():
+    assert is_any_shell()
+    assert not is_bash()
+    assert is_powershell()
 
 
 @skip_github_ci

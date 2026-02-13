@@ -128,6 +128,10 @@ This section demonstrates all syntax variations for referencing different object
 | `` {func}`~is_aarch64` ``                         | {func}`~is_aarch64`                         | Architecture trait detection function                      |
 | `` {data}`~pytest.skip_aarch64` ``                | {data}`~pytest.skip_aarch64`                | Architecture trait skip decorator                          |
 | `` {data}`~pytest.unless_aarch64` ``              | {data}`~pytest.unless_aarch64`              | Architecture trait unless decorator                        |
+| `` {data}`~BASH` ``                               | {data}`~BASH`                               | Shell trait symbol                                         |
+| `` {func}`~is_bash` ``                            | {func}`~is_bash`                            | Shell trait detection function                             |
+| `` {data}`~pytest.skip_bash` ``                   | {data}`~pytest.skip_bash`                   | Shell trait skip decorator                                 |
+| `` {data}`~pytest.unless_bash` ``                 | {data}`~pytest.unless_bash`                 | Shell trait unless decorator                               |
 | `` {data}`~GITHUB_CI` ``                          | {data}`~GITHUB_CI`                          | CI trait symbol                                            |
 | `` {func}`~is_github_ci` ``                       | {func}`~is_github_ci`                       | CI trait detection function                                |
 | `` {data}`~pytest.skip_github_ci` ``              | {data}`~pytest.skip_github_ci`              | CI trait skip decorator                                    |
@@ -141,6 +145,10 @@ This section demonstrates all syntax variations for referencing different object
 | `` {func}`~is_any_platform` ``                    | {func}`~is_any_platform`                    | `ALL_*` group detection function                           |
 | `` {data}`~pytest.skip_all_platforms` ``          | {data}`~pytest.skip_all_platforms`          | `ALL_*` group skip decorator                               |
 | `` {data}`~pytest.unless_any_platform` ``         | {data}`~pytest.unless_any_platform`         | `ALL_*` group unless decorator                             |
+| `` {data}`~ALL_SHELLS` ``                         | {data}`~ALL_SHELLS`                         | `ALL_*` shell group symbol                                 |
+| `` {func}`~is_any_shell` ``                       | {func}`~is_any_shell`                       | `ALL_*` shell group detection function                     |
+| `` {data}`~pytest.skip_all_shells` ``             | {data}`~pytest.skip_all_shells`             | `ALL_*` shell group skip decorator                         |
+| `` {data}`~pytest.unless_any_shell` ``            | {data}`~pytest.unless_any_shell`            | `ALL_*` shell group unless decorator                       |
 | `` {data}`~UNKNOWN_PLATFORM` ``                   | {data}`~UNKNOWN_PLATFORM`                   | Unknown platform symbol                                    |
 | `` {func}`~is_unknown_platform` ``                | {func}`~is_unknown_platform`                | Unknown platform detection function                        |
 | `` {data}`~pytest.skip_unknown_platform` ``       | {data}`~pytest.skip_unknown_platform`       | Unknown platform skip decorator                            |
@@ -149,6 +157,10 @@ This section demonstrates all syntax variations for referencing different object
 | `` {func}`~is_unknown_architecture` ``            | {func}`~is_unknown_architecture`            | Unknown architecture detection function                    |
 | `` {data}`~pytest.skip_unknown_architecture` ``   | {data}`~pytest.skip_unknown_architecture`   | Unknown architecture skip decorator                        |
 | `` {data}`~pytest.unless_unknown_architecture` `` | {data}`~pytest.unless_unknown_architecture` | Unknown architecture unless decorator                      |
+| `` {data}`~UNKNOWN_SHELL` ``                      | {data}`~UNKNOWN_SHELL`                      | Unknown shell symbol                                       |
+| `` {func}`~is_unknown_shell` ``                   | {func}`~is_unknown_shell`                   | Unknown shell detection function                           |
+| `` {data}`~pytest.skip_unknown_shell` ``          | {data}`~pytest.skip_unknown_shell`          | Unknown shell skip decorator                               |
+| `` {data}`~pytest.unless_unknown_shell` ``        | {data}`~pytest.unless_unknown_shell`        | Unknown shell unless decorator                             |
 | `` {data}`~UNKNOWN_CI` ``                         | {data}`~UNKNOWN_CI`                         | Unknown CI symbol                                          |
 | `` {func}`~is_unknown_ci` ``                      | {func}`~is_unknown_ci`                      | Unknown CI detection function                              |
 | `` {data}`~pytest.skip_unknown_ci` ``             | {data}`~pytest.skip_unknown_ci`             | Unknown CI skip decorator                                  |
@@ -158,11 +170,13 @@ This section demonstrates all syntax variations for referencing different object
 |                                                   |                                             | **Detection Methods**                                      |
 | `` {func}`~current_platform` ``                   | {func}`~current_platform`                   | Current platform detection function                        |
 | `` {func}`~current_architecture` ``               | {func}`~current_architecture`               | Current architecture detection function                    |
+| `` {func}`~current_shell` ``                      | {func}`~current_shell`                      | Current shell detection function                           |
 | `` {func}`~current_ci` ``                         | {func}`~current_ci`                         | Current CI detection function                              |
 | `` {func}`~current_traits` ``                     | {func}`~current_traits`                     | All current traits detection function                      |
 |                                                   |                                             | **Classes**                                                |
 | `` {class}`~Platform` ``                          | {class}`~Platform`                          | Platform trait class                                       |
 | `` {class}`~Architecture` ``                      | {class}`~Architecture`                      | Architecture trait class                                   |
+| `` {class}`~Shell` ``                             | {class}`~Shell`                             | Shell trait class                                          |
 | `` {class}`~CI` ``                                | {class}`~CI`                                | CI trait class                                             |
 | `` {class}`~Group` ``                             | {class}`~Group`                             | Group class                                                |
 |                                                   |                                             | **Utilities**                                              |

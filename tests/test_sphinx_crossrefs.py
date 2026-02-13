@@ -38,6 +38,7 @@ from extra_platforms import (
     Architecture,
     Group,
     Platform,
+    Shell,
     Trait,
 )
 
@@ -108,9 +109,11 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
         # Group symbols on groups.html.
         ("groups.html", "ALL_ARCHITECTURES", "#extra_platforms.ALL_ARCHITECTURES"),
         ("groups.html", "ALL_PLATFORMS", "#extra_platforms.ALL_PLATFORMS"),
+        ("groups.html", "ALL_SHELLS", "#extra_platforms.ALL_SHELLS"),
         ("groups.html", "LINUX", "#extra_platforms.LINUX"),
         ("groups.html", "BSD", "#extra_platforms.BSD"),
         ("groups.html", "UNIX", "#extra_platforms.UNIX"),
+        ("groups.html", "BOURNE_SHELLS", "#extra_platforms.BOURNE_SHELLS"),
         # Group detection functions on groups.html.
         (
             "groups.html",
@@ -122,12 +125,18 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
             "is_any_platform()",
             "detection.html#extra_platforms.is_any_platform",
         ),
+        (
+            "groups.html",
+            "is_any_shell()",
+            "detection.html#extra_platforms.is_any_shell",
+        ),
         ("groups.html", "is_linux()", "detection.html#extra_platforms.is_linux"),
         ("groups.html", "is_bsd()", "detection.html#extra_platforms.is_bsd"),
         ("groups.html", "is_unix()", "detection.html#extra_platforms.is_unix"),
         # Pytest decorator table symbols.
         ("pytest.html", "AARCH64", "architectures.html#extra_platforms.AARCH64"),
         ("pytest.html", "UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("pytest.html", "BASH", "shells.html#extra_platforms.BASH"),
         ("pytest.html", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
         ("pytest.html", "LINUX", "groups.html#extra_platforms.LINUX"),
         # Pytest decorator docstrings.
@@ -144,11 +153,13 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
             "architectures.html#extra_platforms.AARCH64",
         ),
         ("detection.html", "UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("detection.html", "BASH", "shells.html#extra_platforms.BASH"),
         ("detection.html", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
         ("detection.html", "LINUX", "groups.html#extra_platforms.LINUX"),
         # Trait table symbols.
         ("trait.html", "AARCH64", "architectures.html#extra_platforms.AARCH64"),
         ("trait.html", "UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
+        ("trait.html", "BASH", "shells.html#extra_platforms.BASH"),
         ("trait.html", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
         # Trait table detection functions.
         (
@@ -157,6 +168,7 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
             "detection.html#extra_platforms.is_aarch64",
         ),
         ("trait.html", "is_ubuntu()", "detection.html#extra_platforms.is_ubuntu"),
+        ("trait.html", "is_bash()", "detection.html#extra_platforms.is_bash"),
         (
             "trait.html",
             "is_github_ci()",
@@ -187,6 +199,9 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
         ("architectures.html", "AARCH64", "#extra_platforms.AARCH64"),
         ("architectures.html", "X86_64", "#extra_platforms.X86_64"),
         ("architectures.html", "ARM", "#extra_platforms.ARM"),
+        # Shell symbols.
+        ("shells.html", "BASH", "#extra_platforms.BASH"),
+        ("shells.html", "POWERSHELL", "#extra_platforms.POWERSHELL"),
         # CI symbols.
         ("ci.html", "GITHUB_CI", "#extra_platforms.GITHUB_CI"),
         ("ci.html", "GITLAB_CI", "#extra_platforms.GITLAB_CI"),
@@ -275,6 +290,19 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "unless_aarch64",
             "pytest.html#extra_platforms.pytest.unless_aarch64",
         ),
+        # Shells
+        ("{data}`~BASH`", "BASH", "shells.html#extra_platforms.BASH"),
+        ("{func}`~is_bash`", "is_bash()", "detection.html#extra_platforms.is_bash"),
+        (
+            "{data}`~pytest.skip_bash`",
+            "skip_bash",
+            "pytest.html#extra_platforms.pytest.skip_bash",
+        ),
+        (
+            "{data}`~pytest.unless_bash`",
+            "unless_bash",
+            "pytest.html#extra_platforms.pytest.unless_bash",
+        ),
         # CI
         ("{data}`~GITHUB_CI`", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
         (
@@ -346,6 +374,46 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "pytest.html#extra_platforms.pytest.unless_unknown_platform",
         ),
         (
+            "{data}`~ALL_SHELLS`",
+            "ALL_SHELLS",
+            "groups.html#extra_platforms.ALL_SHELLS",
+        ),
+        (
+            "{func}`~is_any_shell`",
+            "is_any_shell()",
+            "detection.html#extra_platforms.is_any_shell",
+        ),
+        (
+            "{data}`~pytest.skip_all_shells`",
+            "skip_all_shells",
+            "pytest.html#extra_platforms.pytest.skip_all_shells",
+        ),
+        (
+            "{data}`~pytest.unless_any_shell`",
+            "unless_any_shell",
+            "pytest.html#extra_platforms.pytest.unless_any_shell",
+        ),
+        (
+            "{data}`~UNKNOWN_SHELL`",
+            "UNKNOWN_SHELL",
+            "shells.html#extra_platforms.UNKNOWN_SHELL",
+        ),
+        (
+            "{func}`~is_unknown_shell`",
+            "is_unknown_shell()",
+            "detection.html#extra_platforms.is_unknown_shell",
+        ),
+        (
+            "{data}`~pytest.skip_unknown_shell`",
+            "skip_unknown_shell",
+            "pytest.html#extra_platforms.pytest.skip_unknown_shell",
+        ),
+        (
+            "{data}`~pytest.unless_unknown_shell`",
+            "unless_unknown_shell",
+            "pytest.html#extra_platforms.pytest.unless_unknown_shell",
+        ),
+        (
             "{data}`~UNKNOWN_ARCHITECTURE`",
             "UNKNOWN_ARCHITECTURE",
             "architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE",
@@ -404,6 +472,11 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "detection.html#extra_platforms.current_architecture",
         ),
         (
+            "{func}`~current_shell`",
+            "current_shell()",
+            "detection.html#extra_platforms.current_shell",
+        ),
+        (
             "{func}`~current_ci`",
             "current_ci()",
             "detection.html#extra_platforms.current_ci",
@@ -420,6 +493,7 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "Architecture",
             "trait.html#extra_platforms.Architecture",
         ),
+        ("{class}`~Shell`", "Shell", "trait.html#extra_platforms.Shell"),
         ("{class}`~CI`", "CI", "trait.html#extra_platforms.CI"),
         ("{class}`~Group`", "Group", "groups.html#extra_platforms.Group"),
         # Utilities
@@ -532,7 +606,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
             return "groups.html"
         # All trait-related classes (Trait, Platform, Architecture, CI) are
         # documented in trait.html
-        if symbol_clean in ("Trait", "Platform", "Architecture", "CI"):
+        if symbol_clean in ("Trait", "Platform", "Architecture", "Shell", "CI"):
             return "trait.html"
         # Default to trait.html for other trait-related classes
         return "trait.html"
@@ -644,7 +718,7 @@ def test_get_expected_page_for_symbol_handles_public_api(symbol_name):
         # Order matters: check classes first, then instances, then functions
         if inspect.isclass(obj):
             role = "class"
-        elif isinstance(obj, (Trait, Architecture, Platform, CI, Group)):
+        elif isinstance(obj, (Trait, Architecture, Platform, Shell, CI, Group)):
             # Trait and Group instances
             role = "data"
         elif inspect.isfunction(obj) or (
@@ -917,6 +991,7 @@ SPECIALIZED_PAGES = (
     "groups.html",
     "platforms.html",
     "pytest.html",
+    "shells.html",
     "sphinx.html",
     "trait.html",
 )

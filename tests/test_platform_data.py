@@ -30,6 +30,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     BSD_WITHOUT_MACOS,
     LINUX,
     LINUX_LAYERS,
+    LINUX_LIKE,
     NON_OVERLAPPING_GROUPS,
     OTHER_POSIX,
     SYSTEM_V,
@@ -39,11 +40,11 @@ from extra_platforms import (  # type: ignore[attr-defined]
     UNKNOWN_PLATFORM,
     current_platform,
     is_aix,
-    is_any_platform,
-    is_any_trait,
     is_altlinux,
     is_amzn,
     is_android,
+    is_any_platform,
+    is_any_trait,
     is_arch,
     is_buildroot,
     is_cachyos,
@@ -277,22 +278,21 @@ def test_platform_logical_grouping():
     for group in ALL_PLATFORM_GROUPS:
         assert group.issubset(ALL_PLATFORMS)
 
-    for group in BSD, LINUX, LINUX_LAYERS, SYSTEM_V, UNIX_LAYERS, OTHER_POSIX:
-        assert group.issubset(UNIX)
-        assert UNIX.issuperset(group)
-
-    assert UNIX_WITHOUT_MACOS.issubset(UNIX)
-    assert UNIX.issuperset(UNIX_WITHOUT_MACOS)
-
-    assert BSD_WITHOUT_MACOS.issubset(UNIX)
-    assert BSD_WITHOUT_MACOS.issubset(BSD)
-    assert UNIX.issuperset(BSD_WITHOUT_MACOS)
-    assert BSD.issuperset(BSD_WITHOUT_MACOS)
+    assert not ALL_PLATFORMS.canonical
 
     # All platforms are divided into Windows and Unix at the highest level.
     assert ALL_PLATFORMS.fullyintersects(ALL_WINDOWS | UNIX)
     assert ALL_WINDOWS.canonical
     assert not UNIX.canonical
+
+    # Every group is a subset of UNIX except Windows.
+    for group in ALL_PLATFORM_GROUPS:
+        if group is ALL_WINDOWS:
+            assert not group.issubset(UNIX)
+            assert not UNIX.issuperset(group)
+        else:
+            assert group.issubset(UNIX)
+            assert UNIX.issuperset(group)
 
     # All UNIX platforms are divided into BSD, Linux, and Unix families.
     assert UNIX.fullyintersects(
@@ -304,6 +304,25 @@ def test_platform_logical_grouping():
     assert SYSTEM_V.canonical
     assert UNIX_LAYERS.canonical
     assert OTHER_POSIX.canonical
+
+    # Relationships specific to LINUX_LIKE.
+    assert LINUX_LIKE.issubset(LINUX)
+    assert LINUX_LIKE.issubset(LINUX_LAYERS)
+    assert LINUX.issuperset(LINUX_LIKE)
+    assert LINUX_LAYERS.issuperset(LINUX_LIKE)
+    assert not LINUX_LIKE.canonical
+
+    # Relationships specific to UNIX_WITHOUT_MACOS.
+    assert UNIX_WITHOUT_MACOS.issubset(UNIX)
+    assert UNIX.issuperset(UNIX_WITHOUT_MACOS)
+    assert not UNIX_WITHOUT_MACOS.canonical
+
+    # Relationships specific to BSD_WITHOUT_MACOS.
+    assert BSD_WITHOUT_MACOS.issubset(UNIX)
+    assert BSD_WITHOUT_MACOS.issubset(BSD)
+    assert UNIX.issuperset(BSD_WITHOUT_MACOS)
+    assert BSD.issuperset(BSD_WITHOUT_MACOS)
+    assert not BSD_WITHOUT_MACOS.canonical
 
 
 def test_no_missing_platform_in_groups():
