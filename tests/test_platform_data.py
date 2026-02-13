@@ -285,9 +285,9 @@ def test_platform_logical_grouping():
     assert ALL_WINDOWS.canonical
     assert not UNIX.canonical
 
-    # Every group is a subset of UNIX except Windows.
+    # Every group is a subset of UNIX except Windows and ALL_PLATFORMS.
     for group in ALL_PLATFORM_GROUPS:
-        if group is ALL_WINDOWS:
+        if group is ALL_WINDOWS or group is ALL_PLATFORMS:
             assert not group.issubset(UNIX)
             assert not UNIX.issuperset(group)
         else:
@@ -305,11 +305,11 @@ def test_platform_logical_grouping():
     assert UNIX_LAYERS.canonical
     assert OTHER_POSIX.canonical
 
-    # Relationships specific to LINUX_LIKE.
-    assert LINUX_LIKE.issubset(LINUX)
-    assert LINUX_LIKE.issubset(LINUX_LAYERS)
-    assert LINUX.issuperset(LINUX_LIKE)
-    assert LINUX_LAYERS.issuperset(LINUX_LIKE)
+    # LINUX_LIKE is the union of LINUX and LINUX_LAYERS.
+    assert LINUX.issubset(LINUX_LIKE)
+    assert LINUX_LAYERS.issubset(LINUX_LIKE)
+    assert LINUX_LIKE.issuperset(LINUX)
+    assert LINUX_LIKE.issuperset(LINUX_LAYERS)
     assert not LINUX_LIKE.canonical
 
     # Relationships specific to UNIX_WITHOUT_MACOS.

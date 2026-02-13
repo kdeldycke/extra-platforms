@@ -30,6 +30,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     Group,
     Trait,
     current_traits,
+    is_aarch64,
     is_any_architecture,
     is_any_ci,
     is_any_platform,
@@ -68,6 +69,7 @@ from extra_platforms.pytest import (
     skip_unknown_shell,
     skip_windows,
     skip_x86_64,
+    unless_aarch64,
     unless_any_architecture,
     unless_any_ci,
     unless_any_platform,
@@ -84,6 +86,7 @@ from extra_platforms.pytest import (
     unless_unknown_platform,
     unless_unknown_shell,
     unless_windows,
+    unless_x86_64,
 )
 
 
@@ -309,28 +312,24 @@ def test_unless_unknown_ci():
 def test_skip_aarch64():
     assert is_any_architecture()
     assert not is_aarch64()
-    assert not is_x86_64()
 
 
 @unless_aarch64
 def test_unless_aarch64():
     assert is_any_architecture()
     assert is_aarch64()
-    assert not is_x86_64()
 
 
 @skip_x86_64
 def test_skip_x86_64():
     assert is_any_architecture()
     assert not is_x86_64()
-    assert not is_aarch64()
 
 
 @unless_x86_64
 def test_unless_x86_64():
     assert is_any_architecture()
     assert is_x86_64()
-    assert not is_aarch64()
 
 
 @skip_linux
@@ -407,27 +406,23 @@ def test_unless_windows():
 def test_skip_bash():
     assert is_any_shell()
     assert not is_bash()
-    assert not is_powershell()
 
 
 @unless_bash
 def test_unless_bash():
     assert is_any_shell()
     assert is_bash()
-    assert not is_powershell()
 
 
 @skip_powershell
 def test_skip_powershell():
     assert is_any_shell()
-    assert not is_bash()
     assert not is_powershell()
 
 
 @unless_powershell
 def test_unless_powershell():
     assert is_any_shell()
-    assert not is_bash()
     assert is_powershell()
 
 

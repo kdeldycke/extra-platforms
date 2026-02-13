@@ -30,6 +30,7 @@ from extra_platforms import (
     NON_OVERLAPPING_GROUPS,
     OTHER_SHELLS,
     UNKNOWN_SHELL,
+    WINDOWS_SHELLS,
     current_shell,
     is_unknown_shell,
 )
