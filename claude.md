@@ -75,7 +75,7 @@ Group - Collection of Traits with set-like operations (group.py)
 | `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()` |
 | `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                |
 | `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)             |
-| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                      |
+| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                       |
 | `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                     |
 | `group_data.py`        | All `Group` instances and ID collections                            |
 | `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                |
