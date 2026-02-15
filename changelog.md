@@ -8,6 +8,7 @@
 - Add `extra-platforms` CLI command.
 - Add new `ALPINE`, `KALI`, `MANJARO`, `OPENWRT` platform definitions.
 - Add issue template with detection results reporting.
+- Fix CLI crash on Windows due to `cp1252` encoding not supporting Unicode output.
 - Tweak some icons.
 
 ## [9.0.0 (2026-02-11)](https://github.com/kdeldycke/extra-platforms/compare/v8.0.0...v9.0.0)

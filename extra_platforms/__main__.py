@@ -95,6 +95,12 @@ def _print_trait(label: str, trait: Trait) -> None:
 
 def main() -> None:
     """Print detected environment traits."""
+    # Force UTF-8 output on Windows where the default console encoding
+    # (e.g. cp1252) cannot represent Unicode box-drawing characters and emoji.
+    for stream in (sys.stdout, sys.stderr):
+        if stream.encoding and stream.encoding.lower().replace("-", "") != "utf8":
+            stream.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
+
     # Add a trailing newline to log messages so warnings are visually
     # separated from the CLI output.
     logging.basicConfig(
