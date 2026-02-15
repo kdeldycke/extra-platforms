@@ -7,7 +7,8 @@
 
 - Add `extra-platforms` CLI command.
 - Add new `ALPINE`, `KALI`, `MANJARO`, `OPENWRT` platform definitions.
-- Fix detection of shells on GitHub Actions runners.
+- Replace filesystem-based shell detection with parent process tree walking via `/proc` on Linux.
+- Make `is_powershell()` detection cross-platform (Linux, macOS, Windows) via `PSModulePath` environment variable and process tree inspection.
 - Fix CLI crash on Windows due to `cp1252` encoding not supporting Unicode output.
 - Tweak some icons.
 - Add issue template with detection results reporting.

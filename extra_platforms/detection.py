@@ -783,11 +783,13 @@ def _detect_shell(
         if shell_id in ids:
             return True
 
-    # Fallback: walk parent process tree to find the active shell.
-    if not shell_path:
-        return _parent_process_shells(shell_ids)
-
-    return False
+    # Fallback: walk the parent process tree to find the active shell. This
+    # covers two cases:
+    # - SHELL is not set at all (stripped containers like ubuntu-slim).
+    # - SHELL is set to a generic value like /bin/sh that doesn't match any
+    #   specific shell (e.g. ubuntu-24.04-arm where SHELL=/bin/sh but the
+    #   GitHub Actions runner actually executes steps via /usr/bin/bash).
+    return _parent_process_shells(shell_ids)
 
 
 @cache
