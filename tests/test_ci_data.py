@@ -208,19 +208,21 @@ def test_github_runner_detection():
         assert is_unix_not_macos()
         assert current_platform() is UBUNTU
         if github_runner_os() == "ubuntu-slim":
-            # XXX ubuntu-slim is a special case: it's running in a WSL2 container on
-            # Windows.
+            # XXX ubuntu-slim is container: it is a stripped-down WSL2, without any
+            # shell-related environment variables set. See:
+            # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#single-cpu-runners
+            # https://github.com/actions/runner-images/blob/main/images/ubuntu-slim/ubuntu-slim-Readme.md
             assert is_wsl2()
             assert is_linux_layers()
-            assert not is_bash()
-            assert is_powershell()
-            assert is_windows_shells()
-            assert current_shell() is POWERSHELL
+            assert is_bash()
+            assert not is_powershell()
+            assert not is_windows_shells()
+            assert current_shell() is BASH
             assert current_traits() == {
                 current_architecture(),
                 UBUNTU,
                 WSL2,
-                POWERSHELL,
+                BASH,
                 GITHUB_CI,
             }
         else:
