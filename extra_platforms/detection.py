@@ -815,10 +815,12 @@ def is_bash() -> bool:
         Detected via the ``BASH_VERSION`` environment variable (set by Bash
         on startup), or via the ``SHELL`` path as a fallback.
 
-    .. note::
-        Some stripped-down environments (e.g. GitHub's ``ubuntu-slim`` runner) set
-        neither ``BASH_VERSION`` nor ``SHELL``. In that case we fall back to
-        walking the parent process tree via ``/proc`` to find bash.
+    .. attention::
+        GitHub's ``ubuntu-slim`` runner is a `stripped-down environments, running as
+        a WSL2 container <https://docs.github.com/en/actions/reference/runners/github-hosted-runners#single-cpu-runners>`_
+        on top of Windows. It `uses Bash as the default shell <https://github.com/actions/runner-images/blob/main/images/ubuntu-slim/ubuntu-slim-Readme.md>`_,
+        but does not set neither ``BASH_VERSION`` nor ``SHELL``.
+        In that case we fall back to walking the parent process tree via ``/proc`` to find it.
     """
     return _detect_shell(version_env_var="BASH_VERSION", shell_ids="bash")
 
@@ -886,8 +888,8 @@ def is_nushell() -> bool:
     """Return :data:`True` if current shell is :data:`~extra_platforms.NUSHELL`.
 
     .. hint::
-        Detected via the ``NU_VERSION`` environment variable, which is set
-        by Nushell on startup.
+        Detected via the ``NU_VERSION`` environment variable (set by Nushell
+        on startup), or via the ``SHELL`` path as a fallback.
     """
     return _detect_shell(version_env_var="NU_VERSION", shell_ids="nu")
 
@@ -902,7 +904,7 @@ def is_powershell() -> bool:
         and macOS. Detection covers all platforms via ``PSModulePath``,
         ``SHELL`` path, and parent process tree.
 
-    .. caution::
+    .. attention::
         ``PSModulePath`` can leak into non-PowerShell child processes via two
         vectors:
 
@@ -914,9 +916,9 @@ def is_powershell() -> bool:
            <https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath>`_
            visible to all processes.
 
-        Because of this, ``PSModulePath`` is checked last among environment
-        variable-based shells. If another shell is also detected, prefer that
-        shell.
+        This is the case for all GitHub Ubuntu runners, where
+        ``PSModulePath`` leaks from Azure infrastructure. This leads to multiple
+        shell detections, which is arbitraged by ``current_shell()``, which deprioritizes PowerShell when other shells are detected.
     """
     return _detect_shell(
         version_env_var="PSModulePath",
@@ -939,8 +941,8 @@ def is_xonsh() -> bool:
     """Return :data:`True` if current shell is :data:`~extra_platforms.XONSH`.
 
     .. hint::
-        Detected via the ``XONSH_VERSION`` environment variable, which is set
-        by Xonsh on startup.
+        Detected via the ``XONSH_VERSION`` environment variable (set by Xonsh
+        on startup), or via the ``SHELL`` path as a fallback.
     """
     return _detect_shell(version_env_var="XONSH_VERSION", shell_ids="xonsh")
 

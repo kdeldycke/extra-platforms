@@ -208,10 +208,7 @@ def test_github_runner_detection():
         assert is_unix_not_macos()
         assert current_platform() is UBUNTU
         if github_runner_os() == "ubuntu-slim":
-            # XXX ubuntu-slim is container: it is a stripped-down WSL2, without any
-            # shell-related environment variables set. See:
-            # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#single-cpu-runners
-            # https://github.com/actions/runner-images/blob/main/images/ubuntu-slim/ubuntu-slim-Readme.md
+            # XXX ubuntu-slim is a stripped-down WSL2 container.
             assert is_wsl2()
             assert is_linux_layers()
             assert is_bash()
@@ -231,9 +228,7 @@ def test_github_runner_detection():
             assert not is_linux_layers()
             assert is_bash()
             assert is_bourne_shells()
-            # XXX PSModulePath leaks from Azure infrastructure into all GitHub
-            # Ubuntu runners, making is_powershell() true. current_shell()
-            # correctly deprioritizes PowerShell and returns BASH.
+            # XXX PSModulePath leaks from Azure infrastructure into Ubuntu runners.
             assert is_powershell()
             assert is_windows_shells()
             assert current_shell() is BASH
