@@ -206,7 +206,8 @@ def test_github_runner_detection():
         assert is_unix_not_macos()
         assert current_platform() is UBUNTU
         if github_runner_os() == "ubuntu-slim":
-            # XXX ubuntu-slim is a special case: it's running in a WSL2 container on Windows.
+            # XXX ubuntu-slim is a special case: it's running in a WSL2 container on
+            # Windows.
             assert is_wsl2()
             assert is_linux_layers()
             assert not is_bash()

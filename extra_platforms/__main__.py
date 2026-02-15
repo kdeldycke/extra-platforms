@@ -75,9 +75,7 @@ def _print_trait(label: str, trait: Trait) -> None:
             print(f"{'aliases':>14}: {aliases}")
         elif isinstance(value, dict):
             # Print nested dicts inline.
-            inner = ", ".join(
-                f"{k}={v}" for k, v in value.items() if v is not None
-            )
+            inner = ", ".join(f"{k}={v}" for k, v in value.items() if v is not None)
             if inner:
                 print(f"{key:>14}: {inner}")
         else:
@@ -86,10 +84,7 @@ def _print_trait(label: str, trait: Trait) -> None:
     # Print importable references.
     print(f"{'symbol':>14}: {trait.symbol_id}")
     print(f"{'detection':>14}: {trait.detection_func_id}()")
-    print(
-        f"{'pytest':>14}: @{trait.skip_decorator_id}"
-        f", @{trait.unless_decorator_id}"
-    )
+    print(f"{'pytest':>14}: @{trait.skip_decorator_id}, @{trait.unless_decorator_id}")
 
     # Print group memberships.
     groups = trait.groups
@@ -147,12 +142,7 @@ def main() -> None:
         det = f"{group.detection_func_id}()"
         skip = f"@{group.skip_decorator_id}"
         unless = f"@{group.unless_decorator_id}"
-        print(
-            f"  {icon} {sym}{canon}"
-            f"  {det:{det_w}}"
-            f"  {skip:{skip_w}}"
-            f"  {unless}"
-        )
+        print(f"  {icon} {sym}{canon}  {det:{det_w}}  {skip:{skip_w}}  {unless}")
 
 
 if __name__ == "__main__":

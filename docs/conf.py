@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import tomllib  # type: ignore[import-not-found]  # stdlib >=3.11; docs require >=3.12.

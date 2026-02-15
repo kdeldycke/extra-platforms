@@ -239,7 +239,9 @@ def generate_group_table(groups: Iterable[Group]) -> str:
             "⬥" if group.canonical else "",
         ])
 
-    table = render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
+    table = render_table(
+        table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
+    )
 
     # Append hint block explaining canonical groups
     if len(sorted_groups) > 1:
@@ -421,7 +423,9 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
             f"{{data}}`~{obj.symbol_id}`",
         ])
 
-    return render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
+    return render_table(
+        table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
+    )
 
 
 def generate_sphinx_directives(
@@ -446,9 +450,7 @@ def generate_sphinx_directives(
 
     directives = []
     for obj in sorted(objects_list, key=attrgetter("id")):
-        directives.append(
-            f".. {directive}:: extra_platforms.{getattr(obj, attr)}"
-        )
+        directives.append(f".. {directive}:: extra_platforms.{getattr(obj, attr)}")
 
     joined = "\n".join(directives)
     return f"```{{eval-rst}}\n{joined}\n```"
@@ -478,7 +480,9 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
             f"{{data}}`~{obj.symbol_id}`",
         ])
 
-    return render_table(table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments)
+    return render_table(
+        table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
+    )
 
 
 def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
@@ -699,9 +703,7 @@ def update_docs() -> None:
         (
             "all-traits-table-start",
             "all-traits-table-end",
-            generate_trait_table(
-                ALL_TRAITS, include_type=True, include_hint=False
-            ),
+            generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False),
         ),
         # Sankey diagrams.
         (
@@ -738,8 +740,7 @@ def update_docs() -> None:
             "shell-sankey-start",
             "shell-sankey-end",
             generate_sankey(
-                list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS)
-                + [ALL_SHELLS]
+                list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]
             ),
         ),
         # Mindmap diagrams.
@@ -767,9 +768,7 @@ def update_docs() -> None:
         (
             "architecture-endianness-mindmap-start",
             "architecture-endianness-mindmap-end",
-            generate_traits_mindmap(
-                [BIG_ENDIAN, LITTLE_ENDIAN, ALL_ARCHITECTURES]
-            ),
+            generate_traits_mindmap([BIG_ENDIAN, LITTLE_ENDIAN, ALL_ARCHITECTURES]),
         ),
         (
             "platform-mindmap-start",
@@ -789,8 +788,7 @@ def update_docs() -> None:
             "shell-mindmap-start",
             "shell-mindmap-end",
             generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS)
-                + [ALL_SHELLS]
+                list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]
             ),
         ),
         # Group tables.
@@ -880,16 +878,12 @@ def update_docs() -> None:
         (
             "trait-detection-autofunction-start",
             "trait-detection-autofunction-end",
-            generate_sphinx_directives(
-                ALL_TRAITS, "autofunction", "detection_func_id"
-            ),
+            generate_sphinx_directives(ALL_TRAITS, "autofunction", "detection_func_id"),
         ),
         (
             "group-detection-autofunction-start",
             "group-detection-autofunction-end",
-            generate_sphinx_directives(
-                ALL_GROUPS, "autofunction", "detection_func_id"
-            ),
+            generate_sphinx_directives(ALL_GROUPS, "autofunction", "detection_func_id"),
         ),
         # Pytest decorator autodata directives.
         (
@@ -921,7 +915,8 @@ def update_docs() -> None:
             "group-module-automodule-end",
             generate_group_module_automodule(),
         ),
-        # Group data module automodule for groups.md (excludes all groups and collections).
+        # Group data module automodule for groups.md (excludes all groups and
+        # collections).
         (
             "group-data-module-automodule-start",
             "group-data-module-automodule-end",
