@@ -47,6 +47,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     current_traits,
     is_aarch64,
     is_any_architecture,
+    is_any_arm,
     is_any_ci,
     is_any_platform,
     is_any_shell,
@@ -181,7 +182,8 @@ def test_github_runner_detection():
     # AArch64 runners.
     else:
         assert is_aarch64()
-        assert is_arm()
+        assert not is_arm()
+        assert is_any_arm()
         assert current_architecture() is AARCH64
         assert AARCH64 in current_traits()
 
