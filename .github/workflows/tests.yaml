@@ -74,8 +74,8 @@ jobs:
           uv run -- extra-platforms
       - name: Run CLI from module
         run: |
-          uv run        -m extra-platforms
-          uv run python -m extra-platforms
+          uv run        -m extra_platforms
+          uv run python -m extra_platforms
 
       - name: Unittests
         env:
