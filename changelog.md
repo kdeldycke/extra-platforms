@@ -6,6 +6,7 @@
 > This version is not released yet and is under active development.
 
 - Add `extra-platforms` CLI command.
+- Skip Nuitka binary builds.
 - Add new `ALPINE`, `KALI`, `MANJARO`, `OPENWRT` platform definitions.
 - Replace filesystem-based shell detection with parent process tree walking via `/proc` on Linux.
 - Make `is_powershell()` detection cross-platform (Linux, macOS, Windows) via `PSModulePath` environment variable and process tree inspection.
