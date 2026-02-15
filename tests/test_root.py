@@ -243,11 +243,11 @@ def test_current_funcs():
         detected_traits += 1
         if is_github_ci():
             # XXX Azure infrastructure leaks into GitHub Ubuntu runners.
-            if is_ubuntu():
-                # +1 shell (PowerShell from Azure).
-                detected_traits += 1
             if github_runner_os() == "ubuntu-slim":
                 # +1 platform (WSL2).
+                detected_traits += 1
+            elif is_ubuntu():
+                # +1 shell (PowerShell from Azure).
                 detected_traits += 1
     assert len(current_traits_results) == detected_traits
 
