@@ -7,9 +7,10 @@
 
 - Add `extra-platforms` CLI command.
 - Add new `ALPINE`, `KALI`, `MANJARO`, `OPENWRT` platform definitions.
-- Add issue template with detection results reporting.
+- Fix detection of shells on GitHub Actions runners.
 - Fix CLI crash on Windows due to `cp1252` encoding not supporting Unicode output.
 - Tweak some icons.
+- Add issue template with detection results reporting.
 
 ## [9.0.0 (2026-02-11)](https://github.com/kdeldycke/extra-platforms/compare/v8.0.0...v9.0.0)
 

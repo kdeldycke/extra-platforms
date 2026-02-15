@@ -71,6 +71,7 @@ For all other traits, we either rely on:
 from __future__ import annotations
 
 import logging
+import os
 import platform
 import sys
 from functools import cache
@@ -81,6 +82,8 @@ import distro
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
+    from typing import Iterable
+
     from .trait import CI, Architecture, Platform, Shell, Trait
 
 
@@ -685,32 +688,78 @@ def is_unknown_platform() -> bool:
 # =============================================================================
 
 
+@cache
+def _parent_process_shells(shell_ids: str | Iterable[str]) -> bool:
+    """Check if any parent process in the tree matches the given shell IDs.
+
+    On Linux, reads ``/proc/<pid>/exe`` symlinks up the process tree via
+    ``/proc/<pid>/stat`` to find the parent PID. This identifies the *active*
+    shell, not merely installed ones.
+
+    Args:
+        shell_ids: Shell executable name(s) to match. Can be a single string
+            (e.g., ``"bash"``) or a tuple of strings (e.g., ``("powershell", "pwsh")``).
+
+    Returns:
+        ``True`` if a matching shell is found in the parent process tree,
+        ``False`` otherwise or on non-Linux platforms where ``/proc`` is unavailable.
+    """
+    # Normalize shell_ids to a set for efficient lookup.
+    id_set = (
+        frozenset({shell_ids}) if isinstance(shell_ids, str) else frozenset(shell_ids)
+    )
+
+    try:
+        pid = os.getpid()
+        visited: set[int] = set()
+        while pid > 1 and pid not in visited:
+            visited.add(pid)
+            # Read the executable path of the process.
+            try:
+                exe = Path(os.readlink(f"/proc/{pid}/exe")).stem.lower()
+                if exe in id_set:
+                    return True
+            except OSError:
+                pass
+            # Read the parent PID from /proc/<pid>/stat.
+            try:
+                stat_content = Path(f"/proc/{pid}/stat").read_text()
+                # Format: "pid (comm) state ppid ...". The comm field may
+                # contain spaces and parentheses, so find the last ')'.
+                ppid_str = stat_content[stat_content.rfind(")") + 2 :].split()[1]
+                pid = int(ppid_str)
+            except (OSError, ValueError, IndexError):
+                break
+    except OSError:
+        pass
+    return False
+
+
 def _detect_shell(
     version_env_var: str | None = None,
-    shell_stems: tuple[str, ...] | None = None,
-    fallback_paths: tuple[str, ...] | None = None,
+    shell_ids: str | Iterable[str] | None = None,
 ) -> bool:
-    """Detect a specific shell from environment.
+    """Detect a specific shell from the environment.
 
     .. caution::
         This function is designed primarily for POSIX/Unix systems. The ``SHELL``
-        environment variable and fallback paths (e.g., ``/bin/*``) are Unix-specific
-        conventions. For Windows shells like :data:`~extra_platforms.CMD`, use
-        platform-specific detection instead.
+        environment variable and ``/proc`` filesystem are Unix-specific conventions.
+        For Windows shells like :data:`~extra_platforms.CMD`, use platform-specific
+        detection instead.
 
     Uses a tiered detection strategy:
 
     1. Checks for shell-specific version environment variable (most reliable).
-    2. Parses the ``SHELL`` environment variable path against known shell executable stem names.
-    3. Falls back to checking for shell binaries in standard locations when
-       ``SHELL`` is not set (e.g., in stripped-down environments).
+    2. Parses the ``SHELL`` environment variable path against known shell executable
+       names.
+    3. Falls back to walking the parent process tree via ``/proc`` to find the
+       active shell (for stripped environments without shell env vars).
 
     Args:
-        version_env_var: Shell-specific environment variable name (e.g., ``"BASH_VERSION"``).
-        shell_stems: Shell executable stem names to match (e.g., ``("bash",)`` or
-            ``("powershell", "pwsh")``).
-        fallback_paths: Shell binary paths to check when ``SHELL`` is not set
-            (e.g., ``("/bin/bash",)``).
+        version_env_var: Shell-specific environment variable name
+            (e.g., ``"BASH_VERSION"``).
+        shell_ids: Shell executable name(s) to match. Can be a single string
+            (e.g., ``"bash"``) or a tuple of strings (e.g., ``("powershell", "pwsh")``).
 
     Returns:
         ``True`` if the shell is detected, ``False`` otherwise.
@@ -719,18 +768,24 @@ def _detect_shell(
     if version_env_var and version_env_var in environ:
         return True
 
-    # Check SHELL environment variable against known shell stems.
+    # Normalize shell_ids for consistent handling.
+    if shell_ids is None:
+        return False
+
+    ids = (
+        frozenset((shell_ids,)) if isinstance(shell_ids, str) else frozenset(shell_ids)
+    )
+
+    # Check SHELL environment variable against known shell IDs.
     shell_path = environ.get("SHELL", "")
-    if shell_path and shell_stems:
-        stem = PurePosixPath(shell_path).stem.lower()
-        if stem in shell_stems:
+    if shell_path:
+        shell_id = PurePosixPath(shell_path).stem.lower()
+        if shell_id in ids:
             return True
 
-    # Fallback: check for shell binaries when SHELL is not set.
-    if not shell_path and fallback_paths:
-        for path in fallback_paths:
-            if Path(path).is_file():
-                return True
+    # Fallback: walk parent process tree to find the active shell.
+    if not shell_path:
+        return _parent_process_shells(shell_ids)
 
     return False
 
@@ -749,7 +804,7 @@ def is_ash() -> bool:
         :data:`~extra_platforms.OPENWRT`), ``$SHELL`` typically resolves to ``/bin/ash``,
         so BusyBox environments are detected as :data:`~extra_platforms.ASH`.
     """
-    return _detect_shell(shell_stems=("ash",), fallback_paths=("/bin/ash",))
+    return _detect_shell(shell_ids="ash")
 
 
 @cache
@@ -763,13 +818,9 @@ def is_bash() -> bool:
     .. note::
         Some stripped-down environments (e.g. GitHub's ``ubuntu-slim`` runner) set
         neither ``BASH_VERSION`` nor ``SHELL``. In that case we fall back to
-        checking whether ``/bin/bash`` exists on the filesystem.
+        walking the parent process tree via ``/proc`` to find bash.
     """
-    return _detect_shell(
-        version_env_var="BASH_VERSION",
-        shell_stems=("bash",),
-        fallback_paths=("/bin/bash",),
-    )
+    return _detect_shell(version_env_var="BASH_VERSION", shell_ids="bash")
 
 
 @cache
@@ -794,7 +845,7 @@ def is_csh() -> bool:
     .. hint::
         Detected via the ``SHELL`` environment variable path.
     """
-    return _detect_shell(shell_stems=("csh",), fallback_paths=("/bin/csh",))
+    return _detect_shell(shell_ids="csh")
 
 
 @cache
@@ -805,7 +856,7 @@ def is_dash() -> bool:
         Detected via the ``SHELL`` environment variable path, as Dash does
         not set its own version variable.
     """
-    return _detect_shell(shell_stems=("dash",), fallback_paths=("/bin/dash",))
+    return _detect_shell(shell_ids="dash")
 
 
 @cache
@@ -816,11 +867,7 @@ def is_fish() -> bool:
         Detected via the ``FISH_VERSION`` environment variable (set by Fish
         on startup), or via the ``SHELL`` path as a fallback.
     """
-    return _detect_shell(
-        version_env_var="FISH_VERSION",
-        shell_stems=("fish",),
-        fallback_paths=("/bin/fish",),
-    )
+    return _detect_shell(version_env_var="FISH_VERSION", shell_ids="fish")
 
 
 @cache
@@ -831,11 +878,7 @@ def is_ksh() -> bool:
         Detected via the ``KSH_VERSION`` environment variable (set by Korn
         shell on startup), or via the ``SHELL`` path as a fallback.
     """
-    return _detect_shell(
-        version_env_var="KSH_VERSION",
-        shell_stems=("ksh",),
-        fallback_paths=("/bin/ksh",),
-    )
+    return _detect_shell(version_env_var="KSH_VERSION", shell_ids="ksh")
 
 
 @cache
@@ -846,12 +889,18 @@ def is_nushell() -> bool:
         Detected via the ``NU_VERSION`` environment variable, which is set
         by Nushell on startup.
     """
-    return _detect_shell(version_env_var="NU_VERSION", shell_stems=("nu",))
+    return _detect_shell(version_env_var="NU_VERSION", shell_ids="nu")
 
 
 @cache
 def is_powershell() -> bool:
     """Return :data:`True` if current shell is :data:`~extra_platforms.POWERSHELL`.
+
+    .. note::
+        PowerShell is cross-platform and `available on Linux
+        <https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell-on-linux>`_
+        and macOS. Detection covers all platforms via ``PSModulePath``,
+        ``SHELL`` path, and parent process tree.
 
     .. caution::
         ``PSModulePath`` can leak into non-PowerShell child processes via two
@@ -869,7 +918,10 @@ def is_powershell() -> bool:
         variable-based shells. If another shell is also detected, prefer that
         shell.
     """
-    return _detect_shell(shell_stems=("powershell", "powershell_ise", "pwsh"))
+    return _detect_shell(
+        version_env_var="PSModulePath",
+        shell_ids=("powershell", "powershell_ise", "pwsh"),
+    )
 
 
 @cache
@@ -879,7 +931,7 @@ def is_tcsh() -> bool:
     .. hint::
         Detected via the ``SHELL`` environment variable path.
     """
-    return _detect_shell(shell_stems=("tcsh",), fallback_paths=("/bin/tcsh",))
+    return _detect_shell(shell_ids="tcsh")
 
 
 @cache
@@ -890,7 +942,7 @@ def is_xonsh() -> bool:
         Detected via the ``XONSH_VERSION`` environment variable, which is set
         by Xonsh on startup.
     """
-    return _detect_shell(version_env_var="XONSH_VERSION", shell_stems=("xonsh",))
+    return _detect_shell(version_env_var="XONSH_VERSION", shell_ids="xonsh")
 
 
 @cache
@@ -901,11 +953,7 @@ def is_zsh() -> bool:
         Detected via the ``ZSH_VERSION`` environment variable (set by Zsh on
         startup), or via the ``SHELL`` path as a fallback.
     """
-    return _detect_shell(
-        version_env_var="ZSH_VERSION",
-        shell_stems=("zsh",),
-        fallback_paths=("/bin/zsh",),
-    )
+    return _detect_shell(version_env_var="ZSH_VERSION", shell_ids="zsh")
 
 
 @cache
