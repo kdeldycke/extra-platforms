@@ -689,7 +689,7 @@ def is_unknown_platform() -> bool:
 
 
 @cache
-def _parent_process_shells(shell_ids: str | Iterable[str]) -> bool:
+def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
     """Check if any parent process in the tree matches the given shell IDs.
 
     On Linux, reads ``/proc/<pid>/exe`` symlinks up the process tree via
@@ -789,7 +789,8 @@ def _detect_shell(
     # - SHELL is set to a generic value like /bin/sh that doesn't match any
     #   specific shell (e.g. ubuntu-24.04-arm where SHELL=/bin/sh but the
     #   GitHub Actions runner actually executes steps via /usr/bin/bash).
-    return _parent_process_shells(shell_ids)
+    normalized_ids = (shell_ids,) if isinstance(shell_ids, str) else tuple(shell_ids)
+    return _parent_process_shells(normalized_ids)
 
 
 @cache
