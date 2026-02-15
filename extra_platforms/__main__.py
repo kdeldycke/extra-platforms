@@ -21,6 +21,8 @@ import logging
 import sys
 import unicodedata
 
+from collections.abc import Iterable
+
 from . import (
     Group,
     Trait,
@@ -29,20 +31,33 @@ from . import (
     current_ci,
     current_platform,
     current_shell,
+    current_traits,
 )
 
 # Section separator width.
 _SEPARATOR_WIDTH = 60
 
 
+_ZERO_WIDTH = frozenset((
+    0xFE0E,  # VS15 — text presentation selector.
+    0xFE0F,  # VS16 — emoji presentation selector.
+    0x200D,  # ZWJ — zero-width joiner.
+))
+
+
 def _display_width(text: str) -> int:
     """Return the terminal display width of a string.
 
-    Uses ``unicodedata.east_asian_width`` to account for wide characters
-    (emoji, CJK) that occupy two columns in a monospace terminal.
+    Zero-width characters (variation selectors, ZWJ) are skipped.  Remaining
+    characters are measured via ``east_asian_width``: **W** and **F** count as
+    two columns, everything else as one.  This matches the cursor-advance
+    behaviour of most terminal emulators, which follow the East Asian Width
+    property rather than the emoji-presentation flag.
     """
     width = 0
     for ch in text:
+        if ord(ch) in _ZERO_WIDTH:
+            continue
         width += 2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1
     return width
 
@@ -50,6 +65,45 @@ def _display_width(text: str) -> int:
 def _pad(text: str, target: int) -> str:
     """Pad ``text`` with spaces to reach ``target`` display columns."""
     return text + " " * max(0, target - _display_width(text))
+
+
+def _column_widths(items: Iterable[Trait | Group]) -> tuple[int, int, int, int]:
+    """Compute column widths for a set of traits or groups."""
+    rows = list(items)
+    if not rows:
+        return (0, 0, 0, 0)
+    return (
+        max(_display_width(r.icon) for r in rows),
+        max(len(r.symbol_id) for r in rows),
+        max(len(r.detection_func_id) + 2 for r in rows),
+        max(len(r.skip_decorator_id) + 1 for r in rows),
+    )
+
+
+def _merge_widths(*widths: tuple[int, int, int, int]) -> tuple[int, int, int, int]:
+    """Return the element-wise maximum of multiple width tuples."""
+    return tuple(max(col) for col in zip(*widths))  # type: ignore[return-value]
+
+
+def _print_table(
+    items: Iterable[Trait | Group],
+    widths: tuple[int, int, int, int],
+) -> None:
+    """Print a columnar table of traits or groups.
+
+    Columns: icon, symbol ID, marker, detection function, skip/unless decorators.
+    Groups get a ``⬥`` marker when canonical; traits get no marker.
+    """
+    icon_w, sym_w, det_w, skip_w = widths
+
+    for row in items:
+        marker = "⬥" if isinstance(row, Group) and row.canonical else " "
+        icon = _pad(row.icon, icon_w)
+        sym = f"{row.symbol_id:{sym_w}}"
+        det = f"{row.detection_func_id}()"
+        skip = f"@{row.skip_decorator_id}"
+        unless = f"@{row.unless_decorator_id}"
+        print(f"  {marker} {icon}  {sym}  {det:{det_w}}  {skip:{skip_w}}  {unless}")
 
 
 def _print_trait(label: str, trait: Trait) -> None:
@@ -125,30 +179,28 @@ def main() -> None:
     _print_trait("Shell", shell)
     _print_trait("CI", ci)
 
-    # Collect all groups from detected traits, deduplicated and sorted.
+    # Summary of all detected traits and their groups.
+    all_detected = current_traits()
+    sorted_traits = sorted(all_detected, key=lambda t: t.id)
+
     all_groups: set[Group] = set()
-    for trait in (arch, plat, shell, ci):
+    for trait in all_detected:
         all_groups.update(trait.groups)
-
-    header = "── Groups ──"
-    print(f"\n{header}{'─' * max(0, _SEPARATOR_WIDTH - len(header))}")
-
     sorted_groups = sorted(all_groups, key=lambda g: g.id)
 
-    # Compute column widths for alignment using display width.
-    icon_w = max(_display_width(g.icon) for g in sorted_groups)
-    sym_w = max(len(g.symbol_id) for g in sorted_groups)
-    det_w = max(len(g.detection_func_id) + 2 for g in sorted_groups)
-    skip_w = max(len(g.skip_decorator_id) + 1 for g in sorted_groups)
+    # Compute column widths across both tables for alignment.
+    widths = _merge_widths(
+        _column_widths(sorted_traits),
+        _column_widths(sorted_groups),
+    )
 
-    for group in sorted_groups:
-        canon = " ⬥" if group.canonical else "  "
-        icon = _pad(group.icon, icon_w)
-        sym = f"{group.symbol_id:{sym_w}}"
-        det = f"{group.detection_func_id}()"
-        skip = f"@{group.skip_decorator_id}"
-        unless = f"@{group.unless_decorator_id}"
-        print(f"  {icon} {sym}{canon}  {det:{det_w}}  {skip:{skip_w}}  {unless}")
+    header = "── Detected traits ──"
+    print(f"\n{header}{'─' * max(0, _SEPARATOR_WIDTH - len(header))}")
+    _print_table(sorted_traits, widths)
+
+    header = "── Detected groups ──"
+    print(f"\n{header}{'─' * max(0, _SEPARATOR_WIDTH - len(header))}")
+    _print_table(sorted_groups, widths)
 
 
 if __name__ == "__main__":

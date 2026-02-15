@@ -5,6 +5,9 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Display all detected traits and groups in `extra-platforms` CLI.
+- Fix emoji column alignment in CLI.
+
 ## [9.1.0 (2026-02-15)](https://github.com/kdeldycke/extra-platforms/compare/v9.0.0...v9.1.0)
 
 - Add `extra-platforms` CLI command.
