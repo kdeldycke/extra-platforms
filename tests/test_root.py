@@ -58,6 +58,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     current_traits,
     invalidate_caches,
     is_aarch64,
+    is_any_ci,
     is_any_platform,
     is_bsd,
     is_fedora,
@@ -237,13 +238,17 @@ def test_current_funcs():
 
     # 1 architecture + 1 platform + 1 shell = 3 traits.
     detected_traits = 3
-    if is_github_ci():
-        if github_runner_os() == "ubuntu-slim":
-            # +2 architectures (Ubuntu + WSL) + 1 CI.
-            detected_traits += 2
-        else:
-            # +1 CI.
-            detected_traits += 1
+    if is_any_ci():
+        # +1 CI.
+        detected_traits += 1
+        if is_github_ci():
+            # XXX Azure infrastructure leaks into GitHub Ubuntu runners.
+            if is_ubuntu():
+                # +1 shell (PowerShell from Azure).
+                detected_traits += 1
+            if github_runner_os() == "ubuntu-slim":
+                # +1 platform (WSL2).
+                detected_traits += 1
     assert len(current_traits_results) == detected_traits
 
     current_architecture_result = current_architecture()

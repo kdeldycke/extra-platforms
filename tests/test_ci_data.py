@@ -215,6 +215,7 @@ def test_github_runner_detection():
             assert is_wsl2()
             assert is_linux_layers()
             assert is_bash()
+            assert is_bourne_shells()
             assert not is_powershell()
             assert not is_windows_shells()
             assert current_shell() is BASH
@@ -230,13 +231,17 @@ def test_github_runner_detection():
             assert not is_linux_layers()
             assert is_bash()
             assert is_bourne_shells()
-            assert not is_powershell()
-            assert not is_windows_shells()
+            # XXX PSModulePath leaks from Azure infrastructure into all GitHub
+            # Ubuntu runners, making is_powershell() true. current_shell()
+            # correctly deprioritizes PowerShell and returns BASH.
+            assert is_powershell()
+            assert is_windows_shells()
             assert current_shell() is BASH
             assert current_traits() == {
                 current_architecture(),
                 UBUNTU,
                 BASH,
+                POWERSHELL,
                 GITHUB_CI,
             }
 
