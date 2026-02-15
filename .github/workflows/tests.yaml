@@ -69,6 +69,14 @@ jobs:
         run: |
           uv --no-progress sync --frozen --all-extras --group test --group docs
 
+      - name: Run local CLI
+        run: |
+          uv run -- extra-platforms
+      - name: Run CLI from module
+        run: |
+          uv run        -m extra-platforms
+          uv run python -m extra-platforms
+
       - name: Unittests
         env:
           # Used by github_runner_os() in tests/test_detection.py to extract the GitHub runner image ID.
@@ -86,3 +94,76 @@ jobs:
         with:
           report_type: test_results
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  pip-install-extra-platforms:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-24.04-arm # arm64
+          - ubuntu-slim      # x86
+          - ubuntu-24.04     # x86
+          - ubuntu-22.04-arm # arm64
+          - ubuntu-22.04     # x86
+          - macos-26         # arm64
+          - macos-15         # arm64
+          - macos-15-intel   # x86
+          - macos-14         # arm64
+          - windows-11-arm   # arm64
+          - windows-2025     # x86
+          - windows-2022     # x86
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: pip install extra-platforms
+      - run: extra-platforms
+
+  pipx-install-extra-platforms:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-24.04-arm # arm64
+          - ubuntu-slim      # x86
+          - ubuntu-24.04     # x86
+          - ubuntu-22.04-arm # arm64
+          - ubuntu-22.04     # x86
+          - macos-26         # arm64
+          - macos-15         # arm64
+          - macos-15-intel   # x86
+          - macos-14         # arm64
+          - windows-11-arm   # arm64
+          - windows-2025     # x86
+          - windows-2022     # x86
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: python -m pip install --upgrade pipx
+      - run: pipx install extra-platforms
+      - run: extra-platforms
+
+  uv-install-extra-platforms:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-24.04-arm # arm64
+          - ubuntu-slim      # x86
+          - ubuntu-24.04     # x86
+          - ubuntu-22.04-arm # arm64
+          - ubuntu-22.04     # x86
+          - macos-26         # arm64
+          - macos-15         # arm64
+          - macos-15-intel   # x86
+          - macos-14         # arm64
+          - windows-11-arm   # arm64
+          - windows-2025     # x86
+          - windows-2022     # x86
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: astral-sh/setup-uv@v7.2.0
+        with:
+          # windows-2025 runners have only Python 3.9 installed.
+          python-version: ${{ matrix.os == 'windows-2025' && '3.10' || ''}}
+      # Run stable CLI.
+      - run: uvx extra-platforms
+      - run: uvx    --from extra-platforms -- extra-platforms
+      - run: uv run --with extra-platforms -- extra-platforms
+      # Run dev CLI.
+      - run: uvx    --from git+https://github.com/kdeldycke/extra-platforms -- extra-platforms
+      - run: uv run --with git+https://github.com/kdeldycke/extra-platforms -- extra-platforms
