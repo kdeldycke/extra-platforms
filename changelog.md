@@ -1,5 +1,10 @@
 # Changelog
 
+## [9.1.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v9.1.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [9.1.0 (2026-02-15)](https://github.com/kdeldycke/extra-platforms/compare/v9.0.0...v9.1.0)
 
 - Add `extra-platforms` CLI command.
