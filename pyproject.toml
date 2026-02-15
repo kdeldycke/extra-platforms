@@ -283,13 +283,13 @@ build-backend.module-root = ""
 # When merged into pyproject.toml via `gha-utils bundled init ruff`,
 # the [tool.ruff] prefix is added automatically.
 [tool.ruff]
+# Enable formatting of Python code blocks in Markdown files.
+# https://docs.astral.sh/ruff/formatter/#markdown-code-formatting
+extend-include = [ "*.{markdown,mdown,mkdn,mdwn,mkd,md,mdtxt,mdtext,mdx}" ]
 preview = true
 fix = true
 unsafe-fixes = true
 show-fixes = true
-# Enable formatting of Python code blocks in Markdown files.
-# https://docs.astral.sh/ruff/formatter/#markdown-code-formatting
-extend-include = [ "*.{markdown,mdown,mkdn,mdwn,mkd,md,mdtxt,mdtext,mdx}" ]
 # Enable reformatting of code snippets in docstrings.
 # https://docs.astral.sh/ruff/formatter/#docstring-formatting
 format.docstring-code-format = true
@@ -304,10 +304,6 @@ lint.ignore = [ "D400", "ERA001" ]
 # this would simplify a fix or enable a new diagnostic.
 # https://docs.astral.sh/ruff/settings/#lint_future-annotations
 lint.future-annotations = true
-
-[tool.gha-utils]
-# Building the package with Nuitka is overkill.
-nuitka = false
 
 [tool.typos]
 default.extend-ignore-identifiers-re = [
@@ -398,3 +394,7 @@ warn_unused_ignores = true
 warn_return_any = true
 warn_unreachable = true
 pretty = true
+
+[tool.gha-utils]
+# Building the package with Nuitka is overkill.
+nuitka = false
