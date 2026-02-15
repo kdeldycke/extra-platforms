@@ -5,7 +5,7 @@ requires = [ "uv-build>=0.9" ]
 [project]
 # Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 name = "extra-platforms"
-version = "9.0.1"
+version = "9.1.0"
 description = "🔎 Detect architectures, platforms, shells and CI systems, grouped by family"
 readme = "readme.md"
 keywords = [
@@ -225,7 +225,7 @@ extra-platforms = "extra_platforms.__main__:main"
 [project.urls]
 "Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
 "Documentation" = "https://kdeldycke.github.io/extra-platforms"
-"Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v9.0.1"
+"Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v9.1.0"
 "Funding" = "https://github.com/sponsors/kdeldycke"
 "Homepage" = "https://github.com/kdeldycke/extra-platforms"
 "Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
@@ -352,7 +352,7 @@ run.source = [ "extra_platforms" ]
 report.precision = 2
 
 [tool.bumpversion]
-current_version = "9.0.1"
+current_version = "9.1.0"
 allow_dirty = true
 
 [[tool.bumpversion.files]]

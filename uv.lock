@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-02-04T00:00:00Z"
+exclude-newer = "2026-02-08T00:00:00Z"
 
 [[package]]
 name = "accessible-pygments"
@@ -382,7 +382,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "9.0.1"
+version = "9.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "distro" },
