@@ -473,19 +473,23 @@ def test_multiple_ci_systems_match(monkeypatch):
 
 def test_unrecognized_message_format():
     """Test that _unrecognized_message contains expected fields."""
-    message = _unrecognized_message()
+    # Default (report=True) includes the GitHub issue URL.
+    message_with_report = _unrecognized_message()
+    assert "github.com/kdeldycke/extra-platforms/issues" in message_with_report
 
-    # Check that the message contains expected platform primitives.
-    assert "sys.platform:" in message
-    assert "platform.platform:" in message
-    assert "platform.release:" in message
-    assert "platform.uname:" in message
-    assert "platform.machine:" in message
-    assert "platform.architecture:" in message
-    assert "distro.id:" in message
+    # Without report request (for legitimately absent traits like terminal/CI).
+    message_without_report = _unrecognized_message(report=False)
+    assert "github.com/kdeldycke/extra-platforms/issues" not in message_without_report
 
-    # Check it contains the GitHub issue URL.
-    assert "github.com/kdeldycke/extra-platforms/issues" in message
+    # Both contain the environment dump primitives.
+    for message in (message_with_report, message_without_report):
+        assert "sys.platform:" in message
+        assert "platform.platform:" in message
+        assert "platform.release:" in message
+        assert "platform.uname:" in message
+        assert "platform.machine:" in message
+        assert "platform.architecture:" in message
+        assert "distro.id:" in message
 
 
 @pytest.mark.skipif(

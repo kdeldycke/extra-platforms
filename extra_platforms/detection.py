@@ -87,15 +87,18 @@ if TYPE_CHECKING:
     from .trait import CI, Architecture, Platform, Shell, Terminal, Trait
 
 
-@cache
-def _unrecognized_message() -> str:
-    """Generate a consistent message for unrecognized environments.
+def _unrecognized_message(report: bool = True) -> str:
+    """Generate a message for unrecognized environments.
 
     .. important::
         This message must contain all the primitives used in the ``detection`` module so
         maintainers can debug heuristics from user reports.
+
+    :param report: If ``True``, append a request to report the issue on GitHub.
+        Set to ``False`` for environments where the trait is legitimately absent
+        (e.g., no terminal in CI, no CI locally).
     """
-    return (
+    msg = (
         "Environment:\n"
         f"  sys.platform:          {sys.platform!r}\n"
         "  platform.platform:     "
@@ -104,10 +107,39 @@ def _unrecognized_message() -> str:
         f"  platform.uname:        {platform.uname()!r}\n"
         f"  platform.machine:      {platform.machine()!r}\n"
         f"  platform.architecture: {platform.architecture()!r}\n"
-        f"  distro.id:             {distro.id()!r}\n"
-        "\nPlease report this at https://github.com/kdeldycke/extra-platforms/issues to "
-        "improve detection heuristics."
+        f"  distro.id:             {distro.id()!r}"
     )
+    if report:
+        msg += (
+            "\n\nPlease report this at "
+            "https://github.com/kdeldycke/extra-platforms/issues "
+            "to improve detection heuristics."
+        )
+    return msg
+
+
+def _report_unrecognized(
+    trait_name: str,
+    *,
+    strict: bool,
+    expected: bool = True,
+) -> None:
+    """Log or raise on unrecognized trait detection.
+
+    :param trait_name: Human-readable name of the trait type (e.g., ``"architecture"``).
+    :param strict: If ``True``, raise :exc:`SystemError` instead of logging.
+    :param expected: If ``True``, the trait is always expected to be detected
+        (architecture, platform, shell), so an unrecognized result logs a ``WARNING``
+        and asks users to report the issue. If ``False`` (terminal, CI), the trait may
+        legitimately be absent, so only ``INFO`` is logged without a report request.
+    """
+    msg = f"Unrecognized {trait_name}: {_unrecognized_message(report=expected)}"
+    if strict:
+        raise SystemError(msg)
+    if expected:
+        logging.warning(msg)
+    else:
+        logging.info(msg)
 
 
 # =============================================================================
@@ -1260,6 +1292,11 @@ def current_architecture(strict: bool = False) -> Architecture:
 
     .. important::
         Always raises an error if multiple architectures match.
+
+    .. warning::
+        An architecture is always expected to be detected. An unrecognized result
+        logs a ``WARNING`` and likely indicates a missing detection heuristic that
+        should be `reported <https://github.com/kdeldycke/extra-platforms/issues>`_.
     """
     # Lazy imports to avoid circular dependencies.
     from .architecture_data import UNKNOWN_ARCHITECTURE
@@ -1281,11 +1318,7 @@ def current_architecture(strict: bool = False) -> Architecture:
             f"Multiple architectures matches: {matching!r}. {_unrecognized_message()}"
         )
 
-    # No matching architecture found.
-    msg = f"Unrecognized architecture: {_unrecognized_message()}"
-    if strict:
-        raise SystemError(msg)
-    logging.warning(msg)
+    _report_unrecognized("architecture", strict=strict)
     return UNKNOWN_ARCHITECTURE
 
 
@@ -1300,6 +1333,11 @@ def current_platform(strict: bool = False) -> Platform:
         If multiple platforms match the current environment, this function will try to
         select the best, informative one. Raises an error if we can't decide on a single,
         appropriate platform.
+
+    .. warning::
+        A platform is always expected to be detected. An unrecognized result logs a
+        ``WARNING`` and likely indicates a missing detection heuristic that should be
+        `reported <https://github.com/kdeldycke/extra-platforms/issues>`_.
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_PLATFORMS
@@ -1332,11 +1370,7 @@ def current_platform(strict: bool = False) -> Platform:
             f"Multiple platforms matches: {matching!r}. {_unrecognized_message()}"
         )
 
-    # No matching platform found.
-    msg = f"Unrecognized platform: {_unrecognized_message()}"
-    if strict:
-        raise SystemError(msg)
-    logging.warning(msg)
+    _report_unrecognized("platform", strict=strict)
     return UNKNOWN_PLATFORM
 
 
@@ -1358,6 +1392,11 @@ def current_shell(strict: bool = False) -> Shell:
         ``PSModulePath`` `leaks into child processes
         <https://github.com/PowerShell/PowerShell/issues/9957>`_), the other
         shell is preferred.
+
+    .. warning::
+        A shell is always expected to be detected. An unrecognized result logs a
+        ``WARNING`` and likely indicates a missing detection heuristic that should be
+        `reported <https://github.com/kdeldycke/extra-platforms/issues>`_.
 
     .. seealso::
         Inspired by `UV's cross-platform shell detection
@@ -1389,11 +1428,7 @@ def current_shell(strict: bool = False) -> Shell:
             f"Multiple shells matches: {matching!r}. {_unrecognized_message()}"
         )
 
-    # No matching shell found.
-    msg = f"Unrecognized shell: {_unrecognized_message()}"
-    if strict:
-        raise SystemError(msg)
-    logging.warning(msg)
+    _report_unrecognized("shell", strict=strict)
     return UNKNOWN_SHELL
 
 
@@ -1409,6 +1444,12 @@ def current_terminal(strict: bool = False) -> Terminal:
         :data:`~extra_platforms.KITTY`), multiplexers are filtered out first to
         identify the innermost terminal. If multiple non-multiplexer terminals still
         match, a :class:`RuntimeError` is raised.
+
+    .. note::
+        Unlike architectures, platforms, and shells, a terminal is not always present.
+        Headless environments (CI runners, cron jobs, Docker containers, SSH
+        non-interactive commands) have no terminal emulator attached. An unrecognized
+        result only logs at ``INFO`` level.
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_TERMINALS, MULTIPLEXERS
@@ -1434,11 +1475,7 @@ def current_terminal(strict: bool = False) -> Terminal:
             f"Multiple terminals matches: {matching!r}. {_unrecognized_message()}"
         )
 
-    # No matching terminal found.
-    msg = f"Unrecognized terminal: {_unrecognized_message()}"
-    if strict:
-        raise SystemError(msg)
-    logging.warning(msg)
+    _report_unrecognized("terminal", strict=strict, expected=False)
     return UNKNOWN_TERMINAL
 
 
@@ -1451,6 +1488,11 @@ def current_ci(strict: bool = False) -> CI:
 
     .. important::
         Always raises an error if multiple CI systems match.
+
+    .. note::
+        Unlike architectures, platforms, and shells, a CI system is not always present.
+        Local development environments have no CI system running. An unrecognized
+        result only logs at ``INFO`` level.
     """
     # Lazy imports to avoid circular dependencies.
     from .ci_data import UNKNOWN_CI
@@ -1468,11 +1510,7 @@ def current_ci(strict: bool = False) -> CI:
             f"Multiple CI matches: {matching!r}. {_unrecognized_message()}"
         )
 
-    # No matching CI system found.
-    msg = f"Unrecognized CI: {_unrecognized_message()}"
-    if strict:
-        raise SystemError(msg)
-    logging.warning(msg)
+    _report_unrecognized("CI", strict=strict, expected=False)
     return UNKNOWN_CI
 
 
