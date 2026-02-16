@@ -100,7 +100,7 @@ RIO = Terminal(
     "rio",
     "Rio",
     "🏞️",
-    "https://raphamorim.io/rio/",
+    "https://rioterm.com",
 )
 
 TABBY = Terminal(
