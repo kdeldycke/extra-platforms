@@ -606,7 +606,14 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
             return "groups.html"
         # All trait-related classes (Trait, Platform, Architecture, CI) are
         # documented in trait.html
-        if symbol_clean in ("Trait", "Platform", "Architecture", "Shell", "Terminal", "CI"):
+        if symbol_clean in (
+            "Trait",
+            "Platform",
+            "Architecture",
+            "Shell",
+            "Terminal",
+            "CI",
+        ):
             return "trait.html"
         # Default to trait.html for other trait-related classes
         return "trait.html"
