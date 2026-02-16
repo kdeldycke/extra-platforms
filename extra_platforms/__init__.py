@@ -375,7 +375,7 @@ from .trait import (  # noqa: E402
 """
 
 
-__version__ = "9.2.0"
+__version__ = "9.2.1"
 
 
 def _initialize_group_detection_functions() -> list[str]:
