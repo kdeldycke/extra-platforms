@@ -433,6 +433,15 @@ class Terminal(Trait):
         Shell and Terminal are orthogonal: any shell can run inside any terminal.
         Unlike shells, multiple terminals can be active simultaneously (e.g.,
         tmux inside Kitty).
+
+    .. seealso::
+        Other tools that detect terminals for adaptation:
+
+        - `Starship <https://starship.rs/>`_ adapts prompt rendering based on terminal
+        - `crossterm <https://github.com/crossterm-rs/crossterm>`_ (Rust) negotiates terminal features
+        - `python-prompt-toolkit <https://github.com/prompt-toolkit/python-prompt-toolkit>`_ adapts to terminal capabilities
+        - `rich <https://github.com/Textualize/rich>`_ probes terminal features for rendering
+        - `termenv <https://github.com/muesli/termenv>`_ (Go) maintains terminal capability database
     """
 
     def info(self) -> dict[str, str | bool | None]:
