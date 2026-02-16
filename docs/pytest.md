@@ -175,6 +175,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_mips64el`             | {deco}`~pytest.unless_mips64el`             |  🔲  | {data}`~MIPS64EL`             |
 | {deco}`~pytest.skip_mipsel`               | {deco}`~pytest.unless_mipsel`               |  🔲  | {data}`~MIPSEL`               |
 | {deco}`~pytest.skip_multiplexers`         | {deco}`~pytest.unless_multiplexers`         |  ⧉   | {data}`~MULTIPLEXERS`         |
+| {deco}`~pytest.skip_native_terminals`     | {deco}`~pytest.unless_native_terminals`     |  ▦   | {data}`~NATIVE_TERMINALS`     |
 | {deco}`~pytest.skip_netbsd`               | {deco}`~pytest.unless_netbsd`               |  🚩  | {data}`~NETBSD`               |
 | {deco}`~pytest.skip_nobara`               | {deco}`~pytest.unless_nobara`               |     | {data}`~NOBARA`               |
 | {deco}`~pytest.skip_nushell`              | {deco}`~pytest.unless_nushell`              |  𝜈   | {data}`~NUSHELL`              |
@@ -229,6 +230,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_vscode_terminal`      | {deco}`~pytest.unless_vscode_terminal`      |  🔵  | {data}`~VSCODE_TERMINAL`      |
 | {deco}`~pytest.skip_wasm32`               | {deco}`~pytest.unless_wasm32`               |  🌐  | {data}`~WASM32`               |
 | {deco}`~pytest.skip_wasm64`               | {deco}`~pytest.unless_wasm64`               |  🌐  | {data}`~WASM64`               |
+| {deco}`~pytest.skip_web_terminals`        | {deco}`~pytest.unless_web_terminals`        |  ⬢   | {data}`~WEB_TERMINALS`        |
 | {deco}`~pytest.skip_webassembly`          | {deco}`~pytest.unless_webassembly`          |  🌐  | {data}`~WEBASSEMBLY`          |
 | {deco}`~pytest.skip_wezterm`              | {deco}`~pytest.unless_wezterm`              |  🔡  | {data}`~WEZTERM`              |
 | {deco}`~pytest.skip_windows`              | {deco}`~pytest.unless_windows`              |  🪟  | {data}`~WINDOWS`              |
@@ -347,6 +349,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_mips64el
 .. autodecorator:: extra_platforms.pytest.skip_mipsel
 .. autodecorator:: extra_platforms.pytest.skip_multiplexers
+.. autodecorator:: extra_platforms.pytest.skip_native_terminals
 .. autodecorator:: extra_platforms.pytest.skip_netbsd
 .. autodecorator:: extra_platforms.pytest.skip_nobara
 .. autodecorator:: extra_platforms.pytest.skip_nushell
@@ -401,6 +404,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_vscode_terminal
 .. autodecorator:: extra_platforms.pytest.skip_wasm32
 .. autodecorator:: extra_platforms.pytest.skip_wasm64
+.. autodecorator:: extra_platforms.pytest.skip_web_terminals
 .. autodecorator:: extra_platforms.pytest.skip_webassembly
 .. autodecorator:: extra_platforms.pytest.skip_wezterm
 .. autodecorator:: extra_platforms.pytest.skip_windows
@@ -516,6 +520,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_mips64el
 .. autodecorator:: extra_platforms.pytest.unless_mipsel
 .. autodecorator:: extra_platforms.pytest.unless_multiplexers
+.. autodecorator:: extra_platforms.pytest.unless_native_terminals
 .. autodecorator:: extra_platforms.pytest.unless_netbsd
 .. autodecorator:: extra_platforms.pytest.unless_nobara
 .. autodecorator:: extra_platforms.pytest.unless_nushell
@@ -570,6 +575,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_vscode_terminal
 .. autodecorator:: extra_platforms.pytest.unless_wasm32
 .. autodecorator:: extra_platforms.pytest.unless_wasm64
+.. autodecorator:: extra_platforms.pytest.unless_web_terminals
 .. autodecorator:: extra_platforms.pytest.unless_webassembly
 .. autodecorator:: extra_platforms.pytest.unless_wezterm
 .. autodecorator:: extra_platforms.pytest.unless_windows
