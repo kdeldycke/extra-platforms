@@ -32,6 +32,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     ALL_GROUPS,
     ALL_PLATFORMS,
     ALL_SHELLS,
+    ALL_TERMINALS,
     ALL_TRAITS,
     BASH,
     GITHUB_CI,
@@ -47,6 +48,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
     UNKNOWN_SHELL,
+    UNKNOWN_TERMINAL,
     WINDOWS,
     WSL1,
     WSL2,
@@ -55,17 +57,20 @@ from extra_platforms import (  # type: ignore[attr-defined]
     current_ci,
     current_platform,
     current_shell,
+    current_terminal,
     current_traits,
     invalidate_caches,
     is_aarch64,
     is_any_ci,
     is_any_platform,
+    is_any_terminal,
     is_bsd,
     is_fedora,
     is_github_ci,
     is_linux,
     is_macos,
     is_ubuntu,
+    is_unknown_terminal,
     is_windows,
 )
 from extra_platforms import architecture_data as architecture_data_module
@@ -75,6 +80,7 @@ from extra_platforms import group as group_module
 from extra_platforms import group_data as group_data_module
 from extra_platforms import platform_data as platform_data_module
 from extra_platforms import shell_data as shell_data_module
+from extra_platforms import terminal_data as terminal_data_module
 from extra_platforms import trait as trait_module
 from extra_platforms.detection import _unrecognized_message
 
@@ -193,6 +199,7 @@ def test_module_root_declarations():
     group_data_members = fetch_module_implements(group_data_module)
     platform_data_members = fetch_module_implements(platform_data_module)
     shell_data_members = fetch_module_implements(shell_data_module)
+    terminal_data_members = fetch_module_implements(terminal_data_module)
     trait_members = fetch_module_implements(trait_module)
     root_members = fetch_module_implements(extra_platforms)
     # Update root members with auto-generated group detection function names.
@@ -215,6 +222,7 @@ def test_module_root_declarations():
     assert group_data_members <= set(extra_platforms_members)
     assert platform_data_members <= set(extra_platforms_members)
     assert shell_data_members <= set(extra_platforms_members)
+    assert terminal_data_members <= set(extra_platforms_members)
     assert trait_members <= set(extra_platforms_members)
 
     expected_members = sorted(
@@ -225,6 +233,7 @@ def test_module_root_declarations():
         .union(group_data_members)
         .union(platform_data_members)
         .union(shell_data_members)
+        .union(terminal_data_members)
         .union(trait_members)
         .union(root_members),
         key=lambda m: (m.lower(), m),
@@ -238,6 +247,11 @@ def test_current_funcs():
 
     # 1 architecture + 1 platform + 1 shell = 3 traits.
     detected_traits = 3
+    if is_any_terminal():
+        # +N terminals (multiple can match, e.g. tmux inside kitty).
+        detected_traits += sum(
+            1 for t in current_traits_results if isinstance(t, extra_platforms.Terminal)
+        )
     if is_any_ci():
         # +1 CI.
         detected_traits += 1
@@ -266,6 +280,11 @@ def test_current_funcs():
     assert current_shell_result in current_traits_results
     assert current_shell_result is not UNKNOWN_SHELL
 
+    current_terminal_result = current_terminal()
+    assert current_terminal_result in ALL_TERMINALS | {UNKNOWN_TERMINAL}
+    if current_terminal_result is not UNKNOWN_TERMINAL:
+        assert current_terminal_result in current_traits_results
+
     current_ci_result = current_ci()
     assert current_ci_result in ALL_CI | {UNKNOWN_CI}
     if current_ci_result is not UNKNOWN_CI:
@@ -290,6 +309,13 @@ def test_current_funcs():
             "Unrecognized platform",
         ),
         (current_shell, ALL_SHELLS, UNKNOWN_SHELL, "shell", "Unrecognized shell"),
+        (
+            current_terminal,
+            ALL_TERMINALS,
+            UNKNOWN_TERMINAL,
+            "terminal",
+            "Unrecognized terminal",
+        ),
         (current_ci, ALL_CI, UNKNOWN_CI, "CI", "Unrecognized CI"),
     ],
 )
@@ -304,7 +330,7 @@ def test_current_strict_mode(
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
     # Skip this check for CI and shell since they may legitimately be unknown.
-    if trait_type not in ("CI", "shell"):
+    if trait_type not in ("CI", "shell", "terminal"):
         invalidate_caches()
         result = current_func()
         assert result in all_collection

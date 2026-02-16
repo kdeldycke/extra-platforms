@@ -136,6 +136,29 @@ from .shell_data import (
     XONSH,
     ZSH,
 )
+from .terminal_data import (
+    ALACRITTY,
+    APPLE_TERMINAL,
+    CONTOUR,
+    FOOT,
+    GHOSTTY,
+    GNOME_TERMINAL,
+    GNU_SCREEN,
+    HYPER,
+    ITERM2,
+    KITTY,
+    KONSOLE,
+    RIO,
+    TABBY,
+    TILIX,
+    TMUX,
+    UNKNOWN_TERMINAL,
+    VSCODE_TERMINAL,
+    WEZTERM,
+    WINDOWS_TERMINAL,
+    XTERM,
+    ZELLIJ,
+)
 
 # =============================================================================
 # Architecture groups
@@ -703,6 +726,80 @@ WINDOWS_SHELLS = Group(
 
 
 # =============================================================================
+# Terminal groups
+# =============================================================================
+
+ALL_TERMINALS: Group = Group(
+    "all_terminals",
+    "All terminals",
+    "💻",
+    (
+        ALACRITTY,
+        APPLE_TERMINAL,
+        CONTOUR,
+        FOOT,
+        GHOSTTY,
+        GNOME_TERMINAL,
+        GNU_SCREEN,
+        HYPER,
+        ITERM2,
+        KITTY,
+        KONSOLE,
+        RIO,
+        TABBY,
+        TILIX,
+        TMUX,
+        VSCODE_TERMINAL,
+        WEZTERM,
+        WINDOWS_TERMINAL,
+        XTERM,
+        ZELLIJ,
+    ),
+)
+"""All recognized terminals.
+
+.. caution::
+    This group does not contain the :data:`~extra_platforms.UNKNOWN_TERMINAL` trait.
+"""
+
+
+GPU_TERMINALS = Group(
+    "gpu_terminals",
+    "GPU-accelerated terminals",
+    "🎮",
+    (ALACRITTY, CONTOUR, FOOT, GHOSTTY, KITTY, RIO, WEZTERM),
+)
+"""GPU-accelerated terminal emulators."""
+
+
+MULTIPLEXERS = Group(
+    "multiplexers",
+    "Terminal multiplexers",
+    "⧉",
+    (GNU_SCREEN, TMUX, ZELLIJ),
+)
+"""Terminal multiplexers that can host other terminals."""
+
+
+NATIVE_TERMINALS = Group(
+    "native_terminals",
+    "Native terminal emulators",
+    "▦",
+    (APPLE_TERMINAL, GNOME_TERMINAL, ITERM2, KONSOLE, TILIX, WINDOWS_TERMINAL, XTERM),
+)
+"""Platform-native terminal emulators built with traditional GUI toolkits."""
+
+
+WEB_TERMINALS = Group(
+    "web_terminals",
+    "Web-based terminals",
+    "⬢",
+    (HYPER, TABBY, VSCODE_TERMINAL),
+)
+"""Terminal emulators built on web technologies (Electron, xterm.js)."""
+
+
+# =============================================================================
 # CI groups
 # =============================================================================
 
@@ -743,18 +840,31 @@ UNKNOWN = Group(
     "unknown",
     "Unknown",
     "❓",
-    (UNKNOWN_ARCHITECTURE, UNKNOWN_PLATFORM, UNKNOWN_SHELL, UNKNOWN_CI),
+    (
+        UNKNOWN_ARCHITECTURE,
+        UNKNOWN_PLATFORM,
+        UNKNOWN_SHELL,
+        UNKNOWN_TERMINAL,
+        UNKNOWN_CI,
+    ),
 )
 """Unknown or unrecognized traits."""
 
 
 ALL_TRAITS = Group(
     "all_traits",
-    "All architectures, platforms, shells, and CI systems",
+    "All architectures, platforms, shells, terminals, and CI systems",
     "⁕",
-    tuple(ALL_ARCHITECTURES | ALL_PLATFORMS | ALL_SHELLS | ALL_CI | UNKNOWN),
+    tuple(
+        ALL_ARCHITECTURES
+        | ALL_PLATFORMS
+        | ALL_SHELLS
+        | ALL_TERMINALS
+        | ALL_CI
+        | UNKNOWN
+    ),
 )
-"""All predefined architectures, platforms, shells, and CI systems.
+"""All predefined architectures, platforms, shells, terminals, and CI systems.
 
 .. hint::
     This group includes all ``UNKNOWN_*`` traits.
@@ -817,6 +927,18 @@ ALL_SHELL_GROUPS: frozenset[Group] = frozenset(
 )
 
 
+#: All groups whose members are :class:`~extra_platforms.Terminal`.
+ALL_TERMINAL_GROUPS: frozenset[Group] = frozenset(
+    (
+        ALL_TERMINALS,
+        GPU_TERMINALS,
+        MULTIPLEXERS,
+        NATIVE_TERMINALS,
+        WEB_TERMINALS,
+    ),
+)
+
+
 #: All groups whose members are :class:`~extra_platforms.CI`.
 #:
 #: .. note::
@@ -850,14 +972,19 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         BSD,
         LINUX,
         LINUX_LAYERS,
+        OTHER_POSIX,
         SYSTEM_V,
         UNIX_LAYERS,
-        OTHER_POSIX,
         # Shell groups.
         BOURNE_SHELLS,
         C_SHELLS,
         OTHER_SHELLS,
         WINDOWS_SHELLS,
+        # Terminal groups.
+        GPU_TERMINALS,
+        MULTIPLEXERS,
+        NATIVE_TERMINALS,
+        WEB_TERMINALS,
         # CI groups.
         ALL_CI,
         # Mixed groups.
@@ -887,6 +1014,8 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         LINUX_LIKE,
         # Shell groups.
         ALL_SHELLS,
+        # Terminal groups.
+        ALL_TERMINALS,
     ),
 )
 

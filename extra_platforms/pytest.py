@@ -158,6 +158,7 @@ for _obj in chain(ALL_TRAITS, ALL_GROUPS):
 if TYPE_CHECKING:
     skip_aarch64: MarkDecorator
     skip_aix: MarkDecorator
+    skip_alacritty: MarkDecorator
     skip_all_architectures: MarkDecorator
     skip_all_arm: MarkDecorator
     skip_all_ci: MarkDecorator
@@ -165,12 +166,14 @@ if TYPE_CHECKING:
     skip_all_platforms: MarkDecorator
     skip_all_shells: MarkDecorator
     skip_all_sparc: MarkDecorator
+    skip_all_terminals: MarkDecorator
     skip_all_traits: MarkDecorator
     skip_all_windows: MarkDecorator
     skip_alpine: MarkDecorator
     skip_altlinux: MarkDecorator
     skip_amzn: MarkDecorator
     skip_android: MarkDecorator
+    skip_apple_terminal: MarkDecorator
     skip_arch: MarkDecorator
     skip_arch_32_bit: MarkDecorator
     skip_arch_64_bit: MarkDecorator
@@ -197,6 +200,7 @@ if TYPE_CHECKING:
     skip_cloudlinux: MarkDecorator
     skip_cmd: MarkDecorator
     skip_codebuild: MarkDecorator
+    skip_contour: MarkDecorator
     skip_csh: MarkDecorator
     skip_cygwin: MarkDecorator
     skip_dash: MarkDecorator
@@ -205,21 +209,30 @@ if TYPE_CHECKING:
     skip_exherbo: MarkDecorator
     skip_fedora: MarkDecorator
     skip_fish: MarkDecorator
+    skip_foot: MarkDecorator
     skip_freebsd: MarkDecorator
     skip_gentoo: MarkDecorator
+    skip_ghostty: MarkDecorator
     skip_github_ci: MarkDecorator
     skip_gitlab_ci: MarkDecorator
+    skip_gnome_terminal: MarkDecorator
+    skip_gnu_screen: MarkDecorator
+    skip_gpu_terminals: MarkDecorator
     skip_guix: MarkDecorator
     skip_haiku: MarkDecorator
     skip_heroku_ci: MarkDecorator
     skip_hurd: MarkDecorator
+    skip_hyper: MarkDecorator
     skip_i386: MarkDecorator
     skip_i586: MarkDecorator
     skip_i686: MarkDecorator
     skip_ibm_mainframe: MarkDecorator
     skip_ibm_powerkvm: MarkDecorator
     skip_illumos: MarkDecorator
+    skip_iterm2: MarkDecorator
     skip_kali: MarkDecorator
+    skip_kitty: MarkDecorator
+    skip_konsole: MarkDecorator
     skip_ksh: MarkDecorator
     skip_kvmibm: MarkDecorator
     skip_linux: MarkDecorator
@@ -238,6 +251,8 @@ if TYPE_CHECKING:
     skip_mips64: MarkDecorator
     skip_mips64el: MarkDecorator
     skip_mipsel: MarkDecorator
+    skip_multiplexers: MarkDecorator
+    skip_native_terminals: MarkDecorator
     skip_netbsd: MarkDecorator
     skip_nobara: MarkDecorator
     skip_nushell: MarkDecorator
@@ -256,6 +271,7 @@ if TYPE_CHECKING:
     skip_ppc64le: MarkDecorator
     skip_raspbian: MarkDecorator
     skip_rhel: MarkDecorator
+    skip_rio: MarkDecorator
     skip_riscv: MarkDecorator
     skip_riscv32: MarkDecorator
     skip_riscv64: MarkDecorator
@@ -269,8 +285,11 @@ if TYPE_CHECKING:
     skip_sparc64: MarkDecorator
     skip_sunos: MarkDecorator
     skip_system_v: MarkDecorator
+    skip_tabby: MarkDecorator
     skip_tcsh: MarkDecorator
     skip_teamcity: MarkDecorator
+    skip_tilix: MarkDecorator
+    skip_tmux: MarkDecorator
     skip_travis_ci: MarkDecorator
     skip_tumbleweed: MarkDecorator
     skip_tuxedo: MarkDecorator
@@ -284,20 +303,28 @@ if TYPE_CHECKING:
     skip_unknown_ci: MarkDecorator
     skip_unknown_platform: MarkDecorator
     skip_unknown_shell: MarkDecorator
+    skip_unknown_terminal: MarkDecorator
+    skip_vscode_terminal: MarkDecorator
     skip_wasm32: MarkDecorator
     skip_wasm64: MarkDecorator
+    skip_web_terminals: MarkDecorator
     skip_webassembly: MarkDecorator
+    skip_wezterm: MarkDecorator
     skip_windows: MarkDecorator
     skip_windows_shells: MarkDecorator
+    skip_windows_terminal: MarkDecorator
     skip_wsl1: MarkDecorator
     skip_wsl2: MarkDecorator
     skip_x86: MarkDecorator
     skip_x86_64: MarkDecorator
     skip_xenserver: MarkDecorator
     skip_xonsh: MarkDecorator
+    skip_xterm: MarkDecorator
+    skip_zellij: MarkDecorator
     skip_zsh: MarkDecorator
     unless_aarch64: MarkDecorator
     unless_aix: MarkDecorator
+    unless_alacritty: MarkDecorator
     unless_alpine: MarkDecorator
     unless_altlinux: MarkDecorator
     unless_amzn: MarkDecorator
@@ -309,8 +336,10 @@ if TYPE_CHECKING:
     unless_any_platform: MarkDecorator
     unless_any_shell: MarkDecorator
     unless_any_sparc: MarkDecorator
+    unless_any_terminal: MarkDecorator
     unless_any_trait: MarkDecorator
     unless_any_windows: MarkDecorator
+    unless_apple_terminal: MarkDecorator
     unless_arch: MarkDecorator
     unless_arch_32_bit: MarkDecorator
     unless_arch_64_bit: MarkDecorator
@@ -337,6 +366,7 @@ if TYPE_CHECKING:
     unless_cloudlinux: MarkDecorator
     unless_cmd: MarkDecorator
     unless_codebuild: MarkDecorator
+    unless_contour: MarkDecorator
     unless_csh: MarkDecorator
     unless_cygwin: MarkDecorator
     unless_dash: MarkDecorator
@@ -345,21 +375,30 @@ if TYPE_CHECKING:
     unless_exherbo: MarkDecorator
     unless_fedora: MarkDecorator
     unless_fish: MarkDecorator
+    unless_foot: MarkDecorator
     unless_freebsd: MarkDecorator
     unless_gentoo: MarkDecorator
+    unless_ghostty: MarkDecorator
     unless_github_ci: MarkDecorator
     unless_gitlab_ci: MarkDecorator
+    unless_gnome_terminal: MarkDecorator
+    unless_gnu_screen: MarkDecorator
+    unless_gpu_terminals: MarkDecorator
     unless_guix: MarkDecorator
     unless_haiku: MarkDecorator
     unless_heroku_ci: MarkDecorator
     unless_hurd: MarkDecorator
+    unless_hyper: MarkDecorator
     unless_i386: MarkDecorator
     unless_i586: MarkDecorator
     unless_i686: MarkDecorator
     unless_ibm_mainframe: MarkDecorator
     unless_ibm_powerkvm: MarkDecorator
     unless_illumos: MarkDecorator
+    unless_iterm2: MarkDecorator
     unless_kali: MarkDecorator
+    unless_kitty: MarkDecorator
+    unless_konsole: MarkDecorator
     unless_ksh: MarkDecorator
     unless_kvmibm: MarkDecorator
     unless_linux: MarkDecorator
@@ -378,6 +417,8 @@ if TYPE_CHECKING:
     unless_mips64: MarkDecorator
     unless_mips64el: MarkDecorator
     unless_mipsel: MarkDecorator
+    unless_multiplexers: MarkDecorator
+    unless_native_terminals: MarkDecorator
     unless_netbsd: MarkDecorator
     unless_nobara: MarkDecorator
     unless_nushell: MarkDecorator
@@ -396,6 +437,7 @@ if TYPE_CHECKING:
     unless_ppc64le: MarkDecorator
     unless_raspbian: MarkDecorator
     unless_rhel: MarkDecorator
+    unless_rio: MarkDecorator
     unless_riscv: MarkDecorator
     unless_riscv32: MarkDecorator
     unless_riscv64: MarkDecorator
@@ -409,8 +451,11 @@ if TYPE_CHECKING:
     unless_sparc64: MarkDecorator
     unless_sunos: MarkDecorator
     unless_system_v: MarkDecorator
+    unless_tabby: MarkDecorator
     unless_tcsh: MarkDecorator
     unless_teamcity: MarkDecorator
+    unless_tilix: MarkDecorator
+    unless_tmux: MarkDecorator
     unless_travis_ci: MarkDecorator
     unless_tumbleweed: MarkDecorator
     unless_tuxedo: MarkDecorator
@@ -424,15 +469,22 @@ if TYPE_CHECKING:
     unless_unknown_ci: MarkDecorator
     unless_unknown_platform: MarkDecorator
     unless_unknown_shell: MarkDecorator
+    unless_unknown_terminal: MarkDecorator
+    unless_vscode_terminal: MarkDecorator
     unless_wasm32: MarkDecorator
     unless_wasm64: MarkDecorator
+    unless_web_terminals: MarkDecorator
     unless_webassembly: MarkDecorator
+    unless_wezterm: MarkDecorator
     unless_windows: MarkDecorator
     unless_windows_shells: MarkDecorator
+    unless_windows_terminal: MarkDecorator
     unless_wsl1: MarkDecorator
     unless_wsl2: MarkDecorator
     unless_x86: MarkDecorator
     unless_x86_64: MarkDecorator
     unless_xenserver: MarkDecorator
     unless_xonsh: MarkDecorator
+    unless_xterm: MarkDecorator
+    unless_zellij: MarkDecorator
     unless_zsh: MarkDecorator

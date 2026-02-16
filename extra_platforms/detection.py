@@ -84,7 +84,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Iterable
 
-    from .trait import CI, Architecture, Platform, Shell, Trait
+    from .trait import CI, Architecture, Platform, Shell, Terminal, Trait
 
 
 @cache
@@ -971,6 +971,140 @@ def is_unknown_shell() -> bool:
 
 
 # =============================================================================
+# Terminal detection heuristics
+# =============================================================================
+
+
+@cache
+def is_alacritty() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.ALACRITTY`."""
+    return "ALACRITTY_SOCKET" in environ or "ALACRITTY_WINDOW_ID" in environ
+
+
+@cache
+def is_apple_terminal() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.APPLE_TERMINAL`."""
+    return environ.get("TERM_PROGRAM") == "Apple_Terminal"
+
+
+@cache
+def is_contour() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.CONTOUR`."""
+    return environ.get("TERMINAL_NAME") == "contour"
+
+
+@cache
+def is_foot() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.FOOT`."""
+    return environ.get("TERM", "").startswith("foot")
+
+
+@cache
+def is_ghostty() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.GHOSTTY`."""
+    return "GHOSTTY_RESOURCES_DIR" in environ
+
+
+@cache
+def is_gnome_terminal() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.GNOME_TERMINAL`."""
+    return "GNOME_TERMINAL_SCREEN" in environ
+
+
+@cache
+def is_gnu_screen() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.GNU_SCREEN`."""
+    return "STY" in environ
+
+
+@cache
+def is_hyper() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.HYPER`."""
+    return environ.get("TERM_PROGRAM") == "Hyper"
+
+
+@cache
+def is_iterm2() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.ITERM2`."""
+    return "ITERM_SESSION_ID" in environ or environ.get("TERM_PROGRAM") == "iTerm.app"
+
+
+@cache
+def is_kitty() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.KITTY`."""
+    return "KITTY_WINDOW_ID" in environ
+
+
+@cache
+def is_konsole() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.KONSOLE`."""
+    return "KONSOLE_VERSION" in environ
+
+
+@cache
+def is_rio() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.RIO`."""
+    return "RIO_WINDOW_ID" in environ
+
+
+@cache
+def is_tabby() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.TABBY`."""
+    return "TABBY" in environ or environ.get("TERM_PROGRAM") == "Tabby"
+
+
+@cache
+def is_tilix() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.TILIX`."""
+    return "TILIX_ID" in environ
+
+
+@cache
+def is_tmux() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.TMUX`."""
+    return "TMUX" in environ
+
+
+@cache
+def is_unknown_terminal() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.UNKNOWN_TERMINAL`."""
+    # Lazy import to avoid circular dependencies.
+    from .terminal_data import UNKNOWN_TERMINAL
+
+    return current_terminal() is UNKNOWN_TERMINAL
+
+
+@cache
+def is_vscode_terminal() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.VSCODE_TERMINAL`."""
+    return environ.get("TERM_PROGRAM") == "vscode"
+
+
+@cache
+def is_wezterm() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.WEZTERM`."""
+    return "WEZTERM_EXECUTABLE" in environ
+
+
+@cache
+def is_windows_terminal() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.WINDOWS_TERMINAL`."""
+    return "WT_SESSION" in environ
+
+
+@cache
+def is_xterm() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.XTERM`."""
+    return "XTERM_VERSION" in environ
+
+
+@cache
+def is_zellij() -> bool:
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.ZELLIJ`."""
+    return "ZELLIJ" in environ
+
+
+# =============================================================================
 # CI/CD detection heuristics
 # =============================================================================
 
@@ -1257,6 +1391,51 @@ def current_shell(strict: bool = False) -> Shell:
 
 
 @cache
+def current_terminal(strict: bool = False) -> Terminal:
+    """Returns the :class:`~extra_platforms.Terminal` matching the current environment.
+
+    Returns :data:`~extra_platforms.UNKNOWN_TERMINAL` if not running inside a
+    recognized terminal. To raise an error instead, set ``strict`` to ``True``.
+
+    .. important::
+        If multiple terminals match (e.g., :data:`~extra_platforms.TMUX` inside
+        :data:`~extra_platforms.KITTY`), multiplexers are filtered out first to
+        identify the innermost terminal. If multiple non-multiplexer terminals still
+        match, a :class:`RuntimeError` is raised.
+    """
+    # Lazy imports to avoid circular dependencies.
+    from .group_data import ALL_TERMINALS, MULTIPLEXERS
+    from .terminal_data import UNKNOWN_TERMINAL
+
+    # Collect all matching terminals.
+    matching: set[Terminal] = {
+        term  # type: ignore[misc]
+        for term in ALL_TERMINALS
+        if term.current
+    }
+
+    # Return the only matching terminal.
+    if len(matching) == 1:
+        return matching.pop()
+
+    # If multiple terminals match, filter out multiplexers to find the innermost.
+    if len(matching) > 1:
+        non_mux = {t for t in matching if t not in MULTIPLEXERS}
+        if len(non_mux) == 1:
+            return non_mux.pop()
+        raise RuntimeError(
+            f"Multiple terminals matches: {matching!r}. {_unrecognized_message()}"
+        )
+
+    # No matching terminal found.
+    msg = f"Unrecognized terminal: {_unrecognized_message()}"
+    if strict:
+        raise SystemError(msg)
+    logging.warning(msg)
+    return UNKNOWN_TERMINAL
+
+
+@cache
 def current_ci(strict: bool = False) -> CI:
     """Returns the :class:`~extra_platforms.CI` system matching the current environment.
 
@@ -1294,8 +1473,9 @@ def current_ci(strict: bool = False) -> CI:
 def current_traits() -> set[Trait]:
     """Returns all traits matching the current environment.
 
-    This includes :class:`~extra_platforms.Platform`, :class:`~extra_platforms.Architecture`,
-    and :class:`~extra_platforms.CI` systems.
+    This includes :class:`~extra_platforms.Architecture`,
+    :class:`~extra_platforms.Platform`, :class:`~extra_platforms.Shell`,
+    :class:`~extra_platforms.Terminal`, and :class:`~extra_platforms.CI` systems.
 
     .. caution::
         Never returns :data:`~extra_platforms.UNKNOWN` traits.

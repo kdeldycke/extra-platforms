@@ -81,6 +81,7 @@ def test_not_in_github_actions():
 | :---------------------------------------- | :------------------------------------------ | :--: | :---------------------------- |
 | {deco}`~pytest.skip_aarch64`              | {deco}`~pytest.unless_aarch64`              |  📱  | {data}`~AARCH64`              |
 | {deco}`~pytest.skip_aix`                  | {deco}`~pytest.unless_aix`                  |  ➿  | {data}`~AIX`                  |
+| {deco}`~pytest.skip_alacritty`            | {deco}`~pytest.unless_alacritty`            |  🔳  | {data}`~ALACRITTY`            |
 | {deco}`~pytest.skip_all_architectures`    | {deco}`~pytest.unless_any_architecture`     |  🏛️  | {data}`~ALL_ARCHITECTURES`    |
 | {deco}`~pytest.skip_all_arm`              | {deco}`~pytest.unless_any_arm`              |  📱  | {data}`~ALL_ARM`              |
 | {deco}`~pytest.skip_all_ci`               | {deco}`~pytest.unless_any_ci`               |  ♺   | {data}`~ALL_CI`               |
@@ -88,12 +89,14 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_all_platforms`        | {deco}`~pytest.unless_any_platform`         |  ⚙️  | {data}`~ALL_PLATFORMS`        |
 | {deco}`~pytest.skip_all_shells`           | {deco}`~pytest.unless_any_shell`            |  🐚  | {data}`~ALL_SHELLS`           |
 | {deco}`~pytest.skip_all_sparc`            | {deco}`~pytest.unless_any_sparc`            |  ☀️  | {data}`~ALL_SPARC`            |
+| {deco}`~pytest.skip_all_terminals`        | {deco}`~pytest.unless_any_terminal`         |  💻  | {data}`~ALL_TERMINALS`        |
 | {deco}`~pytest.skip_all_traits`           | {deco}`~pytest.unless_any_trait`            |  ⁕   | {data}`~ALL_TRAITS`           |
 | {deco}`~pytest.skip_all_windows`          | {deco}`~pytest.unless_any_windows`          |  🪟  | {data}`~ALL_WINDOWS`          |
 | {deco}`~pytest.skip_alpine`               | {deco}`~pytest.unless_alpine`               |  🏔️  | {data}`~ALPINE`               |
 | {deco}`~pytest.skip_altlinux`             | {deco}`~pytest.unless_altlinux`             |  Δ   | {data}`~ALTLINUX`             |
 | {deco}`~pytest.skip_amzn`                 | {deco}`~pytest.unless_amzn`                 |  ⤻   | {data}`~AMZN`                 |
 | {deco}`~pytest.skip_android`              | {deco}`~pytest.unless_android`              |  🤖  | {data}`~ANDROID`              |
+| {deco}`~pytest.skip_apple_terminal`       | {deco}`~pytest.unless_apple_terminal`       |  🍏  | {data}`~APPLE_TERMINAL`       |
 | {deco}`~pytest.skip_arch`                 | {deco}`~pytest.unless_arch`                 |  🎗️  | {data}`~ARCH`                 |
 | {deco}`~pytest.skip_arch_32_bit`          | {deco}`~pytest.unless_arch_32_bit`          |  ³²  | {data}`~ARCH_32_BIT`          |
 | {deco}`~pytest.skip_arch_64_bit`          | {deco}`~pytest.unless_arch_64_bit`          |  ⁶⁴  | {data}`~ARCH_64_BIT`          |
@@ -120,6 +123,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_cloudlinux`           | {deco}`~pytest.unless_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {deco}`~pytest.skip_cmd`                  | {deco}`~pytest.unless_cmd`                  |  ▶   | {data}`~CMD`                  |
 | {deco}`~pytest.skip_codebuild`            | {deco}`~pytest.unless_codebuild`            |  ᚙ   | {data}`~CODEBUILD`            |
+| {deco}`~pytest.skip_contour`              | {deco}`~pytest.unless_contour`              |  ◰   | {data}`~CONTOUR`              |
 | {deco}`~pytest.skip_csh`                  | {deco}`~pytest.unless_csh`                  |  𝐂   | {data}`~CSH`                  |
 | {deco}`~pytest.skip_cygwin`               | {deco}`~pytest.unless_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
 | {deco}`~pytest.skip_dash`                 | {deco}`~pytest.unless_dash`                 |  💨  | {data}`~DASH`                 |
@@ -128,21 +132,30 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_exherbo`              | {deco}`~pytest.unless_exherbo`              |  🐽  | {data}`~EXHERBO`              |
 | {deco}`~pytest.skip_fedora`               | {deco}`~pytest.unless_fedora`               |  🎩  | {data}`~FEDORA`               |
 | {deco}`~pytest.skip_fish`                 | {deco}`~pytest.unless_fish`                 |  🐟  | {data}`~FISH`                 |
+| {deco}`~pytest.skip_foot`                 | {deco}`~pytest.unless_foot`                 |  🦶  | {data}`~FOOT`                 |
 | {deco}`~pytest.skip_freebsd`              | {deco}`~pytest.unless_freebsd`              |  😈  | {data}`~FREEBSD`              |
 | {deco}`~pytest.skip_gentoo`               | {deco}`~pytest.unless_gentoo`               |  🗜️  | {data}`~GENTOO`               |
+| {deco}`~pytest.skip_ghostty`              | {deco}`~pytest.unless_ghostty`              |  👻  | {data}`~GHOSTTY`              |
 | {deco}`~pytest.skip_github_ci`            | {deco}`~pytest.unless_github_ci`            |  🐙  | {data}`~GITHUB_CI`            |
 | {deco}`~pytest.skip_gitlab_ci`            | {deco}`~pytest.unless_gitlab_ci`            |  🦊  | {data}`~GITLAB_CI`            |
+| {deco}`~pytest.skip_gnome_terminal`       | {deco}`~pytest.unless_gnome_terminal`       |  𝐆   | {data}`~GNOME_TERMINAL`       |
+| {deco}`~pytest.skip_gnu_screen`           | {deco}`~pytest.unless_gnu_screen`           |  📺  | {data}`~GNU_SCREEN`           |
+| {deco}`~pytest.skip_gpu_terminals`        | {deco}`~pytest.unless_gpu_terminals`        |  🎮  | {data}`~GPU_TERMINALS`        |
 | {deco}`~pytest.skip_guix`                 | {deco}`~pytest.unless_guix`                 |  🐃  | {data}`~GUIX`                 |
 | {deco}`~pytest.skip_haiku`                | {deco}`~pytest.unless_haiku`                |  🍂  | {data}`~HAIKU`                |
 | {deco}`~pytest.skip_heroku_ci`            | {deco}`~pytest.unless_heroku_ci`            |  ⥁   | {data}`~HEROKU_CI`            |
 | {deco}`~pytest.skip_hurd`                 | {deco}`~pytest.unless_hurd`                 |  🦬  | {data}`~HURD`                 |
+| {deco}`~pytest.skip_hyper`                | {deco}`~pytest.unless_hyper`                |  ⬡   | {data}`~HYPER`                |
 | {deco}`~pytest.skip_i386`                 | {deco}`~pytest.unless_i386`                 |  𝗶   | {data}`~I386`                 |
 | {deco}`~pytest.skip_i586`                 | {deco}`~pytest.unless_i586`                 |  𝗶   | {data}`~I586`                 |
 | {deco}`~pytest.skip_i686`                 | {deco}`~pytest.unless_i686`                 |  𝗶   | {data}`~I686`                 |
 | {deco}`~pytest.skip_ibm_mainframe`        | {deco}`~pytest.unless_ibm_mainframe`        |  🏢  | {data}`~IBM_MAINFRAME`        |
 | {deco}`~pytest.skip_ibm_powerkvm`         | {deco}`~pytest.unless_ibm_powerkvm`         |  🤹  | {data}`~IBM_POWERKVM`         |
 | {deco}`~pytest.skip_illumos`              | {deco}`~pytest.unless_illumos`              |  🔥  | {data}`~ILLUMOS`              |
+| {deco}`~pytest.skip_iterm2`               | {deco}`~pytest.unless_iterm2`               |  ⬛  | {data}`~ITERM2`               |
 | {deco}`~pytest.skip_kali`                 | {deco}`~pytest.unless_kali`                 |  🔱  | {data}`~KALI`                 |
+| {deco}`~pytest.skip_kitty`                | {deco}`~pytest.unless_kitty`                |  🐱  | {data}`~KITTY`                |
+| {deco}`~pytest.skip_konsole`              | {deco}`~pytest.unless_konsole`              |  💎  | {data}`~KONSOLE`              |
 | {deco}`~pytest.skip_ksh`                  | {deco}`~pytest.unless_ksh`                  |  𝐊   | {data}`~KSH`                  |
 | {deco}`~pytest.skip_kvmibm`               | {deco}`~pytest.unless_kvmibm`               |  🤹  | {data}`~KVMIBM`               |
 | {deco}`~pytest.skip_linux`                | {deco}`~pytest.unless_linux`                |  🐧  | {data}`~LINUX`                |
@@ -161,6 +174,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_mips64`               | {deco}`~pytest.unless_mips64`               |  🔲  | {data}`~MIPS64`               |
 | {deco}`~pytest.skip_mips64el`             | {deco}`~pytest.unless_mips64el`             |  🔲  | {data}`~MIPS64EL`             |
 | {deco}`~pytest.skip_mipsel`               | {deco}`~pytest.unless_mipsel`               |  🔲  | {data}`~MIPSEL`               |
+| {deco}`~pytest.skip_multiplexers`         | {deco}`~pytest.unless_multiplexers`         |  ⧉   | {data}`~MULTIPLEXERS`         |
 | {deco}`~pytest.skip_netbsd`               | {deco}`~pytest.unless_netbsd`               |  🚩  | {data}`~NETBSD`               |
 | {deco}`~pytest.skip_nobara`               | {deco}`~pytest.unless_nobara`               |     | {data}`~NOBARA`               |
 | {deco}`~pytest.skip_nushell`              | {deco}`~pytest.unless_nushell`              |  𝜈   | {data}`~NUSHELL`              |
@@ -179,6 +193,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_ppc64le`              | {deco}`~pytest.unless_ppc64le`              |  ⚡  | {data}`~PPC64LE`              |
 | {deco}`~pytest.skip_raspbian`             | {deco}`~pytest.unless_raspbian`             |  🍓  | {data}`~RASPBIAN`             |
 | {deco}`~pytest.skip_rhel`                 | {deco}`~pytest.unless_rhel`                 |  🎩  | {data}`~RHEL`                 |
+| {deco}`~pytest.skip_rio`                  | {deco}`~pytest.unless_rio`                  |  🏞️  | {data}`~RIO`                  |
 | {deco}`~pytest.skip_riscv`                | {deco}`~pytest.unless_riscv`                |  Ⅴ   | {data}`~RISCV`                |
 | {deco}`~pytest.skip_riscv32`              | {deco}`~pytest.unless_riscv32`              |  Ⅴ   | {data}`~RISCV32`              |
 | {deco}`~pytest.skip_riscv64`              | {deco}`~pytest.unless_riscv64`              |  Ⅴ   | {data}`~RISCV64`              |
@@ -192,8 +207,11 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_sparc64`              | {deco}`~pytest.unless_sparc64`              |  ☀️  | {data}`~SPARC64`              |
 | {deco}`~pytest.skip_sunos`                | {deco}`~pytest.unless_sunos`                |  🌅  | {data}`~SUNOS`                |
 | {deco}`~pytest.skip_system_v`             | {deco}`~pytest.unless_system_v`             |  𝐕   | {data}`~SYSTEM_V`             |
+| {deco}`~pytest.skip_tabby`                | {deco}`~pytest.unless_tabby`                |  🐈  | {data}`~TABBY`                |
 | {deco}`~pytest.skip_tcsh`                 | {deco}`~pytest.unless_tcsh`                 |  𝐓   | {data}`~TCSH`                 |
 | {deco}`~pytest.skip_teamcity`             | {deco}`~pytest.unless_teamcity`             |  🏙️  | {data}`~TEAMCITY`             |
+| {deco}`~pytest.skip_tilix`                | {deco}`~pytest.unless_tilix`                |  🔀  | {data}`~TILIX`                |
+| {deco}`~pytest.skip_tmux`                 | {deco}`~pytest.unless_tmux`                 |  📟  | {data}`~TMUX`                 |
 | {deco}`~pytest.skip_travis_ci`            | {deco}`~pytest.unless_travis_ci`            |  👷  | {data}`~TRAVIS_CI`            |
 | {deco}`~pytest.skip_tumbleweed`           | {deco}`~pytest.unless_tumbleweed`           |  ↻   | {data}`~TUMBLEWEED`           |
 | {deco}`~pytest.skip_tuxedo`               | {deco}`~pytest.unless_tuxedo`               |  🤵  | {data}`~TUXEDO`               |
@@ -207,17 +225,23 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_unknown_ci`           | {deco}`~pytest.unless_unknown_ci`           |  ❓  | {data}`~UNKNOWN_CI`           |
 | {deco}`~pytest.skip_unknown_platform`     | {deco}`~pytest.unless_unknown_platform`     |  ❓  | {data}`~UNKNOWN_PLATFORM`     |
 | {deco}`~pytest.skip_unknown_shell`        | {deco}`~pytest.unless_unknown_shell`        |  ❓  | {data}`~UNKNOWN_SHELL`        |
+| {deco}`~pytest.skip_unknown_terminal`     | {deco}`~pytest.unless_unknown_terminal`     |  ❓  | {data}`~UNKNOWN_TERMINAL`     |
+| {deco}`~pytest.skip_vscode_terminal`      | {deco}`~pytest.unless_vscode_terminal`      |  🔵  | {data}`~VSCODE_TERMINAL`      |
 | {deco}`~pytest.skip_wasm32`               | {deco}`~pytest.unless_wasm32`               |  🌐  | {data}`~WASM32`               |
 | {deco}`~pytest.skip_wasm64`               | {deco}`~pytest.unless_wasm64`               |  🌐  | {data}`~WASM64`               |
 | {deco}`~pytest.skip_webassembly`          | {deco}`~pytest.unless_webassembly`          |  🌐  | {data}`~WEBASSEMBLY`          |
+| {deco}`~pytest.skip_wezterm`              | {deco}`~pytest.unless_wezterm`              |  🔡  | {data}`~WEZTERM`              |
 | {deco}`~pytest.skip_windows`              | {deco}`~pytest.unless_windows`              |  🪟  | {data}`~WINDOWS`              |
 | {deco}`~pytest.skip_windows_shells`       | {deco}`~pytest.unless_windows_shells`       |  ⌨️  | {data}`~WINDOWS_SHELLS`       |
+| {deco}`~pytest.skip_windows_terminal`     | {deco}`~pytest.unless_windows_terminal`     |  ⊡   | {data}`~WINDOWS_TERMINAL`     |
 | {deco}`~pytest.skip_wsl1`                 | {deco}`~pytest.unless_wsl1`                 |  ⊞   | {data}`~WSL1`                 |
 | {deco}`~pytest.skip_wsl2`                 | {deco}`~pytest.unless_wsl2`                 |  ⊞   | {data}`~WSL2`                 |
 | {deco}`~pytest.skip_x86`                  | {deco}`~pytest.unless_x86`                  |  𝘅   | {data}`~X86`                  |
 | {deco}`~pytest.skip_x86_64`               | {deco}`~pytest.unless_x86_64`               |  🖥️  | {data}`~X86_64`               |
 | {deco}`~pytest.skip_xenserver`            | {deco}`~pytest.unless_xenserver`            |  Ⓧ   | {data}`~XENSERVER`            |
 | {deco}`~pytest.skip_xonsh`                | {deco}`~pytest.unless_xonsh`                |  🐍  | {data}`~XONSH`                |
+| {deco}`~pytest.skip_xterm`                | {deco}`~pytest.unless_xterm`                |  𝐗   | {data}`~XTERM`                |
+| {deco}`~pytest.skip_zellij`               | {deco}`~pytest.unless_zellij`               |  🪵  | {data}`~ZELLIJ`               |
 | {deco}`~pytest.skip_zsh`                  | {deco}`~pytest.unless_zsh`                  |  ℤ   | {data}`~ZSH`                  |
 
 <!-- decorators-table-end -->
@@ -229,6 +253,7 @@ def test_not_in_github_actions():
 ```{eval-rst}
 .. autodecorator:: extra_platforms.pytest.skip_aarch64
 .. autodecorator:: extra_platforms.pytest.skip_aix
+.. autodecorator:: extra_platforms.pytest.skip_alacritty
 .. autodecorator:: extra_platforms.pytest.skip_all_architectures
 .. autodecorator:: extra_platforms.pytest.skip_all_arm
 .. autodecorator:: extra_platforms.pytest.skip_all_ci
@@ -236,12 +261,14 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_all_platforms
 .. autodecorator:: extra_platforms.pytest.skip_all_shells
 .. autodecorator:: extra_platforms.pytest.skip_all_sparc
+.. autodecorator:: extra_platforms.pytest.skip_all_terminals
 .. autodecorator:: extra_platforms.pytest.skip_all_traits
 .. autodecorator:: extra_platforms.pytest.skip_all_windows
 .. autodecorator:: extra_platforms.pytest.skip_alpine
 .. autodecorator:: extra_platforms.pytest.skip_altlinux
 .. autodecorator:: extra_platforms.pytest.skip_amzn
 .. autodecorator:: extra_platforms.pytest.skip_android
+.. autodecorator:: extra_platforms.pytest.skip_apple_terminal
 .. autodecorator:: extra_platforms.pytest.skip_arch
 .. autodecorator:: extra_platforms.pytest.skip_arch_32_bit
 .. autodecorator:: extra_platforms.pytest.skip_arch_64_bit
@@ -268,6 +295,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_cloudlinux
 .. autodecorator:: extra_platforms.pytest.skip_cmd
 .. autodecorator:: extra_platforms.pytest.skip_codebuild
+.. autodecorator:: extra_platforms.pytest.skip_contour
 .. autodecorator:: extra_platforms.pytest.skip_csh
 .. autodecorator:: extra_platforms.pytest.skip_cygwin
 .. autodecorator:: extra_platforms.pytest.skip_dash
@@ -276,21 +304,30 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_exherbo
 .. autodecorator:: extra_platforms.pytest.skip_fedora
 .. autodecorator:: extra_platforms.pytest.skip_fish
+.. autodecorator:: extra_platforms.pytest.skip_foot
 .. autodecorator:: extra_platforms.pytest.skip_freebsd
 .. autodecorator:: extra_platforms.pytest.skip_gentoo
+.. autodecorator:: extra_platforms.pytest.skip_ghostty
 .. autodecorator:: extra_platforms.pytest.skip_github_ci
 .. autodecorator:: extra_platforms.pytest.skip_gitlab_ci
+.. autodecorator:: extra_platforms.pytest.skip_gnome_terminal
+.. autodecorator:: extra_platforms.pytest.skip_gnu_screen
+.. autodecorator:: extra_platforms.pytest.skip_gpu_terminals
 .. autodecorator:: extra_platforms.pytest.skip_guix
 .. autodecorator:: extra_platforms.pytest.skip_haiku
 .. autodecorator:: extra_platforms.pytest.skip_heroku_ci
 .. autodecorator:: extra_platforms.pytest.skip_hurd
+.. autodecorator:: extra_platforms.pytest.skip_hyper
 .. autodecorator:: extra_platforms.pytest.skip_i386
 .. autodecorator:: extra_platforms.pytest.skip_i586
 .. autodecorator:: extra_platforms.pytest.skip_i686
 .. autodecorator:: extra_platforms.pytest.skip_ibm_mainframe
 .. autodecorator:: extra_platforms.pytest.skip_ibm_powerkvm
 .. autodecorator:: extra_platforms.pytest.skip_illumos
+.. autodecorator:: extra_platforms.pytest.skip_iterm2
 .. autodecorator:: extra_platforms.pytest.skip_kali
+.. autodecorator:: extra_platforms.pytest.skip_kitty
+.. autodecorator:: extra_platforms.pytest.skip_konsole
 .. autodecorator:: extra_platforms.pytest.skip_ksh
 .. autodecorator:: extra_platforms.pytest.skip_kvmibm
 .. autodecorator:: extra_platforms.pytest.skip_linux
@@ -309,6 +346,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_mips64
 .. autodecorator:: extra_platforms.pytest.skip_mips64el
 .. autodecorator:: extra_platforms.pytest.skip_mipsel
+.. autodecorator:: extra_platforms.pytest.skip_multiplexers
 .. autodecorator:: extra_platforms.pytest.skip_netbsd
 .. autodecorator:: extra_platforms.pytest.skip_nobara
 .. autodecorator:: extra_platforms.pytest.skip_nushell
@@ -327,6 +365,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_ppc64le
 .. autodecorator:: extra_platforms.pytest.skip_raspbian
 .. autodecorator:: extra_platforms.pytest.skip_rhel
+.. autodecorator:: extra_platforms.pytest.skip_rio
 .. autodecorator:: extra_platforms.pytest.skip_riscv
 .. autodecorator:: extra_platforms.pytest.skip_riscv32
 .. autodecorator:: extra_platforms.pytest.skip_riscv64
@@ -340,8 +379,11 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_sparc64
 .. autodecorator:: extra_platforms.pytest.skip_sunos
 .. autodecorator:: extra_platforms.pytest.skip_system_v
+.. autodecorator:: extra_platforms.pytest.skip_tabby
 .. autodecorator:: extra_platforms.pytest.skip_tcsh
 .. autodecorator:: extra_platforms.pytest.skip_teamcity
+.. autodecorator:: extra_platforms.pytest.skip_tilix
+.. autodecorator:: extra_platforms.pytest.skip_tmux
 .. autodecorator:: extra_platforms.pytest.skip_travis_ci
 .. autodecorator:: extra_platforms.pytest.skip_tumbleweed
 .. autodecorator:: extra_platforms.pytest.skip_tuxedo
@@ -355,17 +397,23 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_unknown_ci
 .. autodecorator:: extra_platforms.pytest.skip_unknown_platform
 .. autodecorator:: extra_platforms.pytest.skip_unknown_shell
+.. autodecorator:: extra_platforms.pytest.skip_unknown_terminal
+.. autodecorator:: extra_platforms.pytest.skip_vscode_terminal
 .. autodecorator:: extra_platforms.pytest.skip_wasm32
 .. autodecorator:: extra_platforms.pytest.skip_wasm64
 .. autodecorator:: extra_platforms.pytest.skip_webassembly
+.. autodecorator:: extra_platforms.pytest.skip_wezterm
 .. autodecorator:: extra_platforms.pytest.skip_windows
 .. autodecorator:: extra_platforms.pytest.skip_windows_shells
+.. autodecorator:: extra_platforms.pytest.skip_windows_terminal
 .. autodecorator:: extra_platforms.pytest.skip_wsl1
 .. autodecorator:: extra_platforms.pytest.skip_wsl2
 .. autodecorator:: extra_platforms.pytest.skip_x86
 .. autodecorator:: extra_platforms.pytest.skip_x86_64
 .. autodecorator:: extra_platforms.pytest.skip_xenserver
 .. autodecorator:: extra_platforms.pytest.skip_xonsh
+.. autodecorator:: extra_platforms.pytest.skip_xterm
+.. autodecorator:: extra_platforms.pytest.skip_zellij
 .. autodecorator:: extra_platforms.pytest.skip_zsh
 ```
 
@@ -374,6 +422,7 @@ def test_not_in_github_actions():
 ```{eval-rst}
 .. autodecorator:: extra_platforms.pytest.unless_aarch64
 .. autodecorator:: extra_platforms.pytest.unless_aix
+.. autodecorator:: extra_platforms.pytest.unless_alacritty
 .. autodecorator:: extra_platforms.pytest.unless_any_architecture
 .. autodecorator:: extra_platforms.pytest.unless_any_arm
 .. autodecorator:: extra_platforms.pytest.unless_any_ci
@@ -381,12 +430,14 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_any_platform
 .. autodecorator:: extra_platforms.pytest.unless_any_shell
 .. autodecorator:: extra_platforms.pytest.unless_any_sparc
+.. autodecorator:: extra_platforms.pytest.unless_any_terminal
 .. autodecorator:: extra_platforms.pytest.unless_any_trait
 .. autodecorator:: extra_platforms.pytest.unless_any_windows
 .. autodecorator:: extra_platforms.pytest.unless_alpine
 .. autodecorator:: extra_platforms.pytest.unless_altlinux
 .. autodecorator:: extra_platforms.pytest.unless_amzn
 .. autodecorator:: extra_platforms.pytest.unless_android
+.. autodecorator:: extra_platforms.pytest.unless_apple_terminal
 .. autodecorator:: extra_platforms.pytest.unless_arch
 .. autodecorator:: extra_platforms.pytest.unless_arch_32_bit
 .. autodecorator:: extra_platforms.pytest.unless_arch_64_bit
@@ -413,6 +464,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_cloudlinux
 .. autodecorator:: extra_platforms.pytest.unless_cmd
 .. autodecorator:: extra_platforms.pytest.unless_codebuild
+.. autodecorator:: extra_platforms.pytest.unless_contour
 .. autodecorator:: extra_platforms.pytest.unless_csh
 .. autodecorator:: extra_platforms.pytest.unless_cygwin
 .. autodecorator:: extra_platforms.pytest.unless_dash
@@ -421,21 +473,30 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_exherbo
 .. autodecorator:: extra_platforms.pytest.unless_fedora
 .. autodecorator:: extra_platforms.pytest.unless_fish
+.. autodecorator:: extra_platforms.pytest.unless_foot
 .. autodecorator:: extra_platforms.pytest.unless_freebsd
 .. autodecorator:: extra_platforms.pytest.unless_gentoo
+.. autodecorator:: extra_platforms.pytest.unless_ghostty
 .. autodecorator:: extra_platforms.pytest.unless_github_ci
 .. autodecorator:: extra_platforms.pytest.unless_gitlab_ci
+.. autodecorator:: extra_platforms.pytest.unless_gnome_terminal
+.. autodecorator:: extra_platforms.pytest.unless_gnu_screen
+.. autodecorator:: extra_platforms.pytest.unless_gpu_terminals
 .. autodecorator:: extra_platforms.pytest.unless_guix
 .. autodecorator:: extra_platforms.pytest.unless_haiku
 .. autodecorator:: extra_platforms.pytest.unless_heroku_ci
 .. autodecorator:: extra_platforms.pytest.unless_hurd
+.. autodecorator:: extra_platforms.pytest.unless_hyper
 .. autodecorator:: extra_platforms.pytest.unless_i386
 .. autodecorator:: extra_platforms.pytest.unless_i586
 .. autodecorator:: extra_platforms.pytest.unless_i686
 .. autodecorator:: extra_platforms.pytest.unless_ibm_mainframe
 .. autodecorator:: extra_platforms.pytest.unless_ibm_powerkvm
 .. autodecorator:: extra_platforms.pytest.unless_illumos
+.. autodecorator:: extra_platforms.pytest.unless_iterm2
 .. autodecorator:: extra_platforms.pytest.unless_kali
+.. autodecorator:: extra_platforms.pytest.unless_kitty
+.. autodecorator:: extra_platforms.pytest.unless_konsole
 .. autodecorator:: extra_platforms.pytest.unless_ksh
 .. autodecorator:: extra_platforms.pytest.unless_kvmibm
 .. autodecorator:: extra_platforms.pytest.unless_linux
@@ -454,6 +515,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_mips64
 .. autodecorator:: extra_platforms.pytest.unless_mips64el
 .. autodecorator:: extra_platforms.pytest.unless_mipsel
+.. autodecorator:: extra_platforms.pytest.unless_multiplexers
 .. autodecorator:: extra_platforms.pytest.unless_netbsd
 .. autodecorator:: extra_platforms.pytest.unless_nobara
 .. autodecorator:: extra_platforms.pytest.unless_nushell
@@ -472,6 +534,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_ppc64le
 .. autodecorator:: extra_platforms.pytest.unless_raspbian
 .. autodecorator:: extra_platforms.pytest.unless_rhel
+.. autodecorator:: extra_platforms.pytest.unless_rio
 .. autodecorator:: extra_platforms.pytest.unless_riscv
 .. autodecorator:: extra_platforms.pytest.unless_riscv32
 .. autodecorator:: extra_platforms.pytest.unless_riscv64
@@ -485,8 +548,11 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_sparc64
 .. autodecorator:: extra_platforms.pytest.unless_sunos
 .. autodecorator:: extra_platforms.pytest.unless_system_v
+.. autodecorator:: extra_platforms.pytest.unless_tabby
 .. autodecorator:: extra_platforms.pytest.unless_tcsh
 .. autodecorator:: extra_platforms.pytest.unless_teamcity
+.. autodecorator:: extra_platforms.pytest.unless_tilix
+.. autodecorator:: extra_platforms.pytest.unless_tmux
 .. autodecorator:: extra_platforms.pytest.unless_travis_ci
 .. autodecorator:: extra_platforms.pytest.unless_tumbleweed
 .. autodecorator:: extra_platforms.pytest.unless_tuxedo
@@ -500,17 +566,23 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_unknown_ci
 .. autodecorator:: extra_platforms.pytest.unless_unknown_platform
 .. autodecorator:: extra_platforms.pytest.unless_unknown_shell
+.. autodecorator:: extra_platforms.pytest.unless_unknown_terminal
+.. autodecorator:: extra_platforms.pytest.unless_vscode_terminal
 .. autodecorator:: extra_platforms.pytest.unless_wasm32
 .. autodecorator:: extra_platforms.pytest.unless_wasm64
 .. autodecorator:: extra_platforms.pytest.unless_webassembly
+.. autodecorator:: extra_platforms.pytest.unless_wezterm
 .. autodecorator:: extra_platforms.pytest.unless_windows
 .. autodecorator:: extra_platforms.pytest.unless_windows_shells
+.. autodecorator:: extra_platforms.pytest.unless_windows_terminal
 .. autodecorator:: extra_platforms.pytest.unless_wsl1
 .. autodecorator:: extra_platforms.pytest.unless_wsl2
 .. autodecorator:: extra_platforms.pytest.unless_x86
 .. autodecorator:: extra_platforms.pytest.unless_x86_64
 .. autodecorator:: extra_platforms.pytest.unless_xenserver
 .. autodecorator:: extra_platforms.pytest.unless_xonsh
+.. autodecorator:: extra_platforms.pytest.unless_xterm
+.. autodecorator:: extra_platforms.pytest.unless_zellij
 .. autodecorator:: extra_platforms.pytest.unless_zsh
 ```
 

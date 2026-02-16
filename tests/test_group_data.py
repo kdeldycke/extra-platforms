@@ -38,6 +38,8 @@ from extra_platforms import (
     ALL_PLATFORMS,
     ALL_SHELL_GROUPS,
     ALL_SHELLS,
+    ALL_TERMINAL_GROUPS,
+    ALL_TERMINALS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
     CI,
@@ -48,6 +50,7 @@ from extra_platforms import (
     Group,
     Platform,
     Shell,
+    Terminal,
     Trait,
 )
 from extra_platforms import group_data as group_data_module
@@ -308,12 +311,15 @@ def test_sets_of_groups():
         assert all(isinstance(m, Platform) for m in platform_group)
     for shell_group in ALL_SHELL_GROUPS:
         assert all(isinstance(m, Shell) for m in shell_group)
+    for terminal_group in ALL_TERMINAL_GROUPS:
+        assert all(isinstance(m, Terminal) for m in terminal_group)
     for ci_group in ALL_CI_GROUPS:
         assert all(isinstance(m, CI) for m in ci_group)
 
     assert ALL_ARCHITECTURES.fullyintersects(ALL_ARCHITECTURE_GROUPS)
     assert ALL_PLATFORMS.fullyintersects(ALL_PLATFORM_GROUPS)
     assert ALL_SHELLS.fullyintersects(ALL_SHELL_GROUPS)
+    assert ALL_TERMINALS.fullyintersects(ALL_TERMINAL_GROUPS)
     assert ALL_CI.fullyintersects(ALL_CI_GROUPS)
 
     # Non-overlapping groups and overlapping groups don't overlap.
@@ -325,6 +331,7 @@ def test_sets_of_groups():
         == ALL_ARCHITECTURE_GROUPS
         | ALL_PLATFORM_GROUPS
         | ALL_SHELL_GROUPS
+        | ALL_TERMINAL_GROUPS
         | ALL_CI_GROUPS
         | {ALL_TRAITS}
         | {UNKNOWN}

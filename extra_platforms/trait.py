@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Trait base class for architectures, platforms, shells, CI systems, and more.
+"""Trait base class for architectures, platforms, shells, terminals, CI systems, and more.
 
 A trait represents a distinguishing characteristic of a runtime environment.
 Each trait has a unique ID, a human-readable name, an icon, and the ability
@@ -423,6 +423,29 @@ class Shell(Trait):
         if env_var:
             return environ.get(env_var)
         return None
+
+
+@dataclass(frozen=True)
+class Terminal(Trait):
+    """A terminal identifies the application rendering the shell's output.
+
+    .. note::
+        Shell and Terminal are orthogonal: any shell can run inside any terminal.
+        Unlike shells, multiple terminals can be active simultaneously (e.g.,
+        tmux inside Kitty).
+    """
+
+    def info(self) -> dict[str, str | bool | None]:
+        """Returns all terminal attributes we can gather."""
+        info: dict[str, str | bool | None] = {
+            **self._base_info(),
+            "version": None,
+            "color_support": None,
+        }
+        if self.current:
+            info["version"] = environ.get("TERM_PROGRAM_VERSION")
+            info["color_support"] = environ.get("COLORTERM")
+        return info
 
 
 @dataclass(frozen=True)

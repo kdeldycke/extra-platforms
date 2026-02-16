@@ -1,4 +1,4 @@
-# {octicon}`terminal` Shells
+# {octicon}`command-palette` Shells
 
 ```{py:currentmodule} extra_platforms
 ```

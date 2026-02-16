@@ -5,6 +5,11 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add new `Terminal` trait type for detecting terminal emulators.
+- Add 20 terminal definitions: `ALACRITTY`, `APPLE_TERMINAL`, `CONTOUR`, `FOOT`, `GHOSTTY`, `GNOME_TERMINAL`, `GNU_SCREEN`, `HYPER`, `ITERM2`, `KITTY`, `KONSOLE`, `RIO`, `TABBY`, `TILIX`, `TMUX`, `VSCODE_TERMINAL`, `WEZTERM`, `WINDOWS_TERMINAL`, `XTERM`, `ZELLIJ`.
+- Add `current_terminal()` detection function.
+- Add terminal groups: `ALL_TERMINALS`, `GPU_TERMINALS`, `MULTIPLEXERS`, `NATIVE_TERMINALS`, `WEB_TERMINALS`.
+- Add `@skip_<terminal>` and `@unless_<terminal>` pytest decorators for all terminals and terminal groups.
 - Display all detected traits and groups in `extra-platforms` CLI.
 - Fix emoji column alignment in CLI.
 

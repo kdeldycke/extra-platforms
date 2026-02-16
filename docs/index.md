@@ -15,6 +15,7 @@ trait
 architectures
 platforms
 shells
+terminals
 ci
 groups
 detection

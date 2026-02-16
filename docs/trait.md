@@ -133,10 +133,12 @@ All recognized traits and their properties:
 | :--: | :---------------------------- | :----------------------------- | :------------------------------- | :----------- |
 |  📱  | {data}`~AARCH64`              | ARM64 (AArch64)                | {func}`~is_aarch64`              | Architecture |
 |  ➿  | {data}`~AIX`                  | IBM AIX                        | {func}`~is_aix`                  | Platform     |
+|  🔳  | {data}`~ALACRITTY`            | Alacritty                      | {func}`~is_alacritty`            | Terminal     |
 |  🏔️  | {data}`~ALPINE`               | Alpine Linux                   | {func}`~is_alpine`               | Platform     |
 |  Δ   | {data}`~ALTLINUX`             | ALT Linux                      | {func}`~is_altlinux`             | Platform     |
 |  ⤻   | {data}`~AMZN`                 | Amazon Linux                   | {func}`~is_amzn`                 | Platform     |
 |  🤖  | {data}`~ANDROID`              | Android                        | {func}`~is_android`              | Platform     |
+|  🍏  | {data}`~APPLE_TERMINAL`       | Apple Terminal                 | {func}`~is_apple_terminal`       | Terminal     |
 |  🎗️  | {data}`~ARCH`                 | Arch Linux                     | {func}`~is_arch`                 | Platform     |
 |  📱  | {data}`~ARM`                  | ARM (32-bit)                   | {func}`~is_arm`                  | Architecture |
 |  📱  | {data}`~ARMV5TEL`             | ARMv5TE (little-endian)        | {func}`~is_armv5tel`             | Architecture |
@@ -156,6 +158,7 @@ All recognized traits and their properties:
 |  ꩜   | {data}`~CLOUDLINUX`           | CloudLinux OS                  | {func}`~is_cloudlinux`           | Platform     |
 |  ▶   | {data}`~CMD`                  | Command Prompt                 | {func}`~is_cmd`                  | Shell        |
 |  ᚙ   | {data}`~CODEBUILD`            | CodeBuild                      | {func}`~is_codebuild`            | CI           |
+|  ◰   | {data}`~CONTOUR`              | Contour                        | {func}`~is_contour`              | Terminal     |
 |  𝐂   | {data}`~CSH`                  | C shell                        | {func}`~is_csh`                  | Shell        |
 |  Ͼ   | {data}`~CYGWIN`               | Cygwin                         | {func}`~is_cygwin`               | Platform     |
 |  💨  | {data}`~DASH`                 | Dash                           | {func}`~is_dash`                 | Shell        |
@@ -164,20 +167,28 @@ All recognized traits and their properties:
 |  🐽  | {data}`~EXHERBO`              | Exherbo Linux                  | {func}`~is_exherbo`              | Platform     |
 |  🎩  | {data}`~FEDORA`               | Fedora                         | {func}`~is_fedora`               | Platform     |
 |  🐟  | {data}`~FISH`                 | Fish                           | {func}`~is_fish`                 | Shell        |
+|  🦶  | {data}`~FOOT`                 | foot                           | {func}`~is_foot`                 | Terminal     |
 |  😈  | {data}`~FREEBSD`              | FreeBSD                        | {func}`~is_freebsd`              | Platform     |
 |  🗜️  | {data}`~GENTOO`               | Gentoo Linux                   | {func}`~is_gentoo`               | Platform     |
+|  👻  | {data}`~GHOSTTY`              | Ghostty                        | {func}`~is_ghostty`              | Terminal     |
 |  🐙  | {data}`~GITHUB_CI`            | GitHub Actions runner          | {func}`~is_github_ci`            | CI           |
 |  🦊  | {data}`~GITLAB_CI`            | GitLab CI                      | {func}`~is_gitlab_ci`            | CI           |
+|  𝐆   | {data}`~GNOME_TERMINAL`       | GNOME Terminal                 | {func}`~is_gnome_terminal`       | Terminal     |
+|  📺  | {data}`~GNU_SCREEN`           | GNU Screen                     | {func}`~is_gnu_screen`           | Terminal     |
 |  🐃  | {data}`~GUIX`                 | Guix System                    | {func}`~is_guix`                 | Platform     |
 |  🍂  | {data}`~HAIKU`                | Haiku                          | {func}`~is_haiku`                | Platform     |
 |  ⥁   | {data}`~HEROKU_CI`            | Heroku CI                      | {func}`~is_heroku_ci`            | CI           |
 |  🦬  | {data}`~HURD`                 | GNU/Hurd                       | {func}`~is_hurd`                 | Platform     |
+|  ⬡   | {data}`~HYPER`                | Hyper                          | {func}`~is_hyper`                | Terminal     |
 |  𝗶   | {data}`~I386`                 | Intel 80386 (i386)             | {func}`~is_i386`                 | Architecture |
 |  𝗶   | {data}`~I586`                 | Intel Pentium (i586)           | {func}`~is_i586`                 | Architecture |
 |  𝗶   | {data}`~I686`                 | Intel Pentium Pro (i686)       | {func}`~is_i686`                 | Architecture |
 |  🤹  | {data}`~IBM_POWERKVM`         | IBM PowerKVM                   | {func}`~is_ibm_powerkvm`         | Platform     |
 |  🔥  | {data}`~ILLUMOS`              | illumos                        | {func}`~is_illumos`              | Platform     |
+|  ⬛  | {data}`~ITERM2`               | iTerm2                         | {func}`~is_iterm2`               | Terminal     |
 |  🔱  | {data}`~KALI`                 | Kali Linux                     | {func}`~is_kali`                 | Platform     |
+|  🐱  | {data}`~KITTY`                | Kitty                          | {func}`~is_kitty`                | Terminal     |
+|  💎  | {data}`~KONSOLE`              | Konsole                        | {func}`~is_konsole`              | Terminal     |
 |  𝐊   | {data}`~KSH`                  | Korn shell                     | {func}`~is_ksh`                  | Shell        |
 |  🤹  | {data}`~KVMIBM`               | KVM for IBM z Systems          | {func}`~is_kvmibm`               | Platform     |
 |  🌿  | {data}`~LINUXMINT`            | Linux Mint                     | {func}`~is_linuxmint`            | Platform     |
@@ -206,6 +217,7 @@ All recognized traits and their properties:
 |  ⚡  | {data}`~PPC64LE`              | PowerPC 64-bit (little-endian) | {func}`~is_ppc64le`              | Architecture |
 |  🍓  | {data}`~RASPBIAN`             | Raspbian                       | {func}`~is_raspbian`             | Platform     |
 |  🎩  | {data}`~RHEL`                 | RedHat Enterprise Linux        | {func}`~is_rhel`                 | Platform     |
+|  🏞️  | {data}`~RIO`                  | Rio                            | {func}`~is_rio`                  | Terminal     |
 |  Ⅴ   | {data}`~RISCV32`              | RISC-V (32-bit)                | {func}`~is_riscv32`              | Architecture |
 |  Ⅴ   | {data}`~RISCV64`              | RISC-V (64-bit)                | {func}`~is_riscv64`              | Architecture |
 |  ⛰️  | {data}`~ROCKY`                | Rocky Linux                    | {func}`~is_rocky`                | Platform     |
@@ -217,8 +229,11 @@ All recognized traits and their properties:
 |  ☀️  | {data}`~SPARC`                | SPARC (32-bit)                 | {func}`~is_sparc`                | Architecture |
 |  ☀️  | {data}`~SPARC64`              | SPARC (64-bit)                 | {func}`~is_sparc64`              | Architecture |
 |  🌅  | {data}`~SUNOS`                | SunOS                          | {func}`~is_sunos`                | Platform     |
+|  🐈  | {data}`~TABBY`                | Tabby                          | {func}`~is_tabby`                | Terminal     |
 |  𝐓   | {data}`~TCSH`                 | tcsh                           | {func}`~is_tcsh`                 | Shell        |
 |  🏙️  | {data}`~TEAMCITY`             | TeamCity                       | {func}`~is_teamcity`             | CI           |
+|  🔀  | {data}`~TILIX`                | Tilix                          | {func}`~is_tilix`                | Terminal     |
+|  📟  | {data}`~TMUX`                 | tmux                           | {func}`~is_tmux`                 | Terminal     |
 |  👷  | {data}`~TRAVIS_CI`            | Travis CI                      | {func}`~is_travis_ci`            | CI           |
 |  ↻   | {data}`~TUMBLEWEED`           | openSUSE Tumbleweed            | {func}`~is_tumbleweed`           | Platform     |
 |  🤵  | {data}`~TUXEDO`               | Tuxedo OS                      | {func}`~is_tuxedo`               | Platform     |
@@ -228,14 +243,20 @@ All recognized traits and their properties:
 |  ❓  | {data}`~UNKNOWN_CI`           | Unknown CI                     | {func}`~is_unknown_ci`           | CI           |
 |  ❓  | {data}`~UNKNOWN_PLATFORM`     | Unknown platform               | {func}`~is_unknown_platform`     | Platform     |
 |  ❓  | {data}`~UNKNOWN_SHELL`        | Unknown shell                  | {func}`~is_unknown_shell`        | Shell        |
+|  ❓  | {data}`~UNKNOWN_TERMINAL`     | Unknown terminal               | {func}`~is_unknown_terminal`     | Terminal     |
+|  🔵  | {data}`~VSCODE_TERMINAL`      | VS Code Terminal               | {func}`~is_vscode_terminal`      | Terminal     |
 |  🌐  | {data}`~WASM32`               | WebAssembly (32-bit)           | {func}`~is_wasm32`               | Architecture |
 |  🌐  | {data}`~WASM64`               | WebAssembly (64-bit)           | {func}`~is_wasm64`               | Architecture |
+|  🔡  | {data}`~WEZTERM`              | WezTerm                        | {func}`~is_wezterm`              | Terminal     |
 |  🪟  | {data}`~WINDOWS`              | Windows                        | {func}`~is_windows`              | Platform     |
+|  ⊡   | {data}`~WINDOWS_TERMINAL`     | Windows Terminal               | {func}`~is_windows_terminal`     | Terminal     |
 |  ⊞   | {data}`~WSL1`                 | Windows Subsystem for Linux v1 | {func}`~is_wsl1`                 | Platform     |
 |  ⊞   | {data}`~WSL2`                 | Windows Subsystem for Linux v2 | {func}`~is_wsl2`                 | Platform     |
 |  🖥️  | {data}`~X86_64`               | x86-64 (AMD64)                 | {func}`~is_x86_64`               | Architecture |
 |  Ⓧ   | {data}`~XENSERVER`            | XenServer                      | {func}`~is_xenserver`            | Platform     |
 |  🐍  | {data}`~XONSH`                | Xonsh                          | {func}`~is_xonsh`                | Shell        |
+|  𝐗   | {data}`~XTERM`                | xterm                          | {func}`~is_xterm`                | Terminal     |
+|  🪵  | {data}`~ZELLIJ`               | Zellij                         | {func}`~is_zellij`               | Terminal     |
 |  ℤ   | {data}`~ZSH`                  | Zsh                            | {func}`~is_zsh`                  | Shell        |
 
 <!-- all-traits-table-end -->
@@ -267,6 +288,12 @@ All recognized traits and their properties:
    :show-inheritance:
 
 .. autoclass:: extra_platforms.Shell
+   :members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: extra_platforms.Terminal
    :members:
    :private-members:
    :undoc-members:

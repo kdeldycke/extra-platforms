@@ -31,6 +31,7 @@ from . import (
     current_ci,
     current_platform,
     current_shell,
+    current_terminal,
     current_traits,
 )
 
@@ -166,6 +167,7 @@ def main() -> None:
     arch = current_architecture()
     plat = current_platform()
     shell = current_shell()
+    terminal = current_terminal()
     # Suppress the "Unrecognized CI" warning: not running in a CI
     # environment is the common case, not an issue worth reporting.
     logging.disable(logging.WARNING)
@@ -177,6 +179,7 @@ def main() -> None:
     _print_trait("Architecture", arch)
     _print_trait("Platform", plat)
     _print_trait("Shell", shell)
+    _print_trait("Terminal", terminal)
     _print_trait("CI", ci)
 
     # Summary of all detected traits and their groups.
