@@ -627,10 +627,6 @@ def reduce(
         implementation uses a `greedy approximation
         <https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm>`_ that
         iteratively selects the largest group fitting the remaining uncovered traits.
-
-    .. todo::
-        Should we rename or alias this method to ``collapse()``? Cannot decide if it is
-        more descriptive or not...
     """
     # Avoid circular import.
     from .group_data import ALL_GROUPS
