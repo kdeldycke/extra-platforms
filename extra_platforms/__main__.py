@@ -83,7 +83,7 @@ def _column_widths(items: Iterable[Trait | Group]) -> tuple[int, int, int, int]:
 
 def _merge_widths(*widths: tuple[int, int, int, int]) -> tuple[int, int, int, int]:
     """Return the element-wise maximum of multiple width tuples."""
-    return tuple(max(col) for col in zip(*widths))  # type: ignore[return-value]
+    return tuple(max(col) for col in zip(*widths))
 
 
 def _print_table(

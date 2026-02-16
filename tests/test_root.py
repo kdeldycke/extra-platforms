@@ -63,6 +63,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_aarch64,
     is_any_ci,
     is_any_platform,
+    is_any_terminal,
     is_bsd,
     is_fedora,
     is_github_ci,
@@ -243,8 +244,12 @@ def test_current_funcs():
     current_traits_results = current_traits()
     assert ALL_TRAITS.issuperset(current_traits_results)
 
-    # 1 architecture + 1 platform + 1 shell + 1 terminal = 4 traits.
-    detected_traits = 4
+    # 1 architecture + 1 platform + 1 shell = 3 traits always detected.
+    detected_traits = 3
+    # Terminal is optional: headless/CI environments may not have one.
+    if is_any_terminal():
+        detected_traits += 1
+    # CI is optional: we may not be running in a CI environment.
     if is_any_ci():
         # +1 CI.
         detected_traits += 1
@@ -274,9 +279,9 @@ def test_current_funcs():
     assert current_shell_result is not UNKNOWN_SHELL
 
     current_terminal_result = current_terminal()
-    assert current_terminal_result in ALL_TERMINALS
-    assert current_terminal_result in current_traits_results
-    assert current_terminal_result is not UNKNOWN_TERMINAL
+    assert current_terminal_result in ALL_TERMINALS | {UNKNOWN_TERMINAL}
+    if current_terminal_result is not UNKNOWN_TERMINAL:
+        assert current_terminal_result in current_traits_results
 
     current_ci_result = current_ci()
     assert current_ci_result in ALL_CI | {UNKNOWN_CI}
@@ -322,8 +327,8 @@ def test_current_strict_mode(
 ):
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
-    # Skip this check for CI since they may legitimately be unknown.
-    if trait_type != "CI":
+    # Skip this check for CI and terminal since they may legitimately be unknown.
+    if trait_type not in ("CI", "terminal"):
         invalidate_caches()
         result = current_func()
         assert result in all_collection
