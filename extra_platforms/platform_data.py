@@ -18,7 +18,7 @@
 .. note::
     Default icons are inspired from Starship project:
     - https://starship.rs/config/#os
-    - https://github.com/davidkna/starship/blob/e9faf17/.github/config-schema.json#L1221-L1269
+    - https://github.com/starship/starship/blob/master/.github/config-schema.json
 
     Some icons, especially Linux distributions, have their own dedicated `codepoints in
     NerdFonts <https://www.nerdfonts.com/cheat-sheet>`_.

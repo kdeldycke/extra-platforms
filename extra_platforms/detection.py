@@ -344,7 +344,7 @@ def is_android() -> bool:
 
     .. seealso::
         Source:
-        <https://github.com/kivy/kivy/blob/3c4b1dc84cdd930d352aab9be32c38e1c98bd5c6/kivy/utils.py#L435-L436>
+        <https://github.com/kivy/kivy/blob/master/kivy/utils.py>
     """
     return "ANDROID_ROOT" in environ or "P4A_BOOTSTRAP" in environ
 
@@ -1047,7 +1047,7 @@ def is_github_ci() -> bool:
 
     .. seealso::
         Environment variables reference:
-        <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables>.
+        <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables>.
     """
     return "GITHUB_ACTIONS" in environ or "GITHUB_RUN_ID" in environ
 
@@ -1080,7 +1080,7 @@ def is_teamcity() -> bool:
 
     .. seealso::
         Environment variables reference:
-        <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#PredefinedBuildParameters-ServerBuildProperties>.
+        <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Predefined+Server+Build+Parameters>.
     """
     return "TEAMCITY_VERSION" in environ
 

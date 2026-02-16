@@ -92,6 +92,12 @@ suppress_warnings = [
     "myst.domains",
 ]
 
+linkcheck_ignore = [
+    # These sites return 403 to bots but are valid.
+    r"https://guix\.gnu\.org",
+    r"https://claude\.ai/code",
+]
+
 nitpick_ignore = [
     # Private base class, excluded from public documentation.
     ("py:class", "extra_platforms.trait._Identifiable"),

@@ -17,7 +17,7 @@
 
 .. hint::
     Architecture's canonical IDs are inspired by those `used in the auditwheel
-    <https://github.com/pypa/auditwheel/blob/78e3a6f8b00aeeffdb4a5c4e81cbf833dbc64e35/src/auditwheel/architecture.py#L13-L24>`_
+    <https://github.com/pypa/auditwheel/blob/main/src/auditwheel/architecture.py>`_
     project to encode the `manylinux policies
     <https://github.com/pypa/auditwheel/blob/6.6.0/src/auditwheel/policy/manylinux-policy.json>`_.
 
@@ -28,7 +28,7 @@
 .. todo::
     Add mapping of architecture to manylinux Python targets? As per:
 
-    - https://github.com/zaniebot/uv/blob/6e9a42e31b19f56abb69352c9e5b3b17a013ad45/crates/uv-platform-tags/src/platform.rs#L182-L199
+    - https://github.com/astral-sh/uv/blob/main/crates/uv-platform-tags/src/platform.rs
     - https://github.com/pypa/manylinux
 """
 
