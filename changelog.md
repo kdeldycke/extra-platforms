@@ -1,9 +1,6 @@
 # Changelog
 
-## [9.2.0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v9.1.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [9.2.0 (2026-02-16)](https://github.com/kdeldycke/extra-platforms/compare/v9.1.0...v9.2.0)
 
 - Add new `Terminal` trait type for detecting terminal emulators. Closes #459.
 - Add 20 terminal definitions: `ALACRITTY`, `APPLE_TERMINAL`, `CONTOUR`, `FOOT`, `GHOSTTY`, `GNOME_TERMINAL`, `GNU_SCREEN`, `HYPER`, `ITERM2`, `KITTY`, `KONSOLE`, `RIO`, `TABBY`, `TILIX`, `TMUX`, `VSCODE_TERMINAL`, `WEZTERM`, `WINDOWS_TERMINAL`, `XTERM`, `ZELLIJ`.
