@@ -1,5 +1,10 @@
 # Changelog
 
+## [9.2.1 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v9.2.0...main)
+
+> [!IMPORTANT]
+> This version is not released yet and is under active development.
+
 ## [9.2.0 (2026-02-16)](https://github.com/kdeldycke/extra-platforms/compare/v9.1.0...v9.2.0)
 
 - Add new `Terminal` trait type for detecting terminal emulators. Closes #459.
