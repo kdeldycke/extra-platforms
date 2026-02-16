@@ -284,6 +284,8 @@ def test_unknown_group():
         assert trait in ALL_TRAITS
         assert trait not in ALL_ARCHITECTURES
         assert trait not in ALL_PLATFORMS
+        assert trait not in ALL_SHELLS
+        assert trait not in ALL_TERMINALS
         assert trait not in ALL_CI
         assert trait.icon == "❓"
 
@@ -294,6 +296,7 @@ def test_sets_of_groups():
         ALL_ARCHITECTURE_GROUPS,
         ALL_PLATFORM_GROUPS,
         ALL_SHELL_GROUPS,
+        ALL_TERMINAL_GROUPS,
         ALL_CI_GROUPS,
         NON_OVERLAPPING_GROUPS,
         EXTRA_GROUPS,

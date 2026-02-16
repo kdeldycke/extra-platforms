@@ -74,6 +74,10 @@ def test_terminal_logical_grouping():
     for group in ALL_TERMINAL_GROUPS:
         assert group.issubset(ALL_TERMINALS)
 
+    # All terminals are divided into families.
+    assert ALL_TERMINALS.fullyintersects(
+        GPU_TERMINALS | MULTIPLEXERS | NATIVE_TERMINALS | WEB_TERMINALS
+    )
     assert not ALL_TERMINALS.canonical
     assert GPU_TERMINALS.canonical
     assert MULTIPLEXERS.canonical

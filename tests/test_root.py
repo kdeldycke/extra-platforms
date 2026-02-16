@@ -63,14 +63,12 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_aarch64,
     is_any_ci,
     is_any_platform,
-    is_any_terminal,
     is_bsd,
     is_fedora,
     is_github_ci,
     is_linux,
     is_macos,
     is_ubuntu,
-    is_unknown_terminal,
     is_windows,
 )
 from extra_platforms import architecture_data as architecture_data_module
@@ -245,13 +243,8 @@ def test_current_funcs():
     current_traits_results = current_traits()
     assert ALL_TRAITS.issuperset(current_traits_results)
 
-    # 1 architecture + 1 platform + 1 shell = 3 traits.
-    detected_traits = 3
-    if is_any_terminal():
-        # +N terminals (multiple can match, e.g. tmux inside kitty).
-        detected_traits += sum(
-            1 for t in current_traits_results if isinstance(t, extra_platforms.Terminal)
-        )
+    # 1 architecture + 1 platform + 1 shell + 1 terminal = 4 traits.
+    detected_traits = 4
     if is_any_ci():
         # +1 CI.
         detected_traits += 1
@@ -281,9 +274,9 @@ def test_current_funcs():
     assert current_shell_result is not UNKNOWN_SHELL
 
     current_terminal_result = current_terminal()
-    assert current_terminal_result in ALL_TERMINALS | {UNKNOWN_TERMINAL}
-    if current_terminal_result is not UNKNOWN_TERMINAL:
-        assert current_terminal_result in current_traits_results
+    assert current_terminal_result in ALL_TERMINALS
+    assert current_terminal_result in current_traits_results
+    assert current_terminal_result is not UNKNOWN_TERMINAL
 
     current_ci_result = current_ci()
     assert current_ci_result in ALL_CI | {UNKNOWN_CI}
@@ -329,8 +322,8 @@ def test_current_strict_mode(
 ):
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
-    # Skip this check for CI and shell since they may legitimately be unknown.
-    if trait_type not in ("CI", "shell", "terminal"):
+    # Skip this check for CI since they may legitimately be unknown.
+    if trait_type != "CI":
         invalidate_caches()
         result = current_func()
         assert result in all_collection
