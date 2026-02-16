@@ -9,7 +9,7 @@ Each platform represents an operating system or OS-like environment, and is asso
 - a human-readable name
 - an icon (emoji / unicode character)
 - a [detection function](detection.md)
-- various metadata in its [`info()` method](trait.md#extra_platforms.Platform.info)
+- various metadata in its {meth}`~Platform.info` method
 
 ## Platform usage
 
@@ -119,20 +119,20 @@ platform is not recognized.
 
 <!-- platform-groups-table-start -->
 
-| Icon | Symbol                      | Description                      | [Detection](detection.md)  | [Canonical](groups.md#extra_platforms.Group.canonical) |
-| :--: | :-------------------------- | :------------------------------- | :------------------------- | :----------------------------------------------------: |
-|  ⚙️  | {data}`~ALL_PLATFORMS`      | All platforms                    | {func}`~is_any_platform`   |                                                        |
-|  🪟  | {data}`~ALL_WINDOWS`        | All Windows                      | {func}`~is_any_windows`    |                           ⬥                            |
-|  Ⓑ   | {data}`~BSD`                | All BSD                          | {func}`~is_bsd`            |                           ⬥                            |
-|  🅱️  | {data}`~BSD_WITHOUT_MACOS`  | All BSD excluding macOS          | {func}`~is_bsd_not_macos`  |                                                        |
-|  🐧  | {data}`~LINUX`              | Linux distributions              | {func}`~is_linux`          |                           ⬥                            |
-|  ≚   | {data}`~LINUX_LAYERS`       | Linux compatibility layers       | {func}`~is_linux_layers`   |                           ⬥                            |
-|  🐣  | {data}`~LINUX_LIKE`         | All Linux & compatibility layers | {func}`~is_linux_like`     |                                                        |
-|  🅟   | {data}`~OTHER_POSIX`        | Other POSIX-compliant platforms  | {func}`~is_other_posix`    |                           ⬥                            |
-|  𝐕   | {data}`~SYSTEM_V`           | AT&T System Five                 | {func}`~is_system_v`       |                           ⬥                            |
-|  ⨷   | {data}`~UNIX`               | All Unix                         | {func}`~is_unix`           |                                                        |
-|  ≛   | {data}`~UNIX_LAYERS`        | Unix compatibility layers        | {func}`~is_unix_layers`    |                           ⬥                            |
-|  ⨂   | {data}`~UNIX_WITHOUT_MACOS` | All Unix excluding macOS         | {func}`~is_unix_not_macos` |                                                        |
+| Icon | Symbol                      | Description                      | [Detection](detection.md)  | {attr}`Canonical <Group.canonical>` |
+| :--: | :-------------------------- | :------------------------------- | :------------------------- | :---------------------------------: |
+|  ⚙️  | {data}`~ALL_PLATFORMS`      | All platforms                    | {func}`~is_any_platform`   |                                     |
+|  🪟  | {data}`~ALL_WINDOWS`        | All Windows                      | {func}`~is_any_windows`    |                  ⬥                  |
+|  Ⓑ   | {data}`~BSD`                | All BSD                          | {func}`~is_bsd`            |                  ⬥                  |
+|  🅱️  | {data}`~BSD_WITHOUT_MACOS`  | All BSD excluding macOS          | {func}`~is_bsd_not_macos`  |                                     |
+|  🐧  | {data}`~LINUX`              | Linux distributions              | {func}`~is_linux`          |                  ⬥                  |
+|  ≚   | {data}`~LINUX_LAYERS`       | Linux compatibility layers       | {func}`~is_linux_layers`   |                  ⬥                  |
+|  🐣  | {data}`~LINUX_LIKE`         | All Linux & compatibility layers | {func}`~is_linux_like`     |                                     |
+|  🅟   | {data}`~OTHER_POSIX`        | Other POSIX-compliant platforms  | {func}`~is_other_posix`    |                  ⬥                  |
+|  𝐕   | {data}`~SYSTEM_V`           | AT&T System Five                 | {func}`~is_system_v`       |                  ⬥                  |
+|  ⨷   | {data}`~UNIX`               | All Unix                         | {func}`~is_unix`           |                                     |
+|  ≛   | {data}`~UNIX_LAYERS`        | Unix compatibility layers        | {func}`~is_unix_layers`    |                  ⬥                  |
+|  ⨂   | {data}`~UNIX_WITHOUT_MACOS` | All Unix excluding macOS         | {func}`~is_unix_not_macos` |                                     |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all

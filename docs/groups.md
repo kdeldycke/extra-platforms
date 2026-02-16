@@ -125,47 +125,47 @@ All recognized groups and their properties:
 
 <!-- groups-table-start -->
 
-| Icon | Symbol                      | Description                                                     | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.Group.canonical) |
-| :--: | :-------------------------- | :-------------------------------------------------------------- | :--------------------------- | :----------------------------------------------------: |
-|  🏛️  | {data}`~ALL_ARCHITECTURES`  | All architectures                                               | {func}`~is_any_architecture` |                                                        |
-|  📱  | {data}`~ALL_ARM`            | ARM architectures                                               | {func}`~is_any_arm`          |                           ⬥                            |
-|  ♺   | {data}`~ALL_CI`             | CI systems                                                      | {func}`~is_any_ci`           |                           ⬥                            |
-|  🔲  | {data}`~ALL_MIPS`           | MIPS architectures                                              | {func}`~is_any_mips`         |                           ⬥                            |
-|  ⚙️  | {data}`~ALL_PLATFORMS`      | All platforms                                                   | {func}`~is_any_platform`     |                                                        |
-|  🐚  | {data}`~ALL_SHELLS`         | All shells                                                      | {func}`~is_any_shell`        |                                                        |
-|  ☀️  | {data}`~ALL_SPARC`          | SPARC architectures                                             | {func}`~is_any_sparc`        |                           ⬥                            |
-|  💻  | {data}`~ALL_TERMINALS`      | All terminals                                                   | {func}`~is_any_terminal`     |                                                        |
-|  ⁕   | {data}`~ALL_TRAITS`         | All architectures, platforms, shells, terminals, and CI systems | {func}`~is_any_trait`        |                                                        |
-|  🪟  | {data}`~ALL_WINDOWS`        | All Windows                                                     | {func}`~is_any_windows`      |                           ⬥                            |
-|  ³²  | {data}`~ARCH_32_BIT`        | 32-bit architectures                                            | {func}`~is_arch_32_bit`      |                                                        |
-|  ⁶⁴  | {data}`~ARCH_64_BIT`        | 64-bit architectures                                            | {func}`~is_arch_64_bit`      |                                                        |
-|  ⬆️  | {data}`~BIG_ENDIAN`         | Big-endian architectures                                        | {func}`~is_big_endian`       |                                                        |
-|  💲  | {data}`~BOURNE_SHELLS`      | Bourne-compatible shells                                        | {func}`~is_bourne_shells`    |                           ⬥                            |
-|  Ⓑ   | {data}`~BSD`                | All BSD                                                         | {func}`~is_bsd`              |                           ⬥                            |
-|  🅱️  | {data}`~BSD_WITHOUT_MACOS`  | All BSD excluding macOS                                         | {func}`~is_bsd_not_macos`    |                                                        |
-|  🅲   | {data}`~C_SHELLS`           | C shells                                                        | {func}`~is_c_shells`         |                           ⬥                            |
-|  🎮  | {data}`~GPU_TERMINALS`      | GPU-accelerated terminals                                       | {func}`~is_gpu_terminals`    |                           ⬥                            |
-|  🏢  | {data}`~IBM_MAINFRAME`      | IBM mainframe                                                   | {func}`~is_ibm_mainframe`    |                           ⬥                            |
-|  🐧  | {data}`~LINUX`              | Linux distributions                                             | {func}`~is_linux`            |                           ⬥                            |
-|  ≚   | {data}`~LINUX_LAYERS`       | Linux compatibility layers                                      | {func}`~is_linux_layers`     |                           ⬥                            |
-|  🐣  | {data}`~LINUX_LIKE`         | All Linux & compatibility layers                                | {func}`~is_linux_like`       |                                                        |
-|  ⬇️  | {data}`~LITTLE_ENDIAN`      | Little-endian architectures                                     | {func}`~is_little_endian`    |                                                        |
-|  🐉  | {data}`~LOONGARCH`          | LoongArch                                                       | {func}`~is_loongarch`        |                           ⬥                            |
-|  ⧉   | {data}`~MULTIPLEXERS`       | Terminal multiplexers                                           | {func}`~is_multiplexers`     |                           ⬥                            |
-|  ▦   | {data}`~NATIVE_TERMINALS`   | Native terminal emulators                                       | {func}`~is_native_terminals` |                           ⬥                            |
-|  🅟   | {data}`~OTHER_POSIX`        | Other POSIX-compliant platforms                                 | {func}`~is_other_posix`      |                           ⬥                            |
-|  ◇   | {data}`~OTHER_SHELLS`       | Other shells                                                    | {func}`~is_other_shells`     |                           ⬥                            |
-|  ⚡  | {data}`~POWERPC`            | PowerPC family                                                  | {func}`~is_powerpc`          |                           ⬥                            |
-|  Ⅴ   | {data}`~RISCV`              | RISC-V family                                                   | {func}`~is_riscv`            |                           ⬥                            |
-|  𝐕   | {data}`~SYSTEM_V`           | AT&T System Five                                                | {func}`~is_system_v`         |                           ⬥                            |
-|  ⨷   | {data}`~UNIX`               | All Unix                                                        | {func}`~is_unix`             |                                                        |
-|  ≛   | {data}`~UNIX_LAYERS`        | Unix compatibility layers                                       | {func}`~is_unix_layers`      |                           ⬥                            |
-|  ⨂   | {data}`~UNIX_WITHOUT_MACOS` | All Unix excluding macOS                                        | {func}`~is_unix_not_macos`   |                                                        |
-|  ❓  | {data}`~UNKNOWN`            | Unknown                                                         | {func}`~is_unknown`          |                           ⬥                            |
-|  ⬢   | {data}`~WEB_TERMINALS`      | Web-based terminals                                             | {func}`~is_web_terminals`    |                           ⬥                            |
-|  🌐  | {data}`~WEBASSEMBLY`        | WebAssembly                                                     | {func}`~is_webassembly`      |                           ⬥                            |
-|  ⌨️  | {data}`~WINDOWS_SHELLS`     | Windows shells                                                  | {func}`~is_windows_shells`   |                           ⬥                            |
-|  𝘅   | {data}`~X86`                | x86 family                                                      | {func}`~is_x86`              |                           ⬥                            |
+| Icon | Symbol                      | Description                                                     | [Detection](detection.md)    | {attr}`Canonical <Group.canonical>` |
+| :--: | :-------------------------- | :-------------------------------------------------------------- | :--------------------------- | :---------------------------------: |
+|  🏛️  | {data}`~ALL_ARCHITECTURES`  | All architectures                                               | {func}`~is_any_architecture` |                                     |
+|  📱  | {data}`~ALL_ARM`            | ARM architectures                                               | {func}`~is_any_arm`          |                  ⬥                  |
+|  ♺   | {data}`~ALL_CI`             | CI systems                                                      | {func}`~is_any_ci`           |                  ⬥                  |
+|  🔲  | {data}`~ALL_MIPS`           | MIPS architectures                                              | {func}`~is_any_mips`         |                  ⬥                  |
+|  ⚙️  | {data}`~ALL_PLATFORMS`      | All platforms                                                   | {func}`~is_any_platform`     |                                     |
+|  🐚  | {data}`~ALL_SHELLS`         | All shells                                                      | {func}`~is_any_shell`        |                                     |
+|  ☀️  | {data}`~ALL_SPARC`          | SPARC architectures                                             | {func}`~is_any_sparc`        |                  ⬥                  |
+|  💻  | {data}`~ALL_TERMINALS`      | All terminals                                                   | {func}`~is_any_terminal`     |                                     |
+|  ⁕   | {data}`~ALL_TRAITS`         | All architectures, platforms, shells, terminals, and CI systems | {func}`~is_any_trait`        |                                     |
+|  🪟  | {data}`~ALL_WINDOWS`        | All Windows                                                     | {func}`~is_any_windows`      |                  ⬥                  |
+|  ³²  | {data}`~ARCH_32_BIT`        | 32-bit architectures                                            | {func}`~is_arch_32_bit`      |                                     |
+|  ⁶⁴  | {data}`~ARCH_64_BIT`        | 64-bit architectures                                            | {func}`~is_arch_64_bit`      |                                     |
+|  ⬆️  | {data}`~BIG_ENDIAN`         | Big-endian architectures                                        | {func}`~is_big_endian`       |                                     |
+|  💲  | {data}`~BOURNE_SHELLS`      | Bourne-compatible shells                                        | {func}`~is_bourne_shells`    |                  ⬥                  |
+|  Ⓑ   | {data}`~BSD`                | All BSD                                                         | {func}`~is_bsd`              |                  ⬥                  |
+|  🅱️  | {data}`~BSD_WITHOUT_MACOS`  | All BSD excluding macOS                                         | {func}`~is_bsd_not_macos`    |                                     |
+|  🅲   | {data}`~C_SHELLS`           | C shells                                                        | {func}`~is_c_shells`         |                  ⬥                  |
+|  🎮  | {data}`~GPU_TERMINALS`      | GPU-accelerated terminals                                       | {func}`~is_gpu_terminals`    |                  ⬥                  |
+|  🏢  | {data}`~IBM_MAINFRAME`      | IBM mainframe                                                   | {func}`~is_ibm_mainframe`    |                  ⬥                  |
+|  🐧  | {data}`~LINUX`              | Linux distributions                                             | {func}`~is_linux`            |                  ⬥                  |
+|  ≚   | {data}`~LINUX_LAYERS`       | Linux compatibility layers                                      | {func}`~is_linux_layers`     |                  ⬥                  |
+|  🐣  | {data}`~LINUX_LIKE`         | All Linux & compatibility layers                                | {func}`~is_linux_like`       |                                     |
+|  ⬇️  | {data}`~LITTLE_ENDIAN`      | Little-endian architectures                                     | {func}`~is_little_endian`    |                                     |
+|  🐉  | {data}`~LOONGARCH`          | LoongArch                                                       | {func}`~is_loongarch`        |                  ⬥                  |
+|  ⧉   | {data}`~MULTIPLEXERS`       | Terminal multiplexers                                           | {func}`~is_multiplexers`     |                  ⬥                  |
+|  ▦   | {data}`~NATIVE_TERMINALS`   | Native terminal emulators                                       | {func}`~is_native_terminals` |                  ⬥                  |
+|  🅟   | {data}`~OTHER_POSIX`        | Other POSIX-compliant platforms                                 | {func}`~is_other_posix`      |                  ⬥                  |
+|  ◇   | {data}`~OTHER_SHELLS`       | Other shells                                                    | {func}`~is_other_shells`     |                  ⬥                  |
+|  ⚡  | {data}`~POWERPC`            | PowerPC family                                                  | {func}`~is_powerpc`          |                  ⬥                  |
+|  Ⅴ   | {data}`~RISCV`              | RISC-V family                                                   | {func}`~is_riscv`            |                  ⬥                  |
+|  𝐕   | {data}`~SYSTEM_V`           | AT&T System Five                                                | {func}`~is_system_v`         |                  ⬥                  |
+|  ⨷   | {data}`~UNIX`               | All Unix                                                        | {func}`~is_unix`             |                                     |
+|  ≛   | {data}`~UNIX_LAYERS`        | Unix compatibility layers                                       | {func}`~is_unix_layers`      |                  ⬥                  |
+|  ⨂   | {data}`~UNIX_WITHOUT_MACOS` | All Unix excluding macOS                                        | {func}`~is_unix_not_macos`   |                                     |
+|  ❓  | {data}`~UNKNOWN`            | Unknown                                                         | {func}`~is_unknown`          |                  ⬥                  |
+|  ⬢   | {data}`~WEB_TERMINALS`      | Web-based terminals                                             | {func}`~is_web_terminals`    |                  ⬥                  |
+|  🌐  | {data}`~WEBASSEMBLY`        | WebAssembly                                                     | {func}`~is_webassembly`      |                  ⬥                  |
+|  ⌨️  | {data}`~WINDOWS_SHELLS`     | Windows shells                                                  | {func}`~is_windows_shells`   |                  ⬥                  |
+|  𝘅   | {data}`~X86`                | x86 family                                                      | {func}`~is_x86`              |                  ⬥                  |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all

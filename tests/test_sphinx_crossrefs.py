@@ -615,6 +615,11 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     if role == "meth" and symbol.startswith("Group."):
         return "groups.html"
 
+    # Trait class methods/attributes go to trait.html.
+    trait_classes = ("Trait.", "Architecture.", "Platform.", "Shell.", "Terminal.", "CI.")
+    if role in ("meth", "attr") and any(symbol.startswith(c) for c in trait_classes):
+        return "trait.html"
+
     # Pytest decorators go to pytest.html
     if (
         "pytest" in symbol

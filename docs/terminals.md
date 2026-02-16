@@ -83,13 +83,13 @@ terminal is not recognized.
 
 <!-- terminal-groups-table-start -->
 
-| Icon | Symbol                    | Description               | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.Group.canonical) |
-| :--: | :------------------------ | :------------------------ | :--------------------------- | :----------------------------------------------------: |
-|  💻  | {data}`~ALL_TERMINALS`    | All terminals             | {func}`~is_any_terminal`     |                                                        |
-|  🎮  | {data}`~GPU_TERMINALS`    | GPU-accelerated terminals | {func}`~is_gpu_terminals`    |                           ⬥                            |
-|  ⧉   | {data}`~MULTIPLEXERS`     | Terminal multiplexers     | {func}`~is_multiplexers`     |                           ⬥                            |
-|  ▦   | {data}`~NATIVE_TERMINALS` | Native terminal emulators | {func}`~is_native_terminals` |                           ⬥                            |
-|  ⬢   | {data}`~WEB_TERMINALS`    | Web-based terminals       | {func}`~is_web_terminals`    |                           ⬥                            |
+| Icon | Symbol                    | Description               | [Detection](detection.md)    | {attr}`Canonical <Group.canonical>` |
+| :--: | :------------------------ | :------------------------ | :--------------------------- | :---------------------------------: |
+|  💻  | {data}`~ALL_TERMINALS`    | All terminals             | {func}`~is_any_terminal`     |                                     |
+|  🎮  | {data}`~GPU_TERMINALS`    | GPU-accelerated terminals | {func}`~is_gpu_terminals`    |                  ⬥                  |
+|  ⧉   | {data}`~MULTIPLEXERS`     | Terminal multiplexers     | {func}`~is_multiplexers`     |                  ⬥                  |
+|  ▦   | {data}`~NATIVE_TERMINALS` | Native terminal emulators | {func}`~is_native_terminals` |                  ⬥                  |
+|  ⬢   | {data}`~WEB_TERMINALS`    | Web-based terminals       | {func}`~is_web_terminals`    |                  ⬥                  |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all

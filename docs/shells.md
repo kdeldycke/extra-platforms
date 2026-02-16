@@ -75,13 +75,13 @@ shell is not recognized.
 
 <!-- shell-groups-table-start -->
 
-| Icon | Symbol                  | Description              | [Detection](detection.md)  | [Canonical](groups.md#extra_platforms.Group.canonical) |
-| :--: | :---------------------- | :----------------------- | :------------------------- | :----------------------------------------------------: |
-|  🐚  | {data}`~ALL_SHELLS`     | All shells               | {func}`~is_any_shell`      |                                                        |
-|  💲  | {data}`~BOURNE_SHELLS`  | Bourne-compatible shells | {func}`~is_bourne_shells`  |                           ⬥                            |
-|  🅲   | {data}`~C_SHELLS`       | C shells                 | {func}`~is_c_shells`       |                           ⬥                            |
-|  ◇   | {data}`~OTHER_SHELLS`   | Other shells             | {func}`~is_other_shells`   |                           ⬥                            |
-|  ⌨️  | {data}`~WINDOWS_SHELLS` | Windows shells           | {func}`~is_windows_shells` |                           ⬥                            |
+| Icon | Symbol                  | Description              | [Detection](detection.md)  | {attr}`Canonical <Group.canonical>` |
+| :--: | :---------------------- | :----------------------- | :------------------------- | :---------------------------------: |
+|  🐚  | {data}`~ALL_SHELLS`     | All shells               | {func}`~is_any_shell`      |                                     |
+|  💲  | {data}`~BOURNE_SHELLS`  | Bourne-compatible shells | {func}`~is_bourne_shells`  |                  ⬥                  |
+|  🅲   | {data}`~C_SHELLS`       | C shells                 | {func}`~is_c_shells`       |                  ⬥                  |
+|  ◇   | {data}`~OTHER_SHELLS`   | Other shells             | {func}`~is_other_shells`   |                  ⬥                  |
+|  ⌨️  | {data}`~WINDOWS_SHELLS` | Windows shells           | {func}`~is_windows_shells` |                  ⬥                  |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all

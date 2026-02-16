@@ -228,7 +228,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
         "Symbol",
         "Description",
         "[Detection](detection.md)",
-        "[Canonical](groups.md#extra_platforms.Group.canonical)",
+        "{attr}`Canonical <Group.canonical>`",
     ]
     alignments = ["center", "left", "left", "left", "center"]
 
