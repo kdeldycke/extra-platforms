@@ -1094,7 +1094,14 @@ def is_windows_terminal() -> bool:
 
 @cache
 def is_xterm() -> bool:
-    """Return :data:`True` if current terminal is :data:`~extra_platforms.XTERM`."""
+    """Return :data:`True` if current terminal is :data:`~extra_platforms.XTERM`.
+
+    .. note::
+        We check for ``XTERM_VERSION`` rather than ``TERM=xterm`` because many
+        headless environments (e.g., GitHub Actions ``ubuntu-slim`` runners) set
+        ``TERM=xterm`` for termcap/terminfo compatibility without actually running
+        xterm.
+    """
     return "XTERM_VERSION" in environ
 
 
