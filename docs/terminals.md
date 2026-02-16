@@ -83,13 +83,13 @@ terminal is not recognized.
 
 <!-- terminal-groups-table-start -->
 
-| Icon | Symbol                  | Description                | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.Group.canonical) |
-| :--: | :---------------------- | :------------------------- | :--------------------------- | :----------------------------------------------------: |
-|  💻  | {data}`~ALL_TERMINALS`  | All terminals              | {func}`~is_any_terminal`     |                                                        |
-|  🎮  | {data}`~GPU_TERMINALS`  | GPU-accelerated terminals  | {func}`~is_gpu_terminals`    |                           ⬥                            |
-|  ⧉   | {data}`~MULTIPLEXERS`   | Terminal multiplexers      | {func}`~is_multiplexers`     |                           ⬥                            |
+| Icon | Symbol                    | Description               | [Detection](detection.md)    | [Canonical](groups.md#extra_platforms.Group.canonical) |
+| :--: | :------------------------ | :------------------------ | :--------------------------- | :----------------------------------------------------: |
+|  💻  | {data}`~ALL_TERMINALS`    | All terminals             | {func}`~is_any_terminal`     |                                                        |
+|  🎮  | {data}`~GPU_TERMINALS`    | GPU-accelerated terminals | {func}`~is_gpu_terminals`    |                           ⬥                            |
+|  ⧉   | {data}`~MULTIPLEXERS`     | Terminal multiplexers     | {func}`~is_multiplexers`     |                           ⬥                            |
 |  ▦   | {data}`~NATIVE_TERMINALS` | Native terminal emulators | {func}`~is_native_terminals` |                           ⬥                            |
-|  ⬢   | {data}`~WEB_TERMINALS`  | Web-based terminals        | {func}`~is_web_terminals`    |                           ⬥                            |
+|  ⬢   | {data}`~WEB_TERMINALS`    | Web-based terminals       | {func}`~is_web_terminals`    |                           ⬥                            |
 
 ```{hint}
 Canonical groups are non-overlapping groups that together cover all
@@ -109,16 +109,10 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-GPU_TERMINALS,ALACRITTY,1
-GPU_TERMINALS,CONTOUR,1
-GPU_TERMINALS,FOOT,1
-GPU_TERMINALS,GHOSTTY,1
-GPU_TERMINALS,KITTY,1
-GPU_TERMINALS,RIO,1
-GPU_TERMINALS,WEZTERM,1
-MULTIPLEXERS,GNU_SCREEN,1
-MULTIPLEXERS,TMUX,1
-MULTIPLEXERS,ZELLIJ,1
+ALL_TERMINALS,NATIVE_TERMINALS,7
+ALL_TERMINALS,GPU_TERMINALS,7
+ALL_TERMINALS,WEB_TERMINALS,3
+ALL_TERMINALS,MULTIPLEXERS,3
 NATIVE_TERMINALS,APPLE_TERMINAL,1
 NATIVE_TERMINALS,GNOME_TERMINAL,1
 NATIVE_TERMINALS,ITERM2,1
@@ -126,9 +120,19 @@ NATIVE_TERMINALS,KONSOLE,1
 NATIVE_TERMINALS,TILIX,1
 NATIVE_TERMINALS,WINDOWS_TERMINAL,1
 NATIVE_TERMINALS,XTERM,1
+GPU_TERMINALS,ALACRITTY,1
+GPU_TERMINALS,CONTOUR,1
+GPU_TERMINALS,FOOT,1
+GPU_TERMINALS,GHOSTTY,1
+GPU_TERMINALS,KITTY,1
+GPU_TERMINALS,RIO,1
+GPU_TERMINALS,WEZTERM,1
 WEB_TERMINALS,HYPER,1
 WEB_TERMINALS,TABBY,1
 WEB_TERMINALS,VSCODE_TERMINAL,1
+MULTIPLEXERS,GNU_SCREEN,1
+MULTIPLEXERS,TMUX,1
+MULTIPLEXERS,ZELLIJ,1
 ```
 
 <!-- terminal-sankey-end -->
@@ -141,19 +145,11 @@ config: {"mindmap": {"padding": 5}}
 ---
 mindmap
     ((💻 ALL_TERMINALS))
-        ((🎮 GPU_TERMINALS))
-            (🔳 ALACRITTY)
-            (◰ CONTOUR)
-            (🦶 FOOT)
-            (👻 GHOSTTY)
-            (🐱 KITTY)
-            (🏞️ RIO)
-            (🔡 WEZTERM)
-        ((⧉ MULTIPLEXERS))
-            (📺 GNU_SCREEN)
-            (📟 TMUX)
-            (🪵 ZELLIJ)
-        ((▦ NATIVE_TERMINALS))
+        )⬢ WEB_TERMINALS(
+            (⬡ HYPER)
+            (🐈 TABBY)
+            (🔵 VSCODE_TERMINAL)
+        )▦ NATIVE_TERMINALS(
             (🍏 APPLE_TERMINAL)
             (𝐆 GNOME_TERMINAL)
             (⬛ ITERM2)
@@ -161,10 +157,18 @@ mindmap
             (🔀 TILIX)
             (⊡ WINDOWS_TERMINAL)
             (𝐗 XTERM)
-        ((⬢ WEB_TERMINALS))
-            (⬡ HYPER)
-            (🐈 TABBY)
-            (🔵 VSCODE_TERMINAL)
+        )⧉ MULTIPLEXERS(
+            (📺 GNU_SCREEN)
+            (📟 TMUX)
+            (🪵 ZELLIJ)
+        )🎮 GPU_TERMINALS(
+            (🔳 ALACRITTY)
+            (◰ CONTOUR)
+            (🦶 FOOT)
+            (👻 GHOSTTY)
+            (🐱 KITTY)
+            (🏞️ RIO)
+            (🔡 WEZTERM)
 ```
 
 <!-- terminal-mindmap-end -->

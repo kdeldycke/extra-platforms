@@ -39,6 +39,10 @@ extra-platforms 9.0.1
             id: zsh
           (...)
 
+── Terminal ── 🍏 Apple Terminal ──[APPLE_TERMINAL]──────────
+            id: apple_terminal
+          (...)
+
 ── CI ── ❓ Unknown CI ──[UNKNOWN_CI]────────────────────────
           (...)
 ```
@@ -380,6 +384,46 @@ mindmap
 ```
 
 <!-- shell-mindmap-end -->
+
+## Terminals
+
+All recognized terminals:
+
+<!-- terminal-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((💻 ALL_TERMINALS))
+        )⬢ WEB_TERMINALS(
+            (⬡ HYPER)
+            (🐈 TABBY)
+            (🔵 VSCODE_TERMINAL)
+        )▦ NATIVE_TERMINALS(
+            (🍏 APPLE_TERMINAL)
+            (𝐆 GNOME_TERMINAL)
+            (⬛ ITERM2)
+            (💎 KONSOLE)
+            (🔀 TILIX)
+            (⊡ WINDOWS_TERMINAL)
+            (𝐗 XTERM)
+        )⧉ MULTIPLEXERS(
+            (📺 GNU_SCREEN)
+            (📟 TMUX)
+            (🪵 ZELLIJ)
+        )🎮 GPU_TERMINALS(
+            (🔳 ALACRITTY)
+            (◰ CONTOUR)
+            (🦶 FOOT)
+            (👻 GHOSTTY)
+            (🐱 KITTY)
+            (🏞️ RIO)
+            (🔡 WEZTERM)
+```
+
+<!-- terminal-mindmap-end -->
 
 ## CI systems
 

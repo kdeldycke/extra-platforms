@@ -50,6 +50,8 @@ from extra_platforms import (
     ALL_PLATFORMS,
     ALL_SHELL_GROUPS,
     ALL_SHELLS,
+    ALL_TERMINAL_GROUPS,
+    ALL_TERMINALS,
     ALL_TRAITS,
     ARCH_32_BIT,
     ARCH_64_BIT,
@@ -60,6 +62,7 @@ from extra_platforms import (
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
     UNKNOWN_SHELL,
+    UNKNOWN_TERMINAL,
     Group,
     Trait,
 )
@@ -587,6 +590,7 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
         "ALL_IDS",
         "ALL_PLATFORM_GROUPS",
         "ALL_SHELL_GROUPS",
+        "ALL_TERMINAL_GROUPS",
         "ALL_TRAIT_IDS",
         "EXTRA_GROUPS",
         "NON_OVERLAPPING_GROUPS",
@@ -629,6 +633,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
         "current_ci",
         "current_platform",
         "current_shell",
+        "current_terminal",
         "current_traits",
         "invalidate_caches",
     ])
@@ -648,6 +653,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
         "Group",
         "Platform",
         "Shell",
+        "Terminal",
         "Trait",
     ])
 
@@ -699,6 +705,11 @@ def update_docs() -> None:
             "shell-table-end",
             generate_trait_table(ALL_SHELLS),
         ),
+        (
+            "terminal-table-start",
+            "terminal-table-end",
+            generate_trait_table(ALL_TERMINALS),
+        ),
         # All traits table (for trait.md) - merged table of all traits.
         (
             "all-traits-table-start",
@@ -741,6 +752,13 @@ def update_docs() -> None:
             "shell-sankey-end",
             generate_sankey(
                 list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]
+            ),
+        ),
+        (
+            "terminal-sankey-start",
+            "terminal-sankey-end",
+            generate_sankey(
+                list(NON_OVERLAPPING_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
             ),
         ),
         # Mindmap diagrams.
@@ -791,6 +809,13 @@ def update_docs() -> None:
                 list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]
             ),
         ),
+        (
+            "terminal-mindmap-start",
+            "terminal-mindmap-end",
+            generate_traits_mindmap(
+                list(NON_OVERLAPPING_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
+            ),
+        ),
         # Group tables.
         (
             "architecture-groups-table-start",
@@ -811,6 +836,11 @@ def update_docs() -> None:
             "shell-groups-table-start",
             "shell-groups-table-end",
             generate_group_table(ALL_SHELL_GROUPS),
+        ),
+        (
+            "terminal-groups-table-start",
+            "terminal-groups-table-end",
+            generate_group_table(ALL_TERMINAL_GROUPS),
         ),
         (
             "groups-table-start",
@@ -856,6 +886,15 @@ def update_docs() -> None:
             "shell-data-autodata-end",
             generate_sphinx_directives(
                 list(ALL_SHELLS) + [UNKNOWN_SHELL],
+                "autodata",
+                "symbol_id",
+            ),
+        ),
+        (
+            "terminal-data-autodata-start",
+            "terminal-data-autodata-end",
+            generate_sphinx_directives(
+                list(ALL_TERMINALS) + [UNKNOWN_TERMINAL],
                 "autodata",
                 "symbol_id",
             ),
