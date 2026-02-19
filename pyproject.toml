@@ -5,7 +5,7 @@ requires = [ "uv-build>=0.9" ]
 [project]
 # Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 name = "extra-platforms"
-version = "9.2.1"
+version = "9.2.1.dev0"
 description = "🔎 Detect architectures, platforms, shells, terminals and CI systems, grouped by family"
 readme = "readme.md"
 keywords = [
@@ -245,7 +245,7 @@ extra-platforms = "extra_platforms.__main__:main"
 [project.urls]
 "Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
 "Documentation" = "https://kdeldycke.github.io/extra-platforms"
-"Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v9.2.1"
+"Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v9.2.1.dev0"
 "Funding" = "https://github.com/sponsors/kdeldycke"
 "Homepage" = "https://github.com/kdeldycke/extra-platforms"
 "Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
@@ -374,8 +374,19 @@ run.source = [ "extra_platforms" ]
 report.precision = 2
 
 [tool.bumpversion]
-current_version = "9.2.1"
+current_version = "9.2.1.dev0"
 allow_dirty = true
+# Parse versions with an optional .devN suffix (PEP 440).
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)(\\.dev(?P<dev>\\d+))?"
+serialize = [
+  "{major}.{minor}.{patch}.dev{dev}",
+  "{major}.{minor}.{patch}",
+]
+# When dev is "release" (its optional value), the .devN suffix is omitted.
+# Bumping patch/minor/major resets dev to "0", producing X.Y.Z.dev0.
+# Bumping dev goes from "0" to "release", stripping the suffix for release.
+parts.dev.values = [ "0", "release" ]
+parts.dev.optional_value = "release"
 
 [[tool.bumpversion.files]]
 # Update Python package version in any __init__.py file.
