@@ -345,6 +345,12 @@ default.extend-ignore-identifiers-re = [
   # 57 │     ("11", None): "Big Sur",
   #    ╰╴                       ━━━
   "Sur",
+  # error: `certifi` should be `certify`, `certifies`, `certified`
+  #     ╭▸ ./docs/assets/dependencies.mmd:173:11
+  #     │
+  # 173 │     click certifi "https://pypi.org/project/certifi/" _blank
+  #     ╰╴           ^^^^^^^
+  "certifi",
 ]
 
 [tool.pytest]
