@@ -10,8 +10,9 @@ name: Changelog & versions
       - "**/pyproject.toml"
       # Trigger on any workflow change to make sure version gets hard-coded everywhere.
       - .github/workflows/*.yaml
+      - uv.lock
 
 jobs:
 
   changelog:
-    uses: kdeldycke/workflows/.github/workflows/changelog.yaml@v5.9.1
+    uses: kdeldycke/workflows/.github/workflows/changelog.yaml@v5.10.3
