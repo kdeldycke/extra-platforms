@@ -96,6 +96,11 @@ linkcheck_ignore = [
     # These sites return 403 to bots but are valid.
     r"https://guix\.gnu\.org",
     r"https://claude\.ai/code",
+    # GitHub fragment anchors are rendered client-side and not visible to linkcheck.
+    r"https://github\.com/actions/runner-images#",
+    r"https://github\.com/kdeldycke/click-extra#",
+    # Site is intermittently unreachable.
+    r"https://midnightbsd\.org",
 ]
 
 nitpick_ignore = [

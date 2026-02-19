@@ -464,4 +464,4 @@ Feel free to send a PR to add your project in this list if you are relying on Ex
 
 ## Development
 
-[Development guidelines](https://github.com/kdeldycke/click-extra?tab=readme-ov-file#development) are the same as [parent project Click Extra](https://github.com/kdeldycke/click-extra), from which `extra-platforms` originated.
+[Development guidelines](https://github.com/kdeldycke/click-extra#development) are the same as [parent project Click Extra](https://github.com/kdeldycke/click-extra), from which `extra-platforms` originated.
