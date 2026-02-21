@@ -9,41 +9,6 @@ name: Autofix
 
 jobs:
 
-  debug-pat:
-    name: Debug WORKFLOW_UPDATE_GITHUB_PAT
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Check if secret is available
-        env:
-          HAS_PAT: ${{ secrets.WORKFLOW_UPDATE_GITHUB_PAT != '' }}
-        run: |
-          echo "::notice::WORKFLOW_UPDATE_GITHUB_PAT is set: $HAS_PAT"
-          if [ "$HAS_PAT" = "true" ]; then
-            echo "Secret exists. Testing token permissions..."
-          else
-            echo "::error::WORKFLOW_UPDATE_GITHUB_PAT secret is empty or not set."
-            exit 1
-          fi
-      - name: Test token permissions
-        env:
-          GH_TOKEN: ${{ secrets.WORKFLOW_UPDATE_GITHUB_PAT }}
-        run: |
-          echo "--- Token identity ---"
-          gh api user --jq '.login' 2>&1 || echo "::warning::Could not resolve token identity (expected for fine-grained PATs)"
-
-          echo ""
-          echo "--- Repository permissions granted by token ---"
-          gh api "repos/${{ github.repository }}" \
-            --jq '"\(.permissions)"' 2>&1 || echo "::warning::Could not read repo permissions"
-
-          echo ""
-          echo "--- Test: can push to a workflows branch? ---"
-          gh api "repos/${{ github.repository }}/git/refs" \
-            --jq '.[0].ref' 2>&1 || echo "::warning::Could not list refs"
-
-          echo ""
-          echo "--- Rate limit (confirms token is valid) ---"
-          gh api rate_limit --jq '"\(.rate.remaining)/\(.rate.limit)"' 2>&1
-
   autofix:
     uses: kdeldycke/workflows/.github/workflows/autofix.yaml@v5.11.0
+    secrets: inherit
