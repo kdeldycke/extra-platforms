@@ -1,6 +1,7 @@
 ---
 name: Labels
 "on":
+  workflow_dispatch:
   push:
     branches:
       - main

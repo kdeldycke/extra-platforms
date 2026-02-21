@@ -1,15 +1,20 @@
 ---
 name: Build & release
 "on":
-  # Target are chosen so that all commits get a chance to have their build tested.
   push:
     branches:
       - main
   pull_request:
+    paths:
+      - "gha_utils/**"
+      - "tests/**"
+      - pyproject.toml
+      - uv.lock
+      - .github/workflows/release.yaml
+  workflow_dispatch:
 
 jobs:
 
   release:
     uses: kdeldycke/workflows/.github/workflows/release.yaml@v5.11.1
-    secrets:
-      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+    secrets: inherit
