@@ -25,7 +25,6 @@ jobs:
             exit 1
           fi
       - name: Test token permissions
-        if: ${{ secrets.WORKFLOW_UPDATE_GITHUB_PAT != '' }}
         env:
           GH_TOKEN: ${{ secrets.WORKFLOW_UPDATE_GITHUB_PAT }}
         run: |
