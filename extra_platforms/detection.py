@@ -1492,8 +1492,11 @@ def current_terminal(strict: bool = False) -> Terminal:
     .. note::
         Unlike architectures, platforms, and shells, a terminal is not always present.
         Headless environments (CI runners, cron jobs, Docker containers, SSH
-        non-interactive commands) have no terminal emulator attached. An unrecognized
-        result only logs at ``INFO`` level.
+        non-interactive commands) have no terminal emulator attached.
+
+        If the ``TERM`` environment variable is set, an unrecognized terminal logs at
+        ``WARNING`` level, as it suggests a terminal emulator is present but not
+        recognized. Otherwise, it logs at ``INFO`` level.
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_TERMINALS, MULTIPLEXERS
@@ -1519,7 +1522,11 @@ def current_terminal(strict: bool = False) -> Terminal:
             f"Multiple terminals matches: {matching!r}. {_unrecognized_message()}"
         )
 
-    _report_unrecognized("terminal", strict=strict, expected=False)
+    # TERM env var signals a terminal emulator is present.
+    if "TERM" in environ:
+        _report_unrecognized("terminal", strict=strict)
+    else:
+        _report_unrecognized("terminal", strict=strict, expected=False)
     return UNKNOWN_TERMINAL
 
 
@@ -1535,8 +1542,11 @@ def current_ci(strict: bool = False) -> CI:
 
     .. note::
         Unlike architectures, platforms, and shells, a CI system is not always present.
-        Local development environments have no CI system running. An unrecognized
-        result only logs at ``INFO`` level.
+        Local development environments have no CI system running.
+
+        If the ``CI`` environment variable is set, an unrecognized CI system logs at
+        ``WARNING`` level, as it suggests a CI system is present but not recognized.
+        Otherwise, it logs at ``INFO`` level.
     """
     # Lazy imports to avoid circular dependencies.
     from .ci_data import UNKNOWN_CI
@@ -1554,7 +1564,11 @@ def current_ci(strict: bool = False) -> CI:
             f"Multiple CI matches: {matching!r}. {_unrecognized_message()}"
         )
 
-    _report_unrecognized("CI", strict=strict, expected=False)
+    # CI env var signals a CI system is present.
+    if "CI" in environ:
+        _report_unrecognized("CI", strict=strict)
+    else:
+        _report_unrecognized("CI", strict=strict, expected=False)
     return UNKNOWN_CI
 
 
@@ -1570,8 +1584,11 @@ def current_agent(strict: bool = False) -> Agent:
 
     .. note::
         Unlike architectures, platforms, and shells, an agent is not always present.
-        Local development without AI agents has no agent running. An unrecognized
-        result only logs at ``INFO`` level.
+        Local development without AI agents has no agent running.
+
+        If the ``LLM`` environment variable is set, an unrecognized agent logs at
+        ``WARNING`` level, as it suggests an AI agent is present but not recognized.
+        Otherwise, it logs at ``INFO`` level.
     """
     # Lazy imports to avoid circular dependencies.
     from .agent_data import UNKNOWN_AGENT
@@ -1591,7 +1608,11 @@ def current_agent(strict: bool = False) -> Agent:
             f"Multiple agent matches: {matching!r}. {_unrecognized_message()}"
         )
 
-    _report_unrecognized("agent", strict=strict, expected=False)
+    # LLM env var signals an AI agent is present.
+    if "LLM" in environ:
+        _report_unrecognized("agent", strict=strict)
+    else:
+        _report_unrecognized("agent", strict=strict, expected=False)
     return UNKNOWN_AGENT
 
 

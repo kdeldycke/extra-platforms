@@ -10,6 +10,7 @@
 - Add `current_agent()` detection function.
 - Add agent group: `ALL_AGENTS`.
 - Add `@skip_<agent>` and `@unless_<agent>` pytest decorators for all agents and agent groups.
+- Use `TERM`, `CI`, and `LLM` environment variables to distinguish unrecognized terminals, CI systems, and agents from absent ones.
 
 ## [9.2.0 (2026-02-16)](https://github.com/kdeldycke/extra-platforms/compare/v9.1.0...v9.2.0)
 
