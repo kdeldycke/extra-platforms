@@ -21,6 +21,7 @@
 | {func}`~is_altlinux`             |  Δ   | {data}`~ALTLINUX`             |
 | {func}`~is_amzn`                 |  ⤻   | {data}`~AMZN`                 |
 | {func}`~is_android`              |  🤖  | {data}`~ANDROID`              |
+| {func}`~is_any_agent`            |  🧠  | {data}`~ALL_AGENTS`           |
 | {func}`~is_any_architecture`     |  🏛️  | {data}`~ALL_ARCHITECTURES`    |
 | {func}`~is_any_arm`              |  📱  | {data}`~ALL_ARM`              |
 | {func}`~is_any_ci`               |  ♺   | {data}`~ALL_CI`               |
@@ -55,11 +56,14 @@
 | {func}`~is_centos`               |  💠  | {data}`~CENTOS`               |
 | {func}`~is_circle_ci`            |  ⪾   | {data}`~CIRCLE_CI`            |
 | {func}`~is_cirrus_ci`            |  ≋   | {data}`~CIRRUS_CI`            |
+| {func}`~is_claude_code`          |  ✴️  | {data}`~CLAUDE_CODE`          |
+| {func}`~is_cline`                |  👾  | {data}`~CLINE`                |
 | {func}`~is_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {func}`~is_cmd`                  |  ▶   | {data}`~CMD`                  |
 | {func}`~is_codebuild`            |  ᚙ   | {data}`~CODEBUILD`            |
 | {func}`~is_contour`              |  ◰   | {data}`~CONTOUR`              |
 | {func}`~is_csh`                  |  𝐂   | {data}`~CSH`                  |
+| {func}`~is_cursor`               |  ➤   | {data}`~CURSOR`               |
 | {func}`~is_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
 | {func}`~is_dash`                 |  💨  | {data}`~DASH`                 |
 | {func}`~is_debian`               |  🌀  | {data}`~DEBIAN`               |
@@ -157,6 +161,7 @@
 | {func}`~is_unix_layers`          |  ≛   | {data}`~UNIX_LAYERS`          |
 | {func}`~is_unix_not_macos`       |  ⨂   | {data}`~UNIX_WITHOUT_MACOS`   |
 | {func}`~is_unknown`              |  ❓  | {data}`~UNKNOWN`              |
+| {func}`~is_unknown_agent`        |  ❓  | {data}`~UNKNOWN_AGENT`        |
 | {func}`~is_unknown_architecture` |  ❓  | {data}`~UNKNOWN_ARCHITECTURE` |
 | {func}`~is_unknown_ci`           |  ❓  | {data}`~UNKNOWN_CI`           |
 | {func}`~is_unknown_platform`     |  ❓  | {data}`~UNKNOWN_PLATFORM`     |
@@ -212,11 +217,14 @@
 .. autofunction:: extra_platforms.is_centos
 .. autofunction:: extra_platforms.is_circle_ci
 .. autofunction:: extra_platforms.is_cirrus_ci
+.. autofunction:: extra_platforms.is_claude_code
+.. autofunction:: extra_platforms.is_cline
 .. autofunction:: extra_platforms.is_cloudlinux
 .. autofunction:: extra_platforms.is_cmd
 .. autofunction:: extra_platforms.is_codebuild
 .. autofunction:: extra_platforms.is_contour
 .. autofunction:: extra_platforms.is_csh
+.. autofunction:: extra_platforms.is_cursor
 .. autofunction:: extra_platforms.is_cygwin
 .. autofunction:: extra_platforms.is_dash
 .. autofunction:: extra_platforms.is_debian
@@ -296,6 +304,7 @@
 .. autofunction:: extra_platforms.is_tuxedo
 .. autofunction:: extra_platforms.is_ubuntu
 .. autofunction:: extra_platforms.is_ultramarine
+.. autofunction:: extra_platforms.is_unknown_agent
 .. autofunction:: extra_platforms.is_unknown_architecture
 .. autofunction:: extra_platforms.is_unknown_ci
 .. autofunction:: extra_platforms.is_unknown_platform
@@ -328,6 +337,7 @@ These functions are dynamically generated for each [group](groups.md) and test w
 <!-- group-detection-autofunction-start -->
 
 ```{eval-rst}
+.. autofunction:: extra_platforms.is_any_agent
 .. autofunction:: extra_platforms.is_any_architecture
 .. autofunction:: extra_platforms.is_any_arm
 .. autofunction:: extra_platforms.is_any_ci

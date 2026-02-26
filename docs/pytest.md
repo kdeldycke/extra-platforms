@@ -82,6 +82,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_aarch64`              | {deco}`~pytest.unless_aarch64`              |  📱  | {data}`~AARCH64`              |
 | {deco}`~pytest.skip_aix`                  | {deco}`~pytest.unless_aix`                  |  ➿  | {data}`~AIX`                  |
 | {deco}`~pytest.skip_alacritty`            | {deco}`~pytest.unless_alacritty`            |  🔳  | {data}`~ALACRITTY`            |
+| {deco}`~pytest.skip_all_agents`           | {deco}`~pytest.unless_any_agent`            |  🧠  | {data}`~ALL_AGENTS`           |
 | {deco}`~pytest.skip_all_architectures`    | {deco}`~pytest.unless_any_architecture`     |  🏛️  | {data}`~ALL_ARCHITECTURES`    |
 | {deco}`~pytest.skip_all_arm`              | {deco}`~pytest.unless_any_arm`              |  📱  | {data}`~ALL_ARM`              |
 | {deco}`~pytest.skip_all_ci`               | {deco}`~pytest.unless_any_ci`               |  ♺   | {data}`~ALL_CI`               |
@@ -120,11 +121,14 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_centos`               | {deco}`~pytest.unless_centos`               |  💠  | {data}`~CENTOS`               |
 | {deco}`~pytest.skip_circle_ci`            | {deco}`~pytest.unless_circle_ci`            |  ⪾   | {data}`~CIRCLE_CI`            |
 | {deco}`~pytest.skip_cirrus_ci`            | {deco}`~pytest.unless_cirrus_ci`            |  ≋   | {data}`~CIRRUS_CI`            |
+| {deco}`~pytest.skip_claude_code`          | {deco}`~pytest.unless_claude_code`          |  ✴️  | {data}`~CLAUDE_CODE`          |
+| {deco}`~pytest.skip_cline`                | {deco}`~pytest.unless_cline`                |  👾  | {data}`~CLINE`                |
 | {deco}`~pytest.skip_cloudlinux`           | {deco}`~pytest.unless_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {deco}`~pytest.skip_cmd`                  | {deco}`~pytest.unless_cmd`                  |  ▶   | {data}`~CMD`                  |
 | {deco}`~pytest.skip_codebuild`            | {deco}`~pytest.unless_codebuild`            |  ᚙ   | {data}`~CODEBUILD`            |
 | {deco}`~pytest.skip_contour`              | {deco}`~pytest.unless_contour`              |  ◰   | {data}`~CONTOUR`              |
 | {deco}`~pytest.skip_csh`                  | {deco}`~pytest.unless_csh`                  |  𝐂   | {data}`~CSH`                  |
+| {deco}`~pytest.skip_cursor`               | {deco}`~pytest.unless_cursor`               |  ➤   | {data}`~CURSOR`               |
 | {deco}`~pytest.skip_cygwin`               | {deco}`~pytest.unless_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
 | {deco}`~pytest.skip_dash`                 | {deco}`~pytest.unless_dash`                 |  💨  | {data}`~DASH`                 |
 | {deco}`~pytest.skip_debian`               | {deco}`~pytest.unless_debian`               |  🌀  | {data}`~DEBIAN`               |
@@ -222,6 +226,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_unix_layers`          | {deco}`~pytest.unless_unix_layers`          |  ≛   | {data}`~UNIX_LAYERS`          |
 | {deco}`~pytest.skip_unix_not_macos`       | {deco}`~pytest.unless_unix_not_macos`       |  ⨂   | {data}`~UNIX_WITHOUT_MACOS`   |
 | {deco}`~pytest.skip_unknown`              | {deco}`~pytest.unless_unknown`              |  ❓  | {data}`~UNKNOWN`              |
+| {deco}`~pytest.skip_unknown_agent`        | {deco}`~pytest.unless_unknown_agent`        |  ❓  | {data}`~UNKNOWN_AGENT`        |
 | {deco}`~pytest.skip_unknown_architecture` | {deco}`~pytest.unless_unknown_architecture` |  ❓  | {data}`~UNKNOWN_ARCHITECTURE` |
 | {deco}`~pytest.skip_unknown_ci`           | {deco}`~pytest.unless_unknown_ci`           |  ❓  | {data}`~UNKNOWN_CI`           |
 | {deco}`~pytest.skip_unknown_platform`     | {deco}`~pytest.unless_unknown_platform`     |  ❓  | {data}`~UNKNOWN_PLATFORM`     |
@@ -256,6 +261,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_aarch64
 .. autodecorator:: extra_platforms.pytest.skip_aix
 .. autodecorator:: extra_platforms.pytest.skip_alacritty
+.. autodecorator:: extra_platforms.pytest.skip_all_agents
 .. autodecorator:: extra_platforms.pytest.skip_all_architectures
 .. autodecorator:: extra_platforms.pytest.skip_all_arm
 .. autodecorator:: extra_platforms.pytest.skip_all_ci
@@ -294,11 +300,14 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_centos
 .. autodecorator:: extra_platforms.pytest.skip_circle_ci
 .. autodecorator:: extra_platforms.pytest.skip_cirrus_ci
+.. autodecorator:: extra_platforms.pytest.skip_claude_code
+.. autodecorator:: extra_platforms.pytest.skip_cline
 .. autodecorator:: extra_platforms.pytest.skip_cloudlinux
 .. autodecorator:: extra_platforms.pytest.skip_cmd
 .. autodecorator:: extra_platforms.pytest.skip_codebuild
 .. autodecorator:: extra_platforms.pytest.skip_contour
 .. autodecorator:: extra_platforms.pytest.skip_csh
+.. autodecorator:: extra_platforms.pytest.skip_cursor
 .. autodecorator:: extra_platforms.pytest.skip_cygwin
 .. autodecorator:: extra_platforms.pytest.skip_dash
 .. autodecorator:: extra_platforms.pytest.skip_debian
@@ -396,6 +405,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_unix_layers
 .. autodecorator:: extra_platforms.pytest.skip_unix_not_macos
 .. autodecorator:: extra_platforms.pytest.skip_unknown
+.. autodecorator:: extra_platforms.pytest.skip_unknown_agent
 .. autodecorator:: extra_platforms.pytest.skip_unknown_architecture
 .. autodecorator:: extra_platforms.pytest.skip_unknown_ci
 .. autodecorator:: extra_platforms.pytest.skip_unknown_platform
@@ -427,6 +437,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_aarch64
 .. autodecorator:: extra_platforms.pytest.unless_aix
 .. autodecorator:: extra_platforms.pytest.unless_alacritty
+.. autodecorator:: extra_platforms.pytest.unless_any_agent
 .. autodecorator:: extra_platforms.pytest.unless_any_architecture
 .. autodecorator:: extra_platforms.pytest.unless_any_arm
 .. autodecorator:: extra_platforms.pytest.unless_any_ci
@@ -465,11 +476,14 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_centos
 .. autodecorator:: extra_platforms.pytest.unless_circle_ci
 .. autodecorator:: extra_platforms.pytest.unless_cirrus_ci
+.. autodecorator:: extra_platforms.pytest.unless_claude_code
+.. autodecorator:: extra_platforms.pytest.unless_cline
 .. autodecorator:: extra_platforms.pytest.unless_cloudlinux
 .. autodecorator:: extra_platforms.pytest.unless_cmd
 .. autodecorator:: extra_platforms.pytest.unless_codebuild
 .. autodecorator:: extra_platforms.pytest.unless_contour
 .. autodecorator:: extra_platforms.pytest.unless_csh
+.. autodecorator:: extra_platforms.pytest.unless_cursor
 .. autodecorator:: extra_platforms.pytest.unless_cygwin
 .. autodecorator:: extra_platforms.pytest.unless_dash
 .. autodecorator:: extra_platforms.pytest.unless_debian
@@ -567,6 +581,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_unix_layers
 .. autodecorator:: extra_platforms.pytest.unless_unix_not_macos
 .. autodecorator:: extra_platforms.pytest.unless_unknown
+.. autodecorator:: extra_platforms.pytest.unless_unknown_agent
 .. autodecorator:: extra_platforms.pytest.unless_unknown_architecture
 .. autodecorator:: extra_platforms.pytest.unless_unknown_ci
 .. autodecorator:: extra_platforms.pytest.unless_unknown_platform

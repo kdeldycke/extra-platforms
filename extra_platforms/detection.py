@@ -84,7 +84,7 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Iterable
 
-    from .trait import CI, Architecture, Platform, Shell, Terminal, Trait
+    from .trait import CI, Agent, Architecture, Platform, Shell, Terminal, Trait
 
 
 def _unrecognized_message(report: bool = True) -> str:
@@ -1279,6 +1279,50 @@ def is_unknown_ci() -> bool:
 
 
 # =============================================================================
+# Agent detection heuristics
+# =============================================================================
+
+
+@cache
+def is_claude_code() -> bool:
+    """Return :data:`True` if current agent is :data:`~extra_platforms.CLAUDE_CODE`.
+
+    .. seealso::
+        Claude Code sets the ``CLAUDECODE`` environment variable when running.
+    """
+    return "CLAUDECODE" in environ
+
+
+@cache
+def is_cline() -> bool:
+    """Return :data:`True` if current agent is :data:`~extra_platforms.CLINE`.
+
+    .. seealso::
+        Cline sets the ``CLINE_ACTIVE`` environment variable when running.
+    """
+    return "CLINE_ACTIVE" in environ
+
+
+@cache
+def is_cursor() -> bool:
+    """Return :data:`True` if current agent is :data:`~extra_platforms.CURSOR`.
+
+    .. seealso::
+        Cursor sets the ``CURSOR_AGENT`` environment variable when running.
+    """
+    return "CURSOR_AGENT" in environ
+
+
+@cache
+def is_unknown_agent() -> bool:
+    """Return :data:`True` if current agent is :data:`~extra_platforms.UNKNOWN_AGENT`."""
+    # Lazy import to avoid circular dependencies.
+    from .agent_data import UNKNOWN_AGENT
+
+    return current_agent() is UNKNOWN_AGENT
+
+
+# =============================================================================
 # Current environment detection
 # =============================================================================
 
@@ -1515,12 +1559,50 @@ def current_ci(strict: bool = False) -> CI:
 
 
 @cache
+def current_agent(strict: bool = False) -> Agent:
+    """Returns the :class:`~extra_platforms.Agent` matching the current environment.
+
+    Returns :data:`~extra_platforms.UNKNOWN_AGENT` if not running inside a recognized
+    agent. To raise an error instead, set ``strict`` to ``True``.
+
+    .. important::
+        Always raises an error if multiple agents match.
+
+    .. note::
+        Unlike architectures, platforms, and shells, an agent is not always present.
+        Local development without AI agents has no agent running. An unrecognized
+        result only logs at ``INFO`` level.
+    """
+    # Lazy imports to avoid circular dependencies.
+    from .agent_data import UNKNOWN_AGENT
+    from .group_data import ALL_AGENTS
+
+    # Collect all matching agents.
+    matching: set[Agent] = {
+        agent for agent in ALL_AGENTS if agent.current  # type: ignore[misc]
+    }
+
+    # Return the only matching agent.
+    if len(matching) == 1:
+        return matching.pop()
+
+    if len(matching) > 1:
+        raise RuntimeError(
+            f"Multiple agent matches: {matching!r}. {_unrecognized_message()}"
+        )
+
+    _report_unrecognized("agent", strict=strict, expected=False)
+    return UNKNOWN_AGENT
+
+
+@cache
 def current_traits() -> set[Trait]:
     """Returns all traits matching the current environment.
 
     This includes :class:`~extra_platforms.Architecture`,
     :class:`~extra_platforms.Platform`, :class:`~extra_platforms.Shell`,
-    :class:`~extra_platforms.Terminal`, and :class:`~extra_platforms.CI` systems.
+    :class:`~extra_platforms.Terminal`, :class:`~extra_platforms.CI` systems,
+    and :class:`~extra_platforms.Agent` environments.
 
     .. caution::
         Never returns :data:`~extra_platforms.UNKNOWN` traits.

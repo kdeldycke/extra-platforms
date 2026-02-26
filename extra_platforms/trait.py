@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-"""Trait base class for architectures, platforms, shells, terminals, CI systems, and more.
+"""Trait base class for architectures, platforms, shells, terminals, CI systems, agents, and more.
 
 A trait represents a distinguishing characteristic of a runtime environment.
 Each trait has a unique ID, a human-readable name, an icon, and the ability
@@ -477,6 +477,24 @@ class CI(Trait):
 
     def info(self) -> dict[str, str | bool | None]:
         """Returns all CI attributes we can gather."""
+        return {**self._base_info()}
+
+
+@dataclass(frozen=True)
+class Agent(Trait):
+    """An agent identifies an AI coding agent environment."""
+
+    type_name = "agent"
+
+    all_group = "ALL_AGENTS"
+
+    def __post_init__(self) -> None:
+        """Tweak agent docstring."""
+        super().__post_init__()
+        object.__setattr__(self, "__doc__", f"Identify {self.name} environment.")
+
+    def info(self) -> dict[str, str | bool | None]:
+        """Returns all agent attributes we can gather."""
         return {**self._base_info()}
 
 

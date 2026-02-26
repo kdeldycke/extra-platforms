@@ -33,16 +33,20 @@ from extra_platforms import (
     CI,
     NON_OVERLAPPING_GROUPS,
     UNKNOWN,
+    Agent,
     Architecture,
     Group,
     Platform,
     Shell,
+    Terminal,
     Trait,
 )
 
 
 @pytest.mark.parametrize(
-    "klass", (Architecture, Platform, Shell, CI), ids=attrgetter("__name__")
+    "klass",
+    (Architecture, Platform, Shell, Terminal, CI, Agent),
+    ids=attrgetter("__name__"),
 )
 def test_trait_class_metadata(klass):
     class_id = klass.__name__.lower()

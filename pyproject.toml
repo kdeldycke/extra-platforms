@@ -6,7 +6,7 @@ requires = [ "uv-build>=0.9" ]
 # Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
 name = "extra-platforms"
 version = "9.2.1.dev0"
-description = "🔎 Detect architectures, platforms, shells, terminals and CI systems, grouped by family"
+description = "🔎 Detect architectures, platforms, shells, terminals, CI systems and agents, grouped by family"
 readme = "readme.md"
 keywords = [
   "Alacritty",
@@ -35,10 +35,13 @@ keywords = [
   "CentOS",
   "Circle CI",
   "Cirrus CI",
+  "Claude Code",
+  "Cline",
   "CloudLinux OS",
   "CodeBuild",
   "Command Prompt",
   "Contour",
+  "Cursor",
   "Cygwin",
   "Dash",
   "Debian",

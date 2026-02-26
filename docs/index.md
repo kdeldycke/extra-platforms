@@ -17,6 +17,7 @@ platforms
 shells
 terminals
 ci
+agents
 groups
 detection
 pytest

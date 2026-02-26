@@ -5,6 +5,12 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Add new `Agent` trait type for detecting AI coding agents.
+- Add 3 agent definitions: `CLAUDE_CODE`, `CLINE`, `CURSOR`.
+- Add `current_agent()` detection function.
+- Add agent group: `ALL_AGENTS`.
+- Add `@skip_<agent>` and `@unless_<agent>` pytest decorators for all agents and agent groups.
+
 ## [9.2.0 (2026-02-16)](https://github.com/kdeldycke/extra-platforms/compare/v9.1.0...v9.2.0)
 
 > [!NOTE]

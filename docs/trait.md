@@ -10,12 +10,14 @@
 
 All aspects of a system are represented as *traits*.
 
-There are four main types of traits:
+There are six types of traits:
 
 - **[Architectures](architectures.md)**: CPU architectures (e.g., x86_64, ARM64)
 - **[Platforms](platforms.md)**: Operating systems (e.g., Windows, macOS, Ubuntu)
 - **[Shells](shells.md)**: Command-line interpreters (e.g., Bash, Zsh, Fish)
+- **[Terminals](terminals.md)**: Terminal emulators (e.g., Kitty, Alacritty, iTerm2)
 - **[CI systems](ci.md)**: Continuous Integration environments (e.g., GitHub Actions, Travis CI)
+- **[Agents](agents.md)**: AI coding agent environments (e.g., Claude Code, Cursor, Cline)
 
 ## Trait usage
 
@@ -155,11 +157,14 @@ All recognized traits and their properties:
 |  💠  | {data}`~CENTOS`               | CentOS                         | {func}`~is_centos`               | Platform     |
 |  ⪾   | {data}`~CIRCLE_CI`            | Circle CI                      | {func}`~is_circle_ci`            | CI           |
 |  ≋   | {data}`~CIRRUS_CI`            | Cirrus CI                      | {func}`~is_cirrus_ci`            | CI           |
+|  ✴️  | {data}`~CLAUDE_CODE`          | Claude Code                    | {func}`~is_claude_code`          | Agent        |
+|  👾  | {data}`~CLINE`                | Cline                          | {func}`~is_cline`                | Agent        |
 |  ꩜   | {data}`~CLOUDLINUX`           | CloudLinux OS                  | {func}`~is_cloudlinux`           | Platform     |
 |  ▶   | {data}`~CMD`                  | Command Prompt                 | {func}`~is_cmd`                  | Shell        |
 |  ᚙ   | {data}`~CODEBUILD`            | CodeBuild                      | {func}`~is_codebuild`            | CI           |
 |  ◰   | {data}`~CONTOUR`              | Contour                        | {func}`~is_contour`              | Terminal     |
 |  𝐂   | {data}`~CSH`                  | C shell                        | {func}`~is_csh`                  | Shell        |
+|  ➤   | {data}`~CURSOR`               | Cursor                         | {func}`~is_cursor`               | Agent        |
 |  Ͼ   | {data}`~CYGWIN`               | Cygwin                         | {func}`~is_cygwin`               | Platform     |
 |  💨  | {data}`~DASH`                 | Dash                           | {func}`~is_dash`                 | Shell        |
 |  🌀  | {data}`~DEBIAN`               | Debian                         | {func}`~is_debian`               | Platform     |
@@ -239,6 +244,7 @@ All recognized traits and their properties:
 |  🤵  | {data}`~TUXEDO`               | Tuxedo OS                      | {func}`~is_tuxedo`               | Platform     |
 |  🎯  | {data}`~UBUNTU`               | Ubuntu                         | {func}`~is_ubuntu`               | Platform     |
 |  🌊  | {data}`~ULTRAMARINE`          | Ultramarine                    | {func}`~is_ultramarine`          | Platform     |
+|  ❓  | {data}`~UNKNOWN_AGENT`        | Unknown agent                  | {func}`~is_unknown_agent`        | Agent        |
 |  ❓  | {data}`~UNKNOWN_ARCHITECTURE` | Unknown architecture           | {func}`~is_unknown_architecture` | Architecture |
 |  ❓  | {data}`~UNKNOWN_CI`           | Unknown CI                     | {func}`~is_unknown_ci`           | CI           |
 |  ❓  | {data}`~UNKNOWN_PLATFORM`     | Unknown platform               | {func}`~is_unknown_platform`     | Platform     |
@@ -300,6 +306,12 @@ All recognized traits and their properties:
    :show-inheritance:
 
 .. autoclass:: extra_platforms.CI
+   :members:
+   :private-members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: extra_platforms.Agent
    :members:
    :private-members:
    :undoc-members:

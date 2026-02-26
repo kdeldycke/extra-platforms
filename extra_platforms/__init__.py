@@ -23,6 +23,12 @@ from functools import cache
 
 from . import detection  # noqa: E402
 from ._docstrings import _initialize_all_docstrings
+from .agent_data import (  # noqa: E402
+    CLAUDE_CODE,
+    CLINE,
+    CURSOR,
+    UNKNOWN_AGENT,
+)
 from .architecture_data import (  # noqa: E402
     AARCH64,
     ARM,
@@ -104,6 +110,7 @@ from .terminal_data import (  # noqa: E402
     ZELLIJ,
 )
 from .detection import (  # noqa: E402
+    current_agent,
     current_architecture,
     current_ci,
     current_platform,
@@ -131,6 +138,8 @@ from .detection import (  # noqa: E402
     is_buildkite,
     is_buildroot,
     is_cachyos,
+    is_claude_code,
+    is_cline,
     is_centos,
     is_circle_ci,
     is_cirrus_ci,
@@ -139,6 +148,7 @@ from .detection import (  # noqa: E402
     is_codebuild,
     is_contour,
     is_csh,
+    is_cursor,
     is_cygwin,
     is_dash,
     is_debian,
@@ -218,6 +228,7 @@ from .detection import (  # noqa: E402
     is_tuxedo,
     is_ubuntu,
     is_ultramarine,
+    is_unknown_agent,
     is_unknown_architecture,
     is_unknown_ci,
     is_unknown_platform,
@@ -246,6 +257,8 @@ from .group import (  # noqa: E402
     traits_from_ids,
 )
 from .group_data import (  # noqa: E402
+    ALL_AGENT_GROUPS,
+    ALL_AGENTS,
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
     ALL_ARM,
@@ -356,6 +369,7 @@ from .platform_data import (  # noqa: E402
 )
 from .trait import (  # noqa: E402
     CI,
+    Agent,
     Architecture,
     Platform,
     Shell,
@@ -453,6 +467,7 @@ def invalidate_caches():
     current_shell.cache_clear()
     current_terminal.cache_clear()
     current_ci.cache_clear()
+    current_agent.cache_clear()
     current_traits.cache_clear()
 
     # Invalidate dynamically generated group detection functions.
@@ -462,8 +477,11 @@ def invalidate_caches():
 
 __all__ = (  # noqa: F405
     "AARCH64",
+    "Agent",
     "AIX",
     "ALACRITTY",
+    "ALL_AGENT_GROUPS",
+    "ALL_AGENTS",
     "ALL_ARCHITECTURE_GROUPS",
     "ALL_ARCHITECTURES",
     "ALL_ARM",
@@ -513,17 +531,21 @@ __all__ = (  # noqa: F405
     "CI",
     "CIRCLE_CI",
     "CIRRUS_CI",
+    "CLAUDE_CODE",
+    "CLINE",
     "CLOUDLINUX",
     "CMD",
     "CODEBUILD",
     "CONTOUR",
     "CSH",
+    "current_agent",
     "current_architecture",
     "current_ci",
     "current_platform",
     "current_shell",
     "current_terminal",
     "current_traits",
+    "CURSOR",
     "CYGWIN",
     "DASH",
     "DEBIAN",
@@ -563,6 +585,7 @@ __all__ = (  # noqa: F405
     "is_altlinux",
     "is_amzn",
     "is_android",
+    "is_any_agent",  # noqa: F822
     "is_any_architecture",  # noqa: F822
     "is_any_arm",  # noqa: F822
     "is_any_ci",  # noqa: F822
@@ -597,11 +620,14 @@ __all__ = (  # noqa: F405
     "is_centos",
     "is_circle_ci",
     "is_cirrus_ci",
+    "is_claude_code",
+    "is_cline",
     "is_cloudlinux",
     "is_cmd",
     "is_codebuild",
     "is_contour",
     "is_csh",
+    "is_cursor",
     "is_cygwin",
     "is_dash",
     "is_debian",
@@ -699,6 +725,7 @@ __all__ = (  # noqa: F405
     "is_unix_layers",  # noqa: F822
     "is_unix_not_macos",  # noqa: F822
     "is_unknown",  # noqa: F822
+    "is_unknown_agent",
     "is_unknown_architecture",
     "is_unknown_ci",
     "is_unknown_platform",
@@ -799,6 +826,7 @@ __all__ = (  # noqa: F405
     "UNIX_LAYERS",
     "UNIX_WITHOUT_MACOS",
     "UNKNOWN",
+    "UNKNOWN_AGENT",
     "UNKNOWN_ARCHITECTURE",
     "UNKNOWN_CI",
     "UNKNOWN_PLATFORM",

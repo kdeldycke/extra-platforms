@@ -31,60 +31,75 @@ from extra_platforms import (  # type: ignore[attr-defined]
     Trait,
     current_traits,
     is_aarch64,
+    is_any_agent,
     is_any_architecture,
     is_any_ci,
     is_any_platform,
     is_any_shell,
+    is_any_terminal,
     is_any_windows,
     is_bash,
+    is_claude_code,
     is_github_ci,
     is_linux,
     is_macos,
     is_powershell,
     is_ubuntu,
+    is_unknown_agent,
     is_unknown_architecture,
     is_unknown_ci,
     is_unknown_platform,
     is_unknown_shell,
+    is_unknown_terminal,
     is_windows,
     is_x86_64,
 )
 from extra_platforms.pytest import (
     _DeferredCondition,
     skip_aarch64,
+    skip_all_agents,
     skip_all_architectures,
     skip_all_ci,
     skip_all_platforms,
     skip_all_shells,
+    skip_all_terminals,
     skip_bash,
+    skip_claude_code,
     skip_github_ci,
     skip_linux,
     skip_macos,
     skip_powershell,
     skip_ubuntu,
     skip_unknown,
+    skip_unknown_agent,
     skip_unknown_architecture,
     skip_unknown_ci,
     skip_unknown_platform,
     skip_unknown_shell,
+    skip_unknown_terminal,
     skip_windows,
     skip_x86_64,
     unless_aarch64,
+    unless_any_agent,
     unless_any_architecture,
     unless_any_ci,
     unless_any_platform,
     unless_any_shell,
+    unless_any_terminal,
     unless_bash,
+    unless_claude_code,
     unless_github_ci,
     unless_linux,
     unless_macos,
     unless_powershell,
     unless_ubuntu,
     unless_unknown,
+    unless_unknown_agent,
     unless_unknown_architecture,
     unless_unknown_ci,
     unless_unknown_platform,
     unless_unknown_shell,
+    unless_unknown_terminal,
     unless_windows,
     unless_x86_64,
 )
@@ -124,13 +139,13 @@ def test_type_annotations():
             and isinstance(node.test, ast.Name)
             and node.test.id == "TYPE_CHECKING"
         ):
-            for line in node.body:
-                if (
-                    isinstance(line, ast.AnnAssign)
-                    and isinstance(line.target, ast.Name)
-                    and line.target.id.startswith(("skip_", "unless_"))
-                ):
-                    decorator_annotations.append(line.target.id)
+            decorator_annotations.extend(
+                line.target.id
+                for line in node.body
+                if isinstance(line, ast.AnnAssign)
+                and isinstance(line.target, ast.Name)
+                and line.target.id.startswith(("skip_", "unless_"))
+            )
 
     assert len(decorator_annotations), "No @skip_*/@unless_* annotations found."
     assert decorator_annotations == sorted(decorator_annotations), (
@@ -202,6 +217,16 @@ def test_unless_any_shell():
     assert True, "This test should always be run as we expect to always detect a shell."
 
 
+@skip_all_terminals
+def test_skip_all_terminals():
+    assert is_unknown_terminal()
+
+
+@unless_any_terminal
+def test_unless_any_terminal():
+    assert not is_unknown_terminal()
+
+
 @skip_all_ci
 def test_skip_all_ci():
     assert is_unknown_ci()
@@ -210,6 +235,16 @@ def test_skip_all_ci():
 @unless_any_ci
 def test_unless_any_ci():
     assert not is_unknown_ci()
+
+
+@skip_all_agents
+def test_skip_all_agents():
+    assert is_unknown_agent()
+
+
+@unless_any_agent
+def test_unless_any_agent():
+    assert not is_unknown_agent()
 
 
 @skip_unknown_architecture
@@ -221,7 +256,11 @@ def test_skip_unknown_architecture():
 
     assert is_any_shell() or is_unknown_shell()
 
+    assert is_any_terminal() or is_unknown_terminal()
+
     assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
 
 
 @unless_unknown_architecture
@@ -233,7 +272,11 @@ def test_unless_unknown_architecture():
 
     assert is_any_shell() or is_unknown_shell()
 
+    assert is_any_terminal() or is_unknown_terminal()
+
     assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
 
 
 @skip_unknown_platform
@@ -245,7 +288,11 @@ def test_skip_unknown_platform():
 
     assert is_any_shell() or is_unknown_shell()
 
+    assert is_any_terminal() or is_unknown_terminal()
+
     assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
 
 
 @unless_unknown_platform
@@ -257,7 +304,11 @@ def test_unless_unknown_platform():
 
     assert is_any_shell() or is_unknown_shell()
 
+    assert is_any_terminal() or is_unknown_terminal()
+
     assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
 
 
 @skip_unknown_shell
@@ -269,7 +320,11 @@ def test_skip_unknown_shell():
     assert is_any_shell()
     assert not is_unknown_shell()
 
+    assert is_any_terminal() or is_unknown_terminal()
+
     assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
 
 
 @unless_unknown_shell
@@ -281,7 +336,43 @@ def test_unless_unknown_shell():
     assert not is_any_shell()
     assert is_unknown_shell()
 
+    assert is_any_terminal() or is_unknown_terminal()
+
     assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
+
+
+@skip_unknown_terminal
+def test_skip_unknown_terminal():
+    assert is_any_architecture() or is_unknown_architecture()
+
+    assert is_any_platform() or is_unknown_platform()
+
+    assert is_any_shell() or is_unknown_shell()
+
+    assert is_any_terminal()
+    assert not is_unknown_terminal()
+
+    assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
+
+
+@unless_unknown_terminal
+def test_unless_unknown_terminal():
+    assert is_any_architecture() or is_unknown_architecture()
+
+    assert is_any_platform() or is_unknown_platform()
+
+    assert is_any_shell() or is_unknown_shell()
+
+    assert not is_any_terminal()
+    assert is_unknown_terminal()
+
+    assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
 
 
 @skip_unknown_ci
@@ -292,8 +383,12 @@ def test_skip_unknown_ci():
 
     assert is_any_shell() or is_unknown_shell()
 
+    assert is_any_terminal() or is_unknown_terminal()
+
     assert is_any_ci()
     assert not is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
 
 
 @unless_unknown_ci
@@ -304,8 +399,44 @@ def test_unless_unknown_ci():
 
     assert is_any_shell() or is_unknown_shell()
 
+    assert is_any_terminal() or is_unknown_terminal()
+
     assert not is_any_ci()
     assert is_unknown_ci()
+
+    assert is_any_agent() or is_unknown_agent()
+
+
+@skip_unknown_agent
+def test_skip_unknown_agent():
+    assert is_any_architecture() or is_unknown_architecture()
+
+    assert is_any_platform() or is_unknown_platform()
+
+    assert is_any_shell() or is_unknown_shell()
+
+    assert is_any_terminal() or is_unknown_terminal()
+
+    assert is_any_ci() or is_unknown_ci()
+
+    assert is_any_agent()
+    assert not is_unknown_agent()
+
+
+@unless_unknown_agent
+def test_unless_unknown_agent():
+    assert is_any_architecture() or is_unknown_architecture()
+
+    assert is_any_platform() or is_unknown_platform()
+
+    assert is_any_shell() or is_unknown_shell()
+
+    assert is_any_terminal() or is_unknown_terminal()
+
+    assert is_any_ci() or is_unknown_ci()
+
+    assert not is_any_agent()
+    assert is_unknown_agent()
 
 
 @skip_aarch64
@@ -437,6 +568,19 @@ def test_unless_github_ci():
     assert is_any_ci()
     assert not is_unknown_ci()
     assert is_github_ci()
+
+
+@skip_claude_code
+def test_skip_claude_code():
+    assert is_any_agent() or is_unknown_agent()
+    assert not is_claude_code()
+
+
+@unless_claude_code
+def test_unless_claude_code():
+    assert is_any_agent()
+    assert not is_unknown_agent()
+    assert is_claude_code()
 
 
 def test_deferred_condition_defers_evaluation():

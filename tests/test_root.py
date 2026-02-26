@@ -27,6 +27,7 @@ import requests
 import extra_platforms
 from extra_platforms import (  # type: ignore[attr-defined]
     AARCH64,
+    ALL_AGENTS,
     ALL_ARCHITECTURES,
     ALL_CI,
     ALL_GROUPS,
@@ -44,6 +45,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     UBUNTU,
     UNIX,
     UNKNOWN,
+    UNKNOWN_AGENT,
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
@@ -53,6 +55,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     WSL1,
     WSL2,
     X86_64,
+    current_agent,
     current_architecture,
     current_ci,
     current_platform,
@@ -61,6 +64,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     current_traits,
     invalidate_caches,
     is_aarch64,
+    is_any_agent,
     is_any_ci,
     is_any_platform,
     is_any_terminal,
@@ -72,6 +76,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_ubuntu,
     is_windows,
 )
+from extra_platforms import agent_data as agent_data_module
 from extra_platforms import architecture_data as architecture_data_module
 from extra_platforms import ci_data as ci_data_module
 from extra_platforms import detection as detection_module
@@ -163,7 +168,7 @@ def test_pyproject_classifiers():
     os_classifiers = [
         c for c in official_classifiers if c.startswith("Operating System :: ")
     ]
-    assert set(c for c in classifiers if c.startswith("Operating System :: ")) == set(
+    assert {c for c in classifiers if c.startswith("Operating System :: ")} == set(
         os_classifiers
     ), "All Operating System classifiers must be present in our metadata."
 
@@ -185,24 +190,23 @@ def test_module_root_declarations():
                     members.add(target.id)
             elif isinstance(node, ast.AnnAssign):
                 members.add(node.target.id)  # type: ignore[union-attr]
-            elif isinstance(node, ast.FunctionDef):
-                members.add(node.name)
-            elif isinstance(node, ast.ClassDef):
+            elif isinstance(node, (ast.FunctionDef, ast.ClassDef)):
                 members.add(node.name)
         return {m for m in members if not m.startswith("_")}
 
-    detection_members = fetch_module_implements(detection_module)
+    agent_data_members = fetch_module_implements(agent_data_module)
     architecture_data_members = fetch_module_implements(architecture_data_module)
     ci_data_members = fetch_module_implements(ci_data_module)
-    group_members = fetch_module_implements(group_module)
+    detection_members = fetch_module_implements(detection_module)
     group_data_members = fetch_module_implements(group_data_module)
+    group_members = fetch_module_implements(group_module)
     platform_data_members = fetch_module_implements(platform_data_module)
+    root_members = fetch_module_implements(extra_platforms)
     shell_data_members = fetch_module_implements(shell_data_module)
     terminal_data_members = fetch_module_implements(terminal_data_module)
     trait_members = fetch_module_implements(trait_module)
-    root_members = fetch_module_implements(extra_platforms)
     # Update root members with auto-generated group detection function names.
-    root_members.update((g.detection_func_id for g in ALL_GROUPS))
+    root_members.update(g.detection_func_id for g in ALL_GROUPS)
 
     # Check all members are exposed at the module root.
     tree = ast.parse(Path(inspect.getfile(extra_platforms)).read_bytes())
@@ -211,14 +215,16 @@ def test_module_root_declarations():
         if isinstance(node, ast.Assign):
             for target in node.targets:
                 if target.id == "__all__":
-                    for element in node.value.elts:
-                        extra_platforms_members.append(element.value)
+                    extra_platforms_members.extend(
+                        element.value for element in node.value.elts
+                    )
 
-    assert detection_members <= set(extra_platforms_members)
+    assert agent_data_members <= set(extra_platforms_members)
     assert architecture_data_members <= set(extra_platforms_members)
     assert ci_data_members <= set(extra_platforms_members)
-    assert group_members <= set(extra_platforms_members)
+    assert detection_members <= set(extra_platforms_members)
     assert group_data_members <= set(extra_platforms_members)
+    assert group_members <= set(extra_platforms_members)
     assert platform_data_members <= set(extra_platforms_members)
     assert shell_data_members <= set(extra_platforms_members)
     assert terminal_data_members <= set(extra_platforms_members)
@@ -226,15 +232,16 @@ def test_module_root_declarations():
 
     expected_members = sorted(
         detection_members
-        .union(group_members)
+        .union(agent_data_members)
         .union(architecture_data_members)
         .union(ci_data_members)
         .union(group_data_members)
+        .union(group_members)
         .union(platform_data_members)
+        .union(root_members)
         .union(shell_data_members)
         .union(terminal_data_members)
-        .union(trait_members)
-        .union(root_members),
+        .union(trait_members),
         key=lambda m: (m.lower(), m),
     )
     assert expected_members == extra_platforms_members
@@ -261,6 +268,9 @@ def test_current_funcs():
             elif is_ubuntu():
                 # +1 shell (PowerShell from Azure).
                 detected_traits += 1
+    # Agent is optional: we may not be running under an AI agent.
+    if is_any_agent():
+        detected_traits += 1
     assert len(current_traits_results) == detected_traits
 
     current_architecture_result = current_architecture()
@@ -288,6 +298,11 @@ def test_current_funcs():
     if current_ci_result is not UNKNOWN_CI:
         assert current_ci_result in current_traits_results
 
+    current_agent_result = current_agent()
+    assert current_agent_result in ALL_AGENTS | {UNKNOWN_AGENT}
+    if current_agent_result is not UNKNOWN_AGENT:
+        assert current_agent_result in current_traits_results
+
 
 @pytest.mark.parametrize(
     "current_func,all_collection,unknown_constant,trait_type,error_message",
@@ -306,7 +321,13 @@ def test_current_funcs():
             "platform",
             "Unrecognized platform",
         ),
-        (current_shell, ALL_SHELLS, UNKNOWN_SHELL, "shell", "Unrecognized shell"),
+        (
+            current_shell,
+            ALL_SHELLS,
+            UNKNOWN_SHELL,
+            "shell",
+            "Unrecognized shell",
+        ),
         (
             current_terminal,
             ALL_TERMINALS,
@@ -314,7 +335,20 @@ def test_current_funcs():
             "terminal",
             "Unrecognized terminal",
         ),
-        (current_ci, ALL_CI, UNKNOWN_CI, "CI", "Unrecognized CI"),
+        (
+            current_ci,
+            ALL_CI,
+            UNKNOWN_CI,
+            "CI",
+            "Unrecognized CI",
+        ),
+        (
+            current_agent,
+            ALL_AGENTS,
+            UNKNOWN_AGENT,
+            "agent",
+            "Unrecognized agent",
+        ),
     ],
 )
 def test_current_strict_mode(
@@ -327,8 +361,8 @@ def test_current_strict_mode(
 ):
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
-    # Skip this check for CI and terminal since they may legitimately be unknown.
-    if trait_type not in ("CI", "terminal"):
+    # Skip this check for CI, terminal, and agent since they may legitimately be unknown.
+    if trait_type not in ("CI", "terminal", "agent"):
         invalidate_caches()
         result = current_func()
         assert result in all_collection

@@ -85,6 +85,7 @@ def test_detection_heuristics_sorting():
     shell_section_start = None
     terminal_section_start = None
     ci_section_start = None
+    agent_section_start = None
 
     for i, line in enumerate(source_lines, start=1):
         if "Architecture detection heuristics" in line:
@@ -97,17 +98,21 @@ def test_detection_heuristics_sorting():
             terminal_section_start = i
         elif "CI/CD detection heuristics" in line:
             ci_section_start = i
+        elif "Agent detection heuristics" in line:
+            agent_section_start = i
 
     assert arch_section_start is not None, "Architecture section not found"
     assert platform_section_start is not None, "Platform section not found"
     assert shell_section_start is not None, "Shell section not found"
     assert terminal_section_start is not None, "Terminal section not found"
     assert ci_section_start is not None, "CI/CD section not found"
+    assert agent_section_start is not None, "Agent section not found"
 
     assert arch_section_start < platform_section_start
     assert platform_section_start < shell_section_start
     assert shell_section_start < terminal_section_start
     assert terminal_section_start < ci_section_start
+    assert ci_section_start < agent_section_start
 
     # Collect heuristic functions by section.
     all_heuristic_ids = []
@@ -116,6 +121,7 @@ def test_detection_heuristics_sorting():
     shell_heuristics = []
     terminal_heuristics = []
     ci_heuristics = []
+    agent_heuristics = []
 
     for node in tree.body:
         if isinstance(node, ast.FunctionDef) and node.name.startswith("is_"):
@@ -132,8 +138,10 @@ def test_detection_heuristics_sorting():
                 shell_heuristics.append(func_id)
             elif line_no >= terminal_section_start and line_no < ci_section_start:
                 terminal_heuristics.append(func_id)
-            elif line_no >= ci_section_start:
+            elif line_no >= ci_section_start and line_no < agent_section_start:
                 ci_heuristics.append(func_id)
+            elif line_no >= agent_section_start:
+                agent_heuristics.append(func_id)
 
     # Check there is no extra "is_" function.
     # All traits, including UNKNOWN traits, must have detection functions.
@@ -146,6 +154,7 @@ def test_detection_heuristics_sorting():
         shell_heuristics,
         terminal_heuristics,
         ci_heuristics,
+        agent_heuristics,
     ]:
         non_generic_func_ids = [
             func_id for func_id in heuristics if func_id.startswith("is_unknown")

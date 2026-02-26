@@ -10,7 +10,7 @@
 
 ## What is Extra Platforms?
 
-Extra Platforms detects the runtime architecture, operating system (including Linux distribution), shell, terminal & CI environment, and exposes rich, cacheable metadata (version, codename, icon, canonical URL). It also groups them into reusable families.
+Extra Platforms detects the runtime architecture, operating system (including Linux distribution), shell, terminal, CI environment & AI coding agents, and exposes rich, cacheable metadata (version, codename, icon, canonical URL). It also groups them into reusable families.
 
 - Accurate detection of architecture, OS/distribution, shell, terminal, and CI systems using lightweight, cacheable heuristics.
 - Rich metadata for platforms: version, codename, icon, canonical URL, and "like" relationships.
@@ -451,6 +451,25 @@ mindmap
 ```
 
 <!-- ci-mindmap-end -->
+
+## Agents
+
+All recognized AI coding agents:
+
+<!-- agent-mindmap-start -->
+
+```mermaid
+---
+config: {"mindmap": {"padding": 5}}
+---
+mindmap
+    ((🧠 ALL_AGENTS))
+        (✴️ CLAUDE_CODE)
+        (👾 CLINE)
+        (➤ CURSOR)
+```
+
+<!-- agent-mindmap-end -->
 
 ## Used in
 

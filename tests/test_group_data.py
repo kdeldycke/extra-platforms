@@ -27,6 +27,8 @@ import pytest
 
 import extra_platforms
 from extra_platforms import (
+    ALL_AGENT_GROUPS,
+    ALL_AGENTS,
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
     ALL_CI,
@@ -46,6 +48,7 @@ from extra_platforms import (
     EXTRA_GROUPS,
     NON_OVERLAPPING_GROUPS,
     UNKNOWN,
+    Agent,
     Architecture,
     Group,
     Platform,
@@ -287,6 +290,7 @@ def test_unknown_group():
         assert trait not in ALL_SHELLS
         assert trait not in ALL_TERMINALS
         assert trait not in ALL_CI
+        assert trait not in ALL_AGENTS
         assert trait.icon == "❓"
 
 
@@ -298,6 +302,7 @@ def test_sets_of_groups():
         ALL_SHELL_GROUPS,
         ALL_TERMINAL_GROUPS,
         ALL_CI_GROUPS,
+        ALL_AGENT_GROUPS,
         NON_OVERLAPPING_GROUPS,
         EXTRA_GROUPS,
     ):
@@ -318,12 +323,15 @@ def test_sets_of_groups():
         assert all(isinstance(m, Terminal) for m in terminal_group)
     for ci_group in ALL_CI_GROUPS:
         assert all(isinstance(m, CI) for m in ci_group)
+    for agent_group in ALL_AGENT_GROUPS:
+        assert all(isinstance(m, Agent) for m in agent_group)
 
     assert ALL_ARCHITECTURES.fullyintersects(ALL_ARCHITECTURE_GROUPS)
     assert ALL_PLATFORMS.fullyintersects(ALL_PLATFORM_GROUPS)
     assert ALL_SHELLS.fullyintersects(ALL_SHELL_GROUPS)
     assert ALL_TERMINALS.fullyintersects(ALL_TERMINAL_GROUPS)
     assert ALL_CI.fullyintersects(ALL_CI_GROUPS)
+    assert ALL_AGENTS.fullyintersects(ALL_AGENT_GROUPS)
 
     # Non-overlapping groups and overlapping groups don't overlap.
     assert NON_OVERLAPPING_GROUPS.isdisjoint(EXTRA_GROUPS)
@@ -336,6 +344,7 @@ def test_sets_of_groups():
         | ALL_SHELL_GROUPS
         | ALL_TERMINAL_GROUPS
         | ALL_CI_GROUPS
+        | ALL_AGENT_GROUPS
         | {ALL_TRAITS}
         | {UNKNOWN}
     )
