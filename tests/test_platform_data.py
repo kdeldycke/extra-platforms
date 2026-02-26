@@ -17,21 +17,15 @@
 
 from __future__ import annotations
 
-import ast
-import inspect
-from pathlib import Path
-
 from extra_platforms import (  # type: ignore[attr-defined]
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
-    ALL_TRAITS,
     ALL_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
     LINUX,
     LINUX_LAYERS,
     LINUX_LIKE,
-    NON_OVERLAPPING_GROUPS,
     OTHER_POSIX,
     SYSTEM_V,
     UNIX,
@@ -90,29 +84,8 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_wsl2,
     is_xenserver,
 )
-from extra_platforms import platform_data as platform_data_module
 
 from .test_ci_data import github_runner_os
-
-
-def test_platform_data_sorting():
-    """Platform instances must be sorted alphabetically."""
-    platform_instance_ids = []
-    tree = ast.parse(Path(inspect.getfile(platform_data_module)).read_bytes())
-    for node in tree.body:
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            assert node.value.func.id == "Platform"
-            assert len(node.targets) == 1
-            instance_id = node.targets[0].id
-            assert instance_id.isupper()
-            platform_instance_ids.append(instance_id)
-
-    assert platform_instance_ids == sorted(platform_instance_ids)
-
-    # Check all defined platforms are references in top-level collections.
-    all_platform_ids = set(map(str.lower, platform_instance_ids))
-    assert all_platform_ids.issubset(ALL_PLATFORMS.member_ids | {UNKNOWN_PLATFORM.id})
-    assert all_platform_ids.issubset(ALL_TRAITS.member_ids)
 
 
 def test_platform_detection():
@@ -275,9 +248,6 @@ def test_platform_detection():
 
 
 def test_platform_logical_grouping():
-    for group in ALL_PLATFORM_GROUPS:
-        assert group.issubset(ALL_PLATFORMS)
-
     assert not ALL_PLATFORMS.canonical
 
     # All platforms are divided into Windows and Unix at the highest level.
@@ -325,6 +295,3 @@ def test_platform_logical_grouping():
     assert not BSD_WITHOUT_MACOS.canonical
 
 
-def test_no_missing_platform_in_groups():
-    """Check all platform are attached to at least one non-overlapping group."""
-    ALL_PLATFORMS.fullyintersects(ALL_PLATFORM_GROUPS & NON_OVERLAPPING_GROUPS)

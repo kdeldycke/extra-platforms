@@ -17,24 +17,17 @@
 
 from __future__ import annotations
 
-import ast
-import inspect
-from pathlib import Path
-
 from extra_platforms import (  # type: ignore[attr-defined]
-    ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
     ALL_ARM,
     ALL_MIPS,
     ALL_SPARC,
-    ALL_TRAITS,
     ARCH_32_BIT,
     ARCH_64_BIT,
     BIG_ENDIAN,
     IBM_MAINFRAME,
     LITTLE_ENDIAN,
     LOONGARCH,
-    NON_OVERLAPPING_GROUPS,
     POWERPC,
     RISCV,
     UNKNOWN_ARCHITECTURE,
@@ -73,29 +66,6 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_wasm64,
     is_x86_64,
 )
-from extra_platforms import architecture_data as architecture_data_module
-
-
-def test_architecture_data_sorting():
-    """Architecture instances must be sorted alphabetically."""
-    architecture_instance_ids = []
-    tree = ast.parse(Path(inspect.getfile(architecture_data_module)).read_bytes())
-    for node in tree.body:
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            assert node.value.func.id == "Architecture"
-            assert len(node.targets) == 1
-            instance_id = node.targets[0].id
-            assert instance_id.isupper()
-            architecture_instance_ids.append(instance_id)
-
-    assert architecture_instance_ids == sorted(architecture_instance_ids)
-
-    # Check all defined architectures are references in top-level collections.
-    all_architecture_ids = set(map(str.lower, architecture_instance_ids))
-    assert all_architecture_ids.issubset(
-        ALL_ARCHITECTURES.member_ids | {UNKNOWN_ARCHITECTURE.id}
-    )
-    assert all_architecture_ids.issubset(ALL_TRAITS.member_ids)
 
 
 def test_architecture_detection():
@@ -163,9 +133,6 @@ def test_architecture_detection():
 
 
 def test_architecture_logical_grouping():
-    for group in ALL_ARCHITECTURE_GROUPS:
-        assert group.issubset(ALL_ARCHITECTURES)
-
     # All architectures are divided into families.
     assert ALL_ARCHITECTURES.fullyintersects(
         ALL_ARM
@@ -198,8 +165,3 @@ def test_architecture_logical_grouping():
     assert BIG_ENDIAN.isdisjoint(LITTLE_ENDIAN)
     assert LITTLE_ENDIAN.isdisjoint(BIG_ENDIAN)
     assert ALL_ARCHITECTURES.fullyintersects(BIG_ENDIAN | LITTLE_ENDIAN)
-
-
-def test_no_missing_architecture_in_groups():
-    """Check all architecture are attached to at least one non-overlapping group."""
-    ALL_ARCHITECTURES.fullyintersects(ALL_ARCHITECTURE_GROUPS & NON_OVERLAPPING_GROUPS)

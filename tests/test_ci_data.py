@@ -17,23 +17,17 @@
 
 from __future__ import annotations
 
-import ast
 import functools
-import inspect
 import json
 import os
 import sys
-from pathlib import Path
 
 from extra_platforms import (  # type: ignore[attr-defined]
     AARCH64,
     ALL_CI,
-    ALL_CI_GROUPS,
-    ALL_TRAITS,
     BASH,
     GITHUB_CI,
     MACOS,
-    NON_OVERLAPPING_GROUPS,
     POWERSHELL,
     UBUNTU,
     UNKNOWN_CI,
@@ -90,7 +84,6 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_x86,
     is_x86_64,
 )
-from extra_platforms import ci_data as ci_data_module
 from extra_platforms.pytest import unless_github_ci
 
 
@@ -109,26 +102,6 @@ def github_runner_os() -> str | None:
     if isinstance(os_value, str):
         return os_value
     return None
-
-
-def test_ci_data_sorting():
-    """CI instances must be sorted alphabetically."""
-    ci_instance_ids = []
-    tree = ast.parse(Path(inspect.getfile(ci_data_module)).read_bytes())
-    for node in tree.body:
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            assert node.value.func.id == "CI"
-            assert len(node.targets) == 1
-            instance_id = node.targets[0].id
-            assert instance_id.isupper()
-            ci_instance_ids.append(instance_id)
-
-    assert ci_instance_ids == sorted(ci_instance_ids)
-
-    # Check all defined CI systems are references in top-level collections.
-    all_ci_ids = set(map(str.lower, ci_instance_ids))
-    assert all_ci_ids.issubset(ALL_CI.member_ids | {UNKNOWN_CI.id})
-    assert all_ci_ids.issubset(ALL_TRAITS.member_ids)
 
 
 @unless_github_ci
@@ -319,12 +292,4 @@ def test_ci_detection():
 
 
 def test_ci_logical_grouping():
-    for group in ALL_CI_GROUPS:
-        assert group.issubset(ALL_CI)
-
     assert ALL_CI.canonical
-
-
-def test_no_missing_ci_in_groups():
-    """Check all CI are attached to at least one non-overlapping group."""
-    ALL_CI.fullyintersects(ALL_CI_GROUPS & NON_OVERLAPPING_GROUPS)

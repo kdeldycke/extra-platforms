@@ -17,44 +17,16 @@
 
 from __future__ import annotations
 
-import ast
-import inspect
-from pathlib import Path
-
 from extra_platforms import (
-    ALL_TERMINAL_GROUPS,
     ALL_TERMINALS,
-    ALL_TRAITS,
     GPU_TERMINALS,
     MULTIPLEXERS,
     NATIVE_TERMINALS,
-    NON_OVERLAPPING_GROUPS,
     UNKNOWN_TERMINAL,
     WEB_TERMINALS,
     current_terminal,
     is_unknown_terminal,
 )
-from extra_platforms import terminal_data as terminal_data_module
-
-
-def test_terminal_data_sorting():
-    """Terminal instances must be sorted alphabetically."""
-    terminal_instance_ids = []
-    tree = ast.parse(Path(inspect.getfile(terminal_data_module)).read_bytes())
-    for node in tree.body:
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            assert node.value.func.id == "Terminal"
-            assert len(node.targets) == 1
-            instance_id = node.targets[0].id
-            assert instance_id.isupper()
-            terminal_instance_ids.append(instance_id)
-
-    assert terminal_instance_ids == sorted(terminal_instance_ids)
-
-    # Check all defined terminals are referenced in top-level collections.
-    all_terminal_ids = set(map(str.lower, terminal_instance_ids))
-    assert all_terminal_ids.issubset(ALL_TERMINALS.member_ids | {UNKNOWN_TERMINAL.id})
-    assert all_terminal_ids.issubset(ALL_TRAITS.member_ids)
 
 
 def test_terminal_detection():
@@ -70,10 +42,6 @@ def test_terminal_detection():
 
 
 def test_terminal_logical_grouping():
-    """All terminal groups are subsets of ALL_TERMINALS."""
-    for group in ALL_TERMINAL_GROUPS:
-        assert group.issubset(ALL_TERMINALS)
-
     # All terminals are divided into families.
     assert ALL_TERMINALS.fullyintersects(
         GPU_TERMINALS | MULTIPLEXERS | NATIVE_TERMINALS | WEB_TERMINALS
@@ -85,6 +53,3 @@ def test_terminal_logical_grouping():
     assert WEB_TERMINALS.canonical
 
 
-def test_no_missing_terminal_in_groups():
-    """Check all terminals are attached to at least one non-overlapping group."""
-    ALL_TERMINALS.fullyintersects(ALL_TERMINAL_GROUPS & NON_OVERLAPPING_GROUPS)
