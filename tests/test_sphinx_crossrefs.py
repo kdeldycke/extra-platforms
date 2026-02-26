@@ -652,6 +652,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
             "ALL_CI_GROUPS",
             "ALL_SHELL_GROUPS",
             "ALL_TERMINAL_GROUPS",
+            "ALL_AGENT_GROUPS",
             "EXTRA_GROUPS",
             "NON_OVERLAPPING_GROUPS",
         ):

@@ -392,6 +392,7 @@ These functions retrieve the currently detected traits:
 .. autofunction:: extra_platforms.current_shell
 .. autofunction:: extra_platforms.current_terminal
 .. autofunction:: extra_platforms.current_ci
+.. autofunction:: extra_platforms.current_agent
 ```
 
 ## Cache management
