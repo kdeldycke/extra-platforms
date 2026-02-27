@@ -1,5 +1,10 @@
 # Changelog
 
+## [10.0.1.dev0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v10.0.0...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [10.0.0 (2026-02-27)](https://github.com/kdeldycke/extra-platforms/compare/v9.2.0...v10.0.0)
 
 - Replace `distro` dependency with built-in `/etc/os-release` parser, making the package dependency-free. macOS `Platform.info()` now returns `distro_id: None` instead of `distro_id: "darwin"`.
@@ -433,4 +438,3 @@
 > `1.0.0` is the *first version* available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.0.0).
 
 - First version as a stand alone package extracted from `click-extra`.
-
