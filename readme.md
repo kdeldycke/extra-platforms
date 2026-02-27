@@ -45,6 +45,9 @@ extra-platforms 9.0.1
 
 ── CI ── ❓ Unknown CI ──[UNKNOWN_CI]────────────────────────
           (...)
+
+── Agent ── ✴️ Claude Code ──[CLAUDE_CODE]──────────────────
+          (...)
 ```
 
 The same output is available via `python -m extra_platforms`.

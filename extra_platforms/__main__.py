@@ -27,6 +27,7 @@ from . import (
     Group,
     Trait,
     __version__,
+    current_agent,
     current_architecture,
     current_ci,
     current_platform,
@@ -168,10 +169,11 @@ def main() -> None:
     plat = current_platform()
     shell = current_shell()
     terminal = current_terminal()
-    # Suppress the "Unrecognized CI" warning: not running in a CI
-    # environment is the common case, not an issue worth reporting.
+    # Suppress the "Unrecognized CI/Agent" warnings: not running in a CI
+    # environment or agent is the common case, not an issue worth reporting.
     logging.disable(logging.WARNING)
     ci = current_ci()
+    agent = current_agent()
     logging.disable(logging.NOTSET)
 
     print(f"extra-platforms {__version__}")
@@ -181,6 +183,7 @@ def main() -> None:
     _print_trait("Shell", shell)
     _print_trait("Terminal", terminal)
     _print_trait("CI", ci)
+    _print_trait("Agent", agent)
 
     # Summary of all detected traits and their groups.
     all_detected = current_traits()
