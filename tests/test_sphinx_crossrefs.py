@@ -613,6 +613,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
             "Shell",
             "Terminal",
             "CI",
+            "Agent",
         ):
             return "trait.html"
         # Default to trait.html for other trait-related classes
@@ -630,6 +631,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
         "Shell.",
         "Terminal.",
         "CI.",
+        "Agent.",
     )
     if role in ("meth", "attr") and any(symbol.startswith(c) for c in trait_classes):
         return "trait.html"
@@ -868,6 +870,7 @@ def test_all_crossreferences_point_to_correct_pages(
         "types.",
         "dict.",
         "frozenset.",
+        "shlex.",
     )):
         if not symbol.startswith("pytest.skip_") and not symbol.startswith(
             "pytest.unless_"
