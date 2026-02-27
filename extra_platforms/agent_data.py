@@ -19,9 +19,7 @@ from __future__ import annotations
 
 from .trait import Agent
 
-CLAUDE_CODE = Agent(
-    "claude_code", "Claude Code", "✴️", "https://claude.ai/code"
-)
+CLAUDE_CODE = Agent("claude_code", "Claude Code", "✴️", "https://claude.ai/code")
 
 CLINE = Agent("cline", "Cline", "👾", "https://cline.bot")
 

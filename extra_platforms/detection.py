@@ -1615,7 +1615,9 @@ def current_agent(strict: bool = False) -> Agent:
 
     # Collect all matching agents.
     matching: set[Agent] = {
-        agent for agent in ALL_AGENTS if agent.current  # type: ignore[misc]
+        agent
+        for agent in ALL_AGENTS
+        if agent.current  # type: ignore[misc]
     }
 
     # Return the only matching agent.
