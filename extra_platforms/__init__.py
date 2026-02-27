@@ -451,6 +451,11 @@ def invalidate_caches():
     if sys.version_info >= (3, 14):
         stdlib_platform.invalidate_caches()
 
+    # Invalidate os-release caches.
+    from .platform_info import invalidate_os_release_cache
+
+    invalidate_os_release_cache()
+
     # Invalidate cached properties of trait classes.
     for member in ALL_TRAITS:
         if "current" in vars(member):

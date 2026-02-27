@@ -5,6 +5,7 @@
 > [!IMPORTANT]
 > This version is not released yet and is under active development.
 
+- Replace `distro` dependency with built-in `/etc/os-release` parser, making the package dependency-free. macOS `Platform.info()` now returns `distro_id: None` instead of `distro_id: "darwin"`.
 - Add new `Agent` trait type for detecting AI coding agents.
 - Add 3 agent definitions: `CLAUDE_CODE`, `CLINE`, `CURSOR`.
 - Add `current_agent()` detection function.

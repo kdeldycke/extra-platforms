@@ -528,7 +528,7 @@ def test_unrecognized_message_format():
         assert "platform.uname:" in message
         assert "platform.machine:" in message
         assert "platform.architecture:" in message
-        assert "distro.id:" in message
+        assert "os_release_id:" in message
 
 
 @pytest.mark.skipif(

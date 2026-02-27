@@ -17,7 +17,7 @@ Extra Platforms detects the runtime architecture, operating system (including Li
 - Grouping and API primitives: predefined families, `is_*()` predicates, `current_*()` accessors, and `Group` membership helpers.
 - Testing helpers: Pytest decorators and markers such as `@skip_<id>` and `@unless_<id>` for concise platform-aware tests.
 - Extensible and CI-friendly: designed to be lightweight, easy to extend, and suitable for CI-aware workflows.
-- Extend [`distro`](https://github.com/python-distro/distro) project with Windows and macOS detection.
+- Built-in Linux distribution detection via `/etc/os-release`, with no external dependencies.
 
 ## Quick start
 
@@ -83,7 +83,7 @@ Platform(id='macos', name='macOS')
     'icon': '🍎',
     'url': 'https://apple.com/macos/',
     'current': True,
-    'distro_id': 'darwin',
+    'distro_id': None,
     'version': '26.2',
     'version_parts': {'major': '26', 'minor': '2', 'build_number': None},
     'like': None,

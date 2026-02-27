@@ -44,10 +44,10 @@ you're careful of not implementing circular dependencies.
     if we only allow one, and only one, heuristic to match the current system, or allow
     for considering multiple systems at the same time.
 
-Detection of Linux distribution rely on `distro
-<https://github.com/python-distro/distro>`_ to gather as much details as possible.
-And also because it is the recommended replacement for Python's original
-``platform.linux_distribution`` function (which was removed in Python 3.8).
+Detection of Linux distributions relies on ``/etc/os-release``, as specified by the
+`os-release specification
+<https://www.freedesktop.org/software/systemd/man/latest/os-release.html>`_.
+Every modern Linux distribution (since 2012) ships this file.
 
 For all other traits, we either rely on:
 
@@ -78,7 +78,7 @@ from functools import cache
 from os import environ
 from pathlib import Path, PurePosixPath
 
-import distro
+from .platform_info import os_release_id
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -107,7 +107,7 @@ def _unrecognized_message(report: bool = True) -> str:
         f"  platform.uname:        {platform.uname()!r}\n"
         f"  platform.machine:      {platform.machine()!r}\n"
         f"  platform.architecture: {platform.architecture()!r}\n"
-        f"  distro.id:             {distro.id()!r}"
+        f"  os_release_id:         {os_release_id()!r}"
     )
     if report:
         msg += (
@@ -349,25 +349,25 @@ def is_unknown_architecture() -> bool:
 @cache
 def is_aix() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.AIX`."""
-    return sys.platform.startswith("aix") or distro.id() == "aix"
+    return sys.platform.startswith("aix") or os_release_id() == "aix"
 
 
 @cache
 def is_alpine() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.ALPINE`."""
-    return distro.id() == "alpine"
+    return os_release_id() == "alpine"
 
 
 @cache
 def is_altlinux() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.ALTLINUX`."""
-    return distro.id() == "altlinux"
+    return os_release_id() == "altlinux"
 
 
 @cache
 def is_amzn() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.AMZN`."""
-    return distro.id() == "amzn"
+    return os_release_id() == "amzn"
 
 
 @cache
@@ -384,31 +384,31 @@ def is_android() -> bool:
 @cache
 def is_arch() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.ARCH`."""
-    return distro.id() == "arch"
+    return os_release_id() == "arch"
 
 
 @cache
 def is_buildroot() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.BUILDROOT`."""
-    return distro.id() == "buildroot"
+    return os_release_id() == "buildroot"
 
 
 @cache
 def is_cachyos() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.CACHYOS`."""
-    return distro.id() == "cachyos"
+    return os_release_id() == "cachyos"
 
 
 @cache
 def is_centos() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.CENTOS`."""
-    return distro.id() == "centos"
+    return os_release_id() == "centos"
 
 
 @cache
 def is_cloudlinux() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.CLOUDLINUX`."""
-    return distro.id() == "cloudlinux"
+    return os_release_id() == "cloudlinux"
 
 
 @cache
@@ -420,7 +420,7 @@ def is_cygwin() -> bool:
 @cache
 def is_debian() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.DEBIAN`."""
-    return distro.id() == "debian"
+    return os_release_id() == "debian"
 
 
 @cache
@@ -432,19 +432,19 @@ def is_dragonfly_bsd() -> bool:
 @cache
 def is_exherbo() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.EXHERBO`."""
-    return distro.id() == "exherbo"
+    return os_release_id() == "exherbo"
 
 
 @cache
 def is_fedora() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.FEDORA`."""
-    return distro.id() == "fedora"
+    return os_release_id() == "fedora"
 
 
 @cache
 def is_freebsd() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.FREEBSD`."""
-    return sys.platform.startswith("freebsd") or distro.id() == "freebsd"
+    return sys.platform.startswith("freebsd") or os_release_id() == "freebsd"
 
 
 @cache
@@ -454,19 +454,19 @@ def is_generic_linux() -> bool:
     Matches when running on a Linux kernel but ``distro`` cannot identify the specific
     distribution (e.g., minimal containers or build chroots without ``/etc/os-release``).
     """
-    return sys.platform == "linux" and not distro.id()
+    return sys.platform == "linux" and not os_release_id()
 
 
 @cache
 def is_gentoo() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.GENTOO`."""
-    return distro.id() == "gentoo"
+    return os_release_id() == "gentoo"
 
 
 @cache
 def is_guix() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.GUIX`."""
-    return distro.id() == "guix"
+    return os_release_id() == "guix"
 
 
 @cache
@@ -489,7 +489,7 @@ def is_hurd() -> bool:
 @cache
 def is_ibm_powerkvm() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.IBM_POWERKVM`."""
-    return distro.id() == "ibm_powerkvm"
+    return os_release_id() == "ibm_powerkvm"
 
 
 @cache
@@ -508,19 +508,19 @@ def is_illumos() -> bool:
 @cache
 def is_kali() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.KALI`."""
-    return distro.id() == "kali"
+    return os_release_id() == "kali"
 
 
 @cache
 def is_kvmibm() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.KVMIBM`."""
-    return distro.id() == "kvmibm"
+    return os_release_id() == "kvmibm"
 
 
 @cache
 def is_linuxmint() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.LINUXMINT`."""
-    return distro.id() == "linuxmint"
+    return os_release_id() == "linuxmint"
 
 
 @cache
@@ -532,109 +532,109 @@ def is_macos() -> bool:
 @cache
 def is_mageia() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.MAGEIA`."""
-    return distro.id() == "mageia"
+    return os_release_id() == "mageia"
 
 
 @cache
 def is_mandriva() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.MANDRIVA`."""
-    return distro.id() == "mandriva"
+    return os_release_id() == "mandriva"
 
 
 @cache
 def is_manjaro() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.MANJARO`."""
-    return distro.id() == "manjaro"
+    return os_release_id() == "manjaro"
 
 
 @cache
 def is_midnightbsd() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.MIDNIGHTBSD`."""
-    return sys.platform.startswith("midnightbsd") or distro.id() == "midnightbsd"
+    return sys.platform.startswith("midnightbsd") or os_release_id() == "midnightbsd"
 
 
 @cache
 def is_netbsd() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.NETBSD`."""
-    return sys.platform.startswith("netbsd") or distro.id() == "netbsd"
+    return sys.platform.startswith("netbsd") or os_release_id() == "netbsd"
 
 
 @cache
 def is_nobara() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.NOBARA`."""
-    return distro.id() == "nobara"
+    return os_release_id() == "nobara"
 
 
 @cache
 def is_openbsd() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.OPENBSD`."""
-    return sys.platform.startswith("openbsd") or distro.id() == "openbsd"
+    return sys.platform.startswith("openbsd") or os_release_id() == "openbsd"
 
 
 @cache
 def is_opensuse() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.OPENSUSE`."""
-    return distro.id() == "opensuse"
+    return os_release_id() == "opensuse"
 
 
 @cache
 def is_openwrt() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.OPENWRT`."""
-    return distro.id() == "openwrt"
+    return os_release_id() == "openwrt"
 
 
 @cache
 def is_oracle() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.ORACLE`."""
-    return distro.id() == "oracle"
+    return os_release_id() == "oracle"
 
 
 @cache
 def is_parallels() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.PARALLELS`."""
-    return distro.id() == "parallels"
+    return os_release_id() == "parallels"
 
 
 @cache
 def is_pidora() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.PIDORA`."""
-    return distro.id() == "pidora"
+    return os_release_id() == "pidora"
 
 
 @cache
 def is_raspbian() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.RASPBIAN`."""
-    return distro.id() == "raspbian"
+    return os_release_id() == "raspbian"
 
 
 @cache
 def is_rhel() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.RHEL`."""
-    return distro.id() == "rhel"
+    return os_release_id() == "rhel"
 
 
 @cache
 def is_rocky() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.ROCKY`."""
-    return distro.id() == "rocky"
+    return os_release_id() == "rocky"
 
 
 @cache
 def is_scientific() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.SCIENTIFIC`."""
-    return distro.id() == "scientific"
+    return os_release_id() == "scientific"
 
 
 @cache
 def is_slackware() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.SLACKWARE`."""
-    return distro.id() == "slackware"
+    return os_release_id() == "slackware"
 
 
 @cache
 def is_sles() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.SLES`."""
-    return distro.id() == "sles"
+    return os_release_id() == "sles"
 
 
 @cache
@@ -652,25 +652,25 @@ def is_sunos() -> bool:
 @cache
 def is_tumbleweed() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.TUMBLEWEED`."""
-    return distro.id() == "opensuse-tumbleweed"
+    return os_release_id() == "opensuse-tumbleweed"
 
 
 @cache
 def is_tuxedo() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.TUXEDO`."""
-    return distro.id() == "tuxedo"
+    return os_release_id() == "tuxedo"
 
 
 @cache
 def is_ubuntu() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.UBUNTU`."""
-    return distro.id() == "ubuntu"
+    return os_release_id() == "ubuntu"
 
 
 @cache
 def is_ultramarine() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.ULTRAMARINE`."""
-    return distro.id() == "ultramarine"
+    return os_release_id() == "ultramarine"
 
 
 @cache
@@ -713,7 +713,7 @@ def is_wsl2() -> bool:
 @cache
 def is_xenserver() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.XENSERVER`."""
-    return distro.id() == "xenserver"
+    return os_release_id() == "xenserver"
 
 
 @cache

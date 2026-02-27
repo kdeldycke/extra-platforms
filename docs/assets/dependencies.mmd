@@ -1,10 +1,6 @@
 flowchart LR
     extra_platforms[["`extra-platforms`"]]
 
-    subgraph primary-deps [Primary dependencies]
-        distro{{"`distro`"}}
-    end
-
     subgraph grp_docs [--group docs]
         sphinx{{"`sphinx >=9.1`"}}
         click_extra{{"`click-extra >=7.5`"}}
@@ -77,7 +73,6 @@ flowchart LR
         types_requests{{"`types-requests >=2.32.4.20250611`"}}
     end
 
-    extra_platforms ==>|" >=1.9 "| distro
     sphinx ==> requests
     sphinx --> pygments
     sphinx --> jinja2
@@ -178,7 +173,6 @@ flowchart LR
     click colorama "https://pypi.org/project/colorama/" _blank
     click coverage "https://pypi.org/project/coverage/" _blank
     click deepmerge "https://pypi.org/project/deepmerge/" _blank
-    click distro "https://pypi.org/project/distro/" _blank
     click docutils "https://pypi.org/project/docutils/" _blank
     click exceptiongroup "https://pypi.org/project/exceptiongroup/" _blank
     click execnet "https://pypi.org/project/execnet/" _blank
@@ -233,7 +227,6 @@ flowchart LR
     style extra_platforms stroke-width:3px
     style click_extra stroke-width:3px
     style coverage stroke-width:3px
-    style distro stroke-width:3px
     style furo stroke-width:3px
     style myst_parser stroke-width:3px
     style pytest stroke-width:3px
@@ -253,7 +246,6 @@ flowchart LR
     style types_requests stroke-width:3px
     style wcmatch stroke-width:3px
 
-    style primary-deps fill:#1565C020,stroke:#42A5F5
     style grp_docs fill:#546E7A20,stroke:#90A4AE
     style grp_test fill:#546E7A20,stroke:#90A4AE
     style grp_typing fill:#546E7A20,stroke:#90A4AE

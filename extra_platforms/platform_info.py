@@ -16,24 +16,143 @@
 """Platform-specific information gathering.
 
 This module provides utilities to fetch detailed version and codename information
-for macOS and Windows platforms, extending the capabilities of the ``distro`` library
-which primarily focuses on Linux distributions.
+for all platforms: Linux distributions (via ``/etc/os-release``), macOS and Windows.
 
-.. hint::
-    This module complement the ``distro`` library by extending [support to non-Linux
-    platforms like macOS and Windows](https://github.com/python-distro/distro/issues/177).
-
-    It has the potential to serve as a total replacement of ``distro`` in the future, if
-    the later is abandoned.
+.. seealso::
+    The `os-release specification
+    <https://www.freedesktop.org/software/systemd/man/latest/os-release.html>`_
+    defines the format and fields of ``/etc/os-release``.
 """
 
 from __future__ import annotations
 
+import os
 import platform
+import re
+import shlex
+from functools import cache
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Iterable
+
+
+def _parse_os_release_content(lines: Iterable[str]) -> dict[str, str]:
+    """Parse os-release file content into a dictionary.
+
+    Uses :class:`shlex.shlex` in POSIX mode to handle quoting rules defined in the
+    `os-release specification
+    <https://www.freedesktop.org/software/systemd/man/latest/os-release.html>`_.
+
+    Keys are lowercased. A ``codename`` key is extracted from ``VERSION`` if present,
+    with ``VERSION_CODENAME`` taking precedence over ``UBUNTU_CODENAME``.
+
+    :param lines: Iterable of lines from an os-release file.
+    :return: Dictionary of parsed key-value pairs.
+    """
+    result: dict[str, str] = {}
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip().lower()
+        # Use shlex to unquote the value.
+        lexer = shlex.shlex(value, posix=True)
+        lexer.whitespace_split = True
+        tokens = list(lexer)
+        result[key] = " ".join(tokens) if tokens else ""
+
+    # Extract codename from VERSION field if not already present.
+    if "version_codename" not in result and "version" in result:
+        # Match patterns like "(Focal Fossa)" or ", Focal Fossa".
+        match = re.search(r"\((\D+)\)|,\s*(\D+)", result["version"])
+        if match:
+            result["version_codename"] = (match.group(1) or match.group(2)).strip()
+
+    # UBUNTU_CODENAME is a fallback for VERSION_CODENAME.
+    if "version_codename" not in result and "ubuntu_codename" in result:
+        result["version_codename"] = result["ubuntu_codename"]
+
+    return result
+
+
+@cache
+def _parse_os_release() -> dict[str, str]:
+    """Read and parse the os-release file.
+
+    Tries ``/etc/os-release`` first, then ``/usr/lib/os-release`` as fallback per the
+    specification.
+
+    :return: Dictionary of parsed key-value pairs, or empty dict if no file found.
+    """
+    for path in ("/etc/os-release", "/usr/lib/os-release"):
+        if os.path.isfile(path):
+            with open(path, encoding="utf-8") as f:
+                return _parse_os_release_content(f)
+    return {}
+
+
+# Normalization table for distro IDs that differ between os-release and distro library.
+_OS_RELEASE_ID_NORMALIZATION: dict[str, str] = {
+    "ol": "oracle",
+    "opensuse-leap": "opensuse",
+}
+
+
+@cache
+def os_release_id() -> str:
+    """Return the normalized distribution ID from os-release.
+
+    Lowercases the ``ID`` field, replaces spaces with underscores, and applies
+    a normalization table for known ID differences.
+
+    :return: Normalized distribution ID, or empty string if absent.
+    """
+    raw_id = _parse_os_release().get("id", "")
+    normalized = raw_id.lower().replace(" ", "_")
+    return _OS_RELEASE_ID_NORMALIZATION.get(normalized, normalized)
+
+
+@cache
+def linux_info() -> dict[str, Any]:
+    """Fetch detailed Linux distribution information from os-release.
+
+    Returns a dictionary with the same structure as ``distro.info()`` for
+    consistency, including:
+
+    - ``id``: Distribution ID (e.g., "ubuntu", "fedora")
+    - ``version``: Full version string (e.g., "22.04")
+    - ``version_parts``: Dictionary with ``major``, ``minor``, ``build_number``
+    - ``like``: Space-separated list of related distributions
+    - ``codename``: Distribution codename (e.g., "jammy")
+
+    :return: Dictionary containing Linux distribution details.
+    """
+    data = _parse_os_release()
+    dist_id = os_release_id()
+    version = data.get("version_id", "")
+    parts = version.split(".", 2) if version else []
+    return {
+        "id": dist_id,
+        "version": version,
+        "version_parts": {
+            "major": parts[0] if len(parts) > 0 else "",
+            "minor": parts[1] if len(parts) > 1 else "",
+            "build_number": parts[2] if len(parts) > 2 else "",
+        },
+        "like": data.get("id_like", ""),
+        "codename": data.get("version_codename", ""),
+    }
+
+
+def invalidate_os_release_cache() -> None:
+    """Clear caches for all os-release functions."""
+    _parse_os_release.cache_clear()
+    os_release_id.cache_clear()
+    linux_info.cache_clear()
 
 
 MACOS_CODENAMES: dict[tuple[str, str | None], str] = {

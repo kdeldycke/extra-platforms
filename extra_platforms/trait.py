@@ -33,11 +33,9 @@ from functools import cached_property, lru_cache
 from os import environ
 from typing import ClassVar
 
-import distro
-
 from ._docstrings import get_attribute_docstring
 from ._utils import _recursive_update, _remove_blanks
-from .platform_info import macos_info, windows_info
+from .platform_info import linux_info, macos_info, windows_info
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -372,8 +370,8 @@ class Platform(Trait):
             "codename": None,
         }
         if self.current:
-            # Get extra Linux distribution info from distro.
-            distro_info = dict(distro.info())
+            # Get Linux distribution info from os-release.
+            distro_info = dict(linux_info())
             # Rename distro ID to avoid conflict with our own ID.
             distro_info["distro_id"] = distro_info.pop("id")
             info = _recursive_update(info, _remove_blanks(distro_info), strict=True)
