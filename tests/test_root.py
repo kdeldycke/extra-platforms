@@ -361,7 +361,8 @@ def test_current_strict_mode(
 ):
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
-    # Skip this check for CI, terminal, and agent since they may legitimately be unknown.
+    # Skip this check for CI, terminal, and agent since they may legitimately
+    # be unknown.
     if trait_type not in ("CI", "terminal", "agent"):
         invalidate_caches()
         result = current_func()

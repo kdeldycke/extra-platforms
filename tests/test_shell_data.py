@@ -51,5 +51,3 @@ def test_shell_logical_grouping():
     assert C_SHELLS.canonical
     assert OTHER_SHELLS.canonical
     assert WINDOWS_SHELLS.canonical
-
-

@@ -51,5 +51,3 @@ def test_terminal_logical_grouping():
     assert MULTIPLEXERS.canonical
     assert NATIVE_TERMINALS.canonical
     assert WEB_TERMINALS.canonical
-
-

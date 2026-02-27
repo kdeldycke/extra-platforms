@@ -293,5 +293,3 @@ def test_platform_logical_grouping():
     assert UNIX.issuperset(BSD_WITHOUT_MACOS)
     assert BSD.issuperset(BSD_WITHOUT_MACOS)
     assert not BSD_WITHOUT_MACOS.canonical
-
-
