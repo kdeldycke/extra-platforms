@@ -13,7 +13,7 @@
 - Add `GENERIC_LINUX` platform for Linux environments where `distro` cannot identify the specific distribution (e.g., minimal containers or build chroots without `/etc/os-release`). Closes #479.
 - Use `TERM`, `CI`, and `LLM` environment variables to distinguish unrecognized terminals, CI systems, and agents from absent ones.
 
-## [9.2.0 (2026-02-16)](https://github.com/kdeldycke/extra-platforms/compare/v9.1.0...v9.2.0)
+## [`9.2.0` (2026-02-16)](https://github.com/kdeldycke/extra-platforms/compare/v9.1.0...v9.2.0)
 
 > [!NOTE]
 > `9.2.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/9.2.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v9.2.0).
@@ -26,7 +26,7 @@
 - Display all detected traits and groups in `extra-platforms` CLI.
 - Fix emoji column alignment in CLI.
 
-## [9.1.0 (2026-02-15)](https://github.com/kdeldycke/extra-platforms/compare/v9.0.0...v9.1.0)
+## [`9.1.0` (2026-02-15)](https://github.com/kdeldycke/extra-platforms/compare/v9.0.0...v9.1.0)
 
 > [!NOTE]
 > `9.1.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/9.1.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v9.1.0).
@@ -40,7 +40,7 @@
 - Tweak some icons.
 - Add issue template with detection results reporting.
 
-## [9.0.0 (2026-02-12)](https://github.com/kdeldycke/extra-platforms/compare/v8.0.0...v9.0.0)
+## [`9.0.0` (2026-02-12)](https://github.com/kdeldycke/extra-platforms/compare/v8.0.0...v9.0.0)
 
 > [!NOTE]
 > `9.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/9.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v9.0.0).
@@ -73,7 +73,7 @@
   - Remove deprecated module shims for `extra_platforms.platform` and `extra_platforms.operations`.
 - Remove `_deprecated.py` module.
 
-## [8.0.0 (2026-02-02)](https://github.com/kdeldycke/extra-platforms/compare/v7.0.0...v8.0.0)
+## [`8.0.0` (2026-02-02)](https://github.com/kdeldycke/extra-platforms/compare/v7.0.0...v8.0.0)
 
 > [!NOTE]
 > `8.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/8.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v8.0.0).
@@ -95,7 +95,7 @@
 - Create new `platform_info.py` module for platform-specific info gathering.
 - Add `claude.md` documentation file.
 
-## [7.0.0 (2026-01-18)](https://github.com/kdeldycke/extra-platforms/compare/v6.0.0...v7.0.0)
+## [`7.0.0` (2026-01-18)](https://github.com/kdeldycke/extra-platforms/compare/v6.0.0...v7.0.0)
 
 > [!NOTE]
 > `7.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/7.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v7.0.0).
@@ -145,7 +145,7 @@
 - Mark all canonical groups with the ⬥ symbol everywhere in the documentation.
 - Cross-link all traits, groups and detection functions in the documentation.
 
-## [6.0.0 (2026-01-02)](https://github.com/kdeldycke/extra-platforms/compare/v5.1.0...v6.0.0)
+## [`6.0.0` (2026-01-02)](https://github.com/kdeldycke/extra-platforms/compare/v5.1.0...v6.0.0)
 
 > [!NOTE]
 > `6.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/6.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v6.0.0).
@@ -172,7 +172,7 @@
 - Replace deprecated `codecov/test-results-action` by `codecov/codecov-action`.
 - Move auto-lock time from 8:43 to 4:43.
 
-## [5.1.0 (2025-12-06)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.1...v5.1.0)
+## [`5.1.0` (2025-12-06)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.1...v5.1.0)
 
 > [!NOTE]
 > `5.1.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/5.1.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v5.1.0).
@@ -187,14 +187,14 @@
 - Run docs update job on `ubuntu-slim` runner.
 - Unlock a CPU core stuck at 100% utilization on `macos-15-intel`.
 
-## [5.0.1 (2025-11-15)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.0...v5.0.1)
+## [`5.0.1` (2025-11-15)](https://github.com/kdeldycke/extra-platforms/compare/v5.0.0...v5.0.1)
 
 > [!NOTE]
 > `5.0.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/5.0.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v5.0.1).
 
 - Add detection of CachyOS. Closes #341.
 
-## [5.0.0 (2025-11-03)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.1...v5.0.0)
+## [`5.0.0` (2025-11-03)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.1...v5.0.0)
 
 > [!NOTE]
 > `5.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/5.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v5.0.0).
@@ -203,14 +203,14 @@
 - Re-introduce `tomli` dependency for Python 3.10 users.
 - Skip tests on intermediate Python versions (`3.11`, `3.12` and `3.13`) to reduce CI load.
 
-## [4.1.1 (2025-11-02)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.0...v4.1.1)
+## [`4.1.1` (2025-11-02)](https://github.com/kdeldycke/extra-platforms/compare/v4.1.0...v4.1.1)
 
 > [!NOTE]
 > `4.1.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/4.1.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v4.1.1).
 
 - Add detection of Ultramarine Linux. Closes #329.
 
-## [4.1.0 (2025-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v4.0.0...v4.1.0)
+## [`4.1.0` (2025-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v4.0.0...v4.1.0)
 
 > [!NOTE]
 > `4.1.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/4.1.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v4.1.0).
@@ -220,7 +220,7 @@
 - Add all `Operating System ::` trove classifiers.
 - Add all platform names as package keywords.
 
-## [4.0.0 (2025-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.3...v4.0.0)
+## [`4.0.0` (2025-10-21)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.3...v4.0.0)
 
 > [!NOTE]
 > `4.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/4.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v4.0.0).
@@ -236,28 +236,28 @@
 - Remove tests on EOL'ed `windows-2019` and `macos-13`.
 - Support GitHub admonitions in Sphinx/MyST documentation.
 
-## [3.2.3 (2025-08-05)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.2...v3.2.3)
+## [`3.2.3` (2025-08-05)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.2...v3.2.3)
 
 > [!NOTE]
 > `3.2.3` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/3.2.3/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v3.2.3).
 
 - Add detection of macOS Tahoe (v26.x).
 
-## [3.2.2 (2025-05-24)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.1...v3.2.2)
+## [`3.2.2` (2025-05-24)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.1...v3.2.2)
 
 > [!NOTE]
 > `3.2.2` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/3.2.2/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v3.2.2).
 
 - Fix detection of `UNKNOWN_CI`.
 
-## [3.2.1 (2025-05-17)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.0...v3.2.1)
+## [`3.2.1` (2025-05-17)](https://github.com/kdeldycke/extra-platforms/compare/v3.2.0...v3.2.1)
 
 > [!NOTE]
 > `3.2.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/3.2.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v3.2.1).
 
 - Add convenient `ALL_PLATFORMS_WITHOUT_CI` group to exclude all CI systems from `ALL_PLATFORMS`.
 
-## [3.2.0 (2025-05-17)](https://github.com/kdeldycke/extra-platforms/compare/v3.1.0...v3.2.0)
+## [`3.2.0` (2025-05-17)](https://github.com/kdeldycke/extra-platforms/compare/v3.1.0...v3.2.0)
 
 > [!NOTE]
 > `3.2.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/3.2.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v3.2.0).
@@ -269,7 +269,7 @@
 - Run tests on `windows-11-arm` runners.
 - Remove tests on EOL `ubuntu-20-04`.
 
-## [3.1.0 (2025-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v3.0.0...v3.1.0)
+## [`3.1.0` (2025-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v3.0.0...v3.1.0)
 
 > [!NOTE]
 > `3.1.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/3.1.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v3.1.0).
@@ -280,7 +280,7 @@
 - Keep initial order of data from `platforms_from_ids()` and `groups_from_ids()` results.
 - Allow arbitrary arguments number in `Group._extract_platforms()`.
 
-## [3.0.0 (2025-03-02)](https://github.com/kdeldycke/extra-platforms/compare/v2.1.0...v3.0.0)
+## [`3.0.0` (2025-03-02)](https://github.com/kdeldycke/extra-platforms/compare/v2.1.0...v3.0.0)
 
 > [!NOTE]
 > `3.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/3.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v3.0.0).
@@ -291,7 +291,7 @@
 - Drop supports for Python 3.10.
 - Remove `tomli` dependency.
 
-## [2.1.0 (2025-02-20)](https://github.com/kdeldycke/extra-platforms/compare/v2.0.0...v2.1.0)
+## [`2.1.0` (2025-02-20)](https://github.com/kdeldycke/extra-platforms/compare/v2.0.0...v2.1.0)
 
 > [!NOTE]
 > `2.1.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/2.1.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v2.1.0).
@@ -303,7 +303,7 @@
 - Add `windows-2025` to the test matrix.
 - Mark Python 3.14 tests as stable.
 
-## [2.0.0 (2025-01-02)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v2.0.0)
+## [`2.0.0` (2025-01-02)](https://github.com/kdeldycke/extra-platforms/compare/v1.7.0...v2.0.0)
 
 > [!NOTE]
 > `2.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/2.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v2.0.0).
@@ -319,7 +319,7 @@
 - Invite users in error messages and logs to contribute back edge-cases to improve detection heuristics.
 - Upload test results to coverage.
 
-## [1.7.0 (2024-12-03)](https://github.com/kdeldycke/extra-platforms/compare/v1.6.0...v1.7.0)
+## [`1.7.0` (2024-12-03)](https://github.com/kdeldycke/extra-platforms/compare/v1.6.0...v1.7.0)
 
 > [!NOTE]
 > `1.7.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.7.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.7.0).
@@ -330,7 +330,7 @@
 - Do not allow icons on platforms and groups to be empty.
 - Run tests in parallel to speed up CI.
 
-## [1.6.0 (2024-11-11)](https://github.com/kdeldycke/extra-platforms/compare/v1.5.0...v1.6.0)
+## [`1.6.0` (2024-11-11)](https://github.com/kdeldycke/extra-platforms/compare/v1.5.0...v1.6.0)
 
 > [!NOTE]
 > `1.6.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.6.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.6.0).
@@ -339,7 +339,7 @@
 - New `target_pool` parameter on `reduce` method let you specify the subset of groups to reduce platforms to.
 - Remove `CURRENT_OS_ID` and `CURRENT_OS_LABEL`.
 
-## [1.5.0 (2024-11-10)](https://github.com/kdeldycke/extra-platforms/compare/v1.4.0...v1.5.0)
+## [`1.5.0` (2024-11-10)](https://github.com/kdeldycke/extra-platforms/compare/v1.4.0...v1.5.0)
 
 > [!NOTE]
 > `1.5.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.5.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.5.0).
@@ -349,7 +349,7 @@
 - Deduplicate platforms on `Group` instantiation.
 - Allow testing for membership of individual platform in `Group`.
 
-## [1.4.0 (2024-10-27)](https://github.com/kdeldycke/extra-platforms/compare/v1.3.1...v1.4.0)
+## [`1.4.0` (2024-10-27)](https://github.com/kdeldycke/extra-platforms/compare/v1.3.1...v1.4.0)
 
 > [!NOTE]
 > `1.4.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.4.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.4.0).
@@ -362,7 +362,7 @@
 - Run tests on `macos-15`. Remove tests on `macos-12`.
 - Run tests on Python 3.14-dev.
 
-## [1.3.1 (2024-09-18)](https://github.com/kdeldycke/extra-platforms/compare/v1.3.0...v1.3.1)
+## [`1.3.1` (2024-09-18)](https://github.com/kdeldycke/extra-platforms/compare/v1.3.0...v1.3.1)
 
 > [!NOTE]
 > `1.3.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.3.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.3.1).
@@ -370,7 +370,7 @@
 - Fix conflicting detection heuristics for Linux distributions. Closes #72.
 - Fix fetching of macOS version for releases without build number (like `15.0`).
 
-## [1.3.0 (2024-09-11)](https://github.com/kdeldycke/extra-platforms/compare/v1.2.1...v1.3.0)
+## [`1.3.0` (2024-09-11)](https://github.com/kdeldycke/extra-platforms/compare/v1.2.1...v1.3.0)
 
 > [!NOTE]
 > `1.3.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.3.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.3.0).
@@ -381,21 +381,21 @@
 - Rename `ALL_LINUX` group to `LINUX`.
 - Rename `ALL_WINDOWS` group to `ANY_WINDOWS`.
 
-## [1.2.1 (2024-09-04)](https://github.com/kdeldycke/extra-platforms/compare/v1.2.0...v1.2.1)
+## [`1.2.1` (2024-09-04)](https://github.com/kdeldycke/extra-platforms/compare/v1.2.0...v1.2.1)
 
 > [!NOTE]
 > `1.2.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.2.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.2.1).
 
 - Fix changelog update.
 
-## [1.2.0 (2024-08-24)](https://github.com/kdeldycke/extra-platforms/compare/v1.1.1...v1.2.0)
+## [`1.2.0` (2024-08-24)](https://github.com/kdeldycke/extra-platforms/compare/v1.1.1...v1.2.0)
 
 > [!NOTE]
 > `1.2.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.2.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.2.0).
 
 - Add new `LINUX_LIKE` family that merge `ALL_LINUX` and `LINUX_LAYERS` groups.
 
-## [1.1.1 (2024-08-21)](https://github.com/kdeldycke/extra-platforms/compare/v1.1.0...v1.1.1)
+## [`1.1.1` (2024-08-21)](https://github.com/kdeldycke/extra-platforms/compare/v1.1.0...v1.1.1)
 
 > [!NOTE]
 > `1.1.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.1.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.1.1).
@@ -403,7 +403,7 @@
 - Run tests on `ubuntu-24.04` and `macos-12`.
 - Add missing typed marker.
 
-## [1.1.0 (2024-08-20)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.2...v1.1.0)
+## [`1.1.0` (2024-08-20)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.2...v1.1.0)
 
 > [!NOTE]
 > `1.1.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.1.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.1.0).
@@ -412,14 +412,14 @@
 - Expose all utilities at root level.
 - Split code.
 
-## [1.0.2 (2024-08-19)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.1...v1.0.2)
+## [`1.0.2` (2024-08-19)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.1...v1.0.2)
 
 > [!NOTE]
 > `1.0.2` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.0.2/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.0.2).
 
 - Re-release.
 
-## [1.0.1 (2024-08-19)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.0...v1.0.1)
+## [`1.0.1` (2024-08-19)](https://github.com/kdeldycke/extra-platforms/compare/v1.0.0...v1.0.1)
 
 > [!WARNING]
 > `1.0.1` is **not available** on 🐍 PyPI and 🐙 GitHub.
@@ -428,9 +428,10 @@
 - Reorganize code.
 - Fix tests.
 
-## [1.0.0 (2024-08-19)](https://github.com/kdeldycke/extra-platforms/compare/90ddb60...v1.0.0)
+## [`1.0.0` (2024-08-19)](https://github.com/kdeldycke/extra-platforms/compare/90ddb60...v1.0.0)
 
 > [!NOTE]
 > `1.0.0` is the *first version* available on [🐍 PyPI](https://pypi.org/project/extra-platforms/1.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v1.0.0).
 
 - First version as a stand alone package extracted from `click-extra`.
+
