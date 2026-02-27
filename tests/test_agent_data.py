@@ -17,12 +17,12 @@
 
 from __future__ import annotations
 
-from extra_platforms import (
+from extra_platforms import (  # type: ignore[attr-defined]
     ALL_AGENTS,
     UNKNOWN_AGENT,
     current_agent,
     is_any_agent,
-    is_any_trait,  # type: ignore[attr-defined]
+    is_any_trait,
     is_claude_code,
     is_cline,
     is_cursor,
