@@ -1406,7 +1406,10 @@ def current_platform(strict: bool = False) -> Platform:
 
     # Return the only matching platform.
     if len(matching) == 1:
-        return matching.pop()
+        (result,) = matching
+        if result is GENERIC_LINUX:
+            _report_unrecognized("Linux distribution", strict=False)
+        return result
 
     # Removes some generic platforms from the matching, until we have a single match.
     # Starts by removing the least specific WSL1, then WSL2: WSL is a generic platform,
