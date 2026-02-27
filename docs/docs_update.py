@@ -629,6 +629,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
 
     # Also exclude utility functions documented in detection.md.
     exclude_list.extend([
+        "current_agent",
         "current_architecture",
         "current_ci",
         "current_platform",
@@ -648,6 +649,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
 
     # Also exclude core classes documented in trait.md and groups.md.
     exclude_list.extend([
+        "Agent",
         "Architecture",
         "CI",
         "Group",
