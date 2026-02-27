@@ -1,5 +1,5 @@
 ---
-name: Docs
+name: 📚 Docs
 "on":
   workflow_dispatch:
   push:
@@ -9,4 +9,4 @@ name: Docs
 jobs:
 
   docs:
-    uses: kdeldycke/workflows/.github/workflows/docs.yaml@v5.11.1
+    uses: kdeldycke/repomatic/.github/workflows/docs.yaml@v6.1.0

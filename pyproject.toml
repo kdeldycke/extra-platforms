@@ -436,6 +436,8 @@ warn_return_any = true
 warn_unreachable = true
 pretty = true
 
-[tool.gha-utils]
+[tool.repomatic]
+# We don't want repomatic's skills in this repository. And no need for custom label or zizmor configuration either.
+init-exclude = ["skills", "labels", "zizmor"]
 # Building the package with Nuitka is overkill.
 nuitka = false

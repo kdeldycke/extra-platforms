@@ -1,5 +1,5 @@
 ---
-name: Renovate
+name: 🆕 Renovate
 "on":
   schedule:
     - cron: "3 17 * * 1"
@@ -10,10 +10,11 @@ name: Renovate
     paths:
       - .github/workflows/renovate.yaml
       - renovate.json5
-      - gha_utils/data/renovate.json5
+      - repomatic/data/renovate.json5
 
 jobs:
 
   renovate:
-    uses: kdeldycke/workflows/.github/workflows/renovate.yaml@v5.11.1
-    secrets: inherit
+    uses: kdeldycke/repomatic/.github/workflows/renovate.yaml@v6.1.0
+    secrets:
+      WORKFLOW_UPDATE_GITHUB_PAT: ${{ secrets.WORKFLOW_UPDATE_GITHUB_PAT }}
