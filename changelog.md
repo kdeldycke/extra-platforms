@@ -1,9 +1,6 @@
 # Changelog
 
-## [10.0.0.dev0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v9.2.0...main)
-
-> [!IMPORTANT]
-> This version is not released yet and is under active development.
+## [10.0.0 (2026-02-27)](https://github.com/kdeldycke/extra-platforms/compare/v9.2.0...v10.0.0)
 
 - Replace `distro` dependency with built-in `/etc/os-release` parser, making the package dependency-free. macOS `Platform.info()` now returns `distro_id: None` instead of `distro_id: "darwin"`.
 - Add new `Agent` trait type for detecting AI coding agents.
