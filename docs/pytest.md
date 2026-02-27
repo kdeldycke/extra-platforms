@@ -138,6 +138,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_fish`                 | {deco}`~pytest.unless_fish`                 |  🐟  | {data}`~FISH`                 |
 | {deco}`~pytest.skip_foot`                 | {deco}`~pytest.unless_foot`                 |  🦶  | {data}`~FOOT`                 |
 | {deco}`~pytest.skip_freebsd`              | {deco}`~pytest.unless_freebsd`              |  😈  | {data}`~FREEBSD`              |
+| {deco}`~pytest.skip_generic_linux`        | {deco}`~pytest.unless_generic_linux`        |  🥚  | {data}`~GENERIC_LINUX`        |
 | {deco}`~pytest.skip_gentoo`               | {deco}`~pytest.unless_gentoo`               |  🗜️  | {data}`~GENTOO`               |
 | {deco}`~pytest.skip_ghostty`              | {deco}`~pytest.unless_ghostty`              |  👻  | {data}`~GHOSTTY`              |
 | {deco}`~pytest.skip_github_ci`            | {deco}`~pytest.unless_github_ci`            |  🐙  | {data}`~GITHUB_CI`            |
@@ -317,6 +318,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_fish
 .. autodecorator:: extra_platforms.pytest.skip_foot
 .. autodecorator:: extra_platforms.pytest.skip_freebsd
+.. autodecorator:: extra_platforms.pytest.skip_generic_linux
 .. autodecorator:: extra_platforms.pytest.skip_gentoo
 .. autodecorator:: extra_platforms.pytest.skip_ghostty
 .. autodecorator:: extra_platforms.pytest.skip_github_ci
@@ -493,6 +495,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_fish
 .. autodecorator:: extra_platforms.pytest.unless_foot
 .. autodecorator:: extra_platforms.pytest.unless_freebsd
+.. autodecorator:: extra_platforms.pytest.unless_generic_linux
 .. autodecorator:: extra_platforms.pytest.unless_gentoo
 .. autodecorator:: extra_platforms.pytest.unless_ghostty
 .. autodecorator:: extra_platforms.pytest.unless_github_ci

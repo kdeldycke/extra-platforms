@@ -73,6 +73,7 @@
 | {func}`~is_fish`                 |  🐟  | {data}`~FISH`                 |
 | {func}`~is_foot`                 |  🦶  | {data}`~FOOT`                 |
 | {func}`~is_freebsd`              |  😈  | {data}`~FREEBSD`              |
+| {func}`~is_generic_linux`        |  🥚  | {data}`~GENERIC_LINUX`        |
 | {func}`~is_gentoo`               |  🗜️  | {data}`~GENTOO`               |
 | {func}`~is_ghostty`              |  👻  | {data}`~GHOSTTY`              |
 | {func}`~is_github_ci`            |  🐙  | {data}`~GITHUB_CI`            |
@@ -234,6 +235,7 @@
 .. autofunction:: extra_platforms.is_fish
 .. autofunction:: extra_platforms.is_foot
 .. autofunction:: extra_platforms.is_freebsd
+.. autofunction:: extra_platforms.is_generic_linux
 .. autofunction:: extra_platforms.is_gentoo
 .. autofunction:: extra_platforms.is_ghostty
 .. autofunction:: extra_platforms.is_github_ci

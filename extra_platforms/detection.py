@@ -448,6 +448,16 @@ def is_freebsd() -> bool:
 
 
 @cache
+def is_generic_linux() -> bool:
+    """Return :data:`True` if current platform is :data:`~extra_platforms.GENERIC_LINUX`.
+
+    Matches when running on a Linux kernel but ``distro`` cannot identify the specific
+    distribution (e.g., minimal containers or build chroots without ``/etc/os-release``).
+    """
+    return sys.platform == "linux" and not distro.id()
+
+
+@cache
 def is_gentoo() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.GENTOO`."""
     return distro.id() == "gentoo"
@@ -1385,7 +1395,7 @@ def current_platform(strict: bool = False) -> Platform:
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_PLATFORMS
-    from .platform_data import UNKNOWN_PLATFORM, WSL1, WSL2
+    from .platform_data import GENERIC_LINUX, UNKNOWN_PLATFORM, WSL1, WSL2
 
     # Collect all matching platforms.
     matching: set[Platform] = {
@@ -1408,6 +1418,12 @@ def current_platform(strict: bool = False) -> Platform:
             matching.remove(wsl)
             if len(matching) == 1:
                 return matching.pop()
+
+    # Remove GENERIC_LINUX if a more specific platform was also detected.
+    if GENERIC_LINUX in matching and len(matching) > 1:
+        matching.remove(GENERIC_LINUX)
+        if len(matching) == 1:
+            return matching.pop()
 
     if len(matching) > 1:
         raise RuntimeError(

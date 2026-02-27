@@ -164,11 +164,11 @@ mappingproxy({
     'tuxedo': Platform(id='tuxedo', name='Tuxedo OS'),
     'ubuntu': Platform(id='ubuntu', name='Ubuntu'),
     'ultramarine': Platform(id='ultramarine', name='Ultramarine'),
-    'unknown_linux': Platform(id='unknown_linux', name='Unknown Linux'),
+    'generic_linux': Platform(id='generic_linux', name='Generic Linux'),
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'centos', 'mageia', 'unknown_linux', 'ultramarine', 'tuxedo', 'arch', 'buildroot', 'android', 'exherbo', 'mandriva', 'fedora', 'slackware', 'parallels', 'xenserver', 'kvmibm', 'nobara', 'amzn', 'guix', 'debian', 'oracle', 'cachyos', 'altlinux', 'rhel', 'ibm_powerkvm', 'rocky', 'scientific', 'sles', 'linuxmint', 'tumbleweed', 'ubuntu', 'pidora', 'cloudlinux', 'gentoo', 'raspbian', 'opensuse'})
+frozenset({'centos', 'mageia', 'generic_linux', 'ultramarine', 'tuxedo', 'arch', 'buildroot', 'android', 'exherbo', 'mandriva', 'fedora', 'slackware', 'parallels', 'xenserver', 'kvmibm', 'nobara', 'amzn', 'guix', 'debian', 'oracle', 'cachyos', 'altlinux', 'rhel', 'ibm_powerkvm', 'rocky', 'scientific', 'sles', 'linuxmint', 'tumbleweed', 'ubuntu', 'pidora', 'cloudlinux', 'gentoo', 'raspbian', 'opensuse'})
 >>> print("\n".join([p.name for p in LINUX]))
 ALT Linux
 Amazon Linux
@@ -203,7 +203,7 @@ openSUSE Tumbleweed
 Tuxedo OS
 Ubuntu
 Ultramarine
-Unknown Linux
+Generic Linux
 XenServer
 ```
 
@@ -310,6 +310,7 @@ mindmap
             (🌀 DEBIAN)
             (🐽 EXHERBO)
             (🎩 FEDORA)
+            (🥚 GENERIC_LINUX)
             (🗜️ GENTOO)
             (🐃 GUIX)
             (🤹 IBM_POWERKVM)

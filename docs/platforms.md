@@ -65,6 +65,7 @@ Platform(id='macos', name='macOS')
 |  🐽  | {data}`~EXHERBO`       | Exherbo Linux                  | {func}`~is_exherbo`       |
 |  🎩  | {data}`~FEDORA`        | Fedora                         | {func}`~is_fedora`        |
 |  😈  | {data}`~FREEBSD`       | FreeBSD                        | {func}`~is_freebsd`       |
+|  🥚  | {data}`~GENERIC_LINUX` | Generic Linux                  | {func}`~is_generic_linux` |
 |  🗜️  | {data}`~GENTOO`        | Gentoo Linux                   | {func}`~is_gentoo`        |
 |  🐃  | {data}`~GUIX`          | Guix System                    | {func}`~is_guix`          |
 |  🍂  | {data}`~HAIKU`         | Haiku                          | {func}`~is_haiku`         |
@@ -158,7 +159,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,38
+ALL_PLATFORMS,LINUX,39
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,OTHER_POSIX,2
@@ -177,6 +178,7 @@ LINUX,CLOUDLINUX,1
 LINUX,DEBIAN,1
 LINUX,EXHERBO,1
 LINUX,FEDORA,1
+LINUX,GENERIC_LINUX,1
 LINUX,GENTOO,1
 LINUX,GUIX,1
 LINUX,IBM_POWERKVM,1
@@ -258,6 +260,7 @@ mindmap
             (🌀 DEBIAN)
             (🐽 EXHERBO)
             (🎩 FEDORA)
+            (🥚 GENERIC_LINUX)
             (🗜️ GENTOO)
             (🐃 GUIX)
             (🤹 IBM_POWERKVM)
@@ -328,6 +331,7 @@ mindmap
 .. autodata:: extra_platforms.EXHERBO
 .. autodata:: extra_platforms.FEDORA
 .. autodata:: extra_platforms.FREEBSD
+.. autodata:: extra_platforms.GENERIC_LINUX
 .. autodata:: extra_platforms.GENTOO
 .. autodata:: extra_platforms.GUIX
 .. autodata:: extra_platforms.HAIKU

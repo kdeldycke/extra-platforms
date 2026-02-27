@@ -174,6 +174,7 @@ All recognized traits and their properties:
 |  🐟  | {data}`~FISH`                 | Fish                           | {func}`~is_fish`                 | Shell        |
 |  🦶  | {data}`~FOOT`                 | foot                           | {func}`~is_foot`                 | Terminal     |
 |  😈  | {data}`~FREEBSD`              | FreeBSD                        | {func}`~is_freebsd`              | Platform     |
+|  🥚  | {data}`~GENERIC_LINUX`        | Generic Linux                  | {func}`~is_generic_linux`        | Platform     |
 |  🗜️  | {data}`~GENTOO`               | Gentoo Linux                   | {func}`~is_gentoo`               | Platform     |
 |  👻  | {data}`~GHOSTTY`              | Ghostty                        | {func}`~is_ghostty`              | Terminal     |
 |  🐙  | {data}`~GITHUB_CI`            | GitHub Actions runner          | {func}`~is_github_ci`            | CI           |

@@ -215,6 +215,7 @@ if TYPE_CHECKING:
     skip_fish: MarkDecorator
     skip_foot: MarkDecorator
     skip_freebsd: MarkDecorator
+    skip_generic_linux: MarkDecorator
     skip_gentoo: MarkDecorator
     skip_ghostty: MarkDecorator
     skip_github_ci: MarkDecorator
@@ -386,6 +387,7 @@ if TYPE_CHECKING:
     unless_fish: MarkDecorator
     unless_foot: MarkDecorator
     unless_freebsd: MarkDecorator
+    unless_generic_linux: MarkDecorator
     unless_gentoo: MarkDecorator
     unless_ghostty: MarkDecorator
     unless_github_ci: MarkDecorator
