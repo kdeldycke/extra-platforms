@@ -373,7 +373,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "9.2.1.dev0"
+version = "10.0.0.dev0"
 source = { editable = "." }
 
 [package.optional-dependencies]
