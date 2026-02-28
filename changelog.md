@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Switch license from GPL-2.0+ to Apache-2.0. Closes #488.
+
 ## [10.0.0 (2026-02-27)](https://github.com/kdeldycke/extra-platforms/compare/v9.2.0...v10.0.0)
 
 - Replace `distro` dependency with built-in `/etc/os-release` parser, making the package dependency-free. macOS `Platform.info()` now returns `distro_id: None` instead of `distro_id: "darwin"`.

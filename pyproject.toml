@@ -156,7 +156,7 @@ classifiers = [
   "Environment :: Win32 (MS Windows)",
   "Framework :: Pytest",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+  "License :: OSI Approved :: Apache Software License",
   # This is a copy of the full "Operating System" hierarchy as we aim to be able to detect all platforms.
   "Operating System :: Android",
   "Operating System :: BeOS",
