@@ -47,11 +47,11 @@ Agent(id='unknown_agent', name='Unknown agent')
 
 <!-- agent-table-start -->
 
-| Icon | Symbol                | Name       | Detection function       |
-| :--: | :-------------------- | :--------- | :----------------------- |
-|  ✴️  | {data}`~CLAUDE_CODE`  | Claude Code | {func}`~is_claude_code` |
-|  👾  | {data}`~CLINE`        | Cline      | {func}`~is_cline`       |
-|  ➤  | {data}`~CURSOR`       | Cursor     | {func}`~is_cursor`      |
+| Icon | Symbol               | Name        | Detection function      |
+| :--: | :------------------- | :---------- | :---------------------- |
+|  ✴️  | {data}`~CLAUDE_CODE` | Claude Code | {func}`~is_claude_code` |
+|  👾  | {data}`~CLINE`       | Cline       | {func}`~is_cline`       |
+|  ➤   | {data}`~CURSOR`      | Cursor      | {func}`~is_cursor`      |
 
 ```{hint}
 The {data}`~UNKNOWN_AGENT` trait represents an unrecognized
