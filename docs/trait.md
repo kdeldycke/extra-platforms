@@ -1,8 +1,10 @@
 # {octicon}`tag` Traits
 
 ```{py:module} extra_platforms.trait
-:no-typesetting:
-:no-contents-entry:
+---
+no-typesetting:
+no-contents-entry:
+---
 ```
 
 ```{py:currentmodule} extra_platforms

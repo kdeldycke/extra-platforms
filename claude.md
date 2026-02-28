@@ -70,21 +70,21 @@ Group - Collection of Traits with set-like operations (group.py)
 
 ### Module layout
 
-| Module                 | Purpose                                                             |
-| ---------------------- | ------------------------------------------------------------------- |
+| Module                 | Purpose                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------- |
 | `trait.py`             | Base classes: `Trait`, `Architecture`, `Platform`, `Shell`, `Terminal`, `CI`, `Agent` |
-| `detection.py`         | All `is_<id>()` detection functions                                          |
-| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`          |
-| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                         |
-| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                      |
-| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                               |
-| `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                      |
-| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                              |
-| `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                     |
-| `group_data.py`        | All `Group` instances and ID collections                            |
-| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                |
-| `_utils.py`            | Internal utilities                                                  |
-| `_types.py`            | Type aliases                                                        |
+| `detection.py`         | All `is_<id>()` detection functions                                                   |
+| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`                   |
+| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                                  |
+| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                               |
+| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                                         |
+| `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                               |
+| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                                       |
+| `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                              |
+| `group_data.py`        | All `Group` instances and ID collections                                              |
+| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                                  |
+| `_utils.py`            | Internal utilities                                                                    |
+| `_types.py`            | Type aliases                                                                          |
 
 ### Detection pattern
 
@@ -166,8 +166,8 @@ if TYPE_CHECKING:
 ### Philosophy
 
 1. Create something that works (to provide business value).
-1. Create something that's beautiful (to lower maintenance costs).
-1. Work on performance.
+2. Create something that's beautiful (to lower maintenance costs).
+3. Work on performance.
 
 ### Linting and formatting
 
