@@ -1,4 +1,4 @@
-cff-version: 11.0.0.dev0
+cff-version: 11.0.0
 title: "Extra Platforms"
 message: "If you use this software, please cite it as below."
 type: software
@@ -8,6 +8,6 @@ authors:
     email: kevin@deldycke.com
     orcid: "https://orcid.org/0000-0001-9748-9014"
 doi: 10.5281/zenodo.13341712
-version: 11.0.0.dev0
+version: 11.0.0
 date-released: 2026-02-28
 url: "https://github.com/kdeldycke/extra-platforms"
