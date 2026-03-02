@@ -1,5 +1,10 @@
 # Changelog
 
+## [11.0.2.dev0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [11.0.1 (2026-03-02)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.0...v11.0.1)
 
 - Cache AST parse results per module in docstring generation, reducing `import extra_platforms` from ~120 ms to ~34 ms.
