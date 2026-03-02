@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import ast
 import inspect
+import subprocess
 import sys
 from pathlib import Path
 
@@ -596,6 +597,33 @@ def test_invalidate_caches_clears_group_detection_functions():
     assert is_linux.cache_info().currsize == 0
     assert is_bsd.cache_info().currsize == 0
     assert is_any_platform.cache_info().currsize == 0
+
+
+def test_import_time():
+    """Guard against import time regressions.
+
+    Spawns a fresh subprocess to measure cold import time, avoiding
+    ``sys.modules`` cache effects from pytest's own imports.
+
+    The 200 ms threshold is deliberately loose (~6x the known-good value of
+    ~34 ms) to absorb CI runner variability on shared VMs. This will not catch
+    small drifts, but reliably prevents reintroducing expensive import-time
+    operations (e.g., the ~120 ms regression from redundant AST parsing that
+    was fixed by caching in ``_docstrings.py``).
+    """
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import time; t = time.perf_counter(); import extra_platforms; "
+            "print(time.perf_counter() - t)",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    elapsed_ms = float(result.stdout.strip()) * 1000
+    assert elapsed_ms < 200, f"Import took {elapsed_ms:.1f} ms, expected < 200 ms"
 
 
 def test_invalidate_caches_clears_trait_current_property():
