@@ -334,6 +334,11 @@ class Trait(_Identifiable, ABC):
 class Architecture(Trait):
     """A CPU architecture identifies a `processor instruction set
     <https://en.wikipedia.org/wiki/Instruction_set_architecture>`_.
+
+    .. seealso::
+        `archspec <https://github.com/archspec/archspec>`_ provides a rich database of
+        CPU microarchitectures (feature flags, compiler compatibility, family trees).
+        It could be used to extend our architecture metadata beyond basic ISA detection.
     """
 
     def info(self) -> dict[str, str | bool | None]:

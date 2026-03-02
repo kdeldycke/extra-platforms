@@ -57,6 +57,13 @@ For all other traits, we either rely on:
   <https://docs.python.org/3/library/platform.html#platform.release>`_
 - environment variables
 
+.. todo::
+    ``hostnamectl`` could be used as a fallback detection source when
+    ``/etc/os-release`` is missing (e.g., stripped CloudLinux VMs). This approach was
+    `proposed upstream in python-distro
+    <https://github.com/python-distro/distro/pull/369>`_ but rejected. The technique
+    is sound and could be implemented here.
+
 .. seealso::
     Other source of inspiration for platform detection:
 
