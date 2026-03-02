@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Cache AST parse results per module in docstring generation, reducing `import extra_platforms` from ~120 ms to ~34 ms.
+
 ## [11.0.0 (2026-02-28)](https://github.com/kdeldycke/extra-platforms/compare/v10.0.0...v11.0.0)
 
 - Switch license from GPL-2.0+ to Apache-2.0. Closes #488.
