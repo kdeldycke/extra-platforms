@@ -1,9 +1,6 @@
 # Changelog
 
-## [11.0.2.dev0 (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [11.0.2 (2026-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...v11.0.2)
 
 - Raise import time test threshold from 200 ms to 500 ms to accommodate slower architectures like i586. Closes #494.
 
