@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Raise import time test threshold from 200 ms to 500 ms to accommodate slower architectures like i586. Closes #494.
+
 ## [11.0.1 (2026-03-02)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.0...v11.0.1)
 
 - Cache AST parse results per module in docstring generation, reducing `import extra_platforms` from ~120 ms to ~34 ms.
