@@ -9,6 +9,7 @@ version = "11.0.3.dev0"
 description = "🔎 Detect architectures, platforms, shells, terminals, CI systems and agents, grouped by family"
 readme = "readme.md"
 keywords = [
+  "Agent detection",
   "Alacritty",
   "Almquist Shell",
   "Alpine Linux",
@@ -16,7 +17,6 @@ keywords = [
   "Amazon Linux",
   "Android",
   "Apple Terminal",
-  "Agent detection",
   "Arch Linux",
   "Architecture detection",
   "ARM (32-bit)",
