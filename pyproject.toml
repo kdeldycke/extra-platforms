@@ -437,3 +437,4 @@ pretty = true
 init-exclude = [ "skills", "labels", "zizmor" ]
 # Building the package with Nuitka is overkill.
 nuitka = false
+workflow-sync-exclude = [ "debug.yaml" ]
