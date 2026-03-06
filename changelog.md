@@ -5,6 +5,11 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Exclude `debug.yaml` from repomatic workflow sync.
+- Exclude `windows-11-arm` + Python 3.10 from test matrix (no native ARM64 build).
+- Add Windows ARM64 workaround to force native Python instead of x86 emulation.
+- Migrate Codecov integration from `codecov-action` to `codecov-cli`.
+
 ## [`11.0.2` (2026-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...v11.0.2)
 
 > [!NOTE]
