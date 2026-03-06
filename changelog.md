@@ -5,19 +5,31 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-## [11.0.2 (2026-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...v11.0.2)
+## [`11.0.2` (2026-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...v11.0.2)
+
+> [!NOTE]
+> `11.0.2` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.0.2/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.0.2).
 
 - Raise import time test threshold from 200 ms to 500 ms to accommodate slower architectures like i586. Closes #494.
 
-## [11.0.1 (2026-03-02)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.0...v11.0.1)
+## [`11.0.1` (2026-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.0...v11.0.1)
+
+> [!NOTE]
+> `11.0.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.0.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.0.1).
 
 - Cache AST parse results per module in docstring generation, reducing `import extra_platforms` from ~120 ms to ~34 ms.
 
-## [11.0.0 (2026-02-28)](https://github.com/kdeldycke/extra-platforms/compare/v10.0.0...v11.0.0)
+## [`11.0.0` (2026-02-28)](https://github.com/kdeldycke/extra-platforms/compare/v10.0.0...v11.0.0)
+
+> [!NOTE]
+> `11.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.0.0).
 
 - Switch license from GPL-2.0+ to Apache-2.0. Closes #488.
 
-## [10.0.0 (2026-02-27)](https://github.com/kdeldycke/extra-platforms/compare/v9.2.0...v10.0.0)
+## [`10.0.0` (2026-02-27)](https://github.com/kdeldycke/extra-platforms/compare/v9.2.0...v10.0.0)
+
+> [!NOTE]
+> `10.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/10.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v10.0.0).
 
 - Replace `distro` dependency with built-in `/etc/os-release` parser, making the package dependency-free. macOS `Platform.info()` now returns `distro_id: None` instead of `distro_id: "darwin"`.
 - Add new `Agent` trait type for detecting AI coding agents.
