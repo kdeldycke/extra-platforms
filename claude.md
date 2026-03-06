@@ -106,6 +106,36 @@ Always update documentation when making changes:
 
 ## Code style
 
+### Terminology and spelling
+
+Use correct capitalization for proper nouns and trademarked names:
+
+- **PyPI** (not ~~PyPi~~) — the Python Package Index. The "I" is capitalized because it stands for "Index".
+- **GitHub** (not ~~Github~~)
+- **GitHub Actions** (not ~~Github Actions~~ or ~~GitHub actions~~)
+- **JavaScript** (not ~~Javascript~~)
+- **TypeScript** (not ~~Typescript~~)
+- **macOS** (not ~~MacOS~~ or ~~macos~~)
+- **iOS** (not ~~IOS~~ or ~~ios~~)
+
+### Version formatting
+
+The version string is always bare (e.g., `1.2.3`). The `v` prefix is a **tag namespace** — it only appears when the reference is to a git tag or something derived from a tag (action ref, comparison URL, commit message).
+
+| Context                                | Format                          | Example                              | Rationale                         |
+| :------------------------------------- | :------------------------------ | :----------------------------------- | :-------------------------------- |
+| Python `__version__`, `pyproject.toml` | `1.2.3`                         | `version = "11.0.2"`                 | PEP 440 bare version.             |
+| Git tags                               | `` `v1.2.3` ``                  | `` `v11.0.2` ``                      | Tag namespace convention.         |
+| GitHub comparison URLs                 | `v1.2.3...v1.2.4`               | `compare/v11.0.1...v11.0.2`          | References tags.                  |
+| GitHub action/workflow refs            | `` `@v1.2.3` ``                 | `actions/checkout@v6.0.2`            | References tags.                  |
+| Commit messages                        | `v1.2.3`                        | `[changelog] Release v11.0.2`        | References the tag being created. |
+| CLI `--version` output                 | `1.2.3`                         | `extra-platforms, version 11.0.2`    | Package version, not a tag.       |
+| Changelog headings                     | `` `1.2.3` ``                   | `` ## [`11.0.2` (2026-03-04)] ``     | Package version, code-formatted.  |
+| PyPI URLs                              | `1.2.3`                         | `pypi.org/project/extra-platforms/11.0.2/` | PyPI uses bare versions.    |
+| PyPI admonitions                       | `` `1.2.3` ``                   | `` `11.0.2` is available on PyPI ``  | Package version, not a tag.       |
+| PR titles                              | `` `v1.2.3` ``                  | `` Release `v11.0.2` ``              | References the tag.               |
+| Prose/documentation                    | `` `v1.2.3` `` or `` `1.2.3` `` | Depends on referent                  | Match what is being referenced.   |
+
 ### Comments and docstrings
 
 - All comments in Python files must end with a period.
@@ -149,6 +179,22 @@ if TYPE_CHECKING:
     from ._types import _T, _TNestedReferences
 ```
 
+### Modern `typing` practices
+
+Use modern equivalents from `collections.abc` and built-in types instead of `typing` imports. Use `X | Y` instead of `Union` and `X | None` instead of `Optional`. New modules should include `from __future__ import annotations`.
+
+### Minimal inline type annotations
+
+Omit type annotations on local variables, loop variables, and assignments when mypy can infer the type from the right-hand side. Always annotate function parameters and return types.
+
+### Python 3.10 compatibility
+
+This project supports Python 3.10+. Be aware of syntax features **not** available in Python 3.10:
+
+- **Multi-line f-string expressions (Python 3.12+):** Cannot break an f-string after `{` onto the next line.
+- **Exception groups and `except*` (Python 3.11+).**
+- **`Self` type hint (Python 3.11+):** Use `from typing_extensions import Self` instead.
+
 ### Imports
 
 - Import from the root package (`from extra_platforms import CI`), not submodules (`from extra_platforms.trait import CI`).
@@ -160,6 +206,7 @@ if TYPE_CHECKING:
 - Keep test logic simple with straightforward asserts.
 - Tests should be sorted logically and alphabetically where applicable.
 - Enforce naming conventions for traits and groups via tests.
+- Do not use classes for grouping tests. Write test functions as top-level module functions. Only use test classes when they provide shared fixtures, setup/teardown methods, or class-level state.
 
 ## Design principles
 
@@ -212,6 +259,13 @@ Icons are inspired by [Starship](https://starship.rs/) and [NerdFonts](https://w
 
 - Detection functions are cached with `@cache` decorator.
 - Use `invalidate_caches()` to reset all cached detection results.
+
+### Common maintenance pitfalls
+
+- **Documentation drift** is the most frequent issue. CLI output, version references, and workflow job descriptions in `readme.md` go stale after every release or refactor. Always verify docs against actual output after changes.
+- **CI debugging starts from the URL.** When a workflow fails, fetch the run logs first (`gh run view --log-failed`). Do not guess at the cause.
+- **Type-checking divergence.** Code that passes `mypy` locally may fail in CI where `--python-version 3.10` is used. Always consider the minimum supported Python version.
+- **Simplify before adding.** When asked to improve something, first ask whether existing code or tools already cover the case. Remove dead code and unused abstractions before introducing new ones.
 
 ### Optional dependencies
 

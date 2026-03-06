@@ -9,6 +9,10 @@
 - Exclude `windows-11-arm` + Python 3.10 from test matrix (no native ARM64 build).
 - Add Windows ARM64 workaround to force native Python instead of x86 emulation.
 - Migrate Codecov integration from `codecov-action` to `codecov-cli`.
+- Add typos extended identifiers for common capitalization fixes (GitHub, macOS, PyPI, etc.).
+- Add `ignore_missing_files` to bumpversion configuration.
+- Rename bug report issue template to `bug-report.yml` and add bug label.
+- Update code of conduct attribution links to canonical URLs.
 
 ## [`11.0.2` (2026-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...v11.0.2)
 

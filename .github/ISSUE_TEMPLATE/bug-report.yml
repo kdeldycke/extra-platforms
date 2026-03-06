@@ -1,5 +1,6 @@
 name: Bug report
 description: Report a bug or detection issue
+labels: ["🐛 bug"]
 body:
   - type: textarea
     id: cli-output

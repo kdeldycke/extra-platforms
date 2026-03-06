@@ -3,6 +3,7 @@
   extends: ["config:recommended", "abandonments:recommended"],
 
   // PR and issue settings.
+  assignees: ["kdeldycke"],
   labels: ["📦 dependencies"],
   dependencyDashboardLabels: ["📦 dependencies"],
 
