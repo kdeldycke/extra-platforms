@@ -195,6 +195,37 @@ This project supports Python 3.10+. Be aware of syntax features **not** availabl
 - **Exception groups and `except*` (Python 3.11+).**
 - **`Self` type hint (Python 3.11+):** Use `from typing_extensions import Self` instead.
 
+### YAML workflows
+
+For single-line commands that fit on one line, use plain inline `run:` without any block scalar indicator:
+
+```yaml
+# Preferred for short commands: plain inline.
+  - name: Install project
+    run: uv --no-progress sync --frozen --all-extras --group test
+```
+
+When a command is too long for a single line, use the folded block scalar (`>`) to split it across multiple lines:
+
+```yaml
+# Preferred for long commands: folded block scalar joins lines with spaces.
+  - name: Unittests
+    run: >
+      uv --no-progress run --frozen -- pytest
+      --cov-report=xml
+      --junitxml=junit.xml
+```
+
+Use literal block scalar (`|`) only when the command requires preserved newlines (e.g., multi-statement scripts, heredocs):
+
+```yaml
+# Use | for multi-statement scripts.
+  - name: Install Python
+    run: |
+      set -e
+      uv --no-progress venv --python "${{ matrix.python-version }}"
+```
+
 ### Imports
 
 - Import from the root package (`from extra_platforms import CI`), not submodules (`from extra_platforms.trait import CI`).
