@@ -70,21 +70,21 @@ Group - Collection of Traits with set-like operations (group.py)
 
 ### Module layout
 
-| Module                 | Purpose                                                             |
-| ---------------------- | ------------------------------------------------------------------- |
+| Module                 | Purpose                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------- |
 | `trait.py`             | Base classes: `Trait`, `Architecture`, `Platform`, `Shell`, `Terminal`, `CI`, `Agent` |
-| `detection.py`         | All `is_<id>()` detection functions                                          |
-| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`          |
-| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                         |
-| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                      |
-| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                               |
-| `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                      |
-| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                              |
-| `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                     |
-| `group_data.py`        | All `Group` instances and ID collections                            |
-| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                |
-| `_utils.py`            | Internal utilities                                                  |
-| `_types.py`            | Type aliases                                                        |
+| `detection.py`         | All `is_<id>()` detection functions                                                   |
+| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`                   |
+| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                                  |
+| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                               |
+| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                                         |
+| `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                               |
+| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                                       |
+| `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                              |
+| `group_data.py`        | All `Group` instances and ID collections                                              |
+| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                                  |
+| `_utils.py`            | Internal utilities                                                                    |
+| `_types.py`            | Type aliases                                                                          |
 
 ### Detection pattern
 
@@ -122,19 +122,19 @@ Use correct capitalization for proper nouns and trademarked names:
 
 The version string is always bare (e.g., `1.2.3`). The `v` prefix is a **tag namespace** — it only appears when the reference is to a git tag or something derived from a tag (action ref, comparison URL, commit message).
 
-| Context                                | Format                          | Example                              | Rationale                         |
-| :------------------------------------- | :------------------------------ | :----------------------------------- | :-------------------------------- |
-| Python `__version__`, `pyproject.toml` | `1.2.3`                         | `version = "11.0.2"`                 | PEP 440 bare version.             |
-| Git tags                               | `` `v1.2.3` ``                  | `` `v11.0.2` ``                      | Tag namespace convention.         |
-| GitHub comparison URLs                 | `v1.2.3...v1.2.4`               | `compare/v11.0.1...v11.0.2`          | References tags.                  |
-| GitHub action/workflow refs            | `` `@v1.2.3` ``                 | `actions/checkout@v6.0.2`            | References tags.                  |
-| Commit messages                        | `v1.2.3`                        | `[changelog] Release v11.0.2`        | References the tag being created. |
-| CLI `--version` output                 | `1.2.3`                         | `extra-platforms, version 11.0.2`    | Package version, not a tag.       |
-| Changelog headings                     | `` `1.2.3` ``                   | `` ## [`11.0.2` (2026-03-04)] ``     | Package version, code-formatted.  |
-| PyPI URLs                              | `1.2.3`                         | `pypi.org/project/extra-platforms/11.0.2/` | PyPI uses bare versions.    |
-| PyPI admonitions                       | `` `1.2.3` ``                   | `` `11.0.2` is available on PyPI ``  | Package version, not a tag.       |
-| PR titles                              | `` `v1.2.3` ``                  | `` Release `v11.0.2` ``              | References the tag.               |
-| Prose/documentation                    | `` `v1.2.3` `` or `` `1.2.3` `` | Depends on referent                  | Match what is being referenced.   |
+| Context                                | Format                          | Example                                    | Rationale                         |
+| :------------------------------------- | :------------------------------ | :----------------------------------------- | :-------------------------------- |
+| Python `__version__`, `pyproject.toml` | `1.2.3`                         | `version = "11.0.2"`                       | PEP 440 bare version.             |
+| Git tags                               | `` `v1.2.3` ``                  | `` `v11.0.2` ``                            | Tag namespace convention.         |
+| GitHub comparison URLs                 | `v1.2.3...v1.2.4`               | `compare/v11.0.1...v11.0.2`                | References tags.                  |
+| GitHub action/workflow refs            | `` `@v1.2.3` ``                 | `actions/checkout@v6.0.2`                  | References tags.                  |
+| Commit messages                        | `v1.2.3`                        | `[changelog] Release v11.0.2`              | References the tag being created. |
+| CLI `--version` output                 | `1.2.3`                         | `extra-platforms, version 11.0.2`          | Package version, not a tag.       |
+| Changelog headings                     | `` `1.2.3` ``                   | `` ## [`11.0.2` (2026-03-04)] ``           | Package version, code-formatted.  |
+| PyPI URLs                              | `1.2.3`                         | `pypi.org/project/extra-platforms/11.0.2/` | PyPI uses bare versions.          |
+| PyPI admonitions                       | `` `1.2.3` ``                   | `` `11.0.2` is available on PyPI ``        | Package version, not a tag.       |
+| PR titles                              | `` `v1.2.3` ``                  | `` Release `v11.0.2` ``                    | References the tag.               |
+| Prose/documentation                    | `` `v1.2.3` `` or `` `1.2.3` `` | Depends on referent                        | Match what is being referenced.   |
 
 ### Comments and docstrings
 
@@ -264,8 +264,8 @@ When invoking `uv` and `uvx` commands in GitHub Actions workflows:
 ### Philosophy
 
 1. Create something that works (to provide business value).
-1. Create something that's beautiful (to lower maintenance costs).
-1. Work on performance.
+2. Create something that's beautiful (to lower maintenance costs).
+3. Work on performance.
 
 ### Linting and formatting
 
