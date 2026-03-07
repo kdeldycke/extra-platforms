@@ -315,9 +315,6 @@ build-backend.module-root = ""
 # When merged into pyproject.toml via `gha-utils bundled init ruff`,
 # the [tool.ruff] prefix is added automatically.
 [tool.ruff]
-# Enable formatting of Python code blocks in Markdown files.
-# https://docs.astral.sh/ruff/formatter/#markdown-code-formatting
-extend-include = [ "*.{markdown,mdown,mkdn,mdwn,mkd,md,mdtxt,mdtext,mdx}" ]
 preview = true
 fix = true
 unsafe-fixes = true
@@ -335,9 +332,14 @@ lint.ignore = [ "D400", "ERA001" ]
 # Allow rules to add `from __future__ import annotations` in cases where
 # this would simplify a fix or enable a new diagnostic.
 # https://docs.astral.sh/ruff/settings/#lint_future-annotations
+lint.isort.combine-as-imports = true
 lint.future-annotations = true
 
 [tool.typos]
+files.extend-exclude = [
+  # Contains deliberate wrong-casing examples in strikethrough (~~PyPi~~, ~~Github~~, etc.).
+  "CLAUDE.md",
+]
 default.extend-identifiers = { Github = "GitHub", IOS = "iOS", Javascript = "JavaScript", MacOS = "macOS", PyPi = "PyPI", Typescript = "TypeScript" }
 default.extend-ignore-identifiers-re = [
   # error: `Tru` should be `Thru`, `True`
