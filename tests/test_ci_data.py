@@ -211,7 +211,7 @@ def test_github_runner_detection():
                 GITHUB_CI,
             }
 
-    # MacOS runners.
+    # macOS runners.
     if github_runner_os() in {
         "macos-latest",
         "macos-latest-large",
