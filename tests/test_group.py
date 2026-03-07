@@ -14,8 +14,8 @@
 
 from __future__ import annotations
 
-from random import choice
 from collections.abc import Iterable
+from random import choice
 
 import pytest
 
@@ -156,7 +156,7 @@ def test_membership():
     ("items", "expected"),
     [
         ([], []),
-        (tuple(), tuple()),
+        ((), ()),
         (set(), set()),
         (frozenset(), frozenset()),
         (None, []),
@@ -421,7 +421,7 @@ def test_symmetric_difference():
     win_and_bsd = ALL_WINDOWS.union(BSD_WITHOUT_MACOS)
     new_group = win_and_bsd.symmetric_difference(BSD)
 
-    assert new_group.member_ids == frozenset((("macos", "windows")))
+    assert new_group.member_ids == frozenset(("macos", "windows"))
 
     assert not win_and_bsd.issubset(new_group)
     assert not win_and_bsd.issuperset(new_group)
@@ -478,7 +478,7 @@ def test_copy():
 def test_bool():
     """Test __bool__() method for truth value testing."""
     # Empty group should be falsy.
-    empty_group = Group("empty", "Empty Group", "❌", tuple())
+    empty_group = Group("empty", "Empty Group", "❌", ())
     assert not empty_group
     assert bool(empty_group) is False
 
@@ -607,7 +607,7 @@ def test_pop():
     assert len(smaller_group) == 1
 
     # Pop from empty group should raise KeyError.
-    empty_group = Group("empty", "Empty", "❌", tuple())
+    empty_group = Group("empty", "Empty", "❌", ())
     with pytest.raises(KeyError, match="pop from an empty group"):
         empty_group.pop()
 
@@ -724,14 +724,14 @@ def test_getitem_with_missing_key():
 
 def test_empty_group_bool():
     """Test that empty groups evaluate to False."""
-    empty_group = Group(id="empty", name="Empty Group", icon="❌", members=tuple())
+    empty_group = Group(id="empty", name="Empty Group", icon="❌", members=())
     assert bool(empty_group) is False
     assert len(empty_group) == 0
 
 
 def test_group_operations_with_empty_groups():
     """Test group operations with empty groups."""
-    empty_group = Group(id="empty", name="Empty Group", icon="❌", members=tuple())
+    empty_group = Group(id="empty", name="Empty Group", icon="❌", members=())
 
     # Union with empty group.
     result = LINUX.union(empty_group)
@@ -1060,13 +1060,13 @@ def test_groups_from_ids_with_invalid_id():
 def test_traits_from_ids_with_empty_list():
     """Test that traits_from_ids works with empty input."""
     result = traits_from_ids()
-    assert result == tuple()
+    assert result == ()
 
 
 def test_groups_from_ids_with_empty_list():
     """Test that groups_from_ids works with empty input."""
     result = groups_from_ids()
-    assert result == tuple()
+    assert result == ()
 
 
 def test_traits_from_ids_with_multiple_valid_ids():

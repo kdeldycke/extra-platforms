@@ -53,8 +53,8 @@ from extra_platforms import (
     Shell,
     Terminal,
     Trait,
+    group_data as group_data_module,
 )
-from extra_platforms import group_data as group_data_module
 
 
 def test_group_class_metadata():
@@ -171,7 +171,7 @@ def test_group_definitions(group: Group):
     assert tuple(group._members.keys()) == tuple(group._members)
     assert len(set(group._members.keys())) == len(group._members)
     assert len(set(group._members.values())) == len(group._members)
-    assert all(isinstance(m_id, str) for m_id in group._members.keys())
+    assert all(isinstance(m_id, str) for m_id in group._members)
     assert all(isinstance(m, Trait) for m in group._members.values())
 
     # Canonical groups are self-canonical.
