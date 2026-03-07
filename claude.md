@@ -110,13 +110,13 @@ Always update documentation when making changes:
 
 Use correct capitalization for proper nouns and trademarked names:
 
-- **PyPI** (not ~~PyPi~~) — the Python Package Index. The "I" is capitalized because it stands for "Index".
-- **GitHub** (not ~~Github~~)
-- **GitHub Actions** (not ~~Github Actions~~ or ~~GitHub actions~~)
-- **JavaScript** (not ~~Javascript~~)
-- **TypeScript** (not ~~Typescript~~)
-- **macOS** (not ~~MacOS~~ or ~~macos~~)
-- **iOS** (not ~~IOS~~ or ~~ios~~)
+- **PyPI** (not ~~PyPI~~) — the Python Package Index. The "I" is capitalized because it stands for "Index".
+- **GitHub** (not ~~GitHub~~)
+- **GitHub Actions** (not ~~GitHub Actions~~ or ~~GitHub actions~~)
+- **JavaScript** (not ~~JavaScript~~)
+- **TypeScript** (not ~~TypeScript~~)
+- **macOS** (not ~~macOS~~ or ~~macos~~)
+- **iOS** (not ~~iOS~~ or ~~ios~~)
 
 ### Version formatting
 

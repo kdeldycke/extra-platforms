@@ -1,6 +1,6 @@
 # {octicon}`download` Installation
 
-This package is [available on PyPi](https://pypi.python.org/pypi/extra-platforms), so you can install the latest stable release with you favorite package manager:
+This package is [available on PyPI](https://pypi.python.org/pypi/extra-platforms), so you can install the latest stable release with you favorite package manager:
 
 `````{tab-set}
 
@@ -47,7 +47,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 
 ````{tip}
-The `uvx` command above is going to download the latest stable release of the `extra-platforms` package from PyPi. If you want to try a development version instead, you can do:
+The `uvx` command above is going to download the latest stable release of the `extra-platforms` package from PyPI. If you want to try a development version instead, you can do:
 
 ```shell-session
 $ uvx --with git+https://github.com/kdeldycke/extra-platforms python
