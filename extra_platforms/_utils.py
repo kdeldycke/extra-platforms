@@ -31,7 +31,7 @@ def _recursive_update(
             a[k] = _recursive_update(a[k], v, strict=strict)
         # Ignore elements unregistered in the template structure.
         elif k in a:
-            a[k] = b[k]
+            a[k] = v
         elif strict:
             raise ValueError(f"Parameter {k!r} found in second dict but not in first.")
     return a

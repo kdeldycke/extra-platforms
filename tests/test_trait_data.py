@@ -25,10 +25,10 @@ import pytest
 import extra_platforms
 from extra_platforms import (
     ALL_TRAITS,
+    CI,
     NON_OVERLAPPING_GROUPS,
     Agent,
     Architecture,
-    CI,
     Platform,
     Shell,
     Terminal,

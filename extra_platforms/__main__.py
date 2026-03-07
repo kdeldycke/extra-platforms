@@ -18,7 +18,6 @@ from __future__ import annotations
 import logging
 import sys
 import unicodedata
-
 from collections.abc import Iterable
 
 from . import (
