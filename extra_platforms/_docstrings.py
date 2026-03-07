@@ -83,10 +83,9 @@ def _parse_module_docstrings(module_name: str) -> dict[str, str]:
             names.extend(
                 target.id for target in node.targets if isinstance(target, ast.Name)
             )
-        elif isinstance(node, ast.AnnAssign):
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
             # Handle annotated assignments like: x: type = value.
-            if isinstance(node.target, ast.Name):
-                names.append(node.target.id)
+            names.append(node.target.id)
 
         if not names:
             continue

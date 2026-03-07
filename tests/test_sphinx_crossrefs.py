@@ -571,9 +571,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     symbol_clean = symbol.split(".")[-1]
 
     # Detection functions always go to detection.html
-    if role == "func" and (
-        symbol_clean.startswith("is_") or symbol_clean.startswith("current_")
-    ):
+    if role == "func" and (symbol_clean.startswith(("is_", "current_"))):
         return "detection.html"
 
     # Cache management functions go to detection.html
@@ -635,11 +633,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
         return "trait.html"
 
     # Pytest decorators go to pytest.html
-    if (
-        "pytest" in symbol
-        or symbol_clean.startswith("skip_")
-        or symbol_clean.startswith("unless_")
-    ):
+    if "pytest" in symbol or symbol_clean.startswith(("skip_", "unless_")):
         return "pytest.html"
 
     # Data symbols - look up the trait or group and use its doc_page
@@ -861,28 +855,29 @@ def test_all_crossreferences_point_to_correct_pages(
     ):
         pytest.skip("Skipping builtin symbol")
 
-    if symbol.startswith((
-        "pytest.",
-        "typing.",
-        "collections.",
-        "types.",
-        "dict.",
-        "frozenset.",
-        "shlex.",
-    )):
-        if not symbol.startswith("pytest.skip_") and not symbol.startswith(
-            "pytest.unless_"
-        ):
-            pytest.skip("External symbol reference")
+    if (
+        symbol.startswith((
+            "pytest.",
+            "typing.",
+            "collections.",
+            "types.",
+            "dict.",
+            "frozenset.",
+            "shlex.",
+        ))
+        and not symbol.startswith("pytest.skip_")
+        and not symbol.startswith("pytest.unless_")
+    ):
+        pytest.skip("External symbol reference")
 
-    if symbol_clean := symbol.split(".")[-1]:
-        if symbol_clean.startswith("ALL_") and symbol_clean.endswith(("_IDS", "_ID")):
-            pytest.skip("Module-level ID collection")
+    symbol_clean = symbol.split(".")[-1]
+    if symbol_clean.startswith("ALL_") and symbol_clean.endswith(("_IDS", "_ID")):
+        pytest.skip("Module-level ID collection")
 
     expected_page = get_expected_page_for_symbol(role, symbol)
 
     symbol_clean = symbol.split(".")[-1]
-    if symbol.startswith("pytest.") or symbol.startswith("extra_platforms.pytest."):
+    if symbol.startswith(("pytest.", "extra_platforms.pytest.")):
         if symbol.startswith("extra_platforms."):
             expected_anchor = symbol
         else:
@@ -910,16 +905,15 @@ def test_all_crossreferences_point_to_correct_pages(
             found = True
             break
 
-    if not found:
-        if (
-            not symbol_clean.startswith("_")
-            and "test" not in source_file.lower()
-            and not symbol_clean.startswith("UNKNOWN_")
-        ):
-            assert found, (
-                f"Symbol {role}:`{symbol}` from {source_file} "
-                f"expected in {expected_page} but anchor {expected_anchor} not found"
-            )
+    if not found and (
+        not symbol_clean.startswith("_")
+        and "test" not in source_file.lower()
+        and not symbol_clean.startswith("UNKNOWN_")
+    ):
+        assert found, (
+            f"Symbol {role}:`{symbol}` from {source_file} "
+            f"expected in {expected_page} but anchor {expected_anchor} not found"
+        )
 
 
 def extract_docstring_from_html(html: str, symbol_id: str) -> str:
@@ -954,9 +948,7 @@ def extract_docstring_from_html(html: str, symbol_id: str) -> str:
     text = re.sub(r"<[^>]+>", " ", dd_content)
 
     # Clean up whitespace.
-    text = re.sub(r"\s+", " ", text).strip()
-
-    return text
+    return re.sub(r"\s+", " ", text).strip()
 
 
 @pytest.mark.parametrize(

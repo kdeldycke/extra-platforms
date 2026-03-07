@@ -76,6 +76,8 @@ For all other traits, we either rely on:
 from __future__ import annotations
 
 import logging
+
+logger = logging.getLogger(__name__)
 import os
 import platform
 import sys
@@ -87,7 +89,7 @@ from .platform_info import os_release_id
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Iterable
+    from collections.abc import Iterable
 
     from .trait import CI, Agent, Architecture, Platform, Shell, Terminal, Trait
 
@@ -142,9 +144,9 @@ def _report_unrecognized(
     if strict:
         raise SystemError(msg)
     if expected:
-        logging.warning(msg)
+        logger.warning(msg)
     else:
-        logging.info(msg)
+        logger.info(msg)
 
 
 # =============================================================================
@@ -200,15 +202,16 @@ def is_arm() -> bool:
         variants: :func:`~extra_platforms.is_aarch64`, :func:`~extra_platforms.is_armv5tel`, :func:`~extra_platforms.is_armv6l`,
         :func:`~extra_platforms.is_armv7l` or :func:`~extra_platforms.is_armv8l`.
     """
-    if platform.machine().startswith("arm") and not any((
-        is_aarch64(),
-        is_armv5tel(),
-        is_armv6l(),
-        is_armv7l(),
-        is_armv8l(),
-    )):
-        return True
-    return False
+    return bool(
+        platform.machine().startswith("arm")
+        and not any((
+            is_aarch64(),
+            is_armv5tel(),
+            is_armv6l(),
+            is_armv7l(),
+            is_armv8l(),
+        ))
+    )
 
 
 @cache

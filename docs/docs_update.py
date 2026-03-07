@@ -29,11 +29,11 @@ from __future__ import annotations
 
 import re
 import sys
+from collections.abc import Iterable
 from itertools import chain
 from operator import attrgetter
 from pathlib import Path
 from textwrap import dedent, indent
-from typing import Iterable
 
 from click_extra.table import TableFormat, render_table
 from wcmatch import glob as wcglob
@@ -92,13 +92,13 @@ def replace_content(
     else:
         path_list = list(filepath)
 
-    for filepath in path_list:
-        filepath = filepath.resolve()
-        assert filepath.exists(), f"File {filepath} does not exist."
-        assert filepath.is_file(), f"File {filepath} is not a file."
+    for path in path_list:
+        path = path.resolve()
+        assert path.exists(), f"File {path} does not exist."
+        assert path.is_file(), f"File {path} is not a file."
 
-        orig_content = filepath.read_text(encoding="utf-8")
-        is_rst = filepath.suffix == ".rst"
+        orig_content = path.read_text(encoding="utf-8")
+        is_rst = path.suffix == ".rst"
 
         if is_rst:
             # rST comment format: .. tag
@@ -142,7 +142,7 @@ def replace_content(
         # Split at end tag.
         post_content = after_start[end_match.end() :]
 
-        filepath.write_text(
+        path.write_text(
             f"{pre_content}{start_tag_formatted}{new_content}{end_tag_formatted}{post_content}",
             encoding="utf-8",
         )
@@ -220,7 +220,6 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     Args:
         groups: The groups to include in the table.
     """
-    table_data = []
     headers = [
         "Icon",
         "Symbol",
@@ -231,14 +230,16 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     alignments = ["center", "left", "left", "left", "center"]
 
     sorted_groups = sorted(groups, key=attrgetter("id"))
-    for group in sorted_groups:
-        table_data.append([
+    table_data = [
+        [
             group.icon,
             f"{{data}}`~{group.symbol_id}`",
             group.name,
             f"{{func}}`~{group.detection_func_id}`",
             "⬥" if group.canonical else "",
-        ])
+        ]
+        for group in sorted_groups
+    ]
 
     table = render_table(
         table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
@@ -346,15 +347,18 @@ def generate_sankey(groups: Iterable[Group]) -> str:
     for group in sorted(
         intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
     ):
-        for member in group._members.values():
-            # XXX Sankey diagrams does not supports emoji labels
-            # https://github.com/mermaid-js/mermaid/issues/1995
-            # https://github.com/mermaid-js/mermaid/issues/5308
-            table.append(f"{group.symbol_id},{member.symbol_id},1")
+        # XXX Sankey diagrams does not supports emoji labels
+        # https://github.com/mermaid-js/mermaid/issues/1995
+        # https://github.com/mermaid-js/mermaid/issues/5308
+        table.extend(
+            f"{group.symbol_id},{member.symbol_id},1"
+            for member in group._members.values()
+        )
 
     # Third layer: superset -> missing traits (weight = 1 each), placed at the end.
-    for trait in missing_traits:
-        table.append(f"{superset.symbol_id},{trait.symbol_id},1")
+    table.extend(
+        f"{superset.symbol_id},{trait.symbol_id},1" for trait in missing_traits
+    )
     output = dedent("""\
         ```mermaid
         ---
@@ -412,17 +416,18 @@ def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
     The table contains the skip decorator (linked), unless decorator (linked),
     icon, and source symbol link for each trait or group.
     """
-    table_data = []
     headers = ["Skip decorator", "Unless decorator", "Icon", "Associated symbol"]
     alignments = ["left", "left", "center", "left"]
 
-    for obj in sorted(objects, key=attrgetter("id")):
-        table_data.append([
+    table_data = [
+        [
             f"{{deco}}`~pytest.{obj.skip_decorator_id}`",
             f"{{deco}}`~pytest.{obj.unless_decorator_id}`",
             obj.icon,
             f"{{data}}`~{obj.symbol_id}`",
-        ])
+        ]
+        for obj in sorted(objects, key=attrgetter("id"))
+    ]
 
     return render_table(
         table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
@@ -449,9 +454,10 @@ def generate_sphinx_directives(
     if not objects_list:
         return "```{eval-rst}\n```"
 
-    directives = []
-    for obj in sorted(objects_list, key=attrgetter("id")):
-        directives.append(f".. {directive}:: extra_platforms.{getattr(obj, attr)}")
+    directives = [
+        f".. {directive}:: extra_platforms.{getattr(obj, attr)}"
+        for obj in sorted(objects_list, key=attrgetter("id"))
+    ]
 
     joined = "\n".join(directives)
     return f"```{{eval-rst}}\n{joined}\n```"
@@ -470,16 +476,17 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
     Returns:
         A Markdown table with all detection functions.
     """
-    table_data = []
     headers = ["Detection function", "Icon", "Associated symbol"]
     alignments = ["left", "center", "left"]
 
-    for obj in sorted(objects, key=attrgetter("detection_func_id")):
-        table_data.append([
+    table_data = [
+        [
             f"{{func}}`~{obj.detection_func_id}`",
             obj.icon,
             f"{{data}}`~{obj.symbol_id}`",
-        ])
+        ]
+        for obj in sorted(objects, key=attrgetter("detection_func_id"))
+    ]
 
     return render_table(
         table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
