@@ -95,12 +95,10 @@ jobs:
           uv --no-progress venv --python "${UV_PYTHON:-${{ matrix.python-version }}}"
       - name: Install project
         # Install all extras, so we can check any incompatibility.
-        run: |
-          uv --no-progress sync --frozen --all-extras --group test --group docs
+        run: uv --no-progress sync --frozen --all-extras --group test --group docs
 
       - name: Run local CLI
-        run: |
-          uv run -- extra-platforms
+        run: uv run -- extra-platforms
       - name: Run CLI from module
         run: |
           uv run        -m extra_platforms
