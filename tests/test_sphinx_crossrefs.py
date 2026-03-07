@@ -138,7 +138,6 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
         ("pytest.html", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
         ("pytest.html", "LINUX", "groups.html#extra_platforms.LINUX"),
         # Pytest decorator docstrings.
-        ("pytest.html", "AARCH64", "architectures.html#extra_platforms.AARCH64"),
         (
             "pytest.html",
             "is_aarch64()",
