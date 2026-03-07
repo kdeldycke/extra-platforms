@@ -101,7 +101,7 @@ Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trai
 
 Always update documentation when making changes:
 
-- **`changelog.md`**: Add a bullet point describing user-facing changes (new features, bug fixes, behavior changes).
+- **`changelog.md`**: Add a bullet point describing **what** changed (new features, bug fixes, behavior changes), not **why**. Keep entries concise and actionable. Justifications and rationale belong in documentation or code comments, not in the changelog.
 - **`readme.md`**: Update relevant sections when adding/modifying public API, classes, or functions.
 
 ## Code style
@@ -170,7 +170,7 @@ Document design decisions, trade-offs, and non-obvious implementation choices di
 
 ### `TYPE_CHECKING` block
 
-Place a module-level `TYPE_CHECKING` block immediately after the module docstring:
+Place a module-level `TYPE_CHECKING` block after all imports. Use `TYPE_CHECKING = False` (not `from typing import TYPE_CHECKING`) to avoid importing `typing` at runtime:
 
 ```python
 TYPE_CHECKING = False
@@ -178,6 +178,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
     from ._types import _T, _TNestedReferences
 ```
+
+Only add `TYPE_CHECKING = False` when there is a corresponding `if TYPE_CHECKING:` block. If all type-checking imports are removed, remove the `TYPE_CHECKING = False` assignment too — a bare assignment with no consumer is dead code.
 
 ### Modern `typing` practices
 
@@ -226,10 +228,28 @@ Use literal block scalar (`|`) only when the command requires preserved newlines
       uv --no-progress venv --python "${{ matrix.python-version }}"
 ```
 
+### Command-line options
+
+Always prefer long-form options over short-form for readability when invoking commands in workflow files and scripts:
+
+- Use `--output` instead of `-o`.
+- Use `--verbose` instead of `-v`.
+- Use `--recursive` instead of `-r`.
+
+### `uv` flags in CI workflows
+
+When invoking `uv` and `uvx` commands in GitHub Actions workflows:
+
+- **`--no-progress`** on all CI commands (uv-level flag, placed before the subcommand). Progress bars render poorly in CI logs.
+- **`--frozen`** on `uv run` commands (run-level flag, placed after `run`). The lockfile should be immutable in CI.
+- **Flag placement:** `uv --no-progress run --frozen -- command` (not `uv run --no-progress`).
+- **Exceptions:** Omit `--frozen` for `uvx` with pinned versions, `uv tool install`, CLI invocability tests, and local development examples.
+
 ### Imports
 
 - Import from the root package (`from extra_platforms import CI`), not submodules (`from extra_platforms.trait import CI`).
 - Place imports at the top of the file, unless avoiding circular imports or improving data registry clarity.
+- **Version-dependent imports** (e.g., `tomllib` fallback for Python 3.10) should be placed **after all normal imports** but **before the `TYPE_CHECKING` block**. This allows ruff to freely sort and organize the normal imports above without interference.
 
 ## Testing guidelines
 
