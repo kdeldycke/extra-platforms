@@ -29,6 +29,7 @@ from extra_platforms import (
     ALL_TRAITS,
     Group,
     Trait,
+    detection as detection_module,
     invalidate_caches,
     is_aarch64,
     is_arm,
@@ -37,7 +38,6 @@ from extra_platforms import (
     is_windows,
     is_x86_64,
 )
-from extra_platforms import detection as detection_module
 
 
 @pytest.mark.parametrize(

@@ -32,7 +32,8 @@ from functools import cache
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Any, Iterable
+    from collections.abc import Iterable
+    from typing import Any
 
 
 def _parse_os_release_content(lines: Iterable[str]) -> dict[str, str]:
@@ -282,5 +283,5 @@ def windows_info() -> dict[str, Any]:
             "minor": minor,
             "build_number": build_number,
         },
-        "codename": " ".join((release, platform.win32_edition())),
+        "codename": f"{release} {platform.win32_edition()}",
     }
