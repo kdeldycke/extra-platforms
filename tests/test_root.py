@@ -54,6 +54,9 @@ from extra_platforms import (  # type: ignore[attr-defined]
     WSL1,
     WSL2,
     X86_64,
+    agent_data as agent_data_module,
+    architecture_data as architecture_data_module,
+    ci_data as ci_data_module,
     current_agent,
     current_architecture,
     current_ci,
@@ -61,6 +64,9 @@ from extra_platforms import (  # type: ignore[attr-defined]
     current_shell,
     current_terminal,
     current_traits,
+    detection as detection_module,
+    group as group_module,
+    group_data as group_data_module,
     invalidate_caches,
     is_aarch64,
     is_any_agent,
@@ -74,17 +80,11 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_macos,
     is_ubuntu,
     is_windows,
+    platform_data as platform_data_module,
+    shell_data as shell_data_module,
+    terminal_data as terminal_data_module,
+    trait as trait_module,
 )
-from extra_platforms import agent_data as agent_data_module
-from extra_platforms import architecture_data as architecture_data_module
-from extra_platforms import ci_data as ci_data_module
-from extra_platforms import detection as detection_module
-from extra_platforms import group as group_module
-from extra_platforms import group_data as group_data_module
-from extra_platforms import platform_data as platform_data_module
-from extra_platforms import shell_data as shell_data_module
-from extra_platforms import terminal_data as terminal_data_module
-from extra_platforms import trait as trait_module
 from extra_platforms.detection import _unrecognized_message
 
 from .test_ci_data import github_runner_os

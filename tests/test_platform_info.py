@@ -136,7 +136,7 @@ class TestOsReleaseId:
         """Return empty string when no ID field is present."""
         monkeypatch.setattr(
             "extra_platforms.platform_info._parse_os_release",
-            lambda: {},
+            dict,
         )
         os_release_id.cache_clear()
         assert os_release_id() == ""

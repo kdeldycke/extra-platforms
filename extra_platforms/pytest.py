@@ -22,7 +22,7 @@ each platform and group.
 from __future__ import annotations
 
 try:
-    import pytest  # noqa: F401
+    import pytest
 except ImportError:
     raise ImportError(
         "You need to install extra_platforms[pytest] extra dependencies to use this "
