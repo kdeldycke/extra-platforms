@@ -230,32 +230,36 @@ def test_module_root_declarations():
                         element.value for element in node.value.elts
                     )
 
-    assert agent_data_members <= set(extra_platforms_members)
-    assert architecture_data_members <= set(extra_platforms_members)
-    assert ci_data_members <= set(extra_platforms_members)
-    assert detection_members <= set(extra_platforms_members)
-    assert group_data_members <= set(extra_platforms_members)
-    assert group_members <= set(extra_platforms_members)
-    assert platform_data_members <= set(extra_platforms_members)
-    assert shell_data_members <= set(extra_platforms_members)
-    assert terminal_data_members <= set(extra_platforms_members)
-    assert trait_members <= set(extra_platforms_members)
+    # Sorting of __all__ is enforced by ruff (RUF022). Here we only check
+    # completeness: every submodule's public members must appear in __all__,
+    # and __all__ must contain nothing extra.
+    all_members_set = set(extra_platforms_members)
 
-    expected_members = sorted(
+    assert agent_data_members <= all_members_set
+    assert architecture_data_members <= all_members_set
+    assert ci_data_members <= all_members_set
+    assert detection_members <= all_members_set
+    assert group_data_members <= all_members_set
+    assert group_members <= all_members_set
+    assert platform_data_members <= all_members_set
+    assert shell_data_members <= all_members_set
+    assert terminal_data_members <= all_members_set
+    assert trait_members <= all_members_set
+
+    expected_members = (
         detection_members
-        .union(agent_data_members)
-        .union(architecture_data_members)
-        .union(ci_data_members)
-        .union(group_data_members)
-        .union(group_members)
-        .union(platform_data_members)
-        .union(root_members)
-        .union(shell_data_members)
-        .union(terminal_data_members)
-        .union(trait_members),
-        key=lambda m: (m.lower(), m),
+        | agent_data_members
+        | architecture_data_members
+        | ci_data_members
+        | group_data_members
+        | group_members
+        | platform_data_members
+        | root_members
+        | shell_data_members
+        | terminal_data_members
+        | trait_members
     )
-    assert expected_members == extra_platforms_members
+    assert expected_members == all_members_set
 
 
 def test_current_funcs():
