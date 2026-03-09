@@ -20,7 +20,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
 from functools import cached_property
 from types import MappingProxyType
-from typing import cast
+from typing import TypeVar, cast
 
 from .trait import Trait, _Identifiable, _resolve_alias
 
@@ -28,7 +28,9 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-    from ._types import _T, _TNestedReferences
+    from ._types import _TNestedReferences
+
+_T = TypeVar("_T")
 
 
 _MembersMapping = MappingProxyType[str, Trait]
