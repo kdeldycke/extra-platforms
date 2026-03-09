@@ -37,9 +37,12 @@ Inspired by `how tomllib does it in the stdlib
 from __future__ import annotations
 
 from collections.abc import Iterable
+from typing import TypeVar
 
 from .group import Group
 from .trait import Trait
+
+_T = TypeVar("_T")
 
 _TRef = Trait | Group | str | None
 """All types that can be used to reference a trait or a group:
