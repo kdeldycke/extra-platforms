@@ -77,7 +77,7 @@ from __future__ import annotations
 
 import logging
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 import os
 import platform
 import sys
@@ -144,9 +144,9 @@ def _report_unrecognized(
     if strict:
         raise SystemError(msg)
     if expected:
-        logger.warning(msg)
+        _logger.warning(msg)
     else:
-        logger.info(msg)
+        _logger.info(msg)
 
 
 # =============================================================================

@@ -130,11 +130,23 @@ def test_pyproject_keywords():
     ))
     # Manually add extra keywords.
     ideal_keywords.extend((
-        "multiplatform",
-        "Pytest",
-        "OS detection",
-        "Platform detection",
+        "Agent detection",
         "Architecture detection",
+        "CI detection",
+        "CPU architecture",
+        "Distro detection",
+        "Hardware detection",
+        "Linux distribution",
+        "multiplatform",
+        "OS detection",
+        "OS info",
+        "Platform detection",
+        "Pytest",
+        "Pytest fixtures",
+        "Pytest plugin",
+        "Shell detection",
+        "System information",
+        "Terminal detection",
     ))
     # Sort and deduplicate keywords (case-insensitive).
     ideal_keywords = sorted(set(ideal_keywords), key=lambda k: k.lower())
