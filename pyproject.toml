@@ -338,7 +338,7 @@ lint.future-annotations = true
 [tool.typos]
 default.extend-identifiers = { Github = "GitHub", IOS = "iOS", Javascript = "JavaScript", MacOS = "macOS", PyPi = "PyPI", Typescript = "TypeScript" }
 # Skip content between <!-- typos:off --> and <!-- typos:on --> markers.
-default.extend-ignore-re = ["(?s)<!-- typos:off -->.*?<!-- typos:on -->"]
+default.extend-ignore-re = [ "(?s)<!-- typos:off -->.*?<!-- typos:on -->" ]
 default.extend-ignore-identifiers-re = [
   # error: `Tru` should be `Thru`, `True`
   #     ╭▸ ./extra_platforms/group_data.py:345:8
