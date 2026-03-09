@@ -41,8 +41,6 @@ from collections.abc import Iterable
 from .group import Group
 from .trait import Trait
 
-"""Generic type variable."""
-
 
 _TRef = Trait | Group | str | None
 """All types that can be used to reference a trait or a group:
