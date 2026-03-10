@@ -13,6 +13,9 @@
 - Add `ignore_missing_files` to bumpversion configuration.
 - Rename bug report issue template to `bug-report.yml` and add bug label.
 - Update code of conduct attribution links to canonical URLs.
+- Rename `"linters"` to `"zizmor"` in `[tool.repomatic] init.exclude` to match upstream rename.
+- Add `assignees` field and uv version custom manager to `renovate.json5`.
+- Add GitHub issue comment fragment exclusion rule to `lychee.toml`.
 
 ## [`11.0.2` (2026-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...v11.0.2)
 

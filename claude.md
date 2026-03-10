@@ -14,9 +14,22 @@ It provides:
 
 ## Upstream conventions
 
-This repository uses reusable workflows from [`kdeldycke/workflows`](https://github.com/kdeldycke/workflows) and follows the conventions established there. For code style, documentation, testing, and design principles, refer to the upstream `claude.md` as the canonical reference.
+This repository uses reusable workflows from [`kdeldycke/repomatic`](https://github.com/kdeldycke/repomatic) and follows the conventions established there. For code style, documentation, testing, and design principles, refer to the upstream `claude.md` as the canonical reference.
 
-**Contributing upstream:** If you spot inefficiencies, improvements, or missing features in the reusable workflows, propose changes via a pull request or issue at [`kdeldycke/workflows`](https://github.com/kdeldycke/workflows/issues).
+**Contributing upstream:** If you spot inefficiencies, improvements, or missing features in the reusable workflows, propose changes via a pull request or issue at [`kdeldycke/repomatic`](https://github.com/kdeldycke/repomatic/issues).
+
+### Source of truth hierarchy
+
+`CLAUDE.md` defines the rules. The codebase and GitHub (issues, PRs, CI logs) are what you measure against those rules. When they disagree, fix the code to match the rules. If the rules are wrong, fix `CLAUDE.md`.
+
+### Keeping `CLAUDE.md` lean
+
+`CLAUDE.md` must contain only conventions, policies, rationale, and non-obvious rules that Claude cannot discover by reading the codebase. Actively remove:
+
+- **Structural inventories** — project trees, module tables, workflow lists. Claude can discover these via `Glob`/`Read`.
+- **Code examples that duplicate source files** — YAML snippets copied from workflows, Python patterns visible in every module. Reference the source file instead.
+- **General programming knowledge** — standard Python idioms, well-known library usage, tool descriptions derivable from imports.
+- **Implementation details readable from code** — what a function does, what a workflow's concurrency block looks like. Only the *rationale* for non-obvious choices belongs here.
 
 ## Commands
 
@@ -97,6 +110,27 @@ Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trai
 
 ## Documentation requirements
 
+### Scope of `CLAUDE.md` vs `readme.md`
+
+- **`CLAUDE.md`**: Contributor and Claude-focused directives — code style, testing guidelines, design principles, and internal development guidance.
+- **`readme.md`**: User-facing documentation — installation, usage, and public API.
+
+When adding new content, consider whether it benefits end users (`readme.md`) or contributors/Claude working on the codebase (`CLAUDE.md`).
+
+### Knowledge placement
+
+Each piece of knowledge has one canonical home, chosen by audience. Other locations get a brief pointer ("See `module.py` for rationale.").
+
+| Audience              | Home                      | Content                                                    |
+| :-------------------- | :------------------------ | :--------------------------------------------------------- |
+| End users             | `readme.md`               | Installation, configuration, usage.                        |
+| Developers            | Python docstrings         | Design decisions, trade-offs, "why" explanations.          |
+| Workflow maintainers  | YAML comments             | Brief "what" + pointer to Python code for "why."           |
+| Bug reporters         | `.github/ISSUE_TEMPLATE/` | Reproduction steps, version commands.                      |
+| Contributors / Claude | `CLAUDE.md`               | Conventions, policies, non-obvious rules.                  |
+
+**YAML → Python distillation:** When workflow YAML files contain lengthy "why" explanations, migrate the rationale to Python module, class, or constant docstrings (using reST admonitions like `.. note::` and `.. warning::`). Trim the YAML comment to a one-line "what" plus a pointer.
+
 ### Changelog and readme updates
 
 Always update documentation when making changes:
@@ -112,7 +146,7 @@ Use correct capitalization for proper nouns and trademarked names:
 
 <!-- typos:off -->
 
-- **PyPI** (not ~~PyPi~~) — the Python Package Index. The "I" is capitalized because it stands for "Index".
+- **PyPI** (not ~~PyPi~~) — the Python Package Index. The "I" is capitalized because it stands for "Index". See [PyPI trademark guidelines](https://pypi.org/trademarks/).
 - **GitHub** (not ~~Github~~)
 - **GitHub Actions** (not ~~Github Actions~~ or ~~GitHub actions~~)
 - **JavaScript** (not ~~Javascript~~)
@@ -124,7 +158,7 @@ Use correct capitalization for proper nouns and trademarked names:
 
 ### Version formatting
 
-The version string is always bare (e.g., `1.2.3`). The `v` prefix is a **tag namespace** — it only appears when the reference is to a git tag or something derived from a tag (action ref, comparison URL, commit message).
+The version string is always bare (e.g., `1.2.3`). The `v` prefix is a **tag namespace** — it only appears when the reference is to a git tag or something derived from a tag (action ref, comparison URL, commit message). This aligns with PEP 440, PyPI, and semver conventions.
 
 | Context                                | Format                          | Example                              | Rationale                         |
 | :------------------------------------- | :------------------------------ | :----------------------------------- | :-------------------------------- |
@@ -140,6 +174,13 @@ The version string is always bare (e.g., `1.2.3`). The `v` prefix is a **tag nam
 | PR titles                              | `` `v1.2.3` ``                  | `` Release `v11.0.2` ``              | References the tag.               |
 | Prose/documentation                    | `` `v1.2.3` `` or `` `1.2.3` `` | Depends on referent                  | Match what is being referenced.   |
 
+**Rules:**
+
+1. **No `v` prefix on package versions.** Anywhere the version identifies the *package* (PyPI, changelog heading, CLI output), use the bare version: `1.2.3`.
+2. **`v` prefix on tag references.** Anywhere the version identifies a *git tag* (comparison URLs, action refs, commit messages, PR titles), use `v1.2.3`.
+3. **Always backtick-escape versions in prose.** Both `v1.2.3` (tag) and `1.2.3` (package) are identifiers, not natural language. In markdown, wrap them in backticks: `` `v1.2.3` ``, `` `1.2.3` ``. In reST docstrings, use double backticks: ``` ``v1.2.3`` ```.
+4. **Development versions** follow PEP 440: `1.2.3.dev0` with optional `+{short_sha}` local identifier.
+
 ### Comments and docstrings
 
 - All comments in Python files must end with a period.
@@ -150,48 +191,25 @@ The version string is always bare (e.g., `1.2.3`). The `v` prefix is a **tag nam
 
 ### Documenting code decisions
 
-Document design decisions, trade-offs, and non-obvious implementation choices directly in the code:
-
-- Use **docstring admonitions** for important notes:
-
-  ```python
-  """Extract metadata from repository.
-
-  .. warning::
-      This method temporarily modifies repository state during execution.
-
-  .. note::
-      The commit range is inclusive on both ends.
-  """
-  ```
-
-- Use **inline comments** for explaining specific code blocks:
-
-  ```python
-  # We use a frozenset for O(1) lookups and immutability.
-  SKIP_BRANCHES: Final[frozenset[str]] = frozenset(("branch-a", "branch-b"))
-  ```
+Document design decisions, trade-offs, and non-obvious implementation choices directly in the code using docstring admonitions (reST `.. warning::`, `.. note::`, `.. caution::`), inline comments, and module-level docstrings for constants that need context.
 
 ### `TYPE_CHECKING` block
 
-Place a module-level `TYPE_CHECKING` block after all imports. Use `TYPE_CHECKING = False` (not `from typing import TYPE_CHECKING`) to avoid importing `typing` at runtime:
-
-```python
-TYPE_CHECKING = False
-if TYPE_CHECKING:
-    from collections.abc import Iterator
-    from ._types import _T, _TNestedReferences
-```
+Place a module-level `TYPE_CHECKING` block after all imports (including version-dependent conditional imports). Use `TYPE_CHECKING = False` (not `from typing import TYPE_CHECKING`) to avoid importing `typing` at runtime. See existing modules for the canonical pattern.
 
 Only add `TYPE_CHECKING = False` when there is a corresponding `if TYPE_CHECKING:` block. If all type-checking imports are removed, remove the `TYPE_CHECKING = False` assignment too — a bare assignment with no consumer is dead code.
 
 ### Modern `typing` practices
 
-Use modern equivalents from `collections.abc` and built-in types instead of `typing` imports. Use `X | Y` instead of `Union` and `X | None` instead of `Optional`. New modules should include `from __future__ import annotations`.
+Use modern equivalents from `collections.abc` and built-in types instead of `typing` imports. Use `X | Y` instead of `Union` and `X | None` instead of `Optional`. New modules should include `from __future__ import annotations` ([PEP 563](https://peps.python.org/pep-0563/)).
 
 ### Minimal inline type annotations
 
-Omit type annotations on local variables, loop variables, and assignments when mypy can infer the type from the right-hand side. Always annotate function parameters and return types.
+Omit type annotations on local variables, loop variables, and assignments when mypy can infer the type from the right-hand side. Annotations add visual noise without helping the type checker.
+
+**When to annotate:** Add an explicit annotation only when mypy cannot infer the correct type and reports an error — e.g., empty collections that need a specific element type (`items: list[Package] = []`), `None` initializations where the intended type isn't obvious from later usage, or narrowing a union that mypy doesn't resolve on its own.
+
+**Function signatures are unaffected.** Always annotate function parameters and return types — those are part of the public API and cannot be inferred.
 
 ### Python 3.10 compatibility
 
@@ -248,6 +266,7 @@ When invoking `uv` and `uvx` commands in GitHub Actions workflows:
 - **`--frozen`** on `uv run` commands (run-level flag, placed after `run`). The lockfile should be immutable in CI.
 - **Flag placement:** `uv --no-progress run --frozen -- command` (not `uv run --no-progress`).
 - **Exceptions:** Omit `--frozen` for `uvx` with pinned versions, `uv tool install`, CLI invocability tests, and local development examples.
+- **Prefer explicit flags over environment variables** (`UV_NO_PROGRESS`, `UV_FROZEN`). Flags are self-documenting, visible in logs, avoid conflicts (e.g., `UV_FROZEN` vs `--locked`), and align with the long-form option principle.
 
 ### Imports
 
@@ -257,10 +276,11 @@ When invoking `uv` and `uvx` commands in GitHub Actions workflows:
 
 ## Testing guidelines
 
-- Use `@pytest.mark.parametrize` when testing the same logic for multiple traits/groups.
+- Use `@pytest.mark.parametrize` when testing the same logic for multiple traits/groups. Prefer parametrize over copy-pasted test functions that differ only in their data — it deduplicates test logic, improves readability, and makes it trivial to add new cases.
 - Keep test logic simple with straightforward asserts.
 - Tests should be sorted logically and alphabetically where applicable.
 - Enforce naming conventions for traits and groups via tests.
+- Test coverage is tracked with `pytest-cov` and reported to Codecov.
 - Do not use classes for grouping tests. Write test functions as top-level module functions. Only use test classes when they provide shared fixtures, setup/teardown methods, or class-level state.
 
 ## Design principles
@@ -268,12 +288,12 @@ When invoking `uv` and `uvx` commands in GitHub Actions workflows:
 ### Philosophy
 
 1. Create something that works (to provide business value).
-1. Create something that's beautiful (to lower maintenance costs).
-1. Work on performance.
+2. Create something that's beautiful (to lower maintenance costs).
+3. Work on performance.
 
 ### Linting and formatting
 
-Linting and formatting are automated via GitHub workflows. Developers don't need to run these manually during development, but are still expected to do best effort. Push your changes and the workflows will catch any issues.
+Linting and formatting are automated via GitHub workflows. Developers don't need to run these manually during development, but are still expected to do best effort. Push your changes and the workflows will catch any issues and perform the nitpicking.
 
 ### Data registry priority
 
@@ -305,7 +325,13 @@ Icons are inspired by [Starship](https://starship.rs/) and [NerdFonts](https://w
 
 ### Ordering and uniqueness
 
+Keep definitions sorted for readability and to minimize merge conflicts:
+
 - **Trait category ordering**: When trait categories appear together (in code sections, imports, collections, documentation, tests, etc.), they must follow this canonical order: **Architecture → Platform → Shell → Terminal → CI → Agent**. This applies to class definitions, detection function sections, group collections, `__all__` exports, documentation pages, and test files.
+- **Workflow jobs**: Ordered by execution dependency (upstream jobs first), then alphabetically within the same dependency level.
+- **Python module-level constants and variables**: Alphabetically, unless there is a logical grouping or dependency order.
+- **YAML configuration keys**: Alphabetically within each mapping level.
+- **Documentation lists and tables**: Alphabetically, unless a logical order (e.g., chronological in changelog) takes precedence.
 - All IDs must be unique across traits and groups.
 - High-level objects in data files must be sorted alphabetically by ID.
 - Tests should verify this ordering.

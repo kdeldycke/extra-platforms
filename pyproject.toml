@@ -444,7 +444,7 @@ pretty = true
 
 [tool.repomatic]
 # We don't want repomatic's skills in this repository. And no need for custom label or zizmor configuration either.
-init.exclude = [ "labels", "linters" ]
+init.exclude = [ "labels", "zizmor" ]
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
 workflow.sync-exclude = [ "debug.yaml" ]
