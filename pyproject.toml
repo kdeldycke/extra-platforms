@@ -372,6 +372,7 @@ addopts = [
   "--durations=10",
   "--cov",
   "--cov-report=term",
+  "--numprocesses=auto",
 ]
 # Make sure tests that are expected to fail do not resurrect and start working all of a sudden.
 xfail_strict = true

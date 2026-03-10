@@ -16,6 +16,7 @@
 - Rename `"linters"` to `"zizmor"` in `[tool.repomatic] init.exclude` to match upstream rename.
 - Add `assignees` field and uv version custom manager to `renovate.json5`.
 - Add GitHub issue comment fragment exclusion rule to `lychee.toml`.
+- Enable parallel test execution by default via `--numprocesses=auto` in pytest `addopts`.
 
 ## [`11.0.2` (2026-03-04)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.1...v11.0.2)
 
