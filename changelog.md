@@ -1,5 +1,10 @@
 # Changelog
 
+## [`11.0.4.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.3...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`11.0.3` (2026-03-10)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.2...v11.0.3)
 
 - Exclude `debug.yaml` from repomatic workflow sync.
