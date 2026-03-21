@@ -738,21 +738,21 @@ __all__ = (
     "is_altlinux",
     "is_amzn",
     "is_android",
-    "is_any_agent",  # noqa: F822
-    "is_any_architecture",  # noqa: F822
-    "is_any_arm",  # noqa: F822
-    "is_any_ci",  # noqa: F822
-    "is_any_mips",  # noqa: F822
-    "is_any_platform",  # noqa: F822
-    "is_any_shell",  # noqa: F822
-    "is_any_sparc",  # noqa: F822
-    "is_any_terminal",  # noqa: F822
-    "is_any_trait",  # noqa: F822
-    "is_any_windows",  # noqa: F822
+    "is_any_agent",
+    "is_any_architecture",
+    "is_any_arm",
+    "is_any_ci",
+    "is_any_mips",
+    "is_any_platform",
+    "is_any_shell",
+    "is_any_sparc",
+    "is_any_terminal",
+    "is_any_trait",
+    "is_any_windows",
     "is_apple_terminal",
     "is_arch",
-    "is_arch_32_bit",  # noqa: F822
-    "is_arch_64_bit",  # noqa: F822
+    "is_arch_32_bit",
+    "is_arch_64_bit",
     "is_arm",
     "is_armv5tel",
     "is_armv6l",
@@ -762,13 +762,13 @@ __all__ = (
     "is_azure_pipelines",
     "is_bamboo",
     "is_bash",
-    "is_big_endian",  # noqa: F822
-    "is_bourne_shells",  # noqa: F822
-    "is_bsd",  # noqa: F822
-    "is_bsd_not_macos",  # noqa: F822
+    "is_big_endian",
+    "is_bourne_shells",
+    "is_bsd",
+    "is_bsd_not_macos",
     "is_buildkite",
     "is_buildroot",
-    "is_c_shells",  # noqa: F822
+    "is_c_shells",
     "is_cachyos",
     "is_centos",
     "is_circle_ci",
@@ -797,7 +797,7 @@ __all__ = (
     "is_gitlab_ci",
     "is_gnome_terminal",
     "is_gnu_screen",
-    "is_gpu_terminals",  # noqa: F822
+    "is_gpu_terminals",
     "is_guix",
     "is_haiku",
     "is_heroku_ci",
@@ -806,7 +806,7 @@ __all__ = (
     "is_i386",
     "is_i586",
     "is_i686",
-    "is_ibm_mainframe",  # noqa: F822
+    "is_ibm_mainframe",
     "is_ibm_powerkvm",
     "is_illumos",
     "is_iterm2",
@@ -815,12 +815,12 @@ __all__ = (
     "is_konsole",
     "is_ksh",
     "is_kvmibm",
-    "is_linux",  # noqa: F822
-    "is_linux_layers",  # noqa: F822
-    "is_linux_like",  # noqa: F822
+    "is_linux",
+    "is_linux_layers",
+    "is_linux_like",
     "is_linuxmint",
-    "is_little_endian",  # noqa: F822
-    "is_loongarch",  # noqa: F822
+    "is_little_endian",
+    "is_loongarch",
     "is_loongarch64",
     "is_macos",
     "is_mageia",
@@ -831,8 +831,8 @@ __all__ = (
     "is_mips64",
     "is_mips64el",
     "is_mipsel",
-    "is_multiplexers",  # noqa: F822
-    "is_native_terminals",  # noqa: F822
+    "is_multiplexers",
+    "is_native_terminals",
     "is_netbsd",
     "is_nobara",
     "is_nushell",
@@ -840,11 +840,11 @@ __all__ = (
     "is_opensuse",
     "is_openwrt",
     "is_oracle",
-    "is_other_posix",  # noqa: F822
-    "is_other_shells",  # noqa: F822
+    "is_other_posix",
+    "is_other_shells",
     "is_parallels",
     "is_pidora",
-    "is_powerpc",  # noqa: F822
+    "is_powerpc",
     "is_powershell",
     "is_ppc",
     "is_ppc64",
@@ -852,7 +852,7 @@ __all__ = (
     "is_raspbian",
     "is_rhel",
     "is_rio",
-    "is_riscv",  # noqa: F822
+    "is_riscv",
     "is_riscv32",
     "is_riscv64",
     "is_rocky",
@@ -864,7 +864,7 @@ __all__ = (
     "is_sparc",
     "is_sparc64",
     "is_sunos",
-    "is_system_v",  # noqa: F822
+    "is_system_v",
     "is_tabby",
     "is_tcsh",
     "is_teamcity",
@@ -875,10 +875,10 @@ __all__ = (
     "is_tuxedo",
     "is_ubuntu",
     "is_ultramarine",
-    "is_unix",  # noqa: F822
-    "is_unix_layers",  # noqa: F822
-    "is_unix_not_macos",  # noqa: F822
-    "is_unknown",  # noqa: F822
+    "is_unix",
+    "is_unix_layers",
+    "is_unix_not_macos",
+    "is_unknown",
     "is_unknown_agent",
     "is_unknown_architecture",
     "is_unknown_ci",
@@ -888,15 +888,15 @@ __all__ = (
     "is_vscode_terminal",
     "is_wasm32",
     "is_wasm64",
-    "is_web_terminals",  # noqa: F822
-    "is_webassembly",  # noqa: F822
+    "is_web_terminals",
+    "is_webassembly",
     "is_wezterm",
     "is_windows",
-    "is_windows_shells",  # noqa: F822
+    "is_windows_shells",
     "is_windows_terminal",
     "is_wsl1",
     "is_wsl2",
-    "is_x86",  # noqa: F822
+    "is_x86",
     "is_x86_64",
     "is_xenserver",
     "is_xonsh",
