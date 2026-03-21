@@ -415,6 +415,38 @@ def test_group_membership_funcs():
         assert group.symbol_id in func.__doc__
 
 
+def test_group_detection_type_stubs():
+    """Check all is_*() group detection type stubs are defined and sorted."""
+    init_file = Path(inspect.getfile(extra_platforms))
+    tree = ast.parse(init_file.read_text(encoding="utf-8"))
+
+    # Collect all function definitions in the TYPE_CHECKING block.
+    stub_names = []
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.If)
+            and isinstance(node.test, ast.Name)
+            and node.test.id == "TYPE_CHECKING"
+        ):
+            stub_names.extend(
+                line.name
+                for line in node.body
+                if isinstance(line, ast.FunctionDef)
+            )
+
+    assert len(stub_names), "No group detection type stubs found."
+    assert stub_names == sorted(stub_names), (
+        "Group detection type stubs not sorted alphabetically."
+    )
+
+    expected_stubs = sorted(g.detection_func_id for g in ALL_GROUPS)
+    assert stub_names == expected_stubs, (
+        f"Group detection type stubs don't match expectations:\n"
+        f"- Missing: {set(expected_stubs) - set(stub_names)}\n"
+        f"- Extra: {set(stub_names) - set(expected_stubs)}"
+    )
+
+
 def test_invalidate_caches():
     """Test that invalidate_caches() properly clears all caches."""
 
