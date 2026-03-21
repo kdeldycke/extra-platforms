@@ -1,9 +1,6 @@
 # Changelog
 
-## [`11.0.3.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.2...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`11.0.3` (2026-03-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.2...v11.0.3)
 
 - Add type stubs for dynamically generated `is_*()` group detection functions.
 - Exclude `windows-11-arm` + Python 3.10 from test matrix (no native ARM64 build).
