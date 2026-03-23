@@ -443,9 +443,18 @@ warn_return_any = true
 warn_unreachable = true
 pretty = true
 
+[tool.lychee]
+exclude = [
+    # GitHub issue comment fragments are dynamically loaded and cannot be verified.
+    "^https://github.com/.+/issues/[0-9]+#issuecomment-.*$",
+    # Skip suggesting redirecting generic download links to their binary artefact.
+    "^https://github.com/.+/releases/.+/download/.*$",
+    # Allow redirects of generic DOI URLs to their specific Zenodo release page.
+    "^https://doi.org/.+/zenodo.*$",
+]
+
 [tool.repomatic]
-# We don't want repomatic's skills in this repository. And no need for custom label or zizmor configuration either.
-init.exclude = [ "labels", "zizmor" ]
+# We don't need custom label configuration, and the debug workflow is not used in this project.
+exclude = [ "labels", "workflows/debug.yaml" ]
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
-workflow.sync-exclude = [ "debug.yaml" ]
