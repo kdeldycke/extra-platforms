@@ -153,10 +153,37 @@ jobs:
         with:
           # windows-2025 runners have only Python 3.9 installed.
           python-version: ${{ matrix.os == 'windows-2025' && '3.10' || ''}}
-      # Run stable CLI.
-      - run: uvx extra-platforms
-      - run: uvx    --from extra-platforms -- extra-platforms
-      - run: uv run --with extra-platforms -- extra-platforms
-      # Run dev CLI.
-      - run: uvx    --from git+https://github.com/kdeldycke/extra-platforms -- extra-platforms
-      - run: uv run --with git+https://github.com/kdeldycke/extra-platforms -- extra-platforms
+      - name: Run stable CLI
+        run: |
+          uvx    extra-platforms
+          uvx    --from extra-platforms                                              -- extra-platforms
+          uv run --with extra-platforms                                              -- extra-platforms
+          uv run --with extra-platforms                                              -m extra_platforms
+          uv run --with extra-platforms                                        python -m extra_platforms
+      - name: Run dev CLI
+        run: |
+          uvx    --from git+https://github.com/kdeldycke/extra-platforms -- extra-platforms
+          uv run --with git+https://github.com/kdeldycke/extra-platforms -- extra-platforms
+          uv run --with git+https://github.com/kdeldycke/extra-platforms -m extra_platforms
+          uv run --with git+https://github.com/kdeldycke/extra-platforms python -m extra_platforms
+      - name: Run stable CLI via uv tool
+        run: |
+          uv --no-progress tool install extra-platforms
+          extra-platforms
+          uv --no-progress tool uninstall extra-platforms
+      - name: Run dev CLI via uv tool
+        run: |
+          uv --no-progress tool install git+https://github.com/kdeldycke/extra-platforms
+          extra-platforms
+          uv --no-progress tool uninstall extra-platforms
+      - name: Run CLI via pipx
+        run: |
+          uv --no-progress tool install pipx
+          pipx run                                                                      extra-platforms
+          pipx run --spec extra-platforms                                                extra-platforms
+          pipx run --spec git+https://github.com/kdeldycke/extra-platforms              extra-platforms
+          uv --no-progress tool uninstall pipx
+      - name: Run CLI via pip
+        run: |
+          pip install extra-platforms
+          extra-platforms
