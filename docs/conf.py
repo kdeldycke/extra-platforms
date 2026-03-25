@@ -54,6 +54,8 @@ myst_enable_extensions = [
 # https://github.com/mgaitan/sphinxcontrib-mermaid/issues/99#issuecomment-2339587001
 myst_fence_as_directive = ["mermaid"]
 
+# Always use the latest version of Mermaid.
+mermaid_version = "latest"
 mermaid_d3_zoom = True
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -100,6 +102,14 @@ linkcheck_ignore = [
     r"https://github\.com/kdeldycke/click-extra#",
     # Site is intermittently unreachable.
     r"https://midnightbsd\.org",
+]
+
+# GitHub renders issue comments, README tab anchors and blob line anchors with
+# JavaScript, so the linkcheck builder cannot find them in the static HTML.
+linkcheck_anchors_ignore = [
+    r"issuecomment-\d+",
+    r"readme",
+    r"L\d+",
 ]
 
 nitpick_ignore = [
