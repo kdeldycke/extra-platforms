@@ -23,6 +23,13 @@
 
     See how it is `used in .github/workflows/docs.yaml workflow
     <https://github.com/kdeldycke/extra-platforms/blob/main/.github/workflows/docs.yaml#L38-L39>`_.
+
+.. warning::
+    The generated Mermaid syntax targets the version bundled with
+    ``sphinxcontrib-mermaid``, currently ``11.12.1``. See the hard-coded
+    ``MERMAID_VERSION`` constant in `sphinxcontrib-mermaid's source
+    <https://github.com/mgaitan/sphinxcontrib-mermaid/blob/master/sphinxcontrib/mermaid/__init__.py>`_.
+    Avoid using Mermaid features introduced after that version.
 """
 
 from __future__ import annotations
@@ -317,6 +324,10 @@ def _analyze_group_hierarchy(
 def generate_sankey(groups: Iterable[Group]) -> str:
     """Produce a Sankey diagram showing trait hierarchy.
 
+    .. warning::
+        Output must stay compatible with the Mermaid version bundled in
+        ``sphinxcontrib-mermaid``. See module docstring for details.
+
     The diagram shows connections from a top-level (superset) group to intermediate
     groups to their individual members. The weights of the first layer reflect the
     number of members in each intermediate group. Missing traits (present in the
@@ -373,6 +384,10 @@ def generate_sankey(groups: Iterable[Group]) -> str:
 
 def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     """Produce a mindmap hierarchy to show the hierarchy of groups and their traits.
+
+    .. warning::
+        Output must stay compatible with the Mermaid version bundled in
+        ``sphinxcontrib-mermaid``. See module docstring for details.
 
     Includes missing traits (present in the superset but not in any intermediate group)
     as direct children of the superset.
