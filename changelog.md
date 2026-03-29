@@ -5,7 +5,10 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-## [`11.0.3` (2026-03-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.2...v11.0.3)
+## [`11.0.3` (2026-03-23)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.2...v11.0.3)
+
+> [!NOTE]
+> `11.0.3` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.0.3/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.0.3).
 
 - Add type stubs for dynamically generated `is_*()` group detection functions.
 - Exclude `windows-11-arm` + Python 3.10 from test matrix (no native ARM64 build).
