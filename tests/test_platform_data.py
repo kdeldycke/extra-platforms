@@ -77,6 +77,7 @@ from extra_platforms import (  # type: ignore[attr-defined]
     is_ubuntu,
     is_ultramarine,
     is_unknown_platform,
+    is_void,
     is_windows,
     is_wsl1,
     is_wsl2,
@@ -137,6 +138,7 @@ def test_platform_detection():
         assert not is_tuxedo()
         assert is_ubuntu()
         assert not is_ultramarine()
+        assert not is_void()
         assert not is_windows()
         assert not is_wsl1()
         # ubuntu-slim is a GitHub actions image running on WSL2.
@@ -190,6 +192,7 @@ def test_platform_detection():
         assert not is_tuxedo()
         assert not is_ubuntu()
         assert not is_ultramarine()
+        assert not is_void()
         assert not is_windows()
         assert not is_wsl1()
         assert not is_wsl2()
@@ -239,6 +242,7 @@ def test_platform_detection():
         assert not is_tuxedo()
         assert not is_ubuntu()
         assert not is_ultramarine()
+        assert not is_void()
         assert is_windows()
         assert not is_wsl1()
         assert not is_wsl2()

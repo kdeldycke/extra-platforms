@@ -121,6 +121,7 @@ from .platform_data import (
     UBUNTU,
     ULTRAMARINE,
     UNKNOWN_PLATFORM,
+    VOID,
     WINDOWS,
     WSL1,
     WSL2,
@@ -439,6 +440,7 @@ ALL_PLATFORMS: Group = Group(
         TUXEDO,
         UBUNTU,
         ULTRAMARINE,
+        VOID,
         WINDOWS,
         WSL1,
         WSL2,
@@ -557,6 +559,7 @@ LINUX = Group(
         TUXEDO,
         UBUNTU,
         ULTRAMARINE,
+        VOID,
         XENSERVER,
     ),
 )

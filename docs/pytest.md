@@ -233,6 +233,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_unknown_platform`     | {deco}`~pytest.unless_unknown_platform`     |  ❓  | {data}`~UNKNOWN_PLATFORM`     |
 | {deco}`~pytest.skip_unknown_shell`        | {deco}`~pytest.unless_unknown_shell`        |  ❓  | {data}`~UNKNOWN_SHELL`        |
 | {deco}`~pytest.skip_unknown_terminal`     | {deco}`~pytest.unless_unknown_terminal`     |  ❓  | {data}`~UNKNOWN_TERMINAL`     |
+| {deco}`~pytest.skip_void`                 | {deco}`~pytest.unless_void`                 |      | {data}`~VOID`                  |
 | {deco}`~pytest.skip_vscode_terminal`      | {deco}`~pytest.unless_vscode_terminal`      |  🔵  | {data}`~VSCODE_TERMINAL`      |
 | {deco}`~pytest.skip_wasm32`               | {deco}`~pytest.unless_wasm32`               |  🌐  | {data}`~WASM32`               |
 | {deco}`~pytest.skip_wasm64`               | {deco}`~pytest.unless_wasm64`               |  🌐  | {data}`~WASM64`               |
@@ -413,6 +414,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_unknown_platform
 .. autodecorator:: extra_platforms.pytest.skip_unknown_shell
 .. autodecorator:: extra_platforms.pytest.skip_unknown_terminal
+.. autodecorator:: extra_platforms.pytest.skip_void
 .. autodecorator:: extra_platforms.pytest.skip_vscode_terminal
 .. autodecorator:: extra_platforms.pytest.skip_wasm32
 .. autodecorator:: extra_platforms.pytest.skip_wasm64
@@ -590,6 +592,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_unknown_platform
 .. autodecorator:: extra_platforms.pytest.unless_unknown_shell
 .. autodecorator:: extra_platforms.pytest.unless_unknown_terminal
+.. autodecorator:: extra_platforms.pytest.unless_void
 .. autodecorator:: extra_platforms.pytest.unless_vscode_terminal
 .. autodecorator:: extra_platforms.pytest.unless_wasm32
 .. autodecorator:: extra_platforms.pytest.unless_wasm64
