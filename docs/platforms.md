@@ -160,7 +160,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,39
+ALL_PLATFORMS,LINUX,40
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,OTHER_POSIX,2
@@ -288,6 +288,7 @@ mindmap
             (🤵 TUXEDO)
             (🎯 UBUNTU)
             (🌊 ULTRAMARINE)
+            (∅ VOID)
             (Ⓧ XENSERVER)
         )Ⓑ BSD(
             (🪰 DRAGONFLY_BSD)
@@ -369,6 +370,7 @@ mindmap
 .. autodata:: extra_platforms.UBUNTU
 .. autodata:: extra_platforms.ULTRAMARINE
 .. autodata:: extra_platforms.UNKNOWN_PLATFORM
+.. autodata:: extra_platforms.VOID
 .. autodata:: extra_platforms.WINDOWS
 .. autodata:: extra_platforms.WSL1
 .. autodata:: extra_platforms.WSL2
