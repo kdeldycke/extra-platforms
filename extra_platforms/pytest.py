@@ -308,6 +308,7 @@ if TYPE_CHECKING:
     skip_unknown_platform: MarkDecorator
     skip_unknown_shell: MarkDecorator
     skip_unknown_terminal: MarkDecorator
+    skip_void: MarkDecorator
     skip_vscode_terminal: MarkDecorator
     skip_wasm32: MarkDecorator
     skip_wasm64: MarkDecorator
@@ -480,6 +481,7 @@ if TYPE_CHECKING:
     unless_unknown_platform: MarkDecorator
     unless_unknown_shell: MarkDecorator
     unless_unknown_terminal: MarkDecorator
+    unless_void: MarkDecorator
     unless_vscode_terminal: MarkDecorator
     unless_wasm32: MarkDecorator
     unless_wasm64: MarkDecorator

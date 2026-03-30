@@ -177,6 +177,8 @@ UNKNOWN_PLATFORM = Platform(
     "https://en.wikipedia.org/wiki/Computer_platform",
 )
 
+VOID = Platform("void", "Void Linux", " ", "https://voidlinux.org/")
+
 WINDOWS = Platform("windows", "Windows", "🪟", "https://windows.com")
 
 WSL1 = Platform(
