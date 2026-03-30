@@ -100,7 +100,7 @@ Platform(id='macos', name='macOS')
 |  🤵  | {data}`~TUXEDO`        | Tuxedo OS                      | {func}`~is_tuxedo`        |
 |  🎯  | {data}`~UBUNTU`        | Ubuntu                         | {func}`~is_ubuntu`        |
 |  🌊  | {data}`~ULTRAMARINE`   | Ultramarine                    | {func}`~is_ultramarine`   |
-|  🌊  | {data}`~VOID`          | Void Linux                     | {func}`~is_void`          |
+|  ∅   | {data}`~VOID`          | Void Linux                     | {func}`~is_void`          |
 |  🪟  | {data}`~WINDOWS`       | Windows                        | {func}`~is_windows`       |
 |  ⊞   | {data}`~WSL1`          | Windows Subsystem for Linux v1 | {func}`~is_wsl1`          |
 |  ⊞   | {data}`~WSL2`          | Windows Subsystem for Linux v2 | {func}`~is_wsl2`          |
