@@ -245,13 +245,13 @@ All recognized traits and their properties:
 |  🤵  | {data}`~TUXEDO`               | Tuxedo OS                      | {func}`~is_tuxedo`               | Platform     |
 |  🎯  | {data}`~UBUNTU`               | Ubuntu                         | {func}`~is_ubuntu`               | Platform     |
 |  🌊  | {data}`~ULTRAMARINE`          | Ultramarine                    | {func}`~is_ultramarine`          | Platform     |
-|  ∅   | {data}`~VOID`                 | Void Linux                     | {func}`~is_void`                 | Platform     |
 |  ❓  | {data}`~UNKNOWN_AGENT`        | Unknown agent                  | {func}`~is_unknown_agent`        | Agent        |
 |  ❓  | {data}`~UNKNOWN_ARCHITECTURE` | Unknown architecture           | {func}`~is_unknown_architecture` | Architecture |
 |  ❓  | {data}`~UNKNOWN_CI`           | Unknown CI                     | {func}`~is_unknown_ci`           | CI           |
 |  ❓  | {data}`~UNKNOWN_PLATFORM`     | Unknown platform               | {func}`~is_unknown_platform`     | Platform     |
 |  ❓  | {data}`~UNKNOWN_SHELL`        | Unknown shell                  | {func}`~is_unknown_shell`        | Shell        |
 |  ❓  | {data}`~UNKNOWN_TERMINAL`     | Unknown terminal               | {func}`~is_unknown_terminal`     | Terminal     |
+|  ∅   | {data}`~VOID`                 | Void Linux                     | {func}`~is_void`                 | Platform     |
 |  🔵  | {data}`~VSCODE_TERMINAL`      | VS Code Terminal               | {func}`~is_vscode_terminal`      | Terminal     |
 |  🌐  | {data}`~WASM32`               | WebAssembly (32-bit)           | {func}`~is_wasm32`               | Architecture |
 |  🌐  | {data}`~WASM64`               | WebAssembly (64-bit)           | {func}`~is_wasm64`               | Architecture |
