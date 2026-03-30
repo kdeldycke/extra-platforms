@@ -15,7 +15,7 @@
 
 from __future__ import annotations
 
-from extra_platforms import (  # type: ignore[attr-defined]
+from extra_platforms import (
     ALL_ARCHITECTURES,
     ALL_ARM,
     ALL_MIPS,

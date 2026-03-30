@@ -21,7 +21,7 @@ from pathlib import Path
 import pytest
 
 import extra_platforms
-from extra_platforms import (  # type: ignore[attr-defined]
+from extra_platforms import (
     ALL_GROUPS,
     ALL_TRAITS,
     UNKNOWN,

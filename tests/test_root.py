@@ -24,7 +24,7 @@ import pytest
 import requests
 
 import extra_platforms
-from extra_platforms import (  # type: ignore[attr-defined]
+from extra_platforms import (
     AARCH64,
     ALL_AGENTS,
     ALL_ARCHITECTURES,

@@ -20,7 +20,7 @@ import json
 import os
 import sys
 
-from extra_platforms import (  # type: ignore[attr-defined]
+from extra_platforms import (
     AARCH64,
     ALL_CI,
     BASH,

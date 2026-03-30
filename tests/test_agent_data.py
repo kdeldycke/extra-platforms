@@ -15,7 +15,7 @@
 
 from __future__ import annotations
 
-from extra_platforms import (  # type: ignore[attr-defined]
+from extra_platforms import (
     ALL_AGENTS,
     UNKNOWN_AGENT,
     current_agent,
