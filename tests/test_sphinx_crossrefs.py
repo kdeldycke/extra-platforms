@@ -23,6 +23,7 @@ from __future__ import annotations
 import inspect
 import re
 import subprocess
+import sys
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -39,6 +40,17 @@ from extra_platforms import (
     Shell,
     Trait,
 )
+from extra_platforms.pytest import unless_linux
+
+# The docs workflow builds on ubuntu-slim with Python >= 3.12 (the docs dependency
+# group minimum). Only run sphinx tests under the same conditions.
+pytestmark = [
+    unless_linux,
+    pytest.mark.skipif(
+        sys.version_info < (3, 12),
+        reason="docs dependency group requires Python >= 3.12",
+    ),
+]
 
 # Path to the built documentation.
 DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "html"
