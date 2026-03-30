@@ -245,6 +245,7 @@ All recognized traits and their properties:
 |  🤵  | {data}`~TUXEDO`               | Tuxedo OS                      | {func}`~is_tuxedo`               | Platform     |
 |  🎯  | {data}`~UBUNTU`               | Ubuntu                         | {func}`~is_ubuntu`               | Platform     |
 |  🌊  | {data}`~ULTRAMARINE`          | Ultramarine                    | {func}`~is_ultramarine`          | Platform     |
+|  ∅   | {data}`~VOID`                 | Void Linux                     | {func}`~is_void`                 | Platform     |
 |  ❓  | {data}`~UNKNOWN_AGENT`        | Unknown agent                  | {func}`~is_unknown_agent`        | Agent        |
 |  ❓  | {data}`~UNKNOWN_ARCHITECTURE` | Unknown architecture           | {func}`~is_unknown_architecture` | Architecture |
 |  ❓  | {data}`~UNKNOWN_CI`           | Unknown CI                     | {func}`~is_unknown_ci`           | CI           |

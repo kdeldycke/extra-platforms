@@ -680,10 +680,12 @@ def is_ultramarine() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.ULTRAMARINE`."""
     return os_release_id() == "ultramarine"
 
+
 @cache
 def is_void() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.VOID`."""
     return os_release_id() == "void"
+
 
 @cache
 def is_windows() -> bool:

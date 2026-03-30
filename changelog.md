@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add Void Linux platform detection. {gh}`523`
+
 ## [`11.0.3` (2026-03-23)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.2...v11.0.3)
 
 > [!NOTE]

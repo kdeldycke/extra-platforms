@@ -168,7 +168,7 @@
 | {func}`~is_unknown_platform`     |  ❓  | {data}`~UNKNOWN_PLATFORM`     |
 | {func}`~is_unknown_shell`        |  ❓  | {data}`~UNKNOWN_SHELL`        |
 | {func}`~is_unknown_terminal`     |  ❓  | {data}`~UNKNOWN_TERMINAL`     |
-| {func}`~is_void`                 |     | {data}`~VOID`      |
+| {func}`~is_void`                 |  ∅   | {data}`~VOID`                 |
 | {func}`~is_vscode_terminal`      |  🔵  | {data}`~VSCODE_TERMINAL`      |
 | {func}`~is_wasm32`               |  🌐  | {data}`~WASM32`               |
 | {func}`~is_wasm64`               |  🌐  | {data}`~WASM64`               |
@@ -313,8 +313,8 @@
 .. autofunction:: extra_platforms.is_unknown_platform
 .. autofunction:: extra_platforms.is_unknown_shell
 .. autofunction:: extra_platforms.is_unknown_terminal
-.. autofunction:: extra_platforms.is_vscode_terminal
 .. autofunction:: extra_platforms.is_void
+.. autofunction:: extra_platforms.is_vscode_terminal
 .. autofunction:: extra_platforms.is_wasm32
 .. autofunction:: extra_platforms.is_wasm64
 .. autofunction:: extra_platforms.is_wezterm

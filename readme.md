@@ -340,8 +340,8 @@ mindmap
             (↻ TUMBLEWEED)
             (🤵 TUXEDO)
             (🎯 UBUNTU)
-            (  VOID)
             (🌊 ULTRAMARINE)
+            (∅ VOID)
             (Ⓧ XENSERVER)
         )Ⓑ BSD(
             (🪰 DRAGONFLY_BSD)
