@@ -1,9 +1,6 @@
 # Changelog
 
-## [`11.0.4.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.3...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`11.0.4` (2026-03-30)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.3...v11.0.4)
 
 - Add Void Linux platform detection. Closes {gh}`523`
 - Fix broken `pipx` documentation link. Suppress false-positive link checker failures for sites that block bots. Closes {gh}`386`
