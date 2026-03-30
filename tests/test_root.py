@@ -429,9 +429,7 @@ def test_group_detection_type_stubs():
             and node.test.id == "TYPE_CHECKING"
         ):
             stub_names.extend(
-                line.name
-                for line in node.body
-                if isinstance(line, ast.FunctionDef)
+                line.name for line in node.body if isinstance(line, ast.FunctionDef)
             )
 
     assert len(stub_names), "No group detection type stubs found."
