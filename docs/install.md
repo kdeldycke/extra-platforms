@@ -23,7 +23,7 @@ $ uv tool install extra-platforms
 ````
 
 ````{tab-item} pipx
-[`pipx`](https://pipx.pypa.io/latest/installation/) is a great way to install the CLI globally:
+[`pipx`](https://pipx.pypa.io/stable/how-to/install-pipx/) is a great way to install the CLI globally:
 
 ```{code-block} shell-session
 $ pipx install extra-platforms

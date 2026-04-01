@@ -5,13 +5,15 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Fix broken `pipx` documentation link. Closes {gh}`386`
+
 ## [`11.0.4` (2026-03-30)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.3...v11.0.4)
 
 > [!NOTE]
 > `11.0.4` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.0.4/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.0.4).
 
 - Add Void Linux platform detection. Closes {gh}`523`
-- Fix broken `pipx` documentation link. Suppress false-positive link checker failures for sites that block bots. Closes {gh}`386`
+- Suppress false-positive link checker failures for sites that block bots.
 
 ## [`11.0.3` (2026-03-23)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.2...v11.0.3)
 
