@@ -1,4 +1,8 @@
-# Extra Platforms
+<p align="center">
+  <a href="https://github.com/kdeldycke/extra-platforms/">
+    <img src="https://raw.githubusercontent.com/kdeldycke/extra-platforms/main/docs/assets/logo-banner.svg" alt="Extra Platforms">
+  </a>
+</p>
 
 [![Last release](https://img.shields.io/pypi/v/extra-platforms.svg)](https://pypi.python.org/pypi/extra-platforms)
 [![Python versions](https://img.shields.io/pypi/pyversions/extra-platforms.svg)](https://pypi.python.org/pypi/extra-platforms)

@@ -5,6 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add project logo and banner. Closes {gh}`522`
 - Fix broken `pipx` documentation link. Closes {gh}`386`
 - Enable `check_untyped_defs` in mypy configuration. Fix all resulting type errors.
 

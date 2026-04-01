@@ -147,6 +147,8 @@ autosectionlabel_prefix_document = True
 # Theme config.
 html_theme = "furo"
 html_title = project
+html_logo = "assets/logo-square.svg"
+html_favicon = "assets/logo-square.svg"
 html_theme_options = {
     # Activates edit links.
     "source_repository": f"https://github.com/{issues_github_path}",
