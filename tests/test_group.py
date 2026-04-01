@@ -117,7 +117,7 @@ from extra_platforms import (
 def test_deduplication():
     my_group = Group("my_group", "My Group", "✅", (AIX, AIX))
     assert len(my_group) == 1
-    assert len(my_group.members) == 1
+    assert len(my_group._members) == 1
     assert len(my_group.member_ids) == 1
 
     assert tuple(my_group) == (AIX,)
@@ -713,7 +713,7 @@ def test_extract_members_with_unsupported_type():
     """Test that extract_members raises TypeError for unsupported types."""
     # Pass an unsupported type.
     with pytest.raises(TypeError, match="Unsupported type"):
-        list(extract_members(123))
+        list(extract_members(123))  # type: ignore[arg-type]
 
 
 def test_getitem_with_missing_key():

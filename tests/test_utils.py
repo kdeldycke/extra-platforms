@@ -213,7 +213,7 @@ def test_remove_blanks_mixed_scenario():
 
 def test_remove_blanks_all_options_disabled():
     """Test that nothing is removed when all options are disabled."""
-    tree = {
+    tree: dict[str, str | None | dict] = {
         "key1": "value",
         "key2": None,
         "key3": "",

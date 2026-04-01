@@ -94,8 +94,10 @@ def test_group_data_ordering():
     tree = ast.parse(Path(inspect.getfile(group_data_module)).read_bytes())
     for node in tree.body:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            assert isinstance(node.value.func, ast.Name)
             assert node.value.func.id == "Group"
             assert len(node.targets) == 1
+            assert isinstance(node.targets[0], ast.Name)
             instance_id = node.targets[0].id
             assert instance_id.isupper()
             group_instance_ids.append(instance_id)

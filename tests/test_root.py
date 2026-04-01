@@ -221,13 +221,17 @@ def test_module_root_declarations():
 
     # Check all members are exposed at the module root.
     tree = ast.parse(Path(inspect.getfile(extra_platforms)).read_bytes())
-    extra_platforms_members = []
+    extra_platforms_members: list[str] = []
     for node in tree.body:
         if isinstance(node, ast.Assign):
             for target in node.targets:
-                if target.id == "__all__":
+                if isinstance(target, ast.Name) and target.id == "__all__":
+                    assert isinstance(node.value, (ast.List, ast.Tuple))
                     extra_platforms_members.extend(
-                        element.value for element in node.value.elts
+                        element.value
+                        for element in node.value.elts
+                        if isinstance(element, ast.Constant)
+                        and isinstance(element.value, str)
                     )
 
     # Sorting of __all__ is enforced by ruff (RUF022). Here we only check
@@ -421,7 +425,7 @@ def test_group_detection_type_stubs():
     tree = ast.parse(init_file.read_text(encoding="utf-8"))
 
     # Collect all function definitions in the TYPE_CHECKING block.
-    stub_names = []
+    stub_names: list[str] = []
     for node in ast.walk(tree):
         if (
             isinstance(node, ast.If)
@@ -628,21 +632,22 @@ def test_invalidate_caches_clears_group_detection_functions():
     _ = is_bsd()
     _ = is_any_platform()
 
-    # Verify they have cache entries.
-    assert is_linux.cache_info().currsize > 0 or is_linux.cache_info().hits > 0
-    assert is_bsd.cache_info().currsize > 0 or is_bsd.cache_info().hits > 0
+    # Verify they have cache entries. The type stubs declare these as plain
+    # callables, but at runtime they are @cache-wrapped and expose cache_info().
+    assert is_linux.cache_info().currsize > 0 or is_linux.cache_info().hits > 0  # type: ignore[attr-defined]
+    assert is_bsd.cache_info().currsize > 0 or is_bsd.cache_info().hits > 0  # type: ignore[attr-defined]
     assert (
-        is_any_platform.cache_info().currsize > 0
-        or is_any_platform.cache_info().hits > 0
+        is_any_platform.cache_info().currsize > 0  # type: ignore[attr-defined]
+        or is_any_platform.cache_info().hits > 0  # type: ignore[attr-defined]
     )
 
     # Invalidate caches.
     invalidate_caches()
 
     # Verify group detection function caches are cleared.
-    assert is_linux.cache_info().currsize == 0
-    assert is_bsd.cache_info().currsize == 0
-    assert is_any_platform.cache_info().currsize == 0
+    assert is_linux.cache_info().currsize == 0  # type: ignore[attr-defined]
+    assert is_bsd.cache_info().currsize == 0  # type: ignore[attr-defined]
+    assert is_any_platform.cache_info().currsize == 0  # type: ignore[attr-defined]
 
 
 def test_import_time():

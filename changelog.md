@@ -6,6 +6,7 @@
 > This version is **not released yet** and is under active development.
 
 - Fix broken `pipx` documentation link. Closes {gh}`386`
+- Enable `check_untyped_defs` in mypy configuration. Fix all resulting type errors.
 
 ## [`11.0.4` (2026-03-30)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.3...v11.0.4)
 

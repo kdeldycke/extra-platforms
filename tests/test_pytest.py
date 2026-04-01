@@ -130,7 +130,7 @@ def test_type_annotations():
     tree = ast.parse(pytest_file.read_text(encoding="utf-8"))
 
     # Collect all annotated assignments in the TYPE_CHECKING block.
-    decorator_annotations = []
+    decorator_annotations: list[str] = []
     for node in ast.walk(tree):
         if (
             isinstance(node, ast.If)
@@ -661,7 +661,7 @@ def test_deferred_condition_with_pytest_skipif():
     condition = _DeferredCondition(always_skip)
 
     # Create a skipif mark.
-    mark = pytest.mark.skipif(condition, reason="Testing deferred condition")
+    mark = pytest.mark.skipif(condition, reason="Testing deferred condition")  # type: ignore[arg-type]
 
     # The mark should have the condition.
     assert mark is not None

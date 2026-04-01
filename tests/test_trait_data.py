@@ -45,8 +45,10 @@ def test_trait_data_sorting(klass):
     tree = ast.parse(Path(inspect.getfile(data_module)).read_bytes())
     for node in tree.body:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            assert isinstance(node.value.func, ast.Name)
             assert node.value.func.id == klass.__name__
             assert len(node.targets) == 1
+            assert isinstance(node.targets[0], ast.Name)
             instance_id = node.targets[0].id
             assert instance_id.isupper()
             instance_ids.append(instance_id)

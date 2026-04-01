@@ -146,6 +146,7 @@ class Group(_Identifiable):
             object.__setattr__(self, "unless_decorator_id", unless_id)
 
         # Accept either a MappingProxyType, dict, or iterable of Traits.
+        traits: Iterable[Trait]
         if isinstance(self.members, (MappingProxyType, dict)):
             traits = self.members.values()
         else:

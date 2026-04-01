@@ -232,7 +232,9 @@ def test_shared_icons_belong_to_same_canonical_group():
         canonical = allowed_icon.get(icon)
         if canonical is not None:
             for owner in owners:
-                assert owner is canonical or owner in canonical, (
+                assert owner is canonical or (
+                    isinstance(owner, Trait) and owner in canonical
+                ), (
                     f"Icon {icon!r} is reserved for canonical group "
                     f"{canonical.id!r} and its members, but is also used by "
                     f"{owner.id!r}."
