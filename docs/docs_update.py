@@ -450,8 +450,9 @@ def generate_sphinx_directives(
         Autodoc directives (``autodata``, ``autofunction``, ``autoclass``, etc.)
         cannot be used as native MyST directives. They perform internal rST nested
         parsing that requires an rST parser context only ``{eval-rst}`` provides.
-        See `MyST-Parser #587 <https://github.com/executablebooks/MyST-Parser/issues/587>`_
-        and `#228 <https://github.com/executablebooks/MyST-Parser/issues/228>`_.
+        See `MyST-Parser #587 <https://github.com/executablebooks/MyST-Parser/issues/587>`_,
+        `#228 <https://github.com/executablebooks/MyST-Parser/issues/228>`_,
+        and `#1119 <https://github.com/executablebooks/MyST-Parser/issues/1119>`_.
 
     :param objects: The traits or groups to generate directives for.
     :param directive: The Sphinx directive name (e.g. ``"autodata"``,
