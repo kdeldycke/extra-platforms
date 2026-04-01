@@ -661,7 +661,10 @@ def test_deferred_condition_with_pytest_skipif():
     condition = _DeferredCondition(always_skip)
 
     # Create a skipif mark.
-    mark = pytest.mark.skipif(condition, reason="Testing deferred condition")  # type: ignore[arg-type]
+    mark = pytest.mark.skipif(
+        condition,  # type: ignore[arg-type]
+        reason="Testing deferred condition",
+    )
 
     # The mark should have the condition.
     assert mark is not None
