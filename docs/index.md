@@ -6,10 +6,8 @@ hide-toc: true
 ```
 
 ```{toctree}
----
-maxdepth: 2
-hidden:
----
+:maxdepth: 2
+:hidden:
 install
 trait
 architectures
@@ -25,11 +23,9 @@ sphinx
 ```
 
 ```{toctree}
----
-caption: Development
-maxdepth: 2
-hidden:
----
+:caption: Development
+:maxdepth: 2
+:hidden:
 contributing
 API <extra_platforms>
 tests
