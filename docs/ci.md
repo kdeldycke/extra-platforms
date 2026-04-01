@@ -130,50 +130,31 @@ mindmap
 
 ## Predefined CI
 
-```{autoclasstree} extra_platforms.ci_data
-:strict:
+```{eval-rst}
+.. autoclasstree:: extra_platforms.ci_data
+   :strict:
 ```
 
-```{automodule} extra_platforms.ci_data
-:no-index:
+```{eval-rst}
+.. automodule:: extra_platforms.ci_data
+   :no-index:
 ```
 
 <!-- ci-data-autodata-start -->
 
-```{autodata} extra_platforms.AZURE_PIPELINES
-```
-
-```{autodata} extra_platforms.BAMBOO
-```
-
-```{autodata} extra_platforms.BUILDKITE
-```
-
-```{autodata} extra_platforms.CIRCLE_CI
-```
-
-```{autodata} extra_platforms.CIRRUS_CI
-```
-
-```{autodata} extra_platforms.CODEBUILD
-```
-
-```{autodata} extra_platforms.GITHUB_CI
-```
-
-```{autodata} extra_platforms.GITLAB_CI
-```
-
-```{autodata} extra_platforms.HEROKU_CI
-```
-
-```{autodata} extra_platforms.TEAMCITY
-```
-
-```{autodata} extra_platforms.TRAVIS_CI
-```
-
-```{autodata} extra_platforms.UNKNOWN_CI
+```{eval-rst}
+.. autodata:: extra_platforms.AZURE_PIPELINES
+.. autodata:: extra_platforms.BAMBOO
+.. autodata:: extra_platforms.BUILDKITE
+.. autodata:: extra_platforms.CIRCLE_CI
+.. autodata:: extra_platforms.CIRRUS_CI
+.. autodata:: extra_platforms.CODEBUILD
+.. autodata:: extra_platforms.GITHUB_CI
+.. autodata:: extra_platforms.GITLAB_CI
+.. autodata:: extra_platforms.HEROKU_CI
+.. autodata:: extra_platforms.TEAMCITY
+.. autodata:: extra_platforms.TRAVIS_CI
+.. autodata:: extra_platforms.UNKNOWN_CI
 ```
 
 <!-- ci-data-autodata-end -->

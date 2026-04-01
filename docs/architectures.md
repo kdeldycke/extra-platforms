@@ -387,92 +387,45 @@ mindmap
 
 ## Predefined architectures
 
-```{autoclasstree} extra_platforms.architecture_data
-:strict:
+```{eval-rst}
+.. autoclasstree:: extra_platforms.architecture_data
+   :strict:
 ```
 
-```{automodule} extra_platforms.architecture_data
-:no-index:
+```{eval-rst}
+.. automodule:: extra_platforms.architecture_data
+   :no-index:
 ```
 
 <!-- architecture-data-autodata-start -->
 
-```{autodata} extra_platforms.AARCH64
-```
-
-```{autodata} extra_platforms.ARM
-```
-
-```{autodata} extra_platforms.ARMV5TEL
-```
-
-```{autodata} extra_platforms.ARMV6L
-```
-
-```{autodata} extra_platforms.ARMV7L
-```
-
-```{autodata} extra_platforms.ARMV8L
-```
-
-```{autodata} extra_platforms.I386
-```
-
-```{autodata} extra_platforms.I586
-```
-
-```{autodata} extra_platforms.I686
-```
-
-```{autodata} extra_platforms.LOONGARCH64
-```
-
-```{autodata} extra_platforms.MIPS
-```
-
-```{autodata} extra_platforms.MIPS64
-```
-
-```{autodata} extra_platforms.MIPS64EL
-```
-
-```{autodata} extra_platforms.MIPSEL
-```
-
-```{autodata} extra_platforms.PPC
-```
-
-```{autodata} extra_platforms.PPC64
-```
-
-```{autodata} extra_platforms.PPC64LE
-```
-
-```{autodata} extra_platforms.RISCV32
-```
-
-```{autodata} extra_platforms.RISCV64
-```
-
-```{autodata} extra_platforms.S390X
-```
-
-```{autodata} extra_platforms.SPARC
-```
-
-```{autodata} extra_platforms.SPARC64
-```
-
-```{autodata} extra_platforms.UNKNOWN_ARCHITECTURE
-```
-
-```{autodata} extra_platforms.WASM32
-```
-
-```{autodata} extra_platforms.WASM64
-```
-
-```{autodata} extra_platforms.X86_64
+```{eval-rst}
+.. autodata:: extra_platforms.AARCH64
+.. autodata:: extra_platforms.ARM
+.. autodata:: extra_platforms.ARMV5TEL
+.. autodata:: extra_platforms.ARMV6L
+.. autodata:: extra_platforms.ARMV7L
+.. autodata:: extra_platforms.ARMV8L
+.. autodata:: extra_platforms.I386
+.. autodata:: extra_platforms.I586
+.. autodata:: extra_platforms.I686
+.. autodata:: extra_platforms.LOONGARCH64
+.. autodata:: extra_platforms.MIPS
+.. autodata:: extra_platforms.MIPS64
+.. autodata:: extra_platforms.MIPS64EL
+.. autodata:: extra_platforms.MIPSEL
+.. autodata:: extra_platforms.PPC
+.. autodata:: extra_platforms.PPC64
+.. autodata:: extra_platforms.PPC64LE
+.. autodata:: extra_platforms.RISCV32
+.. autodata:: extra_platforms.RISCV64
+.. autodata:: extra_platforms.S390X
+.. autodata:: extra_platforms.SPARC
+.. autodata:: extra_platforms.SPARC64
+.. autodata:: extra_platforms.UNKNOWN_ARCHITECTURE
+.. autodata:: extra_platforms.WASM32
+.. autodata:: extra_platforms.WASM64
+.. autodata:: extra_platforms.X86_64
 ```
 
 <!-- architecture-data-autodata-end -->

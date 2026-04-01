@@ -194,403 +194,140 @@
 
 <!-- trait-detection-autofunction-start -->
 
-```{autofunction} extra_platforms.is_aarch64
-```
-
-```{autofunction} extra_platforms.is_aix
-```
-
-```{autofunction} extra_platforms.is_alacritty
-```
-
-```{autofunction} extra_platforms.is_alpine
-```
-
-```{autofunction} extra_platforms.is_altlinux
-```
-
-```{autofunction} extra_platforms.is_amzn
-```
-
-```{autofunction} extra_platforms.is_android
-```
-
-```{autofunction} extra_platforms.is_apple_terminal
-```
-
-```{autofunction} extra_platforms.is_arch
-```
-
-```{autofunction} extra_platforms.is_arm
-```
-
-```{autofunction} extra_platforms.is_armv5tel
-```
-
-```{autofunction} extra_platforms.is_armv6l
-```
-
-```{autofunction} extra_platforms.is_armv7l
-```
-
-```{autofunction} extra_platforms.is_armv8l
-```
-
-```{autofunction} extra_platforms.is_ash
-```
-
-```{autofunction} extra_platforms.is_azure_pipelines
-```
-
-```{autofunction} extra_platforms.is_bamboo
-```
-
-```{autofunction} extra_platforms.is_bash
-```
-
-```{autofunction} extra_platforms.is_buildkite
-```
-
-```{autofunction} extra_platforms.is_buildroot
-```
-
-```{autofunction} extra_platforms.is_cachyos
-```
-
-```{autofunction} extra_platforms.is_centos
-```
-
-```{autofunction} extra_platforms.is_circle_ci
-```
-
-```{autofunction} extra_platforms.is_cirrus_ci
-```
-
-```{autofunction} extra_platforms.is_claude_code
-```
-
-```{autofunction} extra_platforms.is_cline
-```
-
-```{autofunction} extra_platforms.is_cloudlinux
-```
-
-```{autofunction} extra_platforms.is_cmd
-```
-
-```{autofunction} extra_platforms.is_codebuild
-```
-
-```{autofunction} extra_platforms.is_contour
-```
-
-```{autofunction} extra_platforms.is_csh
-```
-
-```{autofunction} extra_platforms.is_cursor
-```
-
-```{autofunction} extra_platforms.is_cygwin
-```
-
-```{autofunction} extra_platforms.is_dash
-```
-
-```{autofunction} extra_platforms.is_debian
-```
-
-```{autofunction} extra_platforms.is_dragonfly_bsd
-```
-
-```{autofunction} extra_platforms.is_exherbo
-```
-
-```{autofunction} extra_platforms.is_fedora
-```
-
-```{autofunction} extra_platforms.is_fish
-```
-
-```{autofunction} extra_platforms.is_foot
-```
-
-```{autofunction} extra_platforms.is_freebsd
-```
-
-```{autofunction} extra_platforms.is_generic_linux
-```
-
-```{autofunction} extra_platforms.is_gentoo
-```
-
-```{autofunction} extra_platforms.is_ghostty
-```
-
-```{autofunction} extra_platforms.is_github_ci
-```
-
-```{autofunction} extra_platforms.is_gitlab_ci
-```
-
-```{autofunction} extra_platforms.is_gnome_terminal
-```
-
-```{autofunction} extra_platforms.is_gnu_screen
-```
-
-```{autofunction} extra_platforms.is_guix
-```
-
-```{autofunction} extra_platforms.is_haiku
-```
-
-```{autofunction} extra_platforms.is_heroku_ci
-```
-
-```{autofunction} extra_platforms.is_hurd
-```
-
-```{autofunction} extra_platforms.is_hyper
-```
-
-```{autofunction} extra_platforms.is_i386
-```
-
-```{autofunction} extra_platforms.is_i586
-```
-
-```{autofunction} extra_platforms.is_i686
-```
-
-```{autofunction} extra_platforms.is_ibm_powerkvm
-```
-
-```{autofunction} extra_platforms.is_illumos
-```
-
-```{autofunction} extra_platforms.is_iterm2
-```
-
-```{autofunction} extra_platforms.is_kali
-```
-
-```{autofunction} extra_platforms.is_kitty
-```
-
-```{autofunction} extra_platforms.is_konsole
-```
-
-```{autofunction} extra_platforms.is_ksh
-```
-
-```{autofunction} extra_platforms.is_kvmibm
-```
-
-```{autofunction} extra_platforms.is_linuxmint
-```
-
-```{autofunction} extra_platforms.is_loongarch64
-```
-
-```{autofunction} extra_platforms.is_macos
-```
-
-```{autofunction} extra_platforms.is_mageia
-```
-
-```{autofunction} extra_platforms.is_mandriva
-```
-
-```{autofunction} extra_platforms.is_manjaro
-```
-
-```{autofunction} extra_platforms.is_midnightbsd
-```
-
-```{autofunction} extra_platforms.is_mips
-```
-
-```{autofunction} extra_platforms.is_mips64
-```
-
-```{autofunction} extra_platforms.is_mips64el
-```
-
-```{autofunction} extra_platforms.is_mipsel
-```
-
-```{autofunction} extra_platforms.is_netbsd
-```
-
-```{autofunction} extra_platforms.is_nobara
-```
-
-```{autofunction} extra_platforms.is_nushell
-```
-
-```{autofunction} extra_platforms.is_openbsd
-```
-
-```{autofunction} extra_platforms.is_opensuse
-```
-
-```{autofunction} extra_platforms.is_openwrt
-```
-
-```{autofunction} extra_platforms.is_oracle
-```
-
-```{autofunction} extra_platforms.is_parallels
-```
-
-```{autofunction} extra_platforms.is_pidora
-```
-
-```{autofunction} extra_platforms.is_powershell
-```
-
-```{autofunction} extra_platforms.is_ppc
-```
-
-```{autofunction} extra_platforms.is_ppc64
-```
-
-```{autofunction} extra_platforms.is_ppc64le
-```
-
-```{autofunction} extra_platforms.is_raspbian
-```
-
-```{autofunction} extra_platforms.is_rhel
-```
-
-```{autofunction} extra_platforms.is_rio
-```
-
-```{autofunction} extra_platforms.is_riscv32
-```
-
-```{autofunction} extra_platforms.is_riscv64
-```
-
-```{autofunction} extra_platforms.is_rocky
-```
-
-```{autofunction} extra_platforms.is_s390x
-```
-
-```{autofunction} extra_platforms.is_scientific
-```
-
-```{autofunction} extra_platforms.is_slackware
-```
-
-```{autofunction} extra_platforms.is_sles
-```
-
-```{autofunction} extra_platforms.is_solaris
-```
-
-```{autofunction} extra_platforms.is_sparc
-```
-
-```{autofunction} extra_platforms.is_sparc64
-```
-
-```{autofunction} extra_platforms.is_sunos
-```
-
-```{autofunction} extra_platforms.is_tabby
-```
-
-```{autofunction} extra_platforms.is_tcsh
-```
-
-```{autofunction} extra_platforms.is_teamcity
-```
-
-```{autofunction} extra_platforms.is_tilix
-```
-
-```{autofunction} extra_platforms.is_tmux
-```
-
-```{autofunction} extra_platforms.is_travis_ci
-```
-
-```{autofunction} extra_platforms.is_tumbleweed
-```
-
-```{autofunction} extra_platforms.is_tuxedo
-```
-
-```{autofunction} extra_platforms.is_ubuntu
-```
-
-```{autofunction} extra_platforms.is_ultramarine
-```
-
-```{autofunction} extra_platforms.is_unknown_agent
-```
-
-```{autofunction} extra_platforms.is_unknown_architecture
-```
-
-```{autofunction} extra_platforms.is_unknown_ci
-```
-
-```{autofunction} extra_platforms.is_unknown_platform
-```
-
-```{autofunction} extra_platforms.is_unknown_shell
-```
-
-```{autofunction} extra_platforms.is_unknown_terminal
-```
-
-```{autofunction} extra_platforms.is_void
-```
-
-```{autofunction} extra_platforms.is_vscode_terminal
-```
-
-```{autofunction} extra_platforms.is_wasm32
-```
-
-```{autofunction} extra_platforms.is_wasm64
-```
-
-```{autofunction} extra_platforms.is_wezterm
-```
-
-```{autofunction} extra_platforms.is_windows
-```
-
-```{autofunction} extra_platforms.is_windows_terminal
-```
-
-```{autofunction} extra_platforms.is_wsl1
-```
-
-```{autofunction} extra_platforms.is_wsl2
-```
-
-```{autofunction} extra_platforms.is_x86_64
-```
-
-```{autofunction} extra_platforms.is_xenserver
-```
-
-```{autofunction} extra_platforms.is_xonsh
-```
-
-```{autofunction} extra_platforms.is_xterm
-```
-
-```{autofunction} extra_platforms.is_zellij
-```
-
-```{autofunction} extra_platforms.is_zsh
+```{eval-rst}
+.. autofunction:: extra_platforms.is_aarch64
+.. autofunction:: extra_platforms.is_aix
+.. autofunction:: extra_platforms.is_alacritty
+.. autofunction:: extra_platforms.is_alpine
+.. autofunction:: extra_platforms.is_altlinux
+.. autofunction:: extra_platforms.is_amzn
+.. autofunction:: extra_platforms.is_android
+.. autofunction:: extra_platforms.is_apple_terminal
+.. autofunction:: extra_platforms.is_arch
+.. autofunction:: extra_platforms.is_arm
+.. autofunction:: extra_platforms.is_armv5tel
+.. autofunction:: extra_platforms.is_armv6l
+.. autofunction:: extra_platforms.is_armv7l
+.. autofunction:: extra_platforms.is_armv8l
+.. autofunction:: extra_platforms.is_ash
+.. autofunction:: extra_platforms.is_azure_pipelines
+.. autofunction:: extra_platforms.is_bamboo
+.. autofunction:: extra_platforms.is_bash
+.. autofunction:: extra_platforms.is_buildkite
+.. autofunction:: extra_platforms.is_buildroot
+.. autofunction:: extra_platforms.is_cachyos
+.. autofunction:: extra_platforms.is_centos
+.. autofunction:: extra_platforms.is_circle_ci
+.. autofunction:: extra_platforms.is_cirrus_ci
+.. autofunction:: extra_platforms.is_claude_code
+.. autofunction:: extra_platforms.is_cline
+.. autofunction:: extra_platforms.is_cloudlinux
+.. autofunction:: extra_platforms.is_cmd
+.. autofunction:: extra_platforms.is_codebuild
+.. autofunction:: extra_platforms.is_contour
+.. autofunction:: extra_platforms.is_csh
+.. autofunction:: extra_platforms.is_cursor
+.. autofunction:: extra_platforms.is_cygwin
+.. autofunction:: extra_platforms.is_dash
+.. autofunction:: extra_platforms.is_debian
+.. autofunction:: extra_platforms.is_dragonfly_bsd
+.. autofunction:: extra_platforms.is_exherbo
+.. autofunction:: extra_platforms.is_fedora
+.. autofunction:: extra_platforms.is_fish
+.. autofunction:: extra_platforms.is_foot
+.. autofunction:: extra_platforms.is_freebsd
+.. autofunction:: extra_platforms.is_generic_linux
+.. autofunction:: extra_platforms.is_gentoo
+.. autofunction:: extra_platforms.is_ghostty
+.. autofunction:: extra_platforms.is_github_ci
+.. autofunction:: extra_platforms.is_gitlab_ci
+.. autofunction:: extra_platforms.is_gnome_terminal
+.. autofunction:: extra_platforms.is_gnu_screen
+.. autofunction:: extra_platforms.is_guix
+.. autofunction:: extra_platforms.is_haiku
+.. autofunction:: extra_platforms.is_heroku_ci
+.. autofunction:: extra_platforms.is_hurd
+.. autofunction:: extra_platforms.is_hyper
+.. autofunction:: extra_platforms.is_i386
+.. autofunction:: extra_platforms.is_i586
+.. autofunction:: extra_platforms.is_i686
+.. autofunction:: extra_platforms.is_ibm_powerkvm
+.. autofunction:: extra_platforms.is_illumos
+.. autofunction:: extra_platforms.is_iterm2
+.. autofunction:: extra_platforms.is_kali
+.. autofunction:: extra_platforms.is_kitty
+.. autofunction:: extra_platforms.is_konsole
+.. autofunction:: extra_platforms.is_ksh
+.. autofunction:: extra_platforms.is_kvmibm
+.. autofunction:: extra_platforms.is_linuxmint
+.. autofunction:: extra_platforms.is_loongarch64
+.. autofunction:: extra_platforms.is_macos
+.. autofunction:: extra_platforms.is_mageia
+.. autofunction:: extra_platforms.is_mandriva
+.. autofunction:: extra_platforms.is_manjaro
+.. autofunction:: extra_platforms.is_midnightbsd
+.. autofunction:: extra_platforms.is_mips
+.. autofunction:: extra_platforms.is_mips64
+.. autofunction:: extra_platforms.is_mips64el
+.. autofunction:: extra_platforms.is_mipsel
+.. autofunction:: extra_platforms.is_netbsd
+.. autofunction:: extra_platforms.is_nobara
+.. autofunction:: extra_platforms.is_nushell
+.. autofunction:: extra_platforms.is_openbsd
+.. autofunction:: extra_platforms.is_opensuse
+.. autofunction:: extra_platforms.is_openwrt
+.. autofunction:: extra_platforms.is_oracle
+.. autofunction:: extra_platforms.is_parallels
+.. autofunction:: extra_platforms.is_pidora
+.. autofunction:: extra_platforms.is_powershell
+.. autofunction:: extra_platforms.is_ppc
+.. autofunction:: extra_platforms.is_ppc64
+.. autofunction:: extra_platforms.is_ppc64le
+.. autofunction:: extra_platforms.is_raspbian
+.. autofunction:: extra_platforms.is_rhel
+.. autofunction:: extra_platforms.is_rio
+.. autofunction:: extra_platforms.is_riscv32
+.. autofunction:: extra_platforms.is_riscv64
+.. autofunction:: extra_platforms.is_rocky
+.. autofunction:: extra_platforms.is_s390x
+.. autofunction:: extra_platforms.is_scientific
+.. autofunction:: extra_platforms.is_slackware
+.. autofunction:: extra_platforms.is_sles
+.. autofunction:: extra_platforms.is_solaris
+.. autofunction:: extra_platforms.is_sparc
+.. autofunction:: extra_platforms.is_sparc64
+.. autofunction:: extra_platforms.is_sunos
+.. autofunction:: extra_platforms.is_tabby
+.. autofunction:: extra_platforms.is_tcsh
+.. autofunction:: extra_platforms.is_teamcity
+.. autofunction:: extra_platforms.is_tilix
+.. autofunction:: extra_platforms.is_tmux
+.. autofunction:: extra_platforms.is_travis_ci
+.. autofunction:: extra_platforms.is_tumbleweed
+.. autofunction:: extra_platforms.is_tuxedo
+.. autofunction:: extra_platforms.is_ubuntu
+.. autofunction:: extra_platforms.is_ultramarine
+.. autofunction:: extra_platforms.is_unknown_agent
+.. autofunction:: extra_platforms.is_unknown_architecture
+.. autofunction:: extra_platforms.is_unknown_ci
+.. autofunction:: extra_platforms.is_unknown_platform
+.. autofunction:: extra_platforms.is_unknown_shell
+.. autofunction:: extra_platforms.is_unknown_terminal
+.. autofunction:: extra_platforms.is_void
+.. autofunction:: extra_platforms.is_vscode_terminal
+.. autofunction:: extra_platforms.is_wasm32
+.. autofunction:: extra_platforms.is_wasm64
+.. autofunction:: extra_platforms.is_wezterm
+.. autofunction:: extra_platforms.is_windows
+.. autofunction:: extra_platforms.is_windows_terminal
+.. autofunction:: extra_platforms.is_wsl1
+.. autofunction:: extra_platforms.is_wsl2
+.. autofunction:: extra_platforms.is_x86_64
+.. autofunction:: extra_platforms.is_xenserver
+.. autofunction:: extra_platforms.is_xonsh
+.. autofunction:: extra_platforms.is_xterm
+.. autofunction:: extra_platforms.is_zellij
+.. autofunction:: extra_platforms.is_zsh
 ```
 
 <!-- trait-detection-autofunction-end -->
@@ -603,124 +340,47 @@ These functions are dynamically generated for each [group](groups.md) and test w
 
 <!-- group-detection-autofunction-start -->
 
-```{autofunction} extra_platforms.is_any_agent
-```
-
-```{autofunction} extra_platforms.is_any_architecture
-```
-
-```{autofunction} extra_platforms.is_any_arm
-```
-
-```{autofunction} extra_platforms.is_any_ci
-```
-
-```{autofunction} extra_platforms.is_any_mips
-```
-
-```{autofunction} extra_platforms.is_any_platform
-```
-
-```{autofunction} extra_platforms.is_any_shell
-```
-
-```{autofunction} extra_platforms.is_any_sparc
-```
-
-```{autofunction} extra_platforms.is_any_terminal
-```
-
-```{autofunction} extra_platforms.is_any_trait
-```
-
-```{autofunction} extra_platforms.is_any_windows
-```
-
-```{autofunction} extra_platforms.is_arch_32_bit
-```
-
-```{autofunction} extra_platforms.is_arch_64_bit
-```
-
-```{autofunction} extra_platforms.is_big_endian
-```
-
-```{autofunction} extra_platforms.is_bourne_shells
-```
-
-```{autofunction} extra_platforms.is_bsd
-```
-
-```{autofunction} extra_platforms.is_bsd_not_macos
-```
-
-```{autofunction} extra_platforms.is_c_shells
-```
-
-```{autofunction} extra_platforms.is_gpu_terminals
-```
-
-```{autofunction} extra_platforms.is_ibm_mainframe
-```
-
-```{autofunction} extra_platforms.is_linux
-```
-
-```{autofunction} extra_platforms.is_linux_layers
-```
-
-```{autofunction} extra_platforms.is_linux_like
-```
-
-```{autofunction} extra_platforms.is_little_endian
-```
-
-```{autofunction} extra_platforms.is_loongarch
-```
-
-```{autofunction} extra_platforms.is_multiplexers
-```
-
-```{autofunction} extra_platforms.is_native_terminals
-```
-
-```{autofunction} extra_platforms.is_other_posix
-```
-
-```{autofunction} extra_platforms.is_other_shells
-```
-
-```{autofunction} extra_platforms.is_powerpc
-```
-
-```{autofunction} extra_platforms.is_riscv
-```
-
-```{autofunction} extra_platforms.is_system_v
-```
-
-```{autofunction} extra_platforms.is_unix
-```
-
-```{autofunction} extra_platforms.is_unix_layers
-```
-
-```{autofunction} extra_platforms.is_unix_not_macos
-```
-
-```{autofunction} extra_platforms.is_unknown
-```
-
-```{autofunction} extra_platforms.is_web_terminals
-```
-
-```{autofunction} extra_platforms.is_webassembly
-```
-
-```{autofunction} extra_platforms.is_windows_shells
-```
-
-```{autofunction} extra_platforms.is_x86
+```{eval-rst}
+.. autofunction:: extra_platforms.is_any_agent
+.. autofunction:: extra_platforms.is_any_architecture
+.. autofunction:: extra_platforms.is_any_arm
+.. autofunction:: extra_platforms.is_any_ci
+.. autofunction:: extra_platforms.is_any_mips
+.. autofunction:: extra_platforms.is_any_platform
+.. autofunction:: extra_platforms.is_any_shell
+.. autofunction:: extra_platforms.is_any_sparc
+.. autofunction:: extra_platforms.is_any_terminal
+.. autofunction:: extra_platforms.is_any_trait
+.. autofunction:: extra_platforms.is_any_windows
+.. autofunction:: extra_platforms.is_arch_32_bit
+.. autofunction:: extra_platforms.is_arch_64_bit
+.. autofunction:: extra_platforms.is_big_endian
+.. autofunction:: extra_platforms.is_bourne_shells
+.. autofunction:: extra_platforms.is_bsd
+.. autofunction:: extra_platforms.is_bsd_not_macos
+.. autofunction:: extra_platforms.is_c_shells
+.. autofunction:: extra_platforms.is_gpu_terminals
+.. autofunction:: extra_platforms.is_ibm_mainframe
+.. autofunction:: extra_platforms.is_linux
+.. autofunction:: extra_platforms.is_linux_layers
+.. autofunction:: extra_platforms.is_linux_like
+.. autofunction:: extra_platforms.is_little_endian
+.. autofunction:: extra_platforms.is_loongarch
+.. autofunction:: extra_platforms.is_multiplexers
+.. autofunction:: extra_platforms.is_native_terminals
+.. autofunction:: extra_platforms.is_other_posix
+.. autofunction:: extra_platforms.is_other_shells
+.. autofunction:: extra_platforms.is_powerpc
+.. autofunction:: extra_platforms.is_riscv
+.. autofunction:: extra_platforms.is_system_v
+.. autofunction:: extra_platforms.is_unix
+.. autofunction:: extra_platforms.is_unix_layers
+.. autofunction:: extra_platforms.is_unix_not_macos
+.. autofunction:: extra_platforms.is_unknown
+.. autofunction:: extra_platforms.is_web_terminals
+.. autofunction:: extra_platforms.is_webassembly
+.. autofunction:: extra_platforms.is_windows_shells
+.. autofunction:: extra_platforms.is_x86
 ```
 
 <!-- group-detection-autofunction-end -->
@@ -729,28 +389,18 @@ These functions are dynamically generated for each [group](groups.md) and test w
 
 These functions retrieve the currently detected traits:
 
-```{autofunction} extra_platforms.current_traits
-```
-
-```{autofunction} extra_platforms.current_architecture
-```
-
-```{autofunction} extra_platforms.current_platform
-```
-
-```{autofunction} extra_platforms.current_shell
-```
-
-```{autofunction} extra_platforms.current_terminal
-```
-
-```{autofunction} extra_platforms.current_ci
-```
-
-```{autofunction} extra_platforms.current_agent
+```{eval-rst}
+.. autofunction:: extra_platforms.current_traits
+.. autofunction:: extra_platforms.current_architecture
+.. autofunction:: extra_platforms.current_platform
+.. autofunction:: extra_platforms.current_shell
+.. autofunction:: extra_platforms.current_terminal
+.. autofunction:: extra_platforms.current_ci
+.. autofunction:: extra_platforms.current_agent
 ```
 
 ## Cache management
 
-```{autofunction} extra_platforms.invalidate_caches
+```{eval-rst}
+.. autofunction:: extra_platforms.invalidate_caches
 ```

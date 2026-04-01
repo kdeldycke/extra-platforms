@@ -182,211 +182,118 @@ with canonical groups.
 
 <!-- group-data-autodata-start -->
 
-```{autodata} extra_platforms.ALL_AGENTS
-```
-
-```{autodata} extra_platforms.ALL_ARCHITECTURES
-```
-
-```{autodata} extra_platforms.ALL_ARM
-```
-
-```{autodata} extra_platforms.ALL_CI
-```
-
-```{autodata} extra_platforms.ALL_MIPS
-```
-
-```{autodata} extra_platforms.ALL_PLATFORMS
-```
-
-```{autodata} extra_platforms.ALL_SHELLS
-```
-
-```{autodata} extra_platforms.ALL_SPARC
-```
-
-```{autodata} extra_platforms.ALL_TERMINALS
-```
-
-```{autodata} extra_platforms.ALL_TRAITS
-```
-
-```{autodata} extra_platforms.ALL_WINDOWS
-```
-
-```{autodata} extra_platforms.ARCH_32_BIT
-```
-
-```{autodata} extra_platforms.ARCH_64_BIT
-```
-
-```{autodata} extra_platforms.BIG_ENDIAN
-```
-
-```{autodata} extra_platforms.BOURNE_SHELLS
-```
-
-```{autodata} extra_platforms.BSD
-```
-
-```{autodata} extra_platforms.BSD_WITHOUT_MACOS
-```
-
-```{autodata} extra_platforms.C_SHELLS
-```
-
-```{autodata} extra_platforms.GPU_TERMINALS
-```
-
-```{autodata} extra_platforms.IBM_MAINFRAME
-```
-
-```{autodata} extra_platforms.LINUX
-```
-
-```{autodata} extra_platforms.LINUX_LAYERS
-```
-
-```{autodata} extra_platforms.LINUX_LIKE
-```
-
-```{autodata} extra_platforms.LITTLE_ENDIAN
-```
-
-```{autodata} extra_platforms.LOONGARCH
-```
-
-```{autodata} extra_platforms.MULTIPLEXERS
-```
-
-```{autodata} extra_platforms.NATIVE_TERMINALS
-```
-
-```{autodata} extra_platforms.OTHER_POSIX
-```
-
-```{autodata} extra_platforms.OTHER_SHELLS
-```
-
-```{autodata} extra_platforms.POWERPC
-```
-
-```{autodata} extra_platforms.RISCV
-```
-
-```{autodata} extra_platforms.SYSTEM_V
-```
-
-```{autodata} extra_platforms.UNIX
-```
-
-```{autodata} extra_platforms.UNIX_LAYERS
-```
-
-```{autodata} extra_platforms.UNIX_WITHOUT_MACOS
-```
-
-```{autodata} extra_platforms.UNKNOWN
-```
-
-```{autodata} extra_platforms.WEB_TERMINALS
-```
-
-```{autodata} extra_platforms.WEBASSEMBLY
-```
-
-```{autodata} extra_platforms.WINDOWS_SHELLS
-```
-
-```{autodata} extra_platforms.X86
+```{eval-rst}
+.. autodata:: extra_platforms.ALL_AGENTS
+.. autodata:: extra_platforms.ALL_ARCHITECTURES
+.. autodata:: extra_platforms.ALL_ARM
+.. autodata:: extra_platforms.ALL_CI
+.. autodata:: extra_platforms.ALL_MIPS
+.. autodata:: extra_platforms.ALL_PLATFORMS
+.. autodata:: extra_platforms.ALL_SHELLS
+.. autodata:: extra_platforms.ALL_SPARC
+.. autodata:: extra_platforms.ALL_TERMINALS
+.. autodata:: extra_platforms.ALL_TRAITS
+.. autodata:: extra_platforms.ALL_WINDOWS
+.. autodata:: extra_platforms.ARCH_32_BIT
+.. autodata:: extra_platforms.ARCH_64_BIT
+.. autodata:: extra_platforms.BIG_ENDIAN
+.. autodata:: extra_platforms.BOURNE_SHELLS
+.. autodata:: extra_platforms.BSD
+.. autodata:: extra_platforms.BSD_WITHOUT_MACOS
+.. autodata:: extra_platforms.C_SHELLS
+.. autodata:: extra_platforms.GPU_TERMINALS
+.. autodata:: extra_platforms.IBM_MAINFRAME
+.. autodata:: extra_platforms.LINUX
+.. autodata:: extra_platforms.LINUX_LAYERS
+.. autodata:: extra_platforms.LINUX_LIKE
+.. autodata:: extra_platforms.LITTLE_ENDIAN
+.. autodata:: extra_platforms.LOONGARCH
+.. autodata:: extra_platforms.MULTIPLEXERS
+.. autodata:: extra_platforms.NATIVE_TERMINALS
+.. autodata:: extra_platforms.OTHER_POSIX
+.. autodata:: extra_platforms.OTHER_SHELLS
+.. autodata:: extra_platforms.POWERPC
+.. autodata:: extra_platforms.RISCV
+.. autodata:: extra_platforms.SYSTEM_V
+.. autodata:: extra_platforms.UNIX
+.. autodata:: extra_platforms.UNIX_LAYERS
+.. autodata:: extra_platforms.UNIX_WITHOUT_MACOS
+.. autodata:: extra_platforms.UNKNOWN
+.. autodata:: extra_platforms.WEB_TERMINALS
+.. autodata:: extra_platforms.WEBASSEMBLY
+.. autodata:: extra_platforms.WINDOWS_SHELLS
+.. autodata:: extra_platforms.X86
 ```
 
 <!-- group-data-autodata-end -->
 
 ## Group collections
 
-```{autodata} extra_platforms.group_data.ALL_ARCHITECTURE_GROUPS
-```
-
-```{autodata} extra_platforms.group_data.ALL_CI_GROUPS
-```
-
-```{autodata} extra_platforms.group_data.ALL_GROUPS
-```
-
-```{autodata} extra_platforms.group_data.ALL_PLATFORM_GROUPS
-```
-
-```{autodata} extra_platforms.group_data.ALL_SHELL_GROUPS
-```
-
-```{autodata} extra_platforms.group_data.ALL_TERMINAL_GROUPS
-```
-
-```{autodata} extra_platforms.group_data.EXTRA_GROUPS
-```
-
-```{autodata} extra_platforms.group_data.NON_OVERLAPPING_GROUPS
+```{eval-rst}
+.. autodata:: extra_platforms.group_data.ALL_ARCHITECTURE_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_CI_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_PLATFORM_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_SHELL_GROUPS
+.. autodata:: extra_platforms.group_data.ALL_TERMINAL_GROUPS
+.. autodata:: extra_platforms.group_data.EXTRA_GROUPS
+.. autodata:: extra_platforms.group_data.NON_OVERLAPPING_GROUPS
 ```
 
 ## ID collections
 
-```{autodata} extra_platforms.group_data.ALL_GROUP_IDS
-```
-
-```{autodata} extra_platforms.group_data.ALL_IDS
-```
-
-```{autodata} extra_platforms.group_data.ALL_TRAIT_IDS
+```{eval-rst}
+.. autodata:: extra_platforms.group_data.ALL_GROUP_IDS
+.. autodata:: extra_platforms.group_data.ALL_IDS
+.. autodata:: extra_platforms.group_data.ALL_TRAIT_IDS
 ```
 
 ## Trait and group operations
 
-```{autofunction} extra_platforms.extract_members
-```
-
-```{autofunction} extra_platforms.traits_from_ids
-```
-
-```{autofunction} extra_platforms.groups_from_ids
-```
-
-```{autofunction} extra_platforms.reduce
+```{eval-rst}
+.. autofunction:: extra_platforms.extract_members
+.. autofunction:: extra_platforms.traits_from_ids
+.. autofunction:: extra_platforms.groups_from_ids
+.. autofunction:: extra_platforms.reduce
 ```
 
 ## Group implementation
 
-```{autoclass} extra_platforms.Group
-:members:
-:private-members:
-:special-members:
-:show-inheritance:
+```{eval-rst}
+.. autoclass:: extra_platforms.Group
+   :members:
+   :private-members:
+   :special-members:
+   :show-inheritance:
 ```
 
-```{autoclasstree} extra_platforms.group
-:strict:
+```{eval-rst}
+.. autoclasstree:: extra_platforms.group
+   :strict:
 ```
 
 <!-- group-module-automodule-start -->
 
-```{automodule} extra_platforms.group
-:members:
-:undoc-members:
-:show-inheritance:
-:exclude-members: Group, extract_members, groups_from_ids, reduce, traits_from_ids
+```{eval-rst}
+.. automodule:: extra_platforms.group
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members: Group, extract_members, groups_from_ids, reduce, traits_from_ids
 ```
 
 <!-- group-module-automodule-end -->
 
-```{autoclasstree} extra_platforms.group_data
-:strict:
+```{eval-rst}
+.. autoclasstree:: extra_platforms.group_data
+   :strict:
 ```
 
 <!-- group-data-module-automodule-start -->
 
-```{automodule} extra_platforms.group_data
-:exclude-members: ALL_AGENTS, ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, ALL_ARM, ALL_CI, ALL_CI_GROUPS, ALL_GROUPS, ALL_GROUP_IDS, ALL_IDS, ALL_MIPS, ALL_PLATFORMS, ALL_PLATFORM_GROUPS, ALL_SHELLS, ALL_SHELL_GROUPS, ALL_SPARC, ALL_TERMINALS, ALL_TERMINAL_GROUPS, ALL_TRAITS, ALL_TRAIT_IDS, ALL_WINDOWS, ARCH_32_BIT, ARCH_64_BIT, BIG_ENDIAN, BOURNE_SHELLS, BSD, BSD_WITHOUT_MACOS, C_SHELLS, EXTRA_GROUPS, GPU_TERMINALS, IBM_MAINFRAME, LINUX, LINUX_LAYERS, LINUX_LIKE, LITTLE_ENDIAN, LOONGARCH, MULTIPLEXERS, NATIVE_TERMINALS, NON_OVERLAPPING_GROUPS, OTHER_POSIX, OTHER_SHELLS, POWERPC, RISCV, SYSTEM_V, UNIX, UNIX_LAYERS, UNIX_WITHOUT_MACOS, UNKNOWN, WEBASSEMBLY, WEB_TERMINALS, WINDOWS_SHELLS, X86
+```{eval-rst}
+.. automodule:: extra_platforms.group_data
+   :exclude-members: ALL_AGENTS, ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, ALL_ARM, ALL_CI, ALL_CI_GROUPS, ALL_GROUPS, ALL_GROUP_IDS, ALL_IDS, ALL_MIPS, ALL_PLATFORMS, ALL_PLATFORM_GROUPS, ALL_SHELLS, ALL_SHELL_GROUPS, ALL_SPARC, ALL_TERMINALS, ALL_TERMINAL_GROUPS, ALL_TRAITS, ALL_TRAIT_IDS, ALL_WINDOWS, ARCH_32_BIT, ARCH_64_BIT, BIG_ENDIAN, BOURNE_SHELLS, BSD, BSD_WITHOUT_MACOS, C_SHELLS, EXTRA_GROUPS, GPU_TERMINALS, IBM_MAINFRAME, LINUX, LINUX_LAYERS, LINUX_LIKE, LITTLE_ENDIAN, LOONGARCH, MULTIPLEXERS, NATIVE_TERMINALS, NON_OVERLAPPING_GROUPS, OTHER_POSIX, OTHER_SHELLS, POWERPC, RISCV, SYSTEM_V, UNIX, UNIX_LAYERS, UNIX_WITHOUT_MACOS, UNKNOWN, WEBASSEMBLY, WEB_TERMINALS, WINDOWS_SHELLS, X86
 ```
 
 <!-- group-data-module-automodule-end -->

@@ -68,11 +68,9 @@ suppress_warnings = [
     # pytest.Mark type is not available during Sphinx documentation build. These are
     # cosmetic warnings that don't affect the generated documentation.
     "sphinx_autodoc_typehints.forward_reference",
-    # Example: "/Users/kde/code/extra-platforms/docs/architectures.md:305: WARNING:
-    # Ignoring "mermaid" directive without content. [docutils]"
+    # Example: "Ignoring "mermaid" directive without content. [myst.directive]"
     # Explanation: The autoclasstree extension sometimes generates empty mermaid
-    # directives for certain module structures. These are harmless and don't affect
-    # the documentation output.
+    # directives for certain module structures.
     "myst.directive",
     # Example: "/Users/kde/code/extra-platforms/tests/test_sphinx_crossrefs.py:docstring
     # of tests.test_sphinx_crossrefs.has_linked_reference:9: ERROR: Unexpected

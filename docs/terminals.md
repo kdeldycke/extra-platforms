@@ -175,77 +175,40 @@ mindmap
 
 ## Predefined terminals
 
-```{autoclasstree} extra_platforms.terminal_data
-:strict:
+```{eval-rst}
+.. autoclasstree:: extra_platforms.terminal_data
+   :strict:
 ```
 
-```{automodule} extra_platforms.terminal_data
-:no-index:
+```{eval-rst}
+.. automodule:: extra_platforms.terminal_data
+   :no-index:
 ```
 
 <!-- terminal-data-autodata-start -->
 
-```{autodata} extra_platforms.ALACRITTY
-```
-
-```{autodata} extra_platforms.APPLE_TERMINAL
-```
-
-```{autodata} extra_platforms.CONTOUR
-```
-
-```{autodata} extra_platforms.FOOT
-```
-
-```{autodata} extra_platforms.GHOSTTY
-```
-
-```{autodata} extra_platforms.GNOME_TERMINAL
-```
-
-```{autodata} extra_platforms.GNU_SCREEN
-```
-
-```{autodata} extra_platforms.HYPER
-```
-
-```{autodata} extra_platforms.ITERM2
-```
-
-```{autodata} extra_platforms.KITTY
-```
-
-```{autodata} extra_platforms.KONSOLE
-```
-
-```{autodata} extra_platforms.RIO
-```
-
-```{autodata} extra_platforms.TABBY
-```
-
-```{autodata} extra_platforms.TILIX
-```
-
-```{autodata} extra_platforms.TMUX
-```
-
-```{autodata} extra_platforms.UNKNOWN_TERMINAL
-```
-
-```{autodata} extra_platforms.VSCODE_TERMINAL
-```
-
-```{autodata} extra_platforms.WEZTERM
-```
-
-```{autodata} extra_platforms.WINDOWS_TERMINAL
-```
-
-```{autodata} extra_platforms.XTERM
-```
-
-```{autodata} extra_platforms.ZELLIJ
+```{eval-rst}
+.. autodata:: extra_platforms.ALACRITTY
+.. autodata:: extra_platforms.APPLE_TERMINAL
+.. autodata:: extra_platforms.CONTOUR
+.. autodata:: extra_platforms.FOOT
+.. autodata:: extra_platforms.GHOSTTY
+.. autodata:: extra_platforms.GNOME_TERMINAL
+.. autodata:: extra_platforms.GNU_SCREEN
+.. autodata:: extra_platforms.HYPER
+.. autodata:: extra_platforms.ITERM2
+.. autodata:: extra_platforms.KITTY
+.. autodata:: extra_platforms.KONSOLE
+.. autodata:: extra_platforms.RIO
+.. autodata:: extra_platforms.TABBY
+.. autodata:: extra_platforms.TILIX
+.. autodata:: extra_platforms.TMUX
+.. autodata:: extra_platforms.UNKNOWN_TERMINAL
+.. autodata:: extra_platforms.VSCODE_TERMINAL
+.. autodata:: extra_platforms.WEZTERM
+.. autodata:: extra_platforms.WINDOWS_TERMINAL
+.. autodata:: extra_platforms.XTERM
+.. autodata:: extra_platforms.ZELLIJ
 ```
 
 <!-- terminal-data-autodata-end -->

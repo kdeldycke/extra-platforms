@@ -442,9 +442,16 @@ def generate_sphinx_directives(
     directive: str,
     attr: str,
 ) -> str:
-    """Generate native MyST directive blocks for a collection of traits or groups.
+    """Generate Sphinx autodoc directives for a collection of traits or groups.
 
-    Produces one ``{directive}`` fenced block per object.
+    Produces a MyST ``{eval-rst}`` block with one directive line per object.
+
+    .. note::
+        Autodoc directives (``autodata``, ``autofunction``, ``autoclass``, etc.)
+        cannot be used as native MyST directives. They perform internal rST nested
+        parsing that requires an rST parser context only ``{eval-rst}`` provides.
+        See `MyST-Parser #587 <https://github.com/executablebooks/MyST-Parser/issues/587>`_
+        and `#228 <https://github.com/executablebooks/MyST-Parser/issues/228>`_.
 
     :param objects: The traits or groups to generate directives for.
     :param directive: The Sphinx directive name (e.g. ``"autodata"``,
@@ -454,14 +461,15 @@ def generate_sphinx_directives(
     """
     objects_list = list(objects)
     if not objects_list:
-        return ""
+        return "```{eval-rst}\n```"
 
-    blocks = [
-        f"```{{{directive}}} extra_platforms.{getattr(obj, attr)}\n```"
+    directives = [
+        f".. {directive}:: extra_platforms.{getattr(obj, attr)}"
         for obj in sorted(objects_list, key=attrgetter("id"))
     ]
 
-    return "\n\n".join(blocks)
+    joined = "\n".join(directives)
+    return f"```{{eval-rst}}\n{joined}\n```"
 
 
 def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> str:
@@ -495,13 +503,12 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
 
 
 def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
-    """Generate native MyST autodecorator directives for pytest decorators.
+    """Generate Sphinx autodecorator directives for pytest decorators.
 
     Generates directives for both ``@skip_<id>`` and ``@unless_<id>`` decorators
     defined in the ``extra_platforms.pytest`` module, organized in separate sections.
 
-    Uses the built-in ``autodecorator`` directive which renders decorator names
-    with @ prefix.
+    Uses ``{eval-rst}`` for the same reason as :func:`generate_sphinx_directives`.
     """
     sorted_objects = sorted(objects, key=attrgetter("id"))
 
@@ -511,14 +518,14 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     )
 
     def _directive_section(title: str, directives: Iterable[str]) -> str:
-        blocks = "\n\n".join(directives)
-        return f"## {title}\n\n{blocks}"
+        joined = "\n".join(directives)
+        return f"## {title}\n\n```{{eval-rst}}\n{joined}\n```"
 
     sections = (
         _directive_section(
             name,
             (
-                f"```{{autodecorator}} extra_platforms.pytest.{getattr(o, attr)}\n```"
+                f".. autodecorator:: extra_platforms.pytest.{getattr(o, attr)}"
                 for o in sorted_objects
             ),
         )
@@ -532,12 +539,14 @@ def generate_noindex_automodule(module: str) -> str:
     """Generate a no-members automodule directive for a submodule section.
 
     All public members are documented in dedicated pages, so only the module
-    docstring is rendered on ``extra_platforms.html``.
+    docstring is rendered on ``extra_platforms.html``. Uses ``{eval-rst}`` for the
+    same reason as :func:`generate_sphinx_directives`.
     """
     return dedent(f"""\
-        ```{{automodule}} {module}
-        :noindex:
-        :no-members:
+        ```{{eval-rst}}
+        .. automodule:: {module}
+           :noindex:
+           :no-members:
         ```""")
 
 
@@ -545,10 +554,8 @@ def generate_group_module_automodule() -> str:
     """Generate the extra_platforms.group automodule for groups.md.
 
     Excludes Group class and utility functions that are documented separately
-    in the same file.
-
-    Returns:
-        A native MyST directive block.
+    in the same file. Uses ``{eval-rst}`` for the same reason as
+    :func:`generate_sphinx_directives`.
     """
     # Exclude Group class (documented via autoclass) and utility functions
     # (documented in "Trait and group operations" section).
@@ -563,11 +570,12 @@ def generate_group_module_automodule() -> str:
     exclude_members = ", ".join(sorted(exclude_list))
 
     return dedent(f"""\
-        ```{{automodule}} extra_platforms.group
-        :members:
-        :undoc-members:
-        :show-inheritance:
-        :exclude-members: {exclude_members}
+        ```{{eval-rst}}
+        .. automodule:: extra_platforms.group
+           :members:
+           :undoc-members:
+           :show-inheritance:
+           :exclude-members: {exclude_members}
         ```""")
 
 
@@ -575,13 +583,11 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
     """Generate the extra_platforms.group_data automodule for groups.md.
 
     Excludes all Group instances and frozenset collections that are documented
-    separately in the same file.
+    separately in the same file. Uses ``{eval-rst}`` for the same reason as
+    :func:`generate_sphinx_directives`.
 
     Args:
         groups: All predefined groups to exclude.
-
-    Returns:
-        A native MyST directive block.
     """
     # Exclude all Group instances (documented in "Predefined groups" section).
     # Group IDs are lowercase but Python symbols are uppercase.
@@ -606,8 +612,9 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
     exclude_members = ", ".join(sorted(exclude_list))
 
     return dedent(f"""\
-        ```{{automodule}} extra_platforms.group_data
-        :exclude-members: {exclude_members}
+        ```{{eval-rst}}
+        .. automodule:: extra_platforms.group_data
+           :exclude-members: {exclude_members}
         ```""")
 
 
@@ -621,11 +628,10 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
     - Utility functions in detection.md and groups.md.
     - Core classes in trait.md and groups.md.
 
+    Uses ``{eval-rst}`` for the same reason as :func:`generate_sphinx_directives`.
+
     Args:
         objects: The traits and groups whose detection functions should be excluded.
-
-    Returns:
-        A native MyST directive block.
     """
     objects_list = list(objects)
 
@@ -669,11 +675,12 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
     exclude_members = ", ".join(sorted(exclude_list))
 
     return dedent(f"""\
-        ```{{automodule}} extra_platforms
-        :members:
-        :show-inheritance:
-        :undoc-members:
-        :exclude-members: {exclude_members}
+        ```{{eval-rst}}
+        .. automodule:: extra_platforms
+           :members:
+           :show-inheritance:
+           :undoc-members:
+           :exclude-members: {exclude_members}
         ```""")
 
 

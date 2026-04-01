@@ -259,1044 +259,358 @@ def test_not_in_github_actions():
 
 ## Skip decorators
 
-```{autodecorator} extra_platforms.pytest.skip_aarch64
-```
-
-```{autodecorator} extra_platforms.pytest.skip_aix
-```
-
-```{autodecorator} extra_platforms.pytest.skip_alacritty
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_agents
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_architectures
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_arm
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_ci
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_mips
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_platforms
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_shells
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_sparc
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_terminals
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_traits
-```
-
-```{autodecorator} extra_platforms.pytest.skip_all_windows
-```
-
-```{autodecorator} extra_platforms.pytest.skip_alpine
-```
-
-```{autodecorator} extra_platforms.pytest.skip_altlinux
-```
-
-```{autodecorator} extra_platforms.pytest.skip_amzn
-```
-
-```{autodecorator} extra_platforms.pytest.skip_android
-```
-
-```{autodecorator} extra_platforms.pytest.skip_apple_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.skip_arch
-```
-
-```{autodecorator} extra_platforms.pytest.skip_arch_32_bit
-```
-
-```{autodecorator} extra_platforms.pytest.skip_arch_64_bit
-```
-
-```{autodecorator} extra_platforms.pytest.skip_arm
-```
-
-```{autodecorator} extra_platforms.pytest.skip_armv5tel
-```
-
-```{autodecorator} extra_platforms.pytest.skip_armv6l
-```
-
-```{autodecorator} extra_platforms.pytest.skip_armv7l
-```
-
-```{autodecorator} extra_platforms.pytest.skip_armv8l
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ash
-```
-
-```{autodecorator} extra_platforms.pytest.skip_azure_pipelines
-```
-
-```{autodecorator} extra_platforms.pytest.skip_bamboo
-```
-
-```{autodecorator} extra_platforms.pytest.skip_bash
-```
-
-```{autodecorator} extra_platforms.pytest.skip_big_endian
-```
-
-```{autodecorator} extra_platforms.pytest.skip_bourne_shells
-```
-
-```{autodecorator} extra_platforms.pytest.skip_bsd
-```
-
-```{autodecorator} extra_platforms.pytest.skip_bsd_not_macos
-```
-
-```{autodecorator} extra_platforms.pytest.skip_buildkite
-```
-
-```{autodecorator} extra_platforms.pytest.skip_buildroot
-```
-
-```{autodecorator} extra_platforms.pytest.skip_c_shells
-```
-
-```{autodecorator} extra_platforms.pytest.skip_cachyos
-```
-
-```{autodecorator} extra_platforms.pytest.skip_centos
-```
-
-```{autodecorator} extra_platforms.pytest.skip_circle_ci
-```
-
-```{autodecorator} extra_platforms.pytest.skip_cirrus_ci
-```
-
-```{autodecorator} extra_platforms.pytest.skip_claude_code
-```
-
-```{autodecorator} extra_platforms.pytest.skip_cline
-```
-
-```{autodecorator} extra_platforms.pytest.skip_cloudlinux
-```
-
-```{autodecorator} extra_platforms.pytest.skip_cmd
-```
-
-```{autodecorator} extra_platforms.pytest.skip_codebuild
-```
-
-```{autodecorator} extra_platforms.pytest.skip_contour
-```
-
-```{autodecorator} extra_platforms.pytest.skip_csh
-```
-
-```{autodecorator} extra_platforms.pytest.skip_cursor
-```
-
-```{autodecorator} extra_platforms.pytest.skip_cygwin
-```
-
-```{autodecorator} extra_platforms.pytest.skip_dash
-```
-
-```{autodecorator} extra_platforms.pytest.skip_debian
-```
-
-```{autodecorator} extra_platforms.pytest.skip_dragonfly_bsd
-```
-
-```{autodecorator} extra_platforms.pytest.skip_exherbo
-```
-
-```{autodecorator} extra_platforms.pytest.skip_fedora
-```
-
-```{autodecorator} extra_platforms.pytest.skip_fish
-```
-
-```{autodecorator} extra_platforms.pytest.skip_foot
-```
-
-```{autodecorator} extra_platforms.pytest.skip_freebsd
-```
-
-```{autodecorator} extra_platforms.pytest.skip_generic_linux
-```
-
-```{autodecorator} extra_platforms.pytest.skip_gentoo
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ghostty
-```
-
-```{autodecorator} extra_platforms.pytest.skip_github_ci
-```
-
-```{autodecorator} extra_platforms.pytest.skip_gitlab_ci
-```
-
-```{autodecorator} extra_platforms.pytest.skip_gnome_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.skip_gnu_screen
-```
-
-```{autodecorator} extra_platforms.pytest.skip_gpu_terminals
-```
-
-```{autodecorator} extra_platforms.pytest.skip_guix
-```
-
-```{autodecorator} extra_platforms.pytest.skip_haiku
-```
-
-```{autodecorator} extra_platforms.pytest.skip_heroku_ci
-```
-
-```{autodecorator} extra_platforms.pytest.skip_hurd
-```
-
-```{autodecorator} extra_platforms.pytest.skip_hyper
-```
-
-```{autodecorator} extra_platforms.pytest.skip_i386
-```
-
-```{autodecorator} extra_platforms.pytest.skip_i586
-```
-
-```{autodecorator} extra_platforms.pytest.skip_i686
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ibm_mainframe
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ibm_powerkvm
-```
-
-```{autodecorator} extra_platforms.pytest.skip_illumos
-```
-
-```{autodecorator} extra_platforms.pytest.skip_iterm2
-```
-
-```{autodecorator} extra_platforms.pytest.skip_kali
-```
-
-```{autodecorator} extra_platforms.pytest.skip_kitty
-```
-
-```{autodecorator} extra_platforms.pytest.skip_konsole
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ksh
-```
-
-```{autodecorator} extra_platforms.pytest.skip_kvmibm
-```
-
-```{autodecorator} extra_platforms.pytest.skip_linux
-```
-
-```{autodecorator} extra_platforms.pytest.skip_linux_layers
-```
-
-```{autodecorator} extra_platforms.pytest.skip_linux_like
-```
-
-```{autodecorator} extra_platforms.pytest.skip_linuxmint
-```
-
-```{autodecorator} extra_platforms.pytest.skip_little_endian
-```
-
-```{autodecorator} extra_platforms.pytest.skip_loongarch
-```
-
-```{autodecorator} extra_platforms.pytest.skip_loongarch64
-```
-
-```{autodecorator} extra_platforms.pytest.skip_macos
-```
-
-```{autodecorator} extra_platforms.pytest.skip_mageia
-```
-
-```{autodecorator} extra_platforms.pytest.skip_mandriva
-```
-
-```{autodecorator} extra_platforms.pytest.skip_manjaro
-```
-
-```{autodecorator} extra_platforms.pytest.skip_midnightbsd
-```
-
-```{autodecorator} extra_platforms.pytest.skip_mips
-```
-
-```{autodecorator} extra_platforms.pytest.skip_mips64
-```
-
-```{autodecorator} extra_platforms.pytest.skip_mips64el
-```
-
-```{autodecorator} extra_platforms.pytest.skip_mipsel
-```
-
-```{autodecorator} extra_platforms.pytest.skip_multiplexers
-```
-
-```{autodecorator} extra_platforms.pytest.skip_native_terminals
-```
-
-```{autodecorator} extra_platforms.pytest.skip_netbsd
-```
-
-```{autodecorator} extra_platforms.pytest.skip_nobara
-```
-
-```{autodecorator} extra_platforms.pytest.skip_nushell
-```
-
-```{autodecorator} extra_platforms.pytest.skip_openbsd
-```
-
-```{autodecorator} extra_platforms.pytest.skip_opensuse
-```
-
-```{autodecorator} extra_platforms.pytest.skip_openwrt
-```
-
-```{autodecorator} extra_platforms.pytest.skip_oracle
-```
-
-```{autodecorator} extra_platforms.pytest.skip_other_posix
-```
-
-```{autodecorator} extra_platforms.pytest.skip_other_shells
-```
-
-```{autodecorator} extra_platforms.pytest.skip_parallels
-```
-
-```{autodecorator} extra_platforms.pytest.skip_pidora
-```
-
-```{autodecorator} extra_platforms.pytest.skip_powerpc
-```
-
-```{autodecorator} extra_platforms.pytest.skip_powershell
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ppc
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ppc64
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ppc64le
-```
-
-```{autodecorator} extra_platforms.pytest.skip_raspbian
-```
-
-```{autodecorator} extra_platforms.pytest.skip_rhel
-```
-
-```{autodecorator} extra_platforms.pytest.skip_rio
-```
-
-```{autodecorator} extra_platforms.pytest.skip_riscv
-```
-
-```{autodecorator} extra_platforms.pytest.skip_riscv32
-```
-
-```{autodecorator} extra_platforms.pytest.skip_riscv64
-```
-
-```{autodecorator} extra_platforms.pytest.skip_rocky
-```
-
-```{autodecorator} extra_platforms.pytest.skip_s390x
-```
-
-```{autodecorator} extra_platforms.pytest.skip_scientific
-```
-
-```{autodecorator} extra_platforms.pytest.skip_slackware
-```
-
-```{autodecorator} extra_platforms.pytest.skip_sles
-```
-
-```{autodecorator} extra_platforms.pytest.skip_solaris
-```
-
-```{autodecorator} extra_platforms.pytest.skip_sparc
-```
-
-```{autodecorator} extra_platforms.pytest.skip_sparc64
-```
-
-```{autodecorator} extra_platforms.pytest.skip_sunos
-```
-
-```{autodecorator} extra_platforms.pytest.skip_system_v
-```
-
-```{autodecorator} extra_platforms.pytest.skip_tabby
-```
-
-```{autodecorator} extra_platforms.pytest.skip_tcsh
-```
-
-```{autodecorator} extra_platforms.pytest.skip_teamcity
-```
-
-```{autodecorator} extra_platforms.pytest.skip_tilix
-```
-
-```{autodecorator} extra_platforms.pytest.skip_tmux
-```
-
-```{autodecorator} extra_platforms.pytest.skip_travis_ci
-```
-
-```{autodecorator} extra_platforms.pytest.skip_tumbleweed
-```
-
-```{autodecorator} extra_platforms.pytest.skip_tuxedo
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ubuntu
-```
-
-```{autodecorator} extra_platforms.pytest.skip_ultramarine
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unix
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unix_layers
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unix_not_macos
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unknown
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unknown_agent
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unknown_architecture
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unknown_ci
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unknown_platform
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unknown_shell
-```
-
-```{autodecorator} extra_platforms.pytest.skip_unknown_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.skip_void
-```
-
-```{autodecorator} extra_platforms.pytest.skip_vscode_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.skip_wasm32
-```
-
-```{autodecorator} extra_platforms.pytest.skip_wasm64
-```
-
-```{autodecorator} extra_platforms.pytest.skip_web_terminals
-```
-
-```{autodecorator} extra_platforms.pytest.skip_webassembly
-```
-
-```{autodecorator} extra_platforms.pytest.skip_wezterm
-```
-
-```{autodecorator} extra_platforms.pytest.skip_windows
-```
-
-```{autodecorator} extra_platforms.pytest.skip_windows_shells
-```
-
-```{autodecorator} extra_platforms.pytest.skip_windows_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.skip_wsl1
-```
-
-```{autodecorator} extra_platforms.pytest.skip_wsl2
-```
-
-```{autodecorator} extra_platforms.pytest.skip_x86
-```
-
-```{autodecorator} extra_platforms.pytest.skip_x86_64
-```
-
-```{autodecorator} extra_platforms.pytest.skip_xenserver
-```
-
-```{autodecorator} extra_platforms.pytest.skip_xonsh
-```
-
-```{autodecorator} extra_platforms.pytest.skip_xterm
-```
-
-```{autodecorator} extra_platforms.pytest.skip_zellij
-```
-
-```{autodecorator} extra_platforms.pytest.skip_zsh
+```{eval-rst}
+.. autodecorator:: extra_platforms.pytest.skip_aarch64
+.. autodecorator:: extra_platforms.pytest.skip_aix
+.. autodecorator:: extra_platforms.pytest.skip_alacritty
+.. autodecorator:: extra_platforms.pytest.skip_all_agents
+.. autodecorator:: extra_platforms.pytest.skip_all_architectures
+.. autodecorator:: extra_platforms.pytest.skip_all_arm
+.. autodecorator:: extra_platforms.pytest.skip_all_ci
+.. autodecorator:: extra_platforms.pytest.skip_all_mips
+.. autodecorator:: extra_platforms.pytest.skip_all_platforms
+.. autodecorator:: extra_platforms.pytest.skip_all_shells
+.. autodecorator:: extra_platforms.pytest.skip_all_sparc
+.. autodecorator:: extra_platforms.pytest.skip_all_terminals
+.. autodecorator:: extra_platforms.pytest.skip_all_traits
+.. autodecorator:: extra_platforms.pytest.skip_all_windows
+.. autodecorator:: extra_platforms.pytest.skip_alpine
+.. autodecorator:: extra_platforms.pytest.skip_altlinux
+.. autodecorator:: extra_platforms.pytest.skip_amzn
+.. autodecorator:: extra_platforms.pytest.skip_android
+.. autodecorator:: extra_platforms.pytest.skip_apple_terminal
+.. autodecorator:: extra_platforms.pytest.skip_arch
+.. autodecorator:: extra_platforms.pytest.skip_arch_32_bit
+.. autodecorator:: extra_platforms.pytest.skip_arch_64_bit
+.. autodecorator:: extra_platforms.pytest.skip_arm
+.. autodecorator:: extra_platforms.pytest.skip_armv5tel
+.. autodecorator:: extra_platforms.pytest.skip_armv6l
+.. autodecorator:: extra_platforms.pytest.skip_armv7l
+.. autodecorator:: extra_platforms.pytest.skip_armv8l
+.. autodecorator:: extra_platforms.pytest.skip_ash
+.. autodecorator:: extra_platforms.pytest.skip_azure_pipelines
+.. autodecorator:: extra_platforms.pytest.skip_bamboo
+.. autodecorator:: extra_platforms.pytest.skip_bash
+.. autodecorator:: extra_platforms.pytest.skip_big_endian
+.. autodecorator:: extra_platforms.pytest.skip_bourne_shells
+.. autodecorator:: extra_platforms.pytest.skip_bsd
+.. autodecorator:: extra_platforms.pytest.skip_bsd_not_macos
+.. autodecorator:: extra_platforms.pytest.skip_buildkite
+.. autodecorator:: extra_platforms.pytest.skip_buildroot
+.. autodecorator:: extra_platforms.pytest.skip_c_shells
+.. autodecorator:: extra_platforms.pytest.skip_cachyos
+.. autodecorator:: extra_platforms.pytest.skip_centos
+.. autodecorator:: extra_platforms.pytest.skip_circle_ci
+.. autodecorator:: extra_platforms.pytest.skip_cirrus_ci
+.. autodecorator:: extra_platforms.pytest.skip_claude_code
+.. autodecorator:: extra_platforms.pytest.skip_cline
+.. autodecorator:: extra_platforms.pytest.skip_cloudlinux
+.. autodecorator:: extra_platforms.pytest.skip_cmd
+.. autodecorator:: extra_platforms.pytest.skip_codebuild
+.. autodecorator:: extra_platforms.pytest.skip_contour
+.. autodecorator:: extra_platforms.pytest.skip_csh
+.. autodecorator:: extra_platforms.pytest.skip_cursor
+.. autodecorator:: extra_platforms.pytest.skip_cygwin
+.. autodecorator:: extra_platforms.pytest.skip_dash
+.. autodecorator:: extra_platforms.pytest.skip_debian
+.. autodecorator:: extra_platforms.pytest.skip_dragonfly_bsd
+.. autodecorator:: extra_platforms.pytest.skip_exherbo
+.. autodecorator:: extra_platforms.pytest.skip_fedora
+.. autodecorator:: extra_platforms.pytest.skip_fish
+.. autodecorator:: extra_platforms.pytest.skip_foot
+.. autodecorator:: extra_platforms.pytest.skip_freebsd
+.. autodecorator:: extra_platforms.pytest.skip_generic_linux
+.. autodecorator:: extra_platforms.pytest.skip_gentoo
+.. autodecorator:: extra_platforms.pytest.skip_ghostty
+.. autodecorator:: extra_platforms.pytest.skip_github_ci
+.. autodecorator:: extra_platforms.pytest.skip_gitlab_ci
+.. autodecorator:: extra_platforms.pytest.skip_gnome_terminal
+.. autodecorator:: extra_platforms.pytest.skip_gnu_screen
+.. autodecorator:: extra_platforms.pytest.skip_gpu_terminals
+.. autodecorator:: extra_platforms.pytest.skip_guix
+.. autodecorator:: extra_platforms.pytest.skip_haiku
+.. autodecorator:: extra_platforms.pytest.skip_heroku_ci
+.. autodecorator:: extra_platforms.pytest.skip_hurd
+.. autodecorator:: extra_platforms.pytest.skip_hyper
+.. autodecorator:: extra_platforms.pytest.skip_i386
+.. autodecorator:: extra_platforms.pytest.skip_i586
+.. autodecorator:: extra_platforms.pytest.skip_i686
+.. autodecorator:: extra_platforms.pytest.skip_ibm_mainframe
+.. autodecorator:: extra_platforms.pytest.skip_ibm_powerkvm
+.. autodecorator:: extra_platforms.pytest.skip_illumos
+.. autodecorator:: extra_platforms.pytest.skip_iterm2
+.. autodecorator:: extra_platforms.pytest.skip_kali
+.. autodecorator:: extra_platforms.pytest.skip_kitty
+.. autodecorator:: extra_platforms.pytest.skip_konsole
+.. autodecorator:: extra_platforms.pytest.skip_ksh
+.. autodecorator:: extra_platforms.pytest.skip_kvmibm
+.. autodecorator:: extra_platforms.pytest.skip_linux
+.. autodecorator:: extra_platforms.pytest.skip_linux_layers
+.. autodecorator:: extra_platforms.pytest.skip_linux_like
+.. autodecorator:: extra_platforms.pytest.skip_linuxmint
+.. autodecorator:: extra_platforms.pytest.skip_little_endian
+.. autodecorator:: extra_platforms.pytest.skip_loongarch
+.. autodecorator:: extra_platforms.pytest.skip_loongarch64
+.. autodecorator:: extra_platforms.pytest.skip_macos
+.. autodecorator:: extra_platforms.pytest.skip_mageia
+.. autodecorator:: extra_platforms.pytest.skip_mandriva
+.. autodecorator:: extra_platforms.pytest.skip_manjaro
+.. autodecorator:: extra_platforms.pytest.skip_midnightbsd
+.. autodecorator:: extra_platforms.pytest.skip_mips
+.. autodecorator:: extra_platforms.pytest.skip_mips64
+.. autodecorator:: extra_platforms.pytest.skip_mips64el
+.. autodecorator:: extra_platforms.pytest.skip_mipsel
+.. autodecorator:: extra_platforms.pytest.skip_multiplexers
+.. autodecorator:: extra_platforms.pytest.skip_native_terminals
+.. autodecorator:: extra_platforms.pytest.skip_netbsd
+.. autodecorator:: extra_platforms.pytest.skip_nobara
+.. autodecorator:: extra_platforms.pytest.skip_nushell
+.. autodecorator:: extra_platforms.pytest.skip_openbsd
+.. autodecorator:: extra_platforms.pytest.skip_opensuse
+.. autodecorator:: extra_platforms.pytest.skip_openwrt
+.. autodecorator:: extra_platforms.pytest.skip_oracle
+.. autodecorator:: extra_platforms.pytest.skip_other_posix
+.. autodecorator:: extra_platforms.pytest.skip_other_shells
+.. autodecorator:: extra_platforms.pytest.skip_parallels
+.. autodecorator:: extra_platforms.pytest.skip_pidora
+.. autodecorator:: extra_platforms.pytest.skip_powerpc
+.. autodecorator:: extra_platforms.pytest.skip_powershell
+.. autodecorator:: extra_platforms.pytest.skip_ppc
+.. autodecorator:: extra_platforms.pytest.skip_ppc64
+.. autodecorator:: extra_platforms.pytest.skip_ppc64le
+.. autodecorator:: extra_platforms.pytest.skip_raspbian
+.. autodecorator:: extra_platforms.pytest.skip_rhel
+.. autodecorator:: extra_platforms.pytest.skip_rio
+.. autodecorator:: extra_platforms.pytest.skip_riscv
+.. autodecorator:: extra_platforms.pytest.skip_riscv32
+.. autodecorator:: extra_platforms.pytest.skip_riscv64
+.. autodecorator:: extra_platforms.pytest.skip_rocky
+.. autodecorator:: extra_platforms.pytest.skip_s390x
+.. autodecorator:: extra_platforms.pytest.skip_scientific
+.. autodecorator:: extra_platforms.pytest.skip_slackware
+.. autodecorator:: extra_platforms.pytest.skip_sles
+.. autodecorator:: extra_platforms.pytest.skip_solaris
+.. autodecorator:: extra_platforms.pytest.skip_sparc
+.. autodecorator:: extra_platforms.pytest.skip_sparc64
+.. autodecorator:: extra_platforms.pytest.skip_sunos
+.. autodecorator:: extra_platforms.pytest.skip_system_v
+.. autodecorator:: extra_platforms.pytest.skip_tabby
+.. autodecorator:: extra_platforms.pytest.skip_tcsh
+.. autodecorator:: extra_platforms.pytest.skip_teamcity
+.. autodecorator:: extra_platforms.pytest.skip_tilix
+.. autodecorator:: extra_platforms.pytest.skip_tmux
+.. autodecorator:: extra_platforms.pytest.skip_travis_ci
+.. autodecorator:: extra_platforms.pytest.skip_tumbleweed
+.. autodecorator:: extra_platforms.pytest.skip_tuxedo
+.. autodecorator:: extra_platforms.pytest.skip_ubuntu
+.. autodecorator:: extra_platforms.pytest.skip_ultramarine
+.. autodecorator:: extra_platforms.pytest.skip_unix
+.. autodecorator:: extra_platforms.pytest.skip_unix_layers
+.. autodecorator:: extra_platforms.pytest.skip_unix_not_macos
+.. autodecorator:: extra_platforms.pytest.skip_unknown
+.. autodecorator:: extra_platforms.pytest.skip_unknown_agent
+.. autodecorator:: extra_platforms.pytest.skip_unknown_architecture
+.. autodecorator:: extra_platforms.pytest.skip_unknown_ci
+.. autodecorator:: extra_platforms.pytest.skip_unknown_platform
+.. autodecorator:: extra_platforms.pytest.skip_unknown_shell
+.. autodecorator:: extra_platforms.pytest.skip_unknown_terminal
+.. autodecorator:: extra_platforms.pytest.skip_void
+.. autodecorator:: extra_platforms.pytest.skip_vscode_terminal
+.. autodecorator:: extra_platforms.pytest.skip_wasm32
+.. autodecorator:: extra_platforms.pytest.skip_wasm64
+.. autodecorator:: extra_platforms.pytest.skip_web_terminals
+.. autodecorator:: extra_platforms.pytest.skip_webassembly
+.. autodecorator:: extra_platforms.pytest.skip_wezterm
+.. autodecorator:: extra_platforms.pytest.skip_windows
+.. autodecorator:: extra_platforms.pytest.skip_windows_shells
+.. autodecorator:: extra_platforms.pytest.skip_windows_terminal
+.. autodecorator:: extra_platforms.pytest.skip_wsl1
+.. autodecorator:: extra_platforms.pytest.skip_wsl2
+.. autodecorator:: extra_platforms.pytest.skip_x86
+.. autodecorator:: extra_platforms.pytest.skip_x86_64
+.. autodecorator:: extra_platforms.pytest.skip_xenserver
+.. autodecorator:: extra_platforms.pytest.skip_xonsh
+.. autodecorator:: extra_platforms.pytest.skip_xterm
+.. autodecorator:: extra_platforms.pytest.skip_zellij
+.. autodecorator:: extra_platforms.pytest.skip_zsh
 ```
 
 ## Unless decorators
 
-```{autodecorator} extra_platforms.pytest.unless_aarch64
-```
-
-```{autodecorator} extra_platforms.pytest.unless_aix
-```
-
-```{autodecorator} extra_platforms.pytest.unless_alacritty
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_agent
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_architecture
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_arm
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_ci
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_mips
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_platform
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_shell
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_sparc
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_trait
-```
-
-```{autodecorator} extra_platforms.pytest.unless_any_windows
-```
-
-```{autodecorator} extra_platforms.pytest.unless_alpine
-```
-
-```{autodecorator} extra_platforms.pytest.unless_altlinux
-```
-
-```{autodecorator} extra_platforms.pytest.unless_amzn
-```
-
-```{autodecorator} extra_platforms.pytest.unless_android
-```
-
-```{autodecorator} extra_platforms.pytest.unless_apple_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.unless_arch
-```
-
-```{autodecorator} extra_platforms.pytest.unless_arch_32_bit
-```
-
-```{autodecorator} extra_platforms.pytest.unless_arch_64_bit
-```
-
-```{autodecorator} extra_platforms.pytest.unless_arm
-```
-
-```{autodecorator} extra_platforms.pytest.unless_armv5tel
-```
-
-```{autodecorator} extra_platforms.pytest.unless_armv6l
-```
-
-```{autodecorator} extra_platforms.pytest.unless_armv7l
-```
-
-```{autodecorator} extra_platforms.pytest.unless_armv8l
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ash
-```
-
-```{autodecorator} extra_platforms.pytest.unless_azure_pipelines
-```
-
-```{autodecorator} extra_platforms.pytest.unless_bamboo
-```
-
-```{autodecorator} extra_platforms.pytest.unless_bash
-```
-
-```{autodecorator} extra_platforms.pytest.unless_big_endian
-```
-
-```{autodecorator} extra_platforms.pytest.unless_bourne_shells
-```
-
-```{autodecorator} extra_platforms.pytest.unless_bsd
-```
-
-```{autodecorator} extra_platforms.pytest.unless_bsd_not_macos
-```
-
-```{autodecorator} extra_platforms.pytest.unless_buildkite
-```
-
-```{autodecorator} extra_platforms.pytest.unless_buildroot
-```
-
-```{autodecorator} extra_platforms.pytest.unless_c_shells
-```
-
-```{autodecorator} extra_platforms.pytest.unless_cachyos
-```
-
-```{autodecorator} extra_platforms.pytest.unless_centos
-```
-
-```{autodecorator} extra_platforms.pytest.unless_circle_ci
-```
-
-```{autodecorator} extra_platforms.pytest.unless_cirrus_ci
-```
-
-```{autodecorator} extra_platforms.pytest.unless_claude_code
-```
-
-```{autodecorator} extra_platforms.pytest.unless_cline
-```
-
-```{autodecorator} extra_platforms.pytest.unless_cloudlinux
-```
-
-```{autodecorator} extra_platforms.pytest.unless_cmd
-```
-
-```{autodecorator} extra_platforms.pytest.unless_codebuild
-```
-
-```{autodecorator} extra_platforms.pytest.unless_contour
-```
-
-```{autodecorator} extra_platforms.pytest.unless_csh
-```
-
-```{autodecorator} extra_platforms.pytest.unless_cursor
-```
-
-```{autodecorator} extra_platforms.pytest.unless_cygwin
-```
-
-```{autodecorator} extra_platforms.pytest.unless_dash
-```
-
-```{autodecorator} extra_platforms.pytest.unless_debian
-```
-
-```{autodecorator} extra_platforms.pytest.unless_dragonfly_bsd
-```
-
-```{autodecorator} extra_platforms.pytest.unless_exherbo
-```
-
-```{autodecorator} extra_platforms.pytest.unless_fedora
-```
-
-```{autodecorator} extra_platforms.pytest.unless_fish
-```
-
-```{autodecorator} extra_platforms.pytest.unless_foot
-```
-
-```{autodecorator} extra_platforms.pytest.unless_freebsd
-```
-
-```{autodecorator} extra_platforms.pytest.unless_generic_linux
-```
-
-```{autodecorator} extra_platforms.pytest.unless_gentoo
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ghostty
-```
-
-```{autodecorator} extra_platforms.pytest.unless_github_ci
-```
-
-```{autodecorator} extra_platforms.pytest.unless_gitlab_ci
-```
-
-```{autodecorator} extra_platforms.pytest.unless_gnome_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.unless_gnu_screen
-```
-
-```{autodecorator} extra_platforms.pytest.unless_gpu_terminals
-```
-
-```{autodecorator} extra_platforms.pytest.unless_guix
-```
-
-```{autodecorator} extra_platforms.pytest.unless_haiku
-```
-
-```{autodecorator} extra_platforms.pytest.unless_heroku_ci
-```
-
-```{autodecorator} extra_platforms.pytest.unless_hurd
-```
-
-```{autodecorator} extra_platforms.pytest.unless_hyper
-```
-
-```{autodecorator} extra_platforms.pytest.unless_i386
-```
-
-```{autodecorator} extra_platforms.pytest.unless_i586
-```
-
-```{autodecorator} extra_platforms.pytest.unless_i686
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ibm_mainframe
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ibm_powerkvm
-```
-
-```{autodecorator} extra_platforms.pytest.unless_illumos
-```
-
-```{autodecorator} extra_platforms.pytest.unless_iterm2
-```
-
-```{autodecorator} extra_platforms.pytest.unless_kali
-```
-
-```{autodecorator} extra_platforms.pytest.unless_kitty
-```
-
-```{autodecorator} extra_platforms.pytest.unless_konsole
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ksh
-```
-
-```{autodecorator} extra_platforms.pytest.unless_kvmibm
-```
-
-```{autodecorator} extra_platforms.pytest.unless_linux
-```
-
-```{autodecorator} extra_platforms.pytest.unless_linux_layers
-```
-
-```{autodecorator} extra_platforms.pytest.unless_linux_like
-```
-
-```{autodecorator} extra_platforms.pytest.unless_linuxmint
-```
-
-```{autodecorator} extra_platforms.pytest.unless_little_endian
-```
-
-```{autodecorator} extra_platforms.pytest.unless_loongarch
-```
-
-```{autodecorator} extra_platforms.pytest.unless_loongarch64
-```
-
-```{autodecorator} extra_platforms.pytest.unless_macos
-```
-
-```{autodecorator} extra_platforms.pytest.unless_mageia
-```
-
-```{autodecorator} extra_platforms.pytest.unless_mandriva
-```
-
-```{autodecorator} extra_platforms.pytest.unless_manjaro
-```
-
-```{autodecorator} extra_platforms.pytest.unless_midnightbsd
-```
-
-```{autodecorator} extra_platforms.pytest.unless_mips
-```
-
-```{autodecorator} extra_platforms.pytest.unless_mips64
-```
-
-```{autodecorator} extra_platforms.pytest.unless_mips64el
-```
-
-```{autodecorator} extra_platforms.pytest.unless_mipsel
-```
-
-```{autodecorator} extra_platforms.pytest.unless_multiplexers
-```
-
-```{autodecorator} extra_platforms.pytest.unless_native_terminals
-```
-
-```{autodecorator} extra_platforms.pytest.unless_netbsd
-```
-
-```{autodecorator} extra_platforms.pytest.unless_nobara
-```
-
-```{autodecorator} extra_platforms.pytest.unless_nushell
-```
-
-```{autodecorator} extra_platforms.pytest.unless_openbsd
-```
-
-```{autodecorator} extra_platforms.pytest.unless_opensuse
-```
-
-```{autodecorator} extra_platforms.pytest.unless_openwrt
-```
-
-```{autodecorator} extra_platforms.pytest.unless_oracle
-```
-
-```{autodecorator} extra_platforms.pytest.unless_other_posix
-```
-
-```{autodecorator} extra_platforms.pytest.unless_other_shells
-```
-
-```{autodecorator} extra_platforms.pytest.unless_parallels
-```
-
-```{autodecorator} extra_platforms.pytest.unless_pidora
-```
-
-```{autodecorator} extra_platforms.pytest.unless_powerpc
-```
-
-```{autodecorator} extra_platforms.pytest.unless_powershell
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ppc
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ppc64
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ppc64le
-```
-
-```{autodecorator} extra_platforms.pytest.unless_raspbian
-```
-
-```{autodecorator} extra_platforms.pytest.unless_rhel
-```
-
-```{autodecorator} extra_platforms.pytest.unless_rio
-```
-
-```{autodecorator} extra_platforms.pytest.unless_riscv
-```
-
-```{autodecorator} extra_platforms.pytest.unless_riscv32
-```
-
-```{autodecorator} extra_platforms.pytest.unless_riscv64
-```
-
-```{autodecorator} extra_platforms.pytest.unless_rocky
-```
-
-```{autodecorator} extra_platforms.pytest.unless_s390x
-```
-
-```{autodecorator} extra_platforms.pytest.unless_scientific
-```
-
-```{autodecorator} extra_platforms.pytest.unless_slackware
-```
-
-```{autodecorator} extra_platforms.pytest.unless_sles
-```
-
-```{autodecorator} extra_platforms.pytest.unless_solaris
-```
-
-```{autodecorator} extra_platforms.pytest.unless_sparc
-```
-
-```{autodecorator} extra_platforms.pytest.unless_sparc64
-```
-
-```{autodecorator} extra_platforms.pytest.unless_sunos
-```
-
-```{autodecorator} extra_platforms.pytest.unless_system_v
-```
-
-```{autodecorator} extra_platforms.pytest.unless_tabby
-```
-
-```{autodecorator} extra_platforms.pytest.unless_tcsh
-```
-
-```{autodecorator} extra_platforms.pytest.unless_teamcity
-```
-
-```{autodecorator} extra_platforms.pytest.unless_tilix
-```
-
-```{autodecorator} extra_platforms.pytest.unless_tmux
-```
-
-```{autodecorator} extra_platforms.pytest.unless_travis_ci
-```
-
-```{autodecorator} extra_platforms.pytest.unless_tumbleweed
-```
-
-```{autodecorator} extra_platforms.pytest.unless_tuxedo
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ubuntu
-```
-
-```{autodecorator} extra_platforms.pytest.unless_ultramarine
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unix
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unix_layers
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unix_not_macos
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unknown
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unknown_agent
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unknown_architecture
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unknown_ci
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unknown_platform
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unknown_shell
-```
-
-```{autodecorator} extra_platforms.pytest.unless_unknown_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.unless_void
-```
-
-```{autodecorator} extra_platforms.pytest.unless_vscode_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.unless_wasm32
-```
-
-```{autodecorator} extra_platforms.pytest.unless_wasm64
-```
-
-```{autodecorator} extra_platforms.pytest.unless_web_terminals
-```
-
-```{autodecorator} extra_platforms.pytest.unless_webassembly
-```
-
-```{autodecorator} extra_platforms.pytest.unless_wezterm
-```
-
-```{autodecorator} extra_platforms.pytest.unless_windows
-```
-
-```{autodecorator} extra_platforms.pytest.unless_windows_shells
-```
-
-```{autodecorator} extra_platforms.pytest.unless_windows_terminal
-```
-
-```{autodecorator} extra_platforms.pytest.unless_wsl1
-```
-
-```{autodecorator} extra_platforms.pytest.unless_wsl2
-```
-
-```{autodecorator} extra_platforms.pytest.unless_x86
-```
-
-```{autodecorator} extra_platforms.pytest.unless_x86_64
-```
-
-```{autodecorator} extra_platforms.pytest.unless_xenserver
-```
-
-```{autodecorator} extra_platforms.pytest.unless_xonsh
-```
-
-```{autodecorator} extra_platforms.pytest.unless_xterm
-```
-
-```{autodecorator} extra_platforms.pytest.unless_zellij
-```
-
-```{autodecorator} extra_platforms.pytest.unless_zsh
+```{eval-rst}
+.. autodecorator:: extra_platforms.pytest.unless_aarch64
+.. autodecorator:: extra_platforms.pytest.unless_aix
+.. autodecorator:: extra_platforms.pytest.unless_alacritty
+.. autodecorator:: extra_platforms.pytest.unless_any_agent
+.. autodecorator:: extra_platforms.pytest.unless_any_architecture
+.. autodecorator:: extra_platforms.pytest.unless_any_arm
+.. autodecorator:: extra_platforms.pytest.unless_any_ci
+.. autodecorator:: extra_platforms.pytest.unless_any_mips
+.. autodecorator:: extra_platforms.pytest.unless_any_platform
+.. autodecorator:: extra_platforms.pytest.unless_any_shell
+.. autodecorator:: extra_platforms.pytest.unless_any_sparc
+.. autodecorator:: extra_platforms.pytest.unless_any_terminal
+.. autodecorator:: extra_platforms.pytest.unless_any_trait
+.. autodecorator:: extra_platforms.pytest.unless_any_windows
+.. autodecorator:: extra_platforms.pytest.unless_alpine
+.. autodecorator:: extra_platforms.pytest.unless_altlinux
+.. autodecorator:: extra_platforms.pytest.unless_amzn
+.. autodecorator:: extra_platforms.pytest.unless_android
+.. autodecorator:: extra_platforms.pytest.unless_apple_terminal
+.. autodecorator:: extra_platforms.pytest.unless_arch
+.. autodecorator:: extra_platforms.pytest.unless_arch_32_bit
+.. autodecorator:: extra_platforms.pytest.unless_arch_64_bit
+.. autodecorator:: extra_platforms.pytest.unless_arm
+.. autodecorator:: extra_platforms.pytest.unless_armv5tel
+.. autodecorator:: extra_platforms.pytest.unless_armv6l
+.. autodecorator:: extra_platforms.pytest.unless_armv7l
+.. autodecorator:: extra_platforms.pytest.unless_armv8l
+.. autodecorator:: extra_platforms.pytest.unless_ash
+.. autodecorator:: extra_platforms.pytest.unless_azure_pipelines
+.. autodecorator:: extra_platforms.pytest.unless_bamboo
+.. autodecorator:: extra_platforms.pytest.unless_bash
+.. autodecorator:: extra_platforms.pytest.unless_big_endian
+.. autodecorator:: extra_platforms.pytest.unless_bourne_shells
+.. autodecorator:: extra_platforms.pytest.unless_bsd
+.. autodecorator:: extra_platforms.pytest.unless_bsd_not_macos
+.. autodecorator:: extra_platforms.pytest.unless_buildkite
+.. autodecorator:: extra_platforms.pytest.unless_buildroot
+.. autodecorator:: extra_platforms.pytest.unless_c_shells
+.. autodecorator:: extra_platforms.pytest.unless_cachyos
+.. autodecorator:: extra_platforms.pytest.unless_centos
+.. autodecorator:: extra_platforms.pytest.unless_circle_ci
+.. autodecorator:: extra_platforms.pytest.unless_cirrus_ci
+.. autodecorator:: extra_platforms.pytest.unless_claude_code
+.. autodecorator:: extra_platforms.pytest.unless_cline
+.. autodecorator:: extra_platforms.pytest.unless_cloudlinux
+.. autodecorator:: extra_platforms.pytest.unless_cmd
+.. autodecorator:: extra_platforms.pytest.unless_codebuild
+.. autodecorator:: extra_platforms.pytest.unless_contour
+.. autodecorator:: extra_platforms.pytest.unless_csh
+.. autodecorator:: extra_platforms.pytest.unless_cursor
+.. autodecorator:: extra_platforms.pytest.unless_cygwin
+.. autodecorator:: extra_platforms.pytest.unless_dash
+.. autodecorator:: extra_platforms.pytest.unless_debian
+.. autodecorator:: extra_platforms.pytest.unless_dragonfly_bsd
+.. autodecorator:: extra_platforms.pytest.unless_exherbo
+.. autodecorator:: extra_platforms.pytest.unless_fedora
+.. autodecorator:: extra_platforms.pytest.unless_fish
+.. autodecorator:: extra_platforms.pytest.unless_foot
+.. autodecorator:: extra_platforms.pytest.unless_freebsd
+.. autodecorator:: extra_platforms.pytest.unless_generic_linux
+.. autodecorator:: extra_platforms.pytest.unless_gentoo
+.. autodecorator:: extra_platforms.pytest.unless_ghostty
+.. autodecorator:: extra_platforms.pytest.unless_github_ci
+.. autodecorator:: extra_platforms.pytest.unless_gitlab_ci
+.. autodecorator:: extra_platforms.pytest.unless_gnome_terminal
+.. autodecorator:: extra_platforms.pytest.unless_gnu_screen
+.. autodecorator:: extra_platforms.pytest.unless_gpu_terminals
+.. autodecorator:: extra_platforms.pytest.unless_guix
+.. autodecorator:: extra_platforms.pytest.unless_haiku
+.. autodecorator:: extra_platforms.pytest.unless_heroku_ci
+.. autodecorator:: extra_platforms.pytest.unless_hurd
+.. autodecorator:: extra_platforms.pytest.unless_hyper
+.. autodecorator:: extra_platforms.pytest.unless_i386
+.. autodecorator:: extra_platforms.pytest.unless_i586
+.. autodecorator:: extra_platforms.pytest.unless_i686
+.. autodecorator:: extra_platforms.pytest.unless_ibm_mainframe
+.. autodecorator:: extra_platforms.pytest.unless_ibm_powerkvm
+.. autodecorator:: extra_platforms.pytest.unless_illumos
+.. autodecorator:: extra_platforms.pytest.unless_iterm2
+.. autodecorator:: extra_platforms.pytest.unless_kali
+.. autodecorator:: extra_platforms.pytest.unless_kitty
+.. autodecorator:: extra_platforms.pytest.unless_konsole
+.. autodecorator:: extra_platforms.pytest.unless_ksh
+.. autodecorator:: extra_platforms.pytest.unless_kvmibm
+.. autodecorator:: extra_platforms.pytest.unless_linux
+.. autodecorator:: extra_platforms.pytest.unless_linux_layers
+.. autodecorator:: extra_platforms.pytest.unless_linux_like
+.. autodecorator:: extra_platforms.pytest.unless_linuxmint
+.. autodecorator:: extra_platforms.pytest.unless_little_endian
+.. autodecorator:: extra_platforms.pytest.unless_loongarch
+.. autodecorator:: extra_platforms.pytest.unless_loongarch64
+.. autodecorator:: extra_platforms.pytest.unless_macos
+.. autodecorator:: extra_platforms.pytest.unless_mageia
+.. autodecorator:: extra_platforms.pytest.unless_mandriva
+.. autodecorator:: extra_platforms.pytest.unless_manjaro
+.. autodecorator:: extra_platforms.pytest.unless_midnightbsd
+.. autodecorator:: extra_platforms.pytest.unless_mips
+.. autodecorator:: extra_platforms.pytest.unless_mips64
+.. autodecorator:: extra_platforms.pytest.unless_mips64el
+.. autodecorator:: extra_platforms.pytest.unless_mipsel
+.. autodecorator:: extra_platforms.pytest.unless_multiplexers
+.. autodecorator:: extra_platforms.pytest.unless_native_terminals
+.. autodecorator:: extra_platforms.pytest.unless_netbsd
+.. autodecorator:: extra_platforms.pytest.unless_nobara
+.. autodecorator:: extra_platforms.pytest.unless_nushell
+.. autodecorator:: extra_platforms.pytest.unless_openbsd
+.. autodecorator:: extra_platforms.pytest.unless_opensuse
+.. autodecorator:: extra_platforms.pytest.unless_openwrt
+.. autodecorator:: extra_platforms.pytest.unless_oracle
+.. autodecorator:: extra_platforms.pytest.unless_other_posix
+.. autodecorator:: extra_platforms.pytest.unless_other_shells
+.. autodecorator:: extra_platforms.pytest.unless_parallels
+.. autodecorator:: extra_platforms.pytest.unless_pidora
+.. autodecorator:: extra_platforms.pytest.unless_powerpc
+.. autodecorator:: extra_platforms.pytest.unless_powershell
+.. autodecorator:: extra_platforms.pytest.unless_ppc
+.. autodecorator:: extra_platforms.pytest.unless_ppc64
+.. autodecorator:: extra_platforms.pytest.unless_ppc64le
+.. autodecorator:: extra_platforms.pytest.unless_raspbian
+.. autodecorator:: extra_platforms.pytest.unless_rhel
+.. autodecorator:: extra_platforms.pytest.unless_rio
+.. autodecorator:: extra_platforms.pytest.unless_riscv
+.. autodecorator:: extra_platforms.pytest.unless_riscv32
+.. autodecorator:: extra_platforms.pytest.unless_riscv64
+.. autodecorator:: extra_platforms.pytest.unless_rocky
+.. autodecorator:: extra_platforms.pytest.unless_s390x
+.. autodecorator:: extra_platforms.pytest.unless_scientific
+.. autodecorator:: extra_platforms.pytest.unless_slackware
+.. autodecorator:: extra_platforms.pytest.unless_sles
+.. autodecorator:: extra_platforms.pytest.unless_solaris
+.. autodecorator:: extra_platforms.pytest.unless_sparc
+.. autodecorator:: extra_platforms.pytest.unless_sparc64
+.. autodecorator:: extra_platforms.pytest.unless_sunos
+.. autodecorator:: extra_platforms.pytest.unless_system_v
+.. autodecorator:: extra_platforms.pytest.unless_tabby
+.. autodecorator:: extra_platforms.pytest.unless_tcsh
+.. autodecorator:: extra_platforms.pytest.unless_teamcity
+.. autodecorator:: extra_platforms.pytest.unless_tilix
+.. autodecorator:: extra_platforms.pytest.unless_tmux
+.. autodecorator:: extra_platforms.pytest.unless_travis_ci
+.. autodecorator:: extra_platforms.pytest.unless_tumbleweed
+.. autodecorator:: extra_platforms.pytest.unless_tuxedo
+.. autodecorator:: extra_platforms.pytest.unless_ubuntu
+.. autodecorator:: extra_platforms.pytest.unless_ultramarine
+.. autodecorator:: extra_platforms.pytest.unless_unix
+.. autodecorator:: extra_platforms.pytest.unless_unix_layers
+.. autodecorator:: extra_platforms.pytest.unless_unix_not_macos
+.. autodecorator:: extra_platforms.pytest.unless_unknown
+.. autodecorator:: extra_platforms.pytest.unless_unknown_agent
+.. autodecorator:: extra_platforms.pytest.unless_unknown_architecture
+.. autodecorator:: extra_platforms.pytest.unless_unknown_ci
+.. autodecorator:: extra_platforms.pytest.unless_unknown_platform
+.. autodecorator:: extra_platforms.pytest.unless_unknown_shell
+.. autodecorator:: extra_platforms.pytest.unless_unknown_terminal
+.. autodecorator:: extra_platforms.pytest.unless_void
+.. autodecorator:: extra_platforms.pytest.unless_vscode_terminal
+.. autodecorator:: extra_platforms.pytest.unless_wasm32
+.. autodecorator:: extra_platforms.pytest.unless_wasm64
+.. autodecorator:: extra_platforms.pytest.unless_web_terminals
+.. autodecorator:: extra_platforms.pytest.unless_webassembly
+.. autodecorator:: extra_platforms.pytest.unless_wezterm
+.. autodecorator:: extra_platforms.pytest.unless_windows
+.. autodecorator:: extra_platforms.pytest.unless_windows_shells
+.. autodecorator:: extra_platforms.pytest.unless_windows_terminal
+.. autodecorator:: extra_platforms.pytest.unless_wsl1
+.. autodecorator:: extra_platforms.pytest.unless_wsl2
+.. autodecorator:: extra_platforms.pytest.unless_x86
+.. autodecorator:: extra_platforms.pytest.unless_x86_64
+.. autodecorator:: extra_platforms.pytest.unless_xenserver
+.. autodecorator:: extra_platforms.pytest.unless_xonsh
+.. autodecorator:: extra_platforms.pytest.unless_xterm
+.. autodecorator:: extra_platforms.pytest.unless_zellij
+.. autodecorator:: extra_platforms.pytest.unless_zsh
 ```
 
 <!-- pytest-decorators-autodata-end -->

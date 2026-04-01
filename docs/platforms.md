@@ -306,184 +306,75 @@ mindmap
 
 ## Predefined platforms
 
-```{autoclasstree} extra_platforms.platform_data
-:strict:
+```{eval-rst}
+.. autoclasstree:: extra_platforms.platform_data
+   :strict:
 ```
 
-```{automodule} extra_platforms.platform_data
+```{eval-rst}
+.. automodule:: extra_platforms.platform_data
 ```
 
 <!-- platform-data-autodata-start -->
 
-```{autodata} extra_platforms.AIX
-```
-
-```{autodata} extra_platforms.ALPINE
-```
-
-```{autodata} extra_platforms.ALTLINUX
-```
-
-```{autodata} extra_platforms.AMZN
-```
-
-```{autodata} extra_platforms.ANDROID
-```
-
-```{autodata} extra_platforms.ARCH
-```
-
-```{autodata} extra_platforms.BUILDROOT
-```
-
-```{autodata} extra_platforms.CACHYOS
-```
-
-```{autodata} extra_platforms.CENTOS
-```
-
-```{autodata} extra_platforms.CLOUDLINUX
-```
-
-```{autodata} extra_platforms.CYGWIN
-```
-
-```{autodata} extra_platforms.DEBIAN
-```
-
-```{autodata} extra_platforms.DRAGONFLY_BSD
-```
-
-```{autodata} extra_platforms.EXHERBO
-```
-
-```{autodata} extra_platforms.FEDORA
-```
-
-```{autodata} extra_platforms.FREEBSD
-```
-
-```{autodata} extra_platforms.GENERIC_LINUX
-```
-
-```{autodata} extra_platforms.GENTOO
-```
-
-```{autodata} extra_platforms.GUIX
-```
-
-```{autodata} extra_platforms.HAIKU
-```
-
-```{autodata} extra_platforms.HURD
-```
-
-```{autodata} extra_platforms.IBM_POWERKVM
-```
-
-```{autodata} extra_platforms.ILLUMOS
-```
-
-```{autodata} extra_platforms.KALI
-```
-
-```{autodata} extra_platforms.KVMIBM
-```
-
-```{autodata} extra_platforms.LINUXMINT
-```
-
-```{autodata} extra_platforms.MACOS
-```
-
-```{autodata} extra_platforms.MAGEIA
-```
-
-```{autodata} extra_platforms.MANDRIVA
-```
-
-```{autodata} extra_platforms.MANJARO
-```
-
-```{autodata} extra_platforms.MIDNIGHTBSD
-```
-
-```{autodata} extra_platforms.NETBSD
-```
-
-```{autodata} extra_platforms.NOBARA
-```
-
-```{autodata} extra_platforms.OPENBSD
-```
-
-```{autodata} extra_platforms.OPENSUSE
-```
-
-```{autodata} extra_platforms.OPENWRT
-```
-
-```{autodata} extra_platforms.ORACLE
-```
-
-```{autodata} extra_platforms.PARALLELS
-```
-
-```{autodata} extra_platforms.PIDORA
-```
-
-```{autodata} extra_platforms.RASPBIAN
-```
-
-```{autodata} extra_platforms.RHEL
-```
-
-```{autodata} extra_platforms.ROCKY
-```
-
-```{autodata} extra_platforms.SCIENTIFIC
-```
-
-```{autodata} extra_platforms.SLACKWARE
-```
-
-```{autodata} extra_platforms.SLES
-```
-
-```{autodata} extra_platforms.SOLARIS
-```
-
-```{autodata} extra_platforms.SUNOS
-```
-
-```{autodata} extra_platforms.TUMBLEWEED
-```
-
-```{autodata} extra_platforms.TUXEDO
-```
-
-```{autodata} extra_platforms.UBUNTU
-```
-
-```{autodata} extra_platforms.ULTRAMARINE
-```
-
-```{autodata} extra_platforms.UNKNOWN_PLATFORM
-```
-
-```{autodata} extra_platforms.VOID
-```
-
-```{autodata} extra_platforms.WINDOWS
-```
-
-```{autodata} extra_platforms.WSL1
-```
-
-```{autodata} extra_platforms.WSL2
-```
-
-```{autodata} extra_platforms.XENSERVER
+```{eval-rst}
+.. autodata:: extra_platforms.AIX
+.. autodata:: extra_platforms.ALPINE
+.. autodata:: extra_platforms.ALTLINUX
+.. autodata:: extra_platforms.AMZN
+.. autodata:: extra_platforms.ANDROID
+.. autodata:: extra_platforms.ARCH
+.. autodata:: extra_platforms.BUILDROOT
+.. autodata:: extra_platforms.CACHYOS
+.. autodata:: extra_platforms.CENTOS
+.. autodata:: extra_platforms.CLOUDLINUX
+.. autodata:: extra_platforms.CYGWIN
+.. autodata:: extra_platforms.DEBIAN
+.. autodata:: extra_platforms.DRAGONFLY_BSD
+.. autodata:: extra_platforms.EXHERBO
+.. autodata:: extra_platforms.FEDORA
+.. autodata:: extra_platforms.FREEBSD
+.. autodata:: extra_platforms.GENERIC_LINUX
+.. autodata:: extra_platforms.GENTOO
+.. autodata:: extra_platforms.GUIX
+.. autodata:: extra_platforms.HAIKU
+.. autodata:: extra_platforms.HURD
+.. autodata:: extra_platforms.IBM_POWERKVM
+.. autodata:: extra_platforms.ILLUMOS
+.. autodata:: extra_platforms.KALI
+.. autodata:: extra_platforms.KVMIBM
+.. autodata:: extra_platforms.LINUXMINT
+.. autodata:: extra_platforms.MACOS
+.. autodata:: extra_platforms.MAGEIA
+.. autodata:: extra_platforms.MANDRIVA
+.. autodata:: extra_platforms.MANJARO
+.. autodata:: extra_platforms.MIDNIGHTBSD
+.. autodata:: extra_platforms.NETBSD
+.. autodata:: extra_platforms.NOBARA
+.. autodata:: extra_platforms.OPENBSD
+.. autodata:: extra_platforms.OPENSUSE
+.. autodata:: extra_platforms.OPENWRT
+.. autodata:: extra_platforms.ORACLE
+.. autodata:: extra_platforms.PARALLELS
+.. autodata:: extra_platforms.PIDORA
+.. autodata:: extra_platforms.RASPBIAN
+.. autodata:: extra_platforms.RHEL
+.. autodata:: extra_platforms.ROCKY
+.. autodata:: extra_platforms.SCIENTIFIC
+.. autodata:: extra_platforms.SLACKWARE
+.. autodata:: extra_platforms.SLES
+.. autodata:: extra_platforms.SOLARIS
+.. autodata:: extra_platforms.SUNOS
+.. autodata:: extra_platforms.TUMBLEWEED
+.. autodata:: extra_platforms.TUXEDO
+.. autodata:: extra_platforms.UBUNTU
+.. autodata:: extra_platforms.ULTRAMARINE
+.. autodata:: extra_platforms.UNKNOWN_PLATFORM
+.. autodata:: extra_platforms.VOID
+.. autodata:: extra_platforms.WINDOWS
+.. autodata:: extra_platforms.WSL1
+.. autodata:: extra_platforms.WSL2
+.. autodata:: extra_platforms.XENSERVER
 ```
 
 <!-- platform-data-autodata-end -->
