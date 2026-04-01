@@ -8,7 +8,5 @@ To add a new Linux distribution, you can get inspiration from these pull request
 ## `claude.md` file
 
 ```{include} ../claude.md
----
-start-line: 2
----
+:start-line: 2
 ```
