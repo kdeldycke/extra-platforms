@@ -42,13 +42,13 @@ extensions = [
 myst_enable_extensions = [
     "attrs_block",
     "attrs_inline",
+    "colon_fence",
     "deflist",
+    "fieldlist",
     "replacements",
     "smartquotes",
     "strikethrough",
     "tasklist",
-    # XXX Only enabled so we can support GitHub admonitions.
-    "colon_fence",
 ]
 # XXX Allow ```mermaid``` directive to be used without curly braces (```{mermaid}```), see:
 # https://github.com/mgaitan/sphinxcontrib-mermaid/issues/99#issuecomment-2339587001

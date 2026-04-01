@@ -151,32 +151,53 @@ mindmap
 
 ## Predefined shells
 
-```{eval-rst}
-.. autoclasstree:: extra_platforms.shell_data
-   :strict:
+```{autoclasstree} extra_platforms.shell_data
+:strict:
 ```
 
-```{eval-rst}
-.. automodule:: extra_platforms.shell_data
-   :no-index:
+```{automodule} extra_platforms.shell_data
+:no-index:
 ```
 
 <!-- shell-data-autodata-start -->
 
-```{eval-rst}
-.. autodata:: extra_platforms.ASH
-.. autodata:: extra_platforms.BASH
-.. autodata:: extra_platforms.CMD
-.. autodata:: extra_platforms.CSH
-.. autodata:: extra_platforms.DASH
-.. autodata:: extra_platforms.FISH
-.. autodata:: extra_platforms.KSH
-.. autodata:: extra_platforms.NUSHELL
-.. autodata:: extra_platforms.POWERSHELL
-.. autodata:: extra_platforms.TCSH
-.. autodata:: extra_platforms.UNKNOWN_SHELL
-.. autodata:: extra_platforms.XONSH
-.. autodata:: extra_platforms.ZSH
+```{autodata} extra_platforms.ASH
+```
+
+```{autodata} extra_platforms.BASH
+```
+
+```{autodata} extra_platforms.CMD
+```
+
+```{autodata} extra_platforms.CSH
+```
+
+```{autodata} extra_platforms.DASH
+```
+
+```{autodata} extra_platforms.FISH
+```
+
+```{autodata} extra_platforms.KSH
+```
+
+```{autodata} extra_platforms.NUSHELL
+```
+
+```{autodata} extra_platforms.POWERSHELL
+```
+
+```{autodata} extra_platforms.TCSH
+```
+
+```{autodata} extra_platforms.UNKNOWN_SHELL
+```
+
+```{autodata} extra_platforms.XONSH
+```
+
+```{autodata} extra_platforms.ZSH
 ```
 
 <!-- shell-data-autodata-end -->

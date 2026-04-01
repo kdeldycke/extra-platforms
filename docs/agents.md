@@ -106,23 +106,26 @@ mindmap
 
 ## Predefined agents
 
-```{eval-rst}
-.. autoclasstree:: extra_platforms.agent_data
-   :strict:
+```{autoclasstree} extra_platforms.agent_data
+:strict:
 ```
 
-```{eval-rst}
-.. automodule:: extra_platforms.agent_data
-   :no-index:
+```{automodule} extra_platforms.agent_data
+:no-index:
 ```
 
 <!-- agent-data-autodata-start -->
 
-```{eval-rst}
-.. autodata:: extra_platforms.CLAUDE_CODE
-.. autodata:: extra_platforms.CLINE
-.. autodata:: extra_platforms.CURSOR
-.. autodata:: extra_platforms.UNKNOWN_AGENT
+```{autodata} extra_platforms.CLAUDE_CODE
+```
+
+```{autodata} extra_platforms.CLINE
+```
+
+```{autodata} extra_platforms.CURSOR
+```
+
+```{autodata} extra_platforms.UNKNOWN_AGENT
 ```
 
 <!-- agent-data-autodata-end -->

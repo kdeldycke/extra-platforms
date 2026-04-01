@@ -271,51 +271,55 @@ All recognized traits and their properties:
 
 ## Trait implementation
 
-```{eval-rst}
-.. autoclasstree:: extra_platforms.trait
-   :strict:
+```{autoclasstree} extra_platforms.trait
+:strict:
 ```
 
-```{eval-rst}
-.. autoclass:: extra_platforms.Trait
-   :members:
-   :private-members:
-   :undoc-members:
-   :show-inheritance:
+```{autoclass} extra_platforms.Trait
+:members:
+:private-members:
+:undoc-members:
+:show-inheritance:
+```
 
-.. autoclass:: extra_platforms.Platform
-   :members:
-   :private-members:
-   :undoc-members:
-   :show-inheritance:
+```{autoclass} extra_platforms.Platform
+:members:
+:private-members:
+:undoc-members:
+:show-inheritance:
+```
 
-.. autoclass:: extra_platforms.Architecture
-   :members:
-   :private-members:
-   :undoc-members:
-   :show-inheritance:
+```{autoclass} extra_platforms.Architecture
+:members:
+:private-members:
+:undoc-members:
+:show-inheritance:
+```
 
-.. autoclass:: extra_platforms.Shell
-   :members:
-   :private-members:
-   :undoc-members:
-   :show-inheritance:
+```{autoclass} extra_platforms.Shell
+:members:
+:private-members:
+:undoc-members:
+:show-inheritance:
+```
 
-.. autoclass:: extra_platforms.Terminal
-   :members:
-   :private-members:
-   :undoc-members:
-   :show-inheritance:
+```{autoclass} extra_platforms.Terminal
+:members:
+:private-members:
+:undoc-members:
+:show-inheritance:
+```
 
-.. autoclass:: extra_platforms.CI
-   :members:
-   :private-members:
-   :undoc-members:
-   :show-inheritance:
+```{autoclass} extra_platforms.CI
+:members:
+:private-members:
+:undoc-members:
+:show-inheritance:
+```
 
-.. autoclass:: extra_platforms.Agent
-   :members:
-   :private-members:
-   :undoc-members:
-   :show-inheritance:
+```{autoclass} extra_platforms.Agent
+:members:
+:private-members:
+:undoc-members:
+:show-inheritance:
 ```

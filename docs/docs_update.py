@@ -46,6 +46,7 @@ from click_extra.table import TableFormat, render_table
 from wcmatch import glob as wcglob
 
 from extra_platforms import (
+    ALL_AGENTS,
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
     ALL_CI,
@@ -63,6 +64,7 @@ from extra_platforms import (
     BIG_ENDIAN,
     LITTLE_ENDIAN,
     NON_OVERLAPPING_GROUPS,
+    UNKNOWN_AGENT,
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
     UNKNOWN_PLATFORM,
@@ -91,8 +93,8 @@ def replace_content(
     """Replace in the provided files the content surrounded by the provided tags.
 
     Tags are specified as simple names (e.g., "architecture-table-start") and will be
-    matched with flexible whitespace handling. Supports both HTML comment format
-    (``<!-- tag -->``) for Markdown and rST comment format (``.. tag``) for rST files.
+    matched with flexible whitespace handling using HTML comment format
+    (``<!-- tag -->``).
     """
     if isinstance(filepath, Path):
         path_list = [filepath]
@@ -105,32 +107,18 @@ def replace_content(
         assert path.is_file(), f"File {path} is not a file."
 
         orig_content = path.read_text(encoding="utf-8")
-        is_rst = path.suffix == ".rst"
 
-        if is_rst:
-            # rST comment format: .. tag
-            start_pattern = re.compile(
-                rf"\.\.\s+{re.escape(start_tag)}\s*",
-                re.MULTILINE | re.DOTALL,
-            )
-            end_pattern = re.compile(
-                rf"\s*\.\.\s+{re.escape(end_tag)}",
-                re.MULTILINE | re.DOTALL,
-            )
-            start_tag_formatted = f".. {start_tag}\n\n"
-            end_tag_formatted = f"\n\n.. {end_tag}"
-        else:
-            # HTML comment format: <!-- tag -->
-            start_pattern = re.compile(
-                rf"<!--\s*{re.escape(start_tag)}\s*-->\s*",
-                re.MULTILINE | re.DOTALL,
-            )
-            end_pattern = re.compile(
-                rf"\s*<!--\s*{re.escape(end_tag)}\s*-->",
-                re.MULTILINE | re.DOTALL,
-            )
-            start_tag_formatted = f"<!-- {start_tag} -->\n\n"
-            end_tag_formatted = f"\n\n<!-- {end_tag} -->"
+        # HTML comment format: <!-- tag -->
+        start_pattern = re.compile(
+            rf"<!--\s*{re.escape(start_tag)}\s*-->\s*",
+            re.MULTILINE | re.DOTALL,
+        )
+        end_pattern = re.compile(
+            rf"\s*<!--\s*{re.escape(end_tag)}\s*-->",
+            re.MULTILINE | re.DOTALL,
+        )
+        start_tag_formatted = f"<!-- {start_tag} -->\n\n"
+        end_tag_formatted = f"\n\n<!-- {end_tag} -->"
 
         # Find start tag.
         start_match = start_pattern.search(orig_content)
@@ -454,10 +442,9 @@ def generate_sphinx_directives(
     directive: str,
     attr: str,
 ) -> str:
-    """Generate Sphinx directives for a collection of traits or groups.
+    """Generate native MyST directive blocks for a collection of traits or groups.
 
-    Produces a MyST ``{eval-rst}`` block with one directive line per object,
-    using the given directive type and attribute name.
+    Produces one ``{directive}`` fenced block per object.
 
     :param objects: The traits or groups to generate directives for.
     :param directive: The Sphinx directive name (e.g. ``"autodata"``,
@@ -467,15 +454,14 @@ def generate_sphinx_directives(
     """
     objects_list = list(objects)
     if not objects_list:
-        return "```{eval-rst}\n```"
+        return ""
 
-    directives = [
-        f".. {directive}:: extra_platforms.{getattr(obj, attr)}"
+    blocks = [
+        f"```{{{directive}}} extra_platforms.{getattr(obj, attr)}\n```"
         for obj in sorted(objects_list, key=attrgetter("id"))
     ]
 
-    joined = "\n".join(directives)
-    return f"```{{eval-rst}}\n{joined}\n```"
+    return "\n\n".join(blocks)
 
 
 def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> str:
@@ -509,12 +495,13 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
 
 
 def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
-    """Generate Sphinx autodecorator directives for pytest decorators.
+    """Generate native MyST autodecorator directives for pytest decorators.
 
     Generates directives for both ``@skip_<id>`` and ``@unless_<id>`` decorators
     defined in the ``extra_platforms.pytest`` module, organized in separate sections.
 
-    Uses the built-in ``autodecorator`` directive which renders decorator names with @ prefix.
+    Uses the built-in ``autodecorator`` directive which renders decorator names
+    with @ prefix.
     """
     sorted_objects = sorted(objects, key=attrgetter("id"))
 
@@ -524,14 +511,14 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     )
 
     def _directive_section(title: str, directives: Iterable[str]) -> str:
-        joined = "\n".join(directives)
-        return f"## {title}\n\n```{{eval-rst}}\n{joined}\n```"
+        blocks = "\n\n".join(directives)
+        return f"## {title}\n\n{blocks}"
 
     sections = (
         _directive_section(
             name,
             (
-                f".. autodecorator:: extra_platforms.pytest.{getattr(o, attr)}"
+                f"```{{autodecorator}} extra_platforms.pytest.{getattr(o, attr)}\n```"
                 for o in sorted_objects
             ),
         )
@@ -548,9 +535,10 @@ def generate_noindex_automodule(module: str) -> str:
     docstring is rendered on ``extra_platforms.html``.
     """
     return dedent(f"""\
-        .. automodule:: {module}
-           :noindex:
-           :no-members:""")
+        ```{{automodule}} {module}
+        :noindex:
+        :no-members:
+        ```""")
 
 
 def generate_group_module_automodule() -> str:
@@ -560,7 +548,7 @@ def generate_group_module_automodule() -> str:
     in the same file.
 
     Returns:
-        A MyST-compatible code block containing the automodule directive.
+        A native MyST directive block.
     """
     # Exclude Group class (documented via autoclass) and utility functions
     # (documented in "Trait and group operations" section).
@@ -575,12 +563,11 @@ def generate_group_module_automodule() -> str:
     exclude_members = ", ".join(sorted(exclude_list))
 
     return dedent(f"""\
-        ```{{eval-rst}}
-        .. automodule:: extra_platforms.group
-           :members:
-           :undoc-members:
-           :show-inheritance:
-           :exclude-members: {exclude_members}
+        ```{{automodule}} extra_platforms.group
+        :members:
+        :undoc-members:
+        :show-inheritance:
+        :exclude-members: {exclude_members}
         ```""")
 
 
@@ -594,7 +581,7 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
         groups: All predefined groups to exclude.
 
     Returns:
-        A MyST-compatible code block containing the automodule directive.
+        A native MyST directive block.
     """
     # Exclude all Group instances (documented in "Predefined groups" section).
     # Group IDs are lowercase but Python symbols are uppercase.
@@ -619,9 +606,8 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
     exclude_members = ", ".join(sorted(exclude_list))
 
     return dedent(f"""\
-        ```{{eval-rst}}
-        .. automodule:: extra_platforms.group_data
-           :exclude-members: {exclude_members}
+        ```{{automodule}} extra_platforms.group_data
+        :exclude-members: {exclude_members}
         ```""")
 
 
@@ -630,15 +616,16 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
 
     This excludes detection functions, utility functions, and core classes from the
     automodule output, since they are documented in other files:
-    - Detection functions in detection.md ({{func}} → detection.html)
-    - Utility functions in detection.md and groups.md ({{func}} → detection.html, groups.html)
-    - Core classes in trait.md and groups.md ({{class}} → trait.html, groups.html)
+
+    - Detection functions in detection.md.
+    - Utility functions in detection.md and groups.md.
+    - Core classes in trait.md and groups.md.
 
     Args:
         objects: The traits and groups whose detection functions should be excluded.
 
     Returns:
-        An rST automodule directive with exclude-members.
+        A native MyST directive block.
     """
     objects_list = list(objects)
 
@@ -682,11 +669,12 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
     exclude_members = ", ".join(sorted(exclude_list))
 
     return dedent(f"""\
-        .. automodule:: extra_platforms
-           :members:
-           :show-inheritance:
-           :undoc-members:
-           :exclude-members: {exclude_members}""")
+        ```{{automodule}} extra_platforms
+        :members:
+        :show-inheritance:
+        :undoc-members:
+        :exclude-members: {exclude_members}
+        ```""")
 
 
 def update_docs() -> None:
@@ -922,6 +910,15 @@ def update_docs() -> None:
             ),
         ),
         (
+            "agent-data-autodata-start",
+            "agent-data-autodata-end",
+            generate_sphinx_directives(
+                list(ALL_AGENTS) + [UNKNOWN_AGENT],
+                "autodata",
+                "symbol_id",
+            ),
+        ),
+        (
             "group-data-autodata-start",
             "group-data-autodata-end",
             generate_sphinx_directives(
@@ -985,16 +982,12 @@ def update_docs() -> None:
         ),
     ]
 
-    # Collect all markdown and rST files from docs directory and project root.
+    # Collect all markdown files from docs directory and project root.
     all_doc_files = set()
 
     # Add markdown files from docs directory using wcmatch glob.
     for md_file in wcglob.iglob(str(DOCS_ROOT / "**/*.md"), flags=wcglob.GLOBSTAR):
         all_doc_files.add(Path(md_file).resolve())
-
-    # Add rST files from docs directory.
-    for rst_file in wcglob.iglob(str(DOCS_ROOT / "**/*.rst"), flags=wcglob.GLOBSTAR):
-        all_doc_files.add(Path(rst_file).resolve())
 
     # Add readme.md from project root.
     if README_PATH.exists():
@@ -1003,34 +996,21 @@ def update_docs() -> None:
     # Apply each replacement rule to all matching files.
     for start_tag, end_tag, content in replacement_rules:
         matching_files: list[Path] = []
-        # Use regex to check if tags exist (with flexible whitespace).
-        # Support both HTML comments (Markdown) and rST comments.
-        html_start_pattern = re.compile(
+        # Use regex to check if HTML comment tags exist (with flexible whitespace).
+        start_pattern = re.compile(
             rf"<!--\s*{re.escape(start_tag)}\s*-->",
             re.MULTILINE | re.DOTALL,
         )
-        html_end_pattern = re.compile(
+        end_pattern = re.compile(
             rf"<!--\s*{re.escape(end_tag)}\s*-->",
-            re.MULTILINE | re.DOTALL,
-        )
-        rst_start_pattern = re.compile(
-            rf"\.\.\s+{re.escape(start_tag)}",
-            re.MULTILINE | re.DOTALL,
-        )
-        rst_end_pattern = re.compile(
-            rf"\.\.\s+{re.escape(end_tag)}",
             re.MULTILINE | re.DOTALL,
         )
 
         for filepath in all_doc_files:
             file_content = filepath.read_text(encoding="utf-8")
-            has_html_tags = html_start_pattern.search(
+            if start_pattern.search(file_content) and end_pattern.search(
                 file_content
-            ) and html_end_pattern.search(file_content)
-            has_rst_tags = rst_start_pattern.search(
-                file_content
-            ) and rst_end_pattern.search(file_content)
-            if has_html_tags or has_rst_tags:
+            ):
                 matching_files.append(filepath)
         if matching_files:
             replace_content(matching_files, start_tag, end_tag, content)
