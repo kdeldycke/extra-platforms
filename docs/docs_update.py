@@ -1016,9 +1016,7 @@ def update_docs() -> None:
 
         for filepath in all_doc_files:
             file_content = filepath.read_text(encoding="utf-8")
-            if start_pattern.search(file_content) and end_pattern.search(
-                file_content
-            ):
+            if start_pattern.search(file_content) and end_pattern.search(file_content):
                 matching_files.append(filepath)
         if matching_files:
             replace_content(matching_files, start_tag, end_tag, content)
