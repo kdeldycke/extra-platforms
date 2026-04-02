@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 740" width="640" height="740"
      role="img" aria-label="Extra Platforms logo">
   <style>
     .frame { fill: #334155; }
     .handle-o { stroke: #334155; }
     .handle-i { stroke: #475569; }
-    @media (prefers-color-scheme: dark) {
-      .frame { fill: #94A3B8; }
-      .handle-o { stroke: #94A3B8; }
-      .handle-i { stroke: #CBD5E1; }
-    }
+    .title { fill: #1E293B; }
   </style>
   <defs>
     <radialGradient id="glass" cx="38%" cy="32%" r="65%">
@@ -36,4 +32,8 @@
   <circle cx="183" cy="306" r="32" fill="#10B981"/>
   <circle cx="258" cy="306" r="32" fill="#8B5CF6"/>
   <circle cx="333" cy="306" r="32" fill="#06B6D4"/>
+  <!-- Project name -->
+  <text class="title" x="320" y="680"
+        font-family="'Inter', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif"
+        font-size="52" font-weight="700" text-anchor="middle" letter-spacing="1">Extra Platforms</text>
 </svg>

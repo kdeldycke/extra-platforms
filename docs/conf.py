@@ -150,6 +150,7 @@ html_title = project
 html_logo = "assets/logo-square.svg"
 html_favicon = "assets/logo-square.svg"
 html_theme_options = {
+    "sidebar_hide_name": True,
     # Activates edit links.
     "source_repository": f"https://github.com/{issues_github_path}",
     "source_branch": "main",

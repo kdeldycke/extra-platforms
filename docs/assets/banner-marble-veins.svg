@@ -7,6 +7,9 @@
     .handle-i { stroke: #475569; }
     .title { fill: #1E293B; }
     .tagline { fill: #64748B; }
+    .vl { stroke: #e2e8ef; }
+    .vd { stroke: #c6cfda; }
+    .bg { fill: #F8FAFC; }
   </style>
   <defs>
     <radialGradient id="glass" cx="38%" cy="32%" r="65%">
@@ -14,6 +17,23 @@
       <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.7"/>
     </radialGradient>
   </defs>
+  <!-- Background -->
+  <rect class="bg" width="1280" height="340"/>
+  <!-- Marble veins (traced from original banner-27-marble-veins.png) -->
+  <g fill="none">
+    <path class="vl" stroke-width="7"
+          d="M -20 58 C 200 78, 500 70, 750 66 S 1050 62, 1300 42"/>
+    <path class="vd" stroke-width="8"
+          d="M -20 118 C 200 100, 500 97, 800 86 S 1100 90, 1300 110"/>
+    <path class="vl" stroke-width="7"
+          d="M -20 152 C 200 148, 450 132, 650 127 S 950 142, 1300 152"/>
+    <path class="vd" stroke-width="8"
+          d="M -20 220 C 200 210, 500 200, 800 196 S 1100 180, 1300 178"/>
+    <path class="vl" stroke-width="7"
+          d="M -20 254 C 200 248, 500 240, 700 236 S 950 248, 1300 276"/>
+    <path class="vd" stroke-width="8"
+          d="M -20 286 C 150 272, 300 268, 550 278 S 800 300, 1000 300 S 1200 296, 1300 296"/>
+  </g>
   <!-- Logo (scaled to fit banner height) -->
   <g transform="translate(15, 15) scale(0.484)">
     <!-- Handle -->
