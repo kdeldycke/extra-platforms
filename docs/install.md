@@ -77,13 +77,18 @@ You can also try the library itself in an interactive Python shell without insta
 
 ```{code-block} shell-session
 $ uvx --with extra-platforms python
-Installed 3 packages in 5ms
-Python 3.11.11 (main, Mar 17 2025, 21:33:08) [Clang 20.1.0 ] on darwin
-Type "help", "copyright", "credits" or "license" for more information.
->>> import extra_platforms
->>> extra_platforms.__version__
-'3.2.3'
->>>
+```
+
+```{code-block} pycon
+>>> from extra_platforms import current_platform, BSD, UNIX, LINUX
+>>> current_platform()
+Platform(id='macos', name='macOS')
+>>> current_platform() in BSD
+True
+>>> current_platform() in UNIX
+True
+>>> current_platform() in LINUX
+False
 ```
 
 ## Main dependencies
