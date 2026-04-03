@@ -1,9 +1,11 @@
 # Changelog
 
-## [`11.0.6.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...main)
+## [`11.0.7.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.6...main)
 
 > [!WARNING]
 > This version is **not released yet** and is under active development.
+
+## [`11.0.6` (2026-04-03)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...v11.0.6)
 
 ## [`11.0.5` (2026-04-03)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.4...v11.0.5)
 
