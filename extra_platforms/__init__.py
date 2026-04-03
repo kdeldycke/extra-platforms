@@ -391,7 +391,7 @@ from .trait import (
 """
 
 
-__version__ = "11.0.6.dev0"
+__version__ = "11.0.6"
 
 
 def _initialize_group_detection_functions() -> list[str]:
