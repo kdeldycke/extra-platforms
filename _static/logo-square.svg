@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 740" width="640" height="740"
+     role="img" aria-label="Extra Platforms logo">
+  <style>
+    .frame { fill: #334155; }
+    .handle-o { stroke: #334155; }
+    .handle-i { stroke: #475569; }
+    .title { fill: #1E293B; }
+  </style>
+  <defs>
+    <radialGradient id="glass" cx="38%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.7"/>
+    </radialGradient>
+  </defs>
+  <!-- Handle -->
+  <line class="handle-o" x1="396" y1="392" x2="554" y2="550"
+        stroke-width="56" stroke-linecap="round"/>
+  <line class="handle-i" x1="396" y1="392" x2="554" y2="550"
+        stroke-width="40" stroke-linecap="round"/>
+  <!-- Lens ring -->
+  <circle class="frame" cx="258" cy="252" r="200"/>
+  <!-- Lens glass -->
+  <circle cx="258" cy="252" r="178" fill="url(#glass)"/>
+  <!-- Highlight arc -->
+  <path d="M 142 172 A 148 148 0 0 1 308 124"
+        fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+  <!-- Trait category dots (canonical order: Architecture, Platform, Shell, Terminal, CI, Agent) -->
+  <circle cx="183" cy="198" r="32" fill="#F59E0B"/>
+  <circle cx="258" cy="198" r="32" fill="#3B82F6"/>
+  <circle cx="333" cy="198" r="32" fill="#EF4444"/>
+  <circle cx="183" cy="306" r="32" fill="#10B981"/>
+  <circle cx="258" cy="306" r="32" fill="#8B5CF6"/>
+  <circle cx="333" cy="306" r="32" fill="#06B6D4"/>
+  <!-- Project name -->
+  <text class="title" x="320" y="680"
+        font-family="'Inter', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif"
+        font-size="52" font-weight="700" text-anchor="middle" letter-spacing="1">Extra Platforms</text>
+</svg>
