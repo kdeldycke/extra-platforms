@@ -68,7 +68,7 @@ GUIX = Platform("guix", "Guix System", "🐃", "https://guix.gnu.org")
 
 HAIKU = Platform("haiku", "Haiku", "🍂", "https://www.haiku-os.org")
 
-HURD = Platform("hurd", "GNU/Hurd", "🦬", "https://gnu.org/software/hurd/")
+HURD = Platform("hurd", "GNU/Hurd", "🦬", "https://www.gnu.org/software/hurd/")
 
 IBM_POWERKVM = Platform(
     "ibm_powerkvm",

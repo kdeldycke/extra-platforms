@@ -92,7 +92,6 @@ suppress_warnings = [
 linkcheck_ignore = [
     # These sites return 403/418 to bots but are valid.
     r"https://doi\.org/10\.5281/zenodo\.",
-    r"https://guix\.gnu\.org",
     r"https://claude\.ai/code",
     r"https://www\.freedesktop\.org/software/systemd/man/",
     r"https://www\.slackware\.com",
@@ -100,7 +99,8 @@ linkcheck_ignore = [
     # GitHub fragment anchors are rendered client-side and not visible to linkcheck.
     r"https://github\.com/actions/runner-images#",
     r"https://github\.com/kdeldycke/click-extra#",
-    # Site is intermittently unreachable.
+    # Sites intermittently unreachable from CI runners.
+    r"https://([^/]+\.)?gnu\.org",
     r"https://midnightbsd\.org",
 ]
 
