@@ -7,6 +7,9 @@
 
 ## [`11.0.5` (2026-04-03)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.4...v11.0.5)
 
+> [!NOTE]
+> `11.0.5` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.0.5/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.0.5).
+
 - Add project logo and banner. Closes {gh}`522`
 - Fix broken `pipx` documentation link. Closes {gh}`386`
 - Enable `check_untyped_defs` in mypy configuration. Fix all resulting type errors.
