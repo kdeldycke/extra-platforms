@@ -464,3 +464,13 @@ exclude = [ "labels", "workflows/debug.yaml" ]
 include = [ "skills" ]
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
+# Extra-platforms needs exhaustive runner coverage because it tests platform detection.
+# Add all runners and Python versions not already in repomatic's default test matrix.
+test-matrix.variations.os = [
+    "ubuntu-24.04",
+    "ubuntu-22.04-arm",
+    "ubuntu-22.04",
+    "macos-15",
+    "macos-14",
+    "windows-2022",
+]
