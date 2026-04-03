@@ -1,9 +1,6 @@
 # Changelog
 
-## [`11.0.5.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.4...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`11.0.5` (2026-04-03)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.4...v11.0.5)
 
 - Add project logo and banner. Closes {gh}`522`
 - Fix broken `pipx` documentation link. Closes {gh}`386`
