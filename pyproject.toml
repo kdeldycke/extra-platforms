@@ -459,5 +459,7 @@ exclude = [
 [tool.repomatic]
 # We don't need custom label configuration, and the debug workflow is not used in this project.
 exclude = [ "labels", "workflows/debug.yaml" ]
+# Skills are excluded by default; force-include them.
+include = [ "skills" ]
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
