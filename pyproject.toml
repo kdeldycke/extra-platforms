@@ -371,6 +371,7 @@ default.extend-ignore-identifiers-re = [
 [tool.pytest]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 addopts = [
+  "--dist=loadgroup",
   "--durations=10",
   "--cov",
   "--cov-report=term",
