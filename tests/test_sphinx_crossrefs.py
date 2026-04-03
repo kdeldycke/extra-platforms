@@ -50,6 +50,10 @@ pytestmark = [
         sys.version_info < (3, 12),
         reason="docs dependency group requires Python >= 3.12",
     ),
+    # Sphinx crashes with a FileNotFoundError on searchindex.js.tmp when
+    # concurrent builds share the same output directory (sphinx-doc/sphinx#13702).
+    # Force all tests in this module onto a single xdist worker.
+    pytest.mark.xdist_group("sphinx"),
 ]
 
 # Path to the built documentation.
