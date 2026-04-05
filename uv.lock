@@ -10,8 +10,8 @@ resolution-markers = [
 exclude-newer = "2026-02-09T00:00:00Z"
 
 [options.exclude-newer-package]
-pygments = { timestamp = "2026-04-03T09:29:13.19855131Z", span = "PT0S" }
-requests = { timestamp = "2026-04-03T09:29:13.198557392Z", span = "PT0S" }
+pygments = { timestamp = "2026-04-05T06:31:06.258094562Z", span = "PT0S" }
+requests = { timestamp = "2026-04-05T06:31:06.258101415Z", span = "PT0S" }
 
 [[package]]
 name = "accessible-pygments"
@@ -377,7 +377,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "11.0.6.dev0"
+version = "11.1.0.dev0"
 source = { editable = "." }
 
 [package.optional-dependencies]
