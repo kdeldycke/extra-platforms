@@ -449,12 +449,12 @@ pretty = true
 
 [tool.lychee]
 exclude = [
-    # GitHub issue comment fragments are dynamically loaded and cannot be verified.
-    "^https://github.com/.+/issues/[0-9]+#issuecomment-.*$",
-    # Skip suggesting redirecting generic download links to their binary artefact.
-    "^https://github.com/.+/releases/.+/download/.*$",
-    # Allow redirects of generic DOI URLs to their specific Zenodo release page.
-    "^https://doi.org/.+/zenodo.*$",
+  # GitHub issue comment fragments are dynamically loaded and cannot be verified.
+  "^https://github.com/.+/issues/[0-9]+#issuecomment-.*$",
+  # Skip suggesting redirecting generic download links to their binary artefact.
+  "^https://github.com/.+/releases/.+/download/.*$",
+  # Allow redirects of generic DOI URLs to their specific Zenodo release page.
+  "^https://doi.org/.+/zenodo.*$",
 ]
 
 [tool.repomatic]
@@ -467,10 +467,10 @@ nuitka.enabled = false
 # Extra-platforms needs exhaustive runner coverage because it tests platform detection.
 # Add all runners and Python versions not already in repomatic's default test matrix.
 test-matrix.variations.os = [
-    "ubuntu-24.04",
-    "ubuntu-22.04-arm",
-    "ubuntu-22.04",
-    "macos-15",
-    "macos-14",
-    "windows-2022",
+  "ubuntu-24.04",
+  "ubuntu-22.04-arm",
+  "ubuntu-22.04",
+  "macos-15",
+  "macos-14",
+  "windows-2022",
 ]
