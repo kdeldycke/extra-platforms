@@ -568,6 +568,12 @@ def is_netbsd() -> bool:
 
 
 @cache
+def is_nixos() -> bool:
+    """Return :data:`True` if current platform is :data:`~extra_platforms.NIXOS`."""
+    return os_release_id() == "nixos"
+
+
+@cache
 def is_nobara() -> bool:
     """Return :data:`True` if current platform is :data:`~extra_platforms.NOBARA`."""
     return os_release_id() == "nobara"

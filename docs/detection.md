@@ -117,6 +117,7 @@
 | {func}`~is_multiplexers`         |  ⧉   | {data}`~MULTIPLEXERS`         |
 | {func}`~is_native_terminals`     |  ▦   | {data}`~NATIVE_TERMINALS`     |
 | {func}`~is_netbsd`               |  🚩  | {data}`~NETBSD`               |
+| {func}`~is_nixos`                |  ❄️  | {data}`~NIXOS`                |
 | {func}`~is_nobara`               |     | {data}`~NOBARA`               |
 | {func}`~is_nushell`              |  𝜈   | {data}`~NUSHELL`              |
 | {func}`~is_openbsd`              |  🐡  | {data}`~OPENBSD`              |
@@ -271,6 +272,7 @@
 .. autofunction:: extra_platforms.is_mips64el
 .. autofunction:: extra_platforms.is_mipsel
 .. autofunction:: extra_platforms.is_netbsd
+.. autofunction:: extra_platforms.is_nixos
 .. autofunction:: extra_platforms.is_nobara
 .. autofunction:: extra_platforms.is_nushell
 .. autofunction:: extra_platforms.is_openbsd

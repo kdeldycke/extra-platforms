@@ -81,6 +81,7 @@ Platform(id='macos', name='macOS')
 |  ▲   | {data}`~MANJARO`       | Manjaro Linux                  | {func}`~is_manjaro`       |
 |  🌘  | {data}`~MIDNIGHTBSD`   | MidnightBSD                    | {func}`~is_midnightbsd`   |
 |  🚩  | {data}`~NETBSD`        | NetBSD                         | {func}`~is_netbsd`        |
+|  ❄️  | {data}`~NIXOS`         | NixOS                          | {func}`~is_nixos`         |
 |     | {data}`~NOBARA`        | Nobara                         | {func}`~is_nobara`        |
 |  🐡  | {data}`~OPENBSD`       | OpenBSD                        | {func}`~is_openbsd`       |
 |  🦎  | {data}`~OPENSUSE`      | openSUSE                       | {func}`~is_opensuse`      |
@@ -160,7 +161,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,40
+ALL_PLATFORMS,LINUX,41
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,OTHER_POSIX,2
@@ -189,6 +190,7 @@ LINUX,LINUXMINT,1
 LINUX,MAGEIA,1
 LINUX,MANDRIVA,1
 LINUX,MANJARO,1
+LINUX,NIXOS,1
 LINUX,NOBARA,1
 LINUX,OPENSUSE,1
 LINUX,OPENWRT,1
@@ -272,6 +274,7 @@ mindmap
             (⍥ MAGEIA)
             (💫 MANDRIVA)
             (▲ MANJARO)
+            (❄️ NIXOS)
             ( NOBARA)
             (🦎 OPENSUSE)
             (📶 OPENWRT)
@@ -350,6 +353,7 @@ mindmap
 .. autodata:: extra_platforms.MANJARO
 .. autodata:: extra_platforms.MIDNIGHTBSD
 .. autodata:: extra_platforms.NETBSD
+.. autodata:: extra_platforms.NIXOS
 .. autodata:: extra_platforms.NOBARA
 .. autodata:: extra_platforms.OPENBSD
 .. autodata:: extra_platforms.OPENSUSE

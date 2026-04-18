@@ -58,6 +58,7 @@ from extra_platforms import (
     is_mandriva,
     is_midnightbsd,
     is_netbsd,
+    is_nixos,
     is_nobara,
     is_openbsd,
     is_opensuse,
@@ -120,6 +121,7 @@ def test_platform_detection():
         assert not is_mandriva()
         assert not is_midnightbsd()
         assert not is_netbsd()
+        assert not is_nixos()
         assert not is_nobara()
         assert not is_openbsd()
         assert not is_opensuse()
@@ -174,6 +176,7 @@ def test_platform_detection():
         assert not is_mandriva()
         assert not is_midnightbsd()
         assert not is_netbsd()
+        assert not is_nixos()
         assert not is_nobara()
         assert not is_openbsd()
         assert not is_opensuse()
@@ -224,6 +227,7 @@ def test_platform_detection():
         assert not is_mandriva()
         assert not is_midnightbsd()
         assert not is_netbsd()
+        assert not is_nixos()
         assert not is_nobara()
         assert not is_openbsd()
         assert not is_opensuse()

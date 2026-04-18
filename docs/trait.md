@@ -209,6 +209,7 @@ All recognized traits and their properties:
 |  🔲  | {data}`~MIPS64EL`             | MIPS64 (little-endian)         | {func}`~is_mips64el`             | Architecture |
 |  🔲  | {data}`~MIPSEL`               | MIPS (32-bit, little-endian)   | {func}`~is_mipsel`               | Architecture |
 |  🚩  | {data}`~NETBSD`               | NetBSD                         | {func}`~is_netbsd`               | Platform     |
+|  ❄️  | {data}`~NIXOS`                | NixOS                          | {func}`~is_nixos`                | Platform     |
 |     | {data}`~NOBARA`               | Nobara                         | {func}`~is_nobara`               | Platform     |
 |  𝜈   | {data}`~NUSHELL`              | Nushell                        | {func}`~is_nushell`              | Shell        |
 |  🐡  | {data}`~OPENBSD`              | OpenBSD                        | {func}`~is_openbsd`              | Platform     |

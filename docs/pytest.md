@@ -182,6 +182,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_multiplexers`         | {deco}`~pytest.unless_multiplexers`         |  ⧉   | {data}`~MULTIPLEXERS`         |
 | {deco}`~pytest.skip_native_terminals`     | {deco}`~pytest.unless_native_terminals`     |  ▦   | {data}`~NATIVE_TERMINALS`     |
 | {deco}`~pytest.skip_netbsd`               | {deco}`~pytest.unless_netbsd`               |  🚩  | {data}`~NETBSD`               |
+| {deco}`~pytest.skip_nixos`                | {deco}`~pytest.unless_nixos`                |  ❄️  | {data}`~NIXOS`                |
 | {deco}`~pytest.skip_nobara`               | {deco}`~pytest.unless_nobara`               |     | {data}`~NOBARA`               |
 | {deco}`~pytest.skip_nushell`              | {deco}`~pytest.unless_nushell`              |  𝜈   | {data}`~NUSHELL`              |
 | {deco}`~pytest.skip_openbsd`              | {deco}`~pytest.unless_openbsd`              |  🐡  | {data}`~OPENBSD`              |
@@ -363,6 +364,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_multiplexers
 .. autodecorator:: extra_platforms.pytest.skip_native_terminals
 .. autodecorator:: extra_platforms.pytest.skip_netbsd
+.. autodecorator:: extra_platforms.pytest.skip_nixos
 .. autodecorator:: extra_platforms.pytest.skip_nobara
 .. autodecorator:: extra_platforms.pytest.skip_nushell
 .. autodecorator:: extra_platforms.pytest.skip_openbsd
@@ -541,6 +543,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_multiplexers
 .. autodecorator:: extra_platforms.pytest.unless_native_terminals
 .. autodecorator:: extra_platforms.pytest.unless_netbsd
+.. autodecorator:: extra_platforms.pytest.unless_nixos
 .. autodecorator:: extra_platforms.pytest.unless_nobara
 .. autodecorator:: extra_platforms.pytest.unless_nushell
 .. autodecorator:: extra_platforms.pytest.unless_openbsd
