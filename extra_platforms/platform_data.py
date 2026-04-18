@@ -104,6 +104,8 @@ MIDNIGHTBSD = Platform("midnightbsd", "MidnightBSD", "🌘", "https://midnightbs
 
 NETBSD = Platform("netbsd", "NetBSD", "🚩", "https://netbsd.org")
 
+NIXOS = Platform("nixos", "NixOS", "❄️", "https://nixos.org")
+
 NOBARA = Platform("nobara", "Nobara", "", "https://nobaraproject.org")
 """
 .. note::

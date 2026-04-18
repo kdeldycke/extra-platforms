@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add NixOS platform detection.
+
 ## [`11.0.5` (2026-04-03)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.4...v11.0.5)
 
 > [!NOTE]

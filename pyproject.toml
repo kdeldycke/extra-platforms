@@ -95,6 +95,7 @@ keywords = [
   "MIPS64 (little-endian)",
   "multiplatform",
   "NetBSD",
+  "NixOS",
   "Nobara",
   "Nushell",
   "OpenBSD",

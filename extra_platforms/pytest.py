@@ -257,6 +257,7 @@ if TYPE_CHECKING:
     skip_multiplexers: MarkDecorator
     skip_native_terminals: MarkDecorator
     skip_netbsd: MarkDecorator
+    skip_nixos: MarkDecorator
     skip_nobara: MarkDecorator
     skip_nushell: MarkDecorator
     skip_openbsd: MarkDecorator
@@ -430,6 +431,7 @@ if TYPE_CHECKING:
     unless_multiplexers: MarkDecorator
     unless_native_terminals: MarkDecorator
     unless_netbsd: MarkDecorator
+    unless_nixos: MarkDecorator
     unless_nobara: MarkDecorator
     unless_nushell: MarkDecorator
     unless_openbsd: MarkDecorator
