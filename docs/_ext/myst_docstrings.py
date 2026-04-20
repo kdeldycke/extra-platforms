@@ -157,5 +157,10 @@ def _on_process_docstring(app, what, name, obj, options, lines):
 
 
 def setup(app):
-    app.connect("autodoc-process-docstring", _on_process_docstring)
+    # Run before sphinx_autodoc_typehints (default priority 500) so the
+    # MyST-to-reST conversion never sees the :rtype:/:type: lines that
+    # sphinx_autodoc_typehints injects. Those lines contain a custom
+    # :sphinx_autodoc_typehints_type: role with escaped backticks that
+    # the inline-code doubling in step 3 would corrupt.
+    app.connect("autodoc-process-docstring", _on_process_docstring, priority=400)
     return {"version": "0.1", "parallel_read_safe": True}
