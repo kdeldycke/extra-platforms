@@ -59,6 +59,7 @@ _FENCE_RE = re.compile(
 # [text](url) but not ![alt](url)
 _LINK_RE = re.compile(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)")
 
+
 def _convert_link(match: re.Match) -> str:
     """Convert a markdown link to reST, stripping backticks from the label."""
     label = match.group(1).replace("`", "")
@@ -95,9 +96,7 @@ def _convert_fence(match: re.Match) -> str:
             # Preserve relative indentation within the body.
             stripped = line.lstrip()
             extra_spaces = len(line) - len(stripped) - len(indent)
-            converted_lines.append(
-                body_indent + " " * max(0, extra_spaces) + stripped
-            )
+            converted_lines.append(body_indent + " " * max(0, extra_spaces) + stripped)
         else:
             converted_lines.append("")
 
