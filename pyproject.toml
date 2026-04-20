@@ -460,9 +460,7 @@ exclude = [
 
 [tool.repomatic]
 # We don't need custom label configuration, and the debug workflow is not used in this project.
-exclude = [ "labels", "workflows/debug.yaml" ]
-# Skills are excluded by default; force-include them.
-include = [ "skills" ]
+exclude = [ "labels", "skills", "workflows/debug.yaml" ]
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
 # Extra-platforms needs exhaustive runner coverage because it tests platform detection.
