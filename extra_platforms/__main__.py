@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""CLI entry point for ``python -m extra_platforms`` and ``extra-platforms``."""
+"""CLI entry point for `python -m extra_platforms` and `extra-platforms`."""
 
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ def _display_width(text: str) -> int:
     """Return the terminal display width of a string.
 
     Zero-width characters (variation selectors, ZWJ) are skipped.  Remaining
-    characters are measured via ``east_asian_width``: **W** and **F** count as
+    characters are measured via `east_asian_width`: **W** and **F** count as
     two columns, everything else as one.  This matches the cursor-advance
     behaviour of most terminal emulators, which follow the East Asian Width
     property rather than the emoji-presentation flag.
@@ -62,7 +62,7 @@ def _display_width(text: str) -> int:
 
 
 def _pad(text: str, target: int) -> str:
-    """Pad ``text`` with spaces to reach ``target`` display columns."""
+    """Pad `text` with spaces to reach `target` display columns."""
     return text + " " * max(0, target - _display_width(text))
 
 
@@ -91,7 +91,7 @@ def _print_table(
     """Print a columnar table of traits or groups.
 
     Columns: icon, symbol ID, marker, detection function, skip/unless decorators.
-    Groups get a ``⬥`` marker when canonical; traits get no marker.
+    Groups get a `⬥` marker when canonical; traits get no marker.
     """
     icon_w, sym_w, det_w, skip_w = widths
 

@@ -13,8 +13,8 @@
 # limitations under the License.
 """Definitions of ready-to-use groups.
 
-This module contains all predefined :class:`~extra_platforms.Group` instances and
-frozenset collections that organize traits into logical categories.
+This module contains all predefined {class}`~extra_platforms.Group` instances and
+{class}`frozenset` collections that organize traits into logical categories.
 """
 
 from __future__ import annotations
@@ -205,8 +205,9 @@ ALL_ARCHITECTURES: Group = Group(
 )
 """All recognized architectures.
 
-.. caution::
-    This group does not contain the :data:`~extra_platforms.UNKNOWN_ARCHITECTURE` trait.
+:::{caution}
+This group does not contain the {data}`~extra_platforms.UNKNOWN_ARCHITECTURE` trait.
+:::
 """
 
 
@@ -451,8 +452,9 @@ ALL_PLATFORMS: Group = Group(
 )
 """All recognized platforms.
 
-.. caution::
-    This group does not contain the :data:`~extra_platforms.UNKNOWN_PLATFORM` trait.
+:::{caution}
+This group does not contain the {data}`~extra_platforms.UNKNOWN_PLATFORM` trait.
+:::
 """
 
 
@@ -494,15 +496,15 @@ BSD = Group(
 )
 """All BSD platforms.
 
-.. note::
-    Are considered of this family (`according Wikipedia
-    <https://en.wikipedia.org/wiki/Template:Unix>`_):
+:::{note}
+Are considered of this family ([according Wikipedia](https://en.wikipedia.org/wiki/Template:Unix)):
 
-    - `386BSD` (`FreeBSD`, `NetBSD`, `OpenBSD`, `DragonFly BSD`)
-    - `NeXTSTEP`
-    - `Darwin` (`macOS`, `iOS`, `audioOS`, `iPadOS`, `tvOS`, `watchOS`, `bridgeOS`)
-    - `SunOS`
-    - `Ultrix`
+- `386BSD` (`FreeBSD`, `NetBSD`, `OpenBSD`, `DragonFly BSD`)
+- `NeXTSTEP`
+- `Darwin` (`macOS`, `iOS`, `audioOS`, `iPadOS`, `tvOS`, `watchOS`, `bridgeOS`)
+- `SunOS`
+- `Ultrix`
+:::
 """
 
 
@@ -568,13 +570,13 @@ LINUX = Group(
 )
 """All distributions based on a Linux kernel.
 
-.. note::
-    Are considered of this family (`according Wikipedia
-    <https://en.wikipedia.org/wiki/Template:Unix>`_):
+:::{note}
+Are considered of this family ([according Wikipedia](https://en.wikipedia.org/wiki/Template:Unix)):
 
-    - `Android`
-    - `ChromeOS`
-    - any other distribution
+- `Android`
+- `ChromeOS`
+- any other distribution
+:::
 """
 
 
@@ -586,11 +588,11 @@ LINUX_LAYERS = Group(
 )
 """Interfaces that allows Linux binaries to run on a different host system.
 
-.. note::
-    Are considered of this family (`according Wikipedia
-    <https://en.wikipedia.org/wiki/Template:Unix>`_):
+:::{note}
+Are considered of this family ([according Wikipedia](https://en.wikipedia.org/wiki/Template:Unix)):
 
-    - `Windows Subsystem for Linux`
+- `Windows Subsystem for Linux`
+:::
 """
 
 
@@ -611,21 +613,21 @@ SYSTEM_V = Group(
 )
 """All Unix platforms derived from AT&T System Five.
 
-.. note::
-    Are considered of this family (`according Wikipedia
-    <https://en.wikipedia.org/wiki/Template:Unix>`_):
+:::{note}
+Are considered of this family ([according Wikipedia](https://en.wikipedia.org/wiki/Template:Unix)):
 
-    - `A/UX`
-    - `AIX`
-    - `HP-UX`
-    - `IRIX`
-    - `OpenServer`
-    - `Solaris`
-    - `OpenSolaris`
-    - `Illumos`
-    - `Tru64`
-    - `UNIX`
-    - `UnixWare`
+- `A/UX`
+- `AIX`
+- `HP-UX`
+- `IRIX`
+- `OpenServer`
+- `Solaris`
+- `OpenSolaris`
+- `Illumos`
+- `Tru64`
+- `UNIX`
+- `UnixWare`
+:::
 """
 
 
@@ -637,24 +639,24 @@ UNIX_LAYERS = Group(
 )
 """Interfaces that allows Unix binaries to run on a different host system.
 
-.. note::
-    Are considered of this family (`according Wikipedia
-    <https://en.wikipedia.org/wiki/Template:Unix>`_):
+:::{note}
+Are considered of this family ([according Wikipedia](https://en.wikipedia.org/wiki/Template:Unix)):
 
-    - `Cygwin`
-    - `Darling`
-    - `Eunice`
-    - `GNV`
-    - `Interix`
-    - `MachTen`
-    - `Microsoft POSIX subsystem`
-    - `MKS Toolkit`
-    - `PASE`
-    - `P.I.P.S.`
-    - `PWS/VSE-AF`
-    - `UNIX System Services`
-    - `UserLAnd Technologies`
-    - `Windows Services for UNIX`
+- `Cygwin`
+- `Darling`
+- `Eunice`
+- `GNV`
+- `Interix`
+- `MachTen`
+- `Microsoft POSIX subsystem`
+- `MKS Toolkit`
+- `PASE`
+- `P.I.P.S.`
+- `PWS/VSE-AF`
+- `UNIX System Services`
+- `UserLAnd Technologies`
+- `Windows Services for UNIX`
+:::
 """
 
 
@@ -666,22 +668,22 @@ OTHER_POSIX = Group(
 )
 """All other UNIX-like or POSIX-compliant platforms.
 
-.. note::
-    Are considered of this family (`according Wikipedia
-    <https://en.wikipedia.org/wiki/Template:Unix>`_):
+:::{note}
+Are considered of this family ([according Wikipedia](https://en.wikipedia.org/wiki/Template:Unix)):
 
-    - `Coherent`
-    - `GNU/Hurd`
-    - `HarmonyOS`
-    - `LiteOS`
-    - `LynxOS`
-    - `Minix`
-    - `MOS`
-    - `OSF/1`
-    - `QNX`
-    - `BlackBerry 10`
-    - `Research Unix`
-    - `SerenityOS`
+- `Coherent`
+- `GNU/Hurd`
+- `HarmonyOS`
+- `LiteOS`
+- `LynxOS`
+- `Minix`
+- `MOS`
+- `OSF/1`
+- `QNX`
+- `BlackBerry 10`
+- `Research Unix`
+- `SerenityOS`
+:::
 """
 
 
@@ -697,8 +699,9 @@ ALL_SHELLS: Group = Group(
 )
 """All recognized shells.
 
-.. caution::
-    This group does not contain the :data:`~extra_platforms.UNKNOWN_SHELL` trait.
+:::{caution}
+This group does not contain the {data}`~extra_platforms.UNKNOWN_SHELL` trait.
+:::
 """
 
 
@@ -771,8 +774,9 @@ ALL_TERMINALS: Group = Group(
 )
 """All recognized terminals.
 
-.. caution::
-    This group does not contain the :data:`~extra_platforms.UNKNOWN_TERMINAL` trait.
+:::{caution}
+This group does not contain the {data}`~extra_platforms.UNKNOWN_TERMINAL` trait.
+:::
 """
 
 
@@ -836,12 +840,13 @@ ALL_CI = Group(
 )
 """All recognized Continuous Integration systems.
 
-.. caution::
-    This group does not contain the :data:`~extra_platforms.UNKNOWN_CI` trait.
+:::{caution}
+This group does not contain the {data}`~extra_platforms.UNKNOWN_CI` trait.
+:::
 
-.. seealso::
-    `List of known CI systems
-    <https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/>`_.
+:::{seealso}
+[List of known CI systems](https://adamj.eu/tech/2020/03/09/detect-if-your-tests-are-running-on-ci/).
+:::
 """
 
 
@@ -861,8 +866,9 @@ ALL_AGENTS = Group(
 )
 """All recognized AI coding agents.
 
-.. caution::
-    This group does not contain the :data:`~extra_platforms.UNKNOWN_AGENT` trait.
+:::{caution}
+This group does not contain the {data}`~extra_platforms.UNKNOWN_AGENT` trait.
+:::
 """
 
 
@@ -902,8 +908,9 @@ ALL_TRAITS = Group(
 )
 """All predefined architectures, platforms, shells, terminals, CI systems, and agents.
 
-.. hint::
-    This group includes all ``UNKNOWN_*`` traits.
+:::{hint}
+This group includes all `UNKNOWN_*` traits.
+:::
 """
 
 
@@ -911,7 +918,7 @@ ALL_TRAITS = Group(
 # Collections of groups
 # =============================================================================
 
-#: All groups whose members are :class:`~extra_platforms.Architecture`.
+#: All groups whose members are {class}`~extra_platforms.Architecture`.
 ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_ARCHITECTURES,
@@ -932,7 +939,7 @@ ALL_ARCHITECTURE_GROUPS: frozenset[Group] = frozenset(
 )
 
 
-#: All groups whose members are :class:`~extra_platforms.Platform`.
+#: All groups whose members are {class}`~extra_platforms.Platform`.
 ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_PLATFORMS,
@@ -951,7 +958,7 @@ ALL_PLATFORM_GROUPS: frozenset[Group] = frozenset(
 )
 
 
-#: All groups whose members are :class:`~extra_platforms.Shell`.
+#: All groups whose members are {class}`~extra_platforms.Shell`.
 ALL_SHELL_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_SHELLS,
@@ -963,7 +970,7 @@ ALL_SHELL_GROUPS: frozenset[Group] = frozenset(
 )
 
 
-#: All groups whose members are :class:`~extra_platforms.Terminal`.
+#: All groups whose members are {class}`~extra_platforms.Terminal`.
 ALL_TERMINAL_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_TERMINALS,
@@ -975,31 +982,34 @@ ALL_TERMINAL_GROUPS: frozenset[Group] = frozenset(
 )
 
 
-#: All groups whose members are :class:`~extra_platforms.CI`.
+#: All groups whose members are {class}`~extra_platforms.CI`.
 #:
-#: .. note::
-#:     Not that useful as there is only one CI group, but provided for symmetry with
-#:     :data:`ALL_ARCHITECTURE_GROUPS` and :data:`ALL_PLATFORM_GROUPS`.
+#: :::{note}
+#: Not that useful as there is only one CI group, but provided for symmetry with
+#: {data}`ALL_ARCHITECTURE_GROUPS` and {data}`ALL_PLATFORM_GROUPS`.
+#: :::
 ALL_CI_GROUPS: frozenset[Group] = frozenset((ALL_CI,))
 
 
-#: All groups whose members are :class:`~extra_platforms.Agent`.
+#: All groups whose members are {class}`~extra_platforms.Agent`.
 #:
-#: .. note::
-#:     Not that useful as there is only one agent group, but provided for symmetry with
-#:     :data:`ALL_ARCHITECTURE_GROUPS` and :data:`ALL_PLATFORM_GROUPS`.
+#: :::{note}
+#: Not that useful as there is only one agent group, but provided for symmetry with
+#: {data}`ALL_ARCHITECTURE_GROUPS` and {data}`ALL_PLATFORM_GROUPS`.
+#: :::
 ALL_AGENT_GROUPS: frozenset[Group] = frozenset((ALL_AGENTS,))
 
 
 #: Non-overlapping groups.
 #:
-#: .. hint::
-#:     These groups together cover all :class:`~extra_platforms.Architecture`,
-#:     :class:`~extra_platforms.Platform`, :class:`~extra_platforms.CI`,
-#:     and :class:`~extra_platforms.Agent` traits,
-#:     including traits from the :data:`~extra_platforms.UNKNOWN` group.
+#: :::{hint}
+#: These groups together cover all {class}`~extra_platforms.Architecture`,
+#: {class}`~extra_platforms.Platform`, {class}`~extra_platforms.CI`,
+#: and {class}`~extra_platforms.Agent` traits,
+#: including traits from the {data}`~extra_platforms.UNKNOWN` group.
 #:
-#:     All groups in this collection are marked as :attr:`~extra_platforms.Group.canonical`.
+#: All groups in this collection are marked as {attr}`~extra_platforms.Group.canonical`.
+#: :::
 NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
     (
         # Architecture groups.
@@ -1042,8 +1052,9 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
 
 #: Overlapping groups, defined for convenience.
 #:
-#: .. hint::
-#:     None of these groups are marked as :attr:`~extra_platforms.Group.canonical`.
+#: :::{hint}
+#: None of these groups are marked as {attr}`~extra_platforms.Group.canonical`.
+#: :::
 EXTRA_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_TRAITS,
@@ -1069,9 +1080,10 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
 
 #: All predefined groups.
 #:
-#: .. hint::
-#:     This collection contains both :attr:`~extra_platforms.Group.canonical` and
-#:     non-canonical groups, including the :data:`~extra_platforms.UNKNOWN` group.
+#: :::{hint}
+#: This collection contains both {attr}`~extra_platforms.Group.canonical` and
+#: non-canonical groups, including the {data}`~extra_platforms.UNKNOWN` group.
+#: :::
 ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
 
 
@@ -1079,23 +1091,26 @@ ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
 # ID collections
 # =============================================================================
 
-#: A :class:`frozenset` of all recognized traits IDs.
+#: A {class}`frozenset` of all recognized traits IDs.
 #:
-#: .. attention::
-#:     This collection does not contain all the ``UNKNOWN_*`` traits.
+#: :::{attention}
+#: This collection does not contain all the `UNKNOWN_*` traits.
+#: :::
 ALL_TRAIT_IDS: frozenset[str] = frozenset(p.id for p in ALL_TRAITS - UNKNOWN)
 
 
-#: A :class:`frozenset` of all recognized group IDs.
+#: A {class}`frozenset` of all recognized group IDs.
 #:
-#: .. attention::
-#:     This collection does not contain the :data:`~extra_platforms.UNKNOWN` group.
+#: :::{attention}
+#: This collection does not contain the {data}`~extra_platforms.UNKNOWN` group.
+#: :::
 ALL_GROUP_IDS: frozenset[str] = frozenset(p.id for p in ALL_GROUPS - {UNKNOWN})
 
 
-#: A :class:`frozenset` of all recognized traits and group IDs.
+#: A {class}`frozenset` of all recognized traits and group IDs.
 #:
-#: .. attention::
-#:     This collection does not contain all the ``UNKNOWN_*`` traits and the
-#:     :data:`~extra_platforms.UNKNOWN` group.
+#: :::{attention}
+#: This collection does not contain all the `UNKNOWN_*` traits and the
+#: {data}`~extra_platforms.UNKNOWN` group.
+#: :::
 ALL_IDS: frozenset[str] = ALL_TRAIT_IDS | ALL_GROUP_IDS

@@ -13,10 +13,11 @@
 # limitations under the License.
 """Pytest decorators to skip tests depending on the platform they're run on.
 
-Generates a pair of ready-to-use ``@skip_<id>`` and ``@unless_<id>`` decorators for
+Generates a pair of ready-to-use `@skip_<id>` and `@unless_<id>` decorators for
 each platform and group.
 
-.. currentmodule:: extra_platforms
+:::{currentmodule} extra_platforms
+:::
 """
 
 from __future__ import annotations
@@ -51,7 +52,7 @@ class _DeferredCondition:
     value is requested.
 
     Pytest's marks can have a condition attached to them. Which is practical for
-    implementing our own ready-to-use ``@skip`` and ``@unless`` decorators.
+    implementing our own ready-to-use `@skip` and `@unless` decorators.
 
     The problem is: this condition is evaluated at import time. Which leads to all our
     platform detection heuristics to be called when we generates our custom decorators
@@ -91,7 +92,7 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
     """
     # Create reference links using Sphinx roles with full paths.
     # Full paths are required because this module is extra_platforms.pytest, so
-    # short references like :data:`~AARCH64` would be resolved relative to
+    # short references like {data}`~AARCH64` would be resolved relative to
     # extra_platforms.pytest, not extra_platforms.
     symbol_link = f":data:`~extra_platforms.{obj.symbol_id}`"
     detection_link = f":func:`~extra_platforms.{obj.detection_func_id}`"
@@ -102,24 +103,24 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
         if is_group:
             summary = (
                 f"Skip test if current environment matches any member of the "
-                f"{symbol_link} group (i.e., when {detection_link} returns ``True``)."
+                f"{symbol_link} group (i.e., when {detection_link} returns `True`)."
             )
         else:
             summary = (
                 f"Skip test if current environment is {symbol_link} "
-                f"(i.e., when {detection_link} returns ``True``)."
+                f"(i.e., when {detection_link} returns `True`)."
             )
     else:
         if is_group:
             summary = (
                 f"Run test only if current environment matches any member of the "
-                f"{symbol_link} group (i.e., when {detection_link} returns ``True``). "
+                f"{symbol_link} group (i.e., when {detection_link} returns `True`). "
                 f"Skip otherwise."
             )
         else:
             summary = (
                 f"Run test only if current environment is {symbol_link} "
-                f"(i.e., when {detection_link} returns ``True``). Skip otherwise."
+                f"(i.e., when {detection_link} returns `True`). Skip otherwise."
             )
 
     return summary

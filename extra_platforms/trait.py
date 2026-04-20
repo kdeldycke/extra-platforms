@@ -45,26 +45,26 @@ class _Identifiable:
     """Base class for identifiable objects with common documentation fields.
 
     Provides the common fields and initialization logic shared by both
-    :class:`~extra_platforms.Trait` and :class:`~extra_platforms.Group`
+    {class}`~extra_platforms.Trait` and {class}`~extra_platforms.Group`
     classes:
 
-    - ``id``: Unique identifier
-    - ``name``: Human-readable name
-    - ``icon``: Visual representation
-    - ``symbol_id``: Uppercase version of ID for module-level constants
-    - ``detection_func_id``: Name of the ``is_<id>()`` detection function
+    - `id`: Unique identifier
+    - `name`: Human-readable name
+    - `icon`: Visual representation
+    - `symbol_id`: Uppercase version of ID for module-level constants
+    - `detection_func_id`: Name of the `is_<id>()` detection function
 
     Subclasses must define the class-level documentation metadata:
 
-    - ``type_id``: Machine-readable type identifier (e.g., "architecture", "ci")
-    - ``type_name``: Human-readable type name (e.g., "architecture", "CI system")
+    - `type_id`: Machine-readable type identifier (e.g., "architecture", "ci")
+    - `type_name`: Human-readable type name (e.g., "architecture", "CI system")
 
-    The following are automatically derived from ``type_id`` via ``__init_subclass__``:
+    The following are automatically derived from `type_id` via `__init_subclass__`:
 
-    - ``data_module_id``: Module name where instances are defined
-    - ``unknown_symbol``: Symbol name for the unknown instance
-    - ``all_group``: Symbol name for the group containing all instances
-    - ``doc_page``: Documentation page filename
+    - `data_module_id`: Module name where instances are defined
+    - `unknown_symbol`: Symbol name for the unknown instance
+    - `all_group`: Symbol name for the group containing all instances
+    - `doc_page`: Documentation page filename
     """
 
     # Class-level documentation metadata (must be overridden by subclasses).
@@ -94,7 +94,7 @@ class _Identifiable:
     """Symbolic identifier.
 
     This is the variable name under which the instance can be accessed at the
-    root of the ``extra_platforms`` module.
+    root of the `extra_platforms` module.
 
     Mainly useful for documentation generation.
     """
@@ -102,22 +102,22 @@ class _Identifiable:
     detection_func_id: str = field(repr=False, init=False)
     """ID of the detection function for this object.
 
-    The detection function is expected to be named ``is_<id>()`` and available at the root
-    of the ``extra_platforms`` module.
+    The detection function is expected to be named `is_<id>()` and available at the root
+    of the `extra_platforms` module.
     """
 
     skip_decorator_id: str = field(repr=False, init=False)
     """ID of the Pytest skip decorator for this object.
 
-    The decorator is expected to be named ``@skip_<id>`` and available from the
-    ``extra_platforms.pytest`` module.
+    The decorator is expected to be named `@skip_<id>` and available from the
+    `extra_platforms.pytest` module.
     """
 
     unless_decorator_id: str = field(repr=False, init=False)
     """ID of the Pytest unless decorator for this object.
 
-    The decorator is expected to be named ``@unless_<id>`` and available from the
-    ``extra_platforms.pytest`` module.
+    The decorator is expected to be named `@unless_<id>` and available from the
+    `extra_platforms.pytest` module.
     """
 
     name: str
@@ -187,12 +187,12 @@ class Trait(_Identifiable, ABC):
     A trait is a distinguishing characteristic of the runtime environment that can
     be detected and identified.
 
-    Additionally of the common fields inherited from ``_Identifiable``, each trait provides:
+    Additionally of the common fields inherited from `_Identifiable`, each trait provides:
 
-    - ``url``: A link to official documentation or website for the trait.
-    - ``current``: A boolean indicating if the current environment matches this trait.
-    - ``info()``: A method returning a dictionary of gathered attributes about the trait.
-    - ``groups``: A set of :class:`~extra_platforms.Group` objects that include this trait as a member.
+    - `url`: A link to official documentation or website for the trait.
+    - `current`: A boolean indicating if the current environment matches this trait.
+    - `info()`: A method returning a dictionary of gathered attributes about the trait.
+    - `groups`: A set of {class}`~extra_platforms.Group` objects that include this trait as a member.
     """
 
     url: str = field(repr=False, default="")
@@ -204,21 +204,23 @@ class Trait(_Identifiable, ABC):
     Aliases are alternative identifiers that resolve to the same trait. When an
     alias is used, a warning is emitted to encourage using the canonical ID.
 
-    .. note::
-        Aliases do not generate their own symbols, detection functions, or pytest
-        decorators. Only the canonical ``id`` produces these artifacts.
+    :::{note}
+    Aliases do not generate their own symbols, detection functions, or pytest
+    decorators. Only the canonical `id` produces these artifacts.
+    :::
     """
 
     def __post_init__(self) -> None:
         """Validate and normalize trait fields.
 
-        - Ensure the URL is not empty and starts with ``https://``.
+        - Ensure the URL is not empty and starts with `https://`.
         - Validate aliases are lowercase and distinct from the canonical ID.
         - Populate the docstring (deferred until after module initialization).
 
-        .. hint::
-            Docstring generation is deferred to avoid circular imports during module
-            initialization. See _docstrings._initialize_all_docstrings().
+        :::{hint}
+        Docstring generation is deferred to avoid circular imports during module
+        initialization. See _docstrings._initialize_all_docstrings().
+        :::
         """
         super().__post_init__()
 
@@ -277,10 +279,10 @@ class Trait(_Identifiable, ABC):
     def groups(self) -> frozenset:
         """Returns the set of groups this trait belongs to.
 
-        Uses dynamic import to avoid circular dependency with ``group_data`` module.
+        Uses dynamic import to avoid circular dependency with `group_data` module.
 
         Returns:
-            A :class:`frozenset` of :class:`~extra_platforms.Group` objects that contain this
+            A {class}`frozenset` of {class}`~extra_platforms.Group` objects that contain this
             trait as a member.
         """
         # Avoid circular import by importing here.
@@ -293,13 +295,14 @@ class Trait(_Identifiable, ABC):
         """Returns whether the current environment matches this trait.
 
         The detection function is dynamically looked up based on the trait ID, and is
-        expected to be found at the root of the ``extra_platforms`` module.
+        expected to be found at the root of the `extra_platforms` module.
 
-        Raises :exc:`NotImplementedError` if a detection function cannot be found.
+        Raises {exc}`NotImplementedError` if a detection function cannot be found.
 
-        .. hint::
-            This is a property to avoid calling all detection heuristics on
-            :class:`~extra_platforms.Trait` object creation, which happens at module import time.
+        :::{hint}
+        This is a property to avoid calling all detection heuristics on
+        {class}`~extra_platforms.Trait` object creation, which happens at module import time.
+        :::
         """
         import extra_platforms
 
@@ -314,7 +317,7 @@ class Trait(_Identifiable, ABC):
     def info(self) -> dict:
         """Returns all trait attributes that can be gathered.
 
-        Returns a :class:`dict` of metadata. Subclasses should override this to include
+        Returns a {class}`dict` of metadata. Subclasses should override this to include
         trait-specific information.
         """
         ...
@@ -332,13 +335,13 @@ class Trait(_Identifiable, ABC):
 
 @dataclass(frozen=True)
 class Architecture(Trait):
-    """A CPU architecture identifies a `processor instruction set
-    <https://en.wikipedia.org/wiki/Instruction_set_architecture>`_.
+    """A CPU architecture identifies a [processor instruction set](https://en.wikipedia.org/wiki/Instruction_set_architecture).
 
-    .. seealso::
-        `archspec <https://github.com/archspec/archspec>`_ provides a rich database of
-        CPU microarchitectures (feature flags, compiler compatibility, family trees).
-        It could be used to extend our architecture metadata beyond basic ISA detection.
+    :::{seealso}
+    [`archspec`](https://github.com/archspec/archspec) provides a rich database of
+    CPU microarchitectures (feature flags, compiler compatibility, family trees).
+    It could be used to extend our architecture metadata beyond basic ISA detection.
+    :::
     """
 
     def info(self) -> dict[str, str | bool | None]:
@@ -360,11 +363,12 @@ class Platform(Trait):
     """A platform can identify multiple distributions or OSes with the same
     characteristics.
 
-    .. seealso::
-        Init systems (systemd, upstart, sysvinit, openrc, runit, etc.) are another
-        dimension of platform characterization that could be detected in the future.
-        See `python-distro/distro#142 <https://github.com/python-distro/distro/issues/142>`_
-        for prior discussion on init system detection.
+    :::{seealso}
+    Init systems (systemd, upstart, sysvinit, openrc, runit, etc.) are another
+    dimension of platform characterization that could be detected in the future.
+    See [`python-distro/distro#142`](https://github.com/python-distro/distro/issues/142)
+    for prior discussion on init system detection.
+    :::
     """
 
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
@@ -399,9 +403,9 @@ class Platform(Trait):
 class Shell(Trait):
     """A shell identifies a command-line interpreter.
 
-    .. seealso::
-        Inspired by `UV's cross-platform shell detection
-        <https://github.com/astral-sh/uv/pull/17870>`_.
+    :::{seealso}
+    Inspired by [UV's cross-platform shell detection](https://github.com/astral-sh/uv/pull/17870).
+    :::
     """
 
     def info(self) -> dict[str, str | bool | None]:
@@ -436,19 +440,21 @@ class Shell(Trait):
 class Terminal(Trait):
     """A terminal identifies the application rendering the shell's output.
 
-    .. note::
-        Shell and Terminal are orthogonal: any shell can run inside any terminal.
-        Unlike shells, multiple terminals can be active simultaneously (e.g.,
-        tmux inside Kitty).
+    :::{note}
+    Shell and Terminal are orthogonal: any shell can run inside any terminal.
+    Unlike shells, multiple terminals can be active simultaneously (e.g.,
+    tmux inside Kitty).
+    :::
 
-    .. seealso::
-        Other tools that detect terminals for adaptation:
+    :::{seealso}
+    Other tools that detect terminals for adaptation:
 
-        - `Starship <https://starship.rs/>`_ adapts prompt rendering based on terminal
-        - `crossterm <https://github.com/crossterm-rs/crossterm>`_ (Rust) negotiates terminal features
-        - `python-prompt-toolkit <https://github.com/prompt-toolkit/python-prompt-toolkit>`_ adapts to terminal capabilities
-        - `rich <https://github.com/Textualize/rich>`_ probes terminal features for rendering
-        - `termenv <https://github.com/muesli/termenv>`_ (Go) maintains terminal capability database
+    - [`Starship`](https://starship.rs/) adapts prompt rendering based on terminal
+    - [`crossterm`](https://github.com/crossterm-rs/crossterm) (Rust) negotiates terminal features
+    - [`python-prompt-toolkit`](https://github.com/prompt-toolkit/python-prompt-toolkit) adapts to terminal capabilities
+    - [`rich`](https://github.com/Textualize/rich) probes terminal features for rendering
+    - [`termenv`](https://github.com/muesli/termenv) (Go) maintains terminal capability database
+    :::
     """
 
     def info(self) -> dict[str, str | bool | None]:
@@ -469,13 +475,13 @@ class CI(Trait):
     """A CI/CD environment identifies a continuous integration platform."""
 
     type_name = "CI system"
-    """Override the default ``ci`` type name."""
+    """Override the default `ci` type name."""
 
     all_group = "ALL_CI"
-    """Override the default ``ALL_CIS`` name with a more natural ``ALL_CI``."""
+    """Override the default `ALL_CIS` name with a more natural `ALL_CI`."""
 
     doc_page = "ci.md"
-    """Override the default ``cis.md`` filename."""
+    """Override the default `cis.md` filename."""
 
     def __post_init__(self) -> None:
         """Tweak CI docstring."""
@@ -515,7 +521,7 @@ def _resolve_alias(id_: str) -> str:
         id_: The ID to resolve (already lowercased).
 
     Returns:
-        The canonical ID if ``id_`` is an alias, otherwise ``id_`` unchanged.
+        The canonical ID if `id_` is an alias, otherwise `id_` unchanged.
     """
     # Avoid circular import.
     from .group_data import ALL_TRAITS

@@ -14,12 +14,12 @@
 """Platform-specific information gathering.
 
 This module provides utilities to fetch detailed version and codename information
-for all platforms: Linux distributions (via ``/etc/os-release``), macOS and Windows.
+for all platforms: Linux distributions (via `/etc/os-release`), macOS and Windows.
 
-.. seealso::
-    The `os-release specification
-    <https://www.freedesktop.org/software/systemd/man/latest/os-release.html>`_
-    defines the format and fields of ``/etc/os-release``.
+:::{seealso}
+The [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html)
+defines the format and fields of `/etc/os-release`.
+:::
 """
 
 from __future__ import annotations
@@ -39,12 +39,11 @@ if TYPE_CHECKING:
 def _parse_os_release_content(lines: Iterable[str]) -> dict[str, str]:
     """Parse os-release file content into a dictionary.
 
-    Uses :class:`shlex.shlex` in POSIX mode to handle quoting rules defined in the
-    `os-release specification
-    <https://www.freedesktop.org/software/systemd/man/latest/os-release.html>`_.
+    Uses {class}`shlex.shlex` in POSIX mode to handle quoting rules defined in the
+    [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html).
 
-    Keys are lowercased. A ``codename`` key is extracted from ``VERSION`` if present,
-    with ``VERSION_CODENAME`` taking precedence over ``UBUNTU_CODENAME``.
+    Keys are lowercased. A `codename` key is extracted from `VERSION` if present,
+    with `VERSION_CODENAME` taking precedence over `UBUNTU_CODENAME`.
 
     :param lines: Iterable of lines from an os-release file.
     :return: Dictionary of parsed key-value pairs.
@@ -82,7 +81,7 @@ def _parse_os_release_content(lines: Iterable[str]) -> dict[str, str]:
 def _parse_os_release() -> dict[str, str]:
     """Read and parse the os-release file.
 
-    Tries ``/etc/os-release`` first, then ``/usr/lib/os-release`` as fallback per the
+    Tries `/etc/os-release` first, then `/usr/lib/os-release` as fallback per the
     specification.
 
     :return: Dictionary of parsed key-value pairs, or empty dict if no file found.
@@ -105,7 +104,7 @@ _OS_RELEASE_ID_NORMALIZATION: dict[str, str] = {
 def os_release_id() -> str:
     """Return the normalized distribution ID from os-release.
 
-    Lowercases the ``ID`` field, replaces spaces with underscores, and applies
+    Lowercases the `ID` field, replaces spaces with underscores, and applies
     a normalization table for known ID differences.
 
     :return: Normalized distribution ID, or empty string if absent.
@@ -119,14 +118,14 @@ def os_release_id() -> str:
 def linux_info() -> dict[str, Any]:
     """Fetch detailed Linux distribution information from os-release.
 
-    Returns a dictionary with the same structure as ``distro.info()`` for
+    Returns a dictionary with the same structure as `distro.info()` for
     consistency, including:
 
-    - ``id``: Distribution ID (e.g., "ubuntu", "fedora")
-    - ``version``: Full version string (e.g., "22.04")
-    - ``version_parts``: Dictionary with ``major``, ``minor``, ``build_number``
-    - ``like``: Space-separated list of related distributions
-    - ``codename``: Distribution codename (e.g., "jammy")
+    - `id`: Distribution ID (e.g., "ubuntu", "fedora")
+    - `version`: Full version string (e.g., "22.04")
+    - `version_parts`: Dictionary with `major`, `minor`, `build_number`
+    - `like`: Space-separated list of related distributions
+    - `codename`: Distribution codename (e.g., "jammy")
 
     :return: Dictionary containing Linux distribution details.
     """
@@ -178,17 +177,19 @@ MACOS_CODENAMES: dict[tuple[str, str | None], str] = {
     ("15", None): "Sequoia",
     ("26", None): "Tahoe",
 }
-"""Maps macOS ``(major, minor)`` version parts to release code name.
+"""Maps macOS `(major, minor)` version parts to release code name.
 
-.. seealso::
-    - https://en.wikipedia.org/wiki/Template:MacOS_versions
-    - https://docs.python.org/3/library/platform.html#platform.mac_ver
+:::{seealso}
+- https://en.wikipedia.org/wiki/Template:MacOS_versions
+- https://docs.python.org/3/library/platform.html#platform.mac_ver
+:::
 
-.. hint::
-    There is this oddity where some beta release of macOS Tahoe report major
-    version as ``16`` instead of ``15`` or ``26``. We choose to not handle this case
-    for now, as we consider this a glitch in macOS history, and do not have a proper
-    way to detect beta versions at this time.
+:::{hint}
+There is this oddity where some beta release of macOS Tahoe report major
+version as `16` instead of `15` or `26`. We choose to not handle this case
+for now, as we consider this a glitch in macOS history, and do not have a proper
+way to detect beta versions at this time.
+:::
 """
 
 
@@ -225,12 +226,12 @@ def get_macos_codename(major: str | None = None, minor: str | None = None) -> st
 def macos_info() -> dict[str, Any]:
     """Fetch detailed macOS version information.
 
-    Returns a dictionary with the same structure as ``distro.info()`` for
+    Returns a dictionary with the same structure as `distro.info()` for
     consistency, including:
 
-    - ``version``: Full version string (e.g., "14.2.1")
-    - ``version_parts``: Dictionary with ``major``, ``minor``, ``build_number``
-    - ``codename``: The macOS codename (e.g., "Sonoma")
+    - `version`: Full version string (e.g., "14.2.1")
+    - `version_parts`: Dictionary with `major`, `minor`, `build_number`
+    - `codename`: The macOS codename (e.g., "Sonoma")
 
     Returns:
         A dictionary containing macOS version details.
@@ -257,19 +258,20 @@ def macos_info() -> dict[str, Any]:
 def windows_info() -> dict[str, Any]:
     """Fetch detailed Windows version information.
 
-    Returns a dictionary with the same structure as ``distro.info()`` for
+    Returns a dictionary with the same structure as `distro.info()` for
     consistency, including:
 
-    - ``version``: Full version string (e.g., "10.0.19041")
-    - ``version_parts``: Dictionary with ``major``, ``minor``, ``build_number``
-    - ``codename``: A combination of version and edition (e.g., "10 Enterprise")
+    - `version`: Full version string (e.g., "10.0.19041")
+    - `version_parts`: Dictionary with `major`, `minor`, `build_number`
+    - `codename`: A combination of version and edition (e.g., "10 Enterprise")
 
     Returns:
         A dictionary containing Windows version details.
 
-    .. todo::
-        Get even more details for Windows version. See inspirations from:
-        https://github.com/saltstack/salt/blob/246d066/salt/grains/core.py#L1432-L1488
+    :::{todo}
+    Get even more details for Windows version. See inspirations from:
+    https://github.com/saltstack/salt/blob/246d066/salt/grains/core.py#L1432-L1488
+    :::
     """
     release, _version, _csd, _ptype = platform.win32_ver()
     parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))

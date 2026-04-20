@@ -21,10 +21,10 @@ from typing import Any
 def _recursive_update(
     a: dict[str, Any], b: dict[str, Any], strict: bool = False
 ) -> dict[str, Any]:
-    """Like standard ``dict.update()``, but recursive so sub-dict gets updated.
+    """Like standard {meth}`dict.update`, but recursive so sub-dict gets updated.
 
-    Ignore elements present in ``b`` but not in ``a``. Unless ``strict`` is set to
-    ``True``, in which case a ``ValueError`` exception will be raised.
+    Ignore elements present in `b` but not in `a`. Unless `strict` is set to
+    `True`, in which case a `ValueError` exception will be raised.
     """
     for k, v in b.items():
         if isinstance(v, dict) and isinstance(a.get(k), dict):
@@ -47,11 +47,11 @@ def _remove_blanks(
 
     Are considered blanks:
 
-    - ``None`` values
+    - `None` values
     - empty strings
-    - empty ``dict``
+    - empty {class}`dict`
 
-    The removal of each of these class can be skipped by setting ``remove_*``
+    The removal of each of these class can be skipped by setting `remove_*`
     parameters.
 
     Dictionarries are inspected recursively and their own blank values are removed.

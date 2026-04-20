@@ -16,16 +16,17 @@
 This module provides functions to extract attribute docstrings from source
 files and generate comprehensive documentation for trait and group instances.
 
-The :func:`_initialize_all_docstrings` function should be called from
-``__init__.py`` after all trait and group instances are imported to populate
-their ``__doc__`` attributes.
+The {func}`_initialize_all_docstrings` function should be called from
+`__init__.py` after all trait and group instances are imported to populate
+their `__doc__` attributes.
 
-.. note::
-    AST parse results are cached per module to avoid redundant work. Without
-    caching, each of the ~170 trait/group instances triggers a full
-    ``ast.parse()`` of its source module, totaling ~300 parses at import time
-    (~115 ms). With per-module caching this drops to ~7 parses (~2.5 ms),
-    reducing ``import extra_platforms`` from ~120 ms to ~10 ms.
+:::{note}
+AST parse results are cached per module to avoid redundant work. Without
+caching, each of the ~170 trait/group instances triggers a full
+{func}`ast.parse` of its source module, totaling ~300 parses at import time
+(~115 ms). With per-module caching this drops to ~7 parses (~2.5 ms),
+reducing `import extra_platforms` from ~120 ms to ~10 ms.
+:::
 """
 
 from __future__ import annotations
@@ -42,7 +43,7 @@ if TYPE_CHECKING:
     from . import Group, Trait
 
 # Per-module cache of attribute name to docstring. Populated lazily by
-# ``_parse_module_docstrings`` on first access to a given module.
+# `_parse_module_docstrings` on first access to a given module.
 _module_docstrings_cache: dict[str, dict[str, str]] = {}
 
 
@@ -111,16 +112,17 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
     assignment. Results are cached per module so each source file is parsed
     only once regardless of how many attributes are looked up.
 
-    .. note::
-        Returns ``None`` if source files are unavailable, which happens in
-        compiled environments (e.g., Nuitka, PyInstaller, cx_Freeze). This
-        graceful degradation allows the library to function without docstrings
-        in compiled binaries.
+    :::{note}
+    Returns `None` if source files are unavailable, which happens in
+    compiled environments (e.g., Nuitka, PyInstaller, cx_Freeze). This
+    graceful degradation allows the library to function without docstrings
+    in compiled binaries.
+    :::
 
     :param module_name: The full module name (e.g.,
         'extra_platforms.platform_data').
     :param attr_name: The attribute name to look for (e.g., 'NOBARA').
-    :returns: The attribute docstring if found, or ``None`` if not found or
+    :returns: The attribute docstring if found, or `None` if not found or
         source is unavailable.
     """
     if module_name not in _module_docstrings_cache:
@@ -133,13 +135,13 @@ def _initialize_all_docstrings(
 ) -> None:
     """Initialize docstrings for all trait and group instances.
 
-    This function should be called from ``__init__.py`` after all trait and
+    This function should be called from `__init__.py` after all trait and
     group instances are imported. It iterates through all instances and sets
-    their ``__doc__`` attributes by calling their ``generate_docstring()``
+    their `__doc__` attributes by calling their `generate_docstring()`
     methods.
 
     This approach avoids circular import issues that would occur if docstrings
-    were generated in ``__post_init__`` during module initialization.
+    were generated in `__post_init__` during module initialization.
 
     :param traits: All trait instances to initialize docstrings for.
     :param groups: All group instances to initialize docstrings for.

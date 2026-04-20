@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
+
+# Make local Sphinx extensions importable.
+sys.path.insert(0, str(Path(__file__).parent / "_ext"))
 
 import tomllib  # type: ignore[import-not-found]  # stdlib >=3.11; docs require >=3.12.
 
@@ -36,6 +40,8 @@ extensions = [
     "sphinx_autodoc_typehints",
     "click_extra.sphinx",
     "sphinxcontrib.mermaid",
+    # Local extension: converts MyST-flavored docstrings to reST for autodoc.
+    "myst_docstrings",
 ]
 
 # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html

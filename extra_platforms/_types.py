@@ -13,25 +13,23 @@
 # limitations under the License.
 """Custom types used across the package.
 
-Inspired by `how tomllib does it in the stdlib
-<https://github.com/python/cpython/tree/main/Lib/tomllib>`_.
+Inspired by [how `tomllib` does it in the stdlib](https://github.com/python/cpython/tree/main/Lib/tomllib).
 
-.. hint::
-    These type are designed to be imported as follows:
+:::{hint}
+These type are designed to be imported as follows:
 
-    .. code-block:: python
+.. code-block:: python
 
-        TYPE_CHECKING = False
-        if TYPE_CHECKING:
-            from typing import Sequence, ...
+    TYPE_CHECKING = False
+    if TYPE_CHECKING:
+        from typing import Sequence, ...
 
-            from ._types import _TRef, _TNestedReferences, ...
+        from ._types import _TRef, _TNestedReferences, ...
 
-    `Mypy is able to pick them up correctly
-    <https://mypy.readthedocs.io/en/stable/common_issues.html#python-version-and-system-platform-checks>`_
-    because ``TYPE_CHECKING`` is always evaluated to ``False`` at runtime, and to
-    ``True`` `during static analysis
-    <https://github.com/python/mypy/blob/6aa44da/mypy/reachability.py#L152>`_.
+[Mypy is able to pick them up correctly](https://mypy.readthedocs.io/en/stable/common_issues.html#python-version-and-system-platform-checks)
+because `TYPE_CHECKING` is always evaluated to `False` at runtime, and to
+`True` [during static analysis](https://github.com/python/mypy/blob/6aa44da/mypy/reachability.py#L152).
+:::
 """
 
 from __future__ import annotations
@@ -44,10 +42,10 @@ from .trait import Trait
 _TRef = Trait | Group | str | None
 """All types that can be used to reference a trait or a group:
 
-- a :class:`~extra_platforms.Trait` object itself
-- a :class:`~extra_platforms.Group` object representing a collection of traits
+- a {class}`~extra_platforms.Trait` object itself
+- a {class}`~extra_platforms.Group` object representing a collection of traits
 - a string representing a trait ID or a group ID
-- ``None`` to represent an empty set of traits
+- `None` to represent an empty set of traits
 """
 
 _TNestedReferences = _TRef | Iterable[_TRef | Iterable["_TNestedReferences"]]

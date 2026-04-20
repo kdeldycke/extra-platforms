@@ -64,9 +64,11 @@ def test_detection_trait_functions(obj: Trait | Group):
     # Ensure the detection function name is lowercase.
     assert obj.detection_func_id.islower()
 
-    # Verify the docstring contains an rST :data: cross-reference to the symbol.
+    # Verify the docstring contains a cross-reference to the symbol.
+    # Detection functions use MyST syntax ({data}`...`), while generated group
+    # detection functions use reST syntax (:data:`...`).
     assert check_func.__doc__ is not None and re.search(
-        rf":data:`~?(?:extra_platforms\.)?{re.escape(obj.symbol_id)}`",
+        rf"[\{{:]data[:\}}]`~?(?:extra_platforms\.)?{re.escape(obj.symbol_id)}`",
         check_func.__doc__,
     )
 
