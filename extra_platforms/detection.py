@@ -57,8 +57,8 @@ For all other traits, we either rely on:
 :::{todo}
 `hostnamectl` could be used as a fallback detection source when
 `/etc/os-release` is missing (e.g., stripped CloudLinux VMs). This approach was
-[proposed upstream in python-distro](https://github.com/python-distro/distro/pull/369) but rejected. The technique
-is sound and could be implemented here.
+[proposed upstream in python-distro](https://github.com/python-distro/distro/pull/369)
+but rejected. The technique is sound and could be implemented here.
 :::
 
 :::{seealso}
@@ -170,25 +170,33 @@ def is_aarch64() -> bool:
 
 @cache
 def is_armv5tel() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.ARMV5TEL`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.ARMV5TEL`.
+    """
     return platform.machine() == "armv5tel"
 
 
 @cache
 def is_armv6l() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.ARMV6L`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.ARMV6L`.
+    """
     return platform.machine() == "armv6l"
 
 
 @cache
 def is_armv7l() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.ARMV7L`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.ARMV7L`.
+    """
     return platform.machine() == "armv7l"
 
 
 @cache
 def is_armv8l() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.ARMV8L`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.ARMV8L`.
+    """
     return platform.machine() == "armv8l"
 
 
@@ -199,8 +207,11 @@ def is_arm() -> bool:
     :::{hint}
     This is a fallback detection for generic ARM architecture. It will return
     `True` for any ARM architecture not specifically covered by the more precise
-    variants: {func}`~extra_platforms.is_aarch64`, {func}`~extra_platforms.is_armv5tel`, {func}`~extra_platforms.is_armv6l`,
-    {func}`~extra_platforms.is_armv7l` or {func}`~extra_platforms.is_armv8l`.
+    variants: {func}`~extra_platforms.is_aarch64`,
+    {func}`~extra_platforms.is_armv5tel`,
+    {func}`~extra_platforms.is_armv6l`,
+    {func}`~extra_platforms.is_armv7l` or
+    {func}`~extra_platforms.is_armv8l`.
     :::
     """
     return bool(
@@ -252,19 +263,25 @@ def is_mips() -> bool:
 
 @cache
 def is_mipsel() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.MIPSEL`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.MIPSEL`.
+    """
     return platform.machine() == "mipsel"
 
 
 @cache
 def is_mips64() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.MIPS64`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.MIPS64`.
+    """
     return platform.machine() == "mips64"
 
 
 @cache
 def is_mips64el() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.MIPS64EL`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.MIPS64EL`.
+    """
     return platform.machine() == "mips64el"
 
 
@@ -282,19 +299,25 @@ def is_ppc64() -> bool:
 
 @cache
 def is_ppc64le() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.PPC64LE`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.PPC64LE`.
+    """
     return platform.machine() == "ppc64le"
 
 
 @cache
 def is_riscv32() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.RISCV32`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.RISCV32`.
+    """
     return platform.machine() == "riscv32"
 
 
 @cache
 def is_riscv64() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.RISCV64`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.RISCV64`.
+    """
     return platform.machine() == "riscv64"
 
 
@@ -306,7 +329,9 @@ def is_sparc() -> bool:
 
 @cache
 def is_sparc64() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.SPARC64`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.SPARC64`.
+    """
     return platform.machine() in ("sparc64", "sun4u", "sun4v")
 
 
@@ -318,7 +343,9 @@ def is_s390x() -> bool:
 
 @cache
 def is_loongarch64() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.LOONGARCH64`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.LOONGARCH64`.
+    """
     return platform.machine() == "loongarch64"
 
 
@@ -346,7 +373,9 @@ def is_wasm64() -> bool:
 
 @cache
 def is_unknown_architecture() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.UNKNOWN_ARCHITECTURE`."""
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.UNKNOWN_ARCHITECTURE`.
+    """
     # Lazy import to avoid circular dependencies.
     from .architecture_data import UNKNOWN_ARCHITECTURE
 
@@ -420,7 +449,9 @@ def is_centos() -> bool:
 
 @cache
 def is_cloudlinux() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.CLOUDLINUX`."""
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.CLOUDLINUX`.
+    """
     return os_release_id() == "cloudlinux"
 
 
@@ -438,7 +469,9 @@ def is_debian() -> bool:
 
 @cache
 def is_dragonfly_bsd() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.DRAGONFLY_BSD`."""
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.DRAGONFLY_BSD`.
+    """
     return sys.platform.startswith("dragonfly")
 
 
@@ -462,10 +495,12 @@ def is_freebsd() -> bool:
 
 @cache
 def is_generic_linux() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.GENERIC_LINUX`.
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.GENERIC_LINUX`.
 
-    Matches when running on a Linux kernel but `distro` cannot identify the specific
-    distribution (e.g., minimal containers or build chroots without `/etc/os-release`).
+    Matches when running on a Linux kernel but `distro` cannot identify
+    the specific distribution (like minimal containers or build chroots without
+    `/etc/os-release`).
     """
     return sys.platform == "linux" and not os_release_id()
 
@@ -502,7 +537,9 @@ def is_hurd() -> bool:
 
 @cache
 def is_ibm_powerkvm() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.IBM_POWERKVM`."""
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.IBM_POWERKVM`.
+    """
     return os_release_id() == "ibm_powerkvm"
 
 
@@ -564,7 +601,9 @@ def is_manjaro() -> bool:
 
 @cache
 def is_midnightbsd() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.MIDNIGHTBSD`."""
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.MIDNIGHTBSD`.
+    """
     return sys.platform.startswith("midnightbsd") or os_release_id() == "midnightbsd"
 
 
@@ -642,7 +681,9 @@ def is_rocky() -> bool:
 
 @cache
 def is_scientific() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.SCIENTIFIC`."""
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.SCIENTIFIC`.
+    """
     return os_release_id() == "scientific"
 
 
@@ -672,7 +713,9 @@ def is_sunos() -> bool:
 
 @cache
 def is_tumbleweed() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.TUMBLEWEED`."""
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.TUMBLEWEED`.
+    """
     return os_release_id() == "opensuse-tumbleweed"
 
 
@@ -690,7 +733,9 @@ def is_ubuntu() -> bool:
 
 @cache
 def is_ultramarine() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.ULTRAMARINE`."""
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.ULTRAMARINE`.
+    """
     return os_release_id() == "ultramarine"
 
 
@@ -711,7 +756,8 @@ def is_wsl1() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.WSL1`.
 
     :::{caution}
-    The only difference between WSL1 and WSL2 is [the case of the kernel release version](https://github.com/andweeb/presence.nvim/pull/64#issue-1174430662):
+    The only difference between WSL1 and WSL2 is
+    [the case of the kernel release version](https://github.com/andweeb/presence.nvim/pull/64#issue-1174430662):
 
     - WSL 1:
 
@@ -745,7 +791,9 @@ def is_xenserver() -> bool:
 
 @cache
 def is_unknown_platform() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.UNKNOWN_PLATFORM`."""
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.UNKNOWN_PLATFORM`.
+    """
     # Lazy import to avoid circular dependencies.
     from .platform_data import UNKNOWN_PLATFORM
 
@@ -892,10 +940,13 @@ def is_bash() -> bool:
     :::
 
     :::{attention}
-    GitHub's `ubuntu-slim` runner is a [stripped-down environments, running as a WSL2 container](https://docs.github.com/en/actions/reference/runners/github-hosted-runners#single-cpu-runners)
-    on top of Windows. It [uses Bash as the default shell](https://github.com/actions/runner-images/blob/main/images/ubuntu-slim/ubuntu-slim-Readme.md),
+    GitHub's `ubuntu-slim` runner is a
+    [stripped-down environments, running as a WSL2 container](https://docs.github.com/en/actions/reference/runners/github-hosted-runners#single-cpu-runners)
+    on top of Windows. It
+    [uses Bash as the default shell](https://github.com/actions/runner-images/blob/main/images/ubuntu-slim/ubuntu-slim-Readme.md),
     but does not set neither `BASH_VERSION` nor `SHELL`.
-    In that case we fall back to walking the parent process tree via `/proc` to find it.
+    In that case we fall back to walking the parent process tree via `/proc`
+    to find it.
     :::
     """
     return _detect_shell(version_env_var="BASH_VERSION", shell_ids="bash")
@@ -981,7 +1032,8 @@ def is_powershell() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.POWERSHELL`.
 
     :::{note}
-    PowerShell is cross-platform and [available on Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell-on-linux)
+    PowerShell is cross-platform and
+    [available on Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell-on-linux)
     and macOS. Detection covers all platforms via `PSModulePath`,
     `SHELL` path, and parent process tree.
     :::
@@ -990,15 +1042,18 @@ def is_powershell() -> bool:
     `PSModulePath` can leak into non-PowerShell child processes via two
     vectors:
 
-    1. **Process-level inheritance** (all platforms): PowerShell modifies
-       `PSModulePath` at startup, and [all non-PowerShell children inherit it](https://github.com/PowerShell/PowerShell/issues/9957).
-    2. **System-wide registry variable** (Windows only): `PSModulePath`
-       is a [persistent machine-level environment variable](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath)
+    1. **Process-level inheritance** (all platforms): PowerShell
+       modifies `PSModulePath` at startup, and
+       [all non-PowerShell children inherit it](https://github.com/PowerShell/PowerShell/issues/9957).
+    2. **System-wide registry variable** (Windows only):
+       `PSModulePath` is a [persistent machine-level
+       environment variable](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath)
        visible to all processes.
 
     This is the case for all GitHub Ubuntu runners, where
     `PSModulePath` leaks from Azure infrastructure. This leads to multiple
-    shell detections, which is arbitraged by `current_shell()`, which deprioritizes PowerShell when other shells are detected.
+    shell detections, which is arbitraged by `current_shell()`,
+    which deprioritizes PowerShell when other shells are detected.
     :::
     """
     return _detect_shell(
@@ -1044,7 +1099,9 @@ def is_zsh() -> bool:
 
 @cache
 def is_unknown_shell() -> bool:
-    """Return {data}`True` if current shell is {data}`~extra_platforms.UNKNOWN_SHELL`."""
+    """Return {data}`True` if current shell is
+    {data}`~extra_platforms.UNKNOWN_SHELL`.
+    """
     # Lazy import to avoid circular dependencies.
     from .shell_data import UNKNOWN_SHELL
 
@@ -1064,7 +1121,9 @@ def is_alacritty() -> bool:
 
 @cache
 def is_apple_terminal() -> bool:
-    """Return {data}`True` if current terminal is {data}`~extra_platforms.APPLE_TERMINAL`."""
+    """Return {data}`True` if current terminal is
+    {data}`~extra_platforms.APPLE_TERMINAL`.
+    """
     return environ.get("TERM_PROGRAM") == "Apple_Terminal"
 
 
@@ -1088,13 +1147,17 @@ def is_ghostty() -> bool:
 
 @cache
 def is_gnome_terminal() -> bool:
-    """Return {data}`True` if current terminal is {data}`~extra_platforms.GNOME_TERMINAL`."""
+    """Return {data}`True` if current terminal is
+    {data}`~extra_platforms.GNOME_TERMINAL`.
+    """
     return "GNOME_TERMINAL_SCREEN" in environ
 
 
 @cache
 def is_gnu_screen() -> bool:
-    """Return {data}`True` if current terminal is {data}`~extra_platforms.GNU_SCREEN`."""
+    """Return {data}`True` if current terminal is
+    {data}`~extra_platforms.GNU_SCREEN`.
+    """
     return "STY" in environ
 
 
@@ -1148,7 +1211,9 @@ def is_tmux() -> bool:
 
 @cache
 def is_unknown_terminal() -> bool:
-    """Return {data}`True` if current terminal is {data}`~extra_platforms.UNKNOWN_TERMINAL`."""
+    """Return {data}`True` if current terminal is
+    {data}`~extra_platforms.UNKNOWN_TERMINAL`.
+    """
     # Lazy import to avoid circular dependencies.
     from .terminal_data import UNKNOWN_TERMINAL
 
@@ -1157,7 +1222,9 @@ def is_unknown_terminal() -> bool:
 
 @cache
 def is_vscode_terminal() -> bool:
-    """Return {data}`True` if current terminal is {data}`~extra_platforms.VSCODE_TERMINAL`."""
+    """Return {data}`True` if current terminal is
+    {data}`~extra_platforms.VSCODE_TERMINAL`.
+    """
     return environ.get("TERM_PROGRAM") == "vscode"
 
 
@@ -1169,7 +1236,9 @@ def is_wezterm() -> bool:
 
 @cache
 def is_windows_terminal() -> bool:
-    """Return {data}`True` if current terminal is {data}`~extra_platforms.WINDOWS_TERMINAL`."""
+    """Return {data}`True` if current terminal is
+    {data}`~extra_platforms.WINDOWS_TERMINAL`.
+    """
     return "WT_SESSION" in environ
 
 
@@ -1379,7 +1448,9 @@ def is_cursor() -> bool:
 
 @cache
 def is_unknown_agent() -> bool:
-    """Return {data}`True` if current agent is {data}`~extra_platforms.UNKNOWN_AGENT`."""
+    """Return {data}`True` if current agent is
+    {data}`~extra_platforms.UNKNOWN_AGENT`.
+    """
     # Lazy import to avoid circular dependencies.
     from .agent_data import UNKNOWN_AGENT
 
@@ -1393,7 +1464,8 @@ def is_unknown_agent() -> bool:
 
 @cache
 def current_architecture(strict: bool = False) -> Architecture:
-    """Returns the {class}`~extra_platforms.Architecture` matching the current environment.
+    """Returns the {class}`~extra_platforms.Architecture` matching the
+    current environment.
 
     Returns {data}`~extra_platforms.UNKNOWN_ARCHITECTURE` if not running inside a
     recognized architecture. To raise an error instead, set `strict` to `True`.
@@ -1434,7 +1506,8 @@ def current_architecture(strict: bool = False) -> Architecture:
 
 @cache
 def current_platform(strict: bool = False) -> Platform:
-    """Always returns the best matching {class}`~extra_platforms.Platform` for the current environment.
+    """Always returns the best matching {class}`~extra_platforms.Platform`
+    for the current environment.
 
     Returns {data}`~extra_platforms.UNKNOWN_PLATFORM` if not running inside a recognized
     platform. To raise an error instead, set `strict` to `True`.
@@ -1471,7 +1544,8 @@ def current_platform(strict: bool = False) -> Platform:
 
     # Removes some generic platforms from the matching, until we have a single match.
     # Starts by removing the least specific WSL1, then WSL2: WSL is a generic platform,
-    # so we should prefer the remaining, more specific platform matches like Ubuntu. See:
+    # so we should prefer the remaining, more specific platform matches
+    # like Ubuntu. See:
     # - https://github.com/kdeldycke/extra-platforms/issues/158
     # - https://github.com/kdeldycke/meta-package-manager/issues/944
     for wsl in (WSL1, WSL2):
@@ -1503,15 +1577,17 @@ def current_shell(strict: bool = False) -> Shell:
 
     1. Shell-specific environment variables (detects active shell).
     2. `SHELL` environment variable (detects login shell on Unix).
-    3. Windows defaults (`PROMPT` → {data}`~extra_platforms.CMD`, else → {data}`~extra_platforms.POWERSHELL`).
+    3. Windows defaults (`PROMPT` → {data}`~extra_platforms.CMD`,
+       else → {data}`~extra_platforms.POWERSHELL`).
 
     Returns {data}`~extra_platforms.UNKNOWN_SHELL` if not running inside a
     recognized shell. To raise an error instead, set `strict` to `True`.
 
     :::{important}
-    If both {data}`~extra_platforms.POWERSHELL` and another shell are detected (because
-    `PSModulePath` [leaks into child processes](https://github.com/PowerShell/PowerShell/issues/9957)), the other
-    shell is preferred.
+    If both {data}`~extra_platforms.POWERSHELL` and another shell are
+    detected (because `PSModulePath`
+    [leaks into child processes](https://github.com/PowerShell/PowerShell/issues/9957)),
+    the other shell is preferred.
     :::
 
     :::{warning}

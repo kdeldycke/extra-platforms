@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Trait base class for architectures, platforms, shells, terminals, CI systems, agents, and more.
+"""Trait base class for architectures, platforms, shells, terminals, and more.
 
 A trait represents a distinguishing characteristic of a runtime environment.
 Each trait has a unique ID, a human-readable name, an icon, and the ability
@@ -187,12 +187,14 @@ class Trait(_Identifiable, ABC):
     A trait is a distinguishing characteristic of the runtime environment that can
     be detected and identified.
 
-    Additionally of the common fields inherited from `_Identifiable`, each trait provides:
+    In addition to the common fields inherited from `_Identifiable`, each trait
+    provides:
 
     - `url`: A link to official documentation or website for the trait.
     - `current`: A boolean indicating if the current environment matches this trait.
     - `info()`: A method returning a dictionary of gathered attributes about the trait.
-    - `groups`: A set of {class}`~extra_platforms.Group` objects that include this trait as a member.
+    - `groups`: A set of {class}`~extra_platforms.Group` objects that include
+      this trait as a member.
     """
 
     url: str = field(repr=False, default="")
@@ -282,8 +284,8 @@ class Trait(_Identifiable, ABC):
         Uses dynamic import to avoid circular dependency with `group_data` module.
 
         Returns:
-            A {class}`frozenset` of {class}`~extra_platforms.Group` objects that contain this
-            trait as a member.
+            A {class}`frozenset` of {class}`~extra_platforms.Group` objects
+            that contain this trait as a member.
         """
         # Avoid circular import by importing here.
         from .group_data import ALL_GROUPS
@@ -301,7 +303,8 @@ class Trait(_Identifiable, ABC):
 
         :::{hint}
         This is a property to avoid calling all detection heuristics on
-        {class}`~extra_platforms.Trait` object creation, which happens at module import time.
+        {class}`~extra_platforms.Trait` object creation, which happens at
+        module import time.
         :::
         """
         import extra_platforms
@@ -450,10 +453,14 @@ class Terminal(Trait):
     Other tools that detect terminals for adaptation:
 
     - [`Starship`](https://starship.rs/) adapts prompt rendering based on terminal
-    - [`crossterm`](https://github.com/crossterm-rs/crossterm) (Rust) negotiates terminal features
-    - [`python-prompt-toolkit`](https://github.com/prompt-toolkit/python-prompt-toolkit) adapts to terminal capabilities
-    - [`rich`](https://github.com/Textualize/rich) probes terminal features for rendering
-    - [`termenv`](https://github.com/muesli/termenv) (Go) maintains terminal capability database
+    - [`crossterm`](https://github.com/crossterm-rs/crossterm) (Rust)
+      negotiates terminal features
+    - [`python-prompt-toolkit`](https://github.com/prompt-toolkit/python-prompt-toolkit)
+      adapts to terminal capabilities
+    - [`rich`](https://github.com/Textualize/rich) probes terminal
+      features for rendering
+    - [`termenv`](https://github.com/muesli/termenv) (Go) maintains
+      terminal capability database
     :::
     """
 

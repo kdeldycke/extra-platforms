@@ -110,7 +110,9 @@ NOBARA = Platform("nobara", "Nobara", "", "https://nobaraproject.org")
 """
 :::{note}
 Instead of using a loose Unicode icon for the Nobara OS, or just not adding any, we
-are using a [NerdFont](https://www.nerdfonts.com) icon instead: [ (i.e. nf-linux-nobara / f380)](https://www.nerdfonts.com/cheat-sheet?glyphSearch=nf-linux-nobara).
+are using a [NerdFont](https://www.nerdfonts.com) icon instead:
+[`` (i.e. `nf-linux-nobara` /
+`f380`)](https://www.nerdfonts.com/cheat-sheet?glyphSearch=nf-linux-nobara).
 
 The side-effect of using a NerdFont character is it will only display correctly
 when using a supported font. Otherwise, it will appear as an unknown or invisible

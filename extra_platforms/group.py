@@ -76,13 +76,17 @@ def extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
 
 @dataclass(frozen=True)
 class Group(_Identifiable):
-    """A {class}`~extra_platforms.Group` identifies a collection of {class}`~extra_platforms.Trait` members.
+    """A {class}`~extra_platforms.Group` identifies a collection of
+    {class}`~extra_platforms.Trait` members.
 
-    Additionally of the common fields inherited from `_Identifiable`, each group provides:
+    Additionally of the common fields inherited from `_Identifiable`,
+    each group provides:
 
-    - `members`: An iterable of {class}`~extra_platforms.Trait` instances that belong to this group.
+    - `members`: An iterable of {class}`~extra_platforms.Trait`
+      instances that belong to this group.
     - `member_ids`: A {class}`frozenset` of member IDs for quick lookup.
-    - `canonical`: A {class}`bool` indicating if the group is canonical (non-overlapping).
+    - `canonical`: A {class}`bool` indicating if the group is canonical
+      (non-overlapping).
     - various {class}`set`-like operations (union, intersection, difference, etc.).
     """
 
@@ -100,10 +104,11 @@ class Group(_Identifiable):
         """Typed access to members as {class}`~types.MappingProxyType`.
 
         :::{warning}
-        The `members` field is typed as {class}`~collections.abc.Iterable` to accept any
-        iterable at construction time. After `__post_init__`, it is always a
-        {class}`~types.MappingProxyType`. This property provides a {func}`~typing.cast` to
-        that type, avoiding `# type: ignore` comments throughout the class.
+        The `members` field is typed as {class}`~collections.abc.Iterable`
+        to accept any iterable at construction time. After `__post_init__`,
+        it is always a {class}`~types.MappingProxyType`. This property
+        provides a {func}`~typing.cast` to that type, avoiding
+        `# type: ignore` comments throughout the class.
         :::
         """
         return cast(_MembersMapping, self.members)
@@ -118,9 +123,10 @@ class Group(_Identifiable):
         """
         super().__post_init__()
 
-        # Override detection_func_id and unless_decorator_id for groups with "all_" prefix.
-        # Groups with "all_" prefix get "is_any_*" detection functions and "unless_any_*"
-        # decorators (singular form) to better convey the "any member matches" semantic.
+        # Override detection_func_id and unless_decorator_id for groups
+        # with "all_" prefix. Groups with "all_" prefix get "is_any_*"
+        # detection functions and "unless_any_*" decorators (singular
+        # form) to better convey the "any member matches" semantic.
         # Class-type groups (those matching Trait subclasses) use the subclass's
         # type_id.
         if self.id.startswith("all_"):
@@ -219,7 +225,8 @@ class Group(_Identifiable):
 
     @cached_property
     def canonical(self) -> bool:
-        """Returns {data}`True` if the group is canonical (non-overlapping), {data}`False` otherwise.
+        """Returns {data}`True` if the group is canonical (non-overlapping),
+        {data}`False` otherwise.
 
         A canonical group is one that does not share any members with other canonical
         groups. All canonical groups are non-overlapping.
@@ -249,7 +256,8 @@ class Group(_Identifiable):
         return len(self._members) > 0
 
     def __contains__(self, item: Trait | str) -> bool:
-        """Test if {class}`~extra_platforms.Trait` object or its ID is part of the group."""
+        """Test if {class}`~extra_platforms.Trait` object or its ID is
+        part of the group."""
         if isinstance(item, str):
             return item in self._members
         return item.id in self._members and self._members[item.id] == item
@@ -304,11 +312,12 @@ class Group(_Identifiable):
         return self_members > other_members
 
     def union(self, *others: _TNestedReferences) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with members from the group and all others.
+        """Return a new {class}`~extra_platforms.Group` with members from
+        the group and all others.
 
         :::{caution}
-        The new {class}`~extra_platforms.Group` will inherits the metadata of the first one.
-        All other groups' metadata will be ignored.
+        The new {class}`~extra_platforms.Group` will inherits the metadata
+        of the first one. All other groups' metadata will be ignored.
         :::
         """
         return Group(
@@ -324,11 +333,12 @@ class Group(_Identifiable):
     __ior__ = union
 
     def intersection(self, *others: _TNestedReferences) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with members common to the group and all others.
+        """Return a new {class}`~extra_platforms.Group` with members
+        common to the group and all others.
 
         :::{caution}
-        The new {class}`~extra_platforms.Group` will inherits the metadata of the first one.
-        All other groups' metadata will be ignored.
+        The new {class}`~extra_platforms.Group` will inherits the metadata
+        of the first one. All other groups' metadata will be ignored.
         :::
         """
         return Group(
@@ -344,11 +354,12 @@ class Group(_Identifiable):
     __iand__ = intersection
 
     def difference(self, *others: _TNestedReferences) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with members in the group that are not in the others.
+        """Return a new {class}`~extra_platforms.Group` with members in the
+        group that are not in the others.
 
         :::{caution}
-        The new {class}`~extra_platforms.Group` will inherits the metadata of the first one.
-        All other groups' metadata will be ignored.
+        The new {class}`~extra_platforms.Group` will inherits the metadata
+        of the first one. All other groups' metadata will be ignored.
         :::
         """
         return Group(
@@ -364,11 +375,12 @@ class Group(_Identifiable):
     __isub__ = difference
 
     def symmetric_difference(self, other: _TNestedReferences) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with members in either the group or other but not both.
+        """Return a new {class}`~extra_platforms.Group` with members in
+        either the group or other but not both.
 
         :::{caution}
-        The new {class}`~extra_platforms.Group` will inherits the metadata of the first one.
-        All other groups' metadata will be ignored.
+        The new {class}`~extra_platforms.Group` will inherits the metadata
+        of the first one. All other groups' metadata will be ignored.
         :::
         """
         return Group(
@@ -424,15 +436,18 @@ class Group(_Identifiable):
         )
 
     def remove(self, member: Trait | str) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with the specified trait removed.
+        """Return a new {class}`~extra_platforms.Group` with the specified
+        trait removed.
 
         Raises {exc}`KeyError` if the trait is not in the group.
 
         Args:
-            member: A {class}`~extra_platforms.Trait` object or trait ID string to remove.
+            member: A {class}`~extra_platforms.Trait` object or trait ID
+                string to remove.
 
         Returns:
-            A new {class}`~extra_platforms.Group` instance with the trait removed.
+            A new {class}`~extra_platforms.Group` instance with the trait
+            removed.
 
         Raises:
             KeyError: If the trait is not in the group.
@@ -454,16 +469,19 @@ class Group(_Identifiable):
         )
 
     def discard(self, member: Trait | str) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with the specified trait removed if present.
+        """Return a new {class}`~extra_platforms.Group` with the specified
+        trait removed if present.
 
-        Unlike {meth}`remove`, this does not raise an error if the trait is not found.
+        Unlike {meth}`remove`, this does not raise an error if the trait
+        is not found.
 
         Args:
-            member: A {class}`~extra_platforms.Trait` object or trait ID string to remove.
+            member: A {class}`~extra_platforms.Trait` object or trait ID
+                string to remove.
 
         Returns:
-            A new {class}`~extra_platforms.Group` instance with the trait removed, or a copy if
-            not present.
+            A new {class}`~extra_platforms.Group` instance with the trait
+            removed, or a copy if not present.
         """
         member_id = member.id if isinstance(member, Trait) else member
 
@@ -485,8 +503,9 @@ class Group(_Identifiable):
         """Remove and return a trait from the group.
 
         Args:
-            member_id: Optional trait ID to remove. If not provided, removes an arbitrary
-                trait (specifically, the first one in iteration order).
+            member_id: Optional trait ID to remove. If not provided,
+                removes an arbitrary trait (specifically, the first one
+                in iteration order).
 
         Returns:
             A {class}`tuple` of (removed {class}`~extra_platforms.Trait`,
@@ -524,8 +543,8 @@ class Group(_Identifiable):
         """Return a new empty {class}`~extra_platforms.Group` with the same metadata.
 
         Returns:
-            A new {class}`~extra_platforms.Group` instance with no members but same id, name,
-            and icon.
+            A new {class}`~extra_platforms.Group` instance with no members
+            but same id, name, and icon.
         """
         return Group(
             self.id,
@@ -631,9 +650,12 @@ def reduce(
     If no reference pool is provided, use all known groups.
 
     :::{note}
-    The algorithm is a variant of the [Set Cover Problem](https://en.wikipedia.org/wiki/Set_cover_problem), which is NP-hard. This
-    implementation uses a [greedy approximation](https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm) that
-    iteratively selects the largest group fitting the remaining uncovered traits.
+    The algorithm is a variant of the [Set Cover
+    Problem](https://en.wikipedia.org/wiki/Set_cover_problem), which is
+    NP-hard. This implementation uses a [greedy
+    approximation](https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm)
+    that iteratively selects the largest group fitting the remaining
+    uncovered traits.
     :::
     """
     # Avoid circular import.
