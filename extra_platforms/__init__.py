@@ -382,16 +382,16 @@ from .trait import (
 )
 
 """
-:::{important}
+```{important}
 Exposing everything at package level here motivates platforms and groups to have a
 unique and unambiguous ID. This constraint is enforced at the data-level and
 checked in unittests.
-:::
+```
 
-:::{hint}
+```{hint}
 The content of `pytest.py` file is not imported here to make dependency on
 Pytest optional.
-:::
+```
 """
 
 
@@ -917,11 +917,11 @@ __all__ = (
 )
 """Expose all package-wide elements.
 
-:::{note}
+```{note}
 Sorting of `__all__` is enforced by `ruff` via rule `RUF022`.
 
 Completeness (no missing or extra entries) is checked in unittests.
-:::
+```
 """
 
 # Initialize docstrings for all trait and group instances after all imports

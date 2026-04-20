@@ -20,13 +20,13 @@ The {func}`_initialize_all_docstrings` function should be called from
 `__init__.py` after all trait and group instances are imported to populate
 their `__doc__` attributes.
 
-:::{note}
+```{note}
 AST parse results are cached per module to avoid redundant work. Without
 caching, each of the ~170 trait/group instances triggers a full
 {func}`ast.parse` of its source module, totaling ~300 parses at import time
 (~115 ms). With per-module caching this drops to ~7 parses (~2.5 ms),
 reducing `import extra_platforms` from ~120 ms to ~10 ms.
-:::
+```
 """
 
 from __future__ import annotations
@@ -112,12 +112,12 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
     assignment. Results are cached per module so each source file is parsed
     only once regardless of how many attributes are looked up.
 
-    :::{note}
+    ```{note}
     Returns `None` if source files are unavailable, which happens in
     compiled environments (e.g., Nuitka, PyInstaller, cx_Freeze). This
     graceful degradation allows the library to function without docstrings
     in compiled binaries.
-    :::
+    ```
 
     :param module_name: The full module name (e.g.,
         'extra_platforms.platform_data').

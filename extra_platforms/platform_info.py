@@ -16,10 +16,10 @@
 This module provides utilities to fetch detailed version and codename information
 for all platforms: Linux distributions (via `/etc/os-release`), macOS and Windows.
 
-:::{seealso}
+```{seealso}
 The [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html)
 defines the format and fields of `/etc/os-release`.
-:::
+```
 """
 
 from __future__ import annotations
@@ -179,17 +179,17 @@ MACOS_CODENAMES: dict[tuple[str, str | None], str] = {
 }
 """Maps macOS `(major, minor)` version parts to release code name.
 
-:::{seealso}
+```{seealso}
 - https://en.wikipedia.org/wiki/Template:MacOS_versions
 - https://docs.python.org/3/library/platform.html#platform.mac_ver
-:::
+```
 
-:::{hint}
+```{hint}
 There is this oddity where some beta release of macOS Tahoe report major
 version as `16` instead of `15` or `26`. We choose to not handle this case
 for now, as we consider this a glitch in macOS history, and do not have a proper
 way to detect beta versions at this time.
-:::
+```
 """
 
 
@@ -268,10 +268,10 @@ def windows_info() -> dict[str, Any]:
     Returns:
         A dictionary containing Windows version details.
 
-    :::{todo}
+    ```{todo}
     Get even more details for Windows version. See inspirations from:
     https://github.com/saltstack/salt/blob/246d066/salt/grains/core.py#L1432-L1488
-    :::
+    ```
     """
     release, _version, _csd, _ptype = platform.win32_ver()
     parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))

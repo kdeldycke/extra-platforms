@@ -20,7 +20,7 @@ All these heuristics can be hard-cached as the underlying system is not changing
 between code execution. They are still allowed to depends on each others, as long as
 you're careful of not implementing circular dependencies.
 
-:::{warning}
+```{warning}
 Even if highly unlikely, it is possible to have multiple platforms detected for the
 same environment.
 
@@ -41,7 +41,7 @@ That's because of the environment metadata, where:
 That way we have the possibility elsewhere in `extra-platforms` to either decide
 if we only allow one, and only one, heuristic to match the current system, or allow
 for considering multiple systems at the same time.
-:::
+```
 
 Detection of Linux distributions relies on `/etc/os-release`, as specified by the
 [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html).
@@ -54,21 +54,21 @@ For all other traits, we either rely on:
 - [`platform.release`](https://docs.python.org/3/library/platform.html#platform.release)
 - environment variables
 
-:::{todo}
+```{todo}
 `hostnamectl` could be used as a fallback detection source when
 `/etc/os-release` is missing (e.g., stripped CloudLinux VMs). This approach was
 [proposed upstream in python-distro](https://github.com/python-distro/distro/pull/369)
 but rejected. The technique is sound and could be implemented here.
-:::
+```
 
-:::{seealso}
+```{seealso}
 Other source of inspiration for platform detection:
 
 - [Rust's `sysinfo` crate](https://github.com/stanislav-tkach/os_info/tree/master/os_info/src).
-:::
+```
 
-:::{currentmodule} extra_platforms
-:::
+```{currentmodule} extra_platforms
+```
 """
 
 from __future__ import annotations
@@ -95,10 +95,10 @@ if TYPE_CHECKING:
 def _unrecognized_message(report: bool = True) -> str:
     """Generate a message for unrecognized environments.
 
-    :::{important}
+    ```{important}
     This message must contain all the primitives used in the `detection` module so
     maintainers can debug heuristics from user reports.
-    :::
+    ```
 
     :param report: If `True`, append a request to report the issue on GitHub.
         Set to `False` for environments where the trait is legitimately absent
@@ -157,13 +157,13 @@ def _report_unrecognized(
 def is_aarch64() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.AARCH64`.
 
-    :::{caution}
+    ```{caution}
     {func}`platform.machine` returns different values depending on the OS:
 
     - Linux: `aarch64`
     - macOS: `arm64`
     - Windows: `ARM64`
-    :::
+    ```
     """
     return platform.machine().lower() in ("aarch64", "arm64")
 
@@ -204,7 +204,7 @@ def is_armv8l() -> bool:
 def is_arm() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.ARM`.
 
-    :::{hint}
+    ```{hint}
     This is a fallback detection for generic ARM architecture. It will return
     `True` for any ARM architecture not specifically covered by the more precise
     variants: {func}`~extra_platforms.is_aarch64`,
@@ -212,7 +212,7 @@ def is_arm() -> bool:
     {func}`~extra_platforms.is_armv6l`,
     {func}`~extra_platforms.is_armv7l` or
     {func}`~extra_platforms.is_armv8l`.
-    :::
+    ```
     """
     return bool(
         platform.machine().startswith("arm")
@@ -248,9 +248,9 @@ def is_i686() -> bool:
 def is_x86_64() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.X86_64`.
 
-    :::{caution}
+    ```{caution}
     Windows returns `AMD64` in uppercase, so we normalize to lowercase.
-    :::
+    ```
     """
     return platform.machine().lower() in ("x86_64", "amd64")
 
@@ -353,9 +353,9 @@ def is_loongarch64() -> bool:
 def is_wasm32() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.WASM32`.
 
-    :::{hint}
+    ```{hint}
     WebAssembly detection is based on Emscripten's platform identifier.
-    :::
+    ```
     """
     return sys.platform == "emscripten" and platform.architecture()[0] == "32bit"
 
@@ -364,9 +364,9 @@ def is_wasm32() -> bool:
 def is_wasm64() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.WASM64`.
 
-    :::{hint}
+    ```{hint}
     WebAssembly detection is based on Emscripten's platform identifier.
-    :::
+    ```
     """
     return sys.platform == "emscripten" and platform.architecture()[0] == "64bit"
 
@@ -415,10 +415,10 @@ def is_amzn() -> bool:
 def is_android() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.ANDROID`.
 
-    :::{seealso}
+    ```{seealso}
     Source:
     <https://github.com/kivy/kivy/blob/master/kivy/utils.py>
-    :::
+    ```
     """
     return "ANDROID_ROOT" in environ or "P4A_BOOTSTRAP" in environ
 
@@ -527,10 +527,10 @@ def is_haiku() -> bool:
 def is_hurd() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.HURD`.
 
-    :::{caution}
+    ```{caution}
     {data}`sys.platform` can returns `GNU` or `gnu0`, see:
     <https://github.com/kdeldycke/extra-platforms/issues/308>
-    :::
+    ```
     """
     return sys.platform.lower().startswith("gnu")
 
@@ -547,12 +547,12 @@ def is_ibm_powerkvm() -> bool:
 def is_illumos() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.ILLUMOS`.
 
-    :::{hint}
+    ```{hint}
     Illumos is a Unix OS derived from OpenSolaris. It shares
     `sys.platform == 'sunos5'` with Solaris, but can be distinguished by checking
     `platform.uname().version` which contains "illumos" on Illumos-based systems
     (like OpenIndiana, SmartOS, OmniOS).
-    :::
+    ```
     """
     return "illumos" in platform.uname().version.lower()
 
@@ -755,7 +755,7 @@ def is_windows() -> bool:
 def is_wsl1() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.WSL1`.
 
-    :::{caution}
+    ```{caution}
     The only difference between WSL1 and WSL2 is
     [the case of the kernel release version](https://github.com/andweeb/presence.nvim/pull/64#issue-1174430662):
 
@@ -772,7 +772,7 @@ def is_wsl1() -> bool:
 
             $ uname -r
             5.10.102.1-microsoft-standard-WSL2
-    :::
+    ```
     """
     return "Microsoft" in platform.release()
 
@@ -858,12 +858,12 @@ def _detect_shell(
 ) -> bool:
     """Detect a specific shell from the environment.
 
-    :::{caution}
+    ```{caution}
     This function is designed primarily for POSIX/Unix systems. The `SHELL`
     environment variable and `/proc` filesystem are Unix-specific conventions.
     For Windows shells like {data}`~extra_platforms.CMD`, use platform-specific
     detection instead.
-    :::
+    ```
 
     Uses a tiered detection strategy:
 
@@ -915,17 +915,17 @@ def _detect_shell(
 def is_ash() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.ASH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `SHELL` environment variable path, as Almquist
     Shell does not set its own version variable.
-    :::
+    ```
 
-    :::{note}
+    ```{note}
     [BusyBox](https://busybox.net)'s built-in shell is an {data}`~extra_platforms.ASH`
     derivative. On BusyBox-based systems ({data}`~extra_platforms.ALPINE`,
     {data}`~extra_platforms.OPENWRT`), `$SHELL` typically resolves to `/bin/ash`,
     so BusyBox environments are detected as {data}`~extra_platforms.ASH`.
-    :::
+    ```
     """
     return _detect_shell(shell_ids="ash")
 
@@ -934,12 +934,12 @@ def is_ash() -> bool:
 def is_bash() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.BASH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `BASH_VERSION` environment variable (set by Bash
     on startup), or via the `SHELL` path as a fallback.
-    :::
+    ```
 
-    :::{attention}
+    ```{attention}
     GitHub's `ubuntu-slim` runner is a
     [stripped-down environments, running as a WSL2 container](https://docs.github.com/en/actions/reference/runners/github-hosted-runners#single-cpu-runners)
     on top of Windows. It
@@ -947,7 +947,7 @@ def is_bash() -> bool:
     but does not set neither `BASH_VERSION` nor `SHELL`.
     In that case we fall back to walking the parent process tree via `/proc`
     to find it.
-    :::
+    ```
     """
     return _detect_shell(version_env_var="BASH_VERSION", shell_ids="bash")
 
@@ -956,10 +956,10 @@ def is_bash() -> bool:
 def is_cmd() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.CMD`.
 
-    :::{hint}
+    ```{hint}
     Detected on Windows when the `PROMPT` environment variable is set
     and `PSModulePath` is not (to exclude PowerShell).
-    :::
+    ```
     """
     return (
         sys.platform == "win32"
@@ -972,9 +972,9 @@ def is_cmd() -> bool:
 def is_csh() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.CSH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `SHELL` environment variable path.
-    :::
+    ```
     """
     return _detect_shell(shell_ids="csh")
 
@@ -983,10 +983,10 @@ def is_csh() -> bool:
 def is_dash() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.DASH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `SHELL` environment variable path, as Dash does
     not set its own version variable.
-    :::
+    ```
     """
     return _detect_shell(shell_ids="dash")
 
@@ -995,10 +995,10 @@ def is_dash() -> bool:
 def is_fish() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.FISH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `FISH_VERSION` environment variable (set by Fish
     on startup), or via the `SHELL` path as a fallback.
-    :::
+    ```
     """
     return _detect_shell(version_env_var="FISH_VERSION", shell_ids="fish")
 
@@ -1007,10 +1007,10 @@ def is_fish() -> bool:
 def is_ksh() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.KSH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `KSH_VERSION` environment variable (set by Korn
     shell on startup), or via the `SHELL` path as a fallback.
-    :::
+    ```
     """
     return _detect_shell(version_env_var="KSH_VERSION", shell_ids="ksh")
 
@@ -1019,10 +1019,10 @@ def is_ksh() -> bool:
 def is_nushell() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.NUSHELL`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `NU_VERSION` environment variable (set by Nushell
     on startup), or via the `SHELL` path as a fallback.
-    :::
+    ```
     """
     return _detect_shell(version_env_var="NU_VERSION", shell_ids="nu")
 
@@ -1031,14 +1031,14 @@ def is_nushell() -> bool:
 def is_powershell() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.POWERSHELL`.
 
-    :::{note}
+    ```{note}
     PowerShell is cross-platform and
     [available on Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell-on-linux)
     and macOS. Detection covers all platforms via `PSModulePath`,
     `SHELL` path, and parent process tree.
-    :::
+    ```
 
-    :::{attention}
+    ```{attention}
     `PSModulePath` can leak into non-PowerShell child processes via two
     vectors:
 
@@ -1054,7 +1054,7 @@ def is_powershell() -> bool:
     `PSModulePath` leaks from Azure infrastructure. This leads to multiple
     shell detections, which is arbitraged by `current_shell()`,
     which deprioritizes PowerShell when other shells are detected.
-    :::
+    ```
     """
     return _detect_shell(
         version_env_var="PSModulePath",
@@ -1066,9 +1066,9 @@ def is_powershell() -> bool:
 def is_tcsh() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.TCSH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `SHELL` environment variable path.
-    :::
+    ```
     """
     return _detect_shell(shell_ids="tcsh")
 
@@ -1077,10 +1077,10 @@ def is_tcsh() -> bool:
 def is_xonsh() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.XONSH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `XONSH_VERSION` environment variable (set by Xonsh
     on startup), or via the `SHELL` path as a fallback.
-    :::
+    ```
     """
     return _detect_shell(version_env_var="XONSH_VERSION", shell_ids="xonsh")
 
@@ -1089,10 +1089,10 @@ def is_xonsh() -> bool:
 def is_zsh() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.ZSH`.
 
-    :::{hint}
+    ```{hint}
     Detected via the `ZSH_VERSION` environment variable (set by Zsh on
     startup), or via the `SHELL` path as a fallback.
-    :::
+    ```
     """
     return _detect_shell(version_env_var="ZSH_VERSION", shell_ids="zsh")
 
@@ -1246,12 +1246,12 @@ def is_windows_terminal() -> bool:
 def is_xterm() -> bool:
     """Return {data}`True` if current terminal is {data}`~extra_platforms.XTERM`.
 
-    :::{note}
+    ```{note}
     We check for `XTERM_VERSION` rather than `TERM=xterm` because many
     headless environments (e.g., GitHub Actions `ubuntu-slim` runners) set
     `TERM=xterm` for termcap/terminfo compatibility without actually running
     xterm.
-    :::
+    ```
     """
     return "XTERM_VERSION" in environ
 
@@ -1271,10 +1271,10 @@ def is_zellij() -> bool:
 def is_azure_pipelines() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.AZURE_PIPELINES`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&viewFallbackFrom=vsts&tabs=yaml#system-variables>.
-    :::
+    ```
     """
     return "TF_BUILD" in environ
 
@@ -1283,10 +1283,10 @@ def is_azure_pipelines() -> bool:
 def is_bamboo() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.BAMBOO`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://confluence.atlassian.com/bamboo/bamboo-variables-289277087.html#Bamboovariables-Build-specificvariables>.
-    :::
+    ```
     """
     return "bamboo.buildKey" in environ
 
@@ -1295,10 +1295,10 @@ def is_bamboo() -> bool:
 def is_buildkite() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.BUILDKITE`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://buildkite.com/docs/pipelines/environment-variables>.
-    :::
+    ```
     """
     return "BUILDKITE" in environ
 
@@ -1307,10 +1307,10 @@ def is_buildkite() -> bool:
 def is_circle_ci() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.CIRCLE_CI`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://circleci.com/docs/reference/variables/#built-in-environment-variables>.
-    :::
+    ```
     """
     return "CIRCLECI" in environ
 
@@ -1319,10 +1319,10 @@ def is_circle_ci() -> bool:
 def is_cirrus_ci() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.CIRRUS_CI`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://cirrus-ci.org/guide/writing-tasks/#environment-variables>.
-    :::
+    ```
     """
     return "CIRRUS_CI" in environ
 
@@ -1331,10 +1331,10 @@ def is_cirrus_ci() -> bool:
 def is_codebuild() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.CODEBUILD`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html>.
-    :::
+    ```
     """
     return "CODEBUILD_BUILD_ID" in environ
 
@@ -1343,10 +1343,10 @@ def is_codebuild() -> bool:
 def is_github_ci() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.GITHUB_CI`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables>.
-    :::
+    ```
     """
     return "GITHUB_ACTIONS" in environ or "GITHUB_RUN_ID" in environ
 
@@ -1355,10 +1355,10 @@ def is_github_ci() -> bool:
 def is_gitlab_ci() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.GITLAB_CI`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://docs.gitlab.com/ci/variables/predefined_variables/#predefined-variables>.
-    :::
+    ```
     """
     return "GITLAB_CI" in environ
 
@@ -1367,10 +1367,10 @@ def is_gitlab_ci() -> bool:
 def is_heroku_ci() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.HEROKU_CI`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://devcenter.heroku.com/articles/heroku-ci#immutable-environment-variables>.
-    :::
+    ```
     """
     return "HEROKU_TEST_RUN_ID" in environ
 
@@ -1379,10 +1379,10 @@ def is_heroku_ci() -> bool:
 def is_teamcity() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.TEAMCITY`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Predefined+Server+Build+Parameters>.
-    :::
+    ```
     """
     return "TEAMCITY_VERSION" in environ
 
@@ -1391,10 +1391,10 @@ def is_teamcity() -> bool:
 def is_travis_ci() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.TRAVIS_CI`.
 
-    :::{seealso}
+    ```{seealso}
     Environment variables reference:
     <https://docs.travis-ci.com/user/environment-variables/#default-environment-variables>.
-    :::
+    ```
     """
     return "TRAVIS" in environ
 
@@ -1417,9 +1417,9 @@ def is_unknown_ci() -> bool:
 def is_claude_code() -> bool:
     """Return {data}`True` if current agent is {data}`~extra_platforms.CLAUDE_CODE`.
 
-    :::{seealso}
+    ```{seealso}
     Claude Code sets the `CLAUDECODE` environment variable when running.
-    :::
+    ```
     """
     return "CLAUDECODE" in environ
 
@@ -1428,9 +1428,9 @@ def is_claude_code() -> bool:
 def is_cline() -> bool:
     """Return {data}`True` if current agent is {data}`~extra_platforms.CLINE`.
 
-    :::{seealso}
+    ```{seealso}
     Cline sets the `CLINE_ACTIVE` environment variable when running.
-    :::
+    ```
     """
     return "CLINE_ACTIVE" in environ
 
@@ -1439,9 +1439,9 @@ def is_cline() -> bool:
 def is_cursor() -> bool:
     """Return {data}`True` if current agent is {data}`~extra_platforms.CURSOR`.
 
-    :::{seealso}
+    ```{seealso}
     Cursor sets the `CURSOR_AGENT` environment variable when running.
-    :::
+    ```
     """
     return "CURSOR_AGENT" in environ
 
@@ -1470,15 +1470,15 @@ def current_architecture(strict: bool = False) -> Architecture:
     Returns {data}`~extra_platforms.UNKNOWN_ARCHITECTURE` if not running inside a
     recognized architecture. To raise an error instead, set `strict` to `True`.
 
-    :::{important}
+    ```{important}
     Always raises an error if multiple architectures match.
-    :::
+    ```
 
-    :::{warning}
+    ```{warning}
     An architecture is always expected to be detected. An unrecognized result
     logs a `WARNING` and likely indicates a missing detection heuristic that
     should be [reported](https://github.com/kdeldycke/extra-platforms/issues).
-    :::
+    ```
     """
     # Lazy imports to avoid circular dependencies.
     from .architecture_data import UNKNOWN_ARCHITECTURE
@@ -1512,17 +1512,17 @@ def current_platform(strict: bool = False) -> Platform:
     Returns {data}`~extra_platforms.UNKNOWN_PLATFORM` if not running inside a recognized
     platform. To raise an error instead, set `strict` to `True`.
 
-    :::{important}
+    ```{important}
     If multiple platforms match the current environment, this function will try to
     select the best, informative one. Raises an error if we can't decide on a single,
     appropriate platform.
-    :::
+    ```
 
-    :::{warning}
+    ```{warning}
     A platform is always expected to be detected. An unrecognized result logs a
     `WARNING` and likely indicates a missing detection heuristic that should be
     [reported](https://github.com/kdeldycke/extra-platforms/issues).
-    :::
+    ```
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_PLATFORMS
@@ -1583,22 +1583,22 @@ def current_shell(strict: bool = False) -> Shell:
     Returns {data}`~extra_platforms.UNKNOWN_SHELL` if not running inside a
     recognized shell. To raise an error instead, set `strict` to `True`.
 
-    :::{important}
+    ```{important}
     If both {data}`~extra_platforms.POWERSHELL` and another shell are
     detected (because `PSModulePath`
     [leaks into child processes](https://github.com/PowerShell/PowerShell/issues/9957)),
     the other shell is preferred.
-    :::
+    ```
 
-    :::{warning}
+    ```{warning}
     A shell is always expected to be detected. An unrecognized result logs a
     `WARNING` and likely indicates a missing detection heuristic that should be
     [reported](https://github.com/kdeldycke/extra-platforms/issues).
-    :::
+    ```
 
-    :::{seealso}
+    ```{seealso}
     Inspired by [UV's cross-platform shell detection](https://github.com/astral-sh/uv/blob/0.10.2/crates/uv-shell/src/lib.rs).
-    :::
+    ```
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_SHELLS
@@ -1637,14 +1637,14 @@ def current_terminal(strict: bool = False) -> Terminal:
     Returns {data}`~extra_platforms.UNKNOWN_TERMINAL` if not running inside a
     recognized terminal. To raise an error instead, set `strict` to `True`.
 
-    :::{important}
+    ```{important}
     If multiple terminals match (e.g., {data}`~extra_platforms.TMUX` inside
     {data}`~extra_platforms.KITTY`), multiplexers are filtered out first to
     identify the innermost terminal. If multiple non-multiplexer terminals still
     match, a {class}`RuntimeError` is raised.
-    :::
+    ```
 
-    :::{note}
+    ```{note}
     Unlike architectures, platforms, and shells, a terminal is not always present.
     Headless environments (CI runners, cron jobs, Docker containers, SSH
     non-interactive commands) have no terminal emulator attached.
@@ -1652,7 +1652,7 @@ def current_terminal(strict: bool = False) -> Terminal:
     If the `TERM` environment variable is set, an unrecognized terminal logs at
     `WARNING` level, as it suggests a terminal emulator is present but not
     recognized. Otherwise, it logs at `INFO` level.
-    :::
+    ```
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_TERMINALS, MULTIPLEXERS
@@ -1693,18 +1693,18 @@ def current_ci(strict: bool = False) -> CI:
     Returns {data}`~extra_platforms.UNKNOWN_CI` if not running inside a recognized CI
     system. To raise an error instead, set `strict` to `True`.
 
-    :::{important}
+    ```{important}
     Always raises an error if multiple CI systems match.
-    :::
+    ```
 
-    :::{note}
+    ```{note}
     Unlike architectures, platforms, and shells, a CI system is not always present.
     Local development environments have no CI system running.
 
     If the `CI` environment variable is set, an unrecognized CI system logs at
     `WARNING` level, as it suggests a CI system is present but not recognized.
     Otherwise, it logs at `INFO` level.
-    :::
+    ```
     """
     # Lazy imports to avoid circular dependencies.
     from .ci_data import UNKNOWN_CI
@@ -1737,18 +1737,18 @@ def current_agent(strict: bool = False) -> Agent:
     Returns {data}`~extra_platforms.UNKNOWN_AGENT` if not running inside a recognized
     agent. To raise an error instead, set `strict` to `True`.
 
-    :::{important}
+    ```{important}
     Always raises an error if multiple agents match.
-    :::
+    ```
 
-    :::{note}
+    ```{note}
     Unlike architectures, platforms, and shells, an agent is not always present.
     Local development without AI agents has no agent running.
 
     If the `LLM` environment variable is set, an unrecognized agent logs at
     `WARNING` level, as it suggests an AI agent is present but not recognized.
     Otherwise, it logs at `INFO` level.
-    :::
+    ```
     """
     # Lazy imports to avoid circular dependencies.
     from .agent_data import UNKNOWN_AGENT
@@ -1787,16 +1787,16 @@ def current_traits() -> set[Trait]:
     {class}`~extra_platforms.Terminal`, {class}`~extra_platforms.CI` systems,
     and {class}`~extra_platforms.Agent` environments.
 
-    :::{caution}
+    ```{caution}
     Never returns {data}`~extra_platforms.UNKNOWN` traits.
-    :::
+    ```
 
     Raises {exc}`SystemError` if the current environment is not recognized at all.
 
-    :::{attention}
+    ```{attention}
     At this point it is too late to worry about caching. This function has no
     choice but to evaluate all detection heuristics.
-    :::
+    ```
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_TRAITS, UNKNOWN

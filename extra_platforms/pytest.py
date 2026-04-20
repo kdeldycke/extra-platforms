@@ -16,8 +16,8 @@
 Generates a pair of ready-to-use `@skip_<id>` and `@unless_<id>` decorators for
 each platform and group.
 
-:::{currentmodule} extra_platforms
-:::
+```{currentmodule} extra_platforms
+```
 """
 
 from __future__ import annotations

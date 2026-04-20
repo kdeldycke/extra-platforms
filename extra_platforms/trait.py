@@ -206,10 +206,10 @@ class Trait(_Identifiable, ABC):
     Aliases are alternative identifiers that resolve to the same trait. When an
     alias is used, a warning is emitted to encourage using the canonical ID.
 
-    :::{note}
+    ```{note}
     Aliases do not generate their own symbols, detection functions, or pytest
     decorators. Only the canonical `id` produces these artifacts.
-    :::
+    ```
     """
 
     def __post_init__(self) -> None:
@@ -219,10 +219,10 @@ class Trait(_Identifiable, ABC):
         - Validate aliases are lowercase and distinct from the canonical ID.
         - Populate the docstring (deferred until after module initialization).
 
-        :::{hint}
+        ```{hint}
         Docstring generation is deferred to avoid circular imports during module
         initialization. See _docstrings._initialize_all_docstrings().
-        :::
+        ```
         """
         super().__post_init__()
 
@@ -301,11 +301,11 @@ class Trait(_Identifiable, ABC):
 
         Raises {exc}`NotImplementedError` if a detection function cannot be found.
 
-        :::{hint}
+        ```{hint}
         This is a property to avoid calling all detection heuristics on
         {class}`~extra_platforms.Trait` object creation, which happens at
         module import time.
-        :::
+        ```
         """
         import extra_platforms
 
@@ -340,11 +340,11 @@ class Trait(_Identifiable, ABC):
 class Architecture(Trait):
     """A CPU architecture identifies a [processor instruction set](https://en.wikipedia.org/wiki/Instruction_set_architecture).
 
-    :::{seealso}
+    ```{seealso}
     [`archspec`](https://github.com/archspec/archspec) provides a rich database of
     CPU microarchitectures (feature flags, compiler compatibility, family trees).
     It could be used to extend our architecture metadata beyond basic ISA detection.
-    :::
+    ```
     """
 
     def info(self) -> dict[str, str | bool | None]:
@@ -366,12 +366,12 @@ class Platform(Trait):
     """A platform can identify multiple distributions or OSes with the same
     characteristics.
 
-    :::{seealso}
+    ```{seealso}
     Init systems (systemd, upstart, sysvinit, openrc, runit, etc.) are another
     dimension of platform characterization that could be detected in the future.
     See [`python-distro/distro#142`](https://github.com/python-distro/distro/issues/142)
     for prior discussion on init system detection.
-    :::
+    ```
     """
 
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
@@ -406,9 +406,9 @@ class Platform(Trait):
 class Shell(Trait):
     """A shell identifies a command-line interpreter.
 
-    :::{seealso}
+    ```{seealso}
     Inspired by [UV's cross-platform shell detection](https://github.com/astral-sh/uv/pull/17870).
-    :::
+    ```
     """
 
     def info(self) -> dict[str, str | bool | None]:
@@ -443,13 +443,13 @@ class Shell(Trait):
 class Terminal(Trait):
     """A terminal identifies the application rendering the shell's output.
 
-    :::{note}
+    ```{note}
     Shell and Terminal are orthogonal: any shell can run inside any terminal.
     Unlike shells, multiple terminals can be active simultaneously (e.g.,
     tmux inside Kitty).
-    :::
+    ```
 
-    :::{seealso}
+    ```{seealso}
     Other tools that detect terminals for adaptation:
 
     - [`Starship`](https://starship.rs/) adapts prompt rendering based on terminal
@@ -461,7 +461,7 @@ class Terminal(Trait):
       features for rendering
     - [`termenv`](https://github.com/muesli/termenv) (Go) maintains
       terminal capability database
-    :::
+    ```
     """
 
     def info(self) -> dict[str, str | bool | None]:

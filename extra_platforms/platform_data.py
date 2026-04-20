@@ -13,13 +13,13 @@
 # limitations under the License.
 """Platform definitions and metadata.
 
-:::{note}
+```{note}
 Default icons are inspired from Starship project:
 - https://starship.rs/config/#os
 - https://github.com/starship/starship/blob/master/.github/config-schema.json
 
 Some icons, especially Linux distributions, have their own dedicated [codepoints in NerdFonts](https://www.nerdfonts.com/cheat-sheet).
-:::
+```
 """
 
 from __future__ import annotations
@@ -108,7 +108,7 @@ NIXOS = Platform("nixos", "NixOS", "❄️", "https://nixos.org")
 
 NOBARA = Platform("nobara", "Nobara", "", "https://nobaraproject.org")
 """
-:::{note}
+```{note}
 Instead of using a loose Unicode icon for the Nobara OS, or just not adding any, we
 are using a [NerdFont](https://www.nerdfonts.com) icon instead:
 [`` (i.e. `nf-linux-nobara` /
@@ -117,12 +117,12 @@ are using a [NerdFont](https://www.nerdfonts.com) icon instead:
 The side-effect of using a NerdFont character is it will only display correctly
 when using a supported font. Otherwise, it will appear as an unknown or invisible
 character depending on the fonts.
-:::
+```
 
-:::{todo}
+```{todo}
 In the future, we may want to have two icons for each platform, one that is
 Unicode-based, the other that is NerdFont-based.
-:::
+```
 """
 
 OPENBSD = Platform("openbsd", "OpenBSD", "🐡", "https://openbsd.org")

@@ -56,9 +56,9 @@ def extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
     {class}`~extra_platforms.Group`, {class}`~extra_platforms.Trait`, or their IDs.
     `None` values and empty iterables are silently ignored.
 
-    :::{caution}
+    ```{caution}
     Can returns duplicates.
-    :::
+    ```
     """
     for item in _flatten(other):
         match item:
@@ -103,23 +103,23 @@ class Group(_Identifiable):
     def _members(self) -> _MembersMapping:
         """Typed access to members as {class}`~types.MappingProxyType`.
 
-        :::{warning}
+        ```{warning}
         The `members` field is typed as {class}`~collections.abc.Iterable`
         to accept any iterable at construction time. After `__post_init__`,
         it is always a {class}`~types.MappingProxyType`. This property
         provides a {func}`~typing.cast` to that type, avoiding
         `# type: ignore` comments throughout the class.
-        :::
+        ```
         """
         return cast(_MembersMapping, self.members)
 
     def __post_init__(self):
         """Normalize members to a sorted, deduplicated mapping.
 
-        :::{hint}
+        ```{hint}
         Docstring generation is deferred to avoid circular imports during module
         initialization. See _docstrings._initialize_all_docstrings().
-        :::
+        ```
         """
         super().__post_init__()
 
@@ -234,9 +234,9 @@ class Group(_Identifiable):
         Non-canonical groups are provided for convenience, but overlap with each other
         or with canonical groups.
 
-        :::{hint}
+        ```{hint}
         Canonical groups are denoted with a ⬥ symbol in the documentation and tables.
-        :::
+        ```
         """
         # Avoid circular import.
         from .group_data import NON_OVERLAPPING_GROUPS
@@ -315,10 +315,10 @@ class Group(_Identifiable):
         """Return a new {class}`~extra_platforms.Group` with members from
         the group and all others.
 
-        :::{caution}
+        ```{caution}
         The new {class}`~extra_platforms.Group` will inherits the metadata
         of the first one. All other groups' metadata will be ignored.
-        :::
+        ```
         """
         return Group(
             self.id,
@@ -336,10 +336,10 @@ class Group(_Identifiable):
         """Return a new {class}`~extra_platforms.Group` with members
         common to the group and all others.
 
-        :::{caution}
+        ```{caution}
         The new {class}`~extra_platforms.Group` will inherits the metadata
         of the first one. All other groups' metadata will be ignored.
-        :::
+        ```
         """
         return Group(
             self.id,
@@ -357,10 +357,10 @@ class Group(_Identifiable):
         """Return a new {class}`~extra_platforms.Group` with members in the
         group that are not in the others.
 
-        :::{caution}
+        ```{caution}
         The new {class}`~extra_platforms.Group` will inherits the metadata
         of the first one. All other groups' metadata will be ignored.
-        :::
+        ```
         """
         return Group(
             self.id,
@@ -378,10 +378,10 @@ class Group(_Identifiable):
         """Return a new {class}`~extra_platforms.Group` with members in
         either the group or other but not both.
 
-        :::{caution}
+        ```{caution}
         The new {class}`~extra_platforms.Group` will inherits the metadata
         of the first one. All other groups' metadata will be ignored.
-        :::
+        ```
         """
         return Group(
             self.id,
@@ -581,10 +581,10 @@ def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
 
     Order of the returned traits matches the order of the provided IDs.
 
-    :::{tip}
+    ```{tip}
     If you want to reduce the returned set and removes as much overlaps as
     possible, you can use the {func}`~extra_platforms.reduce` function on the results.
-    :::
+    ```
     """
     # Avoid circular import.
     from .group_data import ALL_IDS, ALL_TRAIT_IDS, ALL_TRAITS
@@ -617,10 +617,10 @@ def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
     Order of the returned {class}`~extra_platforms.Group` instances matches the order of
     the provided IDs.
 
-    :::{tip}
+    ```{tip}
     If you want to reduce the returned set and removes as much overlaps as
     possible, you can use the {func}`~extra_platforms.reduce` function on the results.
-    :::
+    ```
     """
     # Avoid circular import.
     from .group_data import ALL_GROUP_IDS, ALL_GROUPS
@@ -649,14 +649,14 @@ def reduce(
     Only the groups defined in the `target_pool` are considered for the reduction.
     If no reference pool is provided, use all known groups.
 
-    :::{note}
+    ```{note}
     The algorithm is a variant of the [Set Cover
     Problem](https://en.wikipedia.org/wiki/Set_cover_problem), which is
     NP-hard. This implementation uses a [greedy
     approximation](https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm)
     that iteratively selects the largest group fitting the remaining
     uncovered traits.
-    :::
+    ```
     """
     # Avoid circular import.
     from .group_data import ALL_GROUPS

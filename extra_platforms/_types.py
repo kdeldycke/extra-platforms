@@ -15,7 +15,7 @@
 
 Inspired by [how `tomllib` does it in the stdlib](https://github.com/python/cpython/tree/main/Lib/tomllib).
 
-:::{hint}
+```{hint}
 These type are designed to be imported as follows:
 
 .. code-block:: python
@@ -29,7 +29,7 @@ These type are designed to be imported as follows:
 [Mypy is able to pick them up correctly](https://mypy.readthedocs.io/en/stable/common_issues.html#python-version-and-system-platform-checks)
 because `TYPE_CHECKING` is always evaluated to `False` at runtime, and to
 `True` [during static analysis](https://github.com/python/mypy/blob/6aa44da/mypy/reachability.py#L152).
-:::
+```
 """
 
 from __future__ import annotations

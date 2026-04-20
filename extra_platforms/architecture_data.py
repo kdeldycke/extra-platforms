@@ -13,21 +13,21 @@
 # limitations under the License.
 """Architecture definitions and metadata.
 
-:::{hint}
+```{hint}
 Architecture's canonical IDs are inspired by those [used in `auditwheel`](https://github.com/pypa/auditwheel/blob/main/src/auditwheel/architecture.py)
 project to encode the [`manylinux` policies](https://github.com/pypa/auditwheel/blob/6.6.0/src/auditwheel/policy/manylinux-policy.json).
-:::
+```
 
-:::{seealso}
+```{seealso}
 Architecture variants from [Rust's `target-lexicon`](https://docs.rs/target-lexicon/latest/target_lexicon/enum.Architecture.html#variants).
-:::
+```
 
-:::{todo}
+```{todo}
 Add mapping of architecture to manylinux Python targets? As per:
 
 - https://github.com/astral-sh/uv/blob/main/crates/uv-platform-tags/src/platform.rs
 - https://github.com/pypa/manylinux
-:::
+```
 """
 
 from __future__ import annotations
@@ -42,10 +42,10 @@ AARCH64 = Architecture(
     aliases=frozenset({"arm64"}),
 )
 """
-:::{hint}
+```{hint}
 Although `aarch64` is the canonical ID for this architecture, some
 platforms may use the alias `arm64` instead (e.g., macOS on Apple Silicon).
-:::
+```
 """
 
 ARM = Architecture(
@@ -62,10 +62,10 @@ ARMV5TEL = Architecture(
     "https://en.wikipedia.org/wiki/ARM11",
 )
 """
-:::{hint}
+```{hint}
 ARMv5TE includes Thumb and DSP extensions. This architecture is found on
 older ARM devices and may appear in embedded systems or legacy platforms.
-:::
+```
 """
 
 ARMV6L = Architecture(
@@ -233,8 +233,8 @@ X86_64 = Architecture(
     aliases=frozenset({"amd64"}),
 )
 """
-:::{hint}
+```{hint}
 Although `x86_64` is the canonical ID for this architecture, some
 platforms may use the alias `amd64` instead (e.g., Windows on x86-64).
-:::
+```
 """
