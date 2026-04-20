@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-04-13T17:54:47.113742Z"
+exclude-newer = "2026-04-13T20:47:50.487099Z"
 exclude-newer-span = "P1W"
 
 [[package]]
@@ -1751,7 +1751,7 @@ wheels = [
 [[package]]
 name = "repomatic"
 version = "6.14.0.dev0"
-source = { git = "https://github.com/kdeldycke/repomatic.git?rev=main#20ea1a3916bbc8bdd1e1064f556721c3f8333dd9" }
+source = { git = "https://github.com/kdeldycke/repomatic.git?rev=main#040b0350242d67244c8c96ffba8c8d7396d44a61" }
 dependencies = [
     { name = "boltons", marker = "python_full_version >= '3.12'" },
     { name = "bump-my-version", marker = "python_full_version >= '3.12'" },
