@@ -290,7 +290,7 @@ docs = [
   # Required so autodoc can import extra_platforms.pytest and document decorators.
   "pytest>=8.2.1",
   # Provides the repomatic.myst_docstrings Sphinx extension.
-  "repomatic @ git+https://github.com/kdeldycke/repomatic.git@main",
+  "repomatic>=6.14",
   # We hard code links with a format that Sphinx only supports from 9.1 onwards.
   "sphinx>=9.1",
   "sphinx-autodoc-typehints>=2.4",
@@ -312,6 +312,7 @@ dependency-groups.docs = { requires-python = ">= 3.12" }
 # Relative dates are fine here because the Renovate lock-maintenance job
 # (sync-uv-lock) reverts uv.lock when the only diff is timestamp noise.
 exclude-newer = "1 week"
+exclude-newer-package.repomatic = "0 day"
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 
