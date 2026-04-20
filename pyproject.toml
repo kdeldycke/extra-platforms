@@ -308,7 +308,7 @@ typing = [
 dependency-groups.docs = { requires-python = ">= 3.12" }
 # Cooldown period.
 exclude-newer = "2026-02-09T00:00:00Z"
-exclude-newer-package = { "pygments" = "0 day", "requests" = "0 day" }
+exclude-newer-package = { pygments = "0 day", pytest = "0 day", requests = "0 day" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 
