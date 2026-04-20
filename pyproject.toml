@@ -285,6 +285,8 @@ test = [
 docs = [
   # We need Click Extra 7.5 to render Markdown table properly.
   "click-extra[sphinx]>=7.5",
+  # Provides the repomatic.myst_docstrings Sphinx extension.
+  "repomatic @ git+https://github.com/kdeldycke/repomatic.git@main",
   "furo>=2025.9.25",
   "myst-parser>=5",
   # Required so autodoc can import extra_platforms.pytest and document decorators.
@@ -308,7 +310,7 @@ typing = [
 dependency-groups.docs = { requires-python = ">= 3.12" }
 # Cooldown period.
 exclude-newer = "2026-02-09T00:00:00Z"
-exclude-newer-package = { "pygments" = "0 day", "requests" = "0 day" }
+exclude-newer-package = { "click-extra" = "0 day", "pygments" = "0 day", "requests" = "0 day" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 
