@@ -7,6 +7,7 @@
 
 - Add NixOS platform detection.
 - Convert Python docstrings to MyST markdown; render them with the `repomatic.myst_docstrings` Sphinx extension.
+- Expand CI test matrix to cover Ubuntu 22.04, Ubuntu 22.04 ARM, macOS 14, macOS 15, and Windows 2022.
 
 ## [`11.0.5` (2026-04-03)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.4...v11.0.5)
 
