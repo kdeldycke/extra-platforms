@@ -521,10 +521,9 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
 def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
     """Parametrized check: the MyST directive in column 1 renders to a link in column 2.
 
-    - `myst` is the literal MyST role example as shown in the first column of the
-      Reference matrix (e.g. "{data}`~UBUNTU`").
-    - `expected_link` is the expected href target used in the rendered
-      second column (e.g. "platforms.html#extra_platforms.UBUNTU").
+    `myst` is the literal MyST role example as shown in the first column of the
+    Reference matrix. `expected_link` is the expected href target used in the
+    rendered second column.
     """
     html = read_html(built_docs, "sphinx.html")
     first_html, rendering_html = _extract_reference_table_rows(html, myst)

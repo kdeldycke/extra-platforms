@@ -93,6 +93,14 @@ suppress_warnings = [
     # `resolve_any_xref` method"
     # Explanation: Upstream limitation in the click-extra Sphinx extension.
     "myst.domains",
+    # Example: "Strikethrough is currently only supported in HTML output"
+    # Explanation: CLAUDE.md uses ~~text~~ for incorrect spellings. We only
+    # build HTML, so the rendering is fine.
+    "myst.strikethrough",
+    # Example: "Document headings start at H2, not H1"
+    # Explanation: readme.md starts at H2 because GitHub supplies the H1 from
+    # the repository name. The heading structure is intentional.
+    "myst.header",
 ]
 
 linkcheck_ignore = [
