@@ -138,6 +138,31 @@ Always update documentation when making changes:
 - **`changelog.md`**: Add a bullet point describing **what** changed (new features, bug fixes, behavior changes), not **why**. Keep entries concise and actionable. Justifications and rationale belong in documentation or code comments, not in the changelog.
 - **`readme.md`**: Update relevant sections when adding/modifying public API, classes, or functions.
 
+## File naming conventions
+
+### Extensions: prefer long form
+
+Use the longest, most explicit file extension available. For YAML, that means `.yaml` (not `.yml`). Apply the same principle to all extensions (e.g., `.html` not `.htm`, `.jpeg` not `.jpg`).
+
+### Filenames: lowercase
+
+Use lowercase filenames everywhere. Avoid shouting-case names like `FUNDING.YML` or `README.MD`.
+
+### GitHub exceptions
+
+GitHub silently ignores certain files unless they use the exact name it expects. These are the known hard constraints where you **cannot** use `.yaml` or lowercase:
+
+| File                     | Required name                       | Why                                               |
+| ------------------------ | ----------------------------------- | ------------------------------------------------- |
+| Issue form templates     | `.github/ISSUE_TEMPLATE/*.yml`      | `.yaml` is not recognized for issue forms         |
+| Issue template config    | `.github/ISSUE_TEMPLATE/config.yml` | `.yaml` not recognized                            |
+| Funding config           | `.github/funding.yml`               | Only `.yml` documented; no evidence `.yaml` works |
+| Release notes config     | `.github/release.yml`               | Only `.yml` documented                            |
+| Issue template directory | `.github/ISSUE_TEMPLATE/`           | Must be uppercase; GitHub ignores lowercase       |
+| Code owners              | `CODEOWNERS`                        | Must be uppercase; no extension                   |
+
+Workflows (`.github/workflows/*.yaml`) and action metadata (`action.yaml`) officially support both `.yml` and `.yaml` — use `.yaml`.
+
 ## Code style
 
 ### Terminology and spelling
@@ -186,8 +211,9 @@ The version string is always bare (e.g., `1.2.3`). The `v` prefix is a **tag nam
 - All comments in Python files must end with a period.
 - Docstrings use reStructuredText format (vanilla style, not Google/NumPy).
 - Documentation in `./docs/` uses MyST markdown format where possible. Fallback to reStructuredText if necessary.
-- Keep lines within 88 characters in Python files, including docstrings and comments (ruff default). Markdown files have no line-length limit.
+- Keep lines within 88 characters in Python files, including docstrings and comments (ruff default). Markdown files have no line-length limit — do not hard-wrap prose in markdown. Each sentence or logical clause should flow as a single long line; let the renderer handle wrapping.
 - Titles in markdown use sentence case.
+- **Dataclass field docs:** In dataclasses, document fields with attribute docstrings (a string literal immediately after the field declaration), not `:param:` entries in the class docstring. Attribute docstrings are co-located with the field they describe, recognized by Sphinx, and stay in sync when fields are added or reordered.
 
 ### Documenting code decisions
 
@@ -267,6 +293,11 @@ When invoking `uv` and `uvx` commands in GitHub Actions workflows:
 - **Flag placement:** `uv --no-progress run --frozen -- command` (not `uv run --no-progress`).
 - **Exceptions:** Omit `--frozen` for `uvx` with pinned versions, `uv tool install`, CLI invocability tests, and local development examples.
 - **Prefer explicit flags over environment variables** (`UV_NO_PROGRESS`, `UV_FROZEN`). Flags are self-documenting, visible in logs, avoid conflicts (e.g., `UV_FROZEN` vs `--locked`), and align with the long-form option principle.
+- **Per-group `requires-python` in `[tool.uv]`:** Downstream repos whose docs or other dependency groups require newer Python features can restrict specific groups with `dependency-groups.docs = { requires-python = ">= 3.14" }`. This prevents uv from installing incompatible dependencies when running on older Python versions.
+
+### Example data
+
+Example data everywhere (documentation, docstrings, comments, workflows, test fixtures) must be domain-neutral: cities, weather, fruits, animals, recipes, or similar real-world subjects. Do not reference the project itself, software engineering concepts, package metadata, or any project-internal details. The reader should understand the example without knowing what the project is.
 
 ### Imports
 
@@ -282,6 +313,9 @@ When invoking `uv` and `uvx` commands in GitHub Actions workflows:
 - Enforce naming conventions for traits and groups via tests.
 - Test coverage is tracked with `pytest-cov` and reported to Codecov.
 - Do not use classes for grouping tests. Write test functions as top-level module functions. Only use test classes when they provide shared fixtures, setup/teardown methods, or class-level state.
+- **`@pytest.mark.once` for run-once tests.** Define a custom `once` marker (in `[tool.pytest].markers`) to tag tests that only need to run once, not across the full CI matrix. Typical candidates: CLI entry point invocability, plugin registration, package metadata checks. The main test matrix filters them out with `pytest -m "not once"`, while a dedicated job runs them on a single runner.
+- **CI-only pytest flags belong in workflow steps, not `[tool.pytest].addopts`.** Flags like `--cov-report=xml`, `--junitxml=junit.xml`, and `--override-ini=junit_family=legacy` produce artifacts only needed in CI. Placing them in `addopts` pollutes local test runs. Keep `addopts` for flags that apply everywhere (`--cov`, `--cov-report=term`, `--durations`, `--numprocesses`). Pass CI-specific flags in the workflow `run:` step.
+- **Coverage configuration belongs in `[tool.coverage]`.** Use the `[tool.coverage]` section in `pyproject.toml` for `run.branch`, `run.source`, and `report.precision` instead of flags in `addopts`. The pytest `addopts` should only contain `--cov` (to activate the plugin) and `--cov-report=term` (for local feedback).
 
 ## Design principles
 
@@ -329,12 +363,16 @@ Keep definitions sorted for readability and to minimize merge conflicts:
 
 - **Trait category ordering**: When trait categories appear together (in code sections, imports, collections, documentation, tests, etc.), they must follow this canonical order: **Architecture → Platform → Shell → Terminal → CI → Agent**. This applies to class definitions, detection function sections, group collections, `__all__` exports, documentation pages, and test files.
 - **Workflow jobs**: Ordered by execution dependency (upstream jobs first), then alphabetically within the same dependency level.
-- **Python module-level constants and variables**: Alphabetically, unless there is a logical grouping or dependency order.
+- **Python module-level constants and variables**: Alphabetically, unless there is a logical grouping or dependency order. Hard-coded domain constants should be placed at the top of the file, immediately after imports: these constants encode domain assertions and business rules, and surfacing them early gives readers an immediate sense of the assumptions the module operates under.
 - **YAML configuration keys**: Alphabetically within each mapping level.
 - **Documentation lists and tables**: Alphabetically, unless a logical order (e.g., chronological in changelog) takes precedence.
 - All IDs must be unique across traits and groups.
 - High-level objects in data files must be sorted alphabetically by ID.
 - Tests should verify this ordering.
+
+### Named constants
+
+Do not inline named constants during refactors. If a constant has a name and a docstring, it exists for readability and grep-ability — preserve both. When moving code between modules, carry the constant with it rather than replacing it with a literal.
 
 ### Caching
 
@@ -344,9 +382,11 @@ Keep definitions sorted for readability and to minimize merge conflicts:
 ### Common maintenance pitfalls
 
 - **Documentation drift** is the most frequent issue. CLI output, version references, and workflow job descriptions in `readme.md` go stale after every release or refactor. Always verify docs against actual output after changes.
-- **CI debugging starts from the URL.** When a workflow fails, fetch the run logs first (`gh run view --log-failed`). Do not guess at the cause.
+- **CI debugging starts from the URL.** When a workflow fails, fetch the run logs first (`gh run view --log-failed`). Do not guess at the cause. When the user points to a specific failure, diagnose that exact error: do not wander into adjacent or speculative issues.
 - **Type-checking divergence.** Code that passes `mypy` locally may fail in CI where `--python-version 3.10` is used. Always consider the minimum supported Python version.
+- **Trace to root cause before coding a fix.** When a bug surfaces, audit its scope across the codebase before writing the patch. If the same pattern appears in multiple places, the fix belongs at the shared layer. If only one call site is affected, check whether the data is on the wrong code path before adding logic to handle it where it lands.
 - **Simplify before adding.** When asked to improve something, first ask whether existing code or tools already cover the case. Remove dead code and unused abstractions before introducing new ones.
+- **Angle-bracket placeholders in bash code blocks.** The `mdformat-shfmt` plugin runs `shfmt` on fenced ```` ```bash ``` ```` blocks. `shfmt` parses `<foo>` as shell input redirection and `>` as output redirection. Use curly braces (`{foo}`) for placeholders in bash examples to avoid mangling.
 
 ### Optional dependencies
 
