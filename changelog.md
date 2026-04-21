@@ -1,9 +1,6 @@
 # Changelog
 
-## [`11.1.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`11.1.0` (2026-04-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...v11.1.0)
 
 - Add NixOS platform detection.
 - Convert Python docstrings to MyST markdown; render them with the `repomatic.myst_docstrings` Sphinx extension.
