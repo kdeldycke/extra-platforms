@@ -193,9 +193,7 @@ class Group(_Identifiable):
         lines.append(
             f"- **Canonical**: ``{self.canonical}`` {'⬥' if self.canonical else ''}"
         )
-        lines.append(
-            f"- **Detection function**: {{func}}`~{self.detection_func_id}`"
-        )
+        lines.append(f"- **Detection function**: {{func}}`~{self.detection_func_id}`")
         lines.append(
             f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
             f"{{deco}}`~pytest.{self.unless_decorator_id}`"

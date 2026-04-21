@@ -358,7 +358,11 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "pytest.html#extra_platforms.pytest.unless_kitty",
         ),
         # Agents
-        ("{data}`~CLAUDE_CODE`", "CLAUDE_CODE", "agents.html#extra_platforms.CLAUDE_CODE"),
+        (
+            "{data}`~CLAUDE_CODE`",
+            "CLAUDE_CODE",
+            "agents.html#extra_platforms.CLAUDE_CODE",
+        ),
         (
             "{func}`~is_claude_code`",
             "is_claude_code()",
@@ -893,7 +897,9 @@ def test_get_expected_page_for_symbol_handles_public_api(symbol_name):
         # Order matters: check classes first, then instances, then functions
         if inspect.isclass(obj):
             role = "class"
-        elif isinstance(obj, (Trait, Architecture, Platform, Shell, Terminal, CI, Agent, Group)):
+        elif isinstance(
+            obj, (Trait, Architecture, Platform, Shell, Terminal, CI, Agent, Group)
+        ):
             # Trait and Group instances
             role = "data"
         elif inspect.isfunction(obj) or (
