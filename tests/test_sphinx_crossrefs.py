@@ -34,10 +34,12 @@ from extra_platforms import (
     ALL_GROUPS,
     ALL_TRAITS,
     CI,
+    Agent,
     Architecture,
     Group,
     Platform,
     Shell,
+    Terminal,
     Trait,
 )
 from extra_platforms.pytest import unless_linux
@@ -216,6 +218,14 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
         ("ci.html", "GITHUB_CI", "#extra_platforms.GITHUB_CI"),
         ("ci.html", "GITLAB_CI", "#extra_platforms.GITLAB_CI"),
         ("ci.html", "TRAVIS_CI", "#extra_platforms.TRAVIS_CI"),
+        # Terminal symbols.
+        ("terminals.html", "KITTY", "#extra_platforms.KITTY"),
+        ("terminals.html", "ALACRITTY", "#extra_platforms.ALACRITTY"),
+        ("terminals.html", "TMUX", "#extra_platforms.TMUX"),
+        # Agent symbols.
+        ("agents.html", "CLAUDE_CODE", "#extra_platforms.CLAUDE_CODE"),
+        ("agents.html", "CLINE", "#extra_platforms.CLINE"),
+        ("agents.html", "CURSOR", "#extra_platforms.CURSOR"),
         # Cross-page references.
         ("platforms.html", "LINUX", "groups.html#extra_platforms.LINUX"),
         (
@@ -330,6 +340,40 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "unless_github_ci",
             "pytest.html#extra_platforms.pytest.unless_github_ci",
         ),
+        # Terminals
+        ("{data}`~KITTY`", "KITTY", "terminals.html#extra_platforms.KITTY"),
+        (
+            "{func}`~is_kitty`",
+            "is_kitty()",
+            "detection.html#extra_platforms.is_kitty",
+        ),
+        (
+            "{data}`~pytest.skip_kitty`",
+            "skip_kitty",
+            "pytest.html#extra_platforms.pytest.skip_kitty",
+        ),
+        (
+            "{data}`~pytest.unless_kitty`",
+            "unless_kitty",
+            "pytest.html#extra_platforms.pytest.unless_kitty",
+        ),
+        # Agents
+        ("{data}`~CLAUDE_CODE`", "CLAUDE_CODE", "agents.html#extra_platforms.CLAUDE_CODE"),
+        (
+            "{func}`~is_claude_code`",
+            "is_claude_code()",
+            "detection.html#extra_platforms.is_claude_code",
+        ),
+        (
+            "{data}`~pytest.skip_claude_code`",
+            "skip_claude_code",
+            "pytest.html#extra_platforms.pytest.skip_claude_code",
+        ),
+        (
+            "{data}`~pytest.unless_claude_code`",
+            "unless_claude_code",
+            "pytest.html#extra_platforms.pytest.unless_claude_code",
+        ),
         # Groups
         ("{data}`~LINUX`", "LINUX", "groups.html#extra_platforms.LINUX"),
         ("{func}`~is_linux`", "is_linux()", "detection.html#extra_platforms.is_linux"),
@@ -404,6 +448,46 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "pytest.html#extra_platforms.pytest.unless_any_shell",
         ),
         (
+            "{data}`~ALL_TERMINALS`",
+            "ALL_TERMINALS",
+            "groups.html#extra_platforms.ALL_TERMINALS",
+        ),
+        (
+            "{func}`~is_any_terminal`",
+            "is_any_terminal()",
+            "detection.html#extra_platforms.is_any_terminal",
+        ),
+        (
+            "{data}`~pytest.skip_all_terminals`",
+            "skip_all_terminals",
+            "pytest.html#extra_platforms.pytest.skip_all_terminals",
+        ),
+        (
+            "{data}`~pytest.unless_any_terminal`",
+            "unless_any_terminal",
+            "pytest.html#extra_platforms.pytest.unless_any_terminal",
+        ),
+        (
+            "{data}`~ALL_AGENTS`",
+            "ALL_AGENTS",
+            "groups.html#extra_platforms.ALL_AGENTS",
+        ),
+        (
+            "{func}`~is_any_agent`",
+            "is_any_agent()",
+            "detection.html#extra_platforms.is_any_agent",
+        ),
+        (
+            "{data}`~pytest.skip_all_agents`",
+            "skip_all_agents",
+            "pytest.html#extra_platforms.pytest.skip_all_agents",
+        ),
+        (
+            "{data}`~pytest.unless_any_agent`",
+            "unless_any_agent",
+            "pytest.html#extra_platforms.pytest.unless_any_agent",
+        ),
+        (
             "{data}`~UNKNOWN_SHELL`",
             "UNKNOWN_SHELL",
             "shells.html#extra_platforms.UNKNOWN_SHELL",
@@ -459,6 +543,46 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "unless_unknown_ci",
             "pytest.html#extra_platforms.pytest.unless_unknown_ci",
         ),
+        (
+            "{data}`~UNKNOWN_TERMINAL`",
+            "UNKNOWN_TERMINAL",
+            "terminals.html#extra_platforms.UNKNOWN_TERMINAL",
+        ),
+        (
+            "{func}`~is_unknown_terminal`",
+            "is_unknown_terminal()",
+            "detection.html#extra_platforms.is_unknown_terminal",
+        ),
+        (
+            "{data}`~pytest.skip_unknown_terminal`",
+            "skip_unknown_terminal",
+            "pytest.html#extra_platforms.pytest.skip_unknown_terminal",
+        ),
+        (
+            "{data}`~pytest.unless_unknown_terminal`",
+            "unless_unknown_terminal",
+            "pytest.html#extra_platforms.pytest.unless_unknown_terminal",
+        ),
+        (
+            "{data}`~UNKNOWN_AGENT`",
+            "UNKNOWN_AGENT",
+            "agents.html#extra_platforms.UNKNOWN_AGENT",
+        ),
+        (
+            "{func}`~is_unknown_agent`",
+            "is_unknown_agent()",
+            "detection.html#extra_platforms.is_unknown_agent",
+        ),
+        (
+            "{data}`~pytest.skip_unknown_agent`",
+            "skip_unknown_agent",
+            "pytest.html#extra_platforms.pytest.skip_unknown_agent",
+        ),
+        (
+            "{data}`~pytest.unless_unknown_agent`",
+            "unless_unknown_agent",
+            "pytest.html#extra_platforms.pytest.unless_unknown_agent",
+        ),
         # UNIX_WITHOUT_MACOS / translation example
         (
             "{data}`~UNIX_WITHOUT_MACOS`",
@@ -492,6 +616,16 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "detection.html#extra_platforms.current_ci",
         ),
         (
+            "{func}`~current_terminal`",
+            "current_terminal()",
+            "detection.html#extra_platforms.current_terminal",
+        ),
+        (
+            "{func}`~current_agent`",
+            "current_agent()",
+            "detection.html#extra_platforms.current_agent",
+        ),
+        (
             "{func}`~current_traits`",
             "current_traits()",
             "detection.html#extra_platforms.current_traits",
@@ -504,10 +638,28 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
             "trait.html#extra_platforms.Architecture",
         ),
         ("{class}`~Shell`", "Shell", "trait.html#extra_platforms.Shell"),
+        ("{class}`~Terminal`", "Terminal", "trait.html#extra_platforms.Terminal"),
         ("{class}`~CI`", "CI", "trait.html#extra_platforms.CI"),
+        ("{class}`~Agent`", "Agent", "trait.html#extra_platforms.Agent"),
+        ("{class}`~Trait`", "Trait", "trait.html#extra_platforms.Trait"),
         ("{class}`~Group`", "Group", "groups.html#extra_platforms.Group"),
         # Utilities
         ("{func}`~reduce`", "reduce()", "groups.html#extra_platforms.reduce"),
+        (
+            "{func}`~extract_members`",
+            "extract_members()",
+            "groups.html#extra_platforms.extract_members",
+        ),
+        (
+            "{func}`~traits_from_ids`",
+            "traits_from_ids()",
+            "groups.html#extra_platforms.traits_from_ids",
+        ),
+        (
+            "{func}`~groups_from_ids`",
+            "groups_from_ids()",
+            "groups.html#extra_platforms.groups_from_ids",
+        ),
         (
             "{func}`~invalidate_caches`",
             "invalidate_caches()",
@@ -741,7 +893,7 @@ def test_get_expected_page_for_symbol_handles_public_api(symbol_name):
         # Order matters: check classes first, then instances, then functions
         if inspect.isclass(obj):
             role = "class"
-        elif isinstance(obj, (Trait, Architecture, Platform, Shell, CI, Group)):
+        elif isinstance(obj, (Trait, Architecture, Platform, Shell, Terminal, CI, Agent, Group)):
             # Trait and Group instances
             role = "data"
         elif inspect.isfunction(obj) or (
@@ -1005,6 +1157,7 @@ def test_frozenset_docstrings_are_custom(
 #: Specialized documentation pages that should never leak links to the generic
 #: auto-generated ``extra_platforms.html`` page.
 SPECIALIZED_PAGES = (
+    "agents.html",
     "architectures.html",
     "ci.html",
     "detection.html",
@@ -1013,6 +1166,7 @@ SPECIALIZED_PAGES = (
     "pytest.html",
     "shells.html",
     "sphinx.html",
+    "terminals.html",
     "trait.html",
 )
 

@@ -136,6 +136,14 @@ This section demonstrates all syntax variations for referencing different object
 | `` {func}`~is_github_ci` ``                       | {func}`~is_github_ci`                       | CI trait detection function                                |
 | `` {data}`~pytest.skip_github_ci` ``              | {data}`~pytest.skip_github_ci`              | CI trait skip decorator                                    |
 | `` {data}`~pytest.unless_github_ci` ``            | {data}`~pytest.unless_github_ci`            | CI trait unless decorator                                  |
+| `` {data}`~KITTY` ``                              | {data}`~KITTY`                              | Terminal trait symbol                                      |
+| `` {func}`~is_kitty` ``                           | {func}`~is_kitty`                           | Terminal trait detection function                           |
+| `` {data}`~pytest.skip_kitty` ``                  | {data}`~pytest.skip_kitty`                  | Terminal trait skip decorator                               |
+| `` {data}`~pytest.unless_kitty` ``                | {data}`~pytest.unless_kitty`                | Terminal trait unless decorator                             |
+| `` {data}`~CLAUDE_CODE` ``                        | {data}`~CLAUDE_CODE`                        | Agent trait symbol                                         |
+| `` {func}`~is_claude_code` ``                     | {func}`~is_claude_code`                     | Agent trait detection function                              |
+| `` {data}`~pytest.skip_claude_code` ``            | {data}`~pytest.skip_claude_code`            | Agent trait skip decorator                                  |
+| `` {data}`~pytest.unless_claude_code` ``          | {data}`~pytest.unless_claude_code`          | Agent trait unless decorator                                |
 |                                                   |                                             | **Groups**                                                 |
 | `` {data}`~LINUX` ``                              | {data}`~LINUX`                              | Regular group symbol                                       |
 | `` {func}`~is_linux` ``                           | {func}`~is_linux`                           | Regular group detection function                           |
@@ -149,6 +157,14 @@ This section demonstrates all syntax variations for referencing different object
 | `` {func}`~is_any_shell` ``                       | {func}`~is_any_shell`                       | `ALL_*` shell group detection function                     |
 | `` {data}`~pytest.skip_all_shells` ``             | {data}`~pytest.skip_all_shells`             | `ALL_*` shell group skip decorator                         |
 | `` {data}`~pytest.unless_any_shell` ``            | {data}`~pytest.unless_any_shell`            | `ALL_*` shell group unless decorator                       |
+| `` {data}`~ALL_TERMINALS` ``                      | {data}`~ALL_TERMINALS`                      | `ALL_*` terminal group symbol                              |
+| `` {func}`~is_any_terminal` ``                    | {func}`~is_any_terminal`                    | `ALL_*` terminal group detection function                  |
+| `` {data}`~pytest.skip_all_terminals` ``          | {data}`~pytest.skip_all_terminals`          | `ALL_*` terminal group skip decorator                      |
+| `` {data}`~pytest.unless_any_terminal` ``         | {data}`~pytest.unless_any_terminal`         | `ALL_*` terminal group unless decorator                    |
+| `` {data}`~ALL_AGENTS` ``                         | {data}`~ALL_AGENTS`                         | `ALL_*` agent group symbol                                 |
+| `` {func}`~is_any_agent` ``                       | {func}`~is_any_agent`                       | `ALL_*` agent group detection function                     |
+| `` {data}`~pytest.skip_all_agents` ``             | {data}`~pytest.skip_all_agents`             | `ALL_*` agent group skip decorator                         |
+| `` {data}`~pytest.unless_any_agent` ``            | {data}`~pytest.unless_any_agent`            | `ALL_*` agent group unless decorator                       |
 | `` {data}`~UNKNOWN_PLATFORM` ``                   | {data}`~UNKNOWN_PLATFORM`                   | Unknown platform symbol                                    |
 | `` {func}`~is_unknown_platform` ``                | {func}`~is_unknown_platform`                | Unknown platform detection function                        |
 | `` {data}`~pytest.skip_unknown_platform` ``       | {data}`~pytest.skip_unknown_platform`       | Unknown platform skip decorator                            |
@@ -165,6 +181,14 @@ This section demonstrates all syntax variations for referencing different object
 | `` {func}`~is_unknown_ci` ``                      | {func}`~is_unknown_ci`                      | Unknown CI detection function                              |
 | `` {data}`~pytest.skip_unknown_ci` ``             | {data}`~pytest.skip_unknown_ci`             | Unknown CI skip decorator                                  |
 | `` {data}`~pytest.unless_unknown_ci` ``           | {data}`~pytest.unless_unknown_ci`           | Unknown CI unless decorator                                |
+| `` {data}`~UNKNOWN_TERMINAL` ``                   | {data}`~UNKNOWN_TERMINAL`                   | Unknown terminal symbol                                    |
+| `` {func}`~is_unknown_terminal` ``                | {func}`~is_unknown_terminal`                | Unknown terminal detection function                        |
+| `` {data}`~pytest.skip_unknown_terminal` ``       | {data}`~pytest.skip_unknown_terminal`       | Unknown terminal skip decorator                            |
+| `` {data}`~pytest.unless_unknown_terminal` ``     | {data}`~pytest.unless_unknown_terminal`     | Unknown terminal unless decorator                          |
+| `` {data}`~UNKNOWN_AGENT` ``                      | {data}`~UNKNOWN_AGENT`                      | Unknown agent symbol                                       |
+| `` {func}`~is_unknown_agent` ``                   | {func}`~is_unknown_agent`                   | Unknown agent detection function                           |
+| `` {data}`~pytest.skip_unknown_agent` ``          | {data}`~pytest.skip_unknown_agent`          | Unknown agent skip decorator                               |
+| `` {data}`~pytest.unless_unknown_agent` ``        | {data}`~pytest.unless_unknown_agent`        | Unknown agent unless decorator                             |
 | `` {data}`~UNIX_WITHOUT_MACOS` ``                 | {data}`~UNIX_WITHOUT_MACOS`                 | Group with `_without_` (translated to `_not_` in function) |
 | `` {func}`~is_unix_not_macos` ``                  | {func}`~is_unix_not_macos`                  | Group function with `_without_` → `_not_` translation      |
 |                                                   |                                             | **Detection Methods**                                      |
@@ -172,17 +196,91 @@ This section demonstrates all syntax variations for referencing different object
 | `` {func}`~current_architecture` ``               | {func}`~current_architecture`               | Current architecture detection function                    |
 | `` {func}`~current_shell` ``                      | {func}`~current_shell`                      | Current shell detection function                           |
 | `` {func}`~current_ci` ``                         | {func}`~current_ci`                         | Current CI detection function                              |
+| `` {func}`~current_terminal` ``                   | {func}`~current_terminal`                   | Current terminal detection function                        |
+| `` {func}`~current_agent` ``                      | {func}`~current_agent`                      | Current agent detection function                           |
 | `` {func}`~current_traits` ``                     | {func}`~current_traits`                     | All current traits detection function                      |
 |                                                   |                                             | **Classes**                                                |
 | `` {class}`~Platform` ``                          | {class}`~Platform`                          | Platform trait class                                       |
 | `` {class}`~Architecture` ``                      | {class}`~Architecture`                      | Architecture trait class                                   |
 | `` {class}`~Shell` ``                             | {class}`~Shell`                             | Shell trait class                                          |
+| `` {class}`~Terminal` ``                          | {class}`~Terminal`                          | Terminal trait class                                       |
 | `` {class}`~CI` ``                                | {class}`~CI`                                | CI trait class                                             |
+| `` {class}`~Agent` ``                             | {class}`~Agent`                             | Agent trait class                                          |
+| `` {class}`~Trait` ``                             | {class}`~Trait`                             | Base trait class                                           |
 | `` {class}`~Group` ``                             | {class}`~Group`                             | Group class                                                |
 |                                                   |                                             | **Utilities**                                              |
 | `` {func}`~reduce` ``                             | {func}`~reduce`                             | Reduce utility function                                    |
+| `` {func}`~extract_members` ``                    | {func}`~extract_members`                    | Extract group members utility function                     |
+| `` {func}`~traits_from_ids` ``                    | {func}`~traits_from_ids`                    | Traits from IDs utility function                           |
+| `` {func}`~groups_from_ids` ``                    | {func}`~groups_from_ids`                    | Groups from IDs utility function                           |
 | `` {func}`~invalidate_caches` ``                  | {func}`~invalidate_caches`                  | Cache invalidation utility function                        |
 
 ```{tip}
 All the examples in this reference matrix are tested in [`tests/test_sphinx_crossrefs.py`](https://github.com/kdeldycke/extra-platforms/blob/main/tests/test_sphinx_crossrefs.py) to ensure cross-references resolve correctly in the built documentation.
+```
+
+## Third-party cross-references
+
+Other projects can link to `extra_platforms` symbols in their own Sphinx documentation via [intersphinx](https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html).
+
+### Setup
+
+Add `extra_platforms` to the `intersphinx_mapping` in your project's `conf.py`:
+
+```python
+extensions = [
+    "sphinx.ext.intersphinx",
+    # ...
+]
+
+intersphinx_mapping = {
+    "extra_platforms": ("https://kdeldycke.github.io/extra-platforms/", None),
+}
+```
+
+### Syntax
+
+Cross-references use the `inventory:target` format. The inventory name is `extra_platforms` (matching the key in `intersphinx_mapping`), and the target is the fully-qualified Python symbol:
+
+`````{tab-set}
+
+````{tab-item} MyST Markdown
+:sync: myst
+```markdown
+Skip this test on Linux with {data}`extra_platforms:extra_platforms.pytest.skip_linux`.
+
+Detect macOS at runtime with {func}`extra_platforms:extra_platforms.is_macos`.
+
+The {class}`extra_platforms:extra_platforms.Group` class supports set operations.
+
+Use {data}`extra_platforms:extra_platforms.UBUNTU` for the Ubuntu platform constant.
+```
+````
+
+````{tab-item} reStructuredText
+:sync: rst
+```rst
+Skip this test on Linux with :data:`extra_platforms:extra_platforms.pytest.skip_linux`.
+
+Detect macOS at runtime with :func:`extra_platforms:extra_platforms.is_macos`.
+
+The :class:`extra_platforms:extra_platforms.Group` class supports set operations.
+
+Use :data:`extra_platforms:extra_platforms.UBUNTU` for the Ubuntu platform constant.
+```
+````
+
+`````
+
+The tilde (`~`) prefix works the same way with the inventory qualifier:
+
+- `` {func}`~extra_platforms:extra_platforms.is_linux` `` renders as `is_linux()`
+- `` {func}`extra_platforms:extra_platforms.is_linux` `` renders as `extra_platforms.is_linux()`
+
+### Inspecting the inventory
+
+To list all available symbols in the published inventory:
+
+```shell-session
+$ python -m sphinx.ext.intersphinx https://kdeldycke.github.io/extra-platforms/objects.inv
 ```
