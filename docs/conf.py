@@ -180,6 +180,9 @@ html_theme_options = {
     ),
 }
 
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
+
 # Footer content.
 html_last_updated_fmt = "%Y-%m-%d"
 copyright = f"{author} and contributors"
