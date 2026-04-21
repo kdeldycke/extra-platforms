@@ -245,9 +245,7 @@ def test_rendered_links_point_to_correct_targets(
     )
 
 
-def _extract_reference_table_rows(
-    html: str, myst: str
-) -> tuple[str, str, str]:
+def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str, str]:
     """Return the (myst_html, rst_html, rendering_html) tuple for `myst`.
 
     Search the Reference matrix table and return the first row whose first
@@ -681,9 +679,7 @@ def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
     rendered Rendering column.
     """
     html = read_html(built_docs, "sphinx.html")
-    first_html, rst_html, rendering_html = _extract_reference_table_rows(
-        html, myst
-    )
+    first_html, rst_html, rendering_html = _extract_reference_table_rows(html, myst)
 
     # Ensure the first-column MyST example is wrapped in <span class="pre">...
     m1 = re.search(r'<span class="pre">(.*?)</span>', first_html, re.DOTALL)
