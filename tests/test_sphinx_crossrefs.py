@@ -245,14 +245,16 @@ def test_rendered_links_point_to_correct_targets(
     )
 
 
-def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
-    """Return the (first_column_html, rendering_column_html) tuple for `myst`.
+def _extract_reference_table_rows(
+    html: str, myst: str
+) -> tuple[str, str, str]:
+    """Return the (myst_html, rst_html, rendering_html) tuple for `myst`.
 
     Search the Reference matrix table and return the first row whose first
     column (stripped of HTML) exactly matches the provided `myst` directive
-    string (e.g. "{data}`~UBUNTU`"). The returned values are the raw HTML
-    contents of the first and second <td> cells for that row. If not found,
-    fail the test.
+    string (e.g. ``"{data}`~UBUNTU`"``). The returned values are the raw HTML
+    contents of the MyST, reST, and Rendering ``<td>`` cells for that row. If
+    not found, fail the test.
     """
     idx = html.find("Reference matrix")
     assert idx != -1, "Reference matrix section not found in sphinx.html"
@@ -264,11 +266,11 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str]:
 
     for row in re.findall(r"<tr[^>]*>(.*?)</tr>", table_html, re.DOTALL):
         tds = re.findall(r"<td[^>]*>(.*?)</td>", row, re.DOTALL)
-        if len(tds) < 2:
+        if len(tds) < 3:
             continue
         first = re.sub(r"<[^>]+>", "", tds[0]).strip()
         if first == myst:
-            return tds[0], tds[1]
+            return tds[0], tds[1], tds[2]
 
     pytest.fail(f"Reference matrix first-column entry not found: {myst}")
 
@@ -672,10 +674,12 @@ def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
 
     `myst` is the literal MyST role example as shown in the first column of the
     Reference matrix. `expected_link` is the expected href target used in the
-    rendered second column.
+    rendered Rendering column.
     """
     html = read_html(built_docs, "sphinx.html")
-    first_html, rendering_html = _extract_reference_table_rows(html, myst)
+    first_html, rst_html, rendering_html = _extract_reference_table_rows(
+        html, myst
+    )
 
     # Ensure the first-column MyST example is wrapped in <span class="pre">...
     m1 = re.search(r'<span class="pre">(.*?)</span>', first_html, re.DOTALL)
@@ -688,6 +692,17 @@ def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
         f"Reference matrix first-column span content '{first_plain}' does not "
         f"match expected myst '{myst}'"
     )
+
+    # Verify the reST column contains the equivalent reST syntax.
+    # The transformation is mechanical: {role} -> :role:.
+    expected_rst = re.sub(r"\{(\w+)\}", r":\1:", myst)
+    rst_span = re.search(r'<span class="pre">(.*?)</span>', rst_html, re.DOTALL)
+    if rst_span:
+        rst_plain = re.sub(r"<[^>]+>", "", rst_span.group(1)).strip()
+        assert rst_plain == expected_rst, (
+            f"Reference matrix reST column for '{myst}' has '{rst_plain}', "
+            f"expected '{expected_rst}'"
+        )
 
     # Ensure the rendering column is wrapped in <span class="pre">...
     m2 = re.search(r'<span class="pre">(.*?)</span>', rendering_html, re.DOTALL)
