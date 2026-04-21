@@ -137,13 +137,13 @@ This section demonstrates all syntax variations for referencing different object
 | `` {data}`~pytest.skip_github_ci` ``              | {data}`~pytest.skip_github_ci`              | CI trait skip decorator                                    |
 | `` {data}`~pytest.unless_github_ci` ``            | {data}`~pytest.unless_github_ci`            | CI trait unless decorator                                  |
 | `` {data}`~KITTY` ``                              | {data}`~KITTY`                              | Terminal trait symbol                                      |
-| `` {func}`~is_kitty` ``                           | {func}`~is_kitty`                           | Terminal trait detection function                           |
-| `` {data}`~pytest.skip_kitty` ``                  | {data}`~pytest.skip_kitty`                  | Terminal trait skip decorator                               |
-| `` {data}`~pytest.unless_kitty` ``                | {data}`~pytest.unless_kitty`                | Terminal trait unless decorator                             |
+| `` {func}`~is_kitty` ``                           | {func}`~is_kitty`                           | Terminal trait detection function                          |
+| `` {data}`~pytest.skip_kitty` ``                  | {data}`~pytest.skip_kitty`                  | Terminal trait skip decorator                              |
+| `` {data}`~pytest.unless_kitty` ``                | {data}`~pytest.unless_kitty`                | Terminal trait unless decorator                            |
 | `` {data}`~CLAUDE_CODE` ``                        | {data}`~CLAUDE_CODE`                        | Agent trait symbol                                         |
-| `` {func}`~is_claude_code` ``                     | {func}`~is_claude_code`                     | Agent trait detection function                              |
-| `` {data}`~pytest.skip_claude_code` ``            | {data}`~pytest.skip_claude_code`            | Agent trait skip decorator                                  |
-| `` {data}`~pytest.unless_claude_code` ``          | {data}`~pytest.unless_claude_code`          | Agent trait unless decorator                                |
+| `` {func}`~is_claude_code` ``                     | {func}`~is_claude_code`                     | Agent trait detection function                             |
+| `` {data}`~pytest.skip_claude_code` ``            | {data}`~pytest.skip_claude_code`            | Agent trait skip decorator                                 |
+| `` {data}`~pytest.unless_claude_code` ``          | {data}`~pytest.unless_claude_code`          | Agent trait unless decorator                               |
 |                                                   |                                             | **Groups**                                                 |
 | `` {data}`~LINUX` ``                              | {data}`~LINUX`                              | Regular group symbol                                       |
 | `` {func}`~is_linux` ``                           | {func}`~is_linux`                           | Regular group detection function                           |
