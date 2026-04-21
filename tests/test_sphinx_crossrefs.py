@@ -1057,12 +1057,16 @@ def test_all_crossreferences_point_to_correct_pages(
 
     expected_page = get_expected_page_for_symbol(role, symbol)
 
+    # Strip domain qualifier if present (e.g. "extra_platforms:extra_platforms.pytest.skip_linux"
+    # becomes "extra_platforms.pytest.skip_linux").
+    symbol_bare = symbol.split(":", 1)[-1] if ":" in symbol else symbol
+
     symbol_clean = symbol.split(".")[-1]
-    if symbol.startswith(("pytest.", "extra_platforms.pytest.")):
-        if symbol.startswith("extra_platforms."):
-            expected_anchor = symbol
+    if symbol_bare.startswith(("pytest.", "extra_platforms.pytest.")):
+        if symbol_bare.startswith("extra_platforms."):
+            expected_anchor = symbol_bare
         else:
-            expected_anchor = f"extra_platforms.{symbol}"
+            expected_anchor = f"extra_platforms.{symbol_bare}"
     elif role == "meth" and "." in symbol:
         # Method references like Group.union have anchors like
         # extra_platforms.Group.union.
