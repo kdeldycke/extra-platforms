@@ -78,24 +78,22 @@ class _DeferredCondition:
 
 
 def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
-    """Generate a reStructuredText docstring for a pytest decorator.
+    """Generate a docstring for a pytest decorator.
 
     Creates a concise docstring with links to the associated trait/group and
     its detection function, using unambiguous language about the behavior.
 
-    Args:
-        obj: The trait or group to document.
-        is_skip: Whether this is a skip decorator (True) or unless decorator (False).
-
-    Returns:
-        A reStructuredText docstring.
+    :param obj: The trait or group to document.
+    :param is_skip: Whether this is a skip decorator (``True``) or unless
+        decorator (``False``).
+    :returns: A docstring string.
     """
-    # Create reference links using Sphinx roles with full paths.
+    # Create reference links using MyST roles with full paths.
     # Full paths are required because this module is extra_platforms.pytest, so
     # short references like {data}`~AARCH64` would be resolved relative to
     # extra_platforms.pytest, not extra_platforms.
-    symbol_link = f":data:`~extra_platforms.{obj.symbol_id}`"
-    detection_link = f":func:`~extra_platforms.{obj.detection_func_id}`"
+    symbol_link = f"{{data}}`~extra_platforms.{obj.symbol_id}`"
+    detection_link = f"{{func}}`~extra_platforms.{obj.detection_func_id}`"
 
     is_group = isinstance(obj, Group)
 

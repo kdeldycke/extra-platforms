@@ -33,11 +33,14 @@ extensions = [
     "sphinxext.opengraph",
     "myst_parser",
     "sphinx.ext.autosectionlabel",
-    "sphinx_autodoc_typehints",
     "click_extra.sphinx",
     "sphinxcontrib.mermaid",
-    # Converts MyST-flavored docstrings to reST for autodoc.
+    # Converts MyST-flavored docstrings to reST for autodoc. Must be listed
+    # before sphinx_autodoc_typehints so the MyST→reST pass runs first; otherwise
+    # the inline-code converter doubles the backticks inside domain-qualified roles
+    # (like :py:obj:`None`) that sphinx_autodoc_typehints injects.
     "repomatic.myst_docstrings",
+    "sphinx_autodoc_typehints",
 ]
 
 # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html

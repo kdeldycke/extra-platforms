@@ -196,17 +196,14 @@ way to detect beta versions at this time.
 def get_macos_codename(major: str | None = None, minor: str | None = None) -> str:
     """Get the macOS codename for a given version.
 
-    Args:
-        major: The major version number (e.g., "10", "11", "14").
-        minor: The minor version number (e.g., "0", "15"). For macOS 11+,
-            this can be None as codenames are tied to major versions only.
-
-    Returns:
-        The codename for the macOS version (e.g., "Sonoma", "Ventura").
-
-    Raises:
-        ValueError: If no codename matches the given version, or if multiple
-            codenames match (which shouldn't happen with valid data).
+    :param major: The major version number (like ``"10"``, ``"11"``, ``"14"``).
+    :param minor: The minor version number (like ``"0"``, ``"15"``). For
+        macOS 11+, this can be ``None`` as codenames are tied to major
+        versions only.
+    :returns: The codename for the macOS version (like ``"Sonoma"``,
+        ``"Ventura"``).
+    :raises ValueError: If no codename matches the given version, or if
+        multiple codenames match (which shouldn't happen with valid data).
     """
     matches = set()
     for (major_key, minor_key), codename in MACOS_CODENAMES.items():
@@ -233,11 +230,9 @@ def macos_info() -> dict[str, Any]:
     - `version_parts`: Dictionary with `major`, `minor`, `build_number`
     - `codename`: The macOS codename (e.g., "Sonoma")
 
-    Returns:
-        A dictionary containing macOS version details.
-
-    Raises:
-        ValueError: If the current macOS version cannot be mapped to a codename.
+    :returns: A dictionary containing macOS version details.
+    :raises ValueError: If the current macOS version cannot be mapped to a
+        codename.
     """
     release, _versioninfo, _machine = platform.mac_ver()
     parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
@@ -265,8 +260,7 @@ def windows_info() -> dict[str, Any]:
     - `version_parts`: Dictionary with `major`, `minor`, `build_number`
     - `codename`: A combination of version and edition (e.g., "10 Enterprise")
 
-    Returns:
-        A dictionary containing Windows version details.
+    :returns: A dictionary containing Windows version details.
 
     ```{todo}
     Get even more details for Windows version. See inspirations from:

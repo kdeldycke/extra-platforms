@@ -615,7 +615,7 @@ def is_netbsd() -> bool:
 
 @cache
 def is_nixos() -> bool:
-    """Return :data:`True` if current platform is :data:`~extra_platforms.NIXOS`."""
+    """Return `True` if current platform is {data}`~extra_platforms.NIXOS`."""
     return os_release_id() == "nixos"
 
 
@@ -813,13 +813,11 @@ def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
     `/proc/<pid>/stat` to find the parent PID. This identifies the *active*
     shell, not merely installed ones.
 
-    Args:
-        shell_ids: Shell executable name(s) to match. Can be a single string
-            (e.g., `"bash"`) or a tuple of strings (e.g., `("powershell", "pwsh")`).
-
-    Returns:
-        `True` if a matching shell is found in the parent process tree,
-        `False` otherwise or on non-Linux platforms where `/proc` is unavailable.
+    :param shell_ids: Shell executable name(s) to match. Can be a single string
+        (like ``"bash"``) or a tuple of strings (like ``("powershell", "pwsh")``).
+    :returns: ``True`` if a matching shell is found in the parent process tree,
+        ``False`` otherwise or on non-Linux platforms where ``/proc`` is
+        unavailable.
     """
     # Normalize shell_ids to a set for efficient lookup.
     id_set = (
@@ -873,14 +871,11 @@ def _detect_shell(
     3. Falls back to walking the parent process tree via `/proc` to find the
        active shell (for stripped environments without shell env vars).
 
-    Args:
-        version_env_var: Shell-specific environment variable name
-            (e.g., `"BASH_VERSION"`).
-        shell_ids: Shell executable name(s) to match. Can be a single string
-            (e.g., `"bash"`) or a tuple of strings (e.g., `("powershell", "pwsh")`).
-
-    Returns:
-        `True` if the shell is detected, `False` otherwise.
+    :param version_env_var: Shell-specific environment variable name
+        (like ``"BASH_VERSION"``).
+    :param shell_ids: Shell executable name(s) to match. Can be a single string
+        (like ``"bash"``) or a tuple of strings (like ``("powershell", "pwsh")``).
+    :returns: ``True`` if the shell is detected, ``False`` otherwise.
     """
     # Check shell-specific version environment variable.
     if version_env_var and version_env_var in environ:

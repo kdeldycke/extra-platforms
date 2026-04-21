@@ -262,15 +262,17 @@ class Trait(_Identifiable, ABC):
         lines.append(f"- **Name**: {self.name}")
         lines.append(f"- **Icon**: {self.icon}")
         lines.append(f"- **Reference**: <{self.url}>_")
-        lines.append(f"- **Detection function**: :func:`~{self.detection_func_id}`")
         lines.append(
-            f"- **Pytest decorators**: :deco:`~pytest.{self.skip_decorator_id}` / "
-            f":deco:`~pytest.{self.unless_decorator_id}`"
+            f"- **Detection function**: {{func}}`~{self.detection_func_id}`"
+        )
+        lines.append(
+            f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
+            f"{{deco}}`~pytest.{self.unless_decorator_id}`"
         )
 
         # Add list of groups this trait belongs to.
         group_links = [
-            f":data:`~{group.symbol_id}`" + (" ⬥" if group.canonical else "")
+            f"{{data}}`~{group.symbol_id}`" + (" ⬥" if group.canonical else "")
             for group in sorted(self.groups, key=lambda g: g.id)
         ]
         lines.append(f"- **Groups** ({len(group_links)}): {', '.join(group_links)}")
@@ -283,8 +285,7 @@ class Trait(_Identifiable, ABC):
 
         Uses dynamic import to avoid circular dependency with `group_data` module.
 
-        Returns:
-            A {class}`frozenset` of {class}`~extra_platforms.Group` objects
+        :returns: A {class}`frozenset` of {class}`~extra_platforms.Group` objects
             that contain this trait as a member.
         """
         # Avoid circular import by importing here.
@@ -524,11 +525,8 @@ def _resolve_alias(id_: str) -> str:
 
     Results are cached, so the warning is only emitted once per alias.
 
-    Args:
-        id_: The ID to resolve (already lowercased).
-
-    Returns:
-        The canonical ID if `id_` is an alias, otherwise `id_` unchanged.
+    :param id_: The ID to resolve (already lowercased).
+    :returns: The canonical ID if ``id_`` is an alias, otherwise ``id_`` unchanged.
     """
     # Avoid circular import.
     from .group_data import ALL_TRAITS

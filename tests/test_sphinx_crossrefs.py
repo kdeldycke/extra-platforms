@@ -104,14 +104,11 @@ def find_links_with_text(html: str, link_text: str) -> list[str]:
 def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> bool:
     """Check if the HTML contains a link with the given text pointing to the expected href.
 
-    Args:
-        html: The HTML content to search.
-        text: The link text to find (e.g., "AARCH64", "is_linux()").
-        expected_href_fragment: A fragment that should be in the href (e.g.,
-            "architectures.html#extra_platforms.AARCH64").
-
-    Returns:
-        True if a matching link is found.
+    :param html: The HTML content to search.
+    :param text: The link text to find (like ``"AARCH64"``, ``"is_linux()"``).
+    :param expected_href_fragment: A fragment that should be in the href
+        (like ``"architectures.html#extra_platforms.AARCH64"``).
+    :returns: ``True`` if a matching link is found.
     """
     hrefs = find_links_with_text(html, text)
     return any(expected_href_fragment in href for href in hrefs)
@@ -574,12 +571,10 @@ def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
 def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     """Determine the expected HTML page for a given symbol.
 
-    Args:
-        role: The Sphinx role (func, data, class, etc.)
-        symbol: The symbol name (e.g., 'UBUNTU', 'is_linux', 'Platform')
-
-    Returns:
-        The expected HTML filename (e.g., 'platforms.html')
+    :param role: The Sphinx role (func, data, class, etc.).
+    :param symbol: The symbol name (like ``"UBUNTU"``, ``"is_linux"``,
+        ``"Platform"``).
+    :returns: The expected HTML filename (like ``"platforms.html"``).
     """
     # Clean symbol name (remove module prefix if present)
     symbol_clean = symbol.split(".")[-1]
@@ -732,9 +727,8 @@ def test_get_expected_page_for_symbol_handles_public_api(symbol_name):
     public API from both extra_platforms and extra_platforms.pytest modules to the
     correct documentation page.
 
-    Args:
-        symbol_name: The symbol name (e.g., "UBUNTU", "is_linux", "pytest.skip_ubuntu")
-        is_pytest_decorator: True if this is a pytest decorator, False otherwise
+    :param symbol_name: The symbol name (like ``"UBUNTU"``, ``"is_linux"``,
+        ``"pytest.skip_ubuntu"``).
     """
     if symbol_name.startswith("pytest."):
         role = "data"
@@ -937,13 +931,11 @@ def extract_docstring_from_html(html: str, symbol_id: str) -> str:
     in the generated HTML documentation, particularly for frozenset collections
     where Sphinx's autodoc would normally show the generic frozenset description.
 
-    Args:
-        html: The HTML content to search.
-        symbol_id: The symbol ID (e.g., "extra_platforms.ALL_GROUPS" or
-            "extra_platforms.group_data.ALL_GROUPS").
-
-    Returns:
-        The docstring text (stripped of HTML tags), or empty string if not found.
+    :param html: The HTML content to search.
+    :param symbol_id: The symbol ID (like ``"extra_platforms.ALL_GROUPS"``
+        or ``"extra_platforms.group_data.ALL_GROUPS"``).
+    :returns: The docstring text (stripped of HTML tags), or empty string if
+        not found.
     """
     # Find the anchor for this symbol.
     pattern = rf'<dt[^>]*id="{re.escape(symbol_id)}"[^>]*>(.*?)</dt>\s*<dd>(.*?)</dd>'

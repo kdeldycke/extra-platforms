@@ -193,20 +193,22 @@ class Group(_Identifiable):
         lines.append(
             f"- **Canonical**: ``{self.canonical}`` {'⬥' if self.canonical else ''}"
         )
-        lines.append(f"- **Detection function**: :func:`~{self.detection_func_id}`")
         lines.append(
-            f"- **Pytest decorators**: :deco:`~pytest.{self.skip_decorator_id}` / "
-            f":deco:`~pytest.{self.unless_decorator_id}`"
+            f"- **Detection function**: {{func}}`~{self.detection_func_id}`"
+        )
+        lines.append(
+            f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
+            f"{{deco}}`~pytest.{self.unless_decorator_id}`"
         )
 
         # Add list of members with links to their definitions.
-        member_links = [f":data:`~{m.symbol_id}`" for m in self]
+        member_links = [f"{{data}}`~{m.symbol_id}`" for m in self]
         type_counts = Counter(type(m).__name__ for m in self)
 
         if member_links:
             # Format type information with links.
             type_parts = [
-                f"{count} :class:`~{class_name}`"
+                f"{count} {{class}}`~{class_name}`"
                 for class_name, count in sorted(type_counts.items())
             ]
             type_info = ", ".join(type_parts)
@@ -412,14 +414,11 @@ class Group(_Identifiable):
 
         If the trait is already in the group, returns a copy unchanged.
 
-        Args:
-            member: A {class}`~extra_platforms.Trait` object or trait ID string to add.
-
-        Returns:
-            A new {class}`~extra_platforms.Group` instance with the trait added.
-
-        Raises:
-            ValueError: If the trait ID is not recognized.
+        :param member: A {class}`~extra_platforms.Trait` object or trait ID
+            string to add.
+        :returns: A new {class}`~extra_platforms.Group` instance with the
+            trait added.
+        :raises ValueError: If the trait ID is not recognized.
         """
         if isinstance(member, str):
             traits = traits_from_ids(member)
@@ -441,16 +440,11 @@ class Group(_Identifiable):
 
         Raises {exc}`KeyError` if the trait is not in the group.
 
-        Args:
-            member: A {class}`~extra_platforms.Trait` object or trait ID
-                string to remove.
-
-        Returns:
-            A new {class}`~extra_platforms.Group` instance with the trait
-            removed.
-
-        Raises:
-            KeyError: If the trait is not in the group.
+        :param member: A {class}`~extra_platforms.Trait` object or trait ID
+            string to remove.
+        :returns: A new {class}`~extra_platforms.Group` instance with the
+            trait removed.
+        :raises KeyError: If the trait is not in the group.
         """
         member_id = member.id if isinstance(member, Trait) else member
 
@@ -475,13 +469,10 @@ class Group(_Identifiable):
         Unlike {meth}`remove`, this does not raise an error if the trait
         is not found.
 
-        Args:
-            member: A {class}`~extra_platforms.Trait` object or trait ID
-                string to remove.
-
-        Returns:
-            A new {class}`~extra_platforms.Group` instance with the trait
-            removed, or a copy if not present.
+        :param member: A {class}`~extra_platforms.Trait` object or trait ID
+            string to remove.
+        :returns: A new {class}`~extra_platforms.Group` instance with the
+            trait removed, or a copy if not present.
         """
         member_id = member.id if isinstance(member, Trait) else member
 
@@ -502,18 +493,14 @@ class Group(_Identifiable):
     def pop(self, member_id: str | None = None) -> tuple[Trait, Group]:
         """Remove and return a trait from the group.
 
-        Args:
-            member_id: Optional trait ID to remove. If not provided,
-                removes an arbitrary trait (specifically, the first one
-                in iteration order).
-
-        Returns:
-            A {class}`tuple` of (removed {class}`~extra_platforms.Trait`,
+        :param member_id: Optional trait ID to remove. If not provided,
+            removes an arbitrary trait (specifically, the first one in
+            iteration order).
+        :returns: A {class}`tuple` of (removed {class}`~extra_platforms.Trait`,
             new {class}`~extra_platforms.Group`).
-
-        Raises:
-            KeyError: If `member_id` is provided but not found in the group.
-            KeyError: If the group is empty.
+        :raises KeyError: If ``member_id`` is provided but not found in the
+            group.
+        :raises KeyError: If the group is empty.
         """
         if not self._members:
             raise KeyError("pop from an empty group")
@@ -542,9 +529,8 @@ class Group(_Identifiable):
     def clear(self) -> Group:
         """Return a new empty {class}`~extra_platforms.Group` with the same metadata.
 
-        Returns:
-            A new {class}`~extra_platforms.Group` instance with no members
-            but same id, name, and icon.
+        :returns: A new {class}`~extra_platforms.Group` instance with no
+            members but same id, name, and icon.
         """
         return Group(
             self.id,

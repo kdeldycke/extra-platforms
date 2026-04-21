@@ -421,7 +421,7 @@ def _initialize_group_detection_functions() -> list[str]:
 
         group_membership_check.__doc__ = (
             "Return `True` if at least one {func}`~current_traits` is "
-            f"found in the :data:`~{group.symbol_id}` group."
+            f"found in the {{data}}`~{group.symbol_id}` group."
         )
 
         assert func_id not in locals(), (
