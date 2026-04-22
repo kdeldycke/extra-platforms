@@ -7,6 +7,9 @@
 
 ## [`11.1.0` (2026-04-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...v11.1.0)
 
+> [!NOTE]
+> `11.1.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.1.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.1.0).
+
 - Add NixOS platform detection.
 - Convert Python docstrings to MyST markdown; render them with the `repomatic.myst_docstrings` Sphinx extension.
 - Expand CI test matrix to cover Ubuntu 22.04, Ubuntu 22.04 ARM, macOS 14, macOS 15, and Windows 2022.
