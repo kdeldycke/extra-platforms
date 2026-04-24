@@ -7,11 +7,11 @@ resolution-markers = [
 ]
 
 [options]
-exclude-newer = "2026-04-17T09:41:23.798136563Z"
+exclude-newer = "2026-04-17T12:00:32.701611193Z"
 exclude-newer-span = "P1W"
 
 [options.exclude-newer-package]
-repomatic = { timestamp = "2026-04-24T09:41:23.798143686Z", span = "PT0S" }
+repomatic = { timestamp = "2026-04-24T12:00:32.701617846Z", span = "PT0S" }
 
 [[package]]
 name = "accessible-pygments"
@@ -607,7 +607,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "11.2.0.dev0"
+version = "12.0.0.dev0"
 source = { editable = "." }
 
 [package.optional-dependencies]
