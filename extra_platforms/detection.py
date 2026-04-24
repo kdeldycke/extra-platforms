@@ -1553,9 +1553,11 @@ def is_unknown_agent() -> bool:
 
 
 # Populate the detection registry with all is_*() functions defined above.
-_detection_registry.update(
-    {_name: _func for _name in dir() if _name.startswith("is_") and callable(_func := globals()[_name])}
-)
+_detection_registry.update({
+    _name: _func
+    for _name in dir()
+    if _name.startswith("is_") and callable(_func := globals()[_name])
+})
 
 
 # =============================================================================
