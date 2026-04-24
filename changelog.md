@@ -5,13 +5,10 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-- Add `--json` and `--help` CLI options via `argparse`. `--json` outputs all detected traits and groups as a single JSON object for scripting.
-- Add `--version` CLI option (replaces version line in default output).
 - Add `SH` (Bourne Shell) trait and `is_sh()` detection function.
 - Add `GUIX_BUILD` CI trait and `is_guix_build()` detection function.
-- Overhaul shell detection: resolve symlinks in `SHELL` before identifying the implementation (so `/bin/sh` → `/bin/bash` detects bash, not sh); `current_shell()` now disambiguates via three-tier priority — startup env vars, then `/proc` parent process tree, then `SHELL` value — fixing detection on CI runners where `SHELL=/bin/sh` points to a different shell than what is actually executing; `SH` is treated as a low-specificity fallback and stripped when a more specific shell is also detected. Use `is_bourne_shells()` to check for a Bourne-compatible interface regardless of the underlying implementation.
-- Add `version_env_var` field to `Shell` for shells that set a dedicated startup environment variable (like `BASH_VERSION` for Bash).
-- Fix `is_powershell()` to check `PSModulePath` as an inline presence signal instead of routing it through the `version_env_var` parameter of `_detect_shell()`, which was semantically incorrect (`PSModulePath` is not a version variable).
+- Add `--json`, `--version`, and `--help` options to the CLI. `--json` outputs all detected traits and groups as a JSON object for scripting.
+- Overhaul shell detection: resolve symlinks in `SHELL` before identifying the implementation (so `/bin/sh` → `/bin/bash` detects bash, not sh); `current_shell()` now disambiguates via three-tier priority — startup env vars, then `/proc` parent process tree, then `SHELL` value — fixing detection on CI runners where `SHELL=/bin/sh` points to a different shell than the one actually executing; `SH` is treated as a low-specificity fallback and stripped when a more specific shell is detected; new `version_env_var` field on `Shell` records each shell's startup environment variable (like `BASH_VERSION` for Bash); `is_powershell()` now checks `PSModulePath` as a presence signal rather than a version variable. Use `is_bourne_shells()` to check for a Bourne-compatible interface regardless of implementation.
 
 ## [`11.1.0` (2026-04-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...v11.1.0)
 
