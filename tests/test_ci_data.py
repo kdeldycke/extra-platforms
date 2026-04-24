@@ -24,6 +24,7 @@ from extra_platforms import (
     AARCH64,
     ALL_CI,
     BASH,
+    DASH,
     GITHUB_CI,
     MACOS,
     POWERSHELL,
@@ -52,6 +53,7 @@ from extra_platforms import (
     is_bamboo,
     is_bash,
     is_big_endian,
+    is_dash,
     is_bourne_shells,
     is_bsd,
     is_buildkite,
@@ -204,13 +206,18 @@ def test_github_runner_detection():
             assert is_powershell()
             assert is_windows_shells()
             assert current_shell() is BASH
-            assert current_traits() == {
+            expected_traits = {
                 current_architecture(),
                 UBUNTU,
                 BASH,
                 POWERSHELL,
                 GITHUB_CI,
             }
+            # XXX On some Ubuntu runners SHELL=/bin/sh resolves to /bin/dash,
+            # so is_dash() is True independently of current_shell().
+            if is_dash():
+                expected_traits.add(DASH)
+            assert current_traits() == expected_traits
 
     # macOS runners.
     if github_runner_os() in {

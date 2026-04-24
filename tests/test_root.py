@@ -75,6 +75,7 @@ from extra_platforms import (
     is_any_platform,
     is_any_terminal,
     is_bsd,
+    is_dash,
     is_fedora,
     is_github_ci,
     is_linux,
@@ -288,6 +289,10 @@ def test_current_funcs():
             elif is_ubuntu():
                 # +1 shell (PowerShell from Azure).
                 detected_traits += 1
+                # XXX On some Ubuntu runners SHELL=/bin/sh resolves to
+                # /bin/dash, so is_dash() is True independently.
+                if is_dash():
+                    detected_traits += 1
     # Agent is optional: we may not be running under an AI agent.
     if is_any_agent():
         detected_traits += 1

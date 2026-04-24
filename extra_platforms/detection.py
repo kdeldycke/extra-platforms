@@ -846,37 +846,26 @@ def _active_env_var_shell_ids() -> frozenset[str]:
 
 
 @cache
-def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
-    """Check if any parent process in the tree matches the given shell IDs.
+def _parent_process_exe_names() -> frozenset[str]:
+    """Collect executable names from the parent process tree.
 
-    On Linux, reads `/proc/<pid>/exe` symlinks up the process tree via
-    `/proc/<pid>/stat` to find the parent PID. This identifies the *active*
-    shell, not merely installed ones.
+    On Linux, reads ``/proc/<pid>/exe`` symlinks up the process tree via
+    ``/proc/<pid>/stat`` to find parent PIDs. Returns a {class}`frozenset`
+    of lowercased executable stems (like ``"bash"``, ``"python3"``).
 
-    :param shell_ids: Shell executable name(s) to match. Can be a single string
-        (like ``"bash"``) or a tuple of strings (like ``("powershell", "pwsh")``).
-    :returns: ``True`` if a matching shell is found in the parent process tree,
-        ``False`` otherwise or on non-Linux platforms where ``/proc`` is
-        unavailable.
+    Returns an empty set on non-Linux platforms where ``/proc`` is
+    unavailable.
     """
-    # Normalize shell_ids to a set for efficient lookup.
-    id_set = (
-        frozenset({shell_ids}) if isinstance(shell_ids, str) else frozenset(shell_ids)
-    )
-
+    names: set[str] = set()
     try:
         pid = os.getpid()
         visited: set[int] = set()
         while pid > 1 and pid not in visited:
             visited.add(pid)
-            # Read the executable path of the process.
             try:
-                exe = Path(os.readlink(f"/proc/{pid}/exe")).stem.lower()
-                if exe in id_set:
-                    return True
+                names.add(Path(os.readlink(f"/proc/{pid}/exe")).stem.lower())
             except OSError:
                 pass
-            # Read the parent PID from /proc/<pid>/stat.
             try:
                 stat_content = Path(f"/proc/{pid}/stat").read_text()
                 # Format: "pid (comm) state ppid ...". The comm field may
@@ -887,7 +876,22 @@ def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
                 break
     except OSError:
         pass
-    return False
+    return frozenset(names)
+
+
+def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
+    """Check if any parent process in the tree matches the given shell IDs.
+
+    :param shell_ids: Shell executable name(s) to match. Can be a single string
+        (like ``"bash"``) or a tuple of strings (like ``("powershell", "pwsh")``).
+    :returns: ``True`` if a matching shell is found in the parent process tree,
+        ``False`` otherwise or on non-Linux platforms where ``/proc`` is
+        unavailable.
+    """
+    id_set = (
+        frozenset({shell_ids}) if isinstance(shell_ids, str) else frozenset(shell_ids)
+    )
+    return bool(id_set & _parent_process_exe_names())
 
 
 def _detect_shell(
@@ -1645,14 +1649,15 @@ def current_platform(strict: bool = False) -> Platform:
 def current_shell(strict: bool = False) -> Shell:
     """Returns the {class}`~extra_platforms.Shell` matching the current environment.
 
-    Uses a tiered detection strategy with cached signals shared with
+    Uses a tiered disambiguation strategy with cached signals shared with
     {func}`_detect_shell`:
 
-    1. Shell-specific environment variables (detects *active* shell).
-    2. ``SHELL`` environment variable resolved through symlinks (detects
-       *configured* login shell on Unix).
-    3. Full scan of all shells (env vars, ``SHELL``, ``/proc`` tree,
-       Windows defaults).
+    1. Shell-specific environment variables (strongest: the Python process
+       *is* the shell).
+    2. ``/proc`` parent process tree (strong: the shell is an ancestor
+       process actively running).
+    3. ``SHELL`` environment variable resolved through symlinks (weak:
+       configured login shell, may differ from the active shell).
 
     {data}`~extra_platforms.SH` is treated as a low-specificity fallback (like
     {data}`~extra_platforms.GENERIC_LINUX` for platforms): on modern systems
@@ -1695,10 +1700,10 @@ def current_shell(strict: bool = False) -> Shell:
     if len(matching) == 1:
         return matching.pop()
 
-    # Tier 1: prefer shells whose startup env var is set (strong signal for
-    # the *active* shell, not merely the configured login shell). This
-    # resolves the common CI conflict where SHELL=/bin/dash (login shell)
-    # while BASH_VERSION is set (active shell is bash).
+    # Tier 1: prefer shells whose startup env var is set (strongest signal
+    # for the *active* shell). These env vars (like BASH_VERSION) are
+    # shell-internal and typically not exported to child processes, so this
+    # tier only fires when the Python process IS the shell itself.
     active = _active_env_var_shell_ids()
     if active:
         active_matches = {s for s in matching if s.id in active}
@@ -1707,14 +1712,25 @@ def current_shell(strict: bool = False) -> Shell:
         if active_matches:
             matching = active_matches
 
-    # Tier 2: prefer the shell resolved from SHELL= over weaker /proc
-    # matches, when there is no env var signal.
-    if not active:
-        resolved = _resolved_shell_id()
-        if resolved:
-            resolved_matches = {s for s in matching if s.id == resolved}
-            if len(resolved_matches) == 1:
-                return resolved_matches.pop()
+    # Tier 2: prefer shells found in the parent process tree (strong signal:
+    # the shell is actively running as an ancestor process). This resolves
+    # the common CI conflict where SHELL=/bin/sh resolves to /bin/dash
+    # (configured login shell) while bash is the actual parent process
+    # running the step.
+    proc_names = _parent_process_exe_names()
+    if proc_names:
+        proc_matches = {s for s in matching if s.id in proc_names}
+        if len(proc_matches) == 1:
+            return proc_matches.pop()
+        if proc_matches:
+            matching = proc_matches
+
+    # Tier 3: prefer the shell resolved from SHELL= over remaining matches.
+    resolved = _resolved_shell_id()
+    if resolved:
+        resolved_matches = {s for s in matching if s.id == resolved}
+        if len(resolved_matches) == 1:
+            return resolved_matches.pop()
 
     # Remove SH if a more specific shell was also detected. On modern
     # systems /bin/sh is almost always a symlink to a concrete shell, so
