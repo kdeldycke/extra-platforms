@@ -182,6 +182,7 @@ All recognized traits and their properties:
 |  𝐆   | {data}`~GNOME_TERMINAL`       | GNOME Terminal                 | {func}`~is_gnome_terminal`       | Terminal     |
 |  📺  | {data}`~GNU_SCREEN`           | GNU Screen                     | {func}`~is_gnu_screen`           | Terminal     |
 |  🐃  | {data}`~GUIX`                 | Guix System                    | {func}`~is_guix`                 | Platform     |
+|  🐂  | {data}`~GUIX_BUILD`           | Guix Build                     | {func}`~is_guix_build`           | CI           |
 |  🍂  | {data}`~HAIKU`                | Haiku                          | {func}`~is_haiku`                | Platform     |
 |  ⥁   | {data}`~HEROKU_CI`            | Heroku CI                      | {func}`~is_heroku_ci`            | CI           |
 |  🦬  | {data}`~HURD`                 | GNU/Hurd                       | {func}`~is_hurd`                 | Platform     |
@@ -230,6 +231,7 @@ All recognized traits and their properties:
 |  ⛰️  | {data}`~ROCKY`                | Rocky Linux                    | {func}`~is_rocky`                | Platform     |
 |  🏢  | {data}`~S390X`                | IBM z/Architecture (s390x)     | {func}`~is_s390x`                | Architecture |
 |  ⚛️  | {data}`~SCIENTIFIC`           | Scientific Linux               | {func}`~is_scientific`           | Platform     |
+|  𝐒   | {data}`~SH`                   | Bourne Shell                   | {func}`~is_sh`                   | Shell        |
 |  🚬  | {data}`~SLACKWARE`            | Slackware                      | {func}`~is_slackware`            | Platform     |
 |  🦎  | {data}`~SLES`                 | SUSE Linux Enterprise Server   | {func}`~is_sles`                 | Platform     |
 |  🌞  | {data}`~SOLARIS`              | Solaris                        | {func}`~is_solaris`              | Platform     |

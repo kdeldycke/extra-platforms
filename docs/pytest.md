@@ -147,6 +147,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_gnu_screen`           | {deco}`~pytest.unless_gnu_screen`           |  📺  | {data}`~GNU_SCREEN`           |
 | {deco}`~pytest.skip_gpu_terminals`        | {deco}`~pytest.unless_gpu_terminals`        |  🎮  | {data}`~GPU_TERMINALS`        |
 | {deco}`~pytest.skip_guix`                 | {deco}`~pytest.unless_guix`                 |  🐃  | {data}`~GUIX`                 |
+| {deco}`~pytest.skip_guix_build`           | {deco}`~pytest.unless_guix_build`           |  🐂  | {data}`~GUIX_BUILD`           |
 | {deco}`~pytest.skip_haiku`                | {deco}`~pytest.unless_haiku`                |  🍂  | {data}`~HAIKU`                |
 | {deco}`~pytest.skip_heroku_ci`            | {deco}`~pytest.unless_heroku_ci`            |  ⥁   | {data}`~HEROKU_CI`            |
 | {deco}`~pytest.skip_hurd`                 | {deco}`~pytest.unless_hurd`                 |  🦬  | {data}`~HURD`                 |
@@ -207,6 +208,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_rocky`                | {deco}`~pytest.unless_rocky`                |  ⛰️  | {data}`~ROCKY`                |
 | {deco}`~pytest.skip_s390x`                | {deco}`~pytest.unless_s390x`                |  🏢  | {data}`~S390X`                |
 | {deco}`~pytest.skip_scientific`           | {deco}`~pytest.unless_scientific`           |  ⚛️  | {data}`~SCIENTIFIC`           |
+| {deco}`~pytest.skip_sh`                   | {deco}`~pytest.unless_sh`                   |  𝐒   | {data}`~SH`                   |
 | {deco}`~pytest.skip_slackware`            | {deco}`~pytest.unless_slackware`            |  🚬  | {data}`~SLACKWARE`            |
 | {deco}`~pytest.skip_sles`                 | {deco}`~pytest.unless_sles`                 |  🦎  | {data}`~SLES`                 |
 | {deco}`~pytest.skip_solaris`              | {deco}`~pytest.unless_solaris`              |  🌞  | {data}`~SOLARIS`              |
@@ -329,6 +331,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_gnu_screen
 .. autodecorator:: extra_platforms.pytest.skip_gpu_terminals
 .. autodecorator:: extra_platforms.pytest.skip_guix
+.. autodecorator:: extra_platforms.pytest.skip_guix_build
 .. autodecorator:: extra_platforms.pytest.skip_haiku
 .. autodecorator:: extra_platforms.pytest.skip_heroku_ci
 .. autodecorator:: extra_platforms.pytest.skip_hurd
@@ -389,6 +392,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_rocky
 .. autodecorator:: extra_platforms.pytest.skip_s390x
 .. autodecorator:: extra_platforms.pytest.skip_scientific
+.. autodecorator:: extra_platforms.pytest.skip_sh
 .. autodecorator:: extra_platforms.pytest.skip_slackware
 .. autodecorator:: extra_platforms.pytest.skip_sles
 .. autodecorator:: extra_platforms.pytest.skip_solaris
@@ -508,6 +512,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_gnu_screen
 .. autodecorator:: extra_platforms.pytest.unless_gpu_terminals
 .. autodecorator:: extra_platforms.pytest.unless_guix
+.. autodecorator:: extra_platforms.pytest.unless_guix_build
 .. autodecorator:: extra_platforms.pytest.unless_haiku
 .. autodecorator:: extra_platforms.pytest.unless_heroku_ci
 .. autodecorator:: extra_platforms.pytest.unless_hurd
@@ -568,6 +573,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_rocky
 .. autodecorator:: extra_platforms.pytest.unless_s390x
 .. autodecorator:: extra_platforms.pytest.unless_scientific
+.. autodecorator:: extra_platforms.pytest.unless_sh
 .. autodecorator:: extra_platforms.pytest.unless_slackware
 .. autodecorator:: extra_platforms.pytest.unless_sles
 .. autodecorator:: extra_platforms.pytest.unless_solaris
