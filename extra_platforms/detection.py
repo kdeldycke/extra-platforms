@@ -840,8 +840,7 @@ def _active_env_var_shell_ids() -> frozenset[str]:
     return frozenset(
         shell.id
         for shell in ALL_SHELLS
-        if (env_var := getattr(shell, "version_env_var", None))
-        and env_var in environ
+        if (env_var := getattr(shell, "version_env_var", None)) and env_var in environ
     )
 
 
