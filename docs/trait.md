@@ -282,6 +282,7 @@ All recognized traits and their properties:
 ```{eval-rst}
 .. autoclass:: extra_platforms.Trait
    :members:
+   :inherited-members:
    :private-members:
    :undoc-members:
    :show-inheritance:
