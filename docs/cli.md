@@ -115,17 +115,17 @@ $ extra-platforms --json
 
 Each trait section contains:
 
-| Field | Description |
-| ----- | ----------- |
-| {attr}`id <Trait.id>` | Unique trait identifier |
-| {attr}`name <Trait.name>` | Human-readable name |
-| {attr}`icon <Trait.icon>` | Single-glyph icon |
-| {attr}`url <Trait.url>` | Reference URL |
-| {attr}`current <Trait.current>` | Whether this trait matches the current environment |
-| {attr}`aliases <Trait.aliases>` | Alternative IDs for this trait |
-| {attr}`symbol <Trait.symbol_id>` | Uppercase symbol for Python imports (`from extra_platforms import AARCH64`) |
-| {attr}`detection <Trait.detection_func_id>` | Detection function name (`from extra_platforms import is_aarch64`) |
-| {attr}`groups <Trait.groups>` | Groups this trait belongs to |
+| Field                                       | Description                                                                 |
+| ------------------------------------------- | --------------------------------------------------------------------------- |
+| {attr}`id <Trait.id>`                       | Unique trait identifier                                                     |
+| {attr}`name <Trait.name>`                   | Human-readable name                                                         |
+| {attr}`icon <Trait.icon>`                   | Single-glyph icon                                                           |
+| {attr}`url <Trait.url>`                     | Reference URL                                                               |
+| {attr}`current <Trait.current>`             | Whether this trait matches the current environment                          |
+| {attr}`aliases <Trait.aliases>`             | Alternative IDs for this trait                                              |
+| {attr}`symbol <Trait.symbol_id>`            | Uppercase symbol for Python imports (`from extra_platforms import AARCH64`) |
+| {attr}`detection <Trait.detection_func_id>` | Detection function name (`from extra_platforms import is_aarch64`)          |
+| {attr}`groups <Trait.groups>`               | Groups this trait belongs to                                                |
 
 Trait-specific fields (like `machine`, `version`, `codename`) are included when available.
 
