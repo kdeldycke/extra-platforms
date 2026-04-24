@@ -394,6 +394,7 @@ mindmap
             (＃ BASH)
             (💨 DASH)
             (𝐊 KSH)
+            (𝐒 SH)
             (ℤ ZSH)
 ```
 
@@ -459,6 +460,7 @@ mindmap
         (ᚙ CODEBUILD)
         (🐙 GITHUB_CI)
         (🦊 GITLAB_CI)
+        (🐂 GUIX_BUILD)
         (⥁ HEROKU_CI)
         (🏙️ TEAMCITY)
         (👷 TRAVIS_CI)

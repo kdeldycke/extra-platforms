@@ -45,6 +45,13 @@ GITLAB_CI = CI(
     "https://docs.gitlab.com/topics/build_your_application/",
 )
 
+GUIX_BUILD = CI(
+    "guix_build",
+    "Guix Build",
+    "🐂",
+    "https://guix.gnu.org/manual/en/html_node/Invoking-guix-build.html",
+)
+
 HEROKU_CI = CI(
     "heroku_ci", "Heroku CI", "⥁", "https://www.heroku.com/continuous-integration/"
 )

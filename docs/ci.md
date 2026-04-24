@@ -57,6 +57,7 @@ CI(id='unknown_ci', name='Unknown CI')
 |  ᚙ   | {data}`~CODEBUILD`       | CodeBuild             | {func}`~is_codebuild`       |
 |  🐙  | {data}`~GITHUB_CI`       | GitHub Actions runner | {func}`~is_github_ci`       |
 |  🦊  | {data}`~GITLAB_CI`       | GitLab CI             | {func}`~is_gitlab_ci`       |
+|  🐂  | {data}`~GUIX_BUILD`      | Guix Build            | {func}`~is_guix_build`      |
 |  ⥁   | {data}`~HEROKU_CI`       | Heroku CI             | {func}`~is_heroku_ci`       |
 |  🏙️  | {data}`~TEAMCITY`        | TeamCity              | {func}`~is_teamcity`        |
 |  👷  | {data}`~TRAVIS_CI`       | Travis CI             | {func}`~is_travis_ci`       |
@@ -98,6 +99,7 @@ ALL_CI,CIRRUS_CI,1
 ALL_CI,CODEBUILD,1
 ALL_CI,GITHUB_CI,1
 ALL_CI,GITLAB_CI,1
+ALL_CI,GUIX_BUILD,1
 ALL_CI,HEROKU_CI,1
 ALL_CI,TEAMCITY,1
 ALL_CI,TRAVIS_CI,1
@@ -121,6 +123,7 @@ mindmap
         (ᚙ CODEBUILD)
         (🐙 GITHUB_CI)
         (🦊 GITLAB_CI)
+        (🐂 GUIX_BUILD)
         (⥁ HEROKU_CI)
         (🏙️ TEAMCITY)
         (👷 TRAVIS_CI)
@@ -151,6 +154,7 @@ mindmap
 .. autodata:: extra_platforms.CODEBUILD
 .. autodata:: extra_platforms.GITHUB_CI
 .. autodata:: extra_platforms.GITLAB_CI
+.. autodata:: extra_platforms.GUIX_BUILD
 .. autodata:: extra_platforms.HEROKU_CI
 .. autodata:: extra_platforms.TEAMCITY
 .. autodata:: extra_platforms.TRAVIS_CI

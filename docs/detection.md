@@ -82,6 +82,7 @@
 | {func}`~is_gnu_screen`           |  📺  | {data}`~GNU_SCREEN`           |
 | {func}`~is_gpu_terminals`        |  🎮  | {data}`~GPU_TERMINALS`        |
 | {func}`~is_guix`                 |  🐃  | {data}`~GUIX`                 |
+| {func}`~is_guix_build`           |  🐂  | {data}`~GUIX_BUILD`           |
 | {func}`~is_haiku`                |  🍂  | {data}`~HAIKU`                |
 | {func}`~is_heroku_ci`            |  ⥁   | {data}`~HEROKU_CI`            |
 | {func}`~is_hurd`                 |  🦬  | {data}`~HURD`                 |
@@ -142,6 +143,7 @@
 | {func}`~is_rocky`                |  ⛰️  | {data}`~ROCKY`                |
 | {func}`~is_s390x`                |  🏢  | {data}`~S390X`                |
 | {func}`~is_scientific`           |  ⚛️  | {data}`~SCIENTIFIC`           |
+| {func}`~is_sh`                   |  𝐒   | {data}`~SH`                   |
 | {func}`~is_slackware`            |  🚬  | {data}`~SLACKWARE`            |
 | {func}`~is_sles`                 |  🦎  | {data}`~SLES`                 |
 | {func}`~is_solaris`              |  🌞  | {data}`~SOLARIS`              |
@@ -245,6 +247,7 @@
 .. autofunction:: extra_platforms.is_gnome_terminal
 .. autofunction:: extra_platforms.is_gnu_screen
 .. autofunction:: extra_platforms.is_guix
+.. autofunction:: extra_platforms.is_guix_build
 .. autofunction:: extra_platforms.is_haiku
 .. autofunction:: extra_platforms.is_heroku_ci
 .. autofunction:: extra_platforms.is_hurd
@@ -293,6 +296,7 @@
 .. autofunction:: extra_platforms.is_rocky
 .. autofunction:: extra_platforms.is_s390x
 .. autofunction:: extra_platforms.is_scientific
+.. autofunction:: extra_platforms.is_sh
 .. autofunction:: extra_platforms.is_slackware
 .. autofunction:: extra_platforms.is_sles
 .. autofunction:: extra_platforms.is_solaris

@@ -80,6 +80,13 @@ POWERSHELL = Shell(
     "https://learn.microsoft.com/en-us/powershell/",
 )
 
+SH = Shell(
+    "sh",
+    "Bourne Shell",
+    "𝐒",
+    "https://en.wikipedia.org/wiki/Bourne_shell",
+)
+
 TCSH = Shell(
     "tcsh",
     "tcsh",

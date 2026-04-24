@@ -43,6 +43,27 @@ The current shell can be obtained via the `current_shell()` function:
 Shell(id='unknown_shell', name='Unknown shell')
 ```
 
+## Symlink resolution: implementation over interface
+
+Shell detection resolves symlinks in the `SHELL` environment variable before identifying the shell. This means detection always reports the **concrete shell implementation** rather than the POSIX interface name.
+
+On most modern Unix systems, `/bin/sh` is a symlink to a concrete shell:
+
+| Distribution     | `/bin/sh` target |
+| :--------------- | :--------------- |
+| Debian, Ubuntu   | `/bin/dash`      |
+| Fedora, RHEL     | `/bin/bash`      |
+| Alpine           | `/bin/busybox`   |
+| macOS            | `/bin/bash`      |
+
+When `/bin/sh` symlinks to `/bin/bash`:
+
+- {func}`~is_bash` returns `True` (the actual binary running is bash).
+- {func}`~is_sh` returns `False` (the resolved binary is not `sh`).
+- {func}`~is_bourne_shells` returns `True` (bash is a Bourne-compatible shell).
+
+This design gives developers the most precise information about what binary is executing their code. If you need to check whether the shell provides a Bourne-compatible *interface* (regardless of which binary implements it), test against the {data}`~BOURNE_SHELLS` group with {func}`~is_bourne_shells` instead of individual shell functions.
+
 ## Recognized shells
 
 <!-- shell-table-start -->
@@ -58,6 +79,7 @@ Shell(id='unknown_shell', name='Unknown shell')
 |  𝐊   | {data}`~KSH`        | Korn shell     | {func}`~is_ksh`        |
 |  𝜈   | {data}`~NUSHELL`    | Nushell        | {func}`~is_nushell`    |
 |  🔷  | {data}`~POWERSHELL` | PowerShell     | {func}`~is_powershell` |
+|  𝐒   | {data}`~SH`         | Bourne Shell   | {func}`~is_sh`         |
 |  𝐓   | {data}`~TCSH`       | tcsh           | {func}`~is_tcsh`       |
 |  🐍  | {data}`~XONSH`      | Xonsh          | {func}`~is_xonsh`      |
 |  ℤ   | {data}`~ZSH`        | Zsh            | {func}`~is_zsh`        |
@@ -101,7 +123,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_SHELLS,BOURNE_SHELLS,5
+ALL_SHELLS,BOURNE_SHELLS,6
 ALL_SHELLS,OTHER_SHELLS,3
 ALL_SHELLS,WINDOWS_SHELLS,2
 ALL_SHELLS,C_SHELLS,2
@@ -109,6 +131,7 @@ BOURNE_SHELLS,ASH,1
 BOURNE_SHELLS,BASH,1
 BOURNE_SHELLS,DASH,1
 BOURNE_SHELLS,KSH,1
+BOURNE_SHELLS,SH,1
 BOURNE_SHELLS,ZSH,1
 OTHER_SHELLS,FISH,1
 OTHER_SHELLS,NUSHELL,1
@@ -144,6 +167,7 @@ mindmap
             (＃ BASH)
             (💨 DASH)
             (𝐊 KSH)
+            (𝐒 SH)
             (ℤ ZSH)
 ```
 
@@ -173,6 +197,7 @@ mindmap
 .. autodata:: extra_platforms.KSH
 .. autodata:: extra_platforms.NUSHELL
 .. autodata:: extra_platforms.POWERSHELL
+.. autodata:: extra_platforms.SH
 .. autodata:: extra_platforms.TCSH
 .. autodata:: extra_platforms.UNKNOWN_SHELL
 .. autodata:: extra_platforms.XONSH

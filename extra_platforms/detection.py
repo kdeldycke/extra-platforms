@@ -866,8 +866,11 @@ def _detect_shell(
     Uses a tiered detection strategy:
 
     1. Checks for shell-specific version environment variable (most reliable).
-    2. Parses the `SHELL` environment variable path against known shell executable
-       names.
+    2. Resolves symlinks in the ``SHELL`` environment variable path, then
+       matches the resolved executable name against known shell IDs. This
+       reports the actual shell implementation rather than the interface name:
+       when ``/bin/sh`` symlinks to ``/bin/bash``, ``bash`` is detected, not
+       ``sh``.
     3. Falls back to walking the parent process tree via `/proc` to find the
        active shell (for stripped environments without shell env vars).
 
@@ -890,18 +893,20 @@ def _detect_shell(
     )
 
     # Check SHELL environment variable against known shell IDs.
+    # Resolve symlinks to detect the actual shell implementation rather than
+    # the interface name. For example, when /bin/sh -> /bin/bash, the resolved
+    # name "bash" is used instead of "sh".
     shell_path = environ.get("SHELL", "")
     if shell_path:
-        shell_id = PurePosixPath(shell_path).stem.lower()
+        try:
+            shell_id = Path(shell_path).resolve(strict=True).stem.lower()
+        except OSError:
+            shell_id = PurePosixPath(shell_path).stem.lower()
         if shell_id in ids:
             return True
 
     # Fallback: walk the parent process tree to find the active shell. This
-    # covers two cases:
-    # - SHELL is not set at all (stripped containers like ubuntu-slim).
-    # - SHELL is set to a generic value like /bin/sh that doesn't match any
-    #   specific shell (e.g. ubuntu-24.04-arm where SHELL=/bin/sh but the
-    #   GitHub Actions runner actually executes steps via /usr/bin/bash).
+    # covers stripped containers (like ubuntu-slim) where SHELL is not set.
     normalized_ids = (shell_ids,) if isinstance(shell_ids, str) else tuple(shell_ids)
     return _parent_process_shells(normalized_ids)
 
@@ -1055,6 +1060,29 @@ def is_powershell() -> bool:
         version_env_var="PSModulePath",
         shell_ids=("powershell", "powershell_ise", "pwsh"),
     )
+
+
+@cache
+def is_sh() -> bool:
+    """Return {data}`True` if current shell is {data}`~extra_platforms.SH`.
+
+    ```{hint}
+    Detected via the ``SHELL`` environment variable path, after symlink
+    resolution. Only matches when the resolved shell binary is literally
+    ``sh``, not when ``/bin/sh`` is a symlink to another shell (like bash or
+    dash).
+    ```
+
+    ```{note}
+    On most modern systems, ``/bin/sh`` is a symlink to a concrete shell
+    (``bash``, ``dash``, etc.). In that case, ``is_sh()`` returns ``False``
+    and the concrete shell's detection function returns ``True`` instead.
+    To test whether the environment provides a Bourne-compatible *interface*
+    regardless of the underlying implementation, use
+    {func}`~extra_platforms.is_bourne_shells` instead.
+    ```
+    """
+    return _detect_shell(shell_ids="sh")
 
 
 @cache
@@ -1356,6 +1384,24 @@ def is_gitlab_ci() -> bool:
     ```
     """
     return "GITLAB_CI" in environ
+
+
+@cache
+def is_guix_build() -> bool:
+    """Return {data}`True` if current CI is {data}`~extra_platforms.GUIX_BUILD`.
+
+    ```{note}
+    The Guix build daemon runs packages in an isolated sandbox with
+    ``HOME`` set to ``/homeless-shelter`` (a non-existent directory). This
+    prevents builds from reading or writing to a real home directory.
+    ```
+
+    ```{seealso}
+    Build environment reference:
+    <https://guix.gnu.org/manual/en/html_node/Build-Environment-Setup.html>.
+    ```
+    """
+    return environ.get("HOME") == "/homeless-shelter"
 
 
 @cache

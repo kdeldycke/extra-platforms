@@ -62,6 +62,7 @@ from .ci_data import (
     CODEBUILD,
     GITHUB_CI,
     GITLAB_CI,
+    GUIX_BUILD,
     HEROKU_CI,
     TEAMCITY,
     TRAVIS_CI,
@@ -138,6 +139,7 @@ from .shell_data import (
     KSH,
     NUSHELL,
     POWERSHELL,
+    SH,
     TCSH,
     UNKNOWN_SHELL,
     XONSH,
@@ -695,7 +697,7 @@ ALL_SHELLS: Group = Group(
     "all_shells",
     "All shells",
     "🐚",
-    (ASH, BASH, CMD, CSH, DASH, FISH, KSH, NUSHELL, POWERSHELL, TCSH, XONSH, ZSH),
+    (ASH, BASH, CMD, CSH, DASH, FISH, KSH, NUSHELL, POWERSHELL, SH, TCSH, XONSH, ZSH),
 )
 """All recognized shells.
 
@@ -709,7 +711,7 @@ BOURNE_SHELLS = Group(
     "bourne_shells",
     "Bourne-compatible shells",
     "💲",
-    (ASH, BASH, DASH, KSH, ZSH),
+    (ASH, BASH, DASH, KSH, SH, ZSH),
 )
 """All Bourne-compatible shells."""
 
@@ -833,6 +835,7 @@ ALL_CI = Group(
         CODEBUILD,
         GITHUB_CI,
         GITLAB_CI,
+        GUIX_BUILD,
         HEROKU_CI,
         TEAMCITY,
         TRAVIS_CI,

@@ -221,6 +221,7 @@ if TYPE_CHECKING:
     skip_gnu_screen: MarkDecorator
     skip_gpu_terminals: MarkDecorator
     skip_guix: MarkDecorator
+    skip_guix_build: MarkDecorator
     skip_haiku: MarkDecorator
     skip_heroku_ci: MarkDecorator
     skip_hurd: MarkDecorator
@@ -281,6 +282,7 @@ if TYPE_CHECKING:
     skip_rocky: MarkDecorator
     skip_s390x: MarkDecorator
     skip_scientific: MarkDecorator
+    skip_sh: MarkDecorator
     skip_slackware: MarkDecorator
     skip_sles: MarkDecorator
     skip_solaris: MarkDecorator
@@ -395,6 +397,7 @@ if TYPE_CHECKING:
     unless_gnu_screen: MarkDecorator
     unless_gpu_terminals: MarkDecorator
     unless_guix: MarkDecorator
+    unless_guix_build: MarkDecorator
     unless_haiku: MarkDecorator
     unless_heroku_ci: MarkDecorator
     unless_hurd: MarkDecorator
@@ -455,6 +458,7 @@ if TYPE_CHECKING:
     unless_rocky: MarkDecorator
     unless_s390x: MarkDecorator
     unless_scientific: MarkDecorator
+    unless_sh: MarkDecorator
     unless_slackware: MarkDecorator
     unless_sles: MarkDecorator
     unless_solaris: MarkDecorator

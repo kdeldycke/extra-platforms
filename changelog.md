@@ -5,6 +5,10 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add Bourne Shell (`SH`) trait and `is_sh()` detection function.
+- Add Guix Build (`GUIX_BUILD`) CI trait and `is_guix_build()` detection function.
+- Resolve symlinks in `SHELL` environment variable before shell detection. When `/bin/sh` symlinks to `/bin/bash`, `is_bash()` returns `True` and `is_sh()` returns `False`. Use `is_bourne_shells()` to test for the Bourne-compatible interface regardless of implementation.
+
 ## [`11.1.0` (2026-04-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...v11.1.0)
 
 > [!NOTE]
