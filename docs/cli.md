@@ -112,17 +112,17 @@ $ extra-platforms --json
 
 Each trait section contains:
 
-| Field | Description |
-| --- | --- |
-| `id` | Unique trait identifier |
-| `name` | Human-readable name |
-| `icon` | Single-glyph icon |
-| `url` | Reference URL |
-| `current` | Whether this trait matches the current environment |
-| `aliases` | Alternative IDs for this trait |
-| `symbol` | Uppercase symbol for Python imports (`from extra_platforms import AARCH64`) |
-| `detection` | Detection function name (`from extra_platforms import is_aarch64`) |
-| `groups` | Groups this trait belongs to |
+| Field       | Description                                                                 |
+| ----------- | --------------------------------------------------------------------------- |
+| `id`        | Unique trait identifier                                                     |
+| `name`      | Human-readable name                                                         |
+| `icon`      | Single-glyph icon                                                           |
+| `url`       | Reference URL                                                               |
+| `current`   | Whether this trait matches the current environment                          |
+| `aliases`   | Alternative IDs for this trait                                              |
+| `symbol`    | Uppercase symbol for Python imports (`from extra_platforms import AARCH64`) |
+| `detection` | Detection function name (`from extra_platforms import is_aarch64`)          |
+| `groups`    | Groups this trait belongs to                                                |
 
 Trait-specific fields (like `machine`, `version`, `codename`) are included when available.
 
