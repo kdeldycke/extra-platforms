@@ -1115,6 +1115,14 @@ def is_sh() -> bool:
     regardless of the underlying implementation, use
     {func}`~extra_platforms.is_bourne_shells` instead.
     ```
+
+    ```{important}
+    {data}`~extra_platforms.SH` is treated as a low-specificity fallback by
+    {func}`~extra_platforms.current_shell` (like
+    {data}`~extra_platforms.GENERIC_LINUX` for platforms): when both
+    {data}`~extra_platforms.SH` and a more specific shell are detected,
+    {func}`~extra_platforms.current_shell` returns the specific shell.
+    ```
     """
     return _detect_shell(shell_ids="sh")
 

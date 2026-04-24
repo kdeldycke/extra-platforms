@@ -5,9 +5,10 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-- Add Bourne Shell (`SH`) trait and `is_sh()` detection function.
-- Add Guix Build (`GUIX_BUILD`) CI trait and `is_guix_build()` detection function.
-- Resolve symlinks in `SHELL` environment variable before shell detection. When `/bin/sh` symlinks to `/bin/bash`, `is_bash()` returns `True` and `is_sh()` returns `False`. Use `is_bourne_shells()` to test for the Bourne-compatible interface regardless of implementation.
+- Add `SH` (Bourne Shell) trait and `is_sh()` detection function.
+- Add `GUIX_BUILD` CI trait and `is_guix_build()` detection function.
+- Overhaul shell detection: resolve symlinks in `SHELL` before identifying the implementation (so `/bin/sh` → `/bin/bash` detects bash, not sh); `current_shell()` now disambiguates via three-tier priority — startup env vars, then `/proc` parent process tree, then `SHELL` value — fixing detection on CI runners where `SHELL=/bin/sh` points to a different shell than what is actually executing; `SH` is treated as a low-specificity fallback and stripped when a more specific shell is also detected. Use `is_bourne_shells()` to check for a Bourne-compatible interface regardless of the underlying implementation.
+- Add `version_env_var` field to `Shell` for shells that set a dedicated startup environment variable (like `BASH_VERSION` for Bash).
 
 ## [`11.1.0` (2026-04-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...v11.1.0)
 

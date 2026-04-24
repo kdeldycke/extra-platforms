@@ -24,7 +24,7 @@ Shell(id='bash', name='Bash')
 >>> BASH.current
 False
 >>> BASH.info()
-{'id': 'bash', 'name': 'Bash', 'icon': '🐚', 'url': 'https://www.gnu.org/software/bash/', 'current': False, 'version': None, 'path': None}
+{'id': 'bash', 'name': 'Bash', 'icon': '＃', 'url': 'https://www.gnu.org/software/bash/', 'current': False, 'version': None, 'path': None}
 ```
 
 To check if the current environment is running in a specific shell, use the corresponding [detection function](detection.md):
