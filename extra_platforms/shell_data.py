@@ -29,6 +29,7 @@ BASH = Shell(
     "Bash",
     "＃",
     "https://www.gnu.org/software/bash/",
+    version_env_var="BASH_VERSION",
 )
 
 CMD = Shell(
@@ -57,6 +58,7 @@ FISH = Shell(
     "Fish",
     "🐟",
     "https://fishshell.com",
+    version_env_var="FISH_VERSION",
 )
 
 KSH = Shell(
@@ -64,6 +66,7 @@ KSH = Shell(
     "Korn shell",
     "𝐊",
     "https://en.wikipedia.org/wiki/KornShell",
+    version_env_var="KSH_VERSION",
 )
 
 NUSHELL = Shell(
@@ -71,6 +74,7 @@ NUSHELL = Shell(
     "Nushell",
     "𝜈",
     "https://www.nushell.sh",
+    version_env_var="NU_VERSION",
 )
 
 POWERSHELL = Shell(
@@ -106,6 +110,7 @@ XONSH = Shell(
     "Xonsh",
     "🐍",
     "https://xon.sh",
+    version_env_var="XONSH_VERSION",
 )
 
 ZSH = Shell(
@@ -113,4 +118,5 @@ ZSH = Shell(
     "Zsh",
     "ℤ",
     "https://www.zsh.org",
+    version_env_var="ZSH_VERSION",
 )

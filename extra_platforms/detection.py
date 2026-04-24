@@ -805,19 +805,44 @@ def is_unknown_platform() -> bool:
 # =============================================================================
 
 
-# Shells that set a dedicated env var at startup, making the var a reliable
-# signal that the shell is *currently running* (not just configured as the
-# login shell in SHELL). PSModulePath is intentionally excluded because it
-# leaks into child processes and is not a trustworthy active-shell indicator.
-# See the ``is_powershell()`` docstring for details.
-_SHELL_STARTUP_ENV_VARS: dict[str, str] = {
-    "bash": "BASH_VERSION",
-    "fish": "FISH_VERSION",
-    "ksh": "KSH_VERSION",
-    "nushell": "NU_VERSION",
-    "xonsh": "XONSH_VERSION",
-    "zsh": "ZSH_VERSION",
-}
+@cache
+def _resolved_shell_id() -> str | None:
+    """Resolve the ``SHELL`` environment variable through symlinks.
+
+    Returns the stem of the resolved path (like ``"bash"`` when
+    ``/bin/sh`` symlinks to ``/bin/bash``), or ``None`` when ``SHELL`` is
+    not set.
+    """
+    shell_path = environ.get("SHELL", "")
+    if not shell_path:
+        return None
+    try:
+        return Path(shell_path).resolve(strict=True).stem.lower()
+    except OSError:
+        return PurePosixPath(shell_path).stem.lower()
+
+
+@cache
+def _active_env_var_shell_ids() -> frozenset[str]:
+    """Return shell IDs whose startup environment variable is currently set.
+
+    Reads ``version_env_var`` from each {class}`~extra_platforms.Shell`
+    instance. ``PSModulePath`` is intentionally excluded (it leaks into
+    child processes and is not a trustworthy active-shell indicator; see
+    the ``is_powershell()`` docstring for details).
+
+    This identifies shells that are *actively running*, not merely configured
+    as the login shell.
+    """
+    # Lazy import to avoid circular dependencies.
+    from .group_data import ALL_SHELLS
+
+    return frozenset(
+        shell.id
+        for shell in ALL_SHELLS
+        if (env_var := getattr(shell, "version_env_var", None))
+        and env_var in environ
+    )
 
 
 @cache
@@ -907,18 +932,9 @@ def _detect_shell(
         frozenset((shell_ids,)) if isinstance(shell_ids, str) else frozenset(shell_ids)
     )
 
-    # Check SHELL environment variable against known shell IDs.
-    # Resolve symlinks to detect the actual shell implementation rather than
-    # the interface name. For example, when /bin/sh -> /bin/bash, the resolved
-    # name "bash" is used instead of "sh".
-    shell_path = environ.get("SHELL", "")
-    if shell_path:
-        try:
-            shell_id = Path(shell_path).resolve(strict=True).stem.lower()
-        except OSError:
-            shell_id = PurePosixPath(shell_path).stem.lower()
-        if shell_id in ids:
-            return True
+    # Check resolved SHELL environment variable against known shell IDs.
+    if _resolved_shell_id() in ids:
+        return True
 
     # Fallback: walk the parent process tree to find the active shell. This
     # covers stripped containers (like ubuntu-slim) where SHELL is not set.
@@ -1629,12 +1645,20 @@ def current_platform(strict: bool = False) -> Platform:
 def current_shell(strict: bool = False) -> Shell:
     """Returns the {class}`~extra_platforms.Shell` matching the current environment.
 
-    Uses a tiered detection strategy:
+    Uses a tiered detection strategy with cached signals shared with
+    {func}`_detect_shell`:
 
-    1. Shell-specific environment variables (detects active shell).
-    2. `SHELL` environment variable (detects login shell on Unix).
-    3. Windows defaults (`PROMPT` → {data}`~extra_platforms.CMD`,
-       else → {data}`~extra_platforms.POWERSHELL`).
+    1. Shell-specific environment variables (detects *active* shell).
+    2. ``SHELL`` environment variable resolved through symlinks (detects
+       *configured* login shell on Unix).
+    3. Full scan of all shells (env vars, ``SHELL``, ``/proc`` tree,
+       Windows defaults).
+
+    {data}`~extra_platforms.SH` is treated as a low-specificity fallback (like
+    {data}`~extra_platforms.GENERIC_LINUX` for platforms): on modern systems
+    ``/bin/sh`` is almost always a symlink to a concrete shell, so
+    {data}`~extra_platforms.SH` is stripped when a more specific shell is also
+    detected.
 
     Returns {data}`~extra_platforms.UNKNOWN_SHELL` if not running inside a
     recognized shell. To raise an error instead, set `strict` to `True`.
@@ -1658,32 +1682,45 @@ def current_shell(strict: bool = False) -> Shell:
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_SHELLS
-    from .shell_data import POWERSHELL, UNKNOWN_SHELL
+    from .shell_data import POWERSHELL, SH, UNKNOWN_SHELL
 
-    # Collect all matching shells.
+    # Collect all matching shells via the full scan (env vars, SHELL=,
+    # /proc tree, Windows defaults).
     matching: set[Shell] = {
         shell  # type: ignore[misc]
         for shell in ALL_SHELLS
         if shell.current
     }
 
-    # Return the only matching shell.
     if len(matching) == 1:
         return matching.pop()
 
-    # When some matching shells were detected via their startup env var
-    # (reliable indicator of the *active* running shell) and others were
-    # detected only via SHELL path or /proc tree (login or parent-process
-    # shell), prefer the former. This resolves the common CI conflict where
-    # SHELL=/bin/sh resolves to /bin/dash (login shell) while BASH_VERSION
-    # is set (active shell is bash).
-    active_shells = {
-        shell
-        for shell in matching
-        if (env_var := _SHELL_STARTUP_ENV_VARS.get(shell.id)) and env_var in environ
-    }
-    if active_shells and active_shells != matching:
-        matching = active_shells
+    # Tier 1: prefer shells whose startup env var is set (strong signal for
+    # the *active* shell, not merely the configured login shell). This
+    # resolves the common CI conflict where SHELL=/bin/dash (login shell)
+    # while BASH_VERSION is set (active shell is bash).
+    active = _active_env_var_shell_ids()
+    if active:
+        active_matches = {s for s in matching if s.id in active}
+        if len(active_matches) == 1:
+            return active_matches.pop()
+        if active_matches:
+            matching = active_matches
+
+    # Tier 2: prefer the shell resolved from SHELL= over weaker /proc
+    # matches, when there is no env var signal.
+    if not active:
+        resolved = _resolved_shell_id()
+        if resolved:
+            resolved_matches = {s for s in matching if s.id == resolved}
+            if len(resolved_matches) == 1:
+                return resolved_matches.pop()
+
+    # Remove SH if a more specific shell was also detected. On modern
+    # systems /bin/sh is almost always a symlink to a concrete shell, so
+    # SH is a low-specificity fallback (like GENERIC_LINUX for platforms).
+    if SH in matching and len(matching) > 1:
+        matching.discard(SH)
         if len(matching) == 1:
             return matching.pop()
 

@@ -35,6 +35,7 @@ from extra_platforms import (
     ALL_TERMINALS,
     ALL_TRAITS,
     BASH,
+    FISH,
     GITHUB_CI,
     GITLAB_CI,
     MACOS,
@@ -536,9 +537,18 @@ def test_multiple_shells_match(monkeypatch):
     """Test RuntimeError when multiple shells match."""
     invalidate_caches()
 
-    # Mock two shells to both return True.
-    monkeypatch.setattr(type(BASH), "current", property(lambda self: True))
-    monkeypatch.setattr(type(POWERSHELL), "current", property(lambda self: True))
+    # Mock detection functions at the extra_platforms level (where
+    # Trait.current looks them up) so exactly BASH and FISH match.
+    # Disable cached signal helpers so the env var fast path does not
+    # short-circuit.
+    for shell in ALL_SHELLS:
+        func_name = f"is_{shell.id}"
+        should_match = shell.id in ("bash", "fish")
+        monkeypatch.setattr(extra_platforms, func_name, lambda m=should_match: m)
+    monkeypatch.setattr(
+        detection_module, "_active_env_var_shell_ids", lambda: frozenset()
+    )
+    monkeypatch.setattr(detection_module, "_resolved_shell_id", lambda: None)
 
     with pytest.raises(RuntimeError, match="Multiple shells matches"):
         current_shell()
