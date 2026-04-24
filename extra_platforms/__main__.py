@@ -15,6 +15,8 @@
 
 from __future__ import annotations
 
+import argparse
+import json
 import logging
 import sys
 import unicodedata
@@ -146,8 +148,50 @@ def _print_trait(label: str, trait: Trait) -> None:
         print(f"{'groups':>14}: {', '.join(group_symbols)}")
 
 
+def _trait_dict(trait: Trait) -> dict:
+    """Convert a detected trait to a JSON-serializable dict."""
+    data = dict(trait.info())
+    data["aliases"] = sorted(trait.aliases) if trait.aliases else []
+    data["symbol"] = trait.symbol_id
+    data["detection"] = trait.detection_func_id
+    data["groups"] = sorted(g.symbol_id for g in trait.groups)
+    return data
+
+
+def _group_dict(group: Group) -> dict:
+    """Convert a group to a JSON-serializable dict."""
+    return {
+        "id": group.id,
+        "name": group.name,
+        "icon": group.icon,
+        "symbol": group.symbol_id,
+        "detection": group.detection_func_id,
+        "canonical": group.canonical,
+    }
+
+
 def main() -> None:
     """Print detected environment traits."""
+    parser = argparse.ArgumentParser(
+        prog="extra-platforms",
+        description=(
+            "Detect and report the architecture, platform, shell, terminal,"
+            " CI, and agent of the current environment."
+        ),
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        dest="json_output",
+        help="output results as JSON",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"extra-platforms {__version__}",
+    )
+    args = parser.parse_args()
+
     # Force UTF-8 output on Windows where the default console encoding
     # (e.g. cp1252) cannot represent Unicode box-drawing characters and emoji.
     for stream in (sys.stdout, sys.stderr):
@@ -173,6 +217,29 @@ def main() -> None:
     agent = current_agent()
     logging.disable(logging.NOTSET)
 
+    # Collect all detected traits and their groups.
+    all_detected = current_traits()
+    sorted_traits = sorted(all_detected, key=lambda t: t.id)
+    all_groups: set[Group] = set()
+    for trait in all_detected:
+        all_groups.update(trait.groups)
+    sorted_groups = sorted(all_groups, key=lambda g: g.id)
+
+    if args.json_output:
+        data = {
+            "version": __version__,
+            "architecture": _trait_dict(arch),
+            "platform": _trait_dict(plat),
+            "shell": _trait_dict(shell),
+            "terminal": _trait_dict(terminal),
+            "ci": _trait_dict(ci),
+            "agent": _trait_dict(agent),
+            "groups": [_group_dict(g) for g in sorted_groups],
+        }
+        print(json.dumps(data, indent=2, ensure_ascii=False))
+        return
+
+    # Human-readable output.
     print(f"extra-platforms {__version__}")
 
     _print_trait("Architecture", arch)
@@ -181,15 +248,6 @@ def main() -> None:
     _print_trait("Terminal", terminal)
     _print_trait("CI", ci)
     _print_trait("Agent", agent)
-
-    # Summary of all detected traits and their groups.
-    all_detected = current_traits()
-    sorted_traits = sorted(all_detected, key=lambda t: t.id)
-
-    all_groups: set[Group] = set()
-    for trait in all_detected:
-        all_groups.update(trait.groups)
-    sorted_groups = sorted(all_groups, key=lambda g: g.id)
 
     # Compute column widths across both tables for alignment.
     widths = _merge_widths(

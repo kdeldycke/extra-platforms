@@ -54,7 +54,14 @@ extra-platforms 9.0.1
           (...)
 ```
 
-The same output is available via `python -m extra_platforms`.
+The same output is available via `python -m extra_platforms`. Use `--json` for machine-readable output, or `--help` to see all options.
+
+For scripting, pipe the JSON output into `jq`:
+
+```shell-session
+$ uvx extra-platforms --json | jq --raw-output .platform.id
+macos
+```
 
 Or if you want to explore usage of the library in a Python REPL:
 

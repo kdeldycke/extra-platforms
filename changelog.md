@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add `--json` and `--help` CLI options via `argparse`. `--json` outputs all detected traits and groups as a single JSON object for scripting.
+- Add `--version` CLI option (replaces version line in default output).
 - Add `SH` (Bourne Shell) trait and `is_sh()` detection function.
 - Add `GUIX_BUILD` CI trait and `is_guix_build()` detection function.
 - Overhaul shell detection: resolve symlinks in `SHELL` before identifying the implementation (so `/bin/sh` → `/bin/bash` detects bash, not sh); `current_shell()` now disambiguates via three-tier priority — startup env vars, then `/proc` parent process tree, then `SHELL` value — fixing detection on CI runners where `SHELL=/bin/sh` points to a different shell than what is actually executing; `SH` is treated as a low-specificity fallback and stripped when a more specific shell is also detected. Use `is_bourne_shells()` to check for a Bourne-compatible interface regardless of the underlying implementation.
