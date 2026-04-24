@@ -140,6 +140,7 @@ def test_github_runner_detection():
         "ubuntu-24.04",
         "ubuntu-22.04",
         "macos-15-intel",
+        "macos-26-intel",
         "windows-2025",
         "windows-2022",
     } or (
@@ -216,6 +217,7 @@ def test_github_runner_detection():
         "macos-latest",
         "macos-latest-large",
         "macos-26",
+        "macos-26-intel",
         "macos-26-xlarge",
         "macos-15",
         "macos-15-intel",

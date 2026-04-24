@@ -805,6 +805,21 @@ def is_unknown_platform() -> bool:
 # =============================================================================
 
 
+# Shells that set a dedicated env var at startup, making the var a reliable
+# signal that the shell is *currently running* (not just configured as the
+# login shell in SHELL). PSModulePath is intentionally excluded because it
+# leaks into child processes and is not a trustworthy active-shell indicator.
+# See the ``is_powershell()`` docstring for details.
+_SHELL_STARTUP_ENV_VARS: dict[str, str] = {
+    "bash": "BASH_VERSION",
+    "fish": "FISH_VERSION",
+    "ksh": "KSH_VERSION",
+    "nushell": "NU_VERSION",
+    "xonsh": "XONSH_VERSION",
+    "zsh": "ZSH_VERSION",
+}
+
+
 @cache
 def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
     """Check if any parent process in the tree matches the given shell IDs.
@@ -1655,6 +1670,22 @@ def current_shell(strict: bool = False) -> Shell:
     # Return the only matching shell.
     if len(matching) == 1:
         return matching.pop()
+
+    # When some matching shells were detected via their startup env var
+    # (reliable indicator of the *active* running shell) and others were
+    # detected only via SHELL path or /proc tree (login or parent-process
+    # shell), prefer the former. This resolves the common CI conflict where
+    # SHELL=/bin/sh resolves to /bin/dash (login shell) while BASH_VERSION
+    # is set (active shell is bash).
+    active_shells = {
+        shell
+        for shell in matching
+        if (env_var := _SHELL_STARTUP_ENV_VARS.get(shell.id)) and env_var in environ
+    }
+    if active_shells and active_shells != matching:
+        matching = active_shells
+        if len(matching) == 1:
+            return matching.pop()
 
     # If PowerShell is detected alongside another shell, prefer the other.
     if POWERSHELL in matching and len(matching) > 1:
