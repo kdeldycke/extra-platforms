@@ -49,12 +49,12 @@ Shell detection resolves symlinks in the `SHELL` environment variable before ide
 
 On most modern Unix systems, `/bin/sh` is a symlink to a concrete shell:
 
-| Distribution     | `/bin/sh` target |
-| :--------------- | :--------------- |
-| Debian, Ubuntu   | `/bin/dash`      |
-| Fedora, RHEL     | `/bin/bash`      |
-| Alpine           | `/bin/busybox`   |
-| macOS            | `/bin/bash`      |
+| Distribution   | `/bin/sh` target |
+| :------------- | :--------------- |
+| Debian, Ubuntu | `/bin/dash`      |
+| Fedora, RHEL   | `/bin/bash`      |
+| Alpine         | `/bin/busybox`   |
+| macOS          | `/bin/bash`      |
 
 When `/bin/sh` symlinks to `/bin/bash`:
 
