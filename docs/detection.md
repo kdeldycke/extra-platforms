@@ -393,7 +393,7 @@ These functions are dynamically generated for each [group](groups.md) and test w
 
 ## Current trait functions
 
-These functions retrieve the currently detected traits:
+{func}`~extra_platforms.current_traits` returns **all detectable traits** (multiple per type are possible). The individual `current_*()` functions return the **single primary trait** per type, after disambiguation:
 
 ```{eval-rst}
 .. autofunction:: extra_platforms.current_traits

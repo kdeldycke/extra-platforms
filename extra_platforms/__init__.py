@@ -432,7 +432,9 @@ def _initialize_group_detection_functions() -> list[str]:
             f"Function ID {func_id} already defined locally."
         )
         func_ids.append(func_id)
-        globals()[func_id] = cache(group_membership_check)
+        cached_func = cache(group_membership_check)
+        globals()[func_id] = cached_func
+        detection._detection_registry[func_id] = cached_func
 
     return func_ids
 

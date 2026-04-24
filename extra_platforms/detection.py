@@ -87,9 +87,20 @@ from .platform_info import os_release_id
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Callable, Iterable
 
     from .trait import CI, Agent, Architecture, Platform, Shell, Terminal, Trait
+
+
+_detection_registry: dict[str, Callable[[], bool]] = {}
+"""Maps detection function IDs (like ``"is_bash"``) to their callables.
+
+Populated automatically after all ``is_*()`` functions are defined. Group
+detection functions generated in ``__init__.py`` are also registered here.
+
+Used by :attr:`Trait.current <extra_platforms.Trait.current>` to look up
+detection functions without a fragile string-based module attribute search.
+"""
 
 
 def _unrecognized_message(report: bool = True) -> str:
@@ -827,9 +838,9 @@ def _active_env_var_shell_ids() -> frozenset[str]:
     """Return shell IDs whose startup environment variable is currently set.
 
     Reads ``version_env_var`` from each {class}`~extra_platforms.Shell`
-    instance. ``PSModulePath`` is intentionally excluded (it leaks into
-    child processes and is not a trustworthy active-shell indicator; see
-    the ``is_powershell()`` docstring for details).
+    instance. PowerShell is naturally excluded because
+    {data}`~extra_platforms.POWERSHELL` has ``version_env_var=None``
+    (``PSModulePath`` is a presence signal, not a version variable).
 
     This identifies shells that are *actively running*, not merely configured
     as the login shell.
@@ -1090,10 +1101,11 @@ def is_powershell() -> bool:
     which deprioritizes PowerShell when other shells are detected.
     ```
     """
-    return _detect_shell(
-        version_env_var="PSModulePath",
-        shell_ids=("powershell", "powershell_ise", "pwsh"),
-    )
+    # PSModulePath is a presence signal, not a version variable. Check it
+    # inline instead of routing through _detect_shell(version_env_var=...).
+    if "PSModulePath" in environ:
+        return True
+    return _detect_shell(shell_ids=("powershell", "powershell_ise", "pwsh"))
 
 
 @cache
@@ -1540,6 +1552,12 @@ def is_unknown_agent() -> bool:
     return current_agent() is UNKNOWN_AGENT
 
 
+# Populate the detection registry with all is_*() functions defined above.
+_detection_registry.update(
+    {_name: _func for _name in dir() if _name.startswith("is_") and callable(_func := globals()[_name])}
+)
+
+
 # =============================================================================
 # Current environment detection
 # =============================================================================
@@ -1680,6 +1698,13 @@ def current_shell(strict: bool = False) -> Shell:
     detected (because `PSModulePath`
     [leaks into child processes](https://github.com/PowerShell/PowerShell/issues/9957)),
     the other shell is preferred.
+    ```
+
+    ```{note}
+    This returns the **single primary shell**, after disambiguation.
+    {func}`~extra_platforms.current_traits` may include additional shells
+    that are detectable but not primary (like
+    {data}`~extra_platforms.POWERSHELL` on GitHub Ubuntu runners).
     ```
 
     ```{warning}
@@ -1924,6 +1949,19 @@ def current_traits() -> set[Trait]:
     ```
 
     Raises {exc}`SystemError` if the current environment is not recognized at all.
+
+    ```{important}
+    This function returns **all detectable traits**, not the disambiguated
+    primary trait per category. Multiple shells, platforms, or other traits
+    may appear in the result (for example, both
+    {data}`~extra_platforms.BASH` and {data}`~extra_platforms.POWERSHELL`
+    on GitHub Ubuntu runners where ``PSModulePath`` leaks from Azure).
+
+    Use the individual ``current_*()`` functions
+    ({func}`~extra_platforms.current_shell`,
+    {func}`~extra_platforms.current_platform`, etc.) to get the single
+    best match per trait type.
+    ```
 
     ```{attention}
     At this point it is too late to worry about caching. This function has no

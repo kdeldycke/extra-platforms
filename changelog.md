@@ -11,6 +11,7 @@
 - Add `GUIX_BUILD` CI trait and `is_guix_build()` detection function.
 - Overhaul shell detection: resolve symlinks in `SHELL` before identifying the implementation (so `/bin/sh` → `/bin/bash` detects bash, not sh); `current_shell()` now disambiguates via three-tier priority — startup env vars, then `/proc` parent process tree, then `SHELL` value — fixing detection on CI runners where `SHELL=/bin/sh` points to a different shell than what is actually executing; `SH` is treated as a low-specificity fallback and stripped when a more specific shell is also detected. Use `is_bourne_shells()` to check for a Bourne-compatible interface regardless of the underlying implementation.
 - Add `version_env_var` field to `Shell` for shells that set a dedicated startup environment variable (like `BASH_VERSION` for Bash).
+- Fix `is_powershell()` to check `PSModulePath` as an inline presence signal instead of routing it through the `version_env_var` parameter of `_detect_shell()`, which was semantically incorrect (`PSModulePath` is not a version variable).
 
 ## [`11.1.0` (2026-04-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...v11.1.0)
 

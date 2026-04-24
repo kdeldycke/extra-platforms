@@ -306,14 +306,14 @@ class Trait(_Identifiable, ABC):
         module import time.
         ```
         """
-        import extra_platforms
+        from .detection import _detection_registry
 
-        func = getattr(extra_platforms, self.detection_func_id, None)
+        func = _detection_registry.get(self.detection_func_id)
         if not func:
             raise NotImplementedError(
                 f"Detection function {self.detection_func_id}() is not implemented."
             )
-        return func()  # type: ignore[no-any-return]
+        return func()
 
     @abstractmethod
     def info(self) -> dict:

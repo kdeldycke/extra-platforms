@@ -35,18 +35,18 @@ You can get all currently detected traits via the {func}`~current_traits` functi
 }
 ```
 
-This function returns a set of all [predefined traits](#all-traits) that match the current system.
+This function returns the set of all [predefined traits](#all-traits) that match the current system. It may include multiple traits of the same type when several are independently detectable (for instance, both `BASH` and `POWERSHELL` on GitHub Ubuntu runners where `PSModulePath` leaks from Azure infrastructure).
 
-Other current traits can be specifically checked via their dedicated [`current_*()` functions](detection.md#current-trait-functions):
+To get the single **primary** trait for a given type, use the dedicated [`current_*()` functions](detection.md#current-trait-functions), which apply disambiguation:
 
 ```pycon
->>> from extra_platforms import current_architectures, current_platforms, current_ci
->>> current_architectures()
-{Architecture(id='aarch64', name='ARM64 (AArch64)')}
->>> current_platforms()
-{Platform(id='macos', name='macOS')}
->>> current_ci()
-{CI(id='github_ci', name='GitHub Actions runner')}
+>>> from extra_platforms import current_architecture, current_platform, current_shell
+>>> current_architecture()
+Architecture(id='aarch64', name='ARM64 (AArch64)')
+>>> current_platform()
+Platform(id='macos', name='macOS')
+>>> current_shell()
+Shell(id='zsh', name='Zsh')
 ```
 
 ### Predefined traits
