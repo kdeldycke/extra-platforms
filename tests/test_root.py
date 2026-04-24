@@ -554,6 +554,9 @@ def test_multiple_shells_match(monkeypatch):
         detection_module, "_active_env_var_shell_ids", lambda: frozenset()
     )
     monkeypatch.setattr(detection_module, "_resolved_shell_id", lambda: None)
+    monkeypatch.setattr(
+        detection_module, "_parent_process_exe_names", lambda: frozenset()
+    )
 
     with pytest.raises(RuntimeError, match="Multiple shells matches"):
         current_shell()
