@@ -5,7 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-- Loosen the `test_import_time` threshold from 500 ms to 1000 ms to accommodate slower architectures like i586. Closes {issue}`494`
+- Defer `logging` and `warnings` imports out of the cold-load path: the stdlib `logging` import pulls in `traceback` (and `_colorize` on Python 3.14+), which dominates import time on slow architectures like i586. Closes {issue}`494`
+- Loosen the `test_import_time` threshold from 500 ms to 1000 ms as a safety margin for slower architectures.
 
 ## [`12.0.0` (2026-04-24)](https://github.com/kdeldycke/extra-platforms/compare/v11.1.0...v12.0.0)
 

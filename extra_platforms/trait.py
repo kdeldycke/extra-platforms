@@ -24,7 +24,6 @@ computed based on environment-dependent values.
 from __future__ import annotations
 
 import platform
-import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property, lru_cache
@@ -525,6 +524,8 @@ def _resolve_alias(id_: str) -> str:
 
     for trait in ALL_TRAITS:
         if id_ in trait.aliases:
+            import warnings
+
             warnings.warn(
                 f"'{id_}' is an alias for '{trait.id}'. "
                 f"Use the canonical ID '{trait.id}' instead.",

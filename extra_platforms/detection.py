@@ -73,9 +73,6 @@ Other source of inspiration for platform detection:
 
 from __future__ import annotations
 
-import logging
-
-_logger = logging.getLogger(__name__)
 import os
 import platform
 import sys
@@ -153,10 +150,16 @@ def _report_unrecognized(
     msg = f"Unrecognized {trait_name}: {_unrecognized_message(report=expected)}"
     if strict:
         raise SystemError(msg)
+    # Defer logging import to keep cold module load fast: stdlib logging pulls
+    # in traceback (and in 3.14+, _colorize), which dominates import time on
+    # slow architectures like i586. See issue #494.
+    import logging
+
+    logger = logging.getLogger(__name__)
     if expected:
-        _logger.warning(msg)
+        logger.warning(msg)
     else:
-        _logger.info(msg)
+        logger.info(msg)
 
 
 # =============================================================================
