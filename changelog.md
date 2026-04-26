@@ -1,9 +1,11 @@
 # Changelog
 
-## [`12.0.2.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.1...main)
+## [`12.0.3.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.2...main)
 
 > [!WARNING]
 > This version is **not released yet** and is under active development.
+
+## [`12.0.2` (2026-04-26)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.1...v12.0.2)
 
 ## [`12.0.1` (2026-04-26)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.0...v12.0.1)
 
