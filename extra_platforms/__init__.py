@@ -399,7 +399,7 @@ Pytest optional.
 """
 
 
-__version__ = "12.0.2.dev0"
+__version__ = "12.1.0.dev0"
 
 
 def _initialize_group_detection_functions() -> list[str]:
