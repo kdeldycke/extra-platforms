@@ -7,10 +7,16 @@
 
 ## [`12.0.1` (2026-04-26)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.0...v12.0.1)
 
+> [!NOTE]
+> `12.0.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/12.0.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v12.0.1).
+
 - Defer `logging` and `warnings` imports out of the cold-load path: the stdlib `logging` import pulls in `traceback` (and `_colorize` on Python 3.14+), which dominates import time on slow architectures like i586. Closes {issue}`494`
 - Loosen the `test_import_time` threshold from 500 ms to 1000 ms as a safety margin for slower architectures.
 
 ## [`12.0.0` (2026-04-24)](https://github.com/kdeldycke/extra-platforms/compare/v11.1.0...v12.0.0)
+
+> [!NOTE]
+> `12.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/12.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v12.0.0).
 
 - Add `SH` (Bourne Shell) trait and `is_sh()` detection function.
 - Add `GUIX_BUILD` CI trait and `is_guix_build()` detection function.
