@@ -381,9 +381,7 @@ markers = [
   "network: Tests that require network access (excluded with -m 'not network').",
 ]
 addopts = [
-  "--dist=loadgroup",
   "--durations=10",
-  "--numprocesses=auto",
 ]
 # Make sure tests that are expected to fail do not resurrect and start working all of a sudden.
 xfail_strict = true

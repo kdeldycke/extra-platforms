@@ -109,6 +109,8 @@ jobs:
           EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
         run: >
           uv --no-progress run --frozen -- pytest
+          --dist=loadgroup
+          --numprocesses=auto
           --cov
           --cov-report=term
           --cov-report=xml

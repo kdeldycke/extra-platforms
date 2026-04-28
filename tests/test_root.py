@@ -78,6 +78,7 @@ from extra_platforms import (
     is_linux,
     is_macos,
     is_ubuntu,
+    is_unknown_shell,
     is_windows,
     platform_data as platform_data_module,
     shell_data as shell_data_module,
@@ -270,8 +271,12 @@ def test_current_funcs():
     current_traits_results = current_traits()
     assert ALL_TRAITS.issuperset(current_traits_results)
 
-    # 1 architecture + 1 platform + 1 shell = 3 traits always detected.
-    detected_traits = 3
+    # 1 architecture + 1 platform = 2 traits always detected.
+    detected_traits = 2
+    # Shell is optional: minimal sandboxes (Guix builders, BusyBox-only images)
+    # may have no recognizable shell.
+    if not is_unknown_shell():
+        detected_traits += 1
     # Terminal is optional: headless/CI environments may not have one.
     if is_any_terminal():
         detected_traits += 1
@@ -307,9 +312,9 @@ def test_current_funcs():
     assert current_platform_result is not UNKNOWN_PLATFORM
 
     current_shell_result = current_shell()
-    assert current_shell_result in ALL_SHELLS
-    assert current_shell_result in current_traits_results
-    assert current_shell_result is not UNKNOWN_SHELL
+    assert current_shell_result in ALL_SHELLS | {UNKNOWN_SHELL}
+    if current_shell_result is not UNKNOWN_SHELL:
+        assert current_shell_result in current_traits_results
 
     current_terminal_result = current_terminal()
     assert current_terminal_result in ALL_TERMINALS | {UNKNOWN_TERMINAL}
@@ -384,9 +389,10 @@ def test_current_strict_mode(
 ):
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
-    # Skip this check for CI, terminal, and agent since they may legitimately
-    # be unknown.
-    if trait_type not in ("CI", "terminal", "agent"):
+    # Skip this check for CI, terminal, agent, and shell since they may
+    # legitimately be unknown (minimal sandboxes often have no recognizable
+    # shell).
+    if trait_type not in ("CI", "terminal", "agent", "shell"):
         invalidate_caches()
         result = current_func()
         assert result in all_collection
