@@ -1,5 +1,10 @@
 # Changelog
 
+## [`12.0.3.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.2...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`12.0.2` (2026-04-28)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.1...v12.0.2)
 
 - Move `--cov`, `--cov-report=term`, `--numprocesses=auto`, and `--dist=loadgroup` from `pyproject.toml` `[tool.pytest].addopts` into the CI workflow. Removes `pytest-cov` and `pytest-xdist` as unconditional test-time dependencies for downstream packagers.
