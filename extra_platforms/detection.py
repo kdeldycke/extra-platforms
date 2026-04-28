@@ -591,8 +591,21 @@ def is_linuxmint() -> bool:
 
 @cache
 def is_macos() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.MACOS`."""
-    return platform.platform(terse=True).startswith(("macOS", "Darwin"))
+    """Return {data}`True` if current platform is {data}`~extra_platforms.MACOS`.
+
+    .. note::
+        Uses {data}`sys.platform` rather than {func}`platform.platform`. The
+        former is a constant baked in by CPython at compile time (always
+        ``"darwin"`` on macOS), while the latter performs runtime introspection
+        and, on Windows, shells out via {func}`platform._syscmd_ver` to invoke
+        ``cmd /c ver``. Calling {func}`platform.platform` here would therefore
+        spawn a subprocess on every non-macOS host, and break test suites that
+        globally patch {func}`subprocess.run`. Since ``sys.platform == "darwin"``
+        is unambiguous for macOS (unlike Solaris vs. SunOS, which both report
+        ``"sunos5"`` and genuinely need {func}`platform.platform` to be told
+        apart), there is no reason to pay that cost here.
+    """
+    return sys.platform == "darwin"
 
 
 @cache

@@ -5,6 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- `is_macos()` now uses `sys.platform == "darwin"` instead of `platform.platform(terse=True)`. Avoids a subprocess call (`cmd /c ver` via `platform._syscmd_ver`) on Windows hosts, which broke downstream test suites that globally patch `subprocess.run`.
 - Move `--cov`, `--cov-report=term`, `--numprocesses=auto`, and `--dist=loadgroup` from `pyproject.toml` `[tool.pytest].addopts` into the CI workflow. Removes `pytest-cov` and `pytest-xdist` as unconditional test-time dependencies for downstream packagers.
 - Mark `test_pyproject_classifiers` with the new `network` marker. Sandboxed builds can exclude it with `pytest -m "not network"`.
 - Make `test_current_funcs` and `test_current_strict_mode` tolerate environments without a recognizable shell (Guix builders, BusyBox-only images). Shell joins `CI`, `terminal`, and `agent` in the optional-trait list.
