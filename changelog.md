@@ -5,10 +5,9 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-- `is_macos()` now uses `sys.platform == "darwin"` instead of `platform.platform(terse=True)`. Avoids a subprocess call (`cmd /c ver` via `platform._syscmd_ver`) on Windows hosts, which broke downstream test suites that globally patch `subprocess.run`.
 - Move `--cov`, `--cov-report=term`, `--numprocesses=auto`, and `--dist=loadgroup` from `pyproject.toml` `[tool.pytest].addopts` into the CI workflow. Removes `pytest-cov` and `pytest-xdist` as unconditional test-time dependencies for downstream packagers.
-- Mark `test_pyproject_classifiers` with the new `network` marker. Sandboxed builds can exclude it with `pytest -m "not network"`.
-- Make `test_current_funcs` and `test_current_strict_mode` tolerate environments without a recognizable shell (Guix builders, BusyBox-only images). Shell joins `CI`, `terminal`, and `agent` in the optional-trait list.
+- Avoid spurious `cmd /c ver` subprocess calls on Windows in detection functions for non-Windows platforms. `is_macos()` now relies on `sys.platform == "darwin"` directly. `is_illumos()`, `is_solaris()`, `is_sunos()`, `is_wsl1()`, and `is_wsl2()` short-circuit on `sys.platform` before invoking `platform.platform()`, `platform.uname()`, or `platform.release()` (each of which shells out via `platform._syscmd_ver` on Windows). Fixes downstream test suites that globally patch `subprocess.run`.
+- Improve test portability: add `network` marker to `test_pyproject_classifiers` (exclude in sandboxed builds with `pytest -m "not network"`); tolerate missing shells in `test_current_funcs` and `test_current_strict_mode` (Guix builders, BusyBox-only images, where shell detection finds nothing).
 
 ## [`12.0.1` (2026-04-26)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.0...v12.0.1)
 
