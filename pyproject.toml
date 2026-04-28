@@ -377,11 +377,12 @@ default.extend-ignore-identifiers-re = [
 
 [tool.pytest]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
+markers = [
+  "network: Tests that require network access (excluded with -m 'not network').",
+]
 addopts = [
   "--dist=loadgroup",
   "--durations=10",
-  "--cov",
-  "--cov-report=term",
   "--numprocesses=auto",
 ]
 # Make sure tests that are expected to fail do not resurrect and start working all of a sudden.

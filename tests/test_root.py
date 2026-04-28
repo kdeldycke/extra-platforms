@@ -156,6 +156,7 @@ def test_pyproject_keywords():
     assert keywords == ideal_keywords
 
 
+@pytest.mark.network
 def test_pyproject_classifiers():
     """Check that Trove classifiers in ``pyproject.toml`` are correct."""
     # Fetch official trove classifiers from PyPI.
