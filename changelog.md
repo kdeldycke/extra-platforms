@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Extend missing-shell tolerance to `test_skip_all_shells`, `test_skip_bash`, and `test_skip_powershell` in `tests/test_pytest.py`. The `12.0.2` shell-tolerance work only covered `tests/test_root.py`, leaving these three tests failing on sandboxed builders (Guix, BusyBox-only images) where no shell is detected.
+
 ## [`12.0.2` (2026-04-28)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.1...v12.0.2)
 
 - Move `--cov`, `--cov-report=term`, `--numprocesses=auto`, and `--dist=loadgroup` from `pyproject.toml` `[tool.pytest].addopts` into the CI workflow. Removes `pytest-cov` and `pytest-xdist` as unconditional test-time dependencies for downstream packagers.
