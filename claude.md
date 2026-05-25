@@ -52,7 +52,7 @@ $ uv run --group test pytest -n auto
 ### Type checking
 
 ```shell-session
-$ uv run --group typing mypy extra_platforms
+$ uvx repomatic run mypy -- extra_platforms
 ```
 
 ### Documentation

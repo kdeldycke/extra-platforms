@@ -45,6 +45,10 @@ extensions = [
 
 # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
 myst_enable_extensions = [
+    # Render GitHub-style alerts (> [!NOTE], > [!WARNING], …) as admonitions.
+    # readme.md, changelog.md and install.md use them, and are pulled into the
+    # docs via {include}; without this they degrade to plain blockquotes.
+    "alert",
     "attrs_block",
     "attrs_inline",
     "colon_fence",

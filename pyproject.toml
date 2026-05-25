@@ -281,15 +281,18 @@ test = [
   "pytest-randomly>=4",
   # pytest-xdist 3.7.0 is the first version to support Python 3.13.
   "pytest-xdist[psutil]>=3.7",
-  # requests 2.32.5 is the first version to drop support for Python 3.8.
-  "requests>=2.32.5",
+  # requests 2.34 is the first version to ship inline type hints (PEP 561),
+  # which lets us drop the types-requests stub package from the typing group.
+  "requests>=2.34",
   "tomli>=2.3; python_version<'3.11'",
 ]
 docs = [
   # We need Click Extra 7.5 to render Markdown table properly.
   "click-extra[sphinx]>=7.5",
   "furo>=2025.9.25",
-  "myst-parser>=5",
+  # myst-parser 5.1 adds the "alert" extension that renders GitHub-style
+  # callouts (> [!NOTE], …) as admonitions. See docs/conf.py.
+  "myst-parser>=5.1",
   # Required so autodoc can import extra_platforms.pytest and document decorators.
   "pytest>=8.2.1",
   # Provides the repomatic.myst_docstrings Sphinx extension.
@@ -304,9 +307,6 @@ docs = [
   "sphinxext-opengraph>=0.13",
   # wcmatch 10.0 fix some inconsistencies in globbing and symlinks.
   "wcmatch>=10",
-]
-typing = [
-  "types-requests>=2.32.4.20250611",
 ]
 
 [tool.uv]
