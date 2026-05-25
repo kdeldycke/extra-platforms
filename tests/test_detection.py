@@ -377,6 +377,43 @@ def test_tree_from_ps_detects_interpreter_shell(tmp_path, monkeypatch):
     assert ("xonsh", str(launcher)) in pairs
 
 
+def test_tree_from_ps_uses_portable_flags(monkeypatch):
+    """The ps invocation avoids BSD-only flags so System V ps (Solaris) works."""
+    captured = {}
+
+    def fake_run(args, **kwargs):
+        captured["args"] = args
+        return subprocess.CompletedProcess(args, 0, stdout="")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    detection_module._tree_from_ps()
+    # `args` (POSIX), not `command` (absent on Solaris/AIX); no `-ww` (rejected
+    # by the System V ps on Solaris and AIX).
+    assert "pid=,ppid=,args=" in captured["args"]
+    assert "-ww" not in captured["args"]
+
+
+def test_ppid_from_proc_tolerates_binary_status(monkeypatch):
+    """System V /proc/<pid>/status is a binary pstatus_t; reading must not raise."""
+    monkeypatch.setattr(
+        detection_module.Path, "read_bytes", lambda self: b"\x00\x80\xff pstatus"
+    )
+    assert detection_module._ppid_from_proc(1234) is None
+
+
+@skip_windows
+def test_parent_process_tree_falls_back_to_ps_when_proc_empty(monkeypatch):
+    """System V /proc (illumos, Solaris) yields nothing, so fall back to ps."""
+    monkeypatch.setattr(detection_module, "_tree_from_proc", lambda: ())
+    sentinel = (("zsh", "/usr/bin/zsh"),)
+    monkeypatch.setattr(detection_module, "_tree_from_ps", lambda: sentinel)
+    # Simulate /proc being mounted, as it is on illumos and Solaris.
+    monkeypatch.setattr(detection_module.Path, "is_dir", lambda self: True)
+    invalidate_caches()
+    assert detection_module._parent_process_tree() == sentinel
+    invalidate_caches()
+
+
 def test_parent_process_exe_names():
     """The dispatcher returns a clean frozenset on every platform."""
     invalidate_caches()

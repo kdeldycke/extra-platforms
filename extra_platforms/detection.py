@@ -946,14 +946,22 @@ def _ppid_from_proc(pid: int) -> int | None:
     Tries the Linux-style ``stat`` file first, then the BSD-style ``status``
     file, so the same walk works across Linux, NetBSD, and FreeBSD. Returns
     {data}`None` when neither file can be read or parsed.
+
+    ```{note}
+    System V ``/proc`` (illumos, Solaris, AIX) exposes ``status`` as a binary
+    ``pstatus_t`` rather than text. Bytes are decoded with ``errors="replace"``
+    so a binary record degrades to an unparsable string (and {data}`None`)
+    instead of raising {exc}`UnicodeDecodeError`. {func}`_parent_process_tree`
+    then falls back to ``ps`` on those systems.
+    ```
     """
     for proc_file in ("stat", "status"):
         try:
-            record = Path(f"/proc/{pid}/{proc_file}").read_text()
+            record = Path(f"/proc/{pid}/{proc_file}").read_bytes()
         except OSError:
             continue
         try:
-            return _parse_proc_ppid(record)
+            return _parse_proc_ppid(record.decode(errors="replace"))
         except (ValueError, IndexError):
             return None
     return None
@@ -1050,25 +1058,31 @@ def _tree_from_proc() -> tuple[tuple[str, str], ...]:
 def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     """Walk the parent process tree through ``ps``.
 
-    Used on POSIX systems without a usable ``/proc`` (notably macOS, and BSDs
-    that do not mount procfs). Parses a single ``ps`` snapshot into a
-    ``{pid: (ppid, command)}`` table, then walks from the current process up to
-    the root, returning ordered ``(name, path)`` pairs (nearest first).
+    Used on POSIX systems without a usable text ``/proc`` (macOS and BSDs
+    without procfs, plus the System V ``/proc`` of illumos, Solaris, and
+    AIX/IBM i). Parses a single ``ps`` snapshot into a ``{pid: (ppid, args)}``
+    table, then walks from the current process up to the root, returning ordered
+    ``(name, path)`` pairs (nearest first).
 
-    The full command line is requested (rather than just the executable) so that
-    interpreter-hosted shells (like xonsh under python) can be recognized from
-    their arguments. ``path`` is taken from ``argv[0]`` when absolute; a login
-    shell (``-zsh``) or a bare name carries no path, so callers fall back to
-    ``SHELL``.
+    The full argument list is requested (rather than just the executable) so
+    that interpreter-hosted shells (like xonsh under python) can be recognized
+    from their arguments. ``path`` is taken from ``argv[0]`` when absolute; a
+    login shell (``-zsh``) or a bare name carries no path, so callers fall back
+    to ``SHELL``.
 
-    Only short option flags are passed: the BSD and macOS ``ps`` have no
-    long-form equivalents. The approach mirrors
-    [shellingham](https://github.com/sarugaku/shellingham) for ``/proc``-less
-    systems.
+    The invocation is the portable POSIX form (``-A``, ``-o field=``, and the
+    ``args`` specifier) with no ``-ww``, so it works across macOS, the BSDs,
+    Linux, and the System V ``ps`` of illumos, Solaris, and AIX/IBM i. Those
+    System V variants lack the ``command`` specifier (only ``args``) and reject
+    ``-ww`` (AIX accepts ``-w`` only in Berkeley mode, which has no ``-o``);
+    ``args`` may be truncated there, but ``argv[0]`` stays intact. Parsing reads
+    positional columns from empty (``field=``) headers, sidestepping the
+    header-name differences (``COMMAND`` vs ``CMD``) that complicate name-based
+    parsing. Mirrors [shellingham](https://github.com/sarugaku/shellingham).
     """
     try:
         result = subprocess.run(
-            ("ps", "-A", "-ww", "-o", "pid=,ppid=,command="),
+            ("ps", "-A", "-o", "pid=,ppid=,args="),
             capture_output=True,
             text=True,
             check=True,
@@ -1082,8 +1096,8 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     # of raising.
     output = str(result.stdout)
 
-    # Parse "<pid> <ppid> <command...>" rows into {pid: (ppid, command)}. The
-    # command is the last field and is kept whole.
+    # Parse "<pid> <ppid> <args...>" rows into {pid: (ppid, args)}. The
+    # argument list is the last field and is kept whole.
     table: dict[int, tuple[int, str]] = {}
     for line in output.splitlines():
         fields = line.split(maxsplit=2)
@@ -1184,10 +1198,14 @@ def _parent_process_tree() -> tuple[tuple[str, str], ...]:
     - The Win32 Tool Help API on Windows.
     - An empty tuple on platforms exposing none of these.
     """
-    # /proc, when present, needs no subprocess (Linux always, procfs BSDs).
+    # Linux (and procfs BSDs) expose a text /proc; this needs no subprocess.
     if Path("/proc").is_dir():
-        return _tree_from_proc()
-    # macOS and BSDs without procfs: walk the tree via `ps`.
+        tree = _tree_from_proc()
+        if tree:
+            return tree
+        # /proc exists but yielded nothing: System V procfs (illumos, Solaris,
+        # AIX) uses a binary layout the Linux reader cannot parse. Use `ps`.
+    # macOS, procfs-less BSDs, and System V procfs systems: walk via `ps`.
     if os.name == "posix":
         return _tree_from_ps()
     # Windows: snapshot via the Win32 Tool Help API. _tree_from_windows()
