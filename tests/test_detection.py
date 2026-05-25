@@ -283,11 +283,11 @@ def test_parse_proc_ppid(record, expected):
 
 def test_tree_from_ps(monkeypatch):
     """The ps-based walk (macOS/BSD) climbs from the current process to root."""
-    # pid ppid comm: comm is the executable path.
+    # pid ppid command: argv[0] is a path, except a login shell's "-zsh".
     table = (
         "  100     1 /sbin/launchd\n"
-        "  200   100 /bin/zsh\n"
-        "  300   200 /usr/bin/python3\n"
+        "  200   100 -zsh\n"
+        "  300   200 /usr/bin/python3 -m pytest\n"
     )
     monkeypatch.setattr(
         subprocess,
@@ -295,10 +295,11 @@ def test_tree_from_ps(monkeypatch):
         lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
     )
     monkeypatch.setattr(os, "getpid", lambda: 300)
-    # Ordered nearest-first, each name paired with its executable path.
+    # Ordered nearest-first. The login shell's argv[0] (-zsh) yields no path, and
+    # "-m pytest" must not be mistaken for an interpreter-hosted shell.
     assert detection_module._tree_from_ps() == (
         ("python3", "/usr/bin/python3"),
-        ("zsh", "/bin/zsh"),
+        ("zsh", ""),
         ("launchd", "/sbin/launchd"),
     )
 
@@ -317,6 +318,63 @@ def test_tree_from_ps_tolerates_mocked_run(monkeypatch):
 
     monkeypatch.setattr(subprocess, "run", _boom)
     assert detection_module._tree_from_ps() == ()
+
+
+def test_interpreter_shell_specs_includes_xonsh():
+    """Xonsh declares python as its interpreter, so it appears in the specs."""
+    launchers = {
+        launcher for _, launcher in detection_module._interpreter_shell_specs()
+    }
+    assert "xonsh" in launchers
+
+
+def test_interpreter_shell(tmp_path):
+    """An interpreter running a launcher file named after a shell is detected."""
+    launcher = tmp_path / "xonsh"
+    launcher.write_text("#!/usr/bin/python\n")
+    launcher_str = str(launcher)
+
+    # A python interpreter running the xonsh launcher file.
+    assert detection_module._interpreter_shell(["/usr/bin/python3", launcher_str]) == (
+        "xonsh",
+        launcher_str,
+    )
+    # The version-tolerant pattern also matches python3.11.
+    assert detection_module._interpreter_shell([
+        "/usr/bin/python3.11",
+        launcher_str,
+    ]) == ("xonsh", launcher_str)
+
+    # `-m xonsh` names a module, not a file: no match.
+    assert (
+        detection_module._interpreter_shell(["/usr/bin/python3", "-m", "xonsh"]) is None
+    )
+    # A non-interpreter argv[0] is not scanned.
+    assert detection_module._interpreter_shell(["/bin/zsh", launcher_str]) is None
+    # A file whose basename is not exactly the launcher (xonsh.py) is ignored.
+    script = tmp_path / "xonsh.py"
+    script.write_text("")
+    assert (
+        detection_module._interpreter_shell(["/usr/bin/python3", str(script)]) is None
+    )
+    # Empty argv.
+    assert detection_module._interpreter_shell([]) is None
+
+
+def test_tree_from_ps_detects_interpreter_shell(tmp_path, monkeypatch):
+    """The ps walk surfaces xonsh when python runs its launcher script."""
+    launcher = tmp_path / "xonsh"
+    launcher.write_text("")
+    table = f"  300   200 /usr/bin/python3 {launcher}\n  200     1 /sbin/launchd\n"
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
+    )
+    monkeypatch.setattr(os, "getpid", lambda: 300)
+    pairs = detection_module._tree_from_ps()
+    assert ("python3", "/usr/bin/python3") in pairs
+    assert ("xonsh", str(launcher)) in pairs
 
 
 def test_parent_process_exe_names():

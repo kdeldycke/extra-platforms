@@ -75,6 +75,7 @@ from __future__ import annotations
 
 import os
 import platform
+import re
 import subprocess
 import sys
 from functools import cache
@@ -958,16 +959,60 @@ def _ppid_from_proc(pid: int) -> int | None:
     return None
 
 
+@cache
+def _interpreter_shell_specs() -> tuple[tuple[re.Pattern[str], str], ...]:
+    """Compiled ``(interpreter pattern, launcher name)`` pairs from the registry.
+
+    Built from {class}`~extra_platforms.Shell` instances that declare an
+    {attr}`~extra_platforms.Shell.interpreter`. The interpreter base name
+    becomes a version-tolerant pattern (so ``python`` matches ``python3`` and
+    ``python3.11``); the launcher name to look for is the shell's ``id``.
+    """
+    # Lazy import to avoid circular dependencies.
+    from .group_data import ALL_SHELLS
+
+    return tuple(
+        (re.compile(rf"^{re.escape(interp)}(\d+(\.\d+)?)?$"), shell.id)
+        for shell in ALL_SHELLS
+        if (interp := getattr(shell, "interpreter", None))
+    )
+
+
+def _interpreter_shell(argv: list[str]) -> tuple[str, str] | None:
+    """Detect a shell hosted by an interpreter from a process command line.
+
+    When ``argv[0]`` is a known interpreter (like ``python``) and a later
+    argument is an existing file whose name is a hosted shell's launcher (like
+    ``xonsh``), returns ``(shell_id, launcher_path)``, else {data}`None`.
+
+    The three guards (interpreter-name pattern, exact launcher basename, and an
+    {meth}`~pathlib.Path.is_file` check) keep unrelated invocations like
+    ``python -m pytest test_xonsh.py`` from matching. Mirrors the approach in
+    [shellingham](https://github.com/sarugaku/shellingham).
+    """
+    if not argv:
+        return None
+    proc_name = PurePosixPath(argv[0]).name.lower()
+    for pattern, launcher in _interpreter_shell_specs():
+        if not pattern.fullmatch(proc_name):
+            continue
+        for arg in argv[1:]:
+            if PurePosixPath(arg).name.lower() == launcher and Path(arg).is_file():
+                return launcher, arg
+    return None
+
+
 def _tree_from_proc() -> tuple[tuple[str, str], ...]:
     """Walk the parent process tree through ``/proc`` (Linux and BSD procfs).
 
     Returns ordered ``(name, path)`` pairs, nearest ancestor first. For each
     process it reads the resolved executable (``/proc/<pid>/exe``, an absolute
-    path that follows a ``/bin/sh`` -> Bash symlink) and its ``argv[0]``
+    path that follows a ``/bin/sh`` -> Bash symlink) and the full ``argv``
     (``/proc/<pid>/cmdline``). Reading both means a login shell is still
     recognized when the ``exe`` symlink is unreadable (hardened ``/proc``
-    mounted with ``hidepid``), and vice versa. ``path`` is empty when only a
-    non-absolute ``argv[0]`` is available.
+    mounted with ``hidepid``), and vice versa. ``argv`` also lets an
+    interpreter-hosted shell (like xonsh under python) be recognized. ``path``
+    is empty when only a non-absolute ``argv[0]`` is available.
     """
     pairs: list[tuple[str, str]] = []
     pid = os.getpid()
@@ -981,15 +1026,20 @@ def _tree_from_proc() -> tuple[tuple[str, str], ...]:
                 pairs.append((name, target))
         except OSError:
             pass
-        # argv[0] from the raw, null-separated command line. Keep it as a path
-        # only when absolute: a login dash or a bare name carries no path.
+        # Full argv from the raw, null-separated command line.
         try:
-            cmdline = Path(f"/proc/{pid}/cmdline").read_bytes()
-            argv0 = cmdline.split(b"\0", 1)[0].decode(errors="replace")
-            if name := _shell_name(argv0):
-                pairs.append((name, argv0 if argv0.startswith("/") else ""))
+            raw = Path(f"/proc/{pid}/cmdline").read_bytes()
+            argv = [a for a in raw.decode(errors="replace").split("\0") if a]
         except OSError:
-            pass
+            argv = []
+        if argv:
+            # argv[0] recovers login shells and survives an unreadable exe; keep
+            # it as a path only when absolute (a login dash carries none).
+            if name := _shell_name(argv[0]):
+                pairs.append((name, argv[0] if argv[0].startswith("/") else ""))
+            # A shell hosted by an interpreter (like xonsh run under python).
+            if hosted := _interpreter_shell(argv):
+                pairs.append(hosted)
         ppid = _ppid_from_proc(pid)
         if ppid is None:
             break
@@ -1002,10 +1052,13 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
 
     Used on POSIX systems without a usable ``/proc`` (notably macOS, and BSDs
     that do not mount procfs). Parses a single ``ps`` snapshot into a
-    ``{pid: (ppid, comm)}`` table, then walks from the current process up to the
-    root, returning ordered ``(name, path)`` pairs (nearest first). ``comm`` is
-    the executable: an absolute path on macOS, while some BSDs report only a
-    basename, in which case ``path`` is non-absolute and callers fall back to
+    ``{pid: (ppid, command)}`` table, then walks from the current process up to
+    the root, returning ordered ``(name, path)`` pairs (nearest first).
+
+    The full command line is requested (rather than just the executable) so that
+    interpreter-hosted shells (like xonsh under python) can be recognized from
+    their arguments. ``path`` is taken from ``argv[0]`` when absolute; a login
+    shell (``-zsh``) or a bare name carries no path, so callers fall back to
     ``SHELL``.
 
     Only short option flags are passed: the BSD and macOS ``ps`` have no
@@ -1015,7 +1068,7 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     """
     try:
         result = subprocess.run(
-            ("ps", "-A", "-ww", "-o", "pid=,ppid=,comm="),
+            ("ps", "-A", "-ww", "-o", "pid=,ppid=,command="),
             capture_output=True,
             text=True,
             check=True,
@@ -1029,8 +1082,8 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     # of raising.
     output = str(result.stdout)
 
-    # Parse "<pid> <ppid> <comm>" rows into {pid: (ppid, comm)}. comm is the
-    # last field and may itself contain spaces, so it is kept whole.
+    # Parse "<pid> <ppid> <command...>" rows into {pid: (ppid, command)}. The
+    # command is the last field and is kept whole.
     table: dict[int, tuple[int, str]] = {}
     for line in output.splitlines():
         fields = line.split(maxsplit=2)
@@ -1047,9 +1100,15 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     visited: set[int] = set()
     while pid > 1 and pid in table and pid not in visited:
         visited.add(pid)
-        ppid, comm = table[pid]
-        if name := _shell_name(comm):
-            pairs.append((name, comm))
+        ppid, command = table[pid]
+        argv = command.split()
+        if argv:
+            # argv[0] is a path only when absolute (a login dash carries none).
+            if name := _shell_name(argv[0]):
+                pairs.append((name, argv[0] if argv[0].startswith("/") else ""))
+            # A shell hosted by an interpreter (like xonsh run under python).
+            if hosted := _interpreter_shell(argv):
+                pairs.append(hosted)
         pid = ppid
     return tuple(pairs)
 
@@ -1371,6 +1430,14 @@ def is_xonsh() -> bool:
     ```{hint}
     Detected via the `XONSH_VERSION` environment variable (set by Xonsh
     on startup), or via the `SHELL` path as a fallback.
+    ```
+
+    ```{note}
+    Xonsh runs as a Python script rather than a standalone binary, so the
+    parent process tree shows `python` rather than `xonsh`. When neither
+    `XONSH_VERSION` nor `SHELL` identifies it, the tree walk inspects
+    interpreter arguments for the `xonsh` launcher (see
+    {attr}`~extra_platforms.Shell.interpreter`).
     ```
     """
     return _detect_shell(version_env_var="XONSH_VERSION", shell_ids="xonsh")

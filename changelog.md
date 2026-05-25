@@ -10,6 +10,7 @@
 - Detect the active shell on macOS and the BSDs by walking the parent process tree via `ps` when `/proc` is unavailable. The parent-process fallback was previously Linux-only, so it silently did nothing on `/proc`-less systems. The `ps` call degrades to no detection (not an error) when blocked, missing, or when `subprocess.run` is globally mocked.
 - Recognize login shells (`argv[0]` like `-bash`) and survive an unreadable `/proc/<pid>/exe` by also reading `/proc/<pid>/cmdline` during the `/proc` walk.
 - Read the parent PID from `/proc/<pid>/status` on BSD procfs (FreeBSD, DragonFly), in addition to the Linux `/proc/<pid>/stat` layout.
+- Detect interpreter-hosted shells like Xonsh, which runs as a Python script so the process tree shows `python` rather than `xonsh`. The tree walk now scans interpreter arguments for the shell's launcher file, matching only an existing file named exactly after the shell to avoid false positives. A new `interpreter` field on `Shell` declares the host interpreter (`XONSH` sets it to `python`). On macOS and the BSDs this required the `ps` walk to read full command lines, so a shell's path there now comes from `argv[0]` (when absolute) or `SHELL`.
 
 ## [`12.0.3` (2026-04-29)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.2...v12.0.3)
 

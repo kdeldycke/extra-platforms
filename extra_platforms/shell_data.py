@@ -111,6 +111,7 @@ XONSH = Shell(
     "🐍",
     "https://xon.sh",
     version_env_var="XONSH_VERSION",
+    interpreter="python",
 )
 
 ZSH = Shell(
