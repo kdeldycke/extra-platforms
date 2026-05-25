@@ -11,6 +11,7 @@
 - Recognize login shells (`argv[0]` like `-bash`) and survive an unreadable `/proc/<pid>/exe` by also reading `/proc/<pid>/cmdline` during the `/proc` walk.
 - Read the parent PID from `/proc/<pid>/status` on BSD procfs (FreeBSD, DragonFly), in addition to the Linux `/proc/<pid>/stat` layout.
 - Detect interpreter-hosted shells like Xonsh, which runs as a Python script so the process tree shows `python` rather than `xonsh`. The tree walk now scans interpreter arguments for the shell's launcher file, matching only an existing file named exactly after the shell to avoid false positives. A new `interpreter` field on `Shell` declares the host interpreter (`XONSH` sets it to `python`). On macOS and the BSDs this required the `ps` walk to read full command lines, so a shell's path there now comes from `argv[0]` (when absolute) or `SHELL`.
+- Detect the active shell on Windows by walking the parent process tree via the Win32 Tool Help API (`CreateToolhelp32Snapshot`), where neither `/proc` nor `ps` exists. `is_powershell()`, `is_cmd()`, Git Bash detection through `is_bash()`, `current_shell()` arbitration, and `current_shell_path()` now rely on the actual ancestor processes rather than only the `PROMPT`/`PSModulePath` environment variables. Executable paths are resolved with `QueryFullProcessImageNameW`. The `ctypes` bindings live in a new `extra_platforms._windows` module, imported lazily and only on Windows.
 
 ## [`12.0.3` (2026-04-29)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.2...v12.0.3)
 

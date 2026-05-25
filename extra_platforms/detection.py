@@ -1113,6 +1113,63 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     return tuple(pairs)
 
 
+def _walk_process_map(
+    process_map: dict[int, tuple[int, str]],
+    start_pid: int,
+    path_getter: Callable[[int], str],
+) -> tuple[tuple[str, str], ...]:
+    """Walk a ``{pid: (ppid, executable)}`` map into ordered ``(name, path)`` pairs.
+
+    Climbs from ``start_pid`` to the root, nearest ancestor first. Each
+    ``executable`` is normalized into a shell name via {func}`_shell_name`, and
+    ``path_getter`` resolves a matched pid's full executable path. This is the
+    platform-agnostic core of the Windows walk: the snapshot acquisition is the
+    only Win32-specific part.
+    """
+    pairs: list[tuple[str, str]] = []
+    pid = start_pid
+    visited: set[int] = set()
+    while pid in process_map and pid not in visited:
+        visited.add(pid)
+        ppid, executable = process_map[pid]
+        if name := _shell_name(executable):
+            pairs.append((name, path_getter(pid)))
+        pid = ppid
+    return tuple(pairs)
+
+
+def _tree_from_windows() -> tuple[tuple[str, str], ...]:
+    """Walk the parent process tree through the Win32 Tool Help API.
+
+    Used on Windows, which has neither ``/proc`` nor ``ps``. Snapshots every
+    process into a ``{pid: (ppid, executable)}`` map (see
+    {mod}`extra_platforms._windows`), then walks from the current process up to
+    the root, resolving each ancestor's full path via
+    ``QueryFullProcessImageNameW``.
+
+    Returns an empty tuple off Windows or on any Win32 failure, so detection
+    degrades to the environment-variable heuristics.
+
+    ```{caution}
+    Windows parent-PID links can be stale: a parent may exit and its PID be
+    reused. The ``visited`` set bounds the walk, but a reused PID could in
+    theory divert it. This matches the limitation in
+    [shellingham](https://github.com/sarugaku/shellingham).
+    ```
+    """
+    tree: tuple[tuple[str, str], ...] = ()
+    if sys.platform == "win32":
+        try:
+            from . import _windows
+
+            tree = _walk_process_map(
+                _windows.process_map(), os.getpid(), _windows.process_path
+            )
+        except (OSError, ImportError):
+            tree = ()
+    return tree
+
+
 @cache
 def _parent_process_tree() -> tuple[tuple[str, str], ...]:
     """Ordered ``(name, path)`` pairs for the process tree, nearest first.
@@ -1124,16 +1181,18 @@ def _parent_process_tree() -> tuple[tuple[str, str], ...]:
     - ``/proc`` when present (Linux always, BSDs that mount procfs): no
       subprocess is spawned.
     - ``ps`` otherwise (macOS, BSDs without procfs).
-    - An empty tuple on Windows, which has neither.
+    - The Win32 Tool Help API on Windows.
+    - An empty tuple on platforms exposing none of these.
     """
     # /proc, when present, needs no subprocess (Linux always, procfs BSDs).
     if Path("/proc").is_dir():
         return _tree_from_proc()
-    # macOS and BSDs without procfs: walk the tree via `ps`. Windows, which
-    # has neither /proc nor `ps`, falls through to an empty tuple.
+    # macOS and BSDs without procfs: walk the tree via `ps`.
     if os.name == "posix":
         return _tree_from_ps()
-    return ()
+    # Windows: snapshot via the Win32 Tool Help API. _tree_from_windows()
+    # returns an empty tuple on any other platform.
+    return _tree_from_windows()
 
 
 @cache
@@ -1152,11 +1211,12 @@ def _running_shell_path(shell_id: str) -> str | None:
     Walks {func}`_parent_process_tree` and returns the first (nearest) absolute
     path whose normalized name equals ``shell_id``. Non-absolute sources (a
     login dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
-    callers can fall back to ``SHELL``. Returns {data}`None` when no running
-    path is found.
+    callers can fall back to ``SHELL``. Absoluteness is tested with
+    {func}`os.path.isabs`, so Windows drive paths (``C:\\...``) qualify too.
+    Returns {data}`None` when no running path is found.
     """
     for name, path in _parent_process_tree():
-        if name == shell_id and path.startswith("/"):
+        if name == shell_id and os.path.isabs(path):
             return path
     return None
 
@@ -1275,14 +1335,16 @@ def is_cmd() -> bool:
     """Return {data}`True` if current shell is {data}`~extra_platforms.CMD`.
 
     ```{hint}
-    Detected on Windows when the `PROMPT` environment variable is set
-    and `PSModulePath` is not (to exclude PowerShell).
+    Detected on Windows via `cmd.exe` in the parent process tree, or when the
+    `PROMPT` environment variable is set and `PSModulePath` is not (to exclude
+    PowerShell).
     ```
     """
-    return (
-        sys.platform == "win32"
-        and "PROMPT" in environ
-        and "PSModulePath" not in environ
+    # cmd.exe in the parent process tree is the strong signal; the PROMPT/
+    # PSModulePath heuristic covers the case where the tree is unavailable.
+    return sys.platform == "win32" and (
+        _detect_shell(shell_ids="cmd")
+        or ("PROMPT" in environ and "PSModulePath" not in environ)
     )
 
 

@@ -20,7 +20,6 @@ import inspect
 import os
 import re
 import subprocess
-import sys
 from itertools import chain
 from pathlib import Path
 
@@ -41,6 +40,7 @@ from extra_platforms import (
     is_windows,
     is_x86_64,
 )
+from extra_platforms.pytest import skip_windows, unless_windows
 
 
 @pytest.mark.parametrize(
@@ -382,12 +382,50 @@ def test_parent_process_exe_names():
     invalidate_caches()
     names = detection_module._parent_process_exe_names()
     assert isinstance(names, frozenset)
-    # Whatever is discovered must be non-empty, lowercased stems. The set
-    # itself may be empty on sandboxed builders with neither /proc nor ps.
+    # Whatever is discovered must be non-empty, lowercased stems. The set itself
+    # may be empty on sandboxed builders with neither /proc, ps, nor Win32.
     assert all(name and name == name.lower() for name in names)
-    if sys.platform == "win32":
-        assert names == frozenset()
     invalidate_caches()
+
+
+def test_walk_process_map():
+    """The Windows-style map walk climbs nearest-first and resolves paths."""
+    process_map = {
+        100: (1, "explorer.exe"),
+        200: (100, "powershell.exe"),
+        300: (200, "python.exe"),
+    }
+    paths = {
+        100: r"C:\Windows\explorer.exe",
+        200: r"C:\Program Files\PowerShell\7\pwsh.exe",
+        300: r"C:\Python\python.exe",
+    }
+    pairs = detection_module._walk_process_map(
+        process_map, 300, lambda pid: paths.get(pid, "")
+    )
+    # Names are normalized (stem, lowercase) and paired with resolved paths.
+    assert pairs == (
+        ("python", r"C:\Python\python.exe"),
+        ("powershell", r"C:\Program Files\PowerShell\7\pwsh.exe"),
+        ("explorer", r"C:\Windows\explorer.exe"),
+    )
+
+
+@skip_windows
+def test_windows_helpers_noop_off_windows():
+    """The _windows module imports cleanly and no-ops on non-Windows platforms."""
+    from extra_platforms import _windows
+
+    assert _windows.process_map() == {}
+    assert _windows.process_path(os.getpid()) == ""
+
+
+@unless_windows
+def test_tree_from_windows_smoke():
+    """On Windows the tree is populated and includes the python interpreter."""
+    pairs = detection_module._tree_from_windows()
+    assert isinstance(pairs, tuple)
+    assert "python" in {name for name, _ in pairs}
 
 
 def test_running_shell_path(monkeypatch):
