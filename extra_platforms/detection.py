@@ -1026,12 +1026,12 @@ def _interpreter_shell(argv: list[str]) -> tuple[str, str] | None:
     """
     if not argv:
         return None
-    proc_name = PurePosixPath(argv[0]).name.lower()
+    proc_name = Path(argv[0]).name.lower()
     for pattern, launcher in _interpreter_shell_specs():
         if not pattern.fullmatch(proc_name):
             continue
         for arg in argv[1:]:
-            if PurePosixPath(arg).name.lower() == launcher and Path(arg).is_file():
+            if Path(arg).name.lower() == launcher and Path(arg).is_file():
                 return launcher, arg
     return None
 
@@ -1296,12 +1296,13 @@ def _running_shell_path(shell_id: str) -> str | None:
     Walks {func}`_parent_process_tree` and returns the first (nearest) absolute
     path whose normalized name equals ``shell_id``. Non-absolute sources (a
     login dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
-    callers can fall back to ``SHELL``. Absoluteness is tested with
-    {func}`os.path.isabs`, so Windows drive paths (``C:\\...``) qualify too.
-    Returns {data}`None` when no running path is found.
+    callers can fall back to ``SHELL``. A path is considered absolute when it
+    starts with ``/`` (POSIX) or satisfies :func:`os.path.isabs` (Windows
+    drive paths like ``C:\\...``). Returns {data}`None` when no running path
+    is found.
     """
     for name, path in _parent_process_tree():
-        if name == shell_id and os.path.isabs(path):
+        if name == shell_id and (path.startswith("/") or os.path.isabs(path)):
             return path
     return None
 
