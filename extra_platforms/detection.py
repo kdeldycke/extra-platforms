@@ -75,6 +75,7 @@ from __future__ import annotations
 
 import os
 import platform
+import subprocess
 import sys
 from functools import cache
 from os import environ
@@ -907,38 +908,166 @@ def _active_env_var_shell_ids() -> frozenset[str]:
     )
 
 
+def _shell_name(command: str) -> str:
+    """Normalize a process command into a comparable shell name.
+
+    Strips a leading ``-`` (which marks a login shell, like ``-bash``), then
+    returns the lowercased filename stem (``/usr/bin/bash`` becomes ``bash``).
+    Returns an empty string when no name can be extracted.
+    """
+    return PurePosixPath(command.lstrip("-")).stem.lower()
+
+
+def _parse_proc_ppid(record: str) -> int:
+    """Extract the parent PID from a ``/proc/<pid>`` process record.
+
+    Two on-disk layouts are recognized, told apart by the presence of the
+    parenthesized ``comm`` field:
+
+    - Linux ``stat`` (and NetBSD's Linux-compatible ``stat``):
+      ``"pid (comm) state ppid ..."``. The ``comm`` field may itself contain
+      spaces and parentheses, so the PPID is taken as the second field after
+      the last ``)``.
+    - BSD ``status`` (FreeBSD, DragonFly): ``"comm pid ppid pgid ..."``, where
+      the PPID is the third whitespace-separated field.
+
+    Raises {class}`ValueError` or {class}`IndexError` on an unparsable record.
+    """
+    marker = record.rfind(")")
+    if marker != -1:
+        return int(record[marker + 2 :].split()[1])
+    return int(record.split()[2])
+
+
+def _ppid_from_proc(pid: int) -> int | None:
+    """Read the parent PID of ``pid`` from ``/proc``.
+
+    Tries the Linux-style ``stat`` file first, then the BSD-style ``status``
+    file, so the same walk works across Linux, NetBSD, and FreeBSD. Returns
+    {data}`None` when neither file can be read or parsed.
+    """
+    for proc_file in ("stat", "status"):
+        try:
+            record = Path(f"/proc/{pid}/{proc_file}").read_text()
+        except OSError:
+            continue
+        try:
+            return _parse_proc_ppid(record)
+        except (ValueError, IndexError):
+            return None
+    return None
+
+
+def _exe_names_from_proc() -> frozenset[str]:
+    """Walk the parent process tree through ``/proc`` (Linux and BSD procfs).
+
+    For each ancestor, collects both the resolved executable
+    (``/proc/<pid>/exe``, so a ``/bin/sh`` symlinked to Bash reports ``bash``)
+    and its ``argv[0]`` (``/proc/<pid>/cmdline``). Reading both means a login
+    shell is still recognized when the ``exe`` symlink is unreadable (hardened
+    ``/proc`` mounted with ``hidepid``), and vice versa.
+    """
+    names: set[str] = set()
+    pid = os.getpid()
+    visited: set[int] = set()
+    while pid > 1 and pid not in visited:
+        visited.add(pid)
+        # Resolved executable target (follows /bin/sh -> bash symlinks).
+        try:
+            if name := _shell_name(os.readlink(f"/proc/{pid}/exe")):
+                names.add(name)
+        except OSError:
+            pass
+        # argv[0] from the raw, null-separated command line.
+        try:
+            cmdline = Path(f"/proc/{pid}/cmdline").read_bytes()
+            argv0 = cmdline.split(b"\0", 1)[0].decode(errors="replace")
+            if name := _shell_name(argv0):
+                names.add(name)
+        except OSError:
+            pass
+        ppid = _ppid_from_proc(pid)
+        if ppid is None:
+            break
+        pid = ppid
+    return frozenset(names)
+
+
+def _exe_names_from_ps() -> frozenset[str]:
+    """Walk the parent process tree through ``ps``.
+
+    Used on POSIX systems without a usable ``/proc`` (notably macOS, and BSDs
+    that do not mount procfs). Parses a single ``ps`` snapshot into a
+    ``{pid: (ppid, command)}`` table, then walks from the current process up to
+    the root, taking each ancestor's ``argv[0]`` as its shell name.
+
+    Only short option flags are passed: the BSD and macOS ``ps`` have no
+    long-form equivalents. The approach mirrors
+    [shellingham](https://github.com/sarugaku/shellingham) for ``/proc``-less
+    systems.
+    """
+    try:
+        result = subprocess.run(
+            ("ps", "-A", "-ww", "-o", "pid=,ppid=,command="),
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=2,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return frozenset()
+
+    # str() coerces an unexpected stdout (like a globally mocked subprocess.run
+    # returning a Mock) to text, so parsing degrades to an empty result instead
+    # of raising.
+    output = str(result.stdout)
+
+    # Parse "<pid> <ppid> <command...>" rows into {pid: (ppid, command)}.
+    table: dict[int, tuple[int, str]] = {}
+    for line in output.splitlines():
+        fields = line.split(maxsplit=2)
+        if len(fields) < 2:
+            continue
+        try:
+            child, parent = int(fields[0]), int(fields[1])
+        except ValueError:
+            continue
+        table[child] = (parent, fields[2] if len(fields) == 3 else "")
+
+    names: set[str] = set()
+    pid = os.getpid()
+    visited: set[int] = set()
+    while pid > 1 and pid in table and pid not in visited:
+        visited.add(pid)
+        ppid, command = table[pid]
+        # argv[0] is the first whitespace-separated token of the command.
+        if command and (name := _shell_name(command.split(maxsplit=1)[0])):
+            names.add(name)
+        pid = ppid
+    return frozenset(names)
+
+
 @cache
 def _parent_process_exe_names() -> frozenset[str]:
     """Collect executable names from the parent process tree.
 
-    On Linux, reads ``/proc/<pid>/exe`` symlinks up the process tree via
-    ``/proc/<pid>/stat`` to find parent PIDs. Returns a {class}`frozenset`
-    of lowercased executable stems (like ``"bash"``, ``"python3"``).
+    Returns a {class}`frozenset` of lowercased executable stems (like
+    ``"bash"`` or ``"python3"``) gathered by walking from the current process
+    up to the root. Dispatches on what the platform exposes:
 
-    Returns an empty set on non-Linux platforms where ``/proc`` is
-    unavailable.
+    - ``/proc`` when present (Linux always, BSDs that mount procfs): no
+      subprocess is spawned.
+    - ``ps`` otherwise (macOS, BSDs without procfs).
+    - An empty set on Windows, which has neither.
     """
-    names: set[str] = set()
-    try:
-        pid = os.getpid()
-        visited: set[int] = set()
-        while pid > 1 and pid not in visited:
-            visited.add(pid)
-            try:
-                names.add(Path(os.readlink(f"/proc/{pid}/exe")).stem.lower())
-            except OSError:
-                pass
-            try:
-                stat_content = Path(f"/proc/{pid}/stat").read_text()
-                # Format: "pid (comm) state ppid ...". The comm field may
-                # contain spaces and parentheses, so find the last ')'.
-                ppid_str = stat_content[stat_content.rfind(")") + 2 :].split()[1]
-                pid = int(ppid_str)
-            except (OSError, ValueError, IndexError):
-                break
-    except OSError:
-        pass
-    return frozenset(names)
+    # /proc, when present, needs no subprocess (Linux always, procfs BSDs).
+    if Path("/proc").is_dir():
+        return _exe_names_from_proc()
+    # macOS and BSDs without procfs: walk the tree via `ps`. Windows, which
+    # has neither /proc nor `ps`, falls through to an empty set.
+    if os.name == "posix":
+        return _exe_names_from_ps()
+    return frozenset()
 
 
 def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
@@ -977,8 +1106,9 @@ def _detect_shell(
        reports the actual shell implementation rather than the interface name:
        when ``/bin/sh`` symlinks to ``/bin/bash``, ``bash`` is detected, not
        ``sh``.
-    3. Falls back to walking the parent process tree via `/proc` to find the
-       active shell (for stripped environments without shell env vars).
+    3. Falls back to walking the parent process tree (via `/proc` on Linux,
+       `ps` on macOS and the BSDs) to find the active shell, for stripped
+       environments without shell env vars.
 
     :param version_env_var: Shell-specific environment variable name
         (like ``"BASH_VERSION"``).
@@ -1733,8 +1863,9 @@ def current_shell(strict: bool = False) -> Shell:
 
     1. Shell-specific environment variables (strongest: the Python process
        *is* the shell).
-    2. ``/proc`` parent process tree (strong: the shell is an ancestor
-       process actively running).
+    2. Parent process tree, read from ``/proc`` on Linux or ``ps`` on macOS
+       and the BSDs (strong: the shell is an ancestor process actively
+       running).
     3. ``SHELL`` environment variable resolved through symlinks (weak:
        configured login shell, may differ from the active shell).
 
@@ -1776,7 +1907,7 @@ def current_shell(strict: bool = False) -> Shell:
     from .shell_data import POWERSHELL, SH, UNKNOWN_SHELL
 
     # Collect all matching shells via the full scan (env vars, SHELL=,
-    # /proc tree, Windows defaults).
+    # parent process tree, Windows defaults).
     matching: set[Shell] = {
         shell  # type: ignore[misc]
         for shell in ALL_SHELLS

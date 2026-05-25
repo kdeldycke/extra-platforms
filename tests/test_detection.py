@@ -17,7 +17,10 @@ from __future__ import annotations
 import ast
 import functools
 import inspect
+import os
 import re
+import subprocess
+import sys
 from itertools import chain
 from pathlib import Path
 
@@ -239,4 +242,90 @@ def test_detection_no_circular_dependencies():
         _ = trait.current
 
     # If no exception was raised, there are no circular dependencies.
+    invalidate_caches()
+
+
+@pytest.mark.parametrize(
+    ("command", "expected"),
+    (
+        ("/usr/bin/bash", "bash"),
+        ("/bin/zsh", "zsh"),
+        ("zsh", "zsh"),
+        ("/opt/homebrew/bin/fish", "fish"),
+        # Login shells carry a leading dash on argv[0].
+        ("-bash", "bash"),
+        ("-zsh", "zsh"),
+        # The name is lowercased.
+        ("/usr/bin/PYTHON3", "python3"),
+        # Nothing extractable.
+        ("", ""),
+        ("-", ""),
+    ),
+)
+def test_shell_name(command, expected):
+    assert detection_module._shell_name(command) == expected
+
+
+@pytest.mark.parametrize(
+    ("record", "expected"),
+    (
+        # Linux /proc/<pid>/stat: "pid (comm) state ppid ...".
+        ("4242 (bash) S 4200 4242 4200 0 ...", 4200),
+        # The comm field may itself contain spaces and parentheses.
+        ("4242 (a (weird) name) S 7 1 1 0 ...", 7),
+        # BSD /proc/<pid>/status: "comm pid ppid pgid ...".
+        ("zsh 4242 4200 4200 ...", 4200),
+    ),
+)
+def test_parse_proc_ppid(record, expected):
+    assert detection_module._parse_proc_ppid(record) == expected
+
+
+def test_exe_names_from_ps(monkeypatch):
+    """The ps-based walk (macOS/BSD) climbs from the current process to root."""
+    # pid ppid command: a login shell (-zsh) under launchd, running pytest.
+    table = (
+        "  100     1 /sbin/launchd\n"
+        "  200   100 -zsh\n"
+        "  300   200 /usr/bin/python3 -m pytest\n"
+    )
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
+    )
+    monkeypatch.setattr(os, "getpid", lambda: 300)
+    assert detection_module._exe_names_from_ps() == frozenset({
+        "launchd",
+        "python3",
+        "zsh",
+    })
+
+
+def test_exe_names_from_ps_tolerates_mocked_run(monkeypatch):
+    """A globally mocked subprocess.run must not break the walk."""
+
+    class _Sentinel:
+        stdout = object()  # Non-string stdout, like a MagicMock attribute.
+
+    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: _Sentinel())
+    assert detection_module._exe_names_from_ps() == frozenset()
+
+    def _boom(*args, **kwargs):
+        raise FileNotFoundError("ps")
+
+    monkeypatch.setattr(subprocess, "run", _boom)
+    assert detection_module._exe_names_from_ps() == frozenset()
+
+
+def test_parent_process_exe_names():
+    """The dispatcher returns a clean frozenset on every platform."""
+    invalidate_caches()
+    names = detection_module._parent_process_exe_names()
+    assert isinstance(names, frozenset)
+    # Whatever is discovered must be non-empty, lowercased stems. The set
+    # itself may be empty on sandboxed builders with neither /proc nor ps.
+    assert all(name and name == name.lower() for name in names)
+    if sys.platform == "win32":
+        assert names == frozenset()
     invalidate_caches()
