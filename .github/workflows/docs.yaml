@@ -5,8 +5,17 @@ name: 📚 Docs
   push:
     branches:
       - main
+    paths:
+      - .github/workflows/docs.yaml
+      - changelog.md
+      - citation.cff
+      - "docs/**"
+      - pyproject.toml
+      - readme.md
+      - uv.lock
+      - "**/*.py"
 
 jobs:
 
   docs:
-    uses: kdeldycke/repomatic/.github/workflows/docs.yaml@f600fefb41f28a11f550f43d8145b96438e46b84 # v6.14.0
+    uses: kdeldycke/repomatic/.github/workflows/docs.yaml@f185b237deb05defc94f8dff02a82a2d9bd579d8 # v6.20.0
