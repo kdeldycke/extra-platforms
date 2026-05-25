@@ -43,6 +43,8 @@ The current shell can be obtained via the `current_shell()` function:
 Shell(id='unknown_shell', name='Unknown shell')
 ```
 
+The path to the running shell's executable is available via {func}`~extra_platforms.current_shell_path`. It prefers the actual ancestor process binary (read from `/proc` on Linux, `ps` on macOS and the BSDs) over the `SHELL` environment variable, so it stays accurate when `SHELL` is unset or points to a different shell than the one executing.
+
 ## Symlink resolution: implementation over interface
 
 Shell detection resolves symlinks in the `SHELL` environment variable before identifying the shell. This means detection always reports the **concrete shell implementation** rather than the POSIX interface name.

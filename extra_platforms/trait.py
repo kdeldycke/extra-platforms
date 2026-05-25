@@ -427,7 +427,11 @@ class Shell(Trait):
         if self.current:
             if self.version_env_var:
                 info["version"] = environ.get(self.version_env_var)
-            info["path"] = environ.get("SHELL")
+            # Prefer the actual running binary from the process tree over the
+            # configured login shell in SHELL.
+            from .detection import _running_shell_path
+
+            info["path"] = _running_shell_path(self.id) or environ.get("SHELL")
         return info
 
 

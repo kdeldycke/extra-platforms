@@ -76,6 +76,7 @@ from .detection import (
     current_ci,
     current_platform,
     current_shell,
+    current_shell_path,
     current_terminal,
     current_traits,
     is_aarch64,
@@ -529,6 +530,7 @@ def invalidate_caches():
     current_architecture.cache_clear()
     current_platform.cache_clear()
     current_shell.cache_clear()
+    current_shell_path.cache_clear()
     current_terminal.cache_clear()
     current_ci.cache_clear()
     current_agent.cache_clear()
@@ -741,6 +743,7 @@ __all__ = (
     "current_ci",
     "current_platform",
     "current_shell",
+    "current_shell_path",
     "current_terminal",
     "current_traits",
     "extract_members",

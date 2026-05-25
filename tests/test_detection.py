@@ -281,13 +281,13 @@ def test_parse_proc_ppid(record, expected):
     assert detection_module._parse_proc_ppid(record) == expected
 
 
-def test_exe_names_from_ps(monkeypatch):
+def test_tree_from_ps(monkeypatch):
     """The ps-based walk (macOS/BSD) climbs from the current process to root."""
-    # pid ppid command: a login shell (-zsh) under launchd, running pytest.
+    # pid ppid comm: comm is the executable path.
     table = (
         "  100     1 /sbin/launchd\n"
-        "  200   100 -zsh\n"
-        "  300   200 /usr/bin/python3 -m pytest\n"
+        "  200   100 /bin/zsh\n"
+        "  300   200 /usr/bin/python3\n"
     )
     monkeypatch.setattr(
         subprocess,
@@ -295,27 +295,28 @@ def test_exe_names_from_ps(monkeypatch):
         lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
     )
     monkeypatch.setattr(os, "getpid", lambda: 300)
-    assert detection_module._exe_names_from_ps() == frozenset({
-        "launchd",
-        "python3",
-        "zsh",
-    })
+    # Ordered nearest-first, each name paired with its executable path.
+    assert detection_module._tree_from_ps() == (
+        ("python3", "/usr/bin/python3"),
+        ("zsh", "/bin/zsh"),
+        ("launchd", "/sbin/launchd"),
+    )
 
 
-def test_exe_names_from_ps_tolerates_mocked_run(monkeypatch):
+def test_tree_from_ps_tolerates_mocked_run(monkeypatch):
     """A globally mocked subprocess.run must not break the walk."""
 
     class _Sentinel:
         stdout = object()  # Non-string stdout, like a MagicMock attribute.
 
     monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: _Sentinel())
-    assert detection_module._exe_names_from_ps() == frozenset()
+    assert detection_module._tree_from_ps() == ()
 
     def _boom(*args, **kwargs):
         raise FileNotFoundError("ps")
 
     monkeypatch.setattr(subprocess, "run", _boom)
-    assert detection_module._exe_names_from_ps() == frozenset()
+    assert detection_module._tree_from_ps() == ()
 
 
 def test_parent_process_exe_names():
@@ -328,4 +329,49 @@ def test_parent_process_exe_names():
     assert all(name and name == name.lower() for name in names)
     if sys.platform == "win32":
         assert names == frozenset()
+    invalidate_caches()
+
+
+def test_running_shell_path(monkeypatch):
+    """The nearest absolute path for a shell id wins; non-absolute is skipped."""
+    tree = (
+        ("python3", "/usr/bin/python3"),
+        ("zsh", "/bin/zsh"),  # Nearest zsh.
+        ("zsh", "/opt/zsh"),  # Farther zsh, must not win.
+        ("launchd", "/sbin/launchd"),
+    )
+    monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: tree)
+    assert detection_module._running_shell_path("zsh") == "/bin/zsh"
+    assert detection_module._running_shell_path("launchd") == "/sbin/launchd"
+    assert detection_module._running_shell_path("fish") is None
+
+    # A non-absolute name (truncated BSD comm, login dash) is not a path.
+    monkeypatch.setattr(
+        detection_module, "_parent_process_tree", lambda: (("zsh", "zsh"),)
+    )
+    assert detection_module._running_shell_path("zsh") is None
+
+
+def test_current_shell_path(monkeypatch):
+    """current_shell_path() prefers the running binary, then falls back to SHELL."""
+    from extra_platforms import ZSH, current_shell_path
+
+    monkeypatch.setattr(detection_module, "current_shell", lambda strict=False: ZSH)
+
+    # The process tree yields the running binary: prefer it over SHELL.
+    monkeypatch.setattr(detection_module, "_running_shell_path", lambda sid: "/bin/zsh")
+    monkeypatch.setenv("SHELL", "/bin/sh")
+    invalidate_caches()
+    assert current_shell_path() == "/bin/zsh"
+
+    # No running path: fall back to the configured login shell.
+    monkeypatch.setattr(detection_module, "_running_shell_path", lambda sid: None)
+    invalidate_caches()
+    assert current_shell_path() == "/bin/sh"
+
+    # Neither source available.
+    monkeypatch.delenv("SHELL", raising=False)
+    invalidate_caches()
+    assert current_shell_path() is None
+
     invalidate_caches()

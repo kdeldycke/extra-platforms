@@ -5,12 +5,15 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-## [`12.0.3` (2026-04-28)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.2...v12.0.3)
-
-- Extend missing-shell tolerance to `test_skip_all_shells`, `test_skip_bash`, and `test_skip_powershell` in `tests/test_pytest.py`. The `12.0.2` shell-tolerance work only covered `tests/test_root.py`, leaving these three tests failing on sandboxed builders (Guix, BusyBox-only images) where no shell is detected.
+- Add `current_shell_path()` returning the executable path of the current shell. It prefers the actual running binary discovered in the parent process tree (`/proc` on Linux, `ps` on macOS and the BSDs), and falls back to the `SHELL` environment variable.
+- `Shell.info()` now reports the running shell's executable in its `"path"` field when the process tree provides it, instead of always using `SHELL` (which is only the configured login shell and may point to a different shell than the one actually running).
 - Detect the active shell on macOS and the BSDs by walking the parent process tree via `ps` when `/proc` is unavailable. The parent-process fallback was previously Linux-only, so it silently did nothing on `/proc`-less systems. The `ps` call degrades to no detection (not an error) when blocked, missing, or when `subprocess.run` is globally mocked.
 - Recognize login shells (`argv[0]` like `-bash`) and survive an unreadable `/proc/<pid>/exe` by also reading `/proc/<pid>/cmdline` during the `/proc` walk.
 - Read the parent PID from `/proc/<pid>/status` on BSD procfs (FreeBSD, DragonFly), in addition to the Linux `/proc/<pid>/stat` layout.
+
+## [`12.0.3` (2026-04-28)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.2...v12.0.3)
+
+- Extend missing-shell tolerance to `test_skip_all_shells`, `test_skip_bash`, and `test_skip_powershell` in `tests/test_pytest.py`. The `12.0.2` shell-tolerance work only covered `tests/test_root.py`, leaving these three tests failing on sandboxed builders (Guix, BusyBox-only images) where no shell is detected.
 
 ## [`12.0.2` (2026-04-28)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.1...v12.0.2)
 

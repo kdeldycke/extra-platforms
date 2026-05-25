@@ -400,6 +400,7 @@ These functions are dynamically generated for each [group](groups.md) and test w
 .. autofunction:: extra_platforms.current_architecture
 .. autofunction:: extra_platforms.current_platform
 .. autofunction:: extra_platforms.current_shell
+.. autofunction:: extra_platforms.current_shell_path
 .. autofunction:: extra_platforms.current_terminal
 .. autofunction:: extra_platforms.current_ci
 .. autofunction:: extra_platforms.current_agent

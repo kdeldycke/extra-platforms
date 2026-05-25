@@ -958,48 +958,55 @@ def _ppid_from_proc(pid: int) -> int | None:
     return None
 
 
-def _exe_names_from_proc() -> frozenset[str]:
+def _tree_from_proc() -> tuple[tuple[str, str], ...]:
     """Walk the parent process tree through ``/proc`` (Linux and BSD procfs).
 
-    For each ancestor, collects both the resolved executable
-    (``/proc/<pid>/exe``, so a ``/bin/sh`` symlinked to Bash reports ``bash``)
-    and its ``argv[0]`` (``/proc/<pid>/cmdline``). Reading both means a login
-    shell is still recognized when the ``exe`` symlink is unreadable (hardened
-    ``/proc`` mounted with ``hidepid``), and vice versa.
+    Returns ordered ``(name, path)`` pairs, nearest ancestor first. For each
+    process it reads the resolved executable (``/proc/<pid>/exe``, an absolute
+    path that follows a ``/bin/sh`` -> Bash symlink) and its ``argv[0]``
+    (``/proc/<pid>/cmdline``). Reading both means a login shell is still
+    recognized when the ``exe`` symlink is unreadable (hardened ``/proc``
+    mounted with ``hidepid``), and vice versa. ``path`` is empty when only a
+    non-absolute ``argv[0]`` is available.
     """
-    names: set[str] = set()
+    pairs: list[tuple[str, str]] = []
     pid = os.getpid()
     visited: set[int] = set()
     while pid > 1 and pid not in visited:
         visited.add(pid)
-        # Resolved executable target (follows /bin/sh -> bash symlinks).
+        # Resolved executable: an absolute path that follows symlinks.
         try:
-            if name := _shell_name(os.readlink(f"/proc/{pid}/exe")):
-                names.add(name)
+            target = os.readlink(f"/proc/{pid}/exe")
+            if name := _shell_name(target):
+                pairs.append((name, target))
         except OSError:
             pass
-        # argv[0] from the raw, null-separated command line.
+        # argv[0] from the raw, null-separated command line. Keep it as a path
+        # only when absolute: a login dash or a bare name carries no path.
         try:
             cmdline = Path(f"/proc/{pid}/cmdline").read_bytes()
             argv0 = cmdline.split(b"\0", 1)[0].decode(errors="replace")
             if name := _shell_name(argv0):
-                names.add(name)
+                pairs.append((name, argv0 if argv0.startswith("/") else ""))
         except OSError:
             pass
         ppid = _ppid_from_proc(pid)
         if ppid is None:
             break
         pid = ppid
-    return frozenset(names)
+    return tuple(pairs)
 
 
-def _exe_names_from_ps() -> frozenset[str]:
+def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     """Walk the parent process tree through ``ps``.
 
     Used on POSIX systems without a usable ``/proc`` (notably macOS, and BSDs
     that do not mount procfs). Parses a single ``ps`` snapshot into a
-    ``{pid: (ppid, command)}`` table, then walks from the current process up to
-    the root, taking each ancestor's ``argv[0]`` as its shell name.
+    ``{pid: (ppid, comm)}`` table, then walks from the current process up to the
+    root, returning ordered ``(name, path)`` pairs (nearest first). ``comm`` is
+    the executable: an absolute path on macOS, while some BSDs report only a
+    basename, in which case ``path`` is non-absolute and callers fall back to
+    ``SHELL``.
 
     Only short option flags are passed: the BSD and macOS ``ps`` have no
     long-form equivalents. The approach mirrors
@@ -1008,43 +1015,66 @@ def _exe_names_from_ps() -> frozenset[str]:
     """
     try:
         result = subprocess.run(
-            ("ps", "-A", "-ww", "-o", "pid=,ppid=,command="),
+            ("ps", "-A", "-ww", "-o", "pid=,ppid=,comm="),
             capture_output=True,
             text=True,
             check=True,
             timeout=2,
         )
     except (OSError, subprocess.SubprocessError):
-        return frozenset()
+        return ()
 
     # str() coerces an unexpected stdout (like a globally mocked subprocess.run
     # returning a Mock) to text, so parsing degrades to an empty result instead
     # of raising.
     output = str(result.stdout)
 
-    # Parse "<pid> <ppid> <command...>" rows into {pid: (ppid, command)}.
+    # Parse "<pid> <ppid> <comm>" rows into {pid: (ppid, comm)}. comm is the
+    # last field and may itself contain spaces, so it is kept whole.
     table: dict[int, tuple[int, str]] = {}
     for line in output.splitlines():
         fields = line.split(maxsplit=2)
-        if len(fields) < 2:
+        if len(fields) < 3:
             continue
         try:
             child, parent = int(fields[0]), int(fields[1])
         except ValueError:
             continue
-        table[child] = (parent, fields[2] if len(fields) == 3 else "")
+        table[child] = (parent, fields[2])
 
-    names: set[str] = set()
+    pairs: list[tuple[str, str]] = []
     pid = os.getpid()
     visited: set[int] = set()
     while pid > 1 and pid in table and pid not in visited:
         visited.add(pid)
-        ppid, command = table[pid]
-        # argv[0] is the first whitespace-separated token of the command.
-        if command and (name := _shell_name(command.split(maxsplit=1)[0])):
-            names.add(name)
+        ppid, comm = table[pid]
+        if name := _shell_name(comm):
+            pairs.append((name, comm))
         pid = ppid
-    return frozenset(names)
+    return tuple(pairs)
+
+
+@cache
+def _parent_process_tree() -> tuple[tuple[str, str], ...]:
+    """Ordered ``(name, path)`` pairs for the process tree, nearest first.
+
+    ``name`` is the normalized shell name (see {func}`_shell_name`); ``path`` is
+    the best-effort executable path, absolute when the source provides it and
+    empty otherwise. Dispatches on what the platform exposes:
+
+    - ``/proc`` when present (Linux always, BSDs that mount procfs): no
+      subprocess is spawned.
+    - ``ps`` otherwise (macOS, BSDs without procfs).
+    - An empty tuple on Windows, which has neither.
+    """
+    # /proc, when present, needs no subprocess (Linux always, procfs BSDs).
+    if Path("/proc").is_dir():
+        return _tree_from_proc()
+    # macOS and BSDs without procfs: walk the tree via `ps`. Windows, which
+    # has neither /proc nor `ps`, falls through to an empty tuple.
+    if os.name == "posix":
+        return _tree_from_ps()
+    return ()
 
 
 @cache
@@ -1052,22 +1082,24 @@ def _parent_process_exe_names() -> frozenset[str]:
     """Collect executable names from the parent process tree.
 
     Returns a {class}`frozenset` of lowercased executable stems (like
-    ``"bash"`` or ``"python3"``) gathered by walking from the current process
-    up to the root. Dispatches on what the platform exposes:
-
-    - ``/proc`` when present (Linux always, BSDs that mount procfs): no
-      subprocess is spawned.
-    - ``ps`` otherwise (macOS, BSDs without procfs).
-    - An empty set on Windows, which has neither.
+    ``"bash"`` or ``"python3"``), derived from {func}`_parent_process_tree`.
     """
-    # /proc, when present, needs no subprocess (Linux always, procfs BSDs).
-    if Path("/proc").is_dir():
-        return _exe_names_from_proc()
-    # macOS and BSDs without procfs: walk the tree via `ps`. Windows, which
-    # has neither /proc nor `ps`, falls through to an empty set.
-    if os.name == "posix":
-        return _exe_names_from_ps()
-    return frozenset()
+    return frozenset(name for name, _ in _parent_process_tree())
+
+
+def _running_shell_path(shell_id: str) -> str | None:
+    """Return the executable path of the nearest ancestor matching ``shell_id``.
+
+    Walks {func}`_parent_process_tree` and returns the first (nearest) absolute
+    path whose normalized name equals ``shell_id``. Non-absolute sources (a
+    login dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
+    callers can fall back to ``SHELL``. Returns {data}`None` when no running
+    path is found.
+    """
+    for name, path in _parent_process_tree():
+        if name == shell_id and path.startswith("/"):
+            return path
+    return None
 
 
 def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
@@ -1970,6 +2002,40 @@ def current_shell(strict: bool = False) -> Shell:
 
     _report_unrecognized("shell", strict=strict)
     return UNKNOWN_SHELL
+
+
+@cache
+def current_shell_path() -> str | None:
+    """Returns the executable path of the current shell, or {data}`None`.
+
+    Resolution order:
+
+    1. The actual running shell binary, taken from the nearest ancestor in the
+       parent process tree that matches {func}`current_shell` (read from
+       ``/proc`` on Linux, ``ps`` on macOS and the BSDs). This is the true
+       interpreter, even when ``SHELL`` is unset or points elsewhere.
+    2. The ``SHELL`` environment variable (the configured login shell), as a
+       fallback.
+
+    Returns {data}`None` when neither is available: no recognized shell, or a
+    stripped environment without ``SHELL``.
+
+    ```{note}
+    On some BSDs, ``ps`` reports only a truncated process name rather than a
+    full path. The non-absolute name is discarded, so this falls back to
+    ``SHELL`` there.
+    ```
+
+    ```{seealso}
+    Comparable to [shellingham](https://github.com/sarugaku/shellingham)'s
+    `detect_shell()`, which returns the shell name paired with its path. Here
+    the name is {func}`current_shell` and the path is this function.
+    ```
+    """
+    path = _running_shell_path(current_shell().id)
+    if path:
+        return path
+    return environ.get("SHELL") or None
 
 
 @cache
