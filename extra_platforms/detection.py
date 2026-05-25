@@ -1036,6 +1036,30 @@ def _interpreter_shell(argv: list[str]) -> tuple[str, str] | None:
     return None
 
 
+_EMULATOR_NAMES = re.compile(r"rosetta|qemu-[a-z0-9_]+(?:-static)?")
+"""User-mode CPU emulators that wrap the real command in their arguments."""
+
+
+def _unwrap_emulator(argv: list[str]) -> list[str]:
+    """Strip a leading user-mode emulator (``qemu-<arch>``, ``rosetta``) from argv.
+
+    Under foreign-architecture emulation (like ``docker run --platform``), a
+    process shows up as ``qemu-aarch64 /bin/bash …``; the real command is the
+    remaining arguments. Returns ``argv`` with the emulator prefix removed, or
+    ``argv`` unchanged when ``argv[0]`` is not an emulator (or nothing follows
+    it). Composes with {func}`_interpreter_shell`: an emulated ``python`` running
+    xonsh unwraps to ``python …`` first, then resolves to xonsh.
+
+    ```{seealso}
+    Mirrors the emulator handling in
+    [shellingham](https://github.com/sarugaku/shellingham).
+    ```
+    """
+    if len(argv) >= 2 and _EMULATOR_NAMES.fullmatch(_shell_name(argv[0])):
+        return argv[1:]
+    return argv
+
+
 def _tree_from_proc() -> tuple[tuple[str, str], ...]:
     """Walk the parent process tree through ``/proc`` (Linux and BSD procfs).
 
@@ -1045,8 +1069,9 @@ def _tree_from_proc() -> tuple[tuple[str, str], ...]:
     (``/proc/<pid>/cmdline``). Reading both means a login shell is still
     recognized when the ``exe`` symlink is unreadable (hardened ``/proc``
     mounted with ``hidepid``), and vice versa. ``argv`` also lets an
-    interpreter-hosted shell (like xonsh under python) be recognized. ``path``
-    is empty when only a non-absolute ``argv[0]`` is available.
+    interpreter-hosted shell (xonsh under python) or an emulated shell (under
+    qemu/rosetta) be recognized. ``path`` is empty when only a non-absolute
+    ``argv[0]`` is available.
     """
     pairs: list[tuple[str, str]] = []
     pid = os.getpid()
@@ -1066,6 +1091,8 @@ def _tree_from_proc() -> tuple[tuple[str, str], ...]:
             argv = [a for a in raw.decode(errors="replace").split("\0") if a]
         except OSError:
             argv = []
+        # Unwrap a user-mode emulator prefix so the emulated shell is seen.
+        argv = _unwrap_emulator(argv)
         if argv:
             # argv[0] recovers login shells and survives an unreadable exe; keep
             # it as a path only when absolute (a login dash carries none).
@@ -1105,6 +1132,14 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     positional columns from empty (``field=``) headers, sidestepping the
     header-name differences (``COMMAND`` vs ``CMD``) that complicate name-based
     parsing. Mirrors [shellingham](https://github.com/sarugaku/shellingham).
+
+    ```{important}
+    ``-A`` (select every process) is essential, not merely convenient. Without
+    it, `ps` defaults to processes sharing the caller's controlling terminal,
+    and macOS returns *nothing* when run outside a tty (as in CI or any
+    non-interactive context, unlike Linux which lists all processes regardless).
+    ``-A`` makes the snapshot tty-independent.
+    ```
     """
     try:
         result = subprocess.run(
@@ -1141,7 +1176,7 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     while pid > 1 and pid in table and pid not in visited:
         visited.add(pid)
         ppid, command = table[pid]
-        argv = command.split()
+        argv = _unwrap_emulator(command.split())
         if argv:
             # argv[0] is a path only when absolute (a login dash carries none).
             if name := _shell_name(argv[0]):

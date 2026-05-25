@@ -393,6 +393,41 @@ def test_tree_from_ps_uses_portable_flags(monkeypatch):
     assert "-ww" not in captured["args"]
 
 
+@pytest.mark.parametrize(
+    ("argv", "expected"),
+    (
+        # qemu user-mode wrapper: the real command follows the emulator.
+        (["qemu-aarch64", "/bin/bash", "-c", "x"], ["/bin/bash", "-c", "x"]),
+        (["/usr/bin/qemu-aarch64-static", "/bin/zsh"], ["/bin/zsh"]),
+        (["qemu-arm", "/bin/sh"], ["/bin/sh"]),
+        (["rosetta", "/bin/zsh"], ["/bin/zsh"]),
+        # Not an emulator: unchanged.
+        (["/bin/bash", "-c", "x"], ["/bin/bash", "-c", "x"]),
+        (["qemubench", "/bin/sh"], ["qemubench", "/bin/sh"]),
+        # Emulator with nothing after it, or empty: unchanged.
+        (["qemu-aarch64"], ["qemu-aarch64"]),
+        ([], []),
+    ),
+)
+def test_unwrap_emulator(argv, expected):
+    assert detection_module._unwrap_emulator(argv) == expected
+
+
+def test_tree_from_ps_unwraps_emulator(monkeypatch):
+    """An emulated shell (qemu-aarch64 /bin/bash) is seen as the real shell."""
+    table = "  300   200 qemu-aarch64 /bin/bash\n  200     1 /sbin/launchd\n"
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
+    )
+    monkeypatch.setattr(os, "getpid", lambda: 300)
+    pairs = detection_module._tree_from_ps()
+    assert ("bash", "/bin/bash") in pairs
+    # The qemu wrapper itself is not reported as a shell.
+    assert not any(name.startswith("qemu") for name, _ in pairs)
+
+
 def test_ppid_from_proc_tolerates_binary_status(monkeypatch):
     """System V /proc/<pid>/status is a binary pstatus_t; reading must not raise."""
     monkeypatch.setattr(
@@ -507,4 +542,37 @@ def test_current_shell_path(monkeypatch):
     invalidate_caches()
     assert current_shell_path() is None
 
+    invalidate_caches()
+
+
+def test_current_shell_prefers_running_shell_over_configured_shell(monkeypatch):
+    """A running shell (process tree) wins over a different configured ``SHELL``.
+
+    Regression guard for the macOS Terminal.app case where the app launches a
+    login fish (``-fish``) while ``$SHELL`` is still zsh (no ``chsh``): the
+    running shell (fish) must win, not the configured login shell (zsh).
+    """
+    from extra_platforms import FISH, current_shell
+
+    # The parent process tree shows fish actually running.
+    monkeypatch.setattr(
+        detection_module,
+        "_parent_process_tree",
+        lambda: (("fish", "/opt/homebrew/bin/fish"),),
+    )
+    # SHELL still points at the configured login shell, zsh.
+    monkeypatch.setenv("SHELL", "/bin/zsh")
+    # No shell-startup version variables leak into the environment.
+    for var in (
+        "BASH_VERSION",
+        "FISH_VERSION",
+        "KSH_VERSION",
+        "NU_VERSION",
+        "XONSH_VERSION",
+        "ZSH_VERSION",
+    ):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.delenv("PSModulePath", raising=False)
+    invalidate_caches()
+    assert current_shell() is FISH
     invalidate_caches()
