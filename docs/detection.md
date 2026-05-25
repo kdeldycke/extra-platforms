@@ -125,6 +125,7 @@
 | {func}`~is_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {func}`~is_openwrt`              |  📶  | {data}`~OPENWRT`              |
 | {func}`~is_oracle`               |  🦴  | {data}`~ORACLE`               |
+| {func}`~is_os400`                |  🟦  | {data}`~OS400`                |
 | {func}`~is_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
 | {func}`~is_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
 | {func}`~is_parallels`            |  ∥   | {data}`~PARALLELS`            |
@@ -282,6 +283,7 @@
 .. autofunction:: extra_platforms.is_opensuse
 .. autofunction:: extra_platforms.is_openwrt
 .. autofunction:: extra_platforms.is_oracle
+.. autofunction:: extra_platforms.is_os400
 .. autofunction:: extra_platforms.is_parallels
 .. autofunction:: extra_platforms.is_pidora
 .. autofunction:: extra_platforms.is_powershell

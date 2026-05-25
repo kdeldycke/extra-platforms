@@ -190,6 +190,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_opensuse`             | {deco}`~pytest.unless_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {deco}`~pytest.skip_openwrt`              | {deco}`~pytest.unless_openwrt`              |  📶  | {data}`~OPENWRT`              |
 | {deco}`~pytest.skip_oracle`               | {deco}`~pytest.unless_oracle`               |  🦴  | {data}`~ORACLE`               |
+| {deco}`~pytest.skip_os400`                | {deco}`~pytest.unless_os400`                |  🟦  | {data}`~OS400`                |
 | {deco}`~pytest.skip_other_posix`          | {deco}`~pytest.unless_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
 | {deco}`~pytest.skip_other_shells`         | {deco}`~pytest.unless_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
 | {deco}`~pytest.skip_parallels`            | {deco}`~pytest.unless_parallels`            |  ∥   | {data}`~PARALLELS`            |
@@ -374,6 +375,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_opensuse
 .. autodecorator:: extra_platforms.pytest.skip_openwrt
 .. autodecorator:: extra_platforms.pytest.skip_oracle
+.. autodecorator:: extra_platforms.pytest.skip_os400
 .. autodecorator:: extra_platforms.pytest.skip_other_posix
 .. autodecorator:: extra_platforms.pytest.skip_other_shells
 .. autodecorator:: extra_platforms.pytest.skip_parallels
@@ -555,6 +557,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_opensuse
 .. autodecorator:: extra_platforms.pytest.unless_openwrt
 .. autodecorator:: extra_platforms.pytest.unless_oracle
+.. autodecorator:: extra_platforms.pytest.unless_os400
 .. autodecorator:: extra_platforms.pytest.unless_other_posix
 .. autodecorator:: extra_platforms.pytest.unless_other_shells
 .. autodecorator:: extra_platforms.pytest.unless_parallels

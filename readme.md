@@ -305,6 +305,7 @@ mindmap
     ((⚙️ ALL_PLATFORMS))
         )≛ UNIX_LAYERS(
             (Ͼ CYGWIN)
+            (🟦 OS400)
         )𝐕 SYSTEM_V(
             (➿ AIX)
             (🔥 ILLUMOS)
