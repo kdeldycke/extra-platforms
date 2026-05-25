@@ -133,6 +133,8 @@ OPENWRT = Platform("openwrt", "OpenWrt", "📶", "https://openwrt.org")
 
 ORACLE = Platform("oracle", "Oracle Linux", "🦴", "https://oracle.com/linux/")
 
+OS400 = Platform("os400", "IBM i", "🟦", "https://en.wikipedia.org/wiki/IBM_i")
+
 PARALLELS = Platform("parallels", "Parallels", "∥", "https://parallels.com")
 
 PIDORA = Platform(

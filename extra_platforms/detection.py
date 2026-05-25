@@ -685,6 +685,32 @@ def is_oracle() -> bool:
 
 
 @cache
+def is_os400() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.OS400`.
+
+    ```{note}
+    Detects [IBM i](https://en.wikipedia.org/wiki/IBM_i) (formerly OS/400),
+    whose AIX-compatible PASE runtime hosts Python. Python 3.9+ on IBM i reports
+    `sys.platform` as `os400` rather than `aix` (as older versions did), so PASE
+    is distinguished from {data}`~extra_platforms.AIX` despite their binary
+    compatibility.
+    ```
+
+    ```{note}
+    {data}`~extra_platforms.OS400` is grouped under
+    {data}`~extra_platforms.UNIX_LAYERS` (beside {data}`~extra_platforms.CYGWIN`),
+    not {data}`~extra_platforms.SYSTEM_V` where its AIX kin lives. IBM i's native
+    OS is not Unix: its only Unix surface is the PASE runtime that `os400` runs
+    in. The [Wikipedia Unix taxonomy](https://en.wikipedia.org/wiki/Template:Unix)
+    that these platform families track classes PASE as a Unix *compatibility
+    layer* (a peer of Cygwin on Windows), so the trait sits there rather than
+    with its System V binary kin.
+    ```
+    """
+    return sys.platform.startswith("os400")
+
+
+@cache
 def is_parallels() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.PARALLELS`."""
     return os_release_id() == "parallels"

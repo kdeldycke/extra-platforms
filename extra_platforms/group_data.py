@@ -108,6 +108,7 @@ from .platform_data import (
     OPENSUSE,
     OPENWRT,
     ORACLE,
+    OS400,
     PARALLELS,
     PIDORA,
     RASPBIAN,
@@ -431,6 +432,7 @@ ALL_PLATFORMS: Group = Group(
         OPENSUSE,
         OPENWRT,
         ORACLE,
+        OS400,
         PARALLELS,
         PIDORA,
         RASPBIAN,
@@ -637,7 +639,7 @@ UNIX_LAYERS = Group(
     "unix_layers",
     "Unix compatibility layers",
     "≛",
-    (CYGWIN,),
+    (CYGWIN, OS400),
 )
 """Interfaces that allows Unix binaries to run on a different host system.
 

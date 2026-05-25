@@ -63,6 +63,7 @@ from extra_platforms import (
     is_openbsd,
     is_opensuse,
     is_oracle,
+    is_os400,
     is_parallels,
     is_pidora,
     is_raspbian,
@@ -126,6 +127,7 @@ def test_platform_detection():
         assert not is_openbsd()
         assert not is_opensuse()
         assert not is_oracle()
+        assert not is_os400()
         assert not is_parallels()
         assert not is_pidora()
         assert not is_raspbian()
@@ -181,6 +183,7 @@ def test_platform_detection():
         assert not is_openbsd()
         assert not is_opensuse()
         assert not is_oracle()
+        assert not is_os400()
         assert not is_parallels()
         assert not is_pidora()
         assert not is_raspbian()
@@ -232,6 +235,7 @@ def test_platform_detection():
         assert not is_openbsd()
         assert not is_opensuse()
         assert not is_oracle()
+        assert not is_os400()
         assert not is_parallels()
         assert not is_pidora()
         assert not is_raspbian()

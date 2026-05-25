@@ -5,6 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add IBM i platform detection: `OS400` / `is_os400()`, recognized via `sys.platform == "os400"` (reported by Python 3.9+ in IBM i's AIX-compatible PASE runtime). Grouped under `UNIX_LAYERS` alongside Cygwin, following the Wikipedia Unix taxonomy the family groups already track.
 - Add `current_shell_path()` returning the executable path of the current shell. It prefers the actual running binary discovered in the parent process tree (`/proc` on Linux, `ps` on macOS and the BSDs), and falls back to the `SHELL` environment variable.
 - `Shell.info()` now reports the running shell's executable in its `"path"` field when the process tree provides it, instead of always using `SHELL` (which is only the configured login shell and may point to a different shell than the one actually running).
 - Detect the active shell on macOS and the BSDs by walking the parent process tree via `ps` when `/proc` is unavailable. The parent-process fallback was previously Linux-only, so it silently did nothing on `/proc`-less systems. The `ps` call degrades to no detection (not an error) when blocked, missing, or when `subprocess.run` is globally mocked.

@@ -264,6 +264,7 @@ if TYPE_CHECKING:
     skip_opensuse: MarkDecorator
     skip_openwrt: MarkDecorator
     skip_oracle: MarkDecorator
+    skip_os400: MarkDecorator
     skip_other_posix: MarkDecorator
     skip_other_shells: MarkDecorator
     skip_parallels: MarkDecorator
@@ -440,6 +441,7 @@ if TYPE_CHECKING:
     unless_opensuse: MarkDecorator
     unless_openwrt: MarkDecorator
     unless_oracle: MarkDecorator
+    unless_os400: MarkDecorator
     unless_other_posix: MarkDecorator
     unless_other_shells: MarkDecorator
     unless_parallels: MarkDecorator

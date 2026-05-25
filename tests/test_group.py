@@ -80,6 +80,7 @@ from extra_platforms import (
     OPENSUSE,
     OPENWRT,
     ORACLE,
+    OS400,
     PARALLELS,
     PIDORA,
     RASPBIAN,
@@ -242,7 +243,13 @@ def test_simple_union():
 def test_multiple_union():
     new_group = ALL_WINDOWS.union(LINUX_LAYERS, UNIX_LAYERS)
 
-    assert new_group.member_ids == frozenset(("windows", "wsl1", "wsl2", "cygwin"))
+    assert new_group.member_ids == frozenset((
+        "windows",
+        "wsl1",
+        "wsl2",
+        "cygwin",
+        "os400",
+    ))
 
     assert ALL_WINDOWS.issubset(new_group)
     assert LINUX_LAYERS.issubset(new_group)
@@ -983,6 +990,7 @@ def test_groups_from_ids(group_id):
                 OPENSUSE,
                 OPENWRT,
                 ORACLE,
+                OS400,
                 PARALLELS,
                 PIDORA,
                 RASPBIAN,
