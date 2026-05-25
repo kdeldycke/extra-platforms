@@ -648,6 +648,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
         "current_ci",
         "current_platform",
         "current_shell",
+        "current_shell_path",
         "current_terminal",
         "current_traits",
         "invalidate_caches",

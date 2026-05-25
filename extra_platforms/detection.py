@@ -1060,6 +1060,28 @@ def _unwrap_emulator(argv: list[str]) -> list[str]:
     return argv
 
 
+def _pairs_from_argv(argv: list[str]) -> list[tuple[str, str]]:
+    """Derive ``(name, path)`` pairs a single process contributes from its argv.
+
+    Unwraps a user-mode emulator prefix (so the emulated shell is seen), then
+    yields the ``argv[0]`` shell name (with its path only when absolute, since a
+    login dash carries none) plus any interpreter-hosted shell found in the
+    arguments (like xonsh run under python). Shared by the ``/proc`` and ``ps``
+    walks, which differ only in how they obtain ``argv``.
+    """
+    pairs: list[tuple[str, str]] = []
+    argv = _unwrap_emulator(argv)
+    if argv:
+        # argv[0] recovers login shells and survives an unreadable exe; keep it
+        # as a path only when absolute (a login dash carries none).
+        if name := _shell_name(argv[0]):
+            pairs.append((name, argv[0] if argv[0].startswith("/") else ""))
+        # A shell hosted by an interpreter (like xonsh run under python).
+        if hosted := _interpreter_shell(argv):
+            pairs.append(hosted)
+    return pairs
+
+
 def _tree_from_proc() -> tuple[tuple[str, str], ...]:
     """Walk the parent process tree through ``/proc`` (Linux and BSD procfs).
 
@@ -1091,16 +1113,7 @@ def _tree_from_proc() -> tuple[tuple[str, str], ...]:
             argv = [a for a in raw.decode(errors="replace").split("\0") if a]
         except OSError:
             argv = []
-        # Unwrap a user-mode emulator prefix so the emulated shell is seen.
-        argv = _unwrap_emulator(argv)
-        if argv:
-            # argv[0] recovers login shells and survives an unreadable exe; keep
-            # it as a path only when absolute (a login dash carries none).
-            if name := _shell_name(argv[0]):
-                pairs.append((name, argv[0] if argv[0].startswith("/") else ""))
-            # A shell hosted by an interpreter (like xonsh run under python).
-            if hosted := _interpreter_shell(argv):
-                pairs.append(hosted)
+        pairs.extend(_pairs_from_argv(argv))
         ppid = _ppid_from_proc(pid)
         if ppid is None:
             break
@@ -1176,14 +1189,7 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     while pid > 1 and pid in table and pid not in visited:
         visited.add(pid)
         ppid, command = table[pid]
-        argv = _unwrap_emulator(command.split())
-        if argv:
-            # argv[0] is a path only when absolute (a login dash carries none).
-            if name := _shell_name(argv[0]):
-                pairs.append((name, argv[0] if argv[0].startswith("/") else ""))
-            # A shell hosted by an interpreter (like xonsh run under python).
-            if hosted := _interpreter_shell(argv):
-                pairs.append(hosted)
+        pairs.extend(_pairs_from_argv(command.split()))
         pid = ppid
     return tuple(pairs)
 
