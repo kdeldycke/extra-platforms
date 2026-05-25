@@ -425,9 +425,9 @@ class Shell(Trait):
     The value is the interpreter's base name (``"python"``); detection tolerates
     a trailing version (``python3``, ``python3.11``). When set, the parent
     process tree is also scanned for an interpreter process whose arguments
-    include a launcher file named after this shell's :attr:`id`, so the shell is
-    detected even without its startup environment variable. ``None`` for
-    standalone shells.
+    include a launcher file named after this shell's
+    {attr}`~extra_platforms.Trait.id`, so the shell is detected even without its
+    startup environment variable. ``None`` for standalone shells.
     """
 
     def info(self) -> dict[str, str | bool | None]:
