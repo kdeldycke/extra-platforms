@@ -1297,9 +1297,9 @@ def _running_shell_path(shell_id: str) -> str | None:
     path whose normalized name equals ``shell_id``. Non-absolute sources (a
     login dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
     callers can fall back to ``SHELL``. A path is considered absolute when it
-    starts with ``/`` (POSIX) or satisfies :func:`os.path.isabs` (Windows
-    drive paths like ``C:\\...``). Returns {data}`None` when no running path
-    is found.
+    starts with ``/`` (POSIX) or satisfies ``os.path.isabs`` (Windows drive
+    paths like ``C:\\...``). Returns {data}`None` when no running path is
+    found.
     """
     for name, path in _parent_process_tree():
         if name == shell_id and (path.startswith("/") or os.path.isabs(path)):
