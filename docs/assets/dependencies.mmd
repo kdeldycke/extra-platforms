@@ -8,7 +8,7 @@ flowchart LR
         pytest{{"`pytest >=8.2.1`"}}
         bump_my_version(["`bump-my-version`"])
         aiohttp(["`aiohttp`"])
-        myst_parser{{"`myst-parser >=5`"}}
+        myst_parser{{"`myst-parser >=5.1`"}}
         pygments(["`pygments`"])
         requests{{"`requests`"}}
         typing_extensions(["`typing-extensions`"])
@@ -61,7 +61,6 @@ flowchart LR
         sphinxext_opengraph{{"`sphinxext-opengraph >=0.13`"}}
         tabulate(["`tabulate`"])
         tomlkit(["`tomlkit`"])
-        urllib3(["`urllib3`"])
         wcwidth(["`wcwidth`"])
         aiofiles(["`aiofiles`"])
         aiohappyeyeballs(["`aiohappyeyeballs`"])
@@ -92,6 +91,7 @@ flowchart LR
         sphinxcontrib_qthelp(["`sphinxcontrib-qthelp`"])
         sphinxcontrib_serializinghtml(["`sphinxcontrib-serializinghtml`"])
         types_pytz(["`types-pytz`"])
+        urllib3(["`urllib3`"])
     end
 
     subgraph grp_test [--group test]
@@ -104,10 +104,6 @@ flowchart LR
         pytest_randomly{{"`pytest-randomly >=4`"}}
         execnet(["`execnet`"])
         psutil(["`psutil`"])
-    end
-
-    subgraph grp_typing [--group typing]
-        types_requests{{"`types-requests >=2.32.4.20250611`"}}
     end
 
     sphinx --> pygments
@@ -165,8 +161,8 @@ flowchart LR
     myst_parser --> mdit_py_plugins
     requests --> idna
     requests --> certifi
-    requests --> urllib3
     requests --> charset_normalizer
+    requests --> urllib3
     furo ==> sphinx
     furo --> pygments
     furo --> beautifulsoup4
@@ -190,7 +186,6 @@ flowchart LR
     sphinx_design ==> sphinx
     sphinx_issues ==> sphinx
     sphinxext_opengraph ==> sphinx
-    types_requests --> urllib3
     bump_my_version --> pydantic
     bump_my_version --> click_0
     bump_my_version --> httpx
@@ -261,7 +256,6 @@ flowchart LR
     pydantic_core --> typing_extensions
     extra_platforms -.-> grp_docs
     extra_platforms -.-> grp_test
-    extra_platforms -.-> grp_typing
 
     click accessible_pygments "https://pypi.org/project/accessible-pygments/" _blank
     click aiofiles "https://pypi.org/project/aiofiles/" _blank
@@ -356,7 +350,6 @@ flowchart LR
     click tomli "https://pypi.org/project/tomli/" _blank
     click tomlkit "https://pypi.org/project/tomlkit/" _blank
     click types_pytz "https://pypi.org/project/types-pytz/" _blank
-    click types_requests "https://pypi.org/project/types-requests/" _blank
     click typing_extensions "https://pypi.org/project/typing-extensions/" _blank
     click typing_inspection "https://pypi.org/project/typing-inspection/" _blank
     click urllib3 "https://pypi.org/project/urllib3/" _blank
@@ -385,9 +378,7 @@ flowchart LR
     style sphinxcontrib_mermaid stroke-width:3px
     style sphinxext_opengraph stroke-width:3px
     style tomli stroke-width:3px
-    style types_requests stroke-width:3px
     style wcmatch stroke-width:3px
 
     style grp_docs fill:#546E7A20,stroke:#90A4AE
     style grp_test fill:#546E7A20,stroke:#90A4AE
-    style grp_typing fill:#546E7A20,stroke:#90A4AE
