@@ -217,6 +217,7 @@ All recognized traits and their properties:
 |  🦎  | {data}`~OPENSUSE`             | openSUSE                       | {func}`~is_opensuse`             | Platform     |
 |  📶  | {data}`~OPENWRT`              | OpenWrt                        | {func}`~is_openwrt`              | Platform     |
 |  🦴  | {data}`~ORACLE`               | Oracle Linux                   | {func}`~is_oracle`               | Platform     |
+|  🟦  | {data}`~OS400`                | IBM i                          | {func}`~is_os400`                | Platform     |
 |  ∥   | {data}`~PARALLELS`            | Parallels                      | {func}`~is_parallels`            | Platform     |
 |  🍓  | {data}`~PIDORA`               | Pidora                         | {func}`~is_pidora`               | Platform     |
 |  🔷  | {data}`~POWERSHELL`           | PowerShell                     | {func}`~is_powershell`           | Shell        |

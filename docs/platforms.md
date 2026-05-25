@@ -87,6 +87,7 @@ Platform(id='macos', name='macOS')
 |  🦎  | {data}`~OPENSUSE`      | openSUSE                       | {func}`~is_opensuse`      |
 |  📶  | {data}`~OPENWRT`       | OpenWrt                        | {func}`~is_openwrt`       |
 |  🦴  | {data}`~ORACLE`        | Oracle Linux                   | {func}`~is_oracle`        |
+|  🟦  | {data}`~OS400`         | IBM i                          | {func}`~is_os400`         |
 |  ∥   | {data}`~PARALLELS`     | Parallels                      | {func}`~is_parallels`     |
 |  🍓  | {data}`~PIDORA`        | Pidora                         | {func}`~is_pidora`        |
 |  🍓  | {data}`~RASPBIAN`      | Raspbian                       | {func}`~is_raspbian`      |
@@ -164,9 +165,9 @@ sankey-beta
 ALL_PLATFORMS,LINUX,41
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
+ALL_PLATFORMS,UNIX_LAYERS,2
 ALL_PLATFORMS,OTHER_POSIX,2
 ALL_PLATFORMS,LINUX_LAYERS,2
-ALL_PLATFORMS,UNIX_LAYERS,1
 ALL_PLATFORMS,ALL_WINDOWS,1
 LINUX,ALPINE,1
 LINUX,ALTLINUX,1
@@ -219,11 +220,12 @@ BSD,SUNOS,1
 SYSTEM_V,AIX,1
 SYSTEM_V,ILLUMOS,1
 SYSTEM_V,SOLARIS,1
+UNIX_LAYERS,CYGWIN,1
+UNIX_LAYERS,OS400,1
 OTHER_POSIX,HAIKU,1
 OTHER_POSIX,HURD,1
 LINUX_LAYERS,WSL1,1
 LINUX_LAYERS,WSL2,1
-UNIX_LAYERS,CYGWIN,1
 ALL_WINDOWS,WINDOWS,1
 ```
 
@@ -241,6 +243,7 @@ mindmap
     ((⚙️ ALL_PLATFORMS))
         )≛ UNIX_LAYERS(
             (Ͼ CYGWIN)
+            (🟦 OS400)
         )𝐕 SYSTEM_V(
             (➿ AIX)
             (🔥 ILLUMOS)
@@ -359,6 +362,7 @@ mindmap
 .. autodata:: extra_platforms.OPENSUSE
 .. autodata:: extra_platforms.OPENWRT
 .. autodata:: extra_platforms.ORACLE
+.. autodata:: extra_platforms.OS400
 .. autodata:: extra_platforms.PARALLELS
 .. autodata:: extra_platforms.PIDORA
 .. autodata:: extra_platforms.RASPBIAN
