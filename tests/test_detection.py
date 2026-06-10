@@ -275,6 +275,19 @@ def test_shell_name(command, expected):
         ("4242 (a (weird) name) S 7 1 1 0 ...", 7),
         # BSD /proc/<pid>/status: "comm pid ppid pgid ...".
         ("zsh 4242 4200 4200 ...", 4200),
+        # NetBSD /proc/<pid>/stat (Linux-compat format from
+        # sys/miscfs/procfs/procfs_linux.c). Confirmed in
+        # https://github.com/sarugaku/shellingham/issues/99 where shellingham's
+        # Linux-style /proc parsing fails but extra-platforms detects ksh.
+        (
+            "1500 (ksh) S 1 1500 1500 1280 1500 0 0 0 0 0 50 100 0 0 "
+            "20 0 1 0 1234567 4194304 512 18446744073709551615 0 0 0 0 0 "
+            "0 0 0 0 0 0 0 0 0 0 0 0 0",
+            1,
+        ),
+        # NetBSD /proc/<pid>/status (BSD format from procfs_status.c):
+        # "comm pid ppid pgid sid tdev,minor flags,flags start,ns ...".
+        ("ksh 1500 1 1500 1500 -1,-1 noflags,noflags 1234567,890 - 1000", 1),
     ),
 )
 def test_parse_proc_ppid(record, expected):
@@ -434,6 +447,36 @@ def test_ppid_from_proc_tolerates_binary_status(monkeypatch):
         detection_module.Path, "read_bytes", lambda self: b"\x00\x80\xff pstatus"
     )
     assert detection_module._ppid_from_proc(1234) is None
+
+
+def test_ppid_from_proc_netbsd_stat(monkeypatch):
+    """NetBSD /proc/<pid>/stat is Linux-compatible: ksh detected as parent.
+
+    Regression test for the scenario in
+    https://github.com/sarugaku/shellingham/issues/99 where shellingham fails
+    on NetBSD's procfs but extra-platforms walks it correctly.
+    """
+    netbsd_stat = (
+        b"1500 (ksh) S 1 1500 1500 1280 1500 0 0 0 0 0 50 100 0 0 "
+        b"20 0 1 0 1234567 4194304 512 18446744073709551615 0 0 0 0 0 "
+        b"0 0 0 0 0 0 0 0 0 0 0 0 0"
+    )
+    monkeypatch.setattr(detection_module.Path, "read_bytes", lambda self: netbsd_stat)
+    assert detection_module._ppid_from_proc(1500) == 1
+
+
+def test_ppid_from_proc_netbsd_status_fallback(monkeypatch):
+    """When NetBSD's stat is unreadable, the BSD-style status fallback parses."""
+    netbsd_status = b"ksh 1500 1 1500 1500 -1,-1 noflags,noflags 1234567,890 - 1000"
+
+    def read_bytes(self):
+        # Mimic a NetBSD /proc with only `status` readable (stat denied).
+        if self.name == "stat":
+            raise OSError("stat unreadable")
+        return netbsd_status
+
+    monkeypatch.setattr(detection_module.Path, "read_bytes", read_bytes)
+    assert detection_module._ppid_from_proc(1500) == 1
 
 
 @skip_windows
