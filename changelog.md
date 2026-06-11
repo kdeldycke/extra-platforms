@@ -7,6 +7,9 @@
 
 ## [`13.0.0` (2026-05-25)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.3...v13.0.0)
 
+> [!NOTE]
+> `13.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.0.0).
+
 - Add IBM i platform detection: `OS400` / `is_os400()`, recognized via `sys.platform == "os400"` (reported by Python 3.9+ in IBM i's AIX-compatible PASE runtime). Grouped under `UNIX_LAYERS` alongside Cygwin.
 - Detect the active shell on Windows by walking the parent process tree via the Win32 Tool Help API (`CreateToolhelp32Snapshot`), where neither `/proc` nor `ps` exists. `is_powershell()`, `is_cmd()`, Git Bash detection through `is_bash()`, `current_shell()` arbitration, and `current_shell_path()` now rely on the actual ancestor processes rather than only the `PROMPT`/`PSModulePath` environment variables. Executable paths are resolved with `QueryFullProcessImageNameW`. The `ctypes` bindings live in a new `extra_platforms._windows` module, imported lazily and only on Windows.
 - Add `current_shell_path()` returning the executable path of the current shell (from the process tree when available, falling back to `SHELL`). `Shell.info()` now exposes the running shell's binary in its `"path"` field instead of always returning the configured login shell from `SHELL`.
