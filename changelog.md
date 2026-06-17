@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add detection of macOS Golden Gate (v27.x).
+
 ## [`13.0.0` (2026-05-25)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.3...v13.0.0)
 
 - Add IBM i platform detection: `OS400` / `is_os400()`, recognized via `sys.platform == "os400"` (reported by Python 3.9+ in IBM i's AIX-compatible PASE runtime). Grouped under `UNIX_LAYERS` alongside Cygwin.

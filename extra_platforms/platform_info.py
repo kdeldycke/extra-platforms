@@ -176,6 +176,7 @@ MACOS_CODENAMES: dict[tuple[str, str | None], str] = {
     ("14", None): "Sonoma",
     ("15", None): "Sequoia",
     ("26", None): "Tahoe",
+    ("27", None): "Golden Gate",
 }
 """Maps macOS `(major, minor)` version parts to release code name.
 
