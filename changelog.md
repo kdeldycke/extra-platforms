@@ -9,39 +9,37 @@
 
 ## [`13.0.0` (2026-05-25)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.3...v13.0.0)
 
-- Add IBM i platform detection: `OS400` / `is_os400()`, recognized via `sys.platform == "os400"` (reported by Python 3.9+ in IBM i's AIX-compatible PASE runtime). Grouped under `UNIX_LAYERS` alongside Cygwin.
-- Detect the active shell on Windows by walking the parent process tree via the Win32 Tool Help API (`CreateToolhelp32Snapshot`), where neither `/proc` nor `ps` exists. `is_powershell()`, `is_cmd()`, Git Bash detection through `is_bash()`, `current_shell()` arbitration, and `current_shell_path()` now rely on the actual ancestor processes rather than only the `PROMPT`/`PSModulePath` environment variables. Executable paths are resolved with `QueryFullProcessImageNameW`. The `ctypes` bindings live in a new `extra_platforms._windows` module, imported lazily and only on Windows.
-- Add `current_shell_path()` returning the executable path of the current shell (from the process tree when available, falling back to `SHELL`). `Shell.info()` now exposes the running shell's binary in its `"path"` field instead of always returning the configured login shell from `SHELL`.
-- Detect interpreter-hosted shells like Xonsh, which runs as a Python script so the process tree shows `python` rather than `xonsh`. The tree walk scans interpreter arguments for the shell's launcher file, matching only an existing file named exactly after the shell to avoid false positives. A new `interpreter` field on `Shell` declares the host interpreter (`XONSH` sets it to `python`).
-- Recognize shells running under a user-mode CPU emulator: under foreign-architecture emulation (like `docker run --platform linux/arm64` on an x86 host), the process tree shows `qemu-aarch64 /bin/bash …` rather than `bash`; the walk strips a leading `qemu-<arch>` (or `rosetta`) wrapper and reads the emulated command, composing with interpreter-hosted detection.
-- Detect the active shell on illumos, Solaris, and AIX/IBM i. Their System V `/proc` exposes process status as binary `pstatus_t` with no `/proc/<pid>/cmdline` or `exe`: the `/proc` walk previously raised `UnicodeDecodeError`, crashing `current_shell()`. It now reads `/proc` records as bytes and falls back to `ps` when `/proc` yields nothing. The `ps` invocation uses the portable POSIX form (`-o pid=,ppid=,args=`) with positional parsing of empty headers, working across the System V `ps` of all three.
-- Extend shell detection via the process tree to macOS and the BSDs: the `/proc`-based walk was Linux-only, and the `ps`-based fallback now covers macOS, FreeBSD, DragonFly, and other systems without `/proc`. The walk also recognizes login shells (`argv[0]` like `-bash`), survives an unreadable `/proc/<pid>/exe` via `/proc/<pid>/cmdline`, and reads parent PIDs from BSD procfs layout (`/proc/<pid>/status`).
-- Render GitHub-style alerts (`> [!NOTE]`, `> [!WARNING]`, …) as admonitions in the documentation by enabling MyST's `alert` extension (requires `myst-parser>=5.1`).
-- Drop the `types-requests` typing stub and the now-empty `typing` dependency group, and require `requests>=2.34`, which ships inline type hints (PEP 561).
+- Add IBM i platform detection: `OS400` / `is_os400()` (via `sys.platform == "os400"`), grouped under `UNIX_LAYERS` alongside Cygwin.
+- Detect the active shell (`is_powershell()`, `is_cmd()`, `is_bash()`, `current_shell()`) by walking the parent process tree, now covering Windows, macOS, the BSDs, illumos, Solaris, and AIX/IBM i instead of Linux only.
+- Add `current_shell_path()` returning the running shell's executable path; `Shell.info()` now reports that binary in its `"path"` field instead of always the `SHELL` login shell.
+- Detect interpreter-hosted shells like Xonsh, which appear as `python` in the process tree, via a new `interpreter` field on `Shell`.
+- Recognize shells running under a user-mode CPU emulator by stripping a leading `qemu-{arch}` or `rosetta` wrapper from the process tree.
+- Render GitHub-style alerts as admonitions in the documentation (requires `myst-parser>=5.1`).
+- Drop the `types-requests` typing stub and the `typing` dependency group; require `requests>=2.34`, which ships inline type hints.
 
 ## [`12.0.3` (2026-04-29)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.2...v12.0.3)
 
 > [!NOTE]
 > `12.0.3` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/12.0.3/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v12.0.3).
 
-- Extend missing-shell tolerance to `test_skip_all_shells`, `test_skip_bash`, and `test_skip_powershell` in `tests/test_pytest.py`. The `12.0.2` shell-tolerance work only covered `tests/test_root.py`, leaving these three tests failing on sandboxed builders (Guix, BusyBox-only images) where no shell is detected.
+- Tolerate missing shells in `test_skip_all_shells`, `test_skip_bash`, and `test_skip_powershell` on sandboxed builders where no shell is detected.
 
 ## [`12.0.2` (2026-04-28)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.1...v12.0.2)
 
 > [!NOTE]
 > `12.0.2` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/12.0.2/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v12.0.2).
 
-- Move `--cov`, `--cov-report=term`, `--numprocesses=auto`, and `--dist=loadgroup` from `pyproject.toml` `[tool.pytest].addopts` into the CI workflow. Removes `pytest-cov` and `pytest-xdist` as unconditional test-time dependencies for downstream packagers.
-- Avoid spurious `cmd /c ver` subprocess calls on Windows in detection functions for non-Windows platforms. `is_macos()` now relies on `sys.platform == "darwin"` directly. `is_illumos()`, `is_solaris()`, `is_sunos()`, `is_wsl1()`, and `is_wsl2()` short-circuit on `sys.platform` before invoking `platform.platform()`, `platform.uname()`, or `platform.release()` (each of which shells out via `platform._syscmd_ver` on Windows). Fixes downstream test suites that globally patch `subprocess.run`.
-- Improve test portability: add `network` marker to `test_pyproject_classifiers` (exclude in sandboxed builds with `pytest -m "not network"`); tolerate missing shells in `test_current_funcs` and `test_current_strict_mode` (Guix builders, BusyBox-only images, where shell detection finds nothing).
+- Move `--cov`, `--cov-report=term`, `--numprocesses=auto`, and `--dist=loadgroup` from `addopts` to the CI workflow, dropping `pytest-cov` and `pytest-xdist` as unconditional test dependencies for downstream packagers.
+- Avoid spurious `cmd /c ver` subprocess calls on Windows when detecting non-Windows platforms (`is_macos()`, `is_illumos()`, `is_solaris()`, `is_sunos()`, `is_wsl1()`, `is_wsl2()`), fixing suites that globally patch `subprocess.run`.
+- Improve test portability under sandboxed builds: add a `network` marker to `test_pyproject_classifiers`, and tolerate missing shells in shell-detection tests.
 
 ## [`12.0.1` (2026-04-26)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.0...v12.0.1)
 
 > [!NOTE]
 > `12.0.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/12.0.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v12.0.1).
 
-- Defer `logging` and `warnings` imports out of the cold-load path: the stdlib `logging` import pulls in `traceback` (and `_colorize` on Python 3.14+), which dominates import time on slow architectures like i586. Closes {issue}`494`
-- Loosen the `test_import_time` threshold from 500 ms to 1000 ms as a safety margin for slower architectures.
+- Defer `logging` and `warnings` imports out of the cold-load path to speed up `import extra_platforms` on slow architectures. Closes {issue}`494`
+- Loosen the `test_import_time` threshold from 500 ms to 1000 ms for slower architectures.
 
 ## [`12.0.0` (2026-04-24)](https://github.com/kdeldycke/extra-platforms/compare/v11.1.0...v12.0.0)
 
@@ -50,8 +48,10 @@
 
 - Add `SH` (Bourne Shell) trait and `is_sh()` detection function.
 - Add `GUIX_BUILD` CI trait and `is_guix_build()` detection function.
-- Add `--json`, `--version`, and `--help` options to the CLI. `--json` outputs all detected traits and groups as a JSON object for scripting.
-- Overhaul shell detection: resolve symlinks in `SHELL` before identifying the implementation (so `/bin/sh` → `/bin/bash` detects bash, not sh); `current_shell()` now disambiguates via three-tier priority — startup env vars, then `/proc` parent process tree, then `SHELL` value — fixing detection on CI runners where `SHELL=/bin/sh` points to a different shell than the one actually executing; `SH` is treated as a low-specificity fallback and stripped when a more specific shell is detected; new `version_env_var` field on `Shell` records each shell's startup environment variable (like `BASH_VERSION` for Bash); `is_powershell()` now checks `PSModulePath` as a presence signal rather than a version variable. Use `is_bourne_shells()` to check for a Bourne-compatible interface regardless of implementation.
+- Add `--json`, `--version`, and `--help` options to the CLI; `--json` outputs all detected traits and groups for scripting.
+- Overhaul shell detection: `current_shell()` now disambiguates via startup env vars, then the `/proc` parent process tree, then `SHELL`, fixing CI runners where `SHELL=/bin/sh` differs from the running shell.
+- Resolve symlinks in `SHELL` before identifying the shell (so `/bin/sh` resolving to `/bin/bash` detects bash), and treat `SH` as a low-specificity fallback; add `is_bourne_shells()` to check for a Bourne-compatible interface.
+- Add a `version_env_var` field to `Shell` recording each shell's startup environment variable (like `BASH_VERSION`).
 
 ## [`11.1.0` (2026-04-21)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.5...v11.1.0)
 
