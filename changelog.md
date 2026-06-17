@@ -9,6 +9,9 @@
 
 ## [`13.0.0` (2026-05-25)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.3...v13.0.0)
 
+> [!NOTE]
+> `13.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.0.0).
+
 - Add IBM i platform detection: `OS400` / `is_os400()` (via `sys.platform == "os400"`), grouped under `UNIX_LAYERS` alongside Cygwin.
 - Detect the active shell (`is_powershell()`, `is_cmd()`, `is_bash()`, `current_shell()`) by walking the parent process tree, now covering Windows, macOS, the BSDs, illumos, Solaris, and AIX/IBM i instead of Linux only.
 - Add `current_shell_path()` returning the running shell's executable path; `Shell.info()` now reports that binary in its `"path"` field instead of always the `SHELL` login shell.
