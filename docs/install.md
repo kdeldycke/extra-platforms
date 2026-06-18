@@ -54,7 +54,7 @@ $ uvx extra-platforms
 
 ````{tab-item} Specific version
 ```shell-session
-$ uvx extra-platforms@9.0.1
+$ uvx extra-platforms@13.0.0
 ```
 ````
 
