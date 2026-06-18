@@ -8,10 +8,10 @@ flowchart LR
         pytest{{"`pytest >=8.2.1`"}}
         bump_my_version(["`bump-my-version`"])
         aiohttp(["`aiohttp`"])
+        typing_extensions(["`typing-extensions`"])
         myst_parser{{"`myst-parser >=5.1`"}}
         pygments(["`pygments`"])
         requests{{"`requests`"}}
-        typing_extensions(["`typing-extensions`"])
         furo{{"`furo >=2025.9.25`"}}
         pydantic(["`pydantic`"])
         click_0(["`click`"])
@@ -214,6 +214,7 @@ flowchart LR
     pyproject_metadata --> packaging
     sphinx_basic_ng ==> sphinx
     tabulate --> wcwidth
+    aiohttp --> typing_extensions
     aiohttp --> yarl
     aiohttp --> aiosignal
     aiohttp --> frozenlist
