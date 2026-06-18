@@ -21,7 +21,6 @@ import sys
 from pathlib import Path
 
 import pytest
-import requests
 
 import extra_platforms
 from extra_platforms import (
@@ -160,6 +159,12 @@ def test_pyproject_keywords():
 @pytest.mark.network
 def test_pyproject_classifiers():
     """Check that Trove classifiers in ``pyproject.toml`` are correct."""
+    # Import requests lazily so this module still collects when the package is
+    # absent. Pytest imports the module to collect it, so a top-level import
+    # would break the whole file even when this network test is deselected with
+    # -m 'not network'.
+    import requests
+
     # Fetch official trove classifiers from PyPI.
     response = requests.get("https://pypi.org/pypi?%3Aaction=list_classifiers")
     assert response.ok, f"{response.url} is not reachable: {response}"
