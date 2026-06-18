@@ -235,12 +235,6 @@ classifiers = [
   "Topic :: Utilities",
   "Typing :: Typed",
 ]
-
-[project.entry-points]
-# Make additional fixtures available to pytest.
-# See: https://docs.pytest.org/en/latest/how-to/writing_plugins.html#making-your-plugin-installable-by-others
-pytest11.extra-platforms = "extra_platforms.pytest"
-
 # Semantic versioning works in theory. In practice, it is hard to guarantee.
 # That's why we rely on >= specifier instead of ~= to relax constraints. This gives more freedom to packagers to
 # release hotfixes for security vulnerabilities in the future.
@@ -250,23 +244,21 @@ pytest11.extra-platforms = "extra_platforms.pytest"
 # - new code path we depends on,
 # - aligns minimal Python requirements to ours,
 # - adds new explicit support Python version.
-[project.optional-dependencies]
-pytest = [
+optional-dependencies.pytest = [
   # pytest 8.2.1 is the first version to support Python 3.13.
   "pytest>=8.2.1",
 ]
-
-[project.scripts]
-extra-platforms = "extra_platforms.__main__:main"
-
-[project.urls]
-"Changelog" = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
-"Documentation" = "https://kdeldycke.github.io/extra-platforms"
-"Download" = "https://github.com/kdeldycke/extra-platforms/releases/tag/v13.0.1.dev0"
-"Funding" = "https://github.com/sponsors/kdeldycke"
-"Homepage" = "https://github.com/kdeldycke/extra-platforms"
-"Issues" = "https://github.com/kdeldycke/extra-platforms/issues"
-"Repository" = "https://github.com/kdeldycke/extra-platforms"
+urls.Changelog = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
+urls.Documentation = "https://kdeldycke.github.io/extra-platforms"
+urls.Download = "https://github.com/kdeldycke/extra-platforms/releases/tag/v13.0.1.dev0"
+urls.Funding = "https://github.com/sponsors/kdeldycke"
+urls.Homepage = "https://github.com/kdeldycke/extra-platforms"
+urls.Issues = "https://github.com/kdeldycke/extra-platforms/issues"
+urls.Repository = "https://github.com/kdeldycke/extra-platforms"
+scripts.extra-platforms = "extra_platforms.__main__:main"
+# Make additional fixtures available to pytest.
+# See: https://docs.pytest.org/en/latest/how-to/writing_plugins.html#making-your-plugin-installable-by-others
+entry-points.pytest11.extra-platforms = "extra_platforms.pytest"
 
 [dependency-groups]
 test = [
@@ -375,13 +367,22 @@ default.extend-ignore-identifiers-re = [
   "certifi",
 ]
 
+[tool.mypy]
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+pretty = true
+warn_unused_configs = true
+
 [tool.pytest]
+addopts = [
+  "--durations=10",
+]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 markers = [
   "network: Tests that require network access (excluded with -m 'not network').",
-]
-addopts = [
-  "--durations=10",
 ]
 # Make sure tests that are expected to fail do not resurrect and start working all of a sudden.
 xfail_strict = true
@@ -459,15 +460,6 @@ filename = "./citation.cff"
 regex = true
 search = "date-released: \\d{{4}}-\\d{{2}}-\\d{{2}}"
 replace = "date-released: {utcnow:%Y-%m-%d}"
-
-[tool.mypy]
-check_untyped_defs = true
-warn_unused_configs = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
-warn_unreachable = true
-pretty = true
 
 [tool.lychee]
 exclude = [
