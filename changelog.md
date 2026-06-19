@@ -7,6 +7,9 @@
 
 ## [`13.0.1` (2026-06-18)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.0...v13.0.1)
 
+> [!NOTE]
+> `13.0.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.0.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.0.1).
+
 - Add detection of macOS Golden Gate (v27.x).
 
 ## [`13.0.0` (2026-05-25)](https://github.com/kdeldycke/extra-platforms/compare/v12.0.3...v13.0.0)
