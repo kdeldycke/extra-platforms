@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.0.2.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.1...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.0.2` (2026-06-30)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.1...v13.0.2)
 
 ## [`13.0.1` (2026-06-18)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.0...v13.0.1)
 
