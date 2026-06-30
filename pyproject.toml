@@ -294,7 +294,6 @@ docs = [
   "sphinx-autodoc-typehints>=2.4",
   "sphinx-copybutton>=0.5.2",
   "sphinx-design>=0.6",
-  "sphinx-issues>=5",
   "sphinxcontrib-mermaid>=1.2.2",
   "sphinxext-opengraph>=0.13",
   # wcmatch 10.0 fix some inconsistencies in globbing and symlinks.

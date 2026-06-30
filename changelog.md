@@ -43,7 +43,7 @@
 > [!NOTE]
 > `12.0.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/12.0.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v12.0.1).
 
-- Defer `logging` and `warnings` imports out of the cold-load path to speed up `import extra_platforms` on slow architectures. Closes {issue}`494`
+- Defer `logging` and `warnings` imports out of the cold-load path to speed up `import extra_platforms` on slow architectures. Closes [#494](https://github.com/kdeldycke/extra-platforms/issues/494)
 - Loosen the `test_import_time` threshold from 500 ms to 1000 ms for slower architectures.
 
 ## [`12.0.0` (2026-04-24)](https://github.com/kdeldycke/extra-platforms/compare/v11.1.0...v12.0.0)
@@ -72,8 +72,8 @@
 > [!NOTE]
 > `11.0.5` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.0.5/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.0.5).
 
-- Add project logo and banner. Closes {issue}`522`
-- Fix broken `pipx` documentation link. Closes {issue}`386`
+- Add project logo and banner. Closes [#522](https://github.com/kdeldycke/extra-platforms/issues/522)
+- Fix broken `pipx` documentation link. Closes [#386](https://github.com/kdeldycke/extra-platforms/issues/386)
 - Enable `check_untyped_defs` in mypy configuration. Fix all resulting type errors.
 
 ## [`11.0.4` (2026-03-30)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.3...v11.0.4)
@@ -81,7 +81,7 @@
 > [!NOTE]
 > `11.0.4` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/11.0.4/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v11.0.4).
 
-- Add Void Linux platform detection. Closes {issue}`523`
+- Add Void Linux platform detection. Closes [#523](https://github.com/kdeldycke/extra-platforms/issues/523)
 - Suppress false-positive link checker failures for sites that block bots.
 
 ## [`11.0.3` (2026-03-23)](https://github.com/kdeldycke/extra-platforms/compare/v11.0.2...v11.0.3)
