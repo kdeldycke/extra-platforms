@@ -1,0 +1,55 @@
+# Behavioral test suite for the extra-platforms CLI, run by click-extra's
+# declarative engine: https://kdeldycke.github.io/click-extra/test-suite.html
+# The tests workflow runs it against both the `extra-platforms` console script
+# and the `python -m extra_platforms` module entry point.
+
+# Print the package version.
+[[cases]]
+cli_parameters = "--version"
+exit_code = 0
+stdout_regex_fullmatch = 'extra-platforms [0-9]+\.[0-9]+\.[0-9]+(\.dev[0-9]+(\+[a-f0-9]+)?)?\n'
+
+# Print the argparse help screen.
+[[cases]]
+cli_parameters = "--help"
+exit_code = 0
+stdout_contains = [
+  "usage: extra-platforms [-h] [--json] [--version]",
+  "--json",
+  "show program's version number and exit",
+]
+
+# A bare invocation renders every detection section and the summary tables.
+[[cases]]
+exit_code = 0
+stdout_contains = [
+  "── Architecture ──",
+  "── Platform ──",
+  "── Shell ──",
+  "── Terminal ──",
+  "── CI ──",
+  "── Agent ──",
+  "── Detected traits ──",
+  "── Detected groups ──",
+]
+
+# JSON output exposes all six trait categories plus version and groups.
+[[cases]]
+cli_parameters = "--json"
+exit_code = 0
+stdout_contains = [
+  '"version":',
+  '"architecture":',
+  '"platform":',
+  '"shell":',
+  '"terminal":',
+  '"ci":',
+  '"agent":',
+  '"groups":',
+]
+
+# Unknown options exit with argparse's usage error.
+[[cases]]
+cli_parameters = "--bogus-option"
+exit_code = 2
+stderr_contains = "unrecognized arguments: --bogus-option"

@@ -50,9 +50,9 @@ jobs:
       - name: Run repomatic metadata
         id: metadata
         run: >
-          uvx --no-progress 'repomatic==6.31.0' metadata
+          uvx --no-progress 'repomatic==7.0.0' metadata
           --format github-json --output "$GITHUB_OUTPUT"
-          test_matrix test_matrix_pr
+          coverage_cells test_matrix test_matrix_pr
 
   tests:
     needs:
@@ -103,12 +103,18 @@ jobs:
         # Install all extras, so we can check any incompatibility.
         run: uv --no-progress sync --frozen --all-extras --group test --group docs
 
-      - name: Run local CLI
-        run: uv run -- extra-platforms
-      - name: Run CLI from module
-        run: |
-          uv run        -m extra_platforms
-          uv run python -m extra_platforms
+      - name: CLI test suite via console script
+        run: >
+          uvx --no-progress 'click-extra==8.1.4' test-suite
+          --command "uv run --frozen -- extra-platforms"
+          --suite-file tests/cli-test-suite.toml
+          --jobs max
+      - name: CLI test suite via python -m
+        run: >
+          uvx --no-progress 'click-extra==8.1.4' test-suite
+          --command "uv run --frozen -- python -m extra_platforms"
+          --suite-file tests/cli-test-suite.toml
+          --jobs max
 
       - name: Unittests
         env:
@@ -121,17 +127,20 @@ jobs:
           --cov
           --cov-report=term
           --cov-report=xml
-          --junitxml=junit.xml
-          --override-ini=junit_family=legacy
 
       - name: Upload coverage to Codecov
-        # Skip on prepare-release PRs (Codecov cannot create commits on protected
-        # branches), sync-repomatic PRs (data-only changes with no coverable
-        # lines), and fork PRs (secrets are not available).
+        # Restrict uploads to the coverage_cells subset (the PR matrix: newest
+        # and oldest Python per PR runner), so full runs skip redundant
+        # per-cell uploads. Also skip on prepare-release PRs (Codecov cannot
+        # create commits on protected branches), sync-repomatic PRs (data-only
+        # changes with no coverable lines), and fork PRs (secrets are not
+        # available).
         if: >
           github.head_ref != 'prepare-release'
           && github.head_ref != 'sync-repomatic'
           && env.CODECOV_TOKEN != ''
+          && contains(format(' {0} ', fromJSON(needs.metadata.outputs.metadata).coverage_cells),
+          format(' {0}|{1} ', matrix.os, matrix.python-version))
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         shell: bash
@@ -141,21 +150,6 @@ jobs:
           upload-process
           --git-service github
           --report-type coverage
-          --token "${CODECOV_TOKEN}"
-      - name: Upload test results to Codecov
-        if: >
-          github.head_ref != 'prepare-release'
-          && github.head_ref != 'sync-repomatic'
-          && env.CODECOV_TOKEN != ''
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        shell: bash
-        run: >
-          uvx --no-progress 'codecov-cli==11.2.8'
-          --auto-load-params-from githubactions
-          upload-process
-          --git-service github
-          --report-type test_results
           --token "${CODECOV_TOKEN}"
 
   test-package-install:

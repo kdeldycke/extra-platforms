@@ -9,6 +9,11 @@
 - Add Clear Linux OS platform detection: `CLEARLINUX` / `is_clearlinux()` (via `ID=clear-linux-os` in `os-release`).
 - Add SliTaz GNU/Linux platform detection: `SLITAZ` / `is_slitaz()` (via `/etc/slitaz-release`, as SliTaz ships no `os-release` file).
 - Add Source Mage GNU/Linux platform detection: `SOURCEMAGE` / `is_sourcemage()` (via `ID=sourcemage` in `os-release`).
+- Align the tests workflow's inline `repomatic` pin with its `v7.0.0` reusable workflow refs.
+- Upload coverage to Codecov from one runner per OS instead of every test matrix cell.
+- Drop the Codecov Test Analytics upload and the `junit.xml` report generation.
+- Assert CLI behavior in CI with a declarative `click-extra` test suite (`tests/cli-test-suite.toml`), replacing the hand-rolled smoke invocations.
+- Add the `macos-15-intel` runner to the test matrix.
 
 ## [`13.0.1` (2026-06-18)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.0...v13.0.1)
 
