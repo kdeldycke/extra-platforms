@@ -54,9 +54,11 @@
 | {func}`~is_c_shells`             |  🅲   | {data}`~C_SHELLS`             |
 | {func}`~is_cachyos`              |  ⌬   | {data}`~CACHYOS`              |
 | {func}`~is_centos`               |  💠  | {data}`~CENTOS`               |
+| {func}`~is_chromeos`             |  🧿  | {data}`~CHROMEOS`             |
 | {func}`~is_circle_ci`            |  ⪾   | {data}`~CIRCLE_CI`            |
 | {func}`~is_cirrus_ci`            |  ≋   | {data}`~CIRRUS_CI`            |
 | {func}`~is_claude_code`          |  ✴️  | {data}`~CLAUDE_CODE`          |
+| {func}`~is_clearlinux`           |  ✳️  | {data}`~CLEARLINUX`           |
 | {func}`~is_cline`                |  👾  | {data}`~CLINE`                |
 | {func}`~is_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {func}`~is_cmd`                  |  ▶   | {data}`~CMD`                  |
@@ -147,7 +149,9 @@
 | {func}`~is_sh`                   |  𝐒   | {data}`~SH`                   |
 | {func}`~is_slackware`            |  🚬  | {data}`~SLACKWARE`            |
 | {func}`~is_sles`                 |  🦎  | {data}`~SLES`                 |
+| {func}`~is_slitaz`               |  🕷️  | {data}`~SLITAZ`               |
 | {func}`~is_solaris`              |  🌞  | {data}`~SOLARIS`              |
+| {func}`~is_sourcemage`           |  🧙  | {data}`~SOURCEMAGE`           |
 | {func}`~is_sparc`                |  ☀️  | {data}`~SPARC`                |
 | {func}`~is_sparc64`              |  ☀️  | {data}`~SPARC64`              |
 | {func}`~is_sunos`                |  🌅  | {data}`~SUNOS`                |
@@ -221,9 +225,11 @@
 .. autofunction:: extra_platforms.is_buildroot
 .. autofunction:: extra_platforms.is_cachyos
 .. autofunction:: extra_platforms.is_centos
+.. autofunction:: extra_platforms.is_chromeos
 .. autofunction:: extra_platforms.is_circle_ci
 .. autofunction:: extra_platforms.is_cirrus_ci
 .. autofunction:: extra_platforms.is_claude_code
+.. autofunction:: extra_platforms.is_clearlinux
 .. autofunction:: extra_platforms.is_cline
 .. autofunction:: extra_platforms.is_cloudlinux
 .. autofunction:: extra_platforms.is_cmd
@@ -301,7 +307,9 @@
 .. autofunction:: extra_platforms.is_sh
 .. autofunction:: extra_platforms.is_slackware
 .. autofunction:: extra_platforms.is_sles
+.. autofunction:: extra_platforms.is_slitaz
 .. autofunction:: extra_platforms.is_solaris
+.. autofunction:: extra_platforms.is_sourcemage
 .. autofunction:: extra_platforms.is_sparc
 .. autofunction:: extra_platforms.is_sparc64
 .. autofunction:: extra_platforms.is_sunos

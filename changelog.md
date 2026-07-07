@@ -5,6 +5,11 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add ChromeOS platform detection: `CHROMEOS` / `is_chromeos()`, matching ChromeOS itself (`ID=chromeos` in `os-release`), ChromiumOS builds and derivatives like FydeOS (`ID=chromiumos`), and the Crostini Linux development environment (via the `/dev/.cros_milestone` marker). Within Crostini, `current_platform()` prefers the container's own distribution, like it does for WSL.
+- Add Clear Linux OS platform detection: `CLEARLINUX` / `is_clearlinux()` (via `ID=clear-linux-os` in `os-release`).
+- Add SliTaz GNU/Linux platform detection: `SLITAZ` / `is_slitaz()` (via `/etc/slitaz-release`, as SliTaz ships no `os-release` file).
+- Add Source Mage GNU/Linux platform detection: `SOURCEMAGE` / `is_sourcemage()` (via `ID=sourcemage` in `os-release`).
+
 ## [`13.0.1` (2026-06-18)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.0...v13.0.1)
 
 > [!NOTE]

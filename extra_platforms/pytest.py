@@ -193,9 +193,11 @@ if TYPE_CHECKING:
     skip_c_shells: MarkDecorator
     skip_cachyos: MarkDecorator
     skip_centos: MarkDecorator
+    skip_chromeos: MarkDecorator
     skip_circle_ci: MarkDecorator
     skip_cirrus_ci: MarkDecorator
     skip_claude_code: MarkDecorator
+    skip_clearlinux: MarkDecorator
     skip_cline: MarkDecorator
     skip_cloudlinux: MarkDecorator
     skip_cmd: MarkDecorator
@@ -286,7 +288,9 @@ if TYPE_CHECKING:
     skip_sh: MarkDecorator
     skip_slackware: MarkDecorator
     skip_sles: MarkDecorator
+    skip_slitaz: MarkDecorator
     skip_solaris: MarkDecorator
+    skip_sourcemage: MarkDecorator
     skip_sparc: MarkDecorator
     skip_sparc64: MarkDecorator
     skip_sunos: MarkDecorator
@@ -370,9 +374,11 @@ if TYPE_CHECKING:
     unless_c_shells: MarkDecorator
     unless_cachyos: MarkDecorator
     unless_centos: MarkDecorator
+    unless_chromeos: MarkDecorator
     unless_circle_ci: MarkDecorator
     unless_cirrus_ci: MarkDecorator
     unless_claude_code: MarkDecorator
+    unless_clearlinux: MarkDecorator
     unless_cline: MarkDecorator
     unless_cloudlinux: MarkDecorator
     unless_cmd: MarkDecorator
@@ -463,7 +469,9 @@ if TYPE_CHECKING:
     unless_sh: MarkDecorator
     unless_slackware: MarkDecorator
     unless_sles: MarkDecorator
+    unless_slitaz: MarkDecorator
     unless_solaris: MarkDecorator
+    unless_sourcemage: MarkDecorator
     unless_sparc: MarkDecorator
     unless_sparc64: MarkDecorator
     unless_sunos: MarkDecorator

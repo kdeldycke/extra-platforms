@@ -145,6 +145,7 @@ List all platforms of a family:
 >>> from extra_platforms import LINUX
 >>> LINUX.members
 mappingproxy({
+    'alpine': Platform(id='alpine', name='Alpine Linux'),
     'altlinux': Platform(id='altlinux', name='ALT Linux'),
     'amzn': Platform(id='amzn', name='Amazon Linux'),
     'android': Platform(id='android', name='Android'),
@@ -152,19 +153,26 @@ mappingproxy({
     'buildroot': Platform(id='buildroot', name='Buildroot'),
     'cachyos': Platform(id='cachyos', name='CachyOS'),
     'centos': Platform(id='centos', name='CentOS'),
+    'chromeos': Platform(id='chromeos', name='ChromeOS'),
+    'clearlinux': Platform(id='clearlinux', name='Clear Linux OS'),
     'cloudlinux': Platform(id='cloudlinux', name='CloudLinux OS'),
     'debian': Platform(id='debian', name='Debian'),
     'exherbo': Platform(id='exherbo', name='Exherbo Linux'),
     'fedora': Platform(id='fedora', name='Fedora'),
+    'generic_linux': Platform(id='generic_linux', name='Generic Linux'),
     'gentoo': Platform(id='gentoo', name='Gentoo Linux'),
     'guix': Platform(id='guix', name='Guix System'),
     'ibm_powerkvm': Platform(id='ibm_powerkvm', name='IBM PowerKVM'),
+    'kali': Platform(id='kali', name='Kali Linux'),
     'kvmibm': Platform(id='kvmibm', name='KVM for IBM z Systems'),
     'linuxmint': Platform(id='linuxmint', name='Linux Mint'),
     'mageia': Platform(id='mageia', name='Mageia'),
     'mandriva': Platform(id='mandriva', name='Mandriva Linux'),
+    'manjaro': Platform(id='manjaro', name='Manjaro Linux'),
+    'nixos': Platform(id='nixos', name='NixOS'),
     'nobara': Platform(id='nobara', name='Nobara'),
     'opensuse': Platform(id='opensuse', name='openSUSE'),
+    'openwrt': Platform(id='openwrt', name='OpenWrt'),
     'oracle': Platform(id='oracle', name='Oracle Linux'),
     'parallels': Platform(id='parallels', name='Parallels'),
     'pidora': Platform(id='pidora', name='Pidora'),
@@ -174,18 +182,19 @@ mappingproxy({
     'scientific': Platform(id='scientific', name='Scientific Linux'),
     'slackware': Platform(id='slackware', name='Slackware'),
     'sles': Platform(id='sles', name='SUSE Linux Enterprise Server'),
+    'slitaz': Platform(id='slitaz', name='SliTaz GNU/Linux'),
+    'sourcemage': Platform(id='sourcemage', name='Source Mage GNU/Linux'),
     'tumbleweed': Platform(id='tumbleweed', name='openSUSE Tumbleweed'),
     'tuxedo': Platform(id='tuxedo', name='Tuxedo OS'),
     'ubuntu': Platform(id='ubuntu', name='Ubuntu'),
     'ultramarine': Platform(id='ultramarine', name='Ultramarine'),
-    'nixos': Platform(id='nixos', name='NixOS'),
     'void': Platform(id='void', name='Void Linux'),
-    'generic_linux': Platform(id='generic_linux', name='Generic Linux'),
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'centos', 'mageia', 'generic_linux', 'ultramarine', 'tuxedo', 'arch', 'buildroot', 'android', 'exherbo', 'nixos', 'void', 'mandriva', 'fedora', 'slackware', 'parallels', 'xenserver', 'kvmibm', 'nobara', 'amzn', 'guix', 'debian', 'oracle', 'cachyos', 'altlinux', 'rhel', 'ibm_powerkvm', 'rocky', 'scientific', 'sles', 'linuxmint', 'tumbleweed', 'ubuntu', 'pidora', 'cloudlinux', 'gentoo', 'raspbian', 'opensuse'})
+frozenset({'rocky', 'kvmibm', 'pidora', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'tumbleweed', 'scientific', 'manjaro', 'parallels', 'clearlinux'})
 >>> print("\n".join([p.name for p in LINUX]))
+Alpine Linux
 ALT Linux
 Amazon Linux
 Android
@@ -193,19 +202,26 @@ Arch Linux
 Buildroot
 CachyOS
 CentOS
+ChromeOS
+Clear Linux OS
 CloudLinux OS
 Debian
 Exherbo Linux
 Fedora
+Generic Linux
 Gentoo Linux
 Guix System
 IBM PowerKVM
+Kali Linux
 KVM for IBM z Systems
 Linux Mint
 Mageia
 Mandriva Linux
+Manjaro Linux
+NixOS
 Nobara
 openSUSE
+OpenWrt
 Oracle Linux
 Parallels
 Pidora
@@ -215,13 +231,13 @@ Rocky Linux
 Scientific Linux
 Slackware
 SUSE Linux Enterprise Server
+SliTaz GNU/Linux
+Source Mage GNU/Linux
 openSUSE Tumbleweed
 Tuxedo OS
 Ubuntu
 Ultramarine
-NixOS
 Void Linux
-Generic Linux
 XenServer
 ```
 
@@ -325,6 +341,8 @@ mindmap
             (⛑️ BUILDROOT)
             (⌬ CACHYOS)
             (💠 CENTOS)
+            (🧿 CHROMEOS)
+            (✳️ CLEARLINUX)
             (꩜ CLOUDLINUX)
             (🌀 DEBIAN)
             (🐽 EXHERBO)
@@ -352,6 +370,8 @@ mindmap
             (⚛️ SCIENTIFIC)
             (🚬 SLACKWARE)
             (🦎 SLES)
+            (🕷️ SLITAZ)
+            (🧙 SOURCEMAGE)
             (↻ TUMBLEWEED)
             (🤵 TUXEDO)
             (🎯 UBUNTU)

@@ -155,9 +155,11 @@ All recognized traits and their properties:
 |  ⛑️  | {data}`~BUILDROOT`            | Buildroot                      | {func}`~is_buildroot`            | Platform     |
 |  ⌬   | {data}`~CACHYOS`              | CachyOS                        | {func}`~is_cachyos`              | Platform     |
 |  💠  | {data}`~CENTOS`               | CentOS                         | {func}`~is_centos`               | Platform     |
+|  🧿  | {data}`~CHROMEOS`             | ChromeOS                       | {func}`~is_chromeos`             | Platform     |
 |  ⪾   | {data}`~CIRCLE_CI`            | Circle CI                      | {func}`~is_circle_ci`            | CI           |
 |  ≋   | {data}`~CIRRUS_CI`            | Cirrus CI                      | {func}`~is_cirrus_ci`            | CI           |
 |  ✴️  | {data}`~CLAUDE_CODE`          | Claude Code                    | {func}`~is_claude_code`          | Agent        |
+|  ✳️  | {data}`~CLEARLINUX`           | Clear Linux OS                 | {func}`~is_clearlinux`           | Platform     |
 |  👾  | {data}`~CLINE`                | Cline                          | {func}`~is_cline`                | Agent        |
 |  ꩜   | {data}`~CLOUDLINUX`           | CloudLinux OS                  | {func}`~is_cloudlinux`           | Platform     |
 |  ▶   | {data}`~CMD`                  | Command Prompt                 | {func}`~is_cmd`                  | Shell        |
@@ -235,7 +237,9 @@ All recognized traits and their properties:
 |  𝐒   | {data}`~SH`                   | Bourne Shell                   | {func}`~is_sh`                   | Shell        |
 |  🚬  | {data}`~SLACKWARE`            | Slackware                      | {func}`~is_slackware`            | Platform     |
 |  🦎  | {data}`~SLES`                 | SUSE Linux Enterprise Server   | {func}`~is_sles`                 | Platform     |
+|  🕷️  | {data}`~SLITAZ`               | SliTaz GNU/Linux               | {func}`~is_slitaz`               | Platform     |
 |  🌞  | {data}`~SOLARIS`              | Solaris                        | {func}`~is_solaris`              | Platform     |
+|  🧙  | {data}`~SOURCEMAGE`           | Source Mage GNU/Linux          | {func}`~is_sourcemage`           | Platform     |
 |  ☀️  | {data}`~SPARC`                | SPARC (32-bit)                 | {func}`~is_sparc`                | Architecture |
 |  ☀️  | {data}`~SPARC64`              | SPARC (64-bit)                 | {func}`~is_sparc64`              | Architecture |
 |  🌅  | {data}`~SUNOS`                | SunOS                          | {func}`~is_sunos`                | Platform     |

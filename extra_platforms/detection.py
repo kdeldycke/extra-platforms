@@ -464,6 +464,53 @@ def is_centos() -> bool:
 
 
 @cache
+def is_chromeos() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.CHROMEOS`.
+
+    Matches ChromeOS itself, whose ``os-release`` file sets ``ID=chromeos`` (the
+    environment targeted by [Chromebrew](https://chromebrew.github.io)), as well
+    as open-source ChromiumOS builds and their derivatives like
+    [FydeOS](https://fydeos.io) and openFyde, which set ``ID=chromiumos``.
+    Accepting both IDs is the practice of Google's own
+    [flashrom tester](https://github.com/flashrom/flashrom/blob/main/util/flashrom_tester/src/tests.rs).
+
+    Also matches the [Crostini](https://chromeos.dev/en/linux) Linux development
+    environment. Crostini being a Debian-based container, its ``os-release`` file
+    reports Debian. So the ``/dev/.cros_milestone`` file exposed by the ChromeOS
+    host is used as the detection marker instead, a practice shared with LXD,
+    Incus and the Dart SDK.
+
+    ```{caution}
+    Within Crostini, both this function and {func}`~extra_platforms.is_debian`
+    return {data}`True`, the same way WSL sessions match both
+    {func}`~extra_platforms.is_wsl2` and the distribution it hosts. In that
+    situation, {func}`~extra_platforms.current_platform` prefers the container's
+    own distribution.
+    ```
+    """
+    return (
+        os_release_id() in ("chromeos", "chromiumos")
+        or Path("/dev/.cros_milestone").is_file()
+    )
+
+
+@cache
+def is_clearlinux() -> bool:
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.CLEARLINUX`.
+
+    ```{note}
+    Clear Linux OS sets ``ID=clear-linux-os`` in its ``os-release`` file. Being a
+    [stateless](https://www.clearlinux.org/clear-linux-documentation/guides/clear/stateless.html)
+    distribution, it ships that file at ``/usr/lib/os-release`` rather than
+    ``/etc/os-release``, relying on the fallback path mandated by the
+    [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html).
+    ```
+    """
+    return os_release_id() == "clear-linux-os"
+
+
+@cache
 def is_cloudlinux() -> bool:
     """Return {data}`True` if current platform is
     {data}`~extra_platforms.CLOUDLINUX`.
@@ -761,6 +808,20 @@ def is_sles() -> bool:
 
 
 @cache
+def is_slitaz() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.SLITAZ`.
+
+    ```{note}
+    SliTaz does not ship any ``os-release`` file: its ``slitaz-base-files``
+    package only provides ``/etc/slitaz-release``, whose existence is used as
+    the detection marker. The standard ``os-release`` check is still performed
+    first, in case future releases adopt the specification.
+    ```
+    """
+    return os_release_id() == "slitaz" or Path("/etc/slitaz-release").is_file()
+
+
+@cache
 def is_solaris() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.SOLARIS`.
 
@@ -775,6 +836,14 @@ def is_solaris() -> bool:
     return sys.platform == "sunos5" and platform.platform(
         aliased=True, terse=True
     ).startswith("Solaris")
+
+
+@cache
+def is_sourcemage() -> bool:
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.SOURCEMAGE`.
+    """
+    return os_release_id() == "sourcemage"
 
 
 @cache
@@ -2058,7 +2127,7 @@ def current_platform(strict: bool = False) -> Platform:
     """
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_PLATFORMS
-    from .platform_data import GENERIC_LINUX, UNKNOWN_PLATFORM, WSL1, WSL2
+    from .platform_data import CHROMEOS, GENERIC_LINUX, UNKNOWN_PLATFORM, WSL1, WSL2
 
     # Collect all matching platforms.
     matching: set[Platform] = {
@@ -2080,9 +2149,12 @@ def current_platform(strict: bool = False) -> Platform:
     # like Ubuntu. See:
     # - https://github.com/kdeldycke/extra-platforms/issues/158
     # - https://github.com/kdeldycke/meta-package-manager/issues/944
-    for wsl in (WSL1, WSL2):
-        if wsl in matching:
-            matching.remove(wsl)
+    # ChromeOS gets the same treatment: within Crostini, the hosting ChromeOS is
+    # detected alongside the container's own distribution (Debian by default),
+    # and the latter is the informative one to return.
+    for layer in (WSL1, WSL2, CHROMEOS):
+        if layer in matching:
+            matching.remove(layer)
             if len(matching) == 1:
                 return matching.pop()
 

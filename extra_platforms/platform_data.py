@@ -44,6 +44,10 @@ CACHYOS = Platform("cachyos", "CachyOS", "⌬", "https://cachyos.org")
 
 CENTOS = Platform("centos", "CentOS", "💠", "https://centos.org")
 
+CHROMEOS = Platform("chromeos", "ChromeOS", "🧿", "https://chromeos.google")
+
+CLEARLINUX = Platform("clearlinux", "Clear Linux OS", "✳️", "https://clearlinux.org")
+
 CLOUDLINUX = Platform("cloudlinux", "CloudLinux OS", "꩜", "https://cloudlinux.com")
 
 CYGWIN = Platform("cygwin", "Cygwin", "Ͼ", "https://cygwin.com")
@@ -160,7 +164,13 @@ SLES = Platform(
     "sles", "SUSE Linux Enterprise Server", "🦎", "https://suse.com/products/server/"
 )
 
+SLITAZ = Platform("slitaz", "SliTaz GNU/Linux", "🕷️", "https://slitaz.org")
+
 SOLARIS = Platform("solaris", "Solaris", "🌞", "https://oracle.com/solaris")
+
+SOURCEMAGE = Platform(
+    "sourcemage", "Source Mage GNU/Linux", "🧙", "https://sourcemage.org"
+)
 
 SUNOS = Platform("sunos", "SunOS", "🌅", "https://wikipedia.org/wiki/SunOS")
 

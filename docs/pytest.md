@@ -119,9 +119,11 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_c_shells`             | {deco}`~pytest.unless_c_shells`             |  🅲   | {data}`~C_SHELLS`             |
 | {deco}`~pytest.skip_cachyos`              | {deco}`~pytest.unless_cachyos`              |  ⌬   | {data}`~CACHYOS`              |
 | {deco}`~pytest.skip_centos`               | {deco}`~pytest.unless_centos`               |  💠  | {data}`~CENTOS`               |
+| {deco}`~pytest.skip_chromeos`             | {deco}`~pytest.unless_chromeos`             |  🧿  | {data}`~CHROMEOS`             |
 | {deco}`~pytest.skip_circle_ci`            | {deco}`~pytest.unless_circle_ci`            |  ⪾   | {data}`~CIRCLE_CI`            |
 | {deco}`~pytest.skip_cirrus_ci`            | {deco}`~pytest.unless_cirrus_ci`            |  ≋   | {data}`~CIRRUS_CI`            |
 | {deco}`~pytest.skip_claude_code`          | {deco}`~pytest.unless_claude_code`          |  ✴️  | {data}`~CLAUDE_CODE`          |
+| {deco}`~pytest.skip_clearlinux`           | {deco}`~pytest.unless_clearlinux`           |  ✳️  | {data}`~CLEARLINUX`           |
 | {deco}`~pytest.skip_cline`                | {deco}`~pytest.unless_cline`                |  👾  | {data}`~CLINE`                |
 | {deco}`~pytest.skip_cloudlinux`           | {deco}`~pytest.unless_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {deco}`~pytest.skip_cmd`                  | {deco}`~pytest.unless_cmd`                  |  ▶   | {data}`~CMD`                  |
@@ -212,7 +214,9 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_sh`                   | {deco}`~pytest.unless_sh`                   |  𝐒   | {data}`~SH`                   |
 | {deco}`~pytest.skip_slackware`            | {deco}`~pytest.unless_slackware`            |  🚬  | {data}`~SLACKWARE`            |
 | {deco}`~pytest.skip_sles`                 | {deco}`~pytest.unless_sles`                 |  🦎  | {data}`~SLES`                 |
+| {deco}`~pytest.skip_slitaz`               | {deco}`~pytest.unless_slitaz`               |  🕷️  | {data}`~SLITAZ`               |
 | {deco}`~pytest.skip_solaris`              | {deco}`~pytest.unless_solaris`              |  🌞  | {data}`~SOLARIS`              |
+| {deco}`~pytest.skip_sourcemage`           | {deco}`~pytest.unless_sourcemage`           |  🧙  | {data}`~SOURCEMAGE`           |
 | {deco}`~pytest.skip_sparc`                | {deco}`~pytest.unless_sparc`                |  ☀️  | {data}`~SPARC`                |
 | {deco}`~pytest.skip_sparc64`              | {deco}`~pytest.unless_sparc64`              |  ☀️  | {data}`~SPARC64`              |
 | {deco}`~pytest.skip_sunos`                | {deco}`~pytest.unless_sunos`                |  🌅  | {data}`~SUNOS`                |
@@ -304,9 +308,11 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_c_shells
 .. autodecorator:: extra_platforms.pytest.skip_cachyos
 .. autodecorator:: extra_platforms.pytest.skip_centos
+.. autodecorator:: extra_platforms.pytest.skip_chromeos
 .. autodecorator:: extra_platforms.pytest.skip_circle_ci
 .. autodecorator:: extra_platforms.pytest.skip_cirrus_ci
 .. autodecorator:: extra_platforms.pytest.skip_claude_code
+.. autodecorator:: extra_platforms.pytest.skip_clearlinux
 .. autodecorator:: extra_platforms.pytest.skip_cline
 .. autodecorator:: extra_platforms.pytest.skip_cloudlinux
 .. autodecorator:: extra_platforms.pytest.skip_cmd
@@ -397,7 +403,9 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_sh
 .. autodecorator:: extra_platforms.pytest.skip_slackware
 .. autodecorator:: extra_platforms.pytest.skip_sles
+.. autodecorator:: extra_platforms.pytest.skip_slitaz
 .. autodecorator:: extra_platforms.pytest.skip_solaris
+.. autodecorator:: extra_platforms.pytest.skip_sourcemage
 .. autodecorator:: extra_platforms.pytest.skip_sparc
 .. autodecorator:: extra_platforms.pytest.skip_sparc64
 .. autodecorator:: extra_platforms.pytest.skip_sunos
@@ -486,9 +494,11 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_c_shells
 .. autodecorator:: extra_platforms.pytest.unless_cachyos
 .. autodecorator:: extra_platforms.pytest.unless_centos
+.. autodecorator:: extra_platforms.pytest.unless_chromeos
 .. autodecorator:: extra_platforms.pytest.unless_circle_ci
 .. autodecorator:: extra_platforms.pytest.unless_cirrus_ci
 .. autodecorator:: extra_platforms.pytest.unless_claude_code
+.. autodecorator:: extra_platforms.pytest.unless_clearlinux
 .. autodecorator:: extra_platforms.pytest.unless_cline
 .. autodecorator:: extra_platforms.pytest.unless_cloudlinux
 .. autodecorator:: extra_platforms.pytest.unless_cmd
@@ -579,7 +589,9 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_sh
 .. autodecorator:: extra_platforms.pytest.unless_slackware
 .. autodecorator:: extra_platforms.pytest.unless_sles
+.. autodecorator:: extra_platforms.pytest.unless_slitaz
 .. autodecorator:: extra_platforms.pytest.unless_solaris
+.. autodecorator:: extra_platforms.pytest.unless_sourcemage
 .. autodecorator:: extra_platforms.pytest.unless_sparc
 .. autodecorator:: extra_platforms.pytest.unless_sparc64
 .. autodecorator:: extra_platforms.pytest.unless_sunos

@@ -41,6 +41,8 @@ from extra_platforms import (
     is_buildroot,
     is_cachyos,
     is_centos,
+    is_chromeos,
+    is_clearlinux,
     is_cloudlinux,
     is_cygwin,
     is_debian,
@@ -72,7 +74,9 @@ from extra_platforms import (
     is_scientific,
     is_slackware,
     is_sles,
+    is_slitaz,
     is_solaris,
+    is_sourcemage,
     is_sunos,
     is_tumbleweed,
     is_tuxedo,
@@ -105,6 +109,8 @@ def test_platform_detection():
         assert not is_buildroot()
         assert not is_cachyos()
         assert not is_centos()
+        assert not is_chromeos()
+        assert not is_clearlinux()
         assert not is_cloudlinux()
         assert not is_cygwin()
         assert not is_debian()
@@ -136,7 +142,9 @@ def test_platform_detection():
         assert not is_scientific()
         assert not is_slackware()
         assert not is_sles()
+        assert not is_slitaz()
         assert not is_solaris()
+        assert not is_sourcemage()
         assert not is_sunos()
         assert not is_tumbleweed()
         assert not is_tuxedo()
@@ -161,6 +169,8 @@ def test_platform_detection():
         assert not is_buildroot()
         assert not is_cachyos()
         assert not is_centos()
+        assert not is_chromeos()
+        assert not is_clearlinux()
         assert not is_cloudlinux()
         assert not is_cygwin()
         assert not is_debian()
@@ -192,7 +202,9 @@ def test_platform_detection():
         assert not is_scientific()
         assert not is_slackware()
         assert not is_sles()
+        assert not is_slitaz()
         assert not is_solaris()
+        assert not is_sourcemage()
         assert not is_sunos()
         assert not is_tumbleweed()
         assert not is_tuxedo()
@@ -213,6 +225,8 @@ def test_platform_detection():
         assert not is_buildroot()
         assert not is_cachyos()
         assert not is_centos()
+        assert not is_chromeos()
+        assert not is_clearlinux()
         assert not is_cloudlinux()
         assert not is_cygwin()
         assert not is_debian()
@@ -244,7 +258,9 @@ def test_platform_detection():
         assert not is_scientific()
         assert not is_slackware()
         assert not is_sles()
+        assert not is_slitaz()
         assert not is_solaris()
+        assert not is_sourcemage()
         assert not is_sunos()
         assert not is_tumbleweed()
         assert not is_tuxedo()

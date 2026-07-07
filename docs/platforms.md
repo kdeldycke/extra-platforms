@@ -58,6 +58,8 @@ Platform(id='macos', name='macOS')
 |  ⛑️  | {data}`~BUILDROOT`     | Buildroot                      | {func}`~is_buildroot`     |
 |  ⌬   | {data}`~CACHYOS`       | CachyOS                        | {func}`~is_cachyos`       |
 |  💠  | {data}`~CENTOS`        | CentOS                         | {func}`~is_centos`        |
+|  🧿  | {data}`~CHROMEOS`      | ChromeOS                       | {func}`~is_chromeos`      |
+|  ✳️  | {data}`~CLEARLINUX`    | Clear Linux OS                 | {func}`~is_clearlinux`    |
 |  ꩜   | {data}`~CLOUDLINUX`    | CloudLinux OS                  | {func}`~is_cloudlinux`    |
 |  Ͼ   | {data}`~CYGWIN`        | Cygwin                         | {func}`~is_cygwin`        |
 |  🌀  | {data}`~DEBIAN`        | Debian                         | {func}`~is_debian`        |
@@ -96,7 +98,9 @@ Platform(id='macos', name='macOS')
 |  ⚛️  | {data}`~SCIENTIFIC`    | Scientific Linux               | {func}`~is_scientific`    |
 |  🚬  | {data}`~SLACKWARE`     | Slackware                      | {func}`~is_slackware`     |
 |  🦎  | {data}`~SLES`          | SUSE Linux Enterprise Server   | {func}`~is_sles`          |
+|  🕷️  | {data}`~SLITAZ`        | SliTaz GNU/Linux               | {func}`~is_slitaz`        |
 |  🌞  | {data}`~SOLARIS`       | Solaris                        | {func}`~is_solaris`       |
+|  🧙  | {data}`~SOURCEMAGE`    | Source Mage GNU/Linux          | {func}`~is_sourcemage`    |
 |  🌅  | {data}`~SUNOS`         | SunOS                          | {func}`~is_sunos`         |
 |  ↻   | {data}`~TUMBLEWEED`    | openSUSE Tumbleweed            | {func}`~is_tumbleweed`    |
 |  🤵  | {data}`~TUXEDO`        | Tuxedo OS                      | {func}`~is_tuxedo`        |
@@ -162,7 +166,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,41
+ALL_PLATFORMS,LINUX,45
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -177,6 +181,8 @@ LINUX,ARCH,1
 LINUX,BUILDROOT,1
 LINUX,CACHYOS,1
 LINUX,CENTOS,1
+LINUX,CHROMEOS,1
+LINUX,CLEARLINUX,1
 LINUX,CLOUDLINUX,1
 LINUX,DEBIAN,1
 LINUX,EXHERBO,1
@@ -204,6 +210,8 @@ LINUX,ROCKY,1
 LINUX,SCIENTIFIC,1
 LINUX,SLACKWARE,1
 LINUX,SLES,1
+LINUX,SLITAZ,1
+LINUX,SOURCEMAGE,1
 LINUX,TUMBLEWEED,1
 LINUX,TUXEDO,1
 LINUX,UBUNTU,1
@@ -263,6 +271,8 @@ mindmap
             (⛑️ BUILDROOT)
             (⌬ CACHYOS)
             (💠 CENTOS)
+            (🧿 CHROMEOS)
+            (✳️ CLEARLINUX)
             (꩜ CLOUDLINUX)
             (🌀 DEBIAN)
             (🐽 EXHERBO)
@@ -290,6 +300,8 @@ mindmap
             (⚛️ SCIENTIFIC)
             (🚬 SLACKWARE)
             (🦎 SLES)
+            (🕷️ SLITAZ)
+            (🧙 SOURCEMAGE)
             (↻ TUMBLEWEED)
             (🤵 TUXEDO)
             (🎯 UBUNTU)
@@ -333,6 +345,8 @@ mindmap
 .. autodata:: extra_platforms.BUILDROOT
 .. autodata:: extra_platforms.CACHYOS
 .. autodata:: extra_platforms.CENTOS
+.. autodata:: extra_platforms.CHROMEOS
+.. autodata:: extra_platforms.CLEARLINUX
 .. autodata:: extra_platforms.CLOUDLINUX
 .. autodata:: extra_platforms.CYGWIN
 .. autodata:: extra_platforms.DEBIAN
@@ -371,7 +385,9 @@ mindmap
 .. autodata:: extra_platforms.SCIENTIFIC
 .. autodata:: extra_platforms.SLACKWARE
 .. autodata:: extra_platforms.SLES
+.. autodata:: extra_platforms.SLITAZ
 .. autodata:: extra_platforms.SOLARIS
+.. autodata:: extra_platforms.SOURCEMAGE
 .. autodata:: extra_platforms.SUNOS
 .. autodata:: extra_platforms.TUMBLEWEED
 .. autodata:: extra_platforms.TUXEDO
