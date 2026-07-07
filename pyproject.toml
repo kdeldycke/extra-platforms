@@ -305,6 +305,7 @@ docs = [
 ]
 
 [tool.uv]
+required-version = ">=0.11.23,<0.12"
 dependency-groups.docs = { requires-python = ">= 3.12" }
 # Cooldown period: 7-day buffer before using newly released packages.
 # Relative dates are fine here because the Renovate lock-maintenance job
@@ -312,7 +313,6 @@ dependency-groups.docs = { requires-python = ">= 3.12" }
 exclude-newer = "1 week"
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
-required-version = ">=0.11.23,<0.12"
 
 # Ruff linter/formatter configuration for Python projects.
 #
