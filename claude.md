@@ -138,6 +138,23 @@ Always update documentation when making changes:
 - **`changelog.md`**: Add a bullet point describing **what** changed (new features, bug fixes, behavior changes), not **why**. Keep entries concise and actionable. Justifications and rationale belong in documentation or code comments, not in the changelog.
 - **`readme.md`**: Update relevant sections when adding/modifying public API, classes, or functions.
 
+#### Changelog entry length
+
+A changelog entry is a **release note**, not a commit message or PR description. The reader scans to decide: does this affect me, and must I do anything? Write the shortest bullet that answers both.
+
+- **One sentence by default**, ~10-25 words. Add a second sentence only to flag a breaking change or migration step. A bullet past ~40 words is a smell: it smuggles in implementation detail (cut it) or covers two changes (split it).
+- **Keep the user-facing surface:** the public name (CLI command, option, config key, exported function/class), what it does for the user, plus the migration when it breaks something. Lead with the change, not the mechanism.
+- **Cut what the user cannot see or act on**, and move it: *mechanism* (the module/function/job implementing it) to the commit, PR, or code comment; *rationale* (why this approach, which edge case) to a code/docstring comment or `docs/`; *archaeology* (dependency floors chased mid-cycle, root cause, CI trivia) to the commit or PR.
+- **Name, don't narrate.** "Add `--cooldown` to skip packages newer than a given age" beats three sentences naming the environment variable each backend uses.
+
+The `lint-changelog` job warns (without failing) on any unreleased bullet over `[tool.repomatic] changelog.bullet-word-threshold` words. Released sections are immutable.
+
+**Do not mention in the changelog:**
+
+- **Mechanical test updates following a behavior change.** Adjusting fixtures, snapshots, parametrize cases, or assertions to match a bumped dependency or renamed symbol is implicit. Only mention *structural* test work: a new harness or fixture mechanism, switching `unittest.TestCase` to functions, parametrizing a whole module.
+- **Short-shelf-life workarounds.** `tool.uv` cooldown bypasses, dev pins for transient upstream bugs, `xfail` markers, commented-out lines: reverted within days. Drop unless load-bearing beyond a release cycle.
+- **Upstream issue commentary.** Prose about a ticket's state (open/closed/not planned, "mirrors the upstream fix in..."). It rots in days and duplicates what `git blame` and the linked thread show. A bare upstream link is fine for a direct backport; anything longer belongs in a code comment, docstring, or PR.
+
 ## File naming conventions
 
 ### Extensions: prefer long form
@@ -205,6 +222,16 @@ The version string is always bare (e.g., `1.2.3`). The `v` prefix is a **tag nam
 2. **`v` prefix on tag references.** Anywhere the version identifies a *git tag* (comparison URLs, action refs, commit messages, PR titles), use `v1.2.3`.
 3. **Always backtick-escape versions in prose.** Both `v1.2.3` (tag) and `1.2.3` (package) are identifiers, not natural language. In markdown, wrap them in backticks: `` `v1.2.3` ``, `` `1.2.3` ``. In reST docstrings, use double backticks: ``` ``v1.2.3`` ```.
 4. **Development versions** follow PEP 440: `1.2.3.dev0` with optional `+{short_sha}` local identifier.
+
+### Linking to external repositories in Markdown
+
+In Markdown (changelog, `readme.md`, `docs/`, issue and PR bodies), link to another repository using GitHub's reference slug as the link text, not the raw URL:
+
+- Issue or PR: `[owner/repo#N](https://github.com/owner/repo/issues/N)`. Issues and PRs share one number space; pick `/issues/N` or `/pull/N` to match the real type (GitHub redirects either way).
+- Commit: `[owner/repo@shortsha](https://github.com/owner/repo/commit/fullsha)`.
+- Repository homepage: `[owner/repo](https://github.com/owner/repo)`.
+
+GitHub autolinks the bare `owner/repo#N` form only inside conversations (issues, PRs, commit messages), never in committed files, so the explicit link is what renders the compact slug in a Markdown file. Same-repo references drop the slug: `[#N](https://github.com/kdeldycke/extra-platforms/issues/N)`.
 
 ### Comments and docstrings
 
@@ -316,6 +343,9 @@ Example data everywhere (documentation, docstrings, comments, workflows, test fi
 - **`@pytest.mark.once` for run-once tests.** Define a custom `once` marker (in `[tool.pytest].markers`) to tag tests that only need to run once, not across the full CI matrix. Typical candidates: CLI entry point invocability, plugin registration, package metadata checks. The main test matrix filters them out with `pytest -m "not once"`, while a dedicated job runs them on a single runner.
 - **CI-only pytest flags belong in workflow steps, not `[tool.pytest].addopts`.** Flags like `--cov-report=xml`, `--junitxml=junit.xml`, and `--override-ini=junit_family=legacy` produce artifacts only needed in CI. Placing them in `addopts` pollutes local test runs. Keep `addopts` for flags that apply everywhere (`--cov`, `--cov-report=term`, `--durations`, `--numprocesses`). Pass CI-specific flags in the workflow `run:` step.
 - **Coverage configuration belongs in `[tool.coverage]`.** Use the `[tool.coverage]` section in `pyproject.toml` for `run.branch`, `run.source`, and `report.precision` instead of flags in `addopts`. The pytest `addopts` should only contain `--cov` (to activate the plugin) and `--cov-report=term` (for local feedback).
+- **Write conformance tests when fixing a class of bugs.** For a bug that is a *category* (not a one-off), add a generic test locking in the invariant: iterate over every member of the set (traits, groups, detection functions, data files) and assert the property uniformly via `@pytest.mark.parametrize` or a loop. Applies when the bug stems from a shared convention checkable from the codebase alone (no fixtures or mocks). Model: `tests/test_group_data.py::test_each_trait_in_exactly_one_canonical_group`. Shape: enumerate the population, assert on each, fail naming the violator.
+- **Pass `encoding="UTF-8"` to `subprocess.run(..., text=True)` when output may contain non-ASCII bytes** (trait icons, accented process names). `text=True` alone uses the platform default (`cp1252` on Windows), raising `UnicodeDecodeError` only in Windows CI.
+- **Pass `encoding="utf-8"` to every text-mode `open()`, `read_text()`, and `write_text()`, in tests and production alike.** The same Windows `cp1252` default applies to file I/O, and the failure hides until content grows a non-ASCII character. When a change touches file I/O, run the suite once with `PYTHONWARNDEFAULTENCODING=1` ([PEP 597](https://peps.python.org/pep-0597/)) to surface every bare call at runtime, on any platform.
 
 ## Design principles
 
