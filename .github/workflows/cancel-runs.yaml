@@ -8,4 +8,4 @@ name: ✂️ Cancel runs
 jobs:
 
   cancel-runs:
-    uses: kdeldycke/repomatic/.github/workflows/cancel-runs.yaml@90400f1be5e7a4df843b83a02dd1672cfbaccfb6 # v6.27.0
+    uses: kdeldycke/repomatic/.github/workflows/cancel-runs.yaml@36523e5a56f287e814210042ca7b852147a95498 # v7.0.0
