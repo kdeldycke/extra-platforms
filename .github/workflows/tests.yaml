@@ -120,12 +120,11 @@ jobs:
         env:
           # Used by github_runner_os() in tests/test_detection.py to extract the GitHub runner image ID.
           EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
+        # Produce the coverage XML artifact consumed by the Codecov upload below.
         run: >
           uv --no-progress run --frozen -- pytest
           --dist=loadgroup
           --numprocesses=auto
-          --cov
-          --cov-report=term
           --cov-report=xml
 
       - name: Upload coverage to Codecov

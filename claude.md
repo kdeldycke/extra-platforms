@@ -289,7 +289,8 @@ When a command is too long for a single line, use the folded block scalar (`>`) 
   - name: Unittests
     run: >
       uv --no-progress run --frozen -- pytest
-      --cov-report=term
+      --dist=loadgroup
+      --numprocesses=auto
       --cov-report=xml
 ```
 

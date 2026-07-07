@@ -317,31 +317,47 @@ build-backend.module-root = ""
 # Ruff linter/formatter configuration for Python projects.
 #
 # Native format - can be used standalone as ruff.toml or .ruff.toml.
-# When merged into pyproject.toml via `gha-utils bundled init ruff`,
+# When merged into pyproject.toml via `repomatic init ruff`,
 # the [tool.ruff] prefix is added automatically.
 [tool.ruff]
 preview = true
 fix = true
 unsafe-fixes = true
 show-fixes = true
+# Enable formatting of Python code blocks in Markdown files.
+# https://docs.astral.sh/ruff/formatter/#markdown-code-formatting
+extend-include = [ "*.{markdown,mdown,mkdn,mdwn,mkd,md,mdtxt,mdtext,mdx}" ]
 # Enable reformatting of code snippets in docstrings.
 # https://docs.astral.sh/ruff/formatter/#docstring-formatting
 format.docstring-code-format = true
+# PLW1514: `open` and friends called without an explicit `encoding` argument.
+#   Windows defaults text I/O to cp1252, so a bare `open()`, `read_text()` or
+#   `write_text()` breaks on non-ASCII content, and only on Windows runners.
+#   Preview rule; its type inference misses unannotated `Path` locals, so
+#   PEP 597's `PYTHONWARNDEFAULTENCODING=1` remains the complete runtime net.
+#   See: https://docs.astral.sh/ruff/rules/unspecified-encoding/
+lint.extend-select = [ "PLW1514" ]
 # D400: First line should end with a period.
 #   Allows docstrings to end up with any punctuation, not just a period.
 #   See: https://github.com/astral-sh/ruff/issues/1858#issuecomment-1382640623
 # ERA001: Found commented-out code.
 #   Do not remove commented code, as it might be used for documentation.
 #   See: https://docs.astral.sh/ruff/rules/#eradicate-era
-lint.ignore = [ "D400", "ERA001" ]
+# LOG015: Root logger calls (logging.info(), etc.).
+#   No root-logger calls exist here today; kept ignored to stay aligned with
+#   repomatic's bundled Ruff defaults.
+#   See: https://docs.astral.sh/ruff/rules/root-logger-call/
+lint.ignore = [ "D400", "ERA001", "LOG015" ]
 # Allow rules to add `from __future__ import annotations` in cases where
 # this would simplify a fix or enable a new diagnostic.
 # https://docs.astral.sh/ruff/settings/#lint_future-annotations
-lint.isort.combine-as-imports = true
 lint.future-annotations = true
+lint.isort.combine-as-imports = true
 
 [tool.typos]
 default.extend-identifiers = { Github = "GitHub", IOS = "iOS", Javascript = "JavaScript", MacOS = "macOS", PyPi = "PyPI", Typescript = "TypeScript" }
+# False positives: "astroid" is a Python AST library (not "asteroid"); "oject" appears when "pyproject.toml" is split across line breaks in CLI help output.
+default.extend-words = { astroid = "astroid", oject = "oject" }
 # Skip content between <!-- typos:off --> and <!-- typos:on --> markers.
 default.extend-ignore-re = [ "(?s)<!-- typos:off -->.*?<!-- typos:on -->" ]
 default.extend-ignore-identifiers-re = [
@@ -381,7 +397,11 @@ pretty = true
 warn_unused_configs = true
 
 [tool.pytest]
+# CI-only flags (--cov-report=xml) are passed by the tests workflow instead,
+# so local runs stay lean. See "Testing guidelines" in claude.md.
 addopts = [
+  "--cov",
+  "--cov-report=term",
   "--durations=10",
 ]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
