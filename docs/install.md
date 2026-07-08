@@ -4,7 +4,7 @@
 [![Packaging status](https://repology.org/badge/vertical-allrepos/python%3Aextra-platforms.svg)](https://repology.org/project/python%3Aextra-platforms/versions)
 ```
 
-This package is [available on PyPI](https://pypi.python.org/pypi/extra-platforms), so you can install the latest stable release with you favorite package manager:
+This package is [available on PyPI](https://pypi.python.org/pypi/extra-platforms) and in several OS distributions, so you can install the latest stable release with your favorite package manager:
 
 `````{tab-set}
 
@@ -39,6 +39,53 @@ $ python -m pip install extra-platforms
 
 See also [pip installation instructions](https://pip.pypa.io/en/stable/installing/).
 ````
+
+````{tab-item} Arch Linux
+A [`python-extra-platforms` package](https://aur.archlinux.org/packages/python-extra-platforms) is available on AUR and can be installed with any AUR helper:
+
+```{code-block} shell-session
+$ yay -S python-extra-platforms
+```
+
+```{code-block} shell-session
+$ paru -S python-extra-platforms
+```
+````
+
+````{tab-item} Guix
+Extra Platforms is [available in GNU Guix](https://packages.guix.gnu.org/packages/python-extra-platforms/):
+
+```{code-block} shell-session
+$ guix install python-extra-platforms
+```
+
+```{tip}
+The package [landed in Guix on 2026-06-28](https://codeberg.org/guix/guix/pulls/8047). If `guix install` cannot find it yet, refresh your channels first with `guix pull`.
+```
+````
+
+````{tab-item} openSUSE
+The [`python-extra-platforms` package](https://software.opensuse.org/package/python-extra-platforms) is available on openSUSE Tumbleweed:
+
+```{code-block} shell-session
+$ sudo zypper install python3-extra-platforms
+```
+````
+
+````{tab-item} pkgsrc
+The [`sysutils/py-extra-platforms` package](https://pkgsrc.se/sysutils/py-extra-platforms) is available in pkgsrc for NetBSD and all other [platforms supported by pkgsrc](https://www.pkgsrc.org):
+
+```{code-block} shell-session
+$ pkgin install py313-extra-platforms
+```
+
+Or build it from source:
+
+```{code-block} shell-session
+$ cd /usr/pkgsrc/sysutils/py-extra-platforms
+$ make install clean
+```
+````
 `````
 
 ## Try it now
@@ -54,7 +101,7 @@ $ uvx extra-platforms
 
 ````{tab-item} Specific version
 ```shell-session
-$ uvx extra-platforms@13.0.1
+$ uvx extra-platforms@13.1.0
 ```
 ````
 
