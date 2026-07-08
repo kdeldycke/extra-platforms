@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.1.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.1...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.1.0` (2026-07-08)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.1...v13.1.0)
 
 - Add ChromeOS platform detection: `CHROMEOS` / `is_chromeos()`, covering ChromeOS itself, ChromiumOS and derivatives like FydeOS, and the Crostini Linux container, where `current_platform()` prefers the container's own distribution, as with WSL.
 - Add Clear Linux OS platform detection: `CLEARLINUX` / `is_clearlinux()` (via `ID=clear-linux-os` in `os-release`).
