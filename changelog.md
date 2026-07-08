@@ -5,12 +5,11 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-- Add ChromeOS platform detection: `CHROMEOS` / `is_chromeos()`, matching ChromeOS itself (`ID=chromeos` in `os-release`), ChromiumOS builds and derivatives like FydeOS (`ID=chromiumos`), and the Crostini Linux development environment (via the `/dev/.cros_milestone` marker). Within Crostini, `current_platform()` prefers the container's own distribution, like it does for WSL.
+- Add ChromeOS platform detection: `CHROMEOS` / `is_chromeos()`, covering ChromeOS itself, ChromiumOS and derivatives like FydeOS, and the Crostini Linux container, where `current_platform()` prefers the container's own distribution, as with WSL.
 - Add Clear Linux OS platform detection: `CLEARLINUX` / `is_clearlinux()` (via `ID=clear-linux-os` in `os-release`).
 - Add SliTaz GNU/Linux platform detection: `SLITAZ` / `is_slitaz()` (via `/etc/slitaz-release`, as SliTaz ships no `os-release` file).
 - Add Source Mage GNU/Linux platform detection: `SOURCEMAGE` / `is_sourcemage()` (via `ID=sourcemage` in `os-release`).
-- Align the tests workflow's inline `repomatic` pin with its `v7.0.0` reusable workflow refs.
-- Upload coverage to Codecov from one runner per OS instead of every test matrix cell.
+- Upload coverage to Codecov from one runner per OS, on the oldest and newest Python, instead of every test matrix cell.
 - Drop the Codecov Test Analytics upload and the `junit.xml` report generation.
 - Assert CLI behavior in CI with a declarative `click-extra` test suite (`tests/cli-test-suite.toml`), replacing the hand-rolled smoke invocations.
 - Add the `macos-15-intel` runner to the test matrix.
