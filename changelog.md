@@ -1,5 +1,10 @@
 # Changelog
 
+## [`13.2.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.2.0...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`13.2.0` (2026-07-15)](https://github.com/kdeldycke/extra-platforms/compare/v13.1.0...v13.2.0)
 
 - Add PikaOS platform detection: `PIKAOS` / `is_pikaos()` (via `ID=pika` in `os-release`). Closes [#610](https://github.com/kdeldycke/extra-platforms/issues/610)
