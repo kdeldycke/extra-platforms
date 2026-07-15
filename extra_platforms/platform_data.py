@@ -148,6 +148,8 @@ PIDORA = Platform(
     "https://web.archive.org/web/20200227132047/http://pidora.ca:80/",
 )
 
+PIKAOS = Platform("pikaos", "PikaOS", "🐹", "https://pika-os.com")
+
 RASPBIAN = Platform("raspbian", "Raspbian", "🍓", "https://raspberrypi.com/software/")
 
 RHEL = Platform("rhel", "RedHat Enterprise Linux", "🎩", "https://redhat.com/rhel/")

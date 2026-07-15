@@ -68,6 +68,7 @@ from extra_platforms import (
     is_os400,
     is_parallels,
     is_pidora,
+    is_pikaos,
     is_raspbian,
     is_rhel,
     is_rocky,
@@ -136,6 +137,7 @@ def test_platform_detection():
         assert not is_os400()
         assert not is_parallels()
         assert not is_pidora()
+        assert not is_pikaos()
         assert not is_raspbian()
         assert not is_rhel()
         assert not is_rocky()
@@ -196,6 +198,7 @@ def test_platform_detection():
         assert not is_os400()
         assert not is_parallels()
         assert not is_pidora()
+        assert not is_pikaos()
         assert not is_raspbian()
         assert not is_rhel()
         assert not is_rocky()
@@ -252,6 +255,7 @@ def test_platform_detection():
         assert not is_os400()
         assert not is_parallels()
         assert not is_pidora()
+        assert not is_pikaos()
         assert not is_raspbian()
         assert not is_rhel()
         assert not is_rocky()

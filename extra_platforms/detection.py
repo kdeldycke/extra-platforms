@@ -770,6 +770,19 @@ def is_pidora() -> bool:
 
 
 @cache
+def is_pikaos() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.PIKAOS`.
+
+    ```{note}
+    PikaOS, an Ubuntu-based gaming distribution, sets ``ID=pika`` (not
+    ``pikaos``) in its ``os-release`` file. Its ``ID_LIKE=debian`` field is
+    ignored, so this stays distinct from {func}`~extra_platforms.is_debian`.
+    ```
+    """
+    return os_release_id() == "pika"
+
+
+@cache
 def is_raspbian() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.RASPBIAN`."""
     return os_release_id() == "raspbian"

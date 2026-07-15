@@ -132,6 +132,7 @@
 | {func}`~is_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
 | {func}`~is_parallels`            |  ∥   | {data}`~PARALLELS`            |
 | {func}`~is_pidora`               |  🍓  | {data}`~PIDORA`               |
+| {func}`~is_pikaos`               |  🐹  | {data}`~PIKAOS`               |
 | {func}`~is_powerpc`              |  ⚡  | {data}`~POWERPC`              |
 | {func}`~is_powershell`           |  🔷  | {data}`~POWERSHELL`           |
 | {func}`~is_ppc`                  |  ⚡  | {data}`~PPC`                  |
@@ -292,6 +293,7 @@
 .. autofunction:: extra_platforms.is_os400
 .. autofunction:: extra_platforms.is_parallels
 .. autofunction:: extra_platforms.is_pidora
+.. autofunction:: extra_platforms.is_pikaos
 .. autofunction:: extra_platforms.is_powershell
 .. autofunction:: extra_platforms.is_ppc
 .. autofunction:: extra_platforms.is_ppc64

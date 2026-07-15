@@ -271,6 +271,7 @@ if TYPE_CHECKING:
     skip_other_shells: MarkDecorator
     skip_parallels: MarkDecorator
     skip_pidora: MarkDecorator
+    skip_pikaos: MarkDecorator
     skip_powerpc: MarkDecorator
     skip_powershell: MarkDecorator
     skip_ppc: MarkDecorator
@@ -452,6 +453,7 @@ if TYPE_CHECKING:
     unless_other_shells: MarkDecorator
     unless_parallels: MarkDecorator
     unless_pidora: MarkDecorator
+    unless_pikaos: MarkDecorator
     unless_powerpc: MarkDecorator
     unless_powershell: MarkDecorator
     unless_ppc: MarkDecorator

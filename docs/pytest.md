@@ -197,6 +197,7 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_other_shells`         | {deco}`~pytest.unless_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
 | {deco}`~pytest.skip_parallels`            | {deco}`~pytest.unless_parallels`            |  ∥   | {data}`~PARALLELS`            |
 | {deco}`~pytest.skip_pidora`               | {deco}`~pytest.unless_pidora`               |  🍓  | {data}`~PIDORA`               |
+| {deco}`~pytest.skip_pikaos`               | {deco}`~pytest.unless_pikaos`               |  🐹  | {data}`~PIKAOS`               |
 | {deco}`~pytest.skip_powerpc`              | {deco}`~pytest.unless_powerpc`              |  ⚡  | {data}`~POWERPC`              |
 | {deco}`~pytest.skip_powershell`           | {deco}`~pytest.unless_powershell`           |  🔷  | {data}`~POWERSHELL`           |
 | {deco}`~pytest.skip_ppc`                  | {deco}`~pytest.unless_ppc`                  |  ⚡  | {data}`~PPC`                  |
@@ -386,6 +387,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_other_shells
 .. autodecorator:: extra_platforms.pytest.skip_parallels
 .. autodecorator:: extra_platforms.pytest.skip_pidora
+.. autodecorator:: extra_platforms.pytest.skip_pikaos
 .. autodecorator:: extra_platforms.pytest.skip_powerpc
 .. autodecorator:: extra_platforms.pytest.skip_powershell
 .. autodecorator:: extra_platforms.pytest.skip_ppc
@@ -572,6 +574,7 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_other_shells
 .. autodecorator:: extra_platforms.pytest.unless_parallels
 .. autodecorator:: extra_platforms.pytest.unless_pidora
+.. autodecorator:: extra_platforms.pytest.unless_pikaos
 .. autodecorator:: extra_platforms.pytest.unless_powerpc
 .. autodecorator:: extra_platforms.pytest.unless_powershell
 .. autodecorator:: extra_platforms.pytest.unless_ppc

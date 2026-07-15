@@ -92,6 +92,7 @@ Platform(id='macos', name='macOS')
 |  🟦  | {data}`~OS400`         | IBM i                          | {func}`~is_os400`         |
 |  ∥   | {data}`~PARALLELS`     | Parallels                      | {func}`~is_parallels`     |
 |  🍓  | {data}`~PIDORA`        | Pidora                         | {func}`~is_pidora`        |
+|  🐹  | {data}`~PIKAOS`        | PikaOS                         | {func}`~is_pikaos`        |
 |  🍓  | {data}`~RASPBIAN`      | Raspbian                       | {func}`~is_raspbian`      |
 |  🎩  | {data}`~RHEL`          | RedHat Enterprise Linux        | {func}`~is_rhel`          |
 |  ⛰️  | {data}`~ROCKY`         | Rocky Linux                    | {func}`~is_rocky`         |
@@ -166,7 +167,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,45
+ALL_PLATFORMS,LINUX,46
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -204,6 +205,7 @@ LINUX,OPENWRT,1
 LINUX,ORACLE,1
 LINUX,PARALLELS,1
 LINUX,PIDORA,1
+LINUX,PIKAOS,1
 LINUX,RASPBIAN,1
 LINUX,RHEL,1
 LINUX,ROCKY,1
@@ -294,6 +296,7 @@ mindmap
             (🦴 ORACLE)
             (∥ PARALLELS)
             (🍓 PIDORA)
+            (🐹 PIKAOS)
             (🍓 RASPBIAN)
             (🎩 RHEL)
             (⛰️ ROCKY)
@@ -379,6 +382,7 @@ mindmap
 .. autodata:: extra_platforms.OS400
 .. autodata:: extra_platforms.PARALLELS
 .. autodata:: extra_platforms.PIDORA
+.. autodata:: extra_platforms.PIKAOS
 .. autodata:: extra_platforms.RASPBIAN
 .. autodata:: extra_platforms.RHEL
 .. autodata:: extra_platforms.ROCKY

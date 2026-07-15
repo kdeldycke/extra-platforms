@@ -5,6 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add PikaOS platform detection: `PIKAOS` / `is_pikaos()` (via `ID=pika` in `os-release`). Closes [#610](https://github.com/kdeldycke/extra-platforms/issues/610)
 - Document installation from AUR, GNU Guix, openSUSE Tumbleweed and pkgsrc.
 
 ## [`13.1.0` (2026-07-08)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.1...v13.1.0)

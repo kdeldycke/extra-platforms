@@ -222,6 +222,7 @@ All recognized traits and their properties:
 |  🟦  | {data}`~OS400`                | IBM i                          | {func}`~is_os400`                | Platform     |
 |  ∥   | {data}`~PARALLELS`            | Parallels                      | {func}`~is_parallels`            | Platform     |
 |  🍓  | {data}`~PIDORA`               | Pidora                         | {func}`~is_pidora`               | Platform     |
+|  🐹  | {data}`~PIKAOS`               | PikaOS                         | {func}`~is_pikaos`               | Platform     |
 |  🔷  | {data}`~POWERSHELL`           | PowerShell                     | {func}`~is_powershell`           | Shell        |
 |  ⚡  | {data}`~PPC`                  | PowerPC (32-bit)               | {func}`~is_ppc`                  | Architecture |
 |  ⚡  | {data}`~PPC64`                | PowerPC 64-bit (big-endian)    | {func}`~is_ppc64`                | Architecture |
