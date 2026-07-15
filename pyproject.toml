@@ -284,8 +284,9 @@ test = [
   "tomli>=2.3; python_version<'3.11'",
 ]
 docs = [
-  # We need Click Extra 7.5 to render Markdown table properly.
-  "click-extra[sphinx]>=7.5",
+  # Click Extra 8.3 adds the {matrix} directive and refresh-directives command
+  # used to build the Python compatibility table in docs/install.md.
+  "click-extra[sphinx]>=8.3",
   "furo>=2025.9.25",
   # myst-parser 5.1 adds the "alert" extension that renders GitHub-style
   # callouts (> [!NOTE], …) as admonitions. See docs/conf.py.

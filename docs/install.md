@@ -88,6 +88,23 @@ $ make install clean
 ````
 `````
 
+## Python compatibility
+
+The table below shows which Python versions each `extra-platforms` release range supports, derived from each git tag's `pyproject.toml`. It refreshes automatically through [click-extra's `{matrix}` directive](https://kdeldycke.github.io/click-extra/sphinx.html#matrix-directives), which repomatic's `update-docs` job reruns to keep it in sync with new releases.
+
+<!-- matrix python -->
+
+| `extra-platforms` | Released   | `3.8` | `3.9` | `3.10` | `3.11` | `3.12` | `3.13` | `3.14` |
+| :---------------- | :--------- | :---: | :---: | :----: | :----: | :----: | :----: | :----: |
+| `5.0.x` → `13.x`  | 2025-11-03 |  ❌   |  ❌   |   ✅   |   ✅   |   ✅   |   ✅   |   ✅   |
+| `4.x`             | 2025-10-21 |  ❌   |  ❌   |   ❌   |   ✅   |   ✅   |   ✅   |   ✅   |
+| `3.x`             | 2025-03-02 |  ❌   |  ❌   |   ❌   |   ✅   |   ✅   |   ✅   |   ❌   |
+| `1.4.x` → `2.1.x` | 2024-10-21 |  ❌   |  ❌   |   ✅   |   ✅   |   ✅   |   ✅   |   ❌   |
+| `1.3.x`           | 2024-09-11 |  ❌   |  ✅   |   ✅   |   ✅   |   ✅   |   ❌   |   ❌   |
+| `1.0.x` → `1.2.x` | 2024-08-18 |  ✅   |  ✅   |   ✅   |   ✅   |   ✅   |   ❌   |   ❌   |
+
+<!-- matrix-end -->
+
 ## Try it now
 
 You can try Extra Platforms right now in your terminal, without installing any dependency or virtual env [thanks to `uvx`](https://docs.astral.sh/uv/guides/tools/):
