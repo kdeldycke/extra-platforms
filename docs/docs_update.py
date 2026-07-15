@@ -15,14 +15,15 @@
 
 .. tip::
 
-    When the module is called directly, it will update all documentation files in-place:
+    When run directly, it updates all documentation files in-place:
 
     .. code-block:: shell-session
 
-        $ run python -m extra_platforms.docs_update
+        $ uv run python docs/docs_update.py
 
-    See how it is `used in .github/workflows/docs.yaml workflow
-    <https://github.com/kdeldycke/extra-platforms/blob/main/.github/workflows/docs.yaml#L38-L39>`_.
+    In CI, the same update runs through the ``repomatic update-docs`` step of the
+    `autofix workflow
+    <https://github.com/kdeldycke/extra-platforms/blob/main/.github/workflows/autofix.yaml>`_.
 
 .. warning::
     The generated Mermaid syntax targets the version bundled with
