@@ -90,7 +90,7 @@ $ make install clean
 
 ## Python compatibility
 
-The table below shows which Python versions each `extra-platforms` release range supports, derived from each git tag's `pyproject.toml`. It refreshes automatically through [click-extra's `{matrix}` directive](https://kdeldycke.github.io/click-extra/sphinx.html#matrix-directives), which repomatic's `update-docs` job reruns to keep it in sync with new releases.
+The table below shows which Python versions each `extra-platforms` release range supports, derived from each git tag's `pyproject.toml`. It refreshes automatically through [click-extra's `{matrix}` directive](https://kdeldycke.github.io/click-extra/sphinx.html#the-matrix-directive), which repomatic's `update-docs` job reruns to keep it in sync with new releases.
 
 <!-- matrix python -->
 
