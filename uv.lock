@@ -577,7 +577,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "13.1.1.dev0"
+version = "13.2.0.dev0"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -1331,6 +1331,7 @@ dependencies = [
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7b/c4/5628ff7e934621473a024b668f9081a641fcf607303783a7160c700b6497/PyDriller-2.9-py3-none-any.whl", hash = "sha256:bc4e72ff59ce62f1ee4dec77e44103df62b62b6d5ed90daea75abe2eb16c6ebf", size = 36811, upload-time = "2025-09-06T07:40:12.771Z" },
+    { url = "https://files.pythonhosted.org/packages/37/cd/8633b101c28bd124b99c58105ca11be93535a15c159c1168dade1c2a1b2a/pydriller-2.9-py3-none-any.whl", hash = "sha256:092c0d3ea02f559181c78cd38561f589084038362e768c6af35124f7db246abc", size = 37187, upload-time = "2026-07-01T07:36:42.466Z" },
 ]
 
 [[package]]
