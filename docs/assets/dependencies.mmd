@@ -7,14 +7,12 @@ flowchart LR
 
     subgraph grp_docs [--group docs]
         sphinx{{"`sphinx >=9.1`"}}
-        click_extra{{"`click-extra >=7.5`"}}
+        click_extra{{"`click-extra >=8.3`"}}
         repomatic{{"`repomatic >=6.14`"}}
-        pytest{{"`pytest >=8.2.1`"}}
         aiohttp(["`aiohttp`"])
         myst_parser{{"`myst-parser >=5.1`"}}
         furo{{"`furo >=2025.9.25`"}}
         pygments(["`pygments`"])
-        pydriller(["`pydriller`"])
         jinja2(["`jinja2`"])
         packaging(["`packaging`"])
         sphinxcontrib_mermaid{{"`sphinxcontrib-mermaid >=1.2.2`"}}
@@ -27,7 +25,6 @@ flowchart LR
         click_0(["`click`"])
         colorama(["`colorama`"])
         docutils(["`docutils`"])
-        lizard(["`lizard`"])
         markdown_it_py(["`markdown-it-py`"])
         pyyaml(["`pyyaml`"])
         vt_py(["`vt-py`"])
@@ -35,8 +32,6 @@ flowchart LR
         boltons(["`boltons`"])
         cloup(["`cloup`"])
         frozenlist(["`frozenlist`"])
-        gitdb(["`gitdb`"])
-        gitpython(["`gitpython`"])
         idna(["`idna`"])
         mdit_py_plugins(["`mdit-py-plugins`"])
         multidict(["`multidict`"])
@@ -65,12 +60,9 @@ flowchart LR
         iniconfig(["`iniconfig`"])
         markupsafe(["`markupsafe`"])
         mdurl(["`mdurl`"])
-        pathspec(["`pathspec`"])
-        pytz(["`pytz`"])
         roman_numerals(["`roman-numerals`"])
         six(["`six`"])
         sly(["`sly`"])
-        smmap(["`smmap`"])
         snowballstemmer(["`snowballstemmer`"])
         soupsieve(["`soupsieve`"])
         sphinxcontrib_applehelp(["`sphinxcontrib-applehelp`"])
@@ -80,12 +72,13 @@ flowchart LR
         sphinxcontrib_qthelp(["`sphinxcontrib-qthelp`"])
         sphinxcontrib_serializinghtml(["`sphinxcontrib-serializinghtml`"])
         tomlrt(["`tomlrt`"])
-        types_pytz(["`types-pytz`"])
         tzdata(["`tzdata`"])
         urllib3(["`urllib3`"])
+        grp_docs_pytest{{"`pytest >=8.2.1`"}}
     end
 
     subgraph grp_test [--group test]
+        pytest{{"`pytest`"}}
         requests{{"`requests >=2.34`"}}
         pytest_cov{{"`pytest-cov >=7`"}}
         pytest_xdist{{"`pytest-xdist >=3.7`"}}
@@ -96,11 +89,10 @@ flowchart LR
         pytest_randomly{{"`pytest-randomly >=4`"}}
         execnet(["`execnet`"])
         psutil(["`psutil`"])
-        grp_test_pytest{{"`pytest`"}}
     end
 
-    sphinx --> pygments
     sphinx --> requests
+    sphinx --> pygments
     sphinx --> jinja2
     sphinx --> packaging
     sphinx --> colorama
@@ -127,9 +119,15 @@ flowchart LR
     click_extra --> tabulate
     click_extra --> wcwidth
     click_extra --> deepmerge
+    pytest --> pygments
+    pytest --> packaging
+    pytest --> colorama
+    pytest --> tomli
+    pytest --> exceptiongroup
+    pytest --> pluggy
+    pytest --> iniconfig
     repomatic --> extra_platforms
     repomatic --> click_extra
-    repomatic --> pydriller
     repomatic --> packaging
     repomatic --> wcmatch
     repomatic --> arrow
@@ -139,13 +137,6 @@ flowchart LR
     repomatic --> py_walk
     repomatic --> pyproject_metadata
     repomatic --> tomlrt
-    pytest --> pygments
-    pytest --> packaging
-    pytest --> colorama
-    pytest --> tomli
-    pytest --> exceptiongroup
-    pytest --> pluggy
-    pytest --> iniconfig
     myst_parser --> sphinx
     myst_parser --> jinja2
     myst_parser --> docutils
@@ -178,10 +169,6 @@ flowchart LR
     sphinx_copybutton --> sphinx
     sphinx_design --> sphinx
     sphinxext_opengraph --> sphinx
-    pydriller --> lizard
-    pydriller --> gitpython
-    pydriller --> pytz
-    pydriller --> types_pytz
     jinja2 --> markupsafe
     arrow --> python_dateutil
     arrow --> tzdata
@@ -207,19 +194,17 @@ flowchart LR
     aiohttp --> propcache
     aiohttp --> aiohappyeyeballs
     aiohttp --> attrs
-    lizard --> pygments
-    lizard --> pathspec
-    gitpython --> gitdb
     python_dateutil --> six
     yarl --> idna
     yarl --> multidict
     yarl --> propcache
     aiosignal --> typing_extensions
     aiosignal --> frozenlist
-    gitdb --> smmap
     extra_platforms -.-> ext_pytest
     extra_platforms -.-> grp_docs
     extra_platforms -.-> grp_test
+    ext_pytest_pytest -.- pytest
+    grp_docs_pytest -.- pytest
 
     click accessible_pygments "https://pypi.org/project/accessible-pygments/" _blank
     click aiofiles "https://pypi.org/project/aiofiles/" _blank
@@ -247,13 +232,10 @@ flowchart LR
     click extra_platforms "https://pypi.org/project/extra-platforms/" _blank
     click frozenlist "https://pypi.org/project/frozenlist/" _blank
     click furo "https://pypi.org/project/furo/" _blank
-    click gitdb "https://pypi.org/project/gitdb/" _blank
-    click gitpython "https://pypi.org/project/gitpython/" _blank
     click idna "https://pypi.org/project/idna/" _blank
     click imagesize "https://pypi.org/project/imagesize/" _blank
     click iniconfig "https://pypi.org/project/iniconfig/" _blank
     click jinja2 "https://pypi.org/project/jinja2/" _blank
-    click lizard "https://pypi.org/project/lizard/" _blank
     click markdown_it_py "https://pypi.org/project/markdown-it-py/" _blank
     click markupsafe "https://pypi.org/project/markupsafe/" _blank
     click mdit_py_plugins "https://pypi.org/project/mdit-py-plugins/" _blank
@@ -261,12 +243,10 @@ flowchart LR
     click multidict "https://pypi.org/project/multidict/" _blank
     click myst_parser "https://pypi.org/project/myst-parser/" _blank
     click packaging "https://pypi.org/project/packaging/" _blank
-    click pathspec "https://pypi.org/project/pathspec/" _blank
     click pluggy "https://pypi.org/project/pluggy/" _blank
     click propcache "https://pypi.org/project/propcache/" _blank
     click psutil "https://pypi.org/project/psutil/" _blank
     click py_walk "https://pypi.org/project/py-walk/" _blank
-    click pydriller "https://pypi.org/project/pydriller/" _blank
     click pygments "https://pypi.org/project/pygments/" _blank
     click pyproject_metadata "https://pypi.org/project/pyproject-metadata/" _blank
     click pytest "https://pypi.org/project/pytest/" _blank
@@ -275,14 +255,12 @@ flowchart LR
     click pytest_randomly "https://pypi.org/project/pytest-randomly/" _blank
     click pytest_xdist "https://pypi.org/project/pytest-xdist/" _blank
     click python_dateutil "https://pypi.org/project/python-dateutil/" _blank
-    click pytz "https://pypi.org/project/pytz/" _blank
     click pyyaml "https://pypi.org/project/pyyaml/" _blank
     click repomatic "https://pypi.org/project/repomatic/" _blank
     click requests "https://pypi.org/project/requests/" _blank
     click roman_numerals "https://pypi.org/project/roman-numerals/" _blank
     click six "https://pypi.org/project/six/" _blank
     click sly "https://pypi.org/project/sly/" _blank
-    click smmap "https://pypi.org/project/smmap/" _blank
     click snowballstemmer "https://pypi.org/project/snowballstemmer/" _blank
     click soupsieve "https://pypi.org/project/soupsieve/" _blank
     click sphinx "https://pypi.org/project/sphinx/" _blank
@@ -301,7 +279,6 @@ flowchart LR
     click tabulate "https://pypi.org/project/tabulate/" _blank
     click tomli "https://pypi.org/project/tomli/" _blank
     click tomlrt "https://pypi.org/project/tomlrt/" _blank
-    click types_pytz "https://pypi.org/project/types-pytz/" _blank
     click typing_extensions "https://pypi.org/project/typing-extensions/" _blank
     click tzdata "https://pypi.org/project/tzdata/" _blank
     click urllib3 "https://pypi.org/project/urllib3/" _blank
@@ -310,7 +287,7 @@ flowchart LR
     click wcwidth "https://pypi.org/project/wcwidth/" _blank
     click yarl "https://pypi.org/project/yarl/" _blank
     click ext_pytest_pytest "https://pypi.org/project/pytest/" _blank
-    click grp_test_pytest "https://pypi.org/project/pytest/" _blank
+    click grp_docs_pytest "https://pypi.org/project/pytest/" _blank
 
     style extra_platforms stroke-width:3px
     style click_extra stroke-width:3px
@@ -332,8 +309,8 @@ flowchart LR
     style sphinxext_opengraph stroke-width:3px
     style tomli stroke-width:3px
     style wcmatch stroke-width:3px
-    style ext_pytest_pytest stroke-width:3px
-    style grp_test_pytest stroke-width:3px
+    style ext_pytest_pytest stroke-width:3px,stroke-dasharray:5 5
+    style grp_docs_pytest stroke-width:3px,stroke-dasharray:5 5
 
     style ext_pytest fill:#7B1FA220,stroke:#BA68C8
     style grp_docs fill:#546E7A20,stroke:#90A4AE
