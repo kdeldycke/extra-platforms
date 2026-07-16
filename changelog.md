@@ -15,10 +15,16 @@
 
 ## [`13.2.0` (2026-07-15)](https://github.com/kdeldycke/extra-platforms/compare/v13.1.0...v13.2.0)
 
+> [!NOTE]
+> `13.2.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.2.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.2.0).
+
 - Add PikaOS platform detection: `PIKAOS` / `is_pikaos()` (via `ID=pika` in `os-release`). Closes [#610](https://github.com/kdeldycke/extra-platforms/issues/610)
 - Document installation from AUR, GNU Guix, openSUSE Tumbleweed and pkgsrc.
 
 ## [`13.1.0` (2026-07-08)](https://github.com/kdeldycke/extra-platforms/compare/v13.0.1...v13.1.0)
+
+> [!NOTE]
+> `13.1.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.1.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.1.0).
 
 - Add ChromeOS platform detection: `CHROMEOS` / `is_chromeos()`, covering ChromeOS itself, ChromiumOS and derivatives like FydeOS, and the Crostini Linux container, where `current_platform()` prefers the container's own distribution, as with WSL.
 - Add Clear Linux OS platform detection: `CLEARLINUX` / `is_clearlinux()` (via `ID=clear-linux-os` in `os-release`).
