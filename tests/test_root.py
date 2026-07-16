@@ -727,28 +727,31 @@ def test_invalidate_caches_clears_trait_current_property():
     assert "current" not in vars(X86_64)
 
 
-def test_deprecated_aliases():
+@pytest.mark.parametrize(
+    "deprecated_id,replacement_id",
+    [
+        ("EXTRA_GROUPS", "NON_CANONICAL_GROUPS"),
+        ("NON_OVERLAPPING_GROUPS", "CANONICAL_GROUPS"),
+        ("TUMBLEWEED", "OPENSUSE"),
+        ("is_tumbleweed", "is_opensuse"),
+    ],
+)
+def test_deprecated_aliases(deprecated_id, replacement_id):
     """Deprecated aliases resolve to their replacement and emit a warning."""
     with pytest.deprecated_call(
-        match="NON_OVERLAPPING_GROUPS is deprecated and will be removed in "
-        "extra-platforms 14.0.0, use CANONICAL_GROUPS instead."
+        match=f"{deprecated_id} is deprecated and will be removed in "
+        f"extra-platforms 14.0.0, use {replacement_id} instead."
     ):
-        assert (
-            extra_platforms.NON_OVERLAPPING_GROUPS is extra_platforms.CANONICAL_GROUPS
+        assert getattr(extra_platforms, deprecated_id) is getattr(
+            extra_platforms, replacement_id
         )
-
-    with pytest.deprecated_call(
-        match="EXTRA_GROUPS is deprecated and will be removed in "
-        "extra-platforms 14.0.0, use NON_CANONICAL_GROUPS instead."
-    ):
-        assert extra_platforms.EXTRA_GROUPS is extra_platforms.NON_CANONICAL_GROUPS
 
 
 def test_deprecated_aliases_not_advertised():
     """Deprecated aliases are resolvable but not part of the public API surface."""
     from extra_platforms._deprecated import DEPRECATED_ALIASES
 
-    for deprecated_id, replacement_id in DEPRECATED_ALIASES.items():
+    for deprecated_id, replacement_id in DEPRECATED_ALIASES["extra_platforms"].items():
         assert deprecated_id not in extra_platforms.__all__
         assert replacement_id in extra_platforms.__all__
 

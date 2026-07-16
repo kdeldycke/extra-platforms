@@ -13,10 +13,10 @@
 # limitations under the License.
 """Backward-compatible deprecated aliases.
 
-Renamed symbols stay importable from the package root for a deprecation cycle.
-Accessing one emits a {exc}`DeprecationWarning` pointing to its replacement,
-through the [PEP 562](https://peps.python.org/pep-0562/) module
-``__getattr__`` hook in ``__init__.py``.
+Renamed and removed symbols stay importable from their original module for a
+deprecation cycle. Accessing one emits a {exc}`DeprecationWarning` pointing to
+its replacement, through the [PEP 562](https://peps.python.org/pep-0562/)
+module ``__getattr__`` hooks in ``__init__.py`` and ``pytest.py``.
 
 ```{important}
 Aliases registered here are scheduled for removal in the major release recorded
@@ -24,14 +24,14 @@ in {data}`REMOVAL_VERSION`.
 ```
 
 ```{todo}
-Remove the ``NON_OVERLAPPING_GROUPS`` and ``EXTRA_GROUPS`` aliases (and their
-tests) in ``14.0.0``.
+Remove all registered aliases (and their tests) in ``14.0.0``.
 ```
 """
 
 from __future__ import annotations
 
 import warnings
+from importlib import import_module
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -40,27 +40,33 @@ if TYPE_CHECKING:
 REMOVAL_VERSION = "14.0.0"
 """The release in which the registered aliases stop resolving."""
 
-DEPRECATED_ALIASES: dict[str, str] = {
-    "EXTRA_GROUPS": "NON_CANONICAL_GROUPS",
-    "NON_OVERLAPPING_GROUPS": "CANONICAL_GROUPS",
+DEPRECATED_ALIASES: dict[str, dict[str, str]] = {
+    "extra_platforms": {
+        "EXTRA_GROUPS": "NON_CANONICAL_GROUPS",
+        "NON_OVERLAPPING_GROUPS": "CANONICAL_GROUPS",
+        "TUMBLEWEED": "OPENSUSE",
+        "is_tumbleweed": "is_opensuse",
+    },
+    "extra_platforms.pytest": {
+        "skip_tumbleweed": "skip_opensuse",
+        "unless_tumbleweed": "unless_opensuse",
+    },
 }
-"""Maps each deprecated symbol to its replacement at the package root."""
+"""Maps each deprecated symbol to its replacement, keyed by hosting module."""
 
 
-def resolve_deprecated(name: str) -> Any:
-    """Return the replacement object for the deprecated ``name``.
+def resolve_deprecated(module_id: str, name: str) -> Any:
+    """Return the replacement object for the deprecated ``name`` in ``module_id``.
 
     Emits a {exc}`DeprecationWarning` naming the replacement, attributed to the
-    caller's access site (``stacklevel=3``: this function, the package root's
+    caller's access site (``stacklevel=3``: this function, the hosting module's
     ``__getattr__``, then the caller).
     """
-    replacement = DEPRECATED_ALIASES[name]
+    replacement = DEPRECATED_ALIASES[module_id][name]
     warnings.warn(
         f"{name} is deprecated and will be removed in extra-platforms "
         f"{REMOVAL_VERSION}, use {replacement} instead.",
         DeprecationWarning,
         stacklevel=3,
     )
-    import extra_platforms
-
-    return getattr(extra_platforms, replacement)
+    return getattr(import_module(module_id), replacement)

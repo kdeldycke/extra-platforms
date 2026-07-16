@@ -5,7 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-- Remove the `TUMBLEWEED` platform, `is_tumbleweed()` and its `skip_tumbleweed` and `unless_tumbleweed` decorators: openSUSE Tumbleweed is now detected as `OPENSUSE` (use `is_opensuse()`).
+- Deprecate the `TUMBLEWEED` platform: openSUSE Tumbleweed is now detected as `OPENSUSE`. `TUMBLEWEED`, `is_tumbleweed()` and the `skip_tumbleweed`/`unless_tumbleweed` decorators still resolve to their `OPENSUSE` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
 - Detect all openSUSE release channels (Tumbleweed, Leap, Slowroll, MicroOS, ...) as `OPENSUSE`. Closes [#619](https://github.com/kdeldycke/extra-platforms/issues/619)
 - `Platform.info()` now reports the raw `os-release` ID of distribution sub-variants in its `distro_id` field (like `ol` or `opensuse-slowroll`) instead of aliasing it to the canonical platform ID.
 - Document the platform granularity policy: independent derivative distributions get a dedicated platform, while channels and variants of the same distribution fold into their parent.

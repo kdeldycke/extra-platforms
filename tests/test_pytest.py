@@ -158,6 +158,30 @@ def test_type_annotations():
     )
 
 
+@pytest.mark.parametrize(
+    "deprecated_id,replacement_id",
+    [
+        ("skip_tumbleweed", "skip_opensuse"),
+        ("unless_tumbleweed", "unless_opensuse"),
+    ],
+)
+def test_deprecated_decorator_aliases(deprecated_id, replacement_id):
+    """Deprecated decorators resolve to their replacement and emit a warning."""
+    with pytest.deprecated_call(
+        match=f"{deprecated_id} is deprecated and will be removed in "
+        f"extra-platforms 14.0.0, use {replacement_id} instead."
+    ):
+        assert getattr(extra_platforms.pytest, deprecated_id) is getattr(
+            extra_platforms.pytest, replacement_id
+        )
+
+
+def test_unknown_pytest_attribute():
+    """Unknown attributes still raise a standard AttributeError."""
+    with pytest.raises(AttributeError, match="has no attribute 'DOES_NOT_EXIST'"):
+        _ = extra_platforms.pytest.DOES_NOT_EXIST
+
+
 @skip_unknown
 def test_skip_unknown():
     assert not current_traits().intersection(UNKNOWN)

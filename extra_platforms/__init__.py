@@ -957,6 +957,6 @@ def __getattr__(name: str) -> Any:
     """
     from ._deprecated import DEPRECATED_ALIASES, resolve_deprecated
 
-    if name in DEPRECATED_ALIASES:
-        return resolve_deprecated(name)
+    if name in DEPRECATED_ALIASES[__name__]:
+        return resolve_deprecated(__name__, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
