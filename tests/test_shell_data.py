@@ -17,18 +17,18 @@ from __future__ import annotations
 
 from extra_platforms import (
     ALL_SHELLS,
-    BOURNE_SHELLS,
-    C_SHELLS,
-    OTHER_SHELLS,
     UNKNOWN_SHELL,
-    WINDOWS_SHELLS,
     current_shell,
     is_unknown_shell,
 )
 
 
 def test_shell_detection():
-    """Basic shell detection sanity checks."""
+    """Basic shell detection sanity checks.
+
+    Family partitions and canonical flags are enforced generically in
+    ``test_trait_data.py`` and ``test_group_data.py``.
+    """
     current_shell_result = current_shell()
     assert current_shell_result
     if is_unknown_shell():
@@ -37,15 +37,3 @@ def test_shell_detection():
     else:
         assert current_shell_result is not UNKNOWN_SHELL
         assert current_shell_result in ALL_SHELLS
-
-
-def test_shell_logical_grouping():
-    # All shells are divided into families.
-    assert ALL_SHELLS.fullyintersects(
-        BOURNE_SHELLS | C_SHELLS | OTHER_SHELLS | WINDOWS_SHELLS
-    )
-    assert not ALL_SHELLS.canonical
-    assert BOURNE_SHELLS.canonical
-    assert C_SHELLS.canonical
-    assert OTHER_SHELLS.canonical
-    assert WINDOWS_SHELLS.canonical

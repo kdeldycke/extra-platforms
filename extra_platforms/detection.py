@@ -81,6 +81,7 @@ import sys
 from functools import cache
 from os import environ
 from pathlib import Path, PurePosixPath
+from typing import TypeVar
 
 from .platform_info import os_release_id
 
@@ -89,6 +90,8 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
 
     from .trait import CI, Agent, Architecture, Platform, Shell, Terminal, Trait
+
+_TTrait = TypeVar("_TTrait", bound="Trait")
 
 
 _detection_registry: dict[str, Callable[[], bool]] = {}
@@ -621,7 +624,7 @@ def is_illumos() -> bool:
         Gates on {data}`sys.platform` before reading {func}`platform.uname` so
         the function returns immediately on non-SunOS hosts. This matters on
         Windows, where {func}`platform.uname` shells out via
-        {func}`platform._syscmd_ver` to populate its ``version`` field.
+        ``platform._syscmd_ver()`` to populate its ``version`` field.
     """
     return sys.platform == "sunos5" and "illumos" in platform.uname().version.lower()
 
@@ -652,7 +655,7 @@ def is_macos() -> bool:
         Uses {data}`sys.platform` rather than {func}`platform.platform`. The
         former is a constant baked in by CPython at compile time (always
         ``"darwin"`` on macOS), while the latter performs runtime introspection
-        and, on Windows, shells out via {func}`platform._syscmd_ver` to invoke
+        and, on Windows, shells out via ``platform._syscmd_ver()`` to invoke
         ``cmd /c ver``. Calling {func}`platform.platform` here would therefore
         spawn a subprocess on every non-macOS host, and break test suites that
         globally patch {func}`subprocess.run`. Since ``sys.platform == "darwin"``
@@ -697,7 +700,7 @@ def is_netbsd() -> bool:
 
 @cache
 def is_nixos() -> bool:
-    """Return `True` if current platform is {data}`~extra_platforms.NIXOS`."""
+    """Return {data}`True` if current platform is {data}`~extra_platforms.NIXOS`."""
     return os_release_id() == "nixos"
 
 
@@ -839,9 +842,9 @@ def is_solaris() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.SOLARIS`.
 
     .. note::
-        Gates on {data}`sys.platform == "sunos5"` before invoking
+        Gates on {data}`sys.platform` being ``"sunos5"`` before invoking
         {func}`platform.platform`, which on Windows would shell out via
-        {func}`platform._syscmd_ver`. Solaris and SunOS share the same
+        ``platform._syscmd_ver()``. Solaris and SunOS share the same
         {data}`sys.platform` value, so {func}`platform.platform` is still needed
         to tell them apart, but only when we already know we're on a SunOS-based
         host.
@@ -936,10 +939,10 @@ def is_wsl1() -> bool:
     ```
 
     .. note::
-        Gates on {data}`sys.platform == "linux"` before invoking
+        Gates on {data}`sys.platform` being ``"linux"`` before invoking
         {func}`platform.release`. WSL is by definition a Linux subsystem, so on
         any other host the answer is trivially {data}`False`. The guard also
-        avoids a {func}`platform._syscmd_ver` subprocess on Windows, where
+        avoids a ``platform._syscmd_ver()`` subprocess on Windows, where
         {func}`platform.release` is implemented as a ``cmd /c ver`` shell-out.
     """
     return sys.platform == "linux" and "Microsoft" in platform.release()
@@ -1389,21 +1392,6 @@ def _running_shell_path(shell_id: str) -> str | None:
     return None
 
 
-def _parent_process_shells(shell_ids: str | tuple[str, ...]) -> bool:
-    """Check if any parent process in the tree matches the given shell IDs.
-
-    :param shell_ids: Shell executable name(s) to match. Can be a single string
-        (like ``"bash"``) or a tuple of strings (like ``("powershell", "pwsh")``).
-    :returns: ``True`` if a matching shell is found in the parent process tree,
-        ``False`` otherwise or on non-Linux platforms where ``/proc`` is
-        unavailable.
-    """
-    id_set = (
-        frozenset({shell_ids}) if isinstance(shell_ids, str) else frozenset(shell_ids)
-    )
-    return bool(id_set & _parent_process_exe_names())
-
-
 def _detect_shell(
     version_env_var: str | None = None,
     shell_ids: str | Iterable[str] | None = None,
@@ -1439,10 +1427,10 @@ def _detect_shell(
     if version_env_var and version_env_var in environ:
         return True
 
-    # Normalize shell_ids for consistent handling.
     if shell_ids is None:
         return False
 
+    # Normalize shell_ids for consistent handling.
     ids = (
         frozenset((shell_ids,)) if isinstance(shell_ids, str) else frozenset(shell_ids)
     )
@@ -1453,8 +1441,7 @@ def _detect_shell(
 
     # Fallback: walk the parent process tree to find the active shell. This
     # covers stripped containers (like ubuntu-slim) where SHELL is not set.
-    normalized_ids = (shell_ids,) if isinstance(shell_ids, str) else tuple(shell_ids)
-    return _parent_process_shells(normalized_ids)
+    return bool(ids & _parent_process_exe_names())
 
 
 @cache
@@ -2076,6 +2063,58 @@ _detection_registry.update({
 # =============================================================================
 
 
+def _drop_fallbacks(matching: set[_TTrait], *fallbacks: _TTrait) -> None:
+    """Discard low-specificity traits while more specific matches remain.
+
+    Mutates ``matching`` in place: each fallback is removed in turn, but never
+    below a single remaining match, so the most specific trait survives.
+    """
+    for fallback in fallbacks:
+        if len(matching) <= 1:
+            break
+        matching.discard(fallback)
+
+
+def _single_match(
+    matching: set[_TTrait],
+    unknown: _TTrait,
+    label: str,
+    *,
+    strict: bool,
+    plural: str | None = None,
+    expected: bool = True,
+) -> _TTrait:
+    """Resolve a set of matching traits to a single result.
+
+    Returns the only match, or ``unknown`` when nothing matched (logging or
+    raising along the way, see {func}`_report_unrecognized`). Raises
+    {exc}`RuntimeError` when multiple traits still match, as category-specific
+    disambiguation is the caller's job.
+
+    :param matching: Traits matching the current environment, already
+        disambiguated by the caller.
+    :param unknown: The ``UNKNOWN_*`` trait to return when nothing matched.
+    :param label: Human-readable trait type (like ``"architecture"``), used in
+        messages. The plural defaults to ``label + "s"``; pass ``plural`` for
+        irregular forms (like ``"CI systems"``).
+    :param strict: If `True`, raise on an unrecognized environment instead of
+        logging.
+    :param expected: If `False`, the trait may legitimately be absent, and an
+        empty match is only logged at `INFO` level.
+    """
+    if len(matching) == 1:
+        return matching.pop()
+
+    if matching:
+        raise RuntimeError(
+            f"Multiple {plural or label + 's'} match: {matching!r}. "
+            f"{_unrecognized_message()}"
+        )
+
+    _report_unrecognized(label, strict=strict, expected=expected)
+    return unknown
+
+
 @cache
 def current_architecture(strict: bool = False) -> Architecture:
     """Returns the {class}`~extra_platforms.Architecture` matching the
@@ -2105,17 +2144,7 @@ def current_architecture(strict: bool = False) -> Architecture:
         if arch.current
     }
 
-    # Return the only matching architecture.
-    if len(matching) == 1:
-        return matching.pop()
-
-    if len(matching) > 1:
-        raise RuntimeError(
-            f"Multiple architectures matches: {matching!r}. {_unrecognized_message()}"
-        )
-
-    _report_unrecognized("architecture", strict=strict)
-    return UNKNOWN_ARCHITECTURE
+    return _single_match(matching, UNKNOWN_ARCHITECTURE, "architecture", strict=strict)
 
 
 @cache
@@ -2149,41 +2178,25 @@ def current_platform(strict: bool = False) -> Platform:
         if plat.current
     }
 
-    # Return the only matching platform.
-    if len(matching) == 1:
-        (result,) = matching
-        if result is GENERIC_LINUX:
-            _report_unrecognized("Linux distribution", strict=False)
-        return result
+    # A lone GENERIC_LINUX match means the Linux distribution itself was not
+    # identified, which is worth reporting.
+    if matching == {GENERIC_LINUX}:
+        _report_unrecognized("Linux distribution", strict=False)
+        return GENERIC_LINUX
 
-    # Removes some generic platforms from the matching, until we have a single match.
-    # Starts by removing the least specific WSL1, then WSL2: WSL is a generic platform,
-    # so we should prefer the remaining, more specific platform matches
-    # like Ubuntu. See:
+    # Remove low-specificity platforms until a single match remains. Starts
+    # with the least specific WSL1, then WSL2: WSL is a generic platform, so we
+    # should prefer the remaining, more specific platform matches like Ubuntu.
+    # See:
     # - https://github.com/kdeldycke/extra-platforms/issues/158
     # - https://github.com/kdeldycke/meta-package-manager/issues/944
-    # ChromeOS gets the same treatment: within Crostini, the hosting ChromeOS is
-    # detected alongside the container's own distribution (Debian by default),
-    # and the latter is the informative one to return.
-    for layer in (WSL1, WSL2, CHROMEOS):
-        if layer in matching:
-            matching.remove(layer)
-            if len(matching) == 1:
-                return matching.pop()
+    # ChromeOS gets the same treatment: within Crostini, the hosting ChromeOS
+    # is detected alongside the container's own distribution (Debian by
+    # default), and the latter is the informative one to return. GENERIC_LINUX
+    # goes last, as any distribution match is more specific.
+    _drop_fallbacks(matching, WSL1, WSL2, CHROMEOS, GENERIC_LINUX)
 
-    # Remove GENERIC_LINUX if a more specific platform was also detected.
-    if GENERIC_LINUX in matching and len(matching) > 1:
-        matching.remove(GENERIC_LINUX)
-        if len(matching) == 1:
-            return matching.pop()
-
-    if len(matching) > 1:
-        raise RuntimeError(
-            f"Multiple platforms matches: {matching!r}. {_unrecognized_message()}"
-        )
-
-    _report_unrecognized("platform", strict=strict)
-    return UNKNOWN_PLATFORM
+    return _single_match(matching, UNKNOWN_PLATFORM, "platform", strict=strict)
 
 
 @cache
@@ -2191,7 +2204,7 @@ def current_shell(strict: bool = False) -> Shell:
     """Returns the {class}`~extra_platforms.Shell` matching the current environment.
 
     Uses a tiered disambiguation strategy with cached signals shared with
-    {func}`_detect_shell`:
+    ``_detect_shell()``:
 
     1. Shell-specific environment variables (strongest: the Python process
        *is* the shell).
@@ -2281,27 +2294,14 @@ def current_shell(strict: bool = False) -> Shell:
         if len(resolved_matches) == 1:
             return resolved_matches.pop()
 
-    # Remove SH if a more specific shell was also detected. On modern
-    # systems /bin/sh is almost always a symlink to a concrete shell, so
-    # SH is a low-specificity fallback (like GENERIC_LINUX for platforms).
-    if SH in matching and len(matching) > 1:
-        matching.discard(SH)
-        if len(matching) == 1:
-            return matching.pop()
+    # Remove low-specificity shells until a single match remains. SH goes
+    # first: on modern systems /bin/sh is almost always a symlink to a
+    # concrete shell, so SH is a low-specificity fallback (like GENERIC_LINUX
+    # for platforms). PowerShell is deprioritized next, as PSModulePath leaks
+    # into child processes and falsely flags PowerShell as active.
+    _drop_fallbacks(matching, SH, POWERSHELL)
 
-    # If PowerShell is detected alongside another shell, prefer the other.
-    if POWERSHELL in matching and len(matching) > 1:
-        matching.discard(POWERSHELL)
-        if len(matching) == 1:
-            return matching.pop()
-
-    if len(matching) > 1:
-        raise RuntimeError(
-            f"Multiple shells matches: {matching!r}. {_unrecognized_message()}"
-        )
-
-    _report_unrecognized("shell", strict=strict)
-    return UNKNOWN_SHELL
+    return _single_match(matching, UNKNOWN_SHELL, "shell", strict=strict)
 
 
 @cache
@@ -2373,25 +2373,21 @@ def current_terminal(strict: bool = False) -> Terminal:
         if term.current
     }
 
-    # Return the only matching terminal.
-    if len(matching) == 1:
-        return matching.pop()
-
-    # If multiple terminals match, filter out multiplexers to find the innermost.
+    # If multiple terminals match, filter out multiplexers to find the
+    # innermost one (like TMUX running inside KITTY).
     if len(matching) > 1:
-        non_mux = {t for t in matching if t not in MULTIPLEXERS}
+        non_mux = {term for term in matching if term not in MULTIPLEXERS}
         if len(non_mux) == 1:
             return non_mux.pop()
-        raise RuntimeError(
-            f"Multiple terminals matches: {matching!r}. {_unrecognized_message()}"
-        )
 
-    # TERM env var signals a terminal emulator is present.
-    if "TERM" in environ:
-        _report_unrecognized("terminal", strict=strict)
-    else:
-        _report_unrecognized("terminal", strict=strict, expected=False)
-    return UNKNOWN_TERMINAL
+    # The TERM env var signals a terminal emulator is expected to be present.
+    return _single_match(
+        matching,
+        UNKNOWN_TERMINAL,
+        "terminal",
+        strict=strict,
+        expected="TERM" in environ,
+    )
 
 
 @cache
@@ -2421,21 +2417,15 @@ def current_ci(strict: bool = False) -> CI:
     # Collect all matching CI systems.
     matching: set[CI] = {ci for ci in ALL_CI if ci.current}  # type: ignore[misc]
 
-    # Return the only matching CI system.
-    if len(matching) == 1:
-        return matching.pop()
-
-    if len(matching) > 1:
-        raise RuntimeError(
-            f"Multiple CI matches: {matching!r}. {_unrecognized_message()}"
-        )
-
-    # CI env var signals a CI system is present.
-    if "CI" in environ:
-        _report_unrecognized("CI", strict=strict)
-    else:
-        _report_unrecognized("CI", strict=strict, expected=False)
-    return UNKNOWN_CI
+    # The CI env var signals a CI system is expected to be present.
+    return _single_match(
+        matching,
+        UNKNOWN_CI,
+        "CI",
+        strict=strict,
+        plural="CI systems",
+        expected="CI" in environ,
+    )
 
 
 @cache
@@ -2469,21 +2459,14 @@ def current_agent(strict: bool = False) -> Agent:
         if agent.current
     }
 
-    # Return the only matching agent.
-    if len(matching) == 1:
-        return matching.pop()
-
-    if len(matching) > 1:
-        raise RuntimeError(
-            f"Multiple agent matches: {matching!r}. {_unrecognized_message()}"
-        )
-
-    # LLM env var signals an AI agent is present.
-    if "LLM" in environ:
-        _report_unrecognized("agent", strict=strict)
-    else:
-        _report_unrecognized("agent", strict=strict, expected=False)
-    return UNKNOWN_AGENT
+    # The LLM env var signals an AI agent is expected to be present.
+    return _single_match(
+        matching,
+        UNKNOWN_AGENT,
+        "agent",
+        strict=strict,
+        expected="LLM" in environ,
+    )
 
 
 @cache

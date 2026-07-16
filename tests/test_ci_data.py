@@ -49,28 +49,18 @@ from extra_platforms import (
     is_arch_32_bit,
     is_arch_64_bit,
     is_arm,
-    is_azure_pipelines,
-    is_bamboo,
     is_bash,
     is_big_endian,
     is_bourne_shells,
     is_bsd,
-    is_buildkite,
-    is_circle_ci,
-    is_cirrus_ci,
-    is_codebuild,
     is_dash,
     is_github_ci,
-    is_gitlab_ci,
-    is_heroku_ci,
     is_linux,
     is_linux_layers,
     is_linux_like,
     is_little_endian,
     is_macos,
     is_powershell,
-    is_teamcity,
-    is_travis_ci,
     is_ubuntu,
     is_unix,
     is_unix_not_macos,
@@ -270,9 +260,6 @@ def test_github_runner_detection():
 
 
 def test_ci_detection():
-    # We always expect to detect something.
-    assert is_any_trait()
-
     # We don't always expect to detect a CI.
     assert current_ci()
     if is_unknown_ci():
@@ -284,19 +271,8 @@ def test_ci_detection():
         assert current_ci() in ALL_CI
         assert is_any_ci()
 
-    if is_github_ci():
-        assert not is_azure_pipelines()
-        assert not is_bamboo()
-        assert not is_buildkite()
-        assert not is_circle_ci()
-        assert not is_cirrus_ci()
-        assert not is_codebuild()
-        assert is_github_ci()
-        assert not is_gitlab_ci()
-        assert not is_heroku_ci()
-        assert not is_teamcity()
-        assert not is_travis_ci()
 
-
-def test_ci_logical_grouping():
-    assert ALL_CI.canonical
+def test_ci_mutual_exclusion():
+    """At most one CI system matches the current environment."""
+    matching = {ci for ci in ALL_CI if ci.current}
+    assert len(matching) <= 1

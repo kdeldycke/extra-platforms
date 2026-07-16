@@ -20,18 +20,11 @@ from extra_platforms import (
     UNKNOWN_AGENT,
     current_agent,
     is_any_agent,
-    is_any_trait,
-    is_claude_code,
-    is_cline,
-    is_cursor,
     is_unknown_agent,
 )
 
 
 def test_agent_detection():
-    # We always expect to detect something.
-    assert is_any_trait()
-
     # We don't always expect to detect an agent.
     assert current_agent()
     if is_unknown_agent():
@@ -43,18 +36,8 @@ def test_agent_detection():
         assert current_agent() in ALL_AGENTS
         assert is_any_agent()
 
-    if is_claude_code():
-        assert not is_cline()
-        assert not is_cursor()
 
-    if is_cline():
-        assert not is_claude_code()
-        assert not is_cursor()
-
-    if is_cursor():
-        assert not is_claude_code()
-        assert not is_cline()
-
-
-def test_agent_logical_grouping():
-    assert ALL_AGENTS.canonical
+def test_agent_mutual_exclusion():
+    """At most one agent matches the current environment."""
+    matching = {agent for agent in ALL_AGENTS if agent.current}
+    assert len(matching) <= 1

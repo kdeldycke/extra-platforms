@@ -5,6 +5,14 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Fix pytest decorator skip reasons mangling acronyms and brand names ("Skip cI systems" is now "Skip All CI systems").
+- Rename the `ALL_CI` group to "All CI systems" and `ALL_AGENTS` to "All AI coding agents", aligning with the other "all" group names.
+- Reword the `current_*()` multiple-match errors: "Multiple architectures matches:" is now "Multiple architectures match:", and "Multiple CI matches:" is now "Multiple CI systems match:".
+- `Trait.info()` is now implemented by the base class with identity metadata: custom `Trait` subclasses are no longer forced to override it.
+- Fix agent tables, Sankey and mindmap diagrams in the documentation being frozen: their generation rules were missing, so they are now refreshed like the other trait categories.
+- Replace the hand-maintained per-platform, per-architecture, per-CI and per-agent exclusivity test blocks with generic mutual-exclusion conformance tests.
+- Convert `test_platform_info.py` from test classes to parametrized top-level functions.
+
 ## [`13.2.0` (2026-07-15)](https://github.com/kdeldycke/extra-platforms/compare/v13.1.0...v13.2.0)
 
 - Add PikaOS platform detection: `PIKAOS` / `is_pikaos()` (via `ID=pika` in `os-release`). Closes [#610](https://github.com/kdeldycke/extra-platforms/issues/610)

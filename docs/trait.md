@@ -108,7 +108,8 @@ frozenset({
    Group(id='x86', name='x86 family'),
    Group(id='all_architectures', name='All architectures'),
    Group(id='arch_64_bit', name='64-bit architectures'),
-   Group(id='all_traits', name='Any architectures, platforms and CI systems')})
+   Group(id='little_endian', name='Little-endian architectures'),
+   Group(id='all_traits', name='All architectures, platforms, shells, terminals, CI systems, and agents')})
 ```
 
 ### Additional information

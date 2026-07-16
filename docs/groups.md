@@ -5,7 +5,7 @@
 
 ## Group usage
 
-A {class}`~Group` is a collection of {class}`~Trait` instances (platforms, architectures, or CI systems). Groups support membership testing, iteration, and set-like operations.
+A {class}`~Group` is a collection of {class}`~Trait` instances (architectures, platforms, shells, terminals, CI systems, or agents). Groups support membership testing, iteration, and set-like operations.
 
 ### Membership testing
 
@@ -17,7 +17,7 @@ Check whether the current environment matches any member of a group:
 True
 ```
 
-Test if a specific trait belongs to a group. You can you both {class}`~Trait` instances and their string IDs:
+Test if a specific trait belongs to a group. You can use both {class}`~Trait` instances and their string IDs:
 
 ```pycon
 >>> from extra_platforms import LINUX, UBUNTU, MACOS
@@ -127,10 +127,10 @@ All recognized groups and their properties:
 
 | Icon | Symbol                      | Description                                                             | [Detection](detection.md)    | {attr}`Canonical <Group.canonical>` |
 | :--: | :-------------------------- | :---------------------------------------------------------------------- | :--------------------------- | :---------------------------------: |
-|  🧠  | {data}`~ALL_AGENTS`         | AI coding agents                                                        | {func}`~is_any_agent`        |                  ⬥                  |
+|  🧠  | {data}`~ALL_AGENTS`         | All AI coding agents                                                    | {func}`~is_any_agent`        |                  ⬥                  |
 |  🏛️  | {data}`~ALL_ARCHITECTURES`  | All architectures                                                       | {func}`~is_any_architecture` |                                     |
 |  📱  | {data}`~ALL_ARM`            | ARM architectures                                                       | {func}`~is_any_arm`          |                  ⬥                  |
-|  ♺   | {data}`~ALL_CI`             | CI systems                                                              | {func}`~is_any_ci`           |                  ⬥                  |
+|  ♺   | {data}`~ALL_CI`             | All CI systems                                                          | {func}`~is_any_ci`           |                  ⬥                  |
 |  🔲  | {data}`~ALL_MIPS`           | MIPS architectures                                                      | {func}`~is_any_mips`         |                  ⬥                  |
 |  ⚙️  | {data}`~ALL_PLATFORMS`      | All platforms                                                           | {func}`~is_any_platform`     |                                     |
 |  🐚  | {data}`~ALL_SHELLS`         | All shells                                                              | {func}`~is_any_shell`        |                                     |
@@ -230,6 +230,7 @@ with canonical groups.
 ## Group collections
 
 ```{eval-rst}
+.. autodata:: extra_platforms.group_data.ALL_AGENT_GROUPS
 .. autodata:: extra_platforms.group_data.ALL_ARCHITECTURE_GROUPS
 .. autodata:: extra_platforms.group_data.ALL_CI_GROUPS
 .. autodata:: extra_platforms.group_data.ALL_GROUPS
@@ -293,7 +294,7 @@ with canonical groups.
 
 ```{eval-rst}
 .. automodule:: extra_platforms.group_data
-   :exclude-members: ALL_AGENTS, ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, ALL_ARM, ALL_CI, ALL_CI_GROUPS, ALL_GROUPS, ALL_GROUP_IDS, ALL_IDS, ALL_MIPS, ALL_PLATFORMS, ALL_PLATFORM_GROUPS, ALL_SHELLS, ALL_SHELL_GROUPS, ALL_SPARC, ALL_TERMINALS, ALL_TERMINAL_GROUPS, ALL_TRAITS, ALL_TRAIT_IDS, ALL_WINDOWS, ARCH_32_BIT, ARCH_64_BIT, BIG_ENDIAN, BOURNE_SHELLS, BSD, BSD_WITHOUT_MACOS, C_SHELLS, EXTRA_GROUPS, GPU_TERMINALS, IBM_MAINFRAME, LINUX, LINUX_LAYERS, LINUX_LIKE, LITTLE_ENDIAN, LOONGARCH, MULTIPLEXERS, NATIVE_TERMINALS, NON_OVERLAPPING_GROUPS, OTHER_POSIX, OTHER_SHELLS, POWERPC, RISCV, SYSTEM_V, UNIX, UNIX_LAYERS, UNIX_WITHOUT_MACOS, UNKNOWN, WEBASSEMBLY, WEB_TERMINALS, WINDOWS_SHELLS, X86
+   :exclude-members: ALL_AGENTS, ALL_AGENT_GROUPS, ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, ALL_ARM, ALL_CI, ALL_CI_GROUPS, ALL_GROUPS, ALL_GROUP_IDS, ALL_IDS, ALL_MIPS, ALL_PLATFORMS, ALL_PLATFORM_GROUPS, ALL_SHELLS, ALL_SHELL_GROUPS, ALL_SPARC, ALL_TERMINALS, ALL_TERMINAL_GROUPS, ALL_TRAITS, ALL_TRAIT_IDS, ALL_WINDOWS, ARCH_32_BIT, ARCH_64_BIT, BIG_ENDIAN, BOURNE_SHELLS, BSD, BSD_WITHOUT_MACOS, C_SHELLS, EXTRA_GROUPS, GPU_TERMINALS, IBM_MAINFRAME, LINUX, LINUX_LAYERS, LINUX_LIKE, LITTLE_ENDIAN, LOONGARCH, MULTIPLEXERS, NATIVE_TERMINALS, NON_OVERLAPPING_GROUPS, OTHER_POSIX, OTHER_SHELLS, POWERPC, RISCV, SYSTEM_V, UNIX, UNIX_LAYERS, UNIX_WITHOUT_MACOS, UNKNOWN, WEBASSEMBLY, WEB_TERMINALS, WINDOWS_SHELLS, X86
 ```
 
 <!-- group-data-module-automodule-end -->

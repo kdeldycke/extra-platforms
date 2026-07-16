@@ -376,9 +376,9 @@ default.extend-ignore-identifiers-re = [
   #     ╰╴       ━━━━
   "PASE",
   # error: `Sur` should be `Sure`
-  #    ╭▸ ./extra_platforms/platform.py:57:24
+  #    ╭▸ ./extra_platforms/platform_info.py
   #    │
-  # 57 │     ("11", None): "Big Sur",
+  #    │     ("11", None): "Big Sur",
   #    ╰╴                       ━━━
   "Sur",
   # error: `certifi` should be `certify`, `certifies`, `certified`

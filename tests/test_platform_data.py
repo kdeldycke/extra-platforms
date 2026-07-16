@@ -21,6 +21,7 @@ from extra_platforms import (
     ALL_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
+    CHROMEOS,
     LINUX,
     LINUX_LAYERS,
     LINUX_LIKE,
@@ -30,68 +31,13 @@ from extra_platforms import (
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
     UNKNOWN_PLATFORM,
+    WSL1,
+    WSL2,
     current_platform,
-    is_aix,
-    is_altlinux,
-    is_amzn,
-    is_android,
     is_any_platform,
     is_any_trait,
-    is_arch,
-    is_buildroot,
-    is_cachyos,
-    is_centos,
-    is_chromeos,
-    is_clearlinux,
-    is_cloudlinux,
-    is_cygwin,
-    is_debian,
-    is_exherbo,
-    is_fedora,
-    is_freebsd,
-    is_gentoo,
-    is_guix,
-    is_hurd,
-    is_ibm_powerkvm,
-    is_kvmibm,
-    is_linuxmint,
-    is_macos,
-    is_mageia,
-    is_mandriva,
-    is_midnightbsd,
-    is_netbsd,
-    is_nixos,
-    is_nobara,
-    is_openbsd,
-    is_opensuse,
-    is_oracle,
-    is_os400,
-    is_parallels,
-    is_pidora,
-    is_pikaos,
-    is_raspbian,
-    is_rhel,
-    is_rocky,
-    is_scientific,
-    is_slackware,
-    is_sles,
-    is_slitaz,
-    is_solaris,
-    is_sourcemage,
-    is_sunos,
-    is_tumbleweed,
-    is_tuxedo,
-    is_ubuntu,
-    is_ultramarine,
     is_unknown_platform,
-    is_void,
-    is_windows,
-    is_wsl1,
-    is_wsl2,
-    is_xenserver,
 )
-
-from .test_ci_data import github_runner_os
 
 
 def test_platform_detection():
@@ -101,189 +47,32 @@ def test_platform_detection():
     assert not is_unknown_platform()
     assert current_platform() is not UNKNOWN_PLATFORM
 
-    if is_ubuntu():
-        assert not is_aix()
-        assert not is_altlinux()
-        assert not is_amzn()
-        assert not is_android()
-        assert not is_arch()
-        assert not is_buildroot()
-        assert not is_cachyos()
-        assert not is_centos()
-        assert not is_chromeos()
-        assert not is_clearlinux()
-        assert not is_cloudlinux()
-        assert not is_cygwin()
-        assert not is_debian()
-        assert not is_exherbo()
-        assert not is_fedora()
-        assert not is_freebsd()
-        assert not is_gentoo()
-        assert not is_guix()
-        assert not is_hurd()
-        assert not is_ibm_powerkvm()
-        assert not is_kvmibm()
-        assert not is_linuxmint()
-        assert not is_macos()
-        assert not is_mageia()
-        assert not is_mandriva()
-        assert not is_midnightbsd()
-        assert not is_netbsd()
-        assert not is_nixos()
-        assert not is_nobara()
-        assert not is_openbsd()
-        assert not is_opensuse()
-        assert not is_oracle()
-        assert not is_os400()
-        assert not is_parallels()
-        assert not is_pidora()
-        assert not is_pikaos()
-        assert not is_raspbian()
-        assert not is_rhel()
-        assert not is_rocky()
-        assert not is_scientific()
-        assert not is_slackware()
-        assert not is_sles()
-        assert not is_slitaz()
-        assert not is_solaris()
-        assert not is_sourcemage()
-        assert not is_sunos()
-        assert not is_tumbleweed()
-        assert not is_tuxedo()
-        assert is_ubuntu()
-        assert not is_ultramarine()
-        assert not is_void()
-        assert not is_windows()
-        assert not is_wsl1()
-        # ubuntu-slim is a GitHub actions image running on WSL2.
-        if github_runner_os() == "ubuntu-slim":
-            assert is_wsl2()
-        else:
-            assert not is_wsl2()
-        assert not is_xenserver()
 
-    if is_macos():
-        assert not is_aix()
-        assert not is_altlinux()
-        assert not is_amzn()
-        assert not is_android()
-        assert not is_arch()
-        assert not is_buildroot()
-        assert not is_cachyos()
-        assert not is_centos()
-        assert not is_chromeos()
-        assert not is_clearlinux()
-        assert not is_cloudlinux()
-        assert not is_cygwin()
-        assert not is_debian()
-        assert not is_exherbo()
-        assert not is_fedora()
-        assert not is_freebsd()
-        assert not is_gentoo()
-        assert not is_guix()
-        assert not is_hurd()
-        assert not is_ibm_powerkvm()
-        assert not is_kvmibm()
-        assert not is_linuxmint()
-        assert is_macos()
-        assert not is_mageia()
-        assert not is_mandriva()
-        assert not is_midnightbsd()
-        assert not is_netbsd()
-        assert not is_nixos()
-        assert not is_nobara()
-        assert not is_openbsd()
-        assert not is_opensuse()
-        assert not is_oracle()
-        assert not is_os400()
-        assert not is_parallels()
-        assert not is_pidora()
-        assert not is_pikaos()
-        assert not is_raspbian()
-        assert not is_rhel()
-        assert not is_rocky()
-        assert not is_scientific()
-        assert not is_slackware()
-        assert not is_sles()
-        assert not is_slitaz()
-        assert not is_solaris()
-        assert not is_sourcemage()
-        assert not is_sunos()
-        assert not is_tumbleweed()
-        assert not is_tuxedo()
-        assert not is_ubuntu()
-        assert not is_ultramarine()
-        assert not is_void()
-        assert not is_windows()
-        assert not is_wsl1()
-        assert not is_wsl2()
-        assert not is_xenserver()
+def test_platform_mutual_exclusion():
+    """A single platform matches, apart from documented compatibility layers.
 
-    if is_windows():
-        assert not is_aix()
-        assert not is_altlinux()
-        assert not is_amzn()
-        assert not is_android()
-        assert not is_arch()
-        assert not is_buildroot()
-        assert not is_cachyos()
-        assert not is_centos()
-        assert not is_chromeos()
-        assert not is_clearlinux()
-        assert not is_cloudlinux()
-        assert not is_cygwin()
-        assert not is_debian()
-        assert not is_exherbo()
-        assert not is_fedora()
-        assert not is_freebsd()
-        assert not is_gentoo()
-        assert not is_guix()
-        assert not is_hurd()
-        assert not is_ibm_powerkvm()
-        assert not is_kvmibm()
-        assert not is_linuxmint()
-        assert not is_macos()
-        assert not is_mageia()
-        assert not is_mandriva()
-        assert not is_midnightbsd()
-        assert not is_netbsd()
-        assert not is_nixos()
-        assert not is_nobara()
-        assert not is_openbsd()
-        assert not is_opensuse()
-        assert not is_oracle()
-        assert not is_os400()
-        assert not is_parallels()
-        assert not is_pidora()
-        assert not is_pikaos()
-        assert not is_raspbian()
-        assert not is_rhel()
-        assert not is_rocky()
-        assert not is_scientific()
-        assert not is_slackware()
-        assert not is_sles()
-        assert not is_slitaz()
-        assert not is_solaris()
-        assert not is_sourcemage()
-        assert not is_sunos()
-        assert not is_tumbleweed()
-        assert not is_tuxedo()
-        assert not is_ubuntu()
-        assert not is_ultramarine()
-        assert not is_void()
-        assert is_windows()
-        assert not is_wsl1()
-        assert not is_wsl2()
-        assert not is_xenserver()
+    WSL and ChromeOS legitimately match alongside the Linux distribution they
+    host, as documented in `current_platform()`.
+    """
+    matching = {platform for platform in ALL_PLATFORMS if platform.current}
+    layers = matching & {CHROMEOS, WSL1, WSL2}
+    hosts = matching - layers
+    assert len(hosts) <= 1
+    # A detected layer either stands alone or hosts a Linux distribution.
+    if layers:
+        assert all(host in LINUX for host in hosts)
 
 
 def test_platform_logical_grouping():
-    assert not ALL_PLATFORMS.canonical
+    """Check set relationships specific to platform groups.
 
+    Family partitions and canonical flags are enforced generically in
+    ``test_trait_data.py`` and ``test_group_data.py``. The relationships below
+    involve the non-canonical UNIX, LINUX_LIKE and *_WITHOUT_MACOS groups, so
+    they are only checked here.
+    """
     # All platforms are divided into Windows and Unix at the highest level.
     assert ALL_PLATFORMS.fullyintersects(ALL_WINDOWS | UNIX)
-    assert ALL_WINDOWS.canonical
-    assert not UNIX.canonical
 
     # Every group is a subset of UNIX except Windows and ALL_PLATFORMS.
     for group in ALL_PLATFORM_GROUPS:
@@ -298,28 +87,19 @@ def test_platform_logical_grouping():
     assert UNIX.fullyintersects(
         BSD | LINUX | LINUX_LAYERS | SYSTEM_V | UNIX_LAYERS | OTHER_POSIX
     )
-    assert BSD.canonical
-    assert LINUX.canonical
-    assert LINUX_LAYERS.canonical
-    assert SYSTEM_V.canonical
-    assert UNIX_LAYERS.canonical
-    assert OTHER_POSIX.canonical
 
     # LINUX_LIKE is the union of LINUX and LINUX_LAYERS.
     assert LINUX.issubset(LINUX_LIKE)
     assert LINUX_LAYERS.issubset(LINUX_LIKE)
     assert LINUX_LIKE.issuperset(LINUX)
     assert LINUX_LIKE.issuperset(LINUX_LAYERS)
-    assert not LINUX_LIKE.canonical
 
     # Relationships specific to UNIX_WITHOUT_MACOS.
     assert UNIX_WITHOUT_MACOS.issubset(UNIX)
     assert UNIX.issuperset(UNIX_WITHOUT_MACOS)
-    assert not UNIX_WITHOUT_MACOS.canonical
 
     # Relationships specific to BSD_WITHOUT_MACOS.
     assert BSD_WITHOUT_MACOS.issubset(UNIX)
     assert BSD_WITHOUT_MACOS.issubset(BSD)
     assert UNIX.issuperset(BSD_WITHOUT_MACOS)
     assert BSD.issuperset(BSD_WITHOUT_MACOS)
-    assert not BSD_WITHOUT_MACOS.canonical

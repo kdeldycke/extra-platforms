@@ -541,3 +541,6 @@ $RECYCLE.BIN/
 
 # Sphinx linkcheck output.
 docs/_linkcheck/
+
+# Sphinx local HTML build output (see claude.md docs build command).
+docs/html/

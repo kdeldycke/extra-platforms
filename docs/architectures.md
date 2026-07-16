@@ -24,7 +24,7 @@ Architecture(id='x86_64', name='x86-64 (AMD64)')
 >>> X86_64.current
 True
 >>> X86_64.info()
-{'id': 'x86_64', 'name': 'x86-64 (AMD64)', 'icon': '💻', 'url': 'https://en.wikipedia.org/wiki/X86-64', 'current': True, 'machine': None, 'processor': None}
+{'id': 'x86_64', 'name': 'x86-64 (AMD64)', 'icon': '🖥️', 'url': 'https://en.wikipedia.org/wiki/X86-64', 'current': True, 'machine': None, 'processor': None}
 ```
 
 To check if the current architecture matches a specific architecture, use the corresponding [detection function](detection.md):

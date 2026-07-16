@@ -35,6 +35,7 @@ from extra_platforms import (
     invalidate_caches,
     is_aarch64,
     is_arm,
+    is_armv7l,
     is_github_ci,
     is_gitlab_ci,
     is_windows,
@@ -176,18 +177,21 @@ def test_detection_heuristics_sorting():
         )
 
 
-def test_is_arm_depends_on_arm_variants():
-    """Test that is_arm() correctly calls ARM variant detection functions."""
-    # Clear caches to ensure fresh evaluation.
+def test_is_arm_depends_on_arm_variants(monkeypatch):
+    """Test that is_arm() is a fallback excluded by specific ARM variants."""
+    # A machine claimed by a specific variant is not generic ARM.
     invalidate_caches()
+    monkeypatch.setattr("platform.machine", lambda: "armv7l")
+    assert is_armv7l()
+    assert not is_arm()
 
-    # Call is_arm() to ensure it internally calls the ARM variant functions.
-    result = is_arm()
+    # An ARM machine unclaimed by any specific variant is generic ARM.
+    invalidate_caches()
+    monkeypatch.setattr("platform.machine", lambda: "armv4tl")
+    assert not is_armv7l()
+    assert is_arm()
 
-    # We can't easily test the internal calls without mocking,
-    # but we can verify the function returns a boolean.
-    assert isinstance(result, bool)
-
+    # Clear cached results computed from the mocked machine value.
     invalidate_caches()
 
 

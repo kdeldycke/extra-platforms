@@ -51,7 +51,7 @@ The default output prints each detected trait with its metadata, followed by sum
 
 ```{code-block} shell-session
 $ extra-platforms
-extra-platforms 13.0.1
+extra-platforms 13.2.0
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]────────────
             id: aarch64
@@ -64,7 +64,7 @@ extra-platforms 13.0.1
         symbol: AARCH64
      detection: is_aarch64()
         pytest: @skip_aarch64, @unless_aarch64
-        groups: ALL_ARCHITECTURES, ALL_ARM, ARCH_64_BIT, LITTLE_ENDIAN
+        groups: ALL_ARCHITECTURES, ALL_ARM, ALL_TRAITS, ARCH_64_BIT, LITTLE_ENDIAN
 
 ── Platform ── 🍎 macOS ──[MACOS]────────────────────────────
             id: macos
@@ -81,7 +81,7 @@ $ extra-platforms --json
 
 ```{code-block} json
 {
-  "version": "13.0.1",
+  "version": "13.2.0",
   "architecture": {
     "id": "aarch64",
     "name": "ARM64 (AArch64)",
@@ -93,7 +93,7 @@ $ extra-platforms --json
     "aliases": ["arm64"],
     "symbol": "AARCH64",
     "detection": "is_aarch64",
-    "groups": ["ALL_ARCHITECTURES", "ALL_ARM", "ARCH_64_BIT", "LITTLE_ENDIAN"]
+    "groups": ["ALL_ARCHITECTURES", "ALL_ARM", "ALL_TRAITS", "ARCH_64_BIT", "LITTLE_ENDIAN"]
   },
   "platform": { "..." : "..." },
   "shell": { "..." : "..." },

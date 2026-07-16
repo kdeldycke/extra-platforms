@@ -18,7 +18,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
-from functools import cached_property
+from functools import cache, cached_property
 from types import MappingProxyType
 from typing import TypeVar, cast
 
@@ -34,6 +34,23 @@ _T = TypeVar("_T")
 
 
 _MembersMapping = MappingProxyType[str, Trait]
+
+
+def _all_group_suffix_to_type_id() -> dict[str, str]:
+    """Map ``ALL_*`` group ID suffixes to their trait type IDs.
+
+    Derived from {class}`~extra_platforms.Trait` and its subclasses, so an
+    ``all_architectures`` group resolves to the singular ``architecture`` type
+    ID (and likewise ``all_ci`` to ``ci``, ``all_traits`` to ``trait``, etc.).
+
+    Rebuilt on each call rather than cached, so {class}`~extra_platforms.Trait`
+    subclasses defined outside this package are picked up by the groups
+    created after them.
+    """
+    return {
+        cls.all_group.lower()[4:]: cls.type_id
+        for cls in (Trait, *Trait.__subclasses__())
+    }
 
 
 def _flatten(items: Iterable) -> Iterator:
@@ -57,7 +74,7 @@ def extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
     `None` values and empty iterables are silently ignored.
 
     ```{caution}
-    Can returns duplicates.
+    Can return duplicates.
     ```
     """
     for item in _flatten(other):
@@ -131,15 +148,9 @@ class Group(_Identifiable):
         # type_id.
         if self.id.startswith("all_"):
             suffix = self.id[4:]
-            # Map group suffix to singular type_id using Trait and its subclasses.
-            # e.g., "architectures" → "architecture", "platforms" → "platform",
-            #       "ci" → "ci", "traits" → "trait"
-            suffix_to_type_id = {
-                cls.all_group.lower()[4:]: cls.type_id
-                for cls in (Trait, *Trait.__subclasses__())
-            }
-            if suffix in suffix_to_type_id:
-                suffix = suffix_to_type_id[suffix]
+            # Map the group suffix to a singular type_id, e.g. "architectures"
+            # → "architecture", "platforms" → "platform", "traits" → "trait".
+            suffix = _all_group_suffix_to_type_id().get(suffix, suffix)
             object.__setattr__(self, "detection_func_id", f"is_any_{suffix}")
             object.__setattr__(self, "unless_decorator_id", f"unless_any_{suffix}")
 
@@ -316,17 +327,14 @@ class Group(_Identifiable):
         the group and all others.
 
         ```{caution}
-        The new {class}`~extra_platforms.Group` will inherits the metadata
-        of the first one. All other groups' metadata will be ignored.
+        The new {class}`~extra_platforms.Group` inherits the metadata of the
+        first one. All other groups' metadata is ignored.
         ```
         """
-        return Group(
-            self.id,
-            self.name,
-            self.icon,
-            set(self._members.values()).union(
+        return self.copy(
+            members=set(self._members.values()).union(
                 *(extract_members(other) for other in others)
-            ),
+            )
         )
 
     __or__ = union
@@ -337,17 +345,14 @@ class Group(_Identifiable):
         common to the group and all others.
 
         ```{caution}
-        The new {class}`~extra_platforms.Group` will inherits the metadata
-        of the first one. All other groups' metadata will be ignored.
+        The new {class}`~extra_platforms.Group` inherits the metadata of the
+        first one. All other groups' metadata is ignored.
         ```
         """
-        return Group(
-            self.id,
-            self.name,
-            self.icon,
-            set(self._members.values()).intersection(
+        return self.copy(
+            members=set(self._members.values()).intersection(
                 *(extract_members(other) for other in others)
-            ),
+            )
         )
 
     __and__ = intersection
@@ -358,17 +363,14 @@ class Group(_Identifiable):
         group that are not in the others.
 
         ```{caution}
-        The new {class}`~extra_platforms.Group` will inherits the metadata
-        of the first one. All other groups' metadata will be ignored.
+        The new {class}`~extra_platforms.Group` inherits the metadata of the
+        first one. All other groups' metadata is ignored.
         ```
         """
-        return Group(
-            self.id,
-            self.name,
-            self.icon,
-            set(self._members.values()).difference(
+        return self.copy(
+            members=set(self._members.values()).difference(
                 *(extract_members(other) for other in others)
-            ),
+            )
         )
 
     __sub__ = difference
@@ -379,15 +381,14 @@ class Group(_Identifiable):
         either the group or other but not both.
 
         ```{caution}
-        The new {class}`~extra_platforms.Group` will inherits the metadata
-        of the first one. All other groups' metadata will be ignored.
+        The new {class}`~extra_platforms.Group` inherits the metadata of the
+        first one. All other groups' metadata is ignored.
         ```
         """
-        return Group(
-            self.id,
-            self.name,
-            self.icon,
-            set(self._members.values()).symmetric_difference(extract_members(other)),
+        return self.copy(
+            members=set(self._members.values()).symmetric_difference(
+                extract_members(other)
+            )
         )
 
     __xor__ = symmetric_difference
@@ -419,18 +420,12 @@ class Group(_Identifiable):
         :raises ValueError: If the trait ID is not recognized.
         """
         if isinstance(member, str):
-            traits = traits_from_ids(member)
-            member = traits[0]
+            member = traits_from_ids(member)[0]
 
         if member in self:
             return self.copy()
 
-        return Group(
-            self.id,
-            self.name,
-            self.icon,
-            set(self._members.values()) | {member},
-        )
+        return self.copy(members=set(self._members.values()) | {member})
 
     def remove(self, member: Trait | str) -> Group:
         """Return a new {class}`~extra_platforms.Group` with the specified
@@ -449,15 +444,8 @@ class Group(_Identifiable):
         if member_id not in self._members:
             raise KeyError(f"Trait '{member_id}' is not in the group")
 
-        new_members = {
-            tid: trait for tid, trait in self._members.items() if tid != member_id
-        }
-
-        return Group(
-            self.id,
-            self.name,
-            self.icon,
-            tuple(new_members.values()),
+        return self.copy(
+            members=tuple(t for tid, t in self._members.items() if tid != member_id)
         )
 
     def discard(self, member: Trait | str) -> Group:
@@ -472,21 +460,10 @@ class Group(_Identifiable):
         :returns: A new {class}`~extra_platforms.Group` instance with the
             trait removed, or a copy if not present.
         """
-        member_id = member.id if isinstance(member, Trait) else member
-
-        if member_id not in self._members:
+        try:
+            return self.remove(member)
+        except KeyError:
             return self.copy()
-
-        new_members = {
-            tid: trait for tid, trait in self._members.items() if tid != member_id
-        }
-
-        return Group(
-            self.id,
-            self.name,
-            self.icon,
-            tuple(new_members.values()),
-        )
 
     def pop(self, member_id: str | None = None) -> tuple[Trait, Group]:
         """Remove and return a trait from the group.
@@ -507,22 +484,9 @@ class Group(_Identifiable):
             # Pop arbitrary (first) member.
             member_id = next(iter(self._members))
 
-        if member_id not in self._members:
-            raise KeyError(f"Trait '{member_id}' is not in the group")
-
-        popped_trait = self._members[member_id]
-        new_members = {
-            tid: trait for tid, trait in self._members.items() if tid != member_id
-        }
-
-        new_group = Group(
-            self.id,
-            self.name,
-            self.icon,
-            tuple(new_members.values()),
-        )
-
-        return popped_trait, new_group
+        # Raises KeyError if the trait is not in the group.
+        new_group = self.remove(member_id)
+        return self._members[member_id], new_group
 
     def clear(self) -> Group:
         """Return a new empty {class}`~extra_platforms.Group` with the same metadata.
@@ -530,12 +494,7 @@ class Group(_Identifiable):
         :returns: A new {class}`~extra_platforms.Group` instance with no
             members but same id, name, and icon.
         """
-        return Group(
-            self.id,
-            self.name,
-            self.icon,
-            (),
-        )
+        return self.copy(members=())
 
 
 # =============================================================================
@@ -554,6 +513,19 @@ def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
     return tuple(dict.fromkeys(items))
 
 
+@cache
+def _group_lookup() -> dict[str, Group]:
+    """Map group IDs to their {class}`~extra_platforms.Group` instances.
+
+    Cached for O(1) lookups: the set of predefined groups is fixed once
+    ``group_data`` is imported.
+    """
+    # Avoid circular import.
+    from .group_data import ALL_GROUPS
+
+    return {group.id: group for group in ALL_GROUPS}
+
+
 def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
     """Returns a deduplicated {class}`tuple` of traits matching the provided IDs.
 
@@ -566,7 +538,7 @@ def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
     Order of the returned traits matches the order of the provided IDs.
 
     ```{tip}
-    If you want to reduce the returned set and removes as much overlaps as
+    If you want to reduce the returned set and remove as much overlap as
     possible, you can use the {func}`~extra_platforms.reduce` function on the results.
     ```
     """
@@ -602,12 +574,12 @@ def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
     the provided IDs.
 
     ```{tip}
-    If you want to reduce the returned set and removes as much overlaps as
+    If you want to reduce the returned set and remove as much overlap as
     possible, you can use the {func}`~extra_platforms.reduce` function on the results.
     ```
     """
     # Avoid circular import.
-    from .group_data import ALL_GROUP_IDS, ALL_GROUPS
+    from .group_data import ALL_GROUP_IDS
 
     ids = _unique(s.lower() for s in group_ids)
     unrecognized_ids = set(ids) - ALL_GROUP_IDS
@@ -615,9 +587,7 @@ def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
         raise ValueError(
             "Unrecognized group IDs: " + ", ".join(sorted(unrecognized_ids))
         )
-    # Build lookup dict for O(1) access instead of O(n) iteration per ID.
-    group_by_id = {g.id: g for g in ALL_GROUPS}
-    return _unique(group_by_id[gid] for gid in ids)
+    return _unique(_group_lookup()[gid] for gid in ids)
 
 
 def reduce(

@@ -16,7 +16,7 @@
 
 Extra Platforms detects the runtime architecture, operating system (including Linux distribution), shell, terminal, CI environment & AI coding agents, and exposes rich, cacheable metadata (version, codename, icon, canonical URL). It also groups them into reusable families.
 
-- Accurate detection of architecture, OS/distribution, shell, terminal, and CI systems using lightweight, cacheable heuristics.
+- Accurate detection of architecture, OS/distribution, shell, terminal, CI systems, and AI coding agents using lightweight, cacheable heuristics.
 - Rich metadata for platforms: version, codename, icon, canonical URL, and "like" relationships.
 - Grouping and API primitives: predefined families, `is_*()` predicates, `current_*()` accessors, and `Group` membership helpers.
 - Testing helpers: Pytest decorators and markers such as `@skip_<id>` and `@unless_<id>` for concise platform-aware tests.
@@ -29,7 +29,7 @@ Quickly inspect your current environment without installing anything, thanks to 
 
 ```shell-session
 $ uvx extra-platforms
-extra-platforms 13.0.1
+extra-platforms 13.2.0
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]────────────
             id: aarch64
@@ -72,7 +72,7 @@ $ uvx --with extra-platforms python
 ```pycon
 >>> import extra_platforms
 >>> extra_platforms.__version__
-'13.0.1'
+'13.2.0'
 ```
 
 ## Examples

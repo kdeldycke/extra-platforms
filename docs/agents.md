@@ -24,7 +24,7 @@ Agent(id='claude_code', name='Claude Code')
 >>> CLAUDE_CODE.current
 False
 >>> CLAUDE_CODE.info()
-{'id': 'claude_code', 'name': 'Claude Code', 'icon': '✴️', 'url': 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview', 'current': False}
+{'id': 'claude_code', 'name': 'Claude Code', 'icon': '✴️', 'url': 'https://claude.ai/code', 'current': False}
 ```
 
 To check if the current environment is running in a specific agent, use the corresponding [detection function](detection.md):
@@ -68,9 +68,9 @@ There is only one group defined for agents: `ALL_AGENTS`, which includes all rec
 
 <!-- agent-groups-table-start -->
 
-| Icon | Symbol              | Description | [Detection](detection.md) | {attr}`Canonical <Group.canonical>` |
-| :--: | :------------------ | :---------- | :------------------------ | :---------------------------------: |
-|  🧠  | {data}`~ALL_AGENTS` | Agents      | {func}`~is_any_agent`     |                  ⬥                  |
+| Icon | Symbol              | Description          | [Detection](detection.md) | {attr}`Canonical <Group.canonical>` |
+| :--: | :------------------ | :------------------- | :------------------------ | :---------------------------------: |
+|  🧠  | {data}`~ALL_AGENTS` | All AI coding agents | {func}`~is_any_agent`     |                  ⬥                  |
 
 <!-- agent-groups-table-end -->
 
@@ -78,7 +78,7 @@ There is only one group defined for agents: `ALL_AGENTS`, which includes all rec
 
 ```mermaid
 ---
-config: {"sankey": {"showValues": false, "width": 800, "height": 400}}
+config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 

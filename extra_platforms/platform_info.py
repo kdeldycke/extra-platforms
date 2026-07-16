@@ -221,6 +221,20 @@ def get_macos_codename(major: str | None = None, minor: str | None = None) -> st
     return matches.pop()
 
 
+def _version_parts(release: str) -> dict[str, str | None]:
+    """Split a dotted release string into `major`, `minor` and `build_number`.
+
+    Missing components are set to `None` (like a bare ``"14"`` release, which
+    has no minor version nor build number).
+    """
+    parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
+    return {
+        "major": parts.get("major"),
+        "minor": parts.get("minor"),
+        "build_number": parts.get("build_number"),
+    }
+
+
 def macos_info() -> dict[str, Any]:
     """Fetch detailed macOS version information.
 
@@ -236,18 +250,11 @@ def macos_info() -> dict[str, Any]:
         codename.
     """
     release, _versioninfo, _machine = platform.mac_ver()
-    parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
-    major = parts.get("major")
-    minor = parts.get("minor")
-    build_number = parts.get("build_number")
+    version_parts = _version_parts(release)
     return {
         "version": release,
-        "version_parts": {
-            "major": major,
-            "minor": minor,
-            "build_number": build_number,
-        },
-        "codename": get_macos_codename(major, minor),
+        "version_parts": version_parts,
+        "codename": get_macos_codename(version_parts["major"], version_parts["minor"]),
     }
 
 
@@ -269,16 +276,8 @@ def windows_info() -> dict[str, Any]:
     ```
     """
     release, _version, _csd, _ptype = platform.win32_ver()
-    parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
-    major = parts.get("major")
-    minor = parts.get("minor")
-    build_number = parts.get("build_number")
     return {
         "version": release,
-        "version_parts": {
-            "major": major,
-            "minor": minor,
-            "build_number": build_number,
-        },
+        "version_parts": _version_parts(release),
         "codename": f"{release} {platform.win32_edition()}",
     }

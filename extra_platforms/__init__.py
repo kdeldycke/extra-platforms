@@ -415,17 +415,16 @@ Pytest optional.
 __version__ = "13.2.1.dev0"
 
 
-def _initialize_group_detection_functions() -> list[str]:
+def _initialize_group_detection_functions() -> None:
     """Initialize and register all group detection functions.
 
     Generates the appropriate test function for each group and registers it globally.
     Since traits and groups have unique, non-overlapping IDs, we can create a
     `is_<group>()` function for each group.
 
-    Returns a list of all registered function IDs for cache invalidation purposes.
+    These are the equivalent for groups of the `is_<trait>()` functions defined
+    in `detection.py`, and are registered in the same detection registry.
     """
-    func_ids = []
-
     for group in ALL_GROUPS:
         func_id = group.detection_func_id
 
@@ -441,26 +440,15 @@ def _initialize_group_detection_functions() -> list[str]:
             f"found in the {{data}}`~{group.symbol_id}` group."
         )
 
-        assert func_id not in locals(), (
-            f"Function ID {func_id} already defined locally."
+        assert func_id not in globals(), (
+            f"Function ID {func_id} already registered at the package root."
         )
-        func_ids.append(func_id)
         cached_func = cache(group_membership_check)
         globals()[func_id] = cached_func
         detection._detection_registry[func_id] = cached_func
 
-    return func_ids
 
-
-_group_detection_func_ids = _initialize_group_detection_functions()
-"""Generates `is_<group>()` function for each group.
-
-These are the equivalent for groups of `is_<trait>()` functions defined in
-`detection.py`.
-
-These functions return a boolean value indicating the membership of the current
-system into that group.
-"""
+_initialize_group_detection_functions()
 
 # Declare type stubs for dynamically generated group detection functions so that
 # mypy and other static type checkers can see them. At runtime, the actual
@@ -532,25 +520,21 @@ def invalidate_caches():
             # Use object.__delattr__ to bypass frozen dataclass restriction.
             object.__delattr__(member, "current")
 
-    # Invalidate cached trait detection functions.
+    # Invalidate every cached callable of the detection module: trait
+    # heuristics, current_*() resolvers, and private signal caches (like the
+    # parent process tree walk).
     for func_id in dir(detection):
         func = getattr(detection, func_id)
         if callable(func) and hasattr(func, "cache_clear"):
             func.cache_clear()
 
-    # Invalidate package-level cached functions.
-    current_architecture.cache_clear()
-    current_platform.cache_clear()
-    current_shell.cache_clear()
-    current_shell_path.cache_clear()
-    current_terminal.cache_clear()
-    current_ci.cache_clear()
-    current_agent.cache_clear()
-    current_traits.cache_clear()
-
-    # Invalidate dynamically generated group detection functions.
-    for func_id in _group_detection_func_ids:
-        globals()[func_id].cache_clear()
+    # Invalidate the group detection functions generated at the package root.
+    # Trait heuristics are also registered there, but clearing them twice is
+    # a harmless no-op.
+    for func in detection._detection_registry.values():
+        cache_clear = getattr(func, "cache_clear", None)
+        if cache_clear is not None:
+            cache_clear()
 
 
 __all__ = (

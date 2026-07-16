@@ -474,7 +474,6 @@ def test_unless_linux():
     assert not is_any_windows()
     assert is_linux()
     assert not is_macos()
-    # assert is_ubuntu()
     assert not is_windows()
 
 
@@ -523,7 +522,6 @@ def test_skip_windows():
 @unless_windows
 def test_unless_windows():
     assert is_any_platform()
-    # assert is_any_windows()
     assert not is_linux()
     assert not is_macos()
     assert not is_ubuntu()
@@ -640,7 +638,6 @@ def test_deferred_condition_invert_false():
 
 def test_deferred_condition_invert_true():
     """Test that _DeferredCondition with invert=True inverts the condition result."""
-    from extra_platforms.pytest import _DeferredCondition
 
     def true_condition():
         return True

@@ -420,12 +420,9 @@ def test_non_overlapping_groups_completeness():
 
 
 def test_canonical_group_marker():
-    """Test that canonical groups have the ⬥ marker in their documentation."""
-    for group in NON_OVERLAPPING_GROUPS:
-        # We can't directly test the markdown output, but we can verify
-        # the canonical property is True.
-        assert group.canonical is True
-
-    # Non-canonical groups should have canonical=False.
-    for group in EXTRA_GROUPS:
-        assert group.canonical is False
+    """Test that only canonical groups have the ⬥ marker in their documentation."""
+    for group in ALL_GROUPS:
+        canonical_line = next(
+            line for line in group.__doc__.splitlines() if "**Canonical**" in line
+        )
+        assert ("⬥" in canonical_line) is group.canonical

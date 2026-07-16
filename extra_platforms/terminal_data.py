@@ -17,12 +17,7 @@ from __future__ import annotations
 
 from .trait import Terminal
 
-ALACRITTY = Terminal(
-    "alacritty",
-    "Alacritty",
-    "🔳",
-    "https://alacritty.org",
-)
+ALACRITTY = Terminal("alacritty", "Alacritty", "🔳", "https://alacritty.org")
 
 APPLE_TERMINAL = Terminal(
     "apple_terminal",
@@ -31,26 +26,11 @@ APPLE_TERMINAL = Terminal(
     "https://support.apple.com/guide/terminal/welcome/mac",
 )
 
-CONTOUR = Terminal(
-    "contour",
-    "Contour",
-    "◰",
-    "https://contour-terminal.org",
-)
+CONTOUR = Terminal("contour", "Contour", "◰", "https://contour-terminal.org")
 
-FOOT = Terminal(
-    "foot",
-    "foot",
-    "🦶",
-    "https://codeberg.org/dnkl/foot",
-)
+FOOT = Terminal("foot", "foot", "🦶", "https://codeberg.org/dnkl/foot")
 
-GHOSTTY = Terminal(
-    "ghostty",
-    "Ghostty",
-    "👻",
-    "https://ghostty.org",
-)
+GHOSTTY = Terminal("ghostty", "Ghostty", "👻", "https://ghostty.org")
 
 GNOME_TERMINAL = Terminal(
     "gnome_terminal",
@@ -60,67 +40,24 @@ GNOME_TERMINAL = Terminal(
 )
 
 GNU_SCREEN = Terminal(
-    "gnu_screen",
-    "GNU Screen",
-    "📺",
-    "https://www.gnu.org/software/screen/",
+    "gnu_screen", "GNU Screen", "📺", "https://www.gnu.org/software/screen/"
 )
 
-HYPER = Terminal(
-    "hyper",
-    "Hyper",
-    "⬡",
-    "https://hyper.is",
-)
+HYPER = Terminal("hyper", "Hyper", "⬡", "https://hyper.is")
 
-ITERM2 = Terminal(
-    "iterm2",
-    "iTerm2",
-    "⬛",
-    "https://iterm2.com",
-)
+ITERM2 = Terminal("iterm2", "iTerm2", "⬛", "https://iterm2.com")
 
-KITTY = Terminal(
-    "kitty",
-    "Kitty",
-    "🐱",
-    "https://sw.kovidgoyal.net/kitty/",
-)
+KITTY = Terminal("kitty", "Kitty", "🐱", "https://sw.kovidgoyal.net/kitty/")
 
-KONSOLE = Terminal(
-    "konsole",
-    "Konsole",
-    "💎",
-    "https://konsole.kde.org",
-)
+KONSOLE = Terminal("konsole", "Konsole", "💎", "https://konsole.kde.org")
 
-RIO = Terminal(
-    "rio",
-    "Rio",
-    "🏞️",
-    "https://rioterm.com",
-)
+RIO = Terminal("rio", "Rio", "🏞️", "https://rioterm.com")
 
-TABBY = Terminal(
-    "tabby",
-    "Tabby",
-    "🐈",
-    "https://tabby.sh",
-)
+TABBY = Terminal("tabby", "Tabby", "🐈", "https://tabby.sh")
 
-TILIX = Terminal(
-    "tilix",
-    "Tilix",
-    "🔀",
-    "https://gnunn1.github.io/tilix-web/",
-)
+TILIX = Terminal("tilix", "Tilix", "🔀", "https://gnunn1.github.io/tilix-web/")
 
-TMUX = Terminal(
-    "tmux",
-    "tmux",
-    "📟",
-    "https://github.com/tmux/tmux/wiki",
-)
+TMUX = Terminal("tmux", "tmux", "📟", "https://github.com/tmux/tmux/wiki")
 
 UNKNOWN_TERMINAL = Terminal(
     "unknown_terminal",
@@ -136,30 +73,12 @@ VSCODE_TERMINAL = Terminal(
     "https://code.visualstudio.com/docs/terminal/basics",
 )
 
-WEZTERM = Terminal(
-    "wezterm",
-    "WezTerm",
-    "🔡",
-    "https://wezfurlong.org/wezterm/",
-)
+WEZTERM = Terminal("wezterm", "WezTerm", "🔡", "https://wezfurlong.org/wezterm/")
 
 WINDOWS_TERMINAL = Terminal(
-    "windows_terminal",
-    "Windows Terminal",
-    "⊡",
-    "https://github.com/microsoft/terminal",
+    "windows_terminal", "Windows Terminal", "⊡", "https://github.com/microsoft/terminal"
 )
 
-XTERM = Terminal(
-    "xterm",
-    "xterm",
-    "𝐗",
-    "https://invisible-island.net/xterm/",
-)
+XTERM = Terminal("xterm", "xterm", "𝐗", "https://invisible-island.net/xterm/")
 
-ZELLIJ = Terminal(
-    "zellij",
-    "Zellij",
-    "🪵",
-    "https://zellij.dev",
-)
+ZELLIJ = Terminal("zellij", "Zellij", "🪵", "https://zellij.dev")

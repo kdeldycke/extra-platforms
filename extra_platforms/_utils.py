@@ -43,18 +43,18 @@ def _remove_blanks(
     remove_dicts: bool = True,
     remove_str: bool = True,
 ) -> dict:
-    """Returns a copy of a dict without items whose values blanks.
+    """Returns a copy of a dict without items whose values are blank.
 
-    Are considered blanks:
+    Are considered blank:
 
     - `None` values
     - empty strings
     - empty {class}`dict`
 
-    The removal of each of these class can be skipped by setting `remove_*`
-    parameters.
+    The removal of each of these classes can be skipped by setting the
+    `remove_*` parameters.
 
-    Dictionarries are inspected recursively and their own blank values are removed.
+    Dictionaries are inspected recursively and their own blank values are removed.
     """
     result = {}
     for key, value in tree.items():

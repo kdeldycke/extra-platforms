@@ -79,4 +79,4 @@ def test_no_missing_trait_in_groups(klass):
     all_group = getattr(extra_platforms, klass.all_group)
     all_type_groups_symbol = f"ALL_{klass.type_id.upper()}_GROUPS"
     all_type_groups = getattr(extra_platforms, all_type_groups_symbol)
-    all_group.fullyintersects(all_type_groups & NON_OVERLAPPING_GROUPS)
+    assert all_group.fullyintersects(all_type_groups & NON_OVERLAPPING_GROUPS)

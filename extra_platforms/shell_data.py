@@ -18,10 +18,7 @@ from __future__ import annotations
 from .trait import Shell
 
 ASH = Shell(
-    "ash",
-    "Almquist Shell",
-    "🪶",
-    "https://en.wikipedia.org/wiki/Almquist_shell",
+    "ash", "Almquist Shell", "🪶", "https://en.wikipedia.org/wiki/Almquist_shell"
 )
 
 BASH = Shell(
@@ -39,26 +36,12 @@ CMD = Shell(
     "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cmd",
 )
 
-CSH = Shell(
-    "csh",
-    "C shell",
-    "𝐂",
-    "https://en.wikipedia.org/wiki/C_shell",
-)
+CSH = Shell("csh", "C shell", "𝐂", "https://en.wikipedia.org/wiki/C_shell")
 
-DASH = Shell(
-    "dash",
-    "Dash",
-    "💨",
-    "https://en.wikipedia.org/wiki/Almquist_shell#dash",
-)
+DASH = Shell("dash", "Dash", "💨", "https://en.wikipedia.org/wiki/Almquist_shell#dash")
 
 FISH = Shell(
-    "fish",
-    "Fish",
-    "🐟",
-    "https://fishshell.com",
-    version_env_var="FISH_VERSION",
+    "fish", "Fish", "🐟", "https://fishshell.com", version_env_var="FISH_VERSION"
 )
 
 KSH = Shell(
@@ -70,33 +53,16 @@ KSH = Shell(
 )
 
 NUSHELL = Shell(
-    "nushell",
-    "Nushell",
-    "𝜈",
-    "https://www.nushell.sh",
-    version_env_var="NU_VERSION",
+    "nushell", "Nushell", "𝜈", "https://www.nushell.sh", version_env_var="NU_VERSION"
 )
 
 POWERSHELL = Shell(
-    "powershell",
-    "PowerShell",
-    "🔷",
-    "https://learn.microsoft.com/en-us/powershell/",
+    "powershell", "PowerShell", "🔷", "https://learn.microsoft.com/en-us/powershell/"
 )
 
-SH = Shell(
-    "sh",
-    "Bourne Shell",
-    "𝐒",
-    "https://en.wikipedia.org/wiki/Bourne_shell",
-)
+SH = Shell("sh", "Bourne Shell", "𝐒", "https://en.wikipedia.org/wiki/Bourne_shell")
 
-TCSH = Shell(
-    "tcsh",
-    "tcsh",
-    "𝐓",
-    "https://www.tcsh.org",
-)
+TCSH = Shell("tcsh", "tcsh", "𝐓", "https://www.tcsh.org")
 
 UNKNOWN_SHELL = Shell(
     "unknown_shell",
@@ -114,10 +80,4 @@ XONSH = Shell(
     interpreter="python",
 )
 
-ZSH = Shell(
-    "zsh",
-    "Zsh",
-    "ℤ",
-    "https://www.zsh.org",
-    version_env_var="ZSH_VERSION",
-)
+ZSH = Shell("zsh", "Zsh", "ℤ", "https://www.zsh.org", version_env_var="ZSH_VERSION")

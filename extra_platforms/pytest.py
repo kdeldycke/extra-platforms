@@ -124,29 +124,39 @@ def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
     return summary
 
 
-# Generate a pair of skip/unless decorators for each platform and group.
-for _obj in chain(ALL_TRAITS, ALL_GROUPS):
-    # Sanity check to please the type checker.
-    assert isinstance(_obj, (Trait, Group))
+def _generate_decorators() -> None:
+    """Generate a pair of skip/unless decorators for each trait and group.
 
-    # Get the detection function for the current object.
-    _func = getattr(extra_platforms, _obj.detection_func_id)
+    Decorators are registered as module-level attributes, named after each
+    object's ``skip_decorator_id`` and ``unless_decorator_id``.
+    """
+    for obj in chain(ALL_TRAITS, ALL_GROUPS):
+        # Sanity check to please the type checker.
+        assert isinstance(obj, (Trait, Group))
 
-    # Generate both skip and unless decorators for this object.
-    for _is_skip in [True, False]:
-        _decorator_id = _obj.skip_decorator_id if _is_skip else _obj.unless_decorator_id
-        _reason_prefix = "Skip" if _is_skip else "Requires"
-        _condition = _DeferredCondition(_func, invert=not _is_skip)
+        # Get the detection function for the current object.
+        func = getattr(extra_platforms, obj.detection_func_id)
 
-        _decorator = pytest.mark.skipif(
-            _condition,  # type: ignore[arg-type]
-            reason=f"{_reason_prefix} {_obj.name[0].lower() + _obj.name[1:]}",
-        )
+        # Generate both skip and unless decorators for this object.
+        for is_skip in (True, False):
+            decorator_id = obj.skip_decorator_id if is_skip else obj.unless_decorator_id
+            reason_prefix = "Skip" if is_skip else "Requires"
+            condition = _DeferredCondition(func, invert=not is_skip)
 
-        # Set a custom docstring for Sphinx autodoc.
-        _decorator.__doc__ = _make_decorator_docstring(_obj, is_skip=_is_skip)
+            decorator = pytest.mark.skipif(
+                condition,  # type: ignore[arg-type]
+                # Use the name verbatim: down-casing its first letter would
+                # mangle acronyms and brands (like CI, GitHub or iTerm2).
+                reason=f"{reason_prefix} {obj.name}",
+            )
 
-        globals()[_decorator_id] = _decorator
+            # Set a custom docstring for Sphinx autodoc.
+            decorator.__doc__ = _make_decorator_docstring(obj, is_skip=is_skip)
+
+            globals()[decorator_id] = decorator
+
+
+_generate_decorators()
 
 
 # XXX Mypy doesn't understand dynamic type annotation, so we need to explicitly declare

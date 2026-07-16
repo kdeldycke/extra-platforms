@@ -24,7 +24,7 @@ computed based on environment-dependent values.
 from __future__ import annotations
 
 import platform
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import dataclass, field
 from functools import cached_property, lru_cache
 from os import environ
@@ -37,6 +37,8 @@ from .platform_info import linux_info, macos_info, windows_info
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any
+
+    from .group import Group
 
 
 @dataclass(frozen=True)
@@ -226,7 +228,9 @@ class Trait(_Identifiable, ABC):
         super().__post_init__()
 
         assert self.url, f"{self.__class__.__name__} URL cannot be empty."
-        assert self.url.startswith("https://"), "URL must start with https://."
+        assert self.url.startswith("https://"), (
+            f"{self.__class__.__name__} URL must start with https://."
+        )
 
         # Validate aliases.
         for alias in self.aliases:
@@ -277,7 +281,7 @@ class Trait(_Identifiable, ABC):
         return "\n".join(lines)
 
     @cached_property
-    def groups(self) -> frozenset:
+    def groups(self) -> frozenset[Group]:
         """Returns the set of groups this trait belongs to.
 
         Uses dynamic import to avoid circular dependency with `group_data` module.
@@ -314,17 +318,13 @@ class Trait(_Identifiable, ABC):
             )
         return func()
 
-    @abstractmethod
-    def info(self) -> dict:
+    def info(self) -> dict[str, Any]:
         """Returns all trait attributes that can be gathered.
 
-        Returns a {class}`dict` of metadata. Subclasses should override this to include
-        trait-specific information.
+        This default implementation returns the identity metadata common to all
+        traits. Subclasses extend it with category-specific fields by merging
+        ``super().info()`` into their own result.
         """
-        ...
-
-    def _base_info(self) -> dict[str, str | bool | None]:
-        """Returns the base info dictionary common to all traits."""
         return {
             "id": self.id,
             "name": self.name,
@@ -348,7 +348,7 @@ class Architecture(Trait):
     def info(self) -> dict[str, str | bool | None]:
         """Returns all architecture attributes we can gather."""
         info: dict[str, str | bool | None] = {
-            **self._base_info(),
+            **super().info(),
             "machine": None,
             "processor": None,
         }
@@ -375,7 +375,7 @@ class Platform(Trait):
     def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
         """Returns all platform attributes we can gather."""
         info: dict[str, str | bool | None | dict[str, str | None]] = {
-            **self._base_info(),
+            **super().info(),
             # Extra fields from distro.info().
             "distro_id": None,
             "version": None,
@@ -433,7 +433,7 @@ class Shell(Trait):
     def info(self) -> dict[str, str | bool | None]:
         """Returns all shell attributes we can gather."""
         info: dict[str, str | bool | None] = {
-            **self._base_info(),
+            **super().info(),
             "version": None,
             "path": None,
         }
@@ -476,7 +476,7 @@ class Terminal(Trait):
     def info(self) -> dict[str, str | bool | None]:
         """Returns all terminal attributes we can gather."""
         info: dict[str, str | bool | None] = {
-            **self._base_info(),
+            **super().info(),
             "version": None,
             "color_support": None,
         }
@@ -499,32 +499,10 @@ class CI(Trait):
     doc_page = "ci.md"
     """Override the default `cis.md` filename."""
 
-    def __post_init__(self) -> None:
-        """Tweak CI docstring."""
-        super().__post_init__()
-        object.__setattr__(self, "__doc__", f"Identify {self.name} environment.")
-
-    def info(self) -> dict[str, str | bool | None]:
-        """Returns all CI attributes we can gather."""
-        return {**self._base_info()}
-
 
 @dataclass(frozen=True)
 class Agent(Trait):
     """An agent identifies an AI coding agent environment."""
-
-    type_name = "agent"
-
-    all_group = "ALL_AGENTS"
-
-    def __post_init__(self) -> None:
-        """Tweak agent docstring."""
-        super().__post_init__()
-        object.__setattr__(self, "__doc__", f"Identify {self.name} environment.")
-
-    def info(self) -> dict[str, str | bool | None]:
-        """Returns all agent attributes we can gather."""
-        return {**self._base_info()}
 
 
 @lru_cache(maxsize=128)

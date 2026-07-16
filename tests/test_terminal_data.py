@@ -17,18 +17,18 @@ from __future__ import annotations
 
 from extra_platforms import (
     ALL_TERMINALS,
-    GPU_TERMINALS,
-    MULTIPLEXERS,
-    NATIVE_TERMINALS,
     UNKNOWN_TERMINAL,
-    WEB_TERMINALS,
     current_terminal,
     is_unknown_terminal,
 )
 
 
 def test_terminal_detection():
-    """Basic terminal detection sanity checks."""
+    """Basic terminal detection sanity checks.
+
+    Family partitions and canonical flags are enforced generically in
+    ``test_trait_data.py`` and ``test_group_data.py``.
+    """
     current_terminal_result = current_terminal()
     assert current_terminal_result
     if is_unknown_terminal():
@@ -37,15 +37,3 @@ def test_terminal_detection():
     else:
         assert current_terminal_result is not UNKNOWN_TERMINAL
         assert current_terminal_result in ALL_TERMINALS
-
-
-def test_terminal_logical_grouping():
-    # All terminals are divided into families.
-    assert ALL_TERMINALS.fullyintersects(
-        GPU_TERMINALS | MULTIPLEXERS | NATIVE_TERMINALS | WEB_TERMINALS
-    )
-    assert not ALL_TERMINALS.canonical
-    assert GPU_TERMINALS.canonical
-    assert MULTIPLEXERS.canonical
-    assert NATIVE_TERMINALS.canonical
-    assert WEB_TERMINALS.canonical

@@ -49,17 +49,11 @@ platforms may use the alias `arm64` instead (e.g., macOS on Apple Silicon).
 """
 
 ARM = Architecture(
-    "arm",
-    "ARM (32-bit)",
-    "📱",
-    "https://en.wikipedia.org/wiki/ARM_architecture_family",
+    "arm", "ARM (32-bit)", "📱", "https://en.wikipedia.org/wiki/ARM_architecture_family"
 )
 
 ARMV5TEL = Architecture(
-    "armv5tel",
-    "ARMv5TE (little-endian)",
-    "📱",
-    "https://en.wikipedia.org/wiki/ARM11",
+    "armv5tel", "ARMv5TE (little-endian)", "📱", "https://en.wikipedia.org/wiki/ARM11"
 )
 """
 ```{hint}
@@ -69,10 +63,7 @@ older ARM devices and may appear in embedded systems or legacy platforms.
 """
 
 ARMV6L = Architecture(
-    "armv6l",
-    "ARMv6 (little-endian)",
-    "📱",
-    "https://en.wikipedia.org/wiki/ARM11",
+    "armv6l", "ARMv6 (little-endian)", "📱", "https://en.wikipedia.org/wiki/ARM11"
 )
 
 ARMV7L = Architecture(
@@ -148,17 +139,11 @@ MIPSEL = Architecture(
 )
 
 PPC = Architecture(
-    "ppc",
-    "PowerPC (32-bit)",
-    "⚡",
-    "https://en.wikipedia.org/wiki/PowerPC",
+    "ppc", "PowerPC (32-bit)", "⚡", "https://en.wikipedia.org/wiki/PowerPC"
 )
 
 PPC64 = Architecture(
-    "ppc64",
-    "PowerPC 64-bit (big-endian)",
-    "⚡",
-    "https://en.wikipedia.org/wiki/Ppc64",
+    "ppc64", "PowerPC 64-bit (big-endian)", "⚡", "https://en.wikipedia.org/wiki/Ppc64"
 )
 
 PPC64LE = Architecture(
@@ -170,17 +155,11 @@ PPC64LE = Architecture(
 )
 
 RISCV32 = Architecture(
-    "riscv32",
-    "RISC-V (32-bit)",
-    "Ⅴ",
-    "https://en.wikipedia.org/wiki/RISC-V",
+    "riscv32", "RISC-V (32-bit)", "Ⅴ", "https://en.wikipedia.org/wiki/RISC-V"
 )
 
 RISCV64 = Architecture(
-    "riscv64",
-    "RISC-V (64-bit)",
-    "Ⅴ",
-    "https://en.wikipedia.org/wiki/RISC-V",
+    "riscv64", "RISC-V (64-bit)", "Ⅴ", "https://en.wikipedia.org/wiki/RISC-V"
 )
 
 S390X = Architecture(
@@ -191,17 +170,11 @@ S390X = Architecture(
 )
 
 SPARC = Architecture(
-    "sparc",
-    "SPARC (32-bit)",
-    "☀️",
-    "https://en.wikipedia.org/wiki/SPARC",
+    "sparc", "SPARC (32-bit)", "☀️", "https://en.wikipedia.org/wiki/SPARC"
 )
 
 SPARC64 = Architecture(
-    "sparc64",
-    "SPARC (64-bit)",
-    "☀️",
-    "https://en.wikipedia.org/wiki/SPARC",
+    "sparc64", "SPARC (64-bit)", "☀️", "https://en.wikipedia.org/wiki/SPARC"
 )
 
 UNKNOWN_ARCHITECTURE = Architecture(
@@ -212,17 +185,11 @@ UNKNOWN_ARCHITECTURE = Architecture(
 )
 
 WASM32 = Architecture(
-    "wasm32",
-    "WebAssembly (32-bit)",
-    "🌐",
-    "https://en.wikipedia.org/wiki/WebAssembly",
+    "wasm32", "WebAssembly (32-bit)", "🌐", "https://en.wikipedia.org/wiki/WebAssembly"
 )
 
 WASM64 = Architecture(
-    "wasm64",
-    "WebAssembly (64-bit)",
-    "🌐",
-    "https://en.wikipedia.org/wiki/WebAssembly",
+    "wasm64", "WebAssembly (64-bit)", "🌐", "https://en.wikipedia.org/wiki/WebAssembly"
 )
 
 X86_64 = Architecture(

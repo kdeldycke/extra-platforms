@@ -238,7 +238,7 @@ intersphinx_mapping = {
 }
 ```
 
-### Syntax
+### Intersphinx syntax
 
 Cross-references use the `inventory:target` format. The inventory name is `extra_platforms` (matching the key in `intersphinx_mapping`), and the target is the fully-qualified Python symbol:
 

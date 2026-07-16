@@ -47,6 +47,7 @@ from click_extra.table import TableFormat, render_table
 from wcmatch import glob as wcglob
 
 from extra_platforms import (
+    ALL_AGENT_GROUPS,
     ALL_AGENTS,
     ALL_ARCHITECTURE_GROUPS,
     ALL_ARCHITECTURES,
@@ -74,6 +75,17 @@ from extra_platforms import (
     Group,
     Trait,
 )
+
+_GROUP_API_FUNCTIONS = (
+    "extract_members",
+    "groups_from_ids",
+    "reduce",
+    "traits_from_ids",
+)
+"""Trait and group operation functions documented in their own groups.md section.
+
+Excluded from automodule directives so groups.md stays their canonical location.
+"""
 
 DOCS_ROOT = Path(__file__).parent
 """The root path of Sphinx documentation."""
@@ -213,8 +225,7 @@ def generate_group_table(groups: Iterable[Group]) -> str:
     a linked detection function, and canonical status for each group.
     A hint block is appended after the table to explain canonical groups.
 
-    Args:
-        groups: The groups to include in the table.
+    :param groups: The groups to include in the table.
     """
     headers = [
         "Icon",
@@ -261,18 +272,15 @@ def _analyze_group_hierarchy(
 ) -> tuple[Group, list[Group], list]:
     """Analyze a collection of groups to identify the superset and missing traits.
 
-    Args:
-        groups: An iterable of groups including both the superset group (e.g.,
-                ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups.
+    :param groups: An iterable of groups including both the superset group (e.g.,
+        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups.
+    :returns: A tuple of ``(superset, intermediate_groups, missing_traits)`` where:
 
-    Returns:
-        A tuple of (superset, intermediate_groups, missing_traits) where:
-        - superset: The group that contains all others as subsets
-        - intermediate_groups: All groups except the superset, sorted by size (descending)
-        - missing_traits: Traits in the superset not covered by any intermediate group
-
-    Raises:
-        ValueError: If no superset group is found among the inputs.
+        - ``superset``: The group that contains all others as subsets
+        - ``intermediate_groups``: All groups except the superset
+        - ``missing_traits``: Traits in the superset not covered by any
+          intermediate group
+    :raises ValueError: If no superset group is found among the inputs.
     """
     groups_list = list(groups)
 
@@ -323,30 +331,27 @@ def generate_sankey(groups: Iterable[Group]) -> str:
     superset but not in any intermediate group) are shown as direct children of
     the superset, placed at the end of the diagram specification.
 
-    Args:
-        groups: An iterable of groups including both the superset group (e.g.,
-                ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-                display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
-
-    Raises:
-        ValueError: If no superset group is found among the inputs.
+    :param groups: An iterable of groups including both the superset group (e.g.,
+        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
+        display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
+    :raises ValueError: If no superset group is found among the inputs.
     """
     superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
+
+    sorted_intermediates = sorted(
+        intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
+    )
 
     table = []
 
     # First layer: superset -> intermediate groups (weight = number of members
     # in group).
-    for group in sorted(
-        intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
-    ):
+    for group in sorted_intermediates:
         member_count = len(group)
         table.append(f"{superset.symbol_id},{group.symbol_id},{member_count}")
 
     # Second layer: intermediate groups -> their members (weight = 1 each).
-    for group in sorted(
-        intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
-    ):
+    for group in sorted_intermediates:
         # XXX Sankey diagrams does not supports emoji labels
         # https://github.com/mermaid-js/mermaid/issues/1995
         # https://github.com/mermaid-js/mermaid/issues/5308
@@ -381,21 +386,18 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     Includes missing traits (present in the superset but not in any intermediate group)
     as direct children of the superset.
 
-    Args:
-        groups: An iterable of groups including both the superset group (e.g.,
-                ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-                display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
-
-    Raises:
-        ValueError: If no superset group is found among the inputs.
+    :param groups: An iterable of groups including both the superset group (e.g.,
+        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
+        display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
+    :raises ValueError: If no superset group is found among the inputs.
     """
     superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
 
     group_map = ""
     for group in sorted(intermediate_groups, key=attrgetter("id"), reverse=True):
         group_map += f"){group.icon} {group.symbol_id}(\n"
-        for platform in group:
-            group_map += f"    ({platform.icon} {platform.symbol_id})\n"
+        for member in group:
+            group_map += f"    ({member.icon} {member.symbol_id})\n"
 
     # Add missing traits as direct children of the superset.
     for trait in missing_traits:
@@ -481,11 +483,9 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
     individual traits (is_macos, is_ubuntu, etc.) and groups (is_linux, is_unix, etc.),
     sorted by function name.
 
-    Args:
-        objects: The traits and groups whose detection functions should be included.
-
-    Returns:
-        A Markdown table with all detection functions.
+    :param objects: The traits and groups whose detection functions should be
+        included.
+    :returns: A Markdown table with all detection functions.
     """
     headers = ["Detection function", "Icon", "Associated symbol"]
     alignments = ["left", "center", "left"]
@@ -561,13 +561,7 @@ def generate_group_module_automodule() -> str:
     """
     # Exclude Group class (documented via autoclass) and utility functions
     # (documented in "Trait and group operations" section).
-    exclude_list = [
-        "Group",
-        "extract_members",
-        "groups_from_ids",
-        "reduce",
-        "traits_from_ids",
-    ]
+    exclude_list = ["Group", *_GROUP_API_FUNCTIONS]
 
     exclude_members = ", ".join(sorted(exclude_list))
 
@@ -588,28 +582,22 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
     separately in the same file. Uses ``{eval-rst}`` for the same reason as
     :func:`generate_sphinx_directives`.
 
-    Args:
-        groups: All predefined groups to exclude.
+    :param groups: All predefined groups to exclude.
     """
+    from extra_platforms import group_data
+
     # Exclude all Group instances (documented in "Predefined groups" section).
     # Group IDs are lowercase but Python symbols are uppercase.
     exclude_list = [g.id.upper() for g in groups]
 
     # Exclude frozenset collections (documented in "Group collections" and
-    # "ID collections" sections).
-    exclude_list.extend([
-        "ALL_ARCHITECTURE_GROUPS",
-        "ALL_CI_GROUPS",
-        "ALL_GROUPS",
-        "ALL_GROUP_IDS",
-        "ALL_IDS",
-        "ALL_PLATFORM_GROUPS",
-        "ALL_SHELL_GROUPS",
-        "ALL_TERMINAL_GROUPS",
-        "ALL_TRAIT_IDS",
-        "EXTRA_GROUPS",
-        "NON_OVERLAPPING_GROUPS",
-    ])
+    # "ID collections" sections). Discovered from the module itself so new
+    # collections are excluded automatically.
+    exclude_list.extend(
+        name
+        for name, value in vars(group_data).items()
+        if name.isupper() and isinstance(value, frozenset)
+    )
 
     exclude_members = ", ".join(sorted(exclude_list))
 
@@ -632,8 +620,8 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
 
     Uses ``{eval-rst}`` for the same reason as :func:`generate_sphinx_directives`.
 
-    Args:
-        objects: The traits and groups whose detection functions should be excluded.
+    :param objects: The traits and groups whose detection functions should be
+        excluded.
     """
     objects_list = list(objects)
 
@@ -656,12 +644,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
     ])
 
     # Also exclude group utility functions documented in groups.md.
-    exclude_list.extend([
-        "extract_members",
-        "groups_from_ids",
-        "reduce",
-        "traits_from_ids",
-    ])
+    exclude_list.extend(_GROUP_API_FUNCTIONS)
 
     # Also exclude core classes documented in trait.md and groups.md.
     exclude_list.extend([
@@ -716,11 +699,6 @@ def update_docs() -> None:
             generate_trait_table(ALL_PLATFORMS),
         ),
         (
-            "ci-table-start",
-            "ci-table-end",
-            generate_trait_table(ALL_CI),
-        ),
-        (
             "shell-table-start",
             "shell-table-end",
             generate_trait_table(ALL_SHELLS),
@@ -729,6 +707,16 @@ def update_docs() -> None:
             "terminal-table-start",
             "terminal-table-end",
             generate_trait_table(ALL_TERMINALS),
+        ),
+        (
+            "ci-table-start",
+            "ci-table-end",
+            generate_trait_table(ALL_CI),
+        ),
+        (
+            "agent-table-start",
+            "agent-table-end",
+            generate_trait_table(ALL_AGENTS),
         ),
         # All traits table (for trait.md) - merged table of all traits.
         (
@@ -763,11 +751,6 @@ def update_docs() -> None:
             ),
         ),
         (
-            "ci-sankey-start",
-            "ci-sankey-end",
-            generate_sankey(ALL_CI_GROUPS),
-        ),
-        (
             "shell-sankey-start",
             "shell-sankey-end",
             generate_sankey(
@@ -780,6 +763,16 @@ def update_docs() -> None:
             generate_sankey(
                 list(NON_OVERLAPPING_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
             ),
+        ),
+        (
+            "ci-sankey-start",
+            "ci-sankey-end",
+            generate_sankey(ALL_CI_GROUPS),
+        ),
+        (
+            "agent-sankey-start",
+            "agent-sankey-end",
+            generate_sankey(ALL_AGENT_GROUPS),
         ),
         # Mindmap diagrams.
         (
@@ -816,13 +809,6 @@ def update_docs() -> None:
             ),
         ),
         (
-            "ci-mindmap-start",
-            "ci-mindmap-end",
-            generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
-            ),
-        ),
-        (
             "shell-mindmap-start",
             "shell-mindmap-end",
             generate_traits_mindmap(
@@ -834,6 +820,20 @@ def update_docs() -> None:
             "terminal-mindmap-end",
             generate_traits_mindmap(
                 list(NON_OVERLAPPING_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
+            ),
+        ),
+        (
+            "ci-mindmap-start",
+            "ci-mindmap-end",
+            generate_traits_mindmap(
+                list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
+            ),
+        ),
+        (
+            "agent-mindmap-start",
+            "agent-mindmap-end",
+            generate_traits_mindmap(
+                list(NON_OVERLAPPING_GROUPS & ALL_AGENT_GROUPS) + [ALL_AGENTS]
             ),
         ),
         # Group tables.
@@ -848,11 +848,6 @@ def update_docs() -> None:
             generate_group_table(ALL_PLATFORM_GROUPS),
         ),
         (
-            "ci-groups-table-start",
-            "ci-groups-table-end",
-            generate_group_table(ALL_CI_GROUPS),
-        ),
-        (
             "shell-groups-table-start",
             "shell-groups-table-end",
             generate_group_table(ALL_SHELL_GROUPS),
@@ -861,6 +856,16 @@ def update_docs() -> None:
             "terminal-groups-table-start",
             "terminal-groups-table-end",
             generate_group_table(ALL_TERMINAL_GROUPS),
+        ),
+        (
+            "ci-groups-table-start",
+            "ci-groups-table-end",
+            generate_group_table(ALL_CI_GROUPS),
+        ),
+        (
+            "agent-groups-table-start",
+            "agent-groups-table-end",
+            generate_group_table(ALL_AGENT_GROUPS),
         ),
         (
             "groups-table-start",
@@ -893,15 +898,6 @@ def update_docs() -> None:
             ),
         ),
         (
-            "ci-data-autodata-start",
-            "ci-data-autodata-end",
-            generate_sphinx_directives(
-                list(ALL_CI) + [UNKNOWN_CI],
-                "autodata",
-                "symbol_id",
-            ),
-        ),
-        (
             "shell-data-autodata-start",
             "shell-data-autodata-end",
             generate_sphinx_directives(
@@ -920,6 +916,15 @@ def update_docs() -> None:
             ),
         ),
         (
+            "ci-data-autodata-start",
+            "ci-data-autodata-end",
+            generate_sphinx_directives(
+                list(ALL_CI) + [UNKNOWN_CI],
+                "autodata",
+                "symbol_id",
+            ),
+        ),
+        (
             "agent-data-autodata-start",
             "agent-data-autodata-end",
             generate_sphinx_directives(
@@ -932,7 +937,7 @@ def update_docs() -> None:
             "group-data-autodata-start",
             "group-data-autodata-end",
             generate_sphinx_directives(
-                [g for g in ALL_GROUPS],
+                ALL_GROUPS,
                 "autodata",
                 "symbol_id",
             ),

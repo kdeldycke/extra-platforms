@@ -17,52 +17,19 @@ from __future__ import annotations
 
 from extra_platforms import (
     ALL_ARCHITECTURES,
-    ALL_ARM,
-    ALL_MIPS,
-    ALL_SPARC,
     ARCH_32_BIT,
     ARCH_64_BIT,
     BIG_ENDIAN,
-    IBM_MAINFRAME,
     LITTLE_ENDIAN,
-    LOONGARCH,
-    POWERPC,
-    RISCV,
     UNKNOWN_ARCHITECTURE,
-    WEBASSEMBLY,
-    X86,
     current_architecture,
-    is_aarch64,
     is_any_architecture,
     is_any_trait,
     is_arch_32_bit,
     is_arch_64_bit,
-    is_arm,
-    is_armv6l,
-    is_armv7l,
-    is_armv8l,
     is_big_endian,
-    is_i386,
-    is_i586,
-    is_i686,
     is_little_endian,
-    is_loongarch64,
-    is_mips,
-    is_mips64,
-    is_mips64el,
-    is_mipsel,
-    is_ppc,
-    is_ppc64,
-    is_ppc64le,
-    is_riscv32,
-    is_riscv64,
-    is_s390x,
-    is_sparc,
-    is_sparc64,
     is_unknown_architecture,
-    is_wasm32,
-    is_wasm64,
-    is_x86_64,
 )
 
 
@@ -73,87 +40,25 @@ def test_architecture_detection():
     assert not is_unknown_architecture()
     assert current_architecture() is not UNKNOWN_ARCHITECTURE
 
-    # Architecture bitness.
+    # An architecture has exactly one bitness and one endianness.
     assert is_arch_32_bit() or is_arch_64_bit()
     assert is_little_endian() or is_big_endian()
 
-    if is_x86_64():
-        assert not is_i386()
-        assert not is_i586()
-        assert not is_i686()
-        assert is_x86_64()
-        assert not is_arm()
-        assert not is_armv6l()
-        assert not is_armv7l()
-        assert not is_armv8l()
-        assert not is_aarch64()
-        assert not is_mips()
-        assert not is_mipsel()
-        assert not is_mips64()
-        assert not is_mips64el()
-        assert not is_ppc()
-        assert not is_ppc64()
-        assert not is_ppc64le()
-        assert not is_riscv32()
-        assert not is_riscv64()
-        assert not is_sparc()
-        assert not is_sparc64()
-        assert not is_s390x()
-        assert not is_loongarch64()
-        assert not is_wasm32()
-        assert not is_wasm64()
 
-    if is_aarch64():
-        assert not is_i386()
-        assert not is_i586()
-        assert not is_i686()
-        assert not is_x86_64()
-        assert not is_arm()
-        assert not is_armv6l()
-        assert not is_armv7l()
-        assert not is_armv8l()
-        assert is_aarch64()
-        assert not is_mips()
-        assert not is_mipsel()
-        assert not is_mips64()
-        assert not is_mips64el()
-        assert not is_ppc()
-        assert not is_ppc64()
-        assert not is_ppc64le()
-        assert not is_riscv32()
-        assert not is_riscv64()
-        assert not is_sparc()
-        assert not is_sparc64()
-        assert not is_s390x()
-        assert not is_loongarch64()
-        assert not is_wasm32()
-        assert not is_wasm64()
+def test_architecture_mutual_exclusion():
+    """Exactly one architecture matches the current environment."""
+    matching = {arch for arch in ALL_ARCHITECTURES if arch.current}
+    assert len(matching) == 1
 
 
 def test_architecture_logical_grouping():
-    # All architectures are divided into families.
-    assert ALL_ARCHITECTURES.fullyintersects(
-        ALL_ARM
-        | ALL_MIPS
-        | ALL_SPARC
-        | IBM_MAINFRAME
-        | LOONGARCH
-        | POWERPC
-        | RISCV
-        | WEBASSEMBLY
-        | X86
-    )
-    assert not ALL_ARCHITECTURES.canonical
-    assert ALL_ARM.canonical
-    assert ALL_MIPS.canonical
-    assert ALL_SPARC.canonical
-    assert IBM_MAINFRAME.canonical
-    assert LOONGARCH.canonical
-    assert POWERPC.canonical
-    assert RISCV.canonical
-    assert WEBASSEMBLY.canonical
-    assert X86.canonical
+    """Check partitions specific to architectures.
 
+    Family partitions and canonical flags are enforced generically in
+    ``test_trait_data.py`` and ``test_group_data.py``. Bitness and endianness
+    are non-canonical groups, so their partition of all architectures is only
+    checked here.
+    """
     # All architectures are divided by bitness.
     assert ARCH_32_BIT.isdisjoint(ARCH_64_BIT)
     assert ARCH_64_BIT.isdisjoint(ARCH_32_BIT)

@@ -527,7 +527,7 @@ def test_multiple_architectures_match(monkeypatch):
     monkeypatch.setattr(type(AARCH64), "current", property(lambda self: True))
     monkeypatch.setattr(type(X86_64), "current", property(lambda self: True))
 
-    with pytest.raises(RuntimeError, match="Multiple architectures matches"):
+    with pytest.raises(RuntimeError, match="Multiple architectures match"):
         current_architecture()
 
     invalidate_caches()
@@ -541,7 +541,7 @@ def test_multiple_platforms_match_non_wsl(monkeypatch):
     monkeypatch.setattr(type(MACOS), "current", property(lambda self: True))
     monkeypatch.setattr(type(UBUNTU), "current", property(lambda self: True))
 
-    with pytest.raises(RuntimeError, match="Multiple platforms matches"):
+    with pytest.raises(RuntimeError, match="Multiple platforms match"):
         current_platform()
 
     invalidate_caches()
@@ -567,7 +567,7 @@ def test_multiple_shells_match(monkeypatch):
         detection_module, "_parent_process_exe_names", lambda: frozenset()
     )
 
-    with pytest.raises(RuntimeError, match="Multiple shells matches"):
+    with pytest.raises(RuntimeError, match="Multiple shells match"):
         current_shell()
 
     invalidate_caches()
@@ -581,7 +581,7 @@ def test_multiple_ci_systems_match(monkeypatch):
     monkeypatch.setattr(type(GITHUB_CI), "current", property(lambda self: True))
     monkeypatch.setattr(type(GITLAB_CI), "current", property(lambda self: True))
 
-    with pytest.raises(RuntimeError, match="Multiple CI matches"):
+    with pytest.raises(RuntimeError, match="Multiple CI systems match"):
         current_ci()
 
     invalidate_caches()

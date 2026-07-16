@@ -754,20 +754,12 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     if role == "func" and symbol_clean == "invalidate_caches":
         return "detection.html"
 
-    # Deprecated detection functions stay in detection.html
-    if role == "func" and symbol_clean in (
-        "current_os",  # Deprecated alias
-        "current_platforms",  # Deprecated alias
-    ):
-        return "detection.html"
-
     # Trait and group operations functions go to groups.html
     if role == "func" and symbol_clean in (
         "extract_members",
         "groups_from_ids",
         "traits_from_ids",
         "reduce",
-        "platforms_from_ids",  # Deprecated alias
     ):
         return "groups.html"
 
@@ -833,24 +825,8 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
             "ALL_GROUP_IDS",
             "ALL_TRAIT_IDS",
             "ALL_IDS",
-            "ALL_PLATFORM_IDS",  # Deprecated alias for ALL_TRAIT_IDS
         ):
             return "groups.html"
-
-        # Deprecated group aliases go to groups.html
-        if symbol_clean in (
-            "ALL_PLATFORMS_WITHOUT_CI",
-            "ANY_ARM",
-            "ANY_MIPS",
-            "ANY_SPARC",
-            "ANY_WINDOWS",
-            "OTHER_UNIX",
-        ):
-            return "groups.html"
-
-        # Deprecated platform aliases go to platforms.html
-        if symbol_clean in ("UNKNOWN_LINUX",):
-            return "platforms.html"
 
         # Find the trait by symbol_id and use its doc_page
         for trait in ALL_TRAITS:

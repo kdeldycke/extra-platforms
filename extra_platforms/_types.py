@@ -16,14 +16,12 @@
 Inspired by [how `tomllib` does it in the stdlib](https://github.com/python/cpython/tree/main/Lib/tomllib).
 
 ```{hint}
-These type are designed to be imported as follows:
+These types are designed to be imported as follows:
 
 .. code-block:: python
 
     TYPE_CHECKING = False
     if TYPE_CHECKING:
-        from typing import Sequence, ...
-
         from ._types import _TRef, _TNestedReferences, ...
 
 [Mypy is able to pick them up correctly](https://mypy.readthedocs.io/en/stable/common_issues.html#python-version-and-system-platform-checks)
