@@ -86,7 +86,7 @@ from extra_platforms import (
 )
 from extra_platforms.detection import _unrecognized_message
 
-from .test_ci_data import github_runner_os
+from .conftest import github_runner_os
 
 if sys.version_info >= (3, 11):
     import tomllib

@@ -15,9 +15,6 @@
 
 from __future__ import annotations
 
-import functools
-import json
-import os
 import sys
 
 from extra_platforms import (
@@ -76,22 +73,7 @@ from extra_platforms import (
 )
 from extra_platforms.pytest import unless_github_ci
 
-
-@functools.cache
-def github_runner_os() -> str | None:
-    """Returns the OS name as defined in the GitHub Actions matrix context.
-
-    .. caution::
-        This only works when running inside a GitHub Actions job that uses a ``matrix``
-        strategy with an ``os`` variant. Which is the case for the ``extra-platforms``
-        workflows.
-    """
-    matrix_context_str = os.environ.get("EXTRA_PLATFORMS_TEST_MATRIX", "{}")
-    matrix_context = json.loads(matrix_context_str)
-    os_value = matrix_context.get("os")
-    if isinstance(os_value, str):
-        return os_value
-    return None
+from .conftest import github_runner_os
 
 
 @unless_github_ci
