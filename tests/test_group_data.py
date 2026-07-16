@@ -422,6 +422,7 @@ def test_non_overlapping_groups_completeness():
 def test_canonical_group_marker():
     """Test that only canonical groups have the ⬥ marker in their documentation."""
     for group in ALL_GROUPS:
+        assert group.__doc__ is not None
         canonical_line = next(
             line for line in group.__doc__.splitlines() if "**Canonical**" in line
         )

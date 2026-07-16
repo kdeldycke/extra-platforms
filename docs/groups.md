@@ -237,8 +237,8 @@ with canonical groups.
 .. autodata:: extra_platforms.group_data.ALL_PLATFORM_GROUPS
 .. autodata:: extra_platforms.group_data.ALL_SHELL_GROUPS
 .. autodata:: extra_platforms.group_data.ALL_TERMINAL_GROUPS
-.. autodata:: extra_platforms.group_data.NON_CANONICAL_GROUPS
 .. autodata:: extra_platforms.group_data.CANONICAL_GROUPS
+.. autodata:: extra_platforms.group_data.NON_CANONICAL_GROUPS
 ```
 
 ## ID collections
