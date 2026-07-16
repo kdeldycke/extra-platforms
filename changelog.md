@@ -5,6 +5,9 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Rename `NON_OVERLAPPING_GROUPS` to `CANONICAL_GROUPS` and `EXTRA_GROUPS` to `NON_CANONICAL_GROUPS`, matching the `Group.canonical` vocabulary. The old names still resolve with a `DeprecationWarning`, and will be removed in `14.0.0`.
+- `current_traits()` now returns an immutable `frozenset`: mutating the previously returned `set` corrupted its cache.
+- `linux_info()` now returns `None` for missing fields instead of empty strings, like `macos_info()` and `windows_info()`.
 - Fix pytest decorator skip reasons mangling acronyms and brand names ("Skip cI systems" is now "Skip All CI systems").
 - Rename the `ALL_CI` group to "All CI systems" and `ALL_AGENTS` to "All AI coding agents", aligning with the other "all" group names.
 - Reword the `current_*()` multiple-match errors: "Multiple architectures matches:" is now "Multiple architectures match:", and "Multiple CI matches:" is now "Multiple CI systems match:".

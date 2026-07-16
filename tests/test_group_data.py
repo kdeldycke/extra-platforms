@@ -42,9 +42,9 @@ from extra_platforms import (
     ALL_TERMINALS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
+    CANONICAL_GROUPS,
     CI,
-    EXTRA_GROUPS,
-    NON_OVERLAPPING_GROUPS,
+    NON_CANONICAL_GROUPS,
     UNKNOWN,
     Agent,
     Architecture,
@@ -177,7 +177,7 @@ def test_group_definitions(group: Group):
     assert all(isinstance(m, Trait) for m in group._members.values())
 
     # Canonical groups are self-canonical.
-    assert group.canonical is (group in NON_OVERLAPPING_GROUPS)
+    assert group.canonical is (group in CANONICAL_GROUPS)
 
     # Check general subset properties and operators.
     assert group.member_ids.issubset(ALL_TRAITS.member_ids)
@@ -303,8 +303,8 @@ def test_sets_of_groups():
         ALL_TERMINAL_GROUPS,
         ALL_CI_GROUPS,
         ALL_AGENT_GROUPS,
-        NON_OVERLAPPING_GROUPS,
-        EXTRA_GROUPS,
+        CANONICAL_GROUPS,
+        NON_CANONICAL_GROUPS,
     ):
         assert len(group_set) > 0
         assert isinstance(group_set, frozenset)
@@ -334,9 +334,9 @@ def test_sets_of_groups():
     assert ALL_AGENTS.fullyintersects(ALL_AGENT_GROUPS)
 
     # Non-overlapping groups and overlapping groups don't overlap.
-    assert NON_OVERLAPPING_GROUPS.isdisjoint(EXTRA_GROUPS)
+    assert CANONICAL_GROUPS.isdisjoint(NON_CANONICAL_GROUPS)
 
-    assert ALL_GROUPS == NON_OVERLAPPING_GROUPS | EXTRA_GROUPS
+    assert ALL_GROUPS == CANONICAL_GROUPS | NON_CANONICAL_GROUPS
     assert (
         ALL_GROUPS
         == ALL_ARCHITECTURE_GROUPS
@@ -352,7 +352,7 @@ def test_sets_of_groups():
 
 def test_non_overlapping_groups():
     """Check non-overlapping groups are mutually exclusive."""
-    for combination in combinations(NON_OVERLAPPING_GROUPS, 2):
+    for combination in combinations(CANONICAL_GROUPS, 2):
         group1, group2 = combination
         assert group1.isdisjoint(group2)
         assert group2.isdisjoint(group1)
@@ -362,9 +362,9 @@ def test_non_overlapping_groups():
 
 def test_overlapping_groups():
     """Check all extra groups overlaps with at least one non-overlapping."""
-    for extra_group in EXTRA_GROUPS:
+    for extra_group in NON_CANONICAL_GROUPS:
         overlap = False
-        for group in NON_OVERLAPPING_GROUPS:
+        for group in CANONICAL_GROUPS:
             if not extra_group.isdisjoint(group):
                 overlap = True
                 break
@@ -375,7 +375,7 @@ def test_overlapping_groups():
 def test_each_trait_in_exactly_one_canonical_group():
     """Check each trait belongs to exactly one canonical group."""
     for trait in ALL_TRAITS:
-        canonical_groups = [group for group in NON_OVERLAPPING_GROUPS if trait in group]
+        canonical_groups = [group for group in CANONICAL_GROUPS if trait in group]
         assert len(canonical_groups) == 1, (
             f"Trait {trait.id!r} is in {len(canonical_groups)} canonical groups: "
             f"{[g.id for g in canonical_groups]}"
@@ -384,7 +384,7 @@ def test_each_trait_in_exactly_one_canonical_group():
 
 def test_canonical_groups_dont_overlap():
     """Test that canonical groups have no members in common with each other."""
-    canonical_list = list(NON_OVERLAPPING_GROUPS)
+    canonical_list = list(CANONICAL_GROUPS)
     for i, group1 in enumerate(canonical_list):
         for group2 in canonical_list[i + 1 :]:
             assert group1.isdisjoint(group2), (
@@ -396,7 +396,7 @@ def test_canonical_groups_cover_all_traits():
     """Test that canonical groups together cover all recognized traits."""
     # Union all canonical groups, excluding unknown traits.
     all_canonical_members = set()
-    for group in NON_OVERLAPPING_GROUPS:
+    for group in CANONICAL_GROUPS:
         for member in group:
             # Exclude unknown traits.
             if not member.id.startswith("unknown_"):
@@ -410,12 +410,12 @@ def test_canonical_groups_cover_all_traits():
 
 
 def test_non_overlapping_groups_completeness():
-    """Test that NON_OVERLAPPING_GROUPS is properly defined."""
+    """Test that CANONICAL_GROUPS is properly defined."""
     # Should have at least 3 canonical groups (architectures, platforms, CI).
-    assert len(NON_OVERLAPPING_GROUPS) >= 3
+    assert len(CANONICAL_GROUPS) >= 3
 
-    # Each group in NON_OVERLAPPING_GROUPS should have canonical=True.
-    for group in NON_OVERLAPPING_GROUPS:
+    # Each group in CANONICAL_GROUPS should have canonical=True.
+    for group in CANONICAL_GROUPS:
         assert group.canonical is True
 
 

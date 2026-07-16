@@ -30,6 +30,7 @@ from extra_platforms import (
     ALL_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
+    CANONICAL_GROUPS,
     DEBIAN,
     DRAGONFLY_BSD,
     FREEBSD,
@@ -39,7 +40,6 @@ from extra_platforms import (
     MACOS,
     MIDNIGHTBSD,
     NETBSD,
-    NON_OVERLAPPING_GROUPS,
     OPENBSD,
     PIDORA,
     RHEL,
@@ -779,11 +779,11 @@ def test_group_fullyintersects():
 def test_group_canonical_property():
     """Test that Group.canonical property works correctly."""
     # LINUX is canonical.
-    if LINUX in NON_OVERLAPPING_GROUPS:
+    if LINUX in CANONICAL_GROUPS:
         assert LINUX.canonical is True
 
     # UNIX is not canonical (overlaps with others).
-    if UNIX not in NON_OVERLAPPING_GROUPS:
+    if UNIX not in CANONICAL_GROUPS:
         assert UNIX.canonical is False
 
 

@@ -185,15 +185,17 @@ def test_linux_info_structure(monkeypatch, fresh_os_release_caches):
 
 
 def test_linux_info_empty_version(monkeypatch, fresh_os_release_caches):
-    """Version parts are empty strings when version_id is absent."""
+    """Version parts are None when version_id is absent."""
     monkeypatch.setattr(
         "extra_platforms.platform_info._parse_os_release",
         lambda: {"id": "arch"},
     )
     info = linux_info()
-    assert info["version"] == ""
+    assert info["version"] is None
     assert info["version_parts"] == {
-        "major": "",
-        "minor": "",
-        "build_number": "",
+        "major": None,
+        "minor": None,
+        "build_number": None,
     }
+    assert info["like"] is None
+    assert info["codename"] is None

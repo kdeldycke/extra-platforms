@@ -258,7 +258,7 @@ from .group_data import (
     BSD,
     BSD_WITHOUT_MACOS,
     C_SHELLS,
-    EXTRA_GROUPS,
+    CANONICAL_GROUPS,
     GPU_TERMINALS,
     IBM_MAINFRAME,
     LINUX,
@@ -268,7 +268,7 @@ from .group_data import (
     LOONGARCH,
     MULTIPLEXERS,
     NATIVE_TERMINALS,
-    NON_OVERLAPPING_GROUPS,
+    NON_CANONICAL_GROUPS,
     OTHER_POSIX,
     OTHER_SHELLS,
     POWERPC,
@@ -456,6 +456,7 @@ _initialize_group_detection_functions()
 # `_initialize_group_detection_functions()` above.
 TYPE_CHECKING = False
 if TYPE_CHECKING:
+    from typing import Any
 
     def is_any_agent() -> bool: ...
     def is_any_architecture() -> bool: ...
@@ -586,6 +587,7 @@ __all__ = (
     "BUILDKITE",
     "BUILDROOT",
     "CACHYOS",
+    "CANONICAL_GROUPS",
     "CENTOS",
     "CHROMEOS",
     "CI",
@@ -606,7 +608,6 @@ __all__ = (
     "DEBIAN",
     "DRAGONFLY_BSD",
     "EXHERBO",
-    "EXTRA_GROUPS",
     "FEDORA",
     "FISH",
     "FOOT",
@@ -658,7 +659,7 @@ __all__ = (
     "NETBSD",
     "NIXOS",
     "NOBARA",
-    "NON_OVERLAPPING_GROUPS",
+    "NON_CANONICAL_GROUPS",
     "NUSHELL",
     "OPENBSD",
     "OPENSUSE",
@@ -949,3 +950,17 @@ Completeness (no missing or extra entries) is checked in unittests.
 # are complete. This avoids circular import issues during module initialization.
 
 _initialize_all_docstrings(ALL_TRAITS, ALL_GROUPS)
+
+
+def __getattr__(name: str) -> Any:
+    """Resolve deprecated symbols lazily, emitting a {exc}`DeprecationWarning`.
+
+    Implements the [PEP 562](https://peps.python.org/pep-0562/) module
+    ``__getattr__`` hook: it only fires for attributes not found in the module,
+    so current symbols are served without overhead. See ``_deprecated.py``.
+    """
+    from ._deprecated import DEPRECATED_ALIASES, resolve_deprecated
+
+    if name in DEPRECATED_ALIASES:
+        return resolve_deprecated(name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

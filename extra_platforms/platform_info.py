@@ -114,6 +114,24 @@ def os_release_id() -> str:
     return _OS_RELEASE_ID_NORMALIZATION.get(normalized, normalized)
 
 
+def _version_parts(release: str) -> dict[str, str | None]:
+    """Split a dotted release string into `major`, `minor` and `build_number`.
+
+    Missing components are set to `None`: a bare ``"14"`` release has no minor
+    version nor build number, and an empty release string has no parts at all.
+    """
+    parts = dict(
+        zip(
+            ("major", "minor", "build_number"), release.split(".", 2) if release else ()
+        )
+    )
+    return {
+        "major": parts.get("major"),
+        "minor": parts.get("minor"),
+        "build_number": parts.get("build_number"),
+    }
+
+
 @cache
 def linux_info() -> dict[str, Any]:
     """Fetch detailed Linux distribution information from os-release.
@@ -127,22 +145,19 @@ def linux_info() -> dict[str, Any]:
     - `like`: Space-separated list of related distributions
     - `codename`: Distribution codename (e.g., "jammy")
 
+    Missing fields are set to `None`, like in {func}`macos_info` and
+    {func}`windows_info`.
+
     :return: Dictionary containing Linux distribution details.
     """
     data = _parse_os_release()
-    dist_id = os_release_id()
     version = data.get("version_id", "")
-    parts = version.split(".", 2) if version else []
     return {
-        "id": dist_id,
-        "version": version,
-        "version_parts": {
-            "major": parts[0] if len(parts) > 0 else "",
-            "minor": parts[1] if len(parts) > 1 else "",
-            "build_number": parts[2] if len(parts) > 2 else "",
-        },
-        "like": data.get("id_like", ""),
-        "codename": data.get("version_codename", ""),
+        "id": os_release_id() or None,
+        "version": version or None,
+        "version_parts": _version_parts(version),
+        "like": data.get("id_like") or None,
+        "codename": data.get("version_codename") or None,
     }
 
 
@@ -219,20 +234,6 @@ def get_macos_codename(major: str | None = None, minor: str | None = None) -> st
             f"Version {major}.{minor} match multiple codenames: {matches!r}"
         )
     return matches.pop()
-
-
-def _version_parts(release: str) -> dict[str, str | None]:
-    """Split a dotted release string into `major`, `minor` and `build_number`.
-
-    Missing components are set to `None` (like a bare ``"14"`` release, which
-    has no minor version nor build number).
-    """
-    parts = dict(zip(("major", "minor", "build_number"), release.split(".", 2)))
-    return {
-        "major": parts.get("major"),
-        "minor": parts.get("minor"),
-        "build_number": parts.get("build_number"),
-    }
 
 
 def macos_info() -> dict[str, Any]:

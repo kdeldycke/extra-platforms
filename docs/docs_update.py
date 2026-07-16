@@ -64,8 +64,8 @@ from extra_platforms import (
     ARCH_32_BIT,
     ARCH_64_BIT,
     BIG_ENDIAN,
+    CANONICAL_GROUPS,
     LITTLE_ENDIAN,
-    NON_OVERLAPPING_GROUPS,
     UNKNOWN_AGENT,
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
@@ -333,7 +333,7 @@ def generate_sankey(groups: Iterable[Group]) -> str:
 
     :param groups: An iterable of groups including both the superset group (e.g.,
         ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-        display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
+        display (e.g., CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS).
     :raises ValueError: If no superset group is found among the inputs.
     """
     superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
@@ -388,7 +388,7 @@ def generate_traits_mindmap(groups: Iterable[Group]) -> str:
 
     :param groups: An iterable of groups including both the superset group (e.g.,
         ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-        display (e.g., NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS).
+        display (e.g., CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS).
     :raises ValueError: If no superset group is found among the inputs.
     """
     superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
@@ -729,8 +729,7 @@ def update_docs() -> None:
             "architecture-canonical-sankey-start",
             "architecture-canonical-sankey-end",
             generate_sankey(
-                list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
-                + [ALL_ARCHITECTURES]
+                list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
             ),
         ),
         (
@@ -747,21 +746,19 @@ def update_docs() -> None:
             "platform-multi-level-sankey-start",
             "platform-multi-level-sankey-end",
             generate_sankey(
-                list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
+                list(CANONICAL_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
             ),
         ),
         (
             "shell-sankey-start",
             "shell-sankey-end",
-            generate_sankey(
-                list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]
-            ),
+            generate_sankey(list(CANONICAL_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]),
         ),
         (
             "terminal-sankey-start",
             "terminal-sankey-end",
             generate_sankey(
-                list(NON_OVERLAPPING_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
+                list(CANONICAL_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
             ),
         ),
         (
@@ -779,16 +776,14 @@ def update_docs() -> None:
             "architecture-canonical-mindmap-start",
             "architecture-canonical-mindmap-end",
             generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
-                + [ALL_ARCHITECTURES]
+                list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
             ),
         ),
         (
             "architecture-mindmap-start",
             "architecture-mindmap-end",
             generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_ARCHITECTURE_GROUPS)
-                + [ALL_ARCHITECTURES]
+                list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
             ),
         ),
         (
@@ -805,35 +800,33 @@ def update_docs() -> None:
             "platform-mindmap-start",
             "platform-mindmap-end",
             generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
+                list(CANONICAL_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
             ),
         ),
         (
             "shell-mindmap-start",
             "shell-mindmap-end",
             generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]
+                list(CANONICAL_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]
             ),
         ),
         (
             "terminal-mindmap-start",
             "terminal-mindmap-end",
             generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
+                list(CANONICAL_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
             ),
         ),
         (
             "ci-mindmap-start",
             "ci-mindmap-end",
-            generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_CI_GROUPS) + [ALL_CI]
-            ),
+            generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_CI_GROUPS) + [ALL_CI]),
         ),
         (
             "agent-mindmap-start",
             "agent-mindmap-end",
             generate_traits_mindmap(
-                list(NON_OVERLAPPING_GROUPS & ALL_AGENT_GROUPS) + [ALL_AGENTS]
+                list(CANONICAL_GROUPS & ALL_AGENT_GROUPS) + [ALL_AGENTS]
             ),
         ),
         # Group tables.

@@ -28,8 +28,8 @@ from extra_platforms import (
     ALL_IDS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
+    CANONICAL_GROUPS,
     CI,
-    NON_OVERLAPPING_GROUPS,
     UNKNOWN,
     Agent,
     Architecture,
@@ -219,7 +219,7 @@ def test_shared_icons_belong_to_same_canonical_group():
 
     # Build a lookup: icon -> canonical group whose members all share that icon.
     allowed_icon: dict[str, Group] = {}
-    for group in NON_OVERLAPPING_GROUPS:
+    for group in CANONICAL_GROUPS:
         if all(member.icon == group.icon for member in group):
             allowed_icon[group.icon] = group
 
@@ -253,7 +253,7 @@ def test_shared_icons_belong_to_same_canonical_group():
         )
         canonical_groups = set()
         for trait in traits:
-            for group in NON_OVERLAPPING_GROUPS:
+            for group in CANONICAL_GROUPS:
                 if trait in group:
                     canonical_groups.add(group.id)
         trait_ids = [t.id for t in traits]

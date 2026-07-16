@@ -250,9 +250,9 @@ class Group(_Identifiable):
         ```
         """
         # Avoid circular import.
-        from .group_data import NON_OVERLAPPING_GROUPS
+        from .group_data import CANONICAL_GROUPS
 
-        return self in NON_OVERLAPPING_GROUPS
+        return self in CANONICAL_GROUPS
 
     def __iter__(self) -> Iterator[Trait]:
         """Iterate over the members of the group."""
@@ -295,7 +295,19 @@ class Group(_Identifiable):
         return set(self._members.values()).isdisjoint(extract_members(other))
 
     def fullyintersects(self, other: _TNestedReferences) -> bool:
-        """Return {data}`True` if the group has all members in common with `other`."""
+        """Return {data}`True` if the group has all members in common with `other`.
+
+        This is the member-level equality test: the equivalent of ``==``
+        between plain {class}`set` objects.
+
+        ```{note}
+        The name follows the {meth}`~Group.issubset` / {meth}`~Group.issuperset` /
+        {meth}`~Group.isdisjoint` naming style of native {class}`set` methods.
+        Python sets express this operation with the ``==`` operator, which
+        {class}`~extra_platforms.Group` reserves for full identity comparison
+        (ID, name, icon, and members).
+        ```
+        """
         return set(self._members.values()) == set(extract_members(other))
 
     def issubset(self, other: _TNestedReferences) -> bool:
@@ -337,8 +349,9 @@ class Group(_Identifiable):
             )
         )
 
+    # No __ior__ and friends: augmented assignments on this immutable class
+    # fall back to the binary operators, which return new Group instances.
     __or__ = union
-    __ior__ = union
 
     def intersection(self, *others: _TNestedReferences) -> Group:
         """Return a new {class}`~extra_platforms.Group` with members
@@ -356,7 +369,6 @@ class Group(_Identifiable):
         )
 
     __and__ = intersection
-    __iand__ = intersection
 
     def difference(self, *others: _TNestedReferences) -> Group:
         """Return a new {class}`~extra_platforms.Group` with members in the
@@ -374,7 +386,6 @@ class Group(_Identifiable):
         )
 
     __sub__ = difference
-    __isub__ = difference
 
     def symmetric_difference(self, other: _TNestedReferences) -> Group:
         """Return a new {class}`~extra_platforms.Group` with members in
@@ -392,7 +403,6 @@ class Group(_Identifiable):
         )
 
     __xor__ = symmetric_difference
-    __ixor__ = symmetric_difference
 
     def copy(
         self,

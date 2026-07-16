@@ -2470,7 +2470,7 @@ def current_agent(strict: bool = False) -> Agent:
 
 
 @cache
-def current_traits() -> set[Trait]:
+def current_traits() -> frozenset[Trait]:
     """Returns all traits matching the current environment.
 
     This includes {class}`~extra_platforms.Architecture`,
@@ -2505,8 +2505,10 @@ def current_traits() -> set[Trait]:
     # Lazy imports to avoid circular dependencies.
     from .group_data import ALL_TRAITS, UNKNOWN
 
-    # Collect all matching traits.
-    matching = {trait for trait in ALL_TRAITS - UNKNOWN if trait.current}
+    # Collect all matching traits. Immutability matters: this function is
+    # cached, so a mutable result would let callers corrupt the cache for
+    # everybody else.
+    matching = frozenset(trait for trait in ALL_TRAITS - UNKNOWN if trait.current)
 
     if not matching:
         raise SystemError(f"Unrecognized environment: {_unrecognized_message()}")

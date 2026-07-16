@@ -815,8 +815,8 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
             "ALL_SHELL_GROUPS",
             "ALL_TERMINAL_GROUPS",
             "ALL_AGENT_GROUPS",
-            "EXTRA_GROUPS",
-            "NON_OVERLAPPING_GROUPS",
+            "NON_CANONICAL_GROUPS",
+            "CANONICAL_GROUPS",
         ):
             return "groups.html"
 
@@ -1112,8 +1112,8 @@ def extract_docstring_from_html(html: str, symbol_id: str) -> str:
         ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are Architecture"),
         ("ALL_PLATFORM_GROUPS", "All groups whose members are Platform"),
         ("ALL_CI_GROUPS", "All groups whose members are CI"),
-        ("NON_OVERLAPPING_GROUPS", "Non-overlapping groups"),
-        ("EXTRA_GROUPS", "Overlapping groups, defined for convenience"),
+        ("CANONICAL_GROUPS", "Non-overlapping groups"),
+        ("NON_CANONICAL_GROUPS", "Overlapping groups, defined for convenience"),
         ("ALL_GROUPS", "All predefined groups"),
         ("ALL_TRAIT_IDS", "frozenset of all recognized traits IDs"),
         ("ALL_GROUP_IDS", "frozenset of all recognized group IDs"),

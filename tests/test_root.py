@@ -728,3 +728,35 @@ def test_invalidate_caches_clears_trait_current_property():
     assert "current" not in vars(UBUNTU)
     assert "current" not in vars(WINDOWS)
     assert "current" not in vars(X86_64)
+
+
+def test_deprecated_aliases():
+    """Deprecated aliases resolve to their replacement and emit a warning."""
+    with pytest.deprecated_call(
+        match="NON_OVERLAPPING_GROUPS is deprecated and will be removed in "
+        "extra-platforms 14.0.0, use CANONICAL_GROUPS instead."
+    ):
+        assert (
+            extra_platforms.NON_OVERLAPPING_GROUPS is extra_platforms.CANONICAL_GROUPS
+        )
+
+    with pytest.deprecated_call(
+        match="EXTRA_GROUPS is deprecated and will be removed in "
+        "extra-platforms 14.0.0, use NON_CANONICAL_GROUPS instead."
+    ):
+        assert extra_platforms.EXTRA_GROUPS is extra_platforms.NON_CANONICAL_GROUPS
+
+
+def test_deprecated_aliases_not_advertised():
+    """Deprecated aliases are resolvable but not part of the public API surface."""
+    from extra_platforms._deprecated import DEPRECATED_ALIASES
+
+    for deprecated_id, replacement_id in DEPRECATED_ALIASES.items():
+        assert deprecated_id not in extra_platforms.__all__
+        assert replacement_id in extra_platforms.__all__
+
+
+def test_unknown_root_attribute():
+    """Unknown attributes still raise a standard AttributeError."""
+    with pytest.raises(AttributeError, match="has no attribute 'DOES_NOT_EXIST'"):
+        _ = extra_platforms.DOES_NOT_EXIST

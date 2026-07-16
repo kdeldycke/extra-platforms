@@ -1020,7 +1020,7 @@ Not that useful as there is only one agent group, but provided for symmetry with
 """
 
 
-NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
+CANONICAL_GROUPS: frozenset[Group] = frozenset(
     (
         # Architecture groups.
         ALL_ARM,
@@ -1058,7 +1058,7 @@ NON_OVERLAPPING_GROUPS: frozenset[Group] = frozenset(
         UNKNOWN,
     ),
 )
-"""Non-overlapping groups.
+"""Canonical, non-overlapping groups.
 
 ```{hint}
 These groups together cover all {class}`~extra_platforms.Architecture`,
@@ -1072,7 +1072,7 @@ All groups in this collection are marked as {attr}`~extra_platforms.Group.canoni
 """
 
 
-EXTRA_GROUPS: frozenset[Group] = frozenset(
+NON_CANONICAL_GROUPS: frozenset[Group] = frozenset(
     (
         ALL_TRAITS,
         # Architecture groups.
@@ -1093,7 +1093,7 @@ EXTRA_GROUPS: frozenset[Group] = frozenset(
         ALL_TERMINALS,
     ),
 )
-"""Overlapping groups, defined for convenience.
+"""Non-canonical, overlapping groups, defined for convenience.
 
 ```{hint}
 None of these groups are marked as {attr}`~extra_platforms.Group.canonical`.
@@ -1101,7 +1101,7 @@ None of these groups are marked as {attr}`~extra_platforms.Group.canonical`.
 """
 
 
-ALL_GROUPS: frozenset[Group] = frozenset(NON_OVERLAPPING_GROUPS | EXTRA_GROUPS)
+ALL_GROUPS: frozenset[Group] = frozenset(CANONICAL_GROUPS | NON_CANONICAL_GROUPS)
 """All predefined groups.
 
 ```{hint}
