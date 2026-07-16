@@ -312,7 +312,6 @@ if TYPE_CHECKING:
     skip_tilix: MarkDecorator
     skip_tmux: MarkDecorator
     skip_travis_ci: MarkDecorator
-    skip_tumbleweed: MarkDecorator
     skip_tuxedo: MarkDecorator
     skip_ubuntu: MarkDecorator
     skip_ultramarine: MarkDecorator
@@ -494,7 +493,6 @@ if TYPE_CHECKING:
     unless_tilix: MarkDecorator
     unless_tmux: MarkDecorator
     unless_travis_ci: MarkDecorator
-    unless_tumbleweed: MarkDecorator
     unless_tuxedo: MarkDecorator
     unless_ubuntu: MarkDecorator
     unless_ultramarine: MarkDecorator

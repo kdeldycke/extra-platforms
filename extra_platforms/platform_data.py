@@ -13,6 +13,22 @@
 # limitations under the License.
 """Platform definitions and metadata.
 
+```{important}
+Not every distribution gets a dedicated entry. The granularity policy is:
+
+- Independent derivative distributions each get their own platform, even when
+  they build on a parent distribution. Ubuntu, Kali Linux, Linux Mint, Raspbian
+  and PikaOS are all Debian derivatives, but each is managed by its own
+  organization, with its own identity, release cadence and package
+  repositories.
+- Release channels, variants and flavors of a single distribution, managed by
+  the same organization as the parent, are folded into the parent's platform.
+  Every openSUSE channel (Tumbleweed, Leap, Slowroll, MicroOS, ...) is
+  detected as {data}`~extra_platforms.OPENSUSE` by its ``is_opensuse()``
+  detection function, while the raw channel ID remains available through
+  ``Platform.info()``.
+```
+
 ```{note}
 Default icons are inspired from Starship project:
 - https://starship.rs/config/#os
@@ -175,10 +191,6 @@ SOURCEMAGE = Platform(
 )
 
 SUNOS = Platform("sunos", "SunOS", "🌅", "https://wikipedia.org/wiki/SunOS")
-
-TUMBLEWEED = Platform(
-    "tumbleweed", "openSUSE Tumbleweed", "↻", "https://get.opensuse.org/tumbleweed/"
-)
 
 TUXEDO = Platform("tuxedo", "Tuxedo OS", "🤵", "https://tuxedocomputers.com/os")
 

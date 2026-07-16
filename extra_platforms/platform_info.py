@@ -93,25 +93,22 @@ def _parse_os_release() -> dict[str, str]:
     return {}
 
 
-# Normalization table for distro IDs that differ between os-release and distro library.
-_OS_RELEASE_ID_NORMALIZATION: dict[str, str] = {
-    "ol": "oracle",
-    "opensuse-leap": "opensuse",
-}
-
-
 @cache
 def os_release_id() -> str:
-    """Return the normalized distribution ID from os-release.
+    """Return the sanitized distribution ID from os-release.
 
-    Lowercases the `ID` field, replaces spaces with underscores, and applies
-    a normalization table for known ID differences.
+    Lowercases the `ID` field and replaces spaces with underscores. No other
+    transformation is applied: sub-variant IDs (like ``ol`` for Oracle Linux,
+    or ``opensuse-slowroll`` for the openSUSE Slowroll channel) are preserved
+    verbatim, so {func}`linux_info` and ``Platform.info()`` expose the exact
+    distribution flavor. Mapping these IDs to their canonical platform is the
+    job of the detection functions (see ``is_oracle()`` and ``is_opensuse()``
+    in ``detection.py``).
 
-    :return: Normalized distribution ID, or empty string if absent.
+    :return: Sanitized distribution ID, or empty string if absent.
     """
     raw_id = _parse_os_release().get("id", "")
-    normalized = raw_id.lower().replace(" ", "_")
-    return _OS_RELEASE_ID_NORMALIZATION.get(normalized, normalized)
+    return raw_id.lower().replace(" ", "_")
 
 
 def _version_parts(release: str) -> dict[str, str | None]:

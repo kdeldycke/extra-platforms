@@ -251,7 +251,6 @@ All recognized traits and their properties:
 |  🔀  | {data}`~TILIX`                | Tilix                          | {func}`~is_tilix`                | Terminal     |
 |  📟  | {data}`~TMUX`                 | tmux                           | {func}`~is_tmux`                 | Terminal     |
 |  👷  | {data}`~TRAVIS_CI`            | Travis CI                      | {func}`~is_travis_ci`            | CI           |
-|  ↻   | {data}`~TUMBLEWEED`           | openSUSE Tumbleweed            | {func}`~is_tumbleweed`           | Platform     |
 |  🤵  | {data}`~TUXEDO`               | Tuxedo OS                      | {func}`~is_tuxedo`               | Platform     |
 |  🎯  | {data}`~UBUNTU`               | Ubuntu                         | {func}`~is_ubuntu`               | Platform     |
 |  🌊  | {data}`~ULTRAMARINE`          | Ultramarine                    | {func}`~is_ultramarine`          | Platform     |

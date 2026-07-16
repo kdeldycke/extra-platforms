@@ -718,8 +718,17 @@ def is_openbsd() -> bool:
 
 @cache
 def is_opensuse() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.OPENSUSE`."""
-    return os_release_id() == "opensuse"
+    """Return {data}`True` if current platform is {data}`~extra_platforms.OPENSUSE`.
+
+    ```{note}
+    Matches the main ``opensuse`` ID as well as any ``opensuse-*`` release
+    channel (Tumbleweed, Leap, Slowroll, MicroOS, ...), per the granularity
+    policy documented in the ``platform_data`` module. The raw channel ID
+    remains available through ``Platform.info()``.
+    ```
+    """
+    distro_id = os_release_id()
+    return distro_id == "opensuse" or distro_id.startswith("opensuse-")
 
 
 @cache
@@ -730,8 +739,15 @@ def is_openwrt() -> bool:
 
 @cache
 def is_oracle() -> bool:
-    """Return {data}`True` if current platform is {data}`~extra_platforms.ORACLE`."""
-    return os_release_id() == "oracle"
+    """Return {data}`True` if current platform is {data}`~extra_platforms.ORACLE`.
+
+    ```{note}
+    Oracle Linux sets ``ID=ol`` in its ``os-release`` file. The platform keeps
+    the more explicit ``oracle`` ID, mirroring the naming of the
+    [`distro` library](https://github.com/python-distro/distro).
+    ```
+    """
+    return os_release_id() == "ol"
 
 
 @cache
@@ -873,14 +889,6 @@ def is_sunos() -> bool:
     return sys.platform == "sunos5" and platform.platform(
         aliased=True, terse=True
     ).startswith("SunOS")
-
-
-@cache
-def is_tumbleweed() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.TUMBLEWEED`.
-    """
-    return os_release_id() == "opensuse-tumbleweed"
 
 
 @cache

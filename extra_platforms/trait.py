@@ -364,6 +364,10 @@ class Platform(Trait):
     """A platform can identify multiple distributions or OSes with the same
     characteristics.
 
+    See the ``platform_data`` module for the granularity policy deciding when a
+    distribution gets a dedicated platform, and when it is folded into an
+    existing one.
+
     ```{seealso}
     Init systems (systemd, upstart, sysvinit, openrc, runit, etc.) are another
     dimension of platform characterization that could be detected in the future.

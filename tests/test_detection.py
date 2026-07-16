@@ -38,6 +38,8 @@ from extra_platforms import (
     is_armv7l,
     is_github_ci,
     is_gitlab_ci,
+    is_opensuse,
+    is_oracle,
     is_windows,
     is_x86_64,
 )
@@ -192,6 +194,37 @@ def test_is_arm_depends_on_arm_variants(monkeypatch):
     assert is_arm()
 
     # Clear cached results computed from the mocked machine value.
+    invalidate_caches()
+
+
+@pytest.mark.parametrize(
+    "distro_id",
+    (
+        "opensuse",
+        "opensuse-aeon",
+        "opensuse-leap",
+        "opensuse-microos",
+        "opensuse-slowroll",
+        "opensuse-tumbleweed",
+    ),
+)
+def test_opensuse_channel_folding(monkeypatch, distro_id):
+    """Any openSUSE release channel is detected as the OPENSUSE platform."""
+    invalidate_caches()
+    monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: distro_id)
+    assert is_opensuse()
+
+    # Clear cached results computed from the mocked distribution ID.
+    invalidate_caches()
+
+
+def test_oracle_raw_id_detection(monkeypatch):
+    """Oracle Linux is detected from its raw ``ol`` os-release ID."""
+    invalidate_caches()
+    monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: "ol")
+    assert is_oracle()
+
+    # Clear cached results computed from the mocked distribution ID.
     invalidate_caches()
 
 

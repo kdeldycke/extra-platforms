@@ -163,7 +163,6 @@
 | {func}`~is_tilix`                |  🔀  | {data}`~TILIX`                |
 | {func}`~is_tmux`                 |  📟  | {data}`~TMUX`                 |
 | {func}`~is_travis_ci`            |  👷  | {data}`~TRAVIS_CI`            |
-| {func}`~is_tumbleweed`           |  ↻   | {data}`~TUMBLEWEED`           |
 | {func}`~is_tuxedo`               |  🤵  | {data}`~TUXEDO`               |
 | {func}`~is_ubuntu`               |  🎯  | {data}`~UBUNTU`               |
 | {func}`~is_ultramarine`          |  🌊  | {data}`~ULTRAMARINE`          |
@@ -321,7 +320,6 @@
 .. autofunction:: extra_platforms.is_tilix
 .. autofunction:: extra_platforms.is_tmux
 .. autofunction:: extra_platforms.is_travis_ci
-.. autofunction:: extra_platforms.is_tumbleweed
 .. autofunction:: extra_platforms.is_tuxedo
 .. autofunction:: extra_platforms.is_ubuntu
 .. autofunction:: extra_platforms.is_ultramarine

@@ -37,7 +37,6 @@ from extra_platforms import (
     GITLAB_CI,
     MACOS,
     SYSTEM_V,
-    TUMBLEWEED,
     UBUNTU,
     UNIX,
     UNKNOWN,
@@ -114,8 +113,6 @@ def test_pyproject_keywords():
             # Remove versioned WSL platforms.
             - WSL1
             - WSL2
-            # Remove Tumbleweed, subsumed by openSUSE.
-            - TUMBLEWEED
             # Remove UNKNOWN_* traits.
             - UNKNOWN
         )

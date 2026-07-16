@@ -185,7 +185,6 @@ mappingproxy({
     'sles': Platform(id='sles', name='SUSE Linux Enterprise Server'),
     'slitaz': Platform(id='slitaz', name='SliTaz GNU/Linux'),
     'sourcemage': Platform(id='sourcemage', name='Source Mage GNU/Linux'),
-    'tumbleweed': Platform(id='tumbleweed', name='openSUSE Tumbleweed'),
     'tuxedo': Platform(id='tuxedo', name='Tuxedo OS'),
     'ubuntu': Platform(id='ubuntu', name='Ubuntu'),
     'ultramarine': Platform(id='ultramarine', name='Ultramarine'),
@@ -193,7 +192,7 @@ mappingproxy({
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'tumbleweed', 'scientific', 'manjaro', 'parallels', 'clearlinux'})
+frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux'})
 >>> print("\n".join([p.name for p in LINUX]))
 Alpine Linux
 ALT Linux
@@ -235,7 +234,6 @@ Slackware
 SUSE Linux Enterprise Server
 SliTaz GNU/Linux
 Source Mage GNU/Linux
-openSUSE Tumbleweed
 Tuxedo OS
 Ubuntu
 Ultramarine
@@ -375,7 +373,6 @@ mindmap
             (🦎 SLES)
             (🕷️ SLITAZ)
             (🧙 SOURCEMAGE)
-            (↻ TUMBLEWEED)
             (🤵 TUXEDO)
             (🎯 UBUNTU)
             (🌊 ULTRAMARINE)

@@ -45,6 +45,8 @@ Platform(id='macos', name='macOS')
 
 ## Recognized platforms
 
+Independent derivative distributions each get a dedicated platform, even when they build on a parent distribution: Ubuntu, Kali Linux, Linux Mint, Raspbian and PikaOS are all Debian derivatives, but each is managed by its own organization. Release channels, variants and flavors of a single distribution, managed by the same organization as the parent, are folded into the parent's platform: every openSUSE channel (Tumbleweed, Leap, Slowroll, MicroOS, ...) is detected as {data}`~OPENSUSE`, while the raw channel ID remains available through {meth}`~Platform.info`.
+
 <!-- platform-table-start -->
 
 | Icon | Symbol                 | Name                           | Detection function        |
@@ -103,7 +105,6 @@ Platform(id='macos', name='macOS')
 |  🌞  | {data}`~SOLARIS`       | Solaris                        | {func}`~is_solaris`       |
 |  🧙  | {data}`~SOURCEMAGE`    | Source Mage GNU/Linux          | {func}`~is_sourcemage`    |
 |  🌅  | {data}`~SUNOS`         | SunOS                          | {func}`~is_sunos`         |
-|  ↻   | {data}`~TUMBLEWEED`    | openSUSE Tumbleweed            | {func}`~is_tumbleweed`    |
 |  🤵  | {data}`~TUXEDO`        | Tuxedo OS                      | {func}`~is_tuxedo`        |
 |  🎯  | {data}`~UBUNTU`        | Ubuntu                         | {func}`~is_ubuntu`        |
 |  🌊  | {data}`~ULTRAMARINE`   | Ultramarine                    | {func}`~is_ultramarine`   |
@@ -167,7 +168,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,46
+ALL_PLATFORMS,LINUX,45
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -214,7 +215,6 @@ LINUX,SLACKWARE,1
 LINUX,SLES,1
 LINUX,SLITAZ,1
 LINUX,SOURCEMAGE,1
-LINUX,TUMBLEWEED,1
 LINUX,TUXEDO,1
 LINUX,UBUNTU,1
 LINUX,ULTRAMARINE,1
@@ -305,7 +305,6 @@ mindmap
             (🦎 SLES)
             (🕷️ SLITAZ)
             (🧙 SOURCEMAGE)
-            (↻ TUMBLEWEED)
             (🤵 TUXEDO)
             (🎯 UBUNTU)
             (🌊 ULTRAMARINE)
@@ -393,7 +392,6 @@ mindmap
 .. autodata:: extra_platforms.SOLARIS
 .. autodata:: extra_platforms.SOURCEMAGE
 .. autodata:: extra_platforms.SUNOS
-.. autodata:: extra_platforms.TUMBLEWEED
 .. autodata:: extra_platforms.TUXEDO
 .. autodata:: extra_platforms.UBUNTU
 .. autodata:: extra_platforms.ULTRAMARINE

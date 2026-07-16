@@ -140,17 +140,18 @@ def test_parse_os_release_content(content, expected):
 @pytest.mark.parametrize(
     ("raw_id", "expected"),
     (
-        ("ol", "oracle"),
-        ("opensuse-leap", "opensuse"),
+        ("ol", "ol"),
+        ("opensuse-leap", "opensuse-leap"),
+        ("opensuse-slowroll", "opensuse-slowroll"),
         ("opensuse-tumbleweed", "opensuse-tumbleweed"),
         ("Ubuntu", "ubuntu"),
         ("fedora", "fedora"),
     ),
 )
-def test_os_release_id_normalization(
+def test_os_release_id_sanitization(
     raw_id, expected, monkeypatch, fresh_os_release_caches
 ):
-    """Test ID normalization rules."""
+    """IDs are lowercased but otherwise preserved, sub-variants included."""
     monkeypatch.setattr(
         "extra_platforms.platform_info._parse_os_release",
         lambda: {"id": raw_id},

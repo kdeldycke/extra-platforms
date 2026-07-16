@@ -364,6 +364,13 @@ Linting and formatting are automated via GitHub workflows. Developers don't need
 
 The `*_data.py` files (trait and group definitions) should be clean and easy to maintain. It's acceptable to use indirections elsewhere (like function-level imports) to achieve this.
 
+### Platform granularity
+
+- **Independent derivative distributions** get a dedicated `Platform` object, even when they build on a parent distribution. Ubuntu, Kali, Linux Mint, Raspbian and PikaOS are all Debian derivatives, but each is managed by its own organization.
+- **Channels, variants and flavors of the same distribution**, managed by the same organization/maintainers as the parent, share the parent's platform object: match their `os-release` ID in the parent's detection function, like `is_opensuse()` matching every `opensuse-*` channel (Tumbleweed, Leap, Slowroll, MicroOS, ...). `os_release_id()` returns the raw sub-variant ID untouched, so `Platform.info()` still exposes the exact flavor.
+
+The canonical statement of this policy lives in the `platform_data.py` module docstring.
+
 ### Icon conventions
 
 Icons are inspired by [Starship](https://starship.rs/) and [NerdFonts](https://www.nerdfonts.com/). Each trait and group has a single-glyph icon (1–2 Python `len()` characters, accounting for variation selectors like `U+FE0F`).

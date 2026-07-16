@@ -228,7 +228,6 @@ def test_not_in_github_actions():
 | {deco}`~pytest.skip_tilix`                | {deco}`~pytest.unless_tilix`                |  🔀  | {data}`~TILIX`                |
 | {deco}`~pytest.skip_tmux`                 | {deco}`~pytest.unless_tmux`                 |  📟  | {data}`~TMUX`                 |
 | {deco}`~pytest.skip_travis_ci`            | {deco}`~pytest.unless_travis_ci`            |  👷  | {data}`~TRAVIS_CI`            |
-| {deco}`~pytest.skip_tumbleweed`           | {deco}`~pytest.unless_tumbleweed`           |  ↻   | {data}`~TUMBLEWEED`           |
 | {deco}`~pytest.skip_tuxedo`               | {deco}`~pytest.unless_tuxedo`               |  🤵  | {data}`~TUXEDO`               |
 | {deco}`~pytest.skip_ubuntu`               | {deco}`~pytest.unless_ubuntu`               |  🎯  | {data}`~UBUNTU`               |
 | {deco}`~pytest.skip_ultramarine`          | {deco}`~pytest.unless_ultramarine`          |  🌊  | {data}`~ULTRAMARINE`          |
@@ -418,7 +417,6 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.skip_tilix
 .. autodecorator:: extra_platforms.pytest.skip_tmux
 .. autodecorator:: extra_platforms.pytest.skip_travis_ci
-.. autodecorator:: extra_platforms.pytest.skip_tumbleweed
 .. autodecorator:: extra_platforms.pytest.skip_tuxedo
 .. autodecorator:: extra_platforms.pytest.skip_ubuntu
 .. autodecorator:: extra_platforms.pytest.skip_ultramarine
@@ -605,7 +603,6 @@ def test_not_in_github_actions():
 .. autodecorator:: extra_platforms.pytest.unless_tilix
 .. autodecorator:: extra_platforms.pytest.unless_tmux
 .. autodecorator:: extra_platforms.pytest.unless_travis_ci
-.. autodecorator:: extra_platforms.pytest.unless_tumbleweed
 .. autodecorator:: extra_platforms.pytest.unless_tuxedo
 .. autodecorator:: extra_platforms.pytest.unless_ubuntu
 .. autodecorator:: extra_platforms.pytest.unless_ultramarine
