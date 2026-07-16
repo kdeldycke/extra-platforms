@@ -1112,8 +1112,11 @@ def extract_docstring_from_html(html: str, symbol_id: str) -> str:
         ("ALL_ARCHITECTURE_GROUPS", "All groups whose members are Architecture"),
         ("ALL_PLATFORM_GROUPS", "All groups whose members are Platform"),
         ("ALL_CI_GROUPS", "All groups whose members are CI"),
-        ("CANONICAL_GROUPS", "Non-overlapping groups"),
-        ("NON_CANONICAL_GROUPS", "Overlapping groups, defined for convenience"),
+        ("CANONICAL_GROUPS", "Canonical, non-overlapping groups"),
+        (
+            "NON_CANONICAL_GROUPS",
+            "Non-canonical, overlapping groups, defined for convenience",
+        ),
         ("ALL_GROUPS", "All predefined groups"),
         ("ALL_TRAIT_IDS", "frozenset of all recognized traits IDs"),
         ("ALL_GROUP_IDS", "frozenset of all recognized group IDs"),
