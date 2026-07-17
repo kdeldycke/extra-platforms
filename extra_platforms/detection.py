@@ -100,7 +100,7 @@ _detection_registry: dict[str, Callable[[], bool]] = {}
 Populated automatically after all ``is_*()`` functions are defined. Group
 detection functions generated in ``__init__.py`` are also registered here.
 
-Used by :attr:`Trait.current <extra_platforms.Trait.current>` to look up
+Used by {attr}`Trait.current <extra_platforms.Trait.current>` to look up
 detection functions without a fragile string-based module attribute search.
 """
 

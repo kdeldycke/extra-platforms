@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Extend the Sphinx cross-reference conformance tests to MyST-style roles in Python docstrings, previously never collected.
+
 ## [`13.3.1` (2026-07-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.0...v13.3.1)
 
 - Fix `test_current_funcs` failing under nested shells: extra shells backed by real ancestor processes (like a fish session running an OBS chroot build) are now accounted for. Addresses [#619](https://github.com/kdeldycke/extra-platforms/issues/619)

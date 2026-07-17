@@ -62,6 +62,14 @@ pytestmark = [
 # directory, which is already covered by the stock .gitignore rules.
 DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "_build"
 
+# Modules absent from every autodoc directive in ./docs/, so their docstring
+# cross-references have no rendered anchors to resolve against. Remove an
+# entry to re-arm anchor checks the day its module joins the documentation.
+UNRENDERED_MODULES = frozenset((
+    "extra_platforms/_deprecated.py",
+    "extra_platforms/platform_info.py",
+))
+
 
 @pytest.fixture(scope="module")
 def built_docs() -> Path:
@@ -925,11 +933,15 @@ def collect_all_refs() -> list[tuple[str, str, str]]:
         for role, symbol in re.findall(myst_pattern, content):
             all_refs.append((role, symbol, str(md_file.relative_to(project_root))))
 
+    # Docstrings are MyST-flavored (rendered via repomatic.myst_docstrings), so
+    # code files are scanned for MyST roles too. The reST pattern is kept for
+    # the rare reST-syntax roles that survive the MyST→reST conversion pass.
     rst_pattern = r":(\w+):`~?([^`]+)`"
     for py_file in code_dir.glob("**/*.py"):
         content = py_file.read_text(encoding="utf-8")
-        for role, symbol in re.findall(rst_pattern, content):
-            all_refs.append((role, symbol, str(py_file.relative_to(project_root))))
+        for pattern in (myst_pattern, rst_pattern):
+            for role, symbol in re.findall(pattern, content):
+                all_refs.append((role, symbol, str(py_file.relative_to(project_root))))
 
     return all_refs
 
@@ -980,10 +992,13 @@ def test_all_crossreferences_point_to_correct_pages(
         "SystemError",
         "NotImplementedError",
         "KeyError",
+        "IndexError",
         "ValueError",
         "TypeError",
         "AttributeError",
         "RuntimeError",
+        "DeprecationWarning",
+        "UnicodeDecodeError",
         "Exception",
     }
     python_builtin_methods = {
@@ -1012,18 +1027,27 @@ def test_all_crossreferences_point_to_correct_pages(
     if (
         symbol.startswith((
             "pytest.",
-            "platform.",
-            "typing.",
+            "ast.",
             "collections.",
-            "types.",
             "dict.",
             "frozenset.",
+            "pathlib.",
+            "platform.",
             "shlex.",
+            "subprocess.",
+            "sys.",
+            "types.",
+            "typing.",
         ))
         and not symbol.startswith("pytest.skip_")
         and not symbol.startswith("pytest.unless_")
     ):
         pytest.skip("External symbol reference")
+
+    # Docstring references from modules the documentation never renders have
+    # no anchors to check against.
+    if source_file in UNRENDERED_MODULES:
+        pytest.skip("Source module not rendered in the documentation")
 
     symbol_clean = symbol.split(".")[-1]
     if symbol_clean.startswith("ALL_") and symbol_clean.endswith(("_IDS", "_ID")):
