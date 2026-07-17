@@ -955,8 +955,6 @@ def __getattr__(name: str) -> Any:
     ``__getattr__`` hook: it only fires for attributes not found in the module,
     so current symbols are served without overhead. See ``_deprecated.py``.
     """
-    from ._deprecated import DEPRECATED_ALIASES, resolve_deprecated
+    from ._deprecated import resolve_deprecated
 
-    if name in DEPRECATED_ALIASES[__name__]:
-        return resolve_deprecated(__name__, name)
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return resolve_deprecated(__name__, name)

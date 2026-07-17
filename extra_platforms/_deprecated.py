@@ -56,13 +56,19 @@ DEPRECATED_ALIASES: dict[str, dict[str, str]] = {
 
 
 def resolve_deprecated(module_id: str, name: str) -> Any:
-    """Return the replacement object for the deprecated ``name`` in ``module_id``.
+    """Resolve an attribute access from a module's ``__getattr__`` hook.
 
-    Emits a {exc}`DeprecationWarning` naming the replacement, attributed to the
-    caller's access site (``stacklevel=3``: this function, the hosting module's
-    ``__getattr__``, then the caller).
+    Looks ``name`` up among the {data}`DEPRECATED_ALIASES` registered for
+    ``module_id``. For a deprecated alias, emits a {exc}`DeprecationWarning`
+    naming the replacement and returns the replacement object. For any other
+    name, raises {exc}`AttributeError` so unknown attributes behave as usual.
+
+    The warning is attributed to the caller's access site (``stacklevel=3``:
+    this function, the hosting module's ``__getattr__``, then the caller).
     """
-    replacement = DEPRECATED_ALIASES[module_id][name]
+    replacement = DEPRECATED_ALIASES[module_id].get(name)
+    if replacement is None:
+        raise AttributeError(f"module {module_id!r} has no attribute {name!r}")
     warnings.warn(
         f"{name} is deprecated and will be removed in extra-platforms "
         f"{REMOVAL_VERSION}, use {replacement} instead.",

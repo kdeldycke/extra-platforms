@@ -8,7 +8,6 @@
 - Deprecate the `TUMBLEWEED` platform: openSUSE Tumbleweed is now detected as `OPENSUSE`. `TUMBLEWEED`, `is_tumbleweed()` and the `skip_tumbleweed`/`unless_tumbleweed` decorators still resolve to their `OPENSUSE` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
 - Detect all openSUSE release channels (Tumbleweed, Leap, Slowroll, MicroOS, ...) as `OPENSUSE`. Closes [#619](https://github.com/kdeldycke/extra-platforms/issues/619)
 - `Platform.info()` now reports the raw `os-release` ID of distribution sub-variants in its `distro_id` field (like `ol` or `opensuse-slowroll`) instead of aliasing it to the canonical platform ID.
-- Document the platform granularity policy: independent derivative distributions get a dedicated platform, while channels and variants of the same distribution fold into their parent.
 - Rename `NON_OVERLAPPING_GROUPS` to `CANONICAL_GROUPS` and `EXTRA_GROUPS` to `NON_CANONICAL_GROUPS`, matching the `Group.canonical` vocabulary. The old names still resolve with a `DeprecationWarning`, and will be removed in `14.0.0`.
 - `Trait.info()` is now implemented by the base class with identity metadata: custom `Trait` subclasses are no longer forced to override it.
 - Rename the `ALL_CI` group to "All CI systems" and `ALL_AGENTS` to "All AI coding agents", aligning with the other "all" group names.
@@ -18,6 +17,7 @@
 - Fix grammar and labels of the `current_*()` multiple-match errors ("Multiple CI matches:" is now "Multiple CI systems match:").
 - Fix the `cff-version` schema field in `citation.cff` being overwritten with the package version on every version bump.
 - Fix stale agent tables, Sankey and mindmap diagrams in the documentation: they are now regenerated like the other trait categories.
+- Document the platform granularity policy: independent derivative distributions get a dedicated platform, while channels and variants of the same distribution fold into their parent.
 - Replace the hand-maintained per-architecture, per-platform, per-CI and per-agent exclusivity test blocks with generic mutual-exclusion conformance tests.
 - Convert `test_platform_info.py` from test classes to parametrized top-level functions.
 

@@ -680,12 +680,18 @@ def test_import_time():
     Spawns a fresh subprocess to measure cold import time, avoiding
     ``sys.modules`` cache effects from pytest's own imports.
 
-    The 1000 ms threshold is deliberately loose to absorb CI runner variability
+    The 2000 ms threshold is deliberately loose to absorb CI runner variability
     on shared VMs and slower architectures (like i586, where cold import
     measured ~340 ms in 11.x and ~613 ms in 12.0.0). This will not catch small
     drifts, but reliably prevents reintroducing expensive import-time
     operations (like the ~120 ms regression from redundant AST parsing that
     was fixed by caching in ``_docstrings.py``).
+
+    The budget doubled from 1000 ms to 2000 ms in the 13.3.0 cycle after the
+    shared macos-15-intel runner measured ~1088 ms cold import on py3.14 with
+    no code-level regression: local cold import held at ~30 ms, matching
+    13.2.0. The larger budget keeps absorbing shared-VM tail latency while
+    still catching grossly expensive import-time operations.
     """
     result = subprocess.run(
         [
@@ -699,7 +705,7 @@ def test_import_time():
         check=True,
     )
     elapsed_ms = float(result.stdout.strip()) * 1000
-    assert elapsed_ms < 1000, f"Import took {elapsed_ms:.1f} ms, expected < 1000 ms"
+    assert elapsed_ms < 2000, f"Import took {elapsed_ms:.1f} ms, expected < 2000 ms"
 
 
 def test_invalidate_caches_clears_trait_current_property():
