@@ -43,6 +43,14 @@ The current agent can be obtained via the `current_agent()` function:
 Agent(id='unknown_agent', name='Unknown agent')
 ```
 
+## Absence is the normal case
+
+Each AI coding agent advertises itself through a dedicated environment variable: `CLAUDECODE` for Claude Code, `CLINE_ACTIVE` for Cline, `CURSOR_AGENT` for Cursor. {func}`~current_agent` expects a single agent to announce itself and raises `RuntimeError` if several match at once.
+
+Outside an agent session, every detection function returns `False` and {func}`~current_agent` returns {data}`~UNKNOWN_AGENT`. This makes {func}`~is_unknown_agent` the idiomatic "not driven by an agent" check.
+
+The `LLM` variable is used as an expectation signal: when it is set but no agent is recognized, the miss is logged as a `WARNING` (a detection heuristic is probably missing and worth [reporting](https://github.com/kdeldycke/extra-platforms/issues)); otherwise it is only logged as `INFO`.
+
 ## Recognized agents
 
 <!-- agent-table-start -->

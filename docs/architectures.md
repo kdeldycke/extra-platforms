@@ -43,6 +43,14 @@ The current architecture can be obtained via the `current_architecture()` functi
 Architecture(id='x86_64', name='x86-64 (AMD64)')
 ```
 
+## Exactly one architecture matches
+
+Architecture detection reads {func}`platform.machine`: the machine name the operating system reports to the Python interpreter. Detection functions normalize the spelling differences between systems, so `aarch64` (Linux), `arm64` (macOS) and `ARM64` (Windows) all resolve to {data}`~AARCH64`, and the `AMD64` reported by Windows resolves to {data}`~X86_64`.
+
+Because the value reflects the interpreter's point of view, a process running under a translation layer like Rosetta 2 or qemu user-mode emulation reports the emulated architecture, not the CPU underneath.
+
+Unlike [shells](shells.md), architectures are mutually exclusive: at most one detection function returns `True` at any time. {func}`~is_arm` preserves that property while acting as a fallback: it only matches ARM machines not covered by the more precise {data}`~ARMV5TEL`, {data}`~ARMV6L`, {data}`~ARMV7L`, {data}`~ARMV8L` and {data}`~AARCH64` variants. {func}`~current_architecture` treats several simultaneous matches as a bug and raises `RuntimeError`.
+
 ## Recognized architectures
 
 <!-- architecture-table-start -->

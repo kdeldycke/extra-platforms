@@ -43,6 +43,14 @@ The current terminal can be obtained via the `current_terminal()` function:
 Terminal(id='unknown_terminal', name='Unknown terminal')
 ```
 
+## Terminals are optional and can stack
+
+Terminal detection relies on the environment variables each emulator advertises to its children (like `TERM_PROGRAM` for Apple Terminal, `KITTY_WINDOW_ID` for Kitty, or `TMUX` for tmux).
+
+A terminal is not always present: headless environments (CI runners, cron jobs, containers, non-interactive SSH commands) have no emulator attached. Every detection function then returns `False` and {func}`~current_terminal` returns {data}`~UNKNOWN_TERMINAL`. When the `TERM` variable is set but no terminal is recognized, the miss is logged as a `WARNING` (an emulator seems present, so a detection heuristic is probably missing and worth [reporting](https://github.com/kdeldycke/extra-platforms/issues)); without `TERM` it is only logged as `INFO`.
+
+Terminal multiplexers stack on top of a regular emulator, and their variables inherit through the stack: running tmux inside Kitty leaves both {func}`~is_tmux` and {func}`~is_kitty` returning `True`. In that case {func}`~current_terminal` sets the multiplexer aside and reports the hosting emulator ({data}`~KITTY` here). Test against the {data}`~MULTIPLEXERS` group with {func}`~is_multiplexers` to target multiplexers explicitly.
+
 ## Recognized terminals
 
 <!-- terminal-table-start -->

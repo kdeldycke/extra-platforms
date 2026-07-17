@@ -2354,10 +2354,10 @@ def current_terminal(strict: bool = False) -> Terminal:
     recognized terminal. To raise an error instead, set `strict` to `True`.
 
     ```{important}
-    If multiple terminals match (e.g., {data}`~extra_platforms.TMUX` inside
+    If multiple terminals match (like {data}`~extra_platforms.TMUX` inside
     {data}`~extra_platforms.KITTY`), multiplexers are filtered out first to
-    identify the innermost terminal. If multiple non-multiplexer terminals still
-    match, a {class}`RuntimeError` is raised.
+    report the terminal emulator hosting the session. If multiple
+    non-multiplexer terminals still match, a {class}`RuntimeError` is raised.
     ```
 
     ```{note}
@@ -2381,8 +2381,8 @@ def current_terminal(strict: bool = False) -> Terminal:
         if term.current
     }
 
-    # If multiple terminals match, filter out multiplexers to find the
-    # innermost one (like TMUX running inside KITTY).
+    # If multiple terminals match, filter out multiplexers to report the
+    # hosting terminal emulator (like KITTY hosting a TMUX session).
     if len(matching) > 1:
         non_mux = {term for term in matching if term not in MULTIPLEXERS}
         if len(non_mux) == 1:

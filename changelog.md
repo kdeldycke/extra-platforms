@@ -6,7 +6,7 @@
 > This version is **not released yet** and is under active development.
 
 - Fix `test_current_funcs` failing under nested shells: extra shells backed by real ancestor processes (like a fish session running an OBS chroot build) are now accounted for. Addresses [#619](https://github.com/kdeldycke/extra-platforms/issues/619)
-- Document on the shells page that multiple shells can be detected simultaneously, and how `current_shell()` picks the primary one.
+- Document detection semantics on every trait page: which traits can match simultaneously (shells, platforms, terminals), which are exclusive (architectures, CI systems, agents), and how each `current_*()` function arbitrates or reports absences.
 
 ## [`13.3.0` (2026-07-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.2.0...v13.3.0)
 

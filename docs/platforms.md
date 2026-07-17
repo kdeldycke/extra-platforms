@@ -43,6 +43,16 @@ The current platform can be obtained via the `current_platform()` function:
 Platform(id='macos', name='macOS')
 ```
 
+## Compatibility layers can match at once
+
+Most Linux distributions are identified by the `ID` field of their [`os-release`](https://www.freedesktop.org/software/systemd/man/latest/os-release.html) file, while other systems are recognized through dedicated markers like `sys.platform` values, environment variables or vendor files.
+
+A compatibility layer is detected alongside the system it hosts, so two platform detection functions can legitimately return `True` at the same time: inside WSL, both {func}`~is_wsl2` (or {func}`~is_wsl1`) and the hosted distribution's function like {func}`~is_ubuntu` match; inside ChromeOS's Crostini container, both {func}`~is_chromeos` and {func}`~is_debian` do.
+
+{func}`~current_platform` narrows the matches down to the most informative one by dropping the layers ({data}`~WSL1`, {data}`~WSL2`, {data}`~CHROMEOS`) in favor of the hosted distribution. {func}`~current_traits` keeps every match.
+
+{data}`~GENERIC_LINUX` plays the opposite role: it is not an extra match but a fallback, only firing when the kernel is Linux and the distribution cannot be identified (like minimal containers or build chroots shipping no `os-release` file). {func}`~current_platform` still returns it in that situation, while logging a warning inviting you to [report](https://github.com/kdeldycke/extra-platforms/issues) the unrecognized distribution.
+
 ## Recognized platforms
 
 Independent derivative distributions each get a dedicated platform, even when they build on a parent distribution: Ubuntu, Kali Linux, Linux Mint, Raspbian and PikaOS are all Debian derivatives, but each is managed by its own organization. Release channels, variants and flavors of a single distribution, managed by the same organization as the parent, are folded into the parent's platform: every openSUSE channel (Tumbleweed, Leap, Slowroll, MicroOS, ...) is detected as {data}`~OPENSUSE`, while the raw channel ID remains available through {meth}`~Platform.info`.

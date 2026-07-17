@@ -43,6 +43,14 @@ The current CI system can be obtained via the `current_ci()` function:
 CI(id='unknown_ci', name='Unknown CI')
 ```
 
+## Absence is the normal case
+
+Each CI system advertises itself through vendor-specific environment variables, like `GITHUB_ACTIONS` for GitHub Actions runners or `TF_BUILD` for Azure Pipelines. Only one system can realistically announce itself at a time: {func}`~current_ci` raises `RuntimeError` if several ever match.
+
+Outside CI, every detection function returns `False` and {func}`~current_ci` returns {data}`~UNKNOWN_CI`. This makes {func}`~is_unknown_ci` the idiomatic "not running in CI" check.
+
+Most vendors also set the generic `CI` variable, which is used as an expectation signal: when `CI` is set but no system is recognized, the miss is logged as a `WARNING` (a detection heuristic is probably missing and worth [reporting](https://github.com/kdeldycke/extra-platforms/issues)); otherwise it is only logged as `INFO`.
+
 ## Recognized CI
 
 <!-- ci-table-start -->
