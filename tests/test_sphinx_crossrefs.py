@@ -1012,6 +1012,7 @@ def test_all_crossreferences_point_to_correct_pages(
     if (
         symbol.startswith((
             "pytest.",
+            "platform.",
             "typing.",
             "collections.",
             "types.",
