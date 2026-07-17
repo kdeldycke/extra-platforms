@@ -7,6 +7,9 @@
 
 ## [`13.3.0` (2026-07-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.2.0...v13.3.0)
 
+> [!NOTE]
+> `13.3.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.3.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.3.0).
+
 - Deprecate the `TUMBLEWEED` platform: openSUSE Tumbleweed is now detected as `OPENSUSE`. `TUMBLEWEED`, `is_tumbleweed()` and the `skip_tumbleweed`/`unless_tumbleweed` decorators still resolve to their `OPENSUSE` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
 - Detect all openSUSE release channels (Tumbleweed, Leap, Slowroll, MicroOS, ...) as `OPENSUSE`. Closes [#619](https://github.com/kdeldycke/extra-platforms/issues/619)
 - `Platform.info()` now reports the raw `os-release` ID of distribution sub-variants in its `distro_id` field (like `ol` or `opensuse-slowroll`) instead of aliasing it to the canonical platform ID.
