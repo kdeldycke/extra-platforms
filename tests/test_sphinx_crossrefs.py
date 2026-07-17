@@ -13,7 +13,7 @@
 # limitations under the License.
 """Tests for Sphinx cross-reference rendering in the real documentation.
 
-These tests verify that cross-references in the built documentation (./docs/html/)
+These tests verify that cross-references in the built documentation (./docs/_build/)
 resolve to actual links with correct href attributes. Unlike mock-based tests,
 these catch real regressions in the actual documentation.
 """
@@ -58,8 +58,9 @@ pytestmark = [
     pytest.mark.xdist_group("sphinx"),
 ]
 
-# Path to the built documentation.
-DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "html"
+# Path to the built documentation. Matches the CI docs workflow output
+# directory, which is already covered by the stock .gitignore rules.
+DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "_build"
 
 
 @pytest.fixture(scope="module")
@@ -71,7 +72,7 @@ def built_docs() -> Path:
     if not DOCS_HTML_DIR.exists():
         # Build the documentation.
         subprocess.run(
-            ["uv", "run", "sphinx-build", "-b", "html", "./docs", "./docs/html"],
+            ["uv", "run", "sphinx-build", "-b", "html", "./docs", "./docs/_build"],
             check=True,
             cwd=Path(__file__).parent.parent,
         )

@@ -60,7 +60,7 @@ $ uvx repomatic run mypy -- extra_platforms
 Build Sphinx documentation locally:
 
 ```shell-session
-$ uv run sphinx-build -b html ./docs ./docs/html
+$ uv run sphinx-build -b html ./docs ./docs/_build
 ```
 
 ## Architecture
