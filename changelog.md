@@ -9,6 +9,9 @@
 
 ## [`13.3.1` (2026-07-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.0...v13.3.1)
 
+> [!NOTE]
+> `13.3.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.3.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.3.1).
+
 - Fix `test_current_funcs` failing under nested shells: extra shells backed by real ancestor processes (like a fish session running an OBS chroot build) are now accounted for. Addresses [#619](https://github.com/kdeldycke/extra-platforms/issues/619)
 - Document detection semantics on every trait page: which traits can match simultaneously (shells, platforms, terminals), which are exclusive (architectures, CI systems, agents), and how each `current_*()` function arbitrates or reports absences.
 - Skip the whole test workflow on version-bump pushes and pull requests.
