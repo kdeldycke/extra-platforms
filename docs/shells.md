@@ -66,6 +66,34 @@ When `/bin/sh` symlinks to `/bin/bash`:
 
 This design gives developers the most precise information about what binary is executing their code. If you need to check whether the shell provides a Bourne-compatible *interface* (regardless of which binary implements it), test against the {data}`~BOURNE_SHELLS` group with {func}`~is_bourne_shells` instead of individual shell functions.
 
+## Multiple shells can match at once
+
+Shell detection functions are independent heuristics. Each one reads three channels in turn:
+
+1. A version environment variable that only the shell itself sets on startup (like `FISH_VERSION`).
+2. The `SHELL` environment variable: the configured login shell, resolved through symlinks as described above.
+3. The parent process tree (read from `/proc` on Linux, `ps` on macOS and the BSDs, the Win32 API on Windows): the shells actually running as ancestors of the current process.
+
+These channels describe different things, so several detection functions can legitimately return `True` at the same time:
+
+- The login shell differs from the running shell: a fish user running a bash script is detected by both {func}`~is_fish` (from `SHELL`) and {func}`~is_bash` (from the process tree).
+- Shells nest: a build chroot driven from a fish terminal keeps fish in the ancestor tree, above the bash chain running the build, and both are real ancestor processes.
+- PowerShell modifies `PSModulePath` on startup and every child process inherits it, so {func}`~is_powershell` can stay `True` alongside the shell really executing your code. This is a permanent fixture of GitHub Ubuntu runners, where the variable leaks from the Azure infrastructure.
+
+An `is_*()` function therefore answers "is this shell part of the current environment?", not "is this the shell executing me?". For the latter, use {func}`~current_shell`: it arbitrates all matches down to a single primary shell, preferring active version variables, then running ancestor processes, then the configured login shell. {func}`~current_traits` applies no such arbitration, so it may contain several shells.
+
+For example, on a Mac where the terminal is configured to launch fish while `SHELL` still points at the stock zsh:
+
+```pycon
+>>> from extra_platforms import current_shell, is_fish, is_zsh
+>>> is_zsh()  # The configured login shell, from SHELL.
+True
+>>> is_fish()  # The shell actually running, from the process tree.
+True
+>>> current_shell()
+Shell(id='fish', name='Fish')
+```
+
 ## Recognized shells
 
 <!-- shell-table-start -->
