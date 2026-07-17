@@ -7,6 +7,9 @@
 
 - Fix `test_current_funcs` failing under nested shells: extra shells backed by real ancestor processes (like a fish session running an OBS chroot build) are now accounted for. Addresses [#619](https://github.com/kdeldycke/extra-platforms/issues/619)
 - Document detection semantics on every trait page: which traits can match simultaneously (shells, platforms, terminals), which are exclusive (architectures, CI systems, agents), and how each `current_*()` function arbitrates or reports absences.
+- Skip the whole test workflow on version-bump pushes and pull requests.
+- Skip the package install checks on pull requests: they exercise the released package, not the change under review.
+- Run the test suite in parallel outside CI too, by moving `--numprocesses=auto` and `--dist=loadgroup` to pytest `addopts`.
 
 ## [`13.3.0` (2026-07-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.2.0...v13.3.0)
 

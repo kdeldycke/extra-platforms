@@ -404,7 +404,11 @@ warn_unused_configs = true
 addopts = [
   "--cov",
   "--cov-report=term",
+  # Honor xdist_group markers: sphinx tests must share one worker (see
+  # tests/test_sphinx_crossrefs.py).
+  "--dist=loadgroup",
   "--durations=10",
+  "--numprocesses=auto",
 ]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 markers = [

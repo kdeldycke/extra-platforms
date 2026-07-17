@@ -41,6 +41,23 @@ jobs:
 
   metadata:
     name: 🧬 Project metadata
+    # Skipping this job propagates to every `needs: metadata` job below.
+    # The `pull_request.branches-ignore` filter above matches the PR's base
+    # branch (always `main`), not its head branch (see
+    # https://github.com/actions/runner/issues/1591), so the version-bump
+    # PRs slip through it and must be filtered here via `github.head_ref`.
+    # The branch list mirrors repomatic's `VERSION_BUMP_BRANCHES`.
+    #
+    # The `[changelog] Post-release bump ` commit prefix is intentionally
+    # *not* in this list: that push also carries the release commit, and
+    # the post-release-bump head commit is our only post-merge test of the
+    # release-frozen tree. The commit-prefix list mirrors repomatic's
+    # `MANUAL_VERSION_BUMP_COMMIT_PREFIXES`.
+    if: >
+      !contains(fromJSON('["major-version-increment","minor-version-increment","prepare-release"]'),
+      github.head_ref)
+      && !startsWith(github.event.head_commit.message || '', 'Bump major version to ')
+      && !startsWith(github.event.head_commit.message || '', 'Bump minor version to ')
     runs-on: ubuntu-slim
     outputs:
       metadata: ${{ steps.metadata.outputs.metadata }}
@@ -121,22 +138,26 @@ jobs:
           # Used by github_runner_os() in tests/test_detection.py to extract the GitHub runner image ID.
           EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
         # Produce the coverage XML artifact consumed by the Codecov upload below.
-        run: >
-          uv --no-progress run --frozen -- pytest
-          --dist=loadgroup
-          --numprocesses=auto
-          --cov-report=xml
+        # Parallelism flags (--numprocesses, --dist) come from [tool.pytest] addopts.
+        run: uv --no-progress run --frozen -- pytest --cov-report=xml
 
       - name: Upload coverage to Codecov
-        # Restrict uploads to the coverage_cells subset (the PR matrix: newest
-        # and oldest Python per PR runner), so full runs skip redundant
-        # per-cell uploads. Also skip on prepare-release PRs (Codecov cannot
-        # create commits on protected branches), sync-repomatic PRs (data-only
-        # changes with no coverable lines), and fork PRs (secrets are not
-        # available).
+        # Upload coverage only from the coverage-distinct cells: one runner per
+        # OS at released Python (the `coverage_cells` set, mirroring the PR
+        # matrix). Coverage depends on OS family and Python version, never CPU
+        # architecture, so architecture twins, prerelease, and free-threaded
+        # cells run the suite but produce coverage already captured by these.
+        #
+        # coverage_cells arrives as a space-joined string of `os|python-version`
+        # tokens (the GitHub list-output convention), so the membership test
+        # pads both operands with spaces to match a whole token, not a substring.
+        #
+        # Also skip sync-repomatic PRs (data-only changes with no coverable
+        # lines) and fork PRs (secrets are not available). The version-bump PR
+        # family is already filtered by the metadata job's `github.head_ref`
+        # gate above.
         if: >
-          github.head_ref != 'prepare-release'
-          && github.head_ref != 'sync-repomatic'
+          github.head_ref != 'sync-repomatic'
           && env.CODECOV_TOKEN != ''
           && contains(format(' {0} ', fromJSON(needs.metadata.outputs.metadata).coverage_cells),
           format(' {0}|{1} ', matrix.os, matrix.python-version))
@@ -152,6 +173,11 @@ jobs:
           --token "${CODECOV_TOKEN}"
 
   test-package-install:
+    name: 📦 Package install
+    needs:
+      - metadata
+    # Installs from PyPI/GitHub (released version), not the PR code.
+    if: github.event_name != 'pull_request'
     strategy:
       matrix:
         os:
