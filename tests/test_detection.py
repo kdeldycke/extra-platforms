@@ -656,3 +656,46 @@ def test_current_shell_prefers_running_shell_over_configured_shell(monkeypatch):
     invalidate_caches()
     assert current_shell() is FISH
     invalidate_caches()
+
+
+def test_nested_ancestor_shells_all_detected(monkeypatch):
+    """A session shell above the running shell chain is detected in parallel.
+
+    Regression guard for openSUSE OBS chroot builds run from a fish terminal:
+    the ``/proc`` walk escapes the build root into the packager's desktop
+    session, so fish sits in the ancestor tree above the bash chain running
+    the build. Both shells are detected, and the primary shell stays the
+    nearest running one.
+    """
+    from extra_platforms import BASH, current_shell, is_bash, is_fish
+
+    monkeypatch.setattr(
+        detection_module,
+        "_parent_process_tree",
+        lambda: (
+            ("python3", "/usr/bin/python3.11"),  # pytest.
+            ("bash", "/usr/bin/bash"),  # rpmbuild %check scriptlet.
+            ("rpmbuild", "/usr/bin/rpmbuild"),
+            ("bash", "/usr/bin/bash"),  # obs-build script.
+            ("python3", "/usr/bin/python3.11"),  # osc.
+            ("fish", "/usr/bin/fish"),  # Packager's desktop shell.
+        ),
+    )
+    # `su - abuild` reset SHELL to the build user's login shell.
+    monkeypatch.setenv("SHELL", "/bin/bash")
+    # No shell-startup version variables leak into the environment.
+    for var in (
+        "BASH_VERSION",
+        "FISH_VERSION",
+        "KSH_VERSION",
+        "NU_VERSION",
+        "XONSH_VERSION",
+        "ZSH_VERSION",
+    ):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.delenv("PSModulePath", raising=False)
+    invalidate_caches()
+    assert is_bash()
+    assert is_fish()
+    assert current_shell() is BASH
+    invalidate_caches()

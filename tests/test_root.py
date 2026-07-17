@@ -279,6 +279,17 @@ def test_current_funcs():
     # may have no recognizable shell.
     if not is_unknown_shell():
         detected_traits += 1
+        # XXX Shells nest: each extra shell backed by a real ancestor process
+        # is a legitimate detection alongside the primary shell. A packager
+        # running an `osc build` chroot from a fish terminal gets fish in the
+        # ancestor tree, above the bash chain rpmbuild runs the tests with.
+        ancestor_names = detection_module._parent_process_exe_names()
+        extra_ancestor_shells = {
+            shell
+            for shell in ALL_SHELLS
+            if shell.current and shell.id in ancestor_names
+        } - {current_shell()}
+        detected_traits += len(extra_ancestor_shells)
     # Terminal is optional: headless/CI environments may not have one.
     if is_any_terminal():
         detected_traits += 1

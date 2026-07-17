@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Fix `test_current_funcs` failing under nested shells: extra shells backed by real ancestor processes (like a fish session running an OBS chroot build) are now accounted for. Addresses [#619](https://github.com/kdeldycke/extra-platforms/issues/619)
+
 ## [`13.3.0` (2026-07-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.2.0...v13.3.0)
 
 - Deprecate the `TUMBLEWEED` platform: openSUSE Tumbleweed is now detected as `OPENSUSE`. `TUMBLEWEED`, `is_tumbleweed()` and the `skip_tumbleweed`/`unless_tumbleweed` decorators still resolve to their `OPENSUSE` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
