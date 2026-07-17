@@ -1,5 +1,10 @@
 # Changelog
 
+## [`13.3.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.0...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`13.3.0` (2026-07-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.2.0...v13.3.0)
 
 - Deprecate the `TUMBLEWEED` platform: openSUSE Tumbleweed is now detected as `OPENSUSE`. `TUMBLEWEED`, `is_tumbleweed()` and the `skip_tumbleweed`/`unless_tumbleweed` decorators still resolve to their `OPENSUSE` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
