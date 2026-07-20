@@ -1,9 +1,11 @@
 # Changelog
 
-## [`13.3.2.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.1...main)
+## [`13.3.3.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.2...main)
 
 > [!WARNING]
 > This version is **not released yet** and is under active development.
+
+## [`13.3.2` (2026-07-20)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.1...v13.3.2)
 
 - Extend the Sphinx cross-reference conformance tests to MyST-style roles in Python docstrings, previously never collected.
 
