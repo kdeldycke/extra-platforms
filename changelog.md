@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.4.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.1...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.4.0` (2026-07-26)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.1...v13.4.0)
 
 - Add `write_fake_executable()` to `extra_platforms.pytest`: a fake command for tests that drive a real subprocess, runnable even in a `/bin/sh`-less build sandbox.
 - Add `@skip_hermetic_build` / `@unless_hermetic_build` as aliases of the Guix-build decorators, covering any `HOME=/homeless-shelter` build sandbox (Guix, Nixpkgs, ...).
