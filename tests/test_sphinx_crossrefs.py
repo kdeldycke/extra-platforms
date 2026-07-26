@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import inspect
 import re
+import shutil
 import subprocess
 import sys
 from collections.abc import Iterator
@@ -51,6 +52,10 @@ pytestmark = [
     pytest.mark.skipif(
         sys.version_info < (3, 12),
         reason="docs dependency group requires Python >= 3.12",
+    ),
+    pytest.mark.skipif(
+        shutil.which("uv") is None,
+        reason="needs uv to build the docs",
     ),
     # Sphinx crashes with a FileNotFoundError on searchindex.js.tmp when
     # concurrent builds share the same output directory (sphinx-doc/sphinx#13702).

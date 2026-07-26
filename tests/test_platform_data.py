@@ -38,8 +38,13 @@ from extra_platforms import (
     is_any_trait,
     is_unknown_platform,
 )
+from extra_platforms.pytest import skip_guix_build
 
 
+# Platform detection reads OS-release files that a hermetic build sandbox
+# (Guix, Nix; both set HOME=/homeless-shelter) does not provide, so no real
+# platform is detected there.
+@skip_guix_build
 def test_platform_detection():
     # We always expect to detect a platform.
     assert is_any_trait()
