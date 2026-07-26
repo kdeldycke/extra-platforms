@@ -37,7 +37,7 @@ extensions = [
     # before sphinx_autodoc_typehints so the MyST→reST pass runs first; otherwise
     # the inline-code converter doubles the backticks inside domain-qualified roles
     # (like :py:obj:`None`) that sphinx_autodoc_typehints injects.
-    "repomatic.myst_docstrings",
+    "click_extra.sphinx.myst_docstrings",
     "sphinx_autodoc_typehints",
 ]
 
