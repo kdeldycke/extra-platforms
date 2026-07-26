@@ -73,6 +73,32 @@ def test_not_in_github_actions():
     pass
 ```
 
+## Test helpers
+
+Beyond the per-trait decorators, the `extra_platforms.pytest` module ships helpers that are absent from the table below.
+
+### Hermetic-build aliases
+
+`@skip_hermetic_build` and `@unless_hermetic_build` are aliases of {deco}`~pytest.skip_guix_build` and {deco}`~pytest.unless_guix_build`. Detection keys on `HOME=/homeless-shelter`, the sentinel Guix, Nixpkgs and other hermetic builders set, so the `hermetic_build` name reads honestly when a test is skipped for lacking a real runtime environment rather than for Guix specifically. Unlike the deprecated aliases, they resolve without a warning.
+
+```python
+from extra_platforms.pytest import skip_hermetic_build
+
+
+@skip_hermetic_build
+def test_needs_a_real_environment():
+    # Skipped in Guix, Nixpkgs and any HOME=/homeless-shelter build sandbox.
+    pass
+```
+
+### Fake executables
+
+Some tests drive a command through a real subprocess. `write_fake_executable` writes a stand-in that still runs in a sandbox shipping no `/bin/sh`:
+
+```{eval-rst}
+.. autofunction:: extra_platforms.pytest.write_fake_executable
+```
+
 ## All decorators
 
 <!-- decorators-table-start -->

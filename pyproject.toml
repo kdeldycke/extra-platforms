@@ -328,12 +328,11 @@ build-backend.source-exclude = [
   "docs/html",
   "tests/.coverage",
 ]
-# Ship the test suite (and the docs and CI files it reads) in the sdist so
+# Ship the test suite and the docs it reads (plus the changelog) in the sdist so
 # distribution packagers can build and test straight from the PyPI sdist instead
 # of fetching a GitHub tag tarball. source-include feeds the sdist only; the
 # wheel stays module-only. Git-ignored build output is pruned via source-exclude.
 build-backend.source-include = [
-  ".github/**",
   "changelog.md",
   "docs/**",
   "tests/**",

@@ -55,22 +55,38 @@ def write_fake_executable(
     stderr: str = "",
     returncode: int = 0,
 ) -> Path:
-    """Write a portable fake executable at ``path`` and return it.
+    """Write a fake executable for ``path`` and return the path to run.
 
-    The script carries a Python shebang (the interpreter running the tests), not
-    ``#!/bin/sh``, so it execs in hermetic build sandboxes that ship no
-    ``/bin/sh`` (Guix, Nixpkgs, ...) where a shell script cannot. It writes
-    ``stdout`` and ``stderr`` verbatim then exits with ``returncode``, ignoring
-    its arguments — enough to stand in for a command a test drives through a real
-    subprocess.
+    On POSIX the script is written to ``path`` with a Python shebang (the
+    interpreter running the tests), not ``#!/bin/sh``, so it execs even in
+    hermetic build sandboxes that ship no ``/bin/sh`` (Guix, Nixpkgs, ...). On
+    Windows, where a shebang is ignored, the Python body is written to a ``.py``
+    sidecar and a ``.cmd`` launcher beside ``path`` is returned instead. Either
+    way the command writes ``stdout`` and ``stderr`` verbatim, then exits with
+    ``returncode``, ignoring its arguments: enough to stand in for a command a
+    test drives through a real subprocess.
     """
-    body = [f"#!{sys.executable}", "import sys"]
+    lines = ["import sys"]
     if stdout:
-        body.append(f"sys.stdout.write({stdout!r})")
+        lines.append(f"sys.stdout.write({stdout!r})")
     if stderr:
-        body.append(f"sys.stderr.write({stderr!r})")
-    body.append(f"sys.exit({returncode})")
-    path.write_text("\n".join(body) + "\n", encoding="utf-8")
+        lines.append(f"sys.stderr.write({stderr!r})")
+    lines.append(f"sys.exit({returncode})")
+    script = "\n".join(lines) + "\n"
+
+    if extra_platforms.is_windows():
+        # Windows ignores the shebang and cannot exec a bare script file, so run
+        # the body from a .py sidecar through a .cmd launcher instead.
+        script_file = path.with_suffix(".py")
+        script_file.write_text(script, encoding="utf-8")
+        launcher = path.with_suffix(".cmd")
+        launcher.write_text(
+            f'@echo off\n"{sys.executable}" "{script_file}"\n',
+            encoding="utf-8",
+        )
+        return launcher
+
+    path.write_text(f"#!{sys.executable}\n{script}", encoding="utf-8")
     path.chmod(0o755)
     return path
 

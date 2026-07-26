@@ -5,6 +5,11 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add `write_fake_executable()` to `extra_platforms.pytest`: a fake command for tests that drive a real subprocess, runnable even in a `/bin/sh`-less build sandbox.
+- Add `@skip_hermetic_build` / `@unless_hermetic_build` as aliases of the Guix-build decorators, covering any `HOME=/homeless-shelter` build sandbox (Guix, Nixpkgs, ...).
+- Ship the test suite in the PyPI sdist so downstream packagers can build and test from it; a plain `pytest` run no longer needs `pytest-cov` or `pytest-xdist`.
+- Drop the `repomatic` documentation dependency: the MyST-docstrings Sphinx extension now comes from `click-extra[sphinx]>=8.5`.
+- Add a "Downstream packaging" guide for distribution packagers.
 - Extend the Sphinx cross-reference conformance tests to MyST-style roles in Python docstrings, previously never collected.
 
 ## [`13.3.1` (2026-07-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.0...v13.3.1)

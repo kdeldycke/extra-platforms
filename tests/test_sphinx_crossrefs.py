@@ -938,9 +938,10 @@ def collect_all_refs() -> list[tuple[str, str, str]]:
         for role, symbol in re.findall(myst_pattern, content):
             all_refs.append((role, symbol, str(md_file.relative_to(project_root))))
 
-    # Docstrings are MyST-flavored (rendered via repomatic.myst_docstrings), so
-    # code files are scanned for MyST roles too. The reST pattern is kept for
-    # the rare reST-syntax roles that survive the MyST→reST conversion pass.
+    # Docstrings are MyST-flavored (rendered via
+    # click_extra.sphinx.myst_docstrings), so code files are scanned for MyST
+    # roles too. The reST pattern is kept for the rare reST-syntax roles that
+    # survive the MyST→reST conversion pass.
     rst_pattern = r":(\w+):`~?([^`]+)`"
     for py_file in code_dir.glob("**/*.py"):
         content = py_file.read_text(encoding="utf-8")
