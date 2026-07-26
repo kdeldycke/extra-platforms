@@ -315,6 +315,25 @@ dependency-groups.docs = { requires-python = ">= 3.12" }
 exclude-newer = "1 week"
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
+# Ship the test suite (and the docs and CI files it reads) in the sdist so
+# distribution packagers can build and test straight from the PyPI sdist instead
+# of fetching a GitHub tag tarball. source-include feeds the sdist only; the
+# wheel stays module-only. Git-ignored build output is pruned via source-exclude.
+build-backend.source-include = [
+  ".github/**",
+  "changelog.md",
+  "docs/**",
+  "tests/**",
+]
+build-backend.source-exclude = [
+  "**/*.bak",
+  "**/.DS_Store",
+  "**/__pycache__",
+  "docs/_build",
+  "docs/_linkcheck",
+  "docs/html",
+  "tests/.coverage",
+]
 
 # Ruff linter/formatter configuration for Python projects.
 #
@@ -399,16 +418,13 @@ pretty = true
 warn_unused_configs = true
 
 [tool.pytest]
-# CI-only flags (--cov-report=xml) are passed by the tests workflow instead,
-# so local runs stay lean. See "Testing guidelines" in claude.md.
+# Coverage and xdist flags (--cov, --cov-report, --numprocesses, --dist) are
+# passed by the tests workflow, not here: keeping them out of addopts lets a
+# from-source build (Guix, Nixpkgs, ...) run a plain `pytest` without having to
+# provide pytest-cov and pytest-xdist just to start. See "Testing guidelines"
+# in claude.md.
 addopts = [
-  "--cov",
-  "--cov-report=term",
-  # Honor xdist_group markers: sphinx tests must share one worker (see
-  # tests/test_sphinx_crossrefs.py).
-  "--dist=loadgroup",
   "--durations=10",
-  "--numprocesses=auto",
 ]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 markers = [

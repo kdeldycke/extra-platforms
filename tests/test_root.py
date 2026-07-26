@@ -84,7 +84,7 @@ from extra_platforms import (
     trait as trait_module,
 )
 from extra_platforms.detection import _unrecognized_message
-from extra_platforms.pytest import skip_guix_build
+from extra_platforms.pytest import skip_hermetic_build
 
 from .conftest import github_runner_os
 
@@ -273,7 +273,7 @@ def test_module_root_declarations():
 # Trait detection (platform, shell, terminal, CI) reads a real runtime
 # environment; a hermetic build sandbox (Guix, Nix; HOME=/homeless-shelter)
 # detects none of them, so the exact-count assertions cannot hold.
-@skip_guix_build
+@skip_hermetic_build
 def test_current_funcs():
     current_traits_results = current_traits()
     assert ALL_TRAITS.issuperset(current_traits_results)

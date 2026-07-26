@@ -30,6 +30,7 @@ except ImportError:
         "module."
     )
 
+import sys
 from itertools import chain
 
 import extra_platforms
@@ -41,9 +42,37 @@ from .trait import Trait
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from pathlib import Path
     from typing import Any
 
     from _pytest.mark.structures import MarkDecorator
+
+
+def write_fake_executable(
+    path: Path,
+    *,
+    stdout: str = "",
+    stderr: str = "",
+    returncode: int = 0,
+) -> Path:
+    """Write a portable fake executable at ``path`` and return it.
+
+    The script carries a Python shebang (the interpreter running the tests), not
+    ``#!/bin/sh``, so it execs in hermetic build sandboxes that ship no
+    ``/bin/sh`` (Guix, Nixpkgs, ...) where a shell script cannot. It writes
+    ``stdout`` and ``stderr`` verbatim then exits with ``returncode``, ignoring
+    its arguments — enough to stand in for a command a test drives through a real
+    subprocess.
+    """
+    body = [f"#!{sys.executable}", "import sys"]
+    if stdout:
+        body.append(f"sys.stdout.write({stdout!r})")
+    if stderr:
+        body.append(f"sys.stderr.write({stderr!r})")
+    body.append(f"sys.exit({returncode})")
+    path.write_text("\n".join(body) + "\n", encoding="utf-8")
+    path.chmod(0o755)
+    return path
 
 
 class _DeferredCondition:
@@ -528,13 +557,32 @@ if TYPE_CHECKING:
     unless_zsh: MarkDecorator
 
 
+# Truthful aliases for the Guix-build decorators. {func}`is_guix_build` detects
+# `HOME=/homeless-shelter`, the sentinel Nixpkgs and other hermetic builders set
+# too, so `hermetic_build` reads honestly where a test is skipped for lacking a
+# real runtime environment rather than for Guix specifically. Served through
+# `__getattr__` (below) so they stay out of `dir()` and the type stubs, which
+# `test_all_definition` and `test_type_annotations` pin to the trait-derived
+# decorators. Unlike the deprecated aliases, they resolve without a warning.
+_HERMETIC_BUILD_ALIASES = {
+    "skip_hermetic_build": "skip_guix_build",
+    "unless_hermetic_build": "unless_guix_build",
+}
+
+
 def __getattr__(name: str) -> Any:
-    """Resolve deprecated decorators lazily, emitting a {exc}`DeprecationWarning`.
+    """Resolve hermetic-build aliases and deprecated decorators lazily.
 
     Implements the [PEP 562](https://peps.python.org/pep-0562/) module
     ``__getattr__`` hook: it only fires for attributes not found in the module,
-    so current symbols are served without overhead. See ``_deprecated.py``.
+    so current symbols are served without overhead. Hermetic-build aliases
+    resolve silently; deprecated symbols emit a {exc}`DeprecationWarning`. See
+    ``_deprecated.py``.
     """
+    target = _HERMETIC_BUILD_ALIASES.get(name)
+    if target is not None:
+        return globals()[target]
+
     from ._deprecated import resolve_deprecated
 
     return resolve_deprecated(__name__, name)

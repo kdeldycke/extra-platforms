@@ -31,6 +31,7 @@ sphinx
 :maxdepth: 2
 :hidden:
 contributing
+packaging
 API <extra_platforms>
 tests
 genindex
