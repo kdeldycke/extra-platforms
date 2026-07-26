@@ -316,9 +316,18 @@ exclude-newer = "1 week"
 # Cooldown bypass: adopt click-extra 8.5 early for the moved
 # click_extra.sphinx.myst_docstrings extension (see the docs dependency group).
 # sync-uv-lock prunes this once 8.5.0 ages past exclude-newer (~2026-07-29).
-exclude-newer-package = { "click-extra" = "2026-07-23T00:00:00Z" }
+exclude-newer-package = { click-extra = "2026-07-23T00:00:00Z" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
+build-backend.source-exclude = [
+  "**/*.bak",
+  "**/.DS_Store",
+  "**/__pycache__",
+  "docs/_build",
+  "docs/_linkcheck",
+  "docs/html",
+  "tests/.coverage",
+]
 # Ship the test suite (and the docs and CI files it reads) in the sdist so
 # distribution packagers can build and test straight from the PyPI sdist instead
 # of fetching a GitHub tag tarball. source-include feeds the sdist only; the
@@ -328,15 +337,6 @@ build-backend.source-include = [
   "changelog.md",
   "docs/**",
   "tests/**",
-]
-build-backend.source-exclude = [
-  "**/*.bak",
-  "**/.DS_Store",
-  "**/__pycache__",
-  "docs/_build",
-  "docs/_linkcheck",
-  "docs/html",
-  "tests/.coverage",
 ]
 
 # Ruff linter/formatter configuration for Python projects.
