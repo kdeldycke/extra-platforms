@@ -15,7 +15,10 @@
 
 from __future__ import annotations
 
+import os
 import sys
+
+import pytest
 
 from extra_platforms import (
     AARCH64,
@@ -71,12 +74,14 @@ from extra_platforms import (
     is_x86,
     is_x86_64,
 )
-from extra_platforms.pytest import unless_github_ci
 
 from .conftest import github_runner_os
 
 
-@unless_github_ci
+@pytest.mark.skipif(
+    "EXTRA_PLATFORMS_TEST_MATRIX" not in os.environ,
+    reason="needs EXTRA_PLATFORMS_TEST_MATRIX, set only by the matrix CI job",
+)
 def test_github_runner_detection():
     """Test GitHub runner OS.
 
@@ -102,11 +107,6 @@ def test_github_runner_detection():
     assert not is_unknown_platform()
     assert not is_unknown_shell()
     assert not is_unknown_ci()
-
-    assert github_runner_os() is not None, (
-        "The EXTRA_PLATFORMS_TEST_MATRIX environment variable is not set. "
-        "This test must be run inside a GitHub Actions job using a matrix strategy."
-    )
 
     # X86-64 runners.
     if github_runner_os() in {
