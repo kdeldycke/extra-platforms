@@ -525,6 +525,9 @@ exclude = [
 ]
 
 [tool.repomatic]
+# 1.0.1 was frozen but never published to PyPI (the changelog marks it "not
+# available"), so lint-changelog skips it instead of warning it is missing.
+abandoned-versions = [ "1.0.1" ]
 # We don't need custom label configuration, and the debug workflow is not used in this project.
 exclude = [ "labels", "skills", "workflows/debug.yaml" ]
 # Building the package with Nuitka is overkill.
