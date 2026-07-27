@@ -7,7 +7,10 @@
 
 - Rename the `GUIX_BUILD` CI trait to `HERMETIC_BUILD`: its `HOME=/homeless-shelter` sentinel is a Nix-origin signal shared with GNU Guix, not Guix-specific. `GUIX_BUILD`, `is_guix_build()` and the `skip_guix_build`/`unless_guix_build` decorators still resolve to their `HERMETIC_BUILD` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
 
-## [`13.4.0` (2026-07-26)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.1...v13.4.0)
+## [`13.4.0` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.1...v13.4.0)
+
+> [!NOTE]
+> `13.4.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.4.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.4.0).
 
 - Add `write_fake_executable()` to `extra_platforms.pytest`: a fake command for tests that drive a real subprocess, runnable even in a `/bin/sh`-less build sandbox.
 - Add `@skip_hermetic_build` / `@unless_hermetic_build` as aliases of the Guix-build decorators, covering any `HOME=/homeless-shelter` build sandbox (Guix, Nixpkgs, ...).
