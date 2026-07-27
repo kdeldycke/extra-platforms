@@ -1,5 +1,10 @@
 # Changelog
 
+## [`13.5.2.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.1...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`13.5.1` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.0...v13.5.1)
 
 - Skip `test_github_runner_detection` unless `EXTRA_PLATFORMS_TEST_MATRIX` is set, instead of whenever GitHub CI is detected, so downstream packagers building the test suite inside GitHub Actions no longer fail on the absent matrix variable.
