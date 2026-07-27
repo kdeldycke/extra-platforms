@@ -279,8 +279,8 @@ if TYPE_CHECKING:
     skip_gnu_screen: MarkDecorator
     skip_gpu_terminals: MarkDecorator
     skip_guix: MarkDecorator
-    skip_guix_build: MarkDecorator
     skip_haiku: MarkDecorator
+    skip_hermetic_build: MarkDecorator
     skip_heroku_ci: MarkDecorator
     skip_hurd: MarkDecorator
     skip_hyper: MarkDecorator
@@ -460,8 +460,8 @@ if TYPE_CHECKING:
     unless_gnu_screen: MarkDecorator
     unless_gpu_terminals: MarkDecorator
     unless_guix: MarkDecorator
-    unless_guix_build: MarkDecorator
     unless_haiku: MarkDecorator
+    unless_hermetic_build: MarkDecorator
     unless_heroku_ci: MarkDecorator
     unless_hurd: MarkDecorator
     unless_hyper: MarkDecorator
@@ -573,32 +573,14 @@ if TYPE_CHECKING:
     unless_zsh: MarkDecorator
 
 
-# Truthful aliases for the Guix-build decorators. {func}`is_guix_build` detects
-# `HOME=/homeless-shelter`, the sentinel Nixpkgs and other hermetic builders set
-# too, so `hermetic_build` reads honestly where a test is skipped for lacking a
-# real runtime environment rather than for Guix specifically. Served through
-# `__getattr__` (below) so they stay out of `dir()` and the type stubs, which
-# `test_all_definition` and `test_type_annotations` pin to the trait-derived
-# decorators. Unlike the deprecated aliases, they resolve without a warning.
-_HERMETIC_BUILD_ALIASES = {
-    "skip_hermetic_build": "skip_guix_build",
-    "unless_hermetic_build": "unless_guix_build",
-}
-
-
 def __getattr__(name: str) -> Any:
-    """Resolve hermetic-build aliases and deprecated decorators lazily.
+    """Resolve deprecated decorator aliases lazily.
 
     Implements the [PEP 562](https://peps.python.org/pep-0562/) module
     ``__getattr__`` hook: it only fires for attributes not found in the module,
-    so current symbols are served without overhead. Hermetic-build aliases
-    resolve silently; deprecated symbols emit a {exc}`DeprecationWarning`. See
-    ``_deprecated.py``.
+    so current symbols are served without overhead. Deprecated symbols emit a
+    {exc}`DeprecationWarning`. See ``_deprecated.py``.
     """
-    target = _HERMETIC_BUILD_ALIASES.get(name)
-    if target is not None:
-        return globals()[target]
-
     from ._deprecated import resolve_deprecated
 
     return resolve_deprecated(__name__, name)

@@ -185,8 +185,8 @@ All recognized traits and their properties:
 |  𝐆   | {data}`~GNOME_TERMINAL`       | GNOME Terminal                 | {func}`~is_gnome_terminal`       | Terminal     |
 |  📺  | {data}`~GNU_SCREEN`           | GNU Screen                     | {func}`~is_gnu_screen`           | Terminal     |
 |  🐃  | {data}`~GUIX`                 | Guix System                    | {func}`~is_guix`                 | Platform     |
-|  🐂  | {data}`~GUIX_BUILD`           | Guix Build                     | {func}`~is_guix_build`           | CI           |
 |  🍂  | {data}`~HAIKU`                | Haiku                          | {func}`~is_haiku`                | Platform     |
+|  🥫  | {data}`~HERMETIC_BUILD`       | Hermetic Build                 | {func}`~is_hermetic_build`       | CI           |
 |  ⥁   | {data}`~HEROKU_CI`            | Heroku CI                      | {func}`~is_heroku_ci`            | CI           |
 |  🦬  | {data}`~HURD`                 | GNU/Hurd                       | {func}`~is_hurd`                 | Platform     |
 |  ⬡   | {data}`~HYPER`                | Hyper                          | {func}`~is_hyper`                | Terminal     |

@@ -488,7 +488,7 @@ mindmap
         (ᚙ CODEBUILD)
         (🐙 GITHUB_CI)
         (🦊 GITLAB_CI)
-        (🐂 GUIX_BUILD)
+        (🥫 HERMETIC_BUILD)
         (⥁ HEROKU_CI)
         (🏙️ TEAMCITY)
         (👷 TRAVIS_CI)

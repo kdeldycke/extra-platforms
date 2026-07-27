@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import ast
 import subprocess
-import warnings
 from itertools import chain
 from pathlib import Path
 
@@ -163,7 +162,9 @@ def test_type_annotations():
 @pytest.mark.parametrize(
     "deprecated_id,replacement_id",
     [
+        ("skip_guix_build", "skip_hermetic_build"),
         ("skip_tumbleweed", "skip_opensuse"),
+        ("unless_guix_build", "unless_hermetic_build"),
         ("unless_tumbleweed", "unless_opensuse"),
     ],
 )
@@ -175,26 +176,6 @@ def test_deprecated_decorator_aliases(deprecated_id, replacement_id):
     ):
         assert getattr(extra_platforms.pytest, deprecated_id) is getattr(
             extra_platforms.pytest, replacement_id
-        )
-
-
-@pytest.mark.parametrize(
-    "alias_id,target_id",
-    [
-        ("skip_hermetic_build", "skip_guix_build"),
-        ("unless_hermetic_build", "unless_guix_build"),
-    ],
-)
-def test_hermetic_build_aliases(alias_id, target_id):
-    """Hermetic-build aliases resolve to the guix-build decorators, silently.
-
-    ``is_guix_build()`` keys on ``HOME=/homeless-shelter``, which Nixpkgs and
-    other hermetic builders set too, so these aliases read honestly.
-    """
-    with warnings.catch_warnings():
-        warnings.simplefilter("error")  # a DeprecationWarning would fail here
-        assert getattr(extra_platforms.pytest, alias_id) is getattr(
-            extra_platforms.pytest, target_id
         )
 
 

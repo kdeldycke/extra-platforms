@@ -45,12 +45,24 @@ GITLAB_CI = CI(
     "https://docs.gitlab.com/topics/build_your_application/",
 )
 
-GUIX_BUILD = CI(
-    "guix_build",
-    "Guix Build",
-    "🐂",
-    "https://guix.gnu.org/manual/en/html_node/Invoking-guix-build.html",
+HERMETIC_BUILD = CI(
+    "hermetic_build",
+    "Hermetic Build",
+    "🥫",
+    "https://guix.gnu.org/manual/en/html_node/Build-Environment-Setup.html",
 )
+"""A package build running in a sandbox sealed off from the host environment.
+
+```{note}
+The ``hermetic`` name follows the Guix build-environment documentation, which
+says the daemon starts builds "in an *isolated* or *hermetic* build
+environment". Both words appear there as synonyms; this trait picks "hermetic"
+over "isolated" on purpose, keeping a lineage to that upstream vocabulary.
+```
+
+See {func}`~extra_platforms.is_hermetic_build` for the ``HOME=/homeless-shelter``
+sentinel it keys on, and why that signal is shared with Nix, not Guix-specific.
+"""
 
 HEROKU_CI = CI(
     "heroku_ci", "Heroku CI", "⥁", "https://www.heroku.com/continuous-integration/"

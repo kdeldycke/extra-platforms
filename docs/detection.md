@@ -84,8 +84,8 @@
 | {func}`~is_gnu_screen`           |  📺  | {data}`~GNU_SCREEN`           |
 | {func}`~is_gpu_terminals`        |  🎮  | {data}`~GPU_TERMINALS`        |
 | {func}`~is_guix`                 |  🐃  | {data}`~GUIX`                 |
-| {func}`~is_guix_build`           |  🐂  | {data}`~GUIX_BUILD`           |
 | {func}`~is_haiku`                |  🍂  | {data}`~HAIKU`                |
+| {func}`~is_hermetic_build`       |  🥫  | {data}`~HERMETIC_BUILD`       |
 | {func}`~is_heroku_ci`            |  ⥁   | {data}`~HEROKU_CI`            |
 | {func}`~is_hurd`                 |  🦬  | {data}`~HURD`                 |
 | {func}`~is_hyper`                |  ⬡   | {data}`~HYPER`                |
@@ -254,8 +254,8 @@
 .. autofunction:: extra_platforms.is_gnome_terminal
 .. autofunction:: extra_platforms.is_gnu_screen
 .. autofunction:: extra_platforms.is_guix
-.. autofunction:: extra_platforms.is_guix_build
 .. autofunction:: extra_platforms.is_haiku
+.. autofunction:: extra_platforms.is_hermetic_build
 .. autofunction:: extra_platforms.is_heroku_ci
 .. autofunction:: extra_platforms.is_hurd
 .. autofunction:: extra_platforms.is_hyper

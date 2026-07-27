@@ -753,8 +753,10 @@ def test_invalidate_caches_clears_trait_current_property():
     "deprecated_id,replacement_id",
     [
         ("EXTRA_GROUPS", "NON_CANONICAL_GROUPS"),
+        ("GUIX_BUILD", "HERMETIC_BUILD"),
         ("NON_OVERLAPPING_GROUPS", "CANONICAL_GROUPS"),
         ("TUMBLEWEED", "OPENSUSE"),
+        ("is_guix_build", "is_hermetic_build"),
         ("is_tumbleweed", "is_opensuse"),
     ],
 )

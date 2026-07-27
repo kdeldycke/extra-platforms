@@ -77,20 +77,6 @@ def test_not_in_github_actions():
 
 Beyond the per-trait decorators, the `extra_platforms.pytest` module ships helpers that are absent from the table below.
 
-### Hermetic-build aliases
-
-`@skip_hermetic_build` and `@unless_hermetic_build` are aliases of {deco}`~pytest.skip_guix_build` and {deco}`~pytest.unless_guix_build`. Detection keys on `HOME=/homeless-shelter`, the sentinel Guix, Nixpkgs and other hermetic builders set, so the `hermetic_build` name reads honestly when a test is skipped for lacking a real runtime environment rather than for Guix specifically. Unlike the deprecated aliases, they resolve without a warning.
-
-```python
-from extra_platforms.pytest import skip_hermetic_build
-
-
-@skip_hermetic_build
-def test_needs_a_real_environment():
-    # Skipped in Guix, Nixpkgs and any HOME=/homeless-shelter build sandbox.
-    pass
-```
-
 ### Fake executables
 
 Some tests drive a command through a real subprocess. `write_fake_executable` writes a stand-in that still runs in a sandbox shipping no `/bin/sh`:
@@ -175,8 +161,8 @@ Some tests drive a command through a real subprocess. `write_fake_executable` wr
 | {deco}`~pytest.skip_gnu_screen`           | {deco}`~pytest.unless_gnu_screen`           |  📺  | {data}`~GNU_SCREEN`           |
 | {deco}`~pytest.skip_gpu_terminals`        | {deco}`~pytest.unless_gpu_terminals`        |  🎮  | {data}`~GPU_TERMINALS`        |
 | {deco}`~pytest.skip_guix`                 | {deco}`~pytest.unless_guix`                 |  🐃  | {data}`~GUIX`                 |
-| {deco}`~pytest.skip_guix_build`           | {deco}`~pytest.unless_guix_build`           |  🐂  | {data}`~GUIX_BUILD`           |
 | {deco}`~pytest.skip_haiku`                | {deco}`~pytest.unless_haiku`                |  🍂  | {data}`~HAIKU`                |
+| {deco}`~pytest.skip_hermetic_build`       | {deco}`~pytest.unless_hermetic_build`       |  🥫  | {data}`~HERMETIC_BUILD`       |
 | {deco}`~pytest.skip_heroku_ci`            | {deco}`~pytest.unless_heroku_ci`            |  ⥁   | {data}`~HEROKU_CI`            |
 | {deco}`~pytest.skip_hurd`                 | {deco}`~pytest.unless_hurd`                 |  🦬  | {data}`~HURD`                 |
 | {deco}`~pytest.skip_hyper`                | {deco}`~pytest.unless_hyper`                |  ⬡   | {data}`~HYPER`                |
@@ -364,8 +350,8 @@ Some tests drive a command through a real subprocess. `write_fake_executable` wr
 .. autodecorator:: extra_platforms.pytest.skip_gnu_screen
 .. autodecorator:: extra_platforms.pytest.skip_gpu_terminals
 .. autodecorator:: extra_platforms.pytest.skip_guix
-.. autodecorator:: extra_platforms.pytest.skip_guix_build
 .. autodecorator:: extra_platforms.pytest.skip_haiku
+.. autodecorator:: extra_platforms.pytest.skip_hermetic_build
 .. autodecorator:: extra_platforms.pytest.skip_heroku_ci
 .. autodecorator:: extra_platforms.pytest.skip_hurd
 .. autodecorator:: extra_platforms.pytest.skip_hyper
@@ -550,8 +536,8 @@ Some tests drive a command through a real subprocess. `write_fake_executable` wr
 .. autodecorator:: extra_platforms.pytest.unless_gnu_screen
 .. autodecorator:: extra_platforms.pytest.unless_gpu_terminals
 .. autodecorator:: extra_platforms.pytest.unless_guix
-.. autodecorator:: extra_platforms.pytest.unless_guix_build
 .. autodecorator:: extra_platforms.pytest.unless_haiku
+.. autodecorator:: extra_platforms.pytest.unless_hermetic_build
 .. autodecorator:: extra_platforms.pytest.unless_heroku_ci
 .. autodecorator:: extra_platforms.pytest.unless_hurd
 .. autodecorator:: extra_platforms.pytest.unless_hyper

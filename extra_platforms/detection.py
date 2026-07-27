@@ -1947,17 +1947,26 @@ def is_gitlab_ci() -> bool:
 
 
 @cache
-def is_guix_build() -> bool:
-    """Return {data}`True` if current CI is {data}`~extra_platforms.GUIX_BUILD`.
+def is_hermetic_build() -> bool:
+    """Return {data}`True` if current CI is {data}`~extra_platforms.HERMETIC_BUILD`.
 
     ```{note}
-    The Guix build daemon runs packages in an isolated sandbox with
-    ``HOME`` set to ``/homeless-shelter`` (a non-existent directory). This
-    prevents builds from reading or writing to a real home directory.
+    Keys on ``HOME=/homeless-shelter``: a non-existent home directory the build
+    daemon assigns so a package build cannot read or write a real home. The
+    value originated in Nix (2003) and was inherited verbatim by GNU Guix, so
+    this matches both, plus Nix-ecosystem wrappers that reuse the sandbox (like
+    devbox). It does not catch hermetic builders that isolate ``HOME``
+    differently, such as Bazel, Buck2 or Spack.
+    ```
+
+    ```{note}
+    Only the ``/homeless-shelter`` signal is checked for now. The heuristic can
+    grow extra signals to recognize the other hermetic builders above, should
+    users [ask for it](https://github.com/kdeldycke/extra-platforms/issues).
     ```
 
     ```{seealso}
-    Build environment reference:
+    The Guix build environment, which documents the sentinel:
     <https://guix.gnu.org/manual/en/html_node/Build-Environment-Setup.html>.
     ```
     """

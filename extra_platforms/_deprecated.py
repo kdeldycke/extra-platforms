@@ -43,12 +43,16 @@ REMOVAL_VERSION = "14.0.0"
 DEPRECATED_ALIASES: dict[str, dict[str, str]] = {
     "extra_platforms": {
         "EXTRA_GROUPS": "NON_CANONICAL_GROUPS",
+        "GUIX_BUILD": "HERMETIC_BUILD",
         "NON_OVERLAPPING_GROUPS": "CANONICAL_GROUPS",
         "TUMBLEWEED": "OPENSUSE",
+        "is_guix_build": "is_hermetic_build",
         "is_tumbleweed": "is_opensuse",
     },
     "extra_platforms.pytest": {
+        "skip_guix_build": "skip_hermetic_build",
         "skip_tumbleweed": "skip_opensuse",
+        "unless_guix_build": "unless_hermetic_build",
         "unless_tumbleweed": "unless_opensuse",
     },
 }
