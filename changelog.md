@@ -7,6 +7,9 @@
 
 ## [`13.5.0` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.4.0...v13.5.0)
 
+> [!NOTE]
+> `13.5.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.5.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.5.0).
+
 - Rename the `GUIX_BUILD` CI trait to `HERMETIC_BUILD`. `GUIX_BUILD`, `is_guix_build()` and the `skip_guix_build`/`unless_guix_build` decorators still resolve to their `HERMETIC_BUILD` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
 
 ## [`13.4.0` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.1...v13.4.0)
