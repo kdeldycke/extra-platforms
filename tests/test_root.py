@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import ast
 import inspect
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -83,6 +84,7 @@ from extra_platforms import (
     terminal_data as terminal_data_module,
     trait as trait_module,
 )
+from extra_platforms._deprecated import DEPRECATED_ALIASES, REMOVAL_VERSION
 from extra_platforms.detection import _unrecognized_message
 from extra_platforms.pytest import skip_hermetic_build
 
@@ -749,22 +751,18 @@ def test_invalidate_caches_clears_trait_current_property():
     assert "current" not in vars(X86_64)
 
 
+# Registry-derived: every alias in DEPRECATED_ALIASES["extra_platforms"] is
+# exercised, so a new entry cannot slip in without test coverage.
 @pytest.mark.parametrize(
     "deprecated_id,replacement_id",
-    [
-        ("EXTRA_GROUPS", "NON_CANONICAL_GROUPS"),
-        ("GUIX_BUILD", "HERMETIC_BUILD"),
-        ("NON_OVERLAPPING_GROUPS", "CANONICAL_GROUPS"),
-        ("TUMBLEWEED", "OPENSUSE"),
-        ("is_guix_build", "is_hermetic_build"),
-        ("is_tumbleweed", "is_opensuse"),
-    ],
+    sorted(DEPRECATED_ALIASES["extra_platforms"].items()),
 )
 def test_deprecated_aliases(deprecated_id, replacement_id):
     """Deprecated aliases resolve to their replacement and emit a warning."""
     with pytest.deprecated_call(
-        match=f"{deprecated_id} is deprecated and will be removed in "
-        f"extra-platforms 14.0.0, use {replacement_id} instead."
+        match=f"{re.escape(deprecated_id)} is deprecated and will be removed in "
+        f"extra-platforms {re.escape(REMOVAL_VERSION)}, "
+        f"use {re.escape(replacement_id)} instead."
     ):
         assert getattr(extra_platforms, deprecated_id) is getattr(
             extra_platforms, replacement_id
@@ -773,8 +771,6 @@ def test_deprecated_aliases(deprecated_id, replacement_id):
 
 def test_deprecated_aliases_not_advertised():
     """Deprecated aliases are resolvable but not part of the public API surface."""
-    from extra_platforms._deprecated import DEPRECATED_ALIASES
-
     for deprecated_id, replacement_id in DEPRECATED_ALIASES["extra_platforms"].items():
         assert deprecated_id not in extra_platforms.__all__
         assert replacement_id in extra_platforms.__all__
