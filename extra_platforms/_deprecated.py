@@ -70,7 +70,7 @@ def resolve_deprecated(module_id: str, name: str) -> Any:
     The warning is attributed to the caller's access site (``stacklevel=3``:
     this function, the hosting module's ``__getattr__``, then the caller).
     """
-    replacement = DEPRECATED_ALIASES[module_id].get(name)
+    replacement = DEPRECATED_ALIASES.get(module_id, {}).get(name)
     if replacement is None:
         raise AttributeError(f"module {module_id!r} has no attribute {name!r}")
     warnings.warn(
