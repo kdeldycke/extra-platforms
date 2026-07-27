@@ -5,7 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
-- Rename the `GUIX_BUILD` CI trait to `HERMETIC_BUILD`: its `HOME=/homeless-shelter` sentinel is a Nix-origin signal shared with GNU Guix, not Guix-specific. `GUIX_BUILD`, `is_guix_build()` and the `skip_guix_build`/`unless_guix_build` decorators still resolve to their `HERMETIC_BUILD` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
+- Rename the `GUIX_BUILD` CI trait to `HERMETIC_BUILD`. `GUIX_BUILD`, `is_guix_build()` and the `skip_guix_build`/`unless_guix_build` decorators still resolve to their `HERMETIC_BUILD` counterparts with a `DeprecationWarning`, and will be removed in `14.0.0`.
 
 ## [`13.4.0` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.3.1...v13.4.0)
 
