@@ -251,23 +251,8 @@ mindmap
    :no-index:
 ```
 
-<!-- shell-data-autodata-start -->
-
-```{eval-rst}
-.. autodata:: extra_platforms.ASH
-.. autodata:: extra_platforms.BASH
-.. autodata:: extra_platforms.CMD
-.. autodata:: extra_platforms.CSH
-.. autodata:: extra_platforms.DASH
-.. autodata:: extra_platforms.FISH
-.. autodata:: extra_platforms.KSH
-.. autodata:: extra_platforms.NUSHELL
-.. autodata:: extra_platforms.POWERSHELL
-.. autodata:: extra_platforms.SH
-.. autodata:: extra_platforms.TCSH
-.. autodata:: extra_platforms.UNKNOWN_SHELL
-.. autodata:: extra_platforms.XONSH
-.. autodata:: extra_platforms.ZSH
+```{python:render}
+from extra_platforms import ALL_SHELLS, UNKNOWN_SHELL
+from extra_platforms._docs import generate_sphinx_directives
+print(generate_sphinx_directives(list(ALL_SHELLS) + [UNKNOWN_SHELL], "autodata", "symbol_id"))
 ```
-
-<!-- shell-data-autodata-end -->

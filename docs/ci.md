@@ -187,22 +187,8 @@ mindmap
    :no-index:
 ```
 
-<!-- ci-data-autodata-start -->
-
-```{eval-rst}
-.. autodata:: extra_platforms.AZURE_PIPELINES
-.. autodata:: extra_platforms.BAMBOO
-.. autodata:: extra_platforms.BUILDKITE
-.. autodata:: extra_platforms.CIRCLE_CI
-.. autodata:: extra_platforms.CIRRUS_CI
-.. autodata:: extra_platforms.CODEBUILD
-.. autodata:: extra_platforms.GITHUB_CI
-.. autodata:: extra_platforms.GITLAB_CI
-.. autodata:: extra_platforms.HERMETIC_BUILD
-.. autodata:: extra_platforms.HEROKU_CI
-.. autodata:: extra_platforms.TEAMCITY
-.. autodata:: extra_platforms.TRAVIS_CI
-.. autodata:: extra_platforms.UNKNOWN_CI
+```{python:render}
+from extra_platforms import ALL_CI, UNKNOWN_CI
+from extra_platforms._docs import generate_sphinx_directives
+print(generate_sphinx_directives(list(ALL_CI) + [UNKNOWN_CI], "autodata", "symbol_id"))
 ```
-
-<!-- ci-data-autodata-end -->

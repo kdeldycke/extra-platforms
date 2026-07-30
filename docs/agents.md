@@ -160,13 +160,8 @@ mindmap
    :no-index:
 ```
 
-<!-- agent-data-autodata-start -->
-
-```{eval-rst}
-.. autodata:: extra_platforms.CLAUDE_CODE
-.. autodata:: extra_platforms.CLINE
-.. autodata:: extra_platforms.CURSOR
-.. autodata:: extra_platforms.UNKNOWN_AGENT
+```{python:render}
+from extra_platforms import ALL_AGENTS, UNKNOWN_AGENT
+from extra_platforms._docs import generate_sphinx_directives
+print(generate_sphinx_directives(list(ALL_AGENTS) + [UNKNOWN_AGENT], "autodata", "symbol_id"))
 ```
-
-<!-- agent-data-autodata-end -->

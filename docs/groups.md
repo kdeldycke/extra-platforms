@@ -189,52 +189,11 @@ with canonical groups.
 
 ## Predefined groups
 
-<!-- group-data-autodata-start -->
-
-```{eval-rst}
-.. autodata:: extra_platforms.ALL_AGENTS
-.. autodata:: extra_platforms.ALL_ARCHITECTURES
-.. autodata:: extra_platforms.ALL_ARM
-.. autodata:: extra_platforms.ALL_CI
-.. autodata:: extra_platforms.ALL_MIPS
-.. autodata:: extra_platforms.ALL_PLATFORMS
-.. autodata:: extra_platforms.ALL_SHELLS
-.. autodata:: extra_platforms.ALL_SPARC
-.. autodata:: extra_platforms.ALL_TERMINALS
-.. autodata:: extra_platforms.ALL_TRAITS
-.. autodata:: extra_platforms.ALL_WINDOWS
-.. autodata:: extra_platforms.ARCH_32_BIT
-.. autodata:: extra_platforms.ARCH_64_BIT
-.. autodata:: extra_platforms.BIG_ENDIAN
-.. autodata:: extra_platforms.BOURNE_SHELLS
-.. autodata:: extra_platforms.BSD
-.. autodata:: extra_platforms.BSD_WITHOUT_MACOS
-.. autodata:: extra_platforms.C_SHELLS
-.. autodata:: extra_platforms.GPU_TERMINALS
-.. autodata:: extra_platforms.IBM_MAINFRAME
-.. autodata:: extra_platforms.LINUX
-.. autodata:: extra_platforms.LINUX_LAYERS
-.. autodata:: extra_platforms.LINUX_LIKE
-.. autodata:: extra_platforms.LITTLE_ENDIAN
-.. autodata:: extra_platforms.LOONGARCH
-.. autodata:: extra_platforms.MULTIPLEXERS
-.. autodata:: extra_platforms.NATIVE_TERMINALS
-.. autodata:: extra_platforms.OTHER_POSIX
-.. autodata:: extra_platforms.OTHER_SHELLS
-.. autodata:: extra_platforms.POWERPC
-.. autodata:: extra_platforms.RISCV
-.. autodata:: extra_platforms.SYSTEM_V
-.. autodata:: extra_platforms.UNIX
-.. autodata:: extra_platforms.UNIX_LAYERS
-.. autodata:: extra_platforms.UNIX_WITHOUT_MACOS
-.. autodata:: extra_platforms.UNKNOWN
-.. autodata:: extra_platforms.WEB_TERMINALS
-.. autodata:: extra_platforms.WEBASSEMBLY
-.. autodata:: extra_platforms.WINDOWS_SHELLS
-.. autodata:: extra_platforms.X86
+```{python:render}
+from extra_platforms import ALL_GROUPS
+from extra_platforms._docs import generate_sphinx_directives
+print(generate_sphinx_directives(ALL_GROUPS, "autodata", "symbol_id"))
 ```
-
-<!-- group-data-autodata-end -->
 
 ## Group collections
 
@@ -282,28 +241,18 @@ with canonical groups.
    :strict:
 ```
 
-<!-- group-module-automodule-start -->
-
-```{eval-rst}
-.. automodule:: extra_platforms.group
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :exclude-members: Group, extract_members, groups_from_ids, reduce, traits_from_ids
+```{python:render}
+from extra_platforms._docs import generate_group_module_automodule
+print(generate_group_module_automodule())
 ```
-
-<!-- group-module-automodule-end -->
 
 ```{eval-rst}
 .. autoclasstree:: extra_platforms.group_data
    :strict:
 ```
 
-<!-- group-data-module-automodule-start -->
-
-```{eval-rst}
-.. automodule:: extra_platforms.group_data
-   :exclude-members: ALL_AGENTS, ALL_AGENT_GROUPS, ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, ALL_ARM, ALL_CI, ALL_CI_GROUPS, ALL_GROUPS, ALL_GROUP_IDS, ALL_IDS, ALL_MIPS, ALL_PLATFORMS, ALL_PLATFORM_GROUPS, ALL_SHELLS, ALL_SHELL_GROUPS, ALL_SPARC, ALL_TERMINALS, ALL_TERMINAL_GROUPS, ALL_TRAITS, ALL_TRAIT_IDS, ALL_WINDOWS, ARCH_32_BIT, ARCH_64_BIT, BIG_ENDIAN, BOURNE_SHELLS, BSD, BSD_WITHOUT_MACOS, CANONICAL_GROUPS, C_SHELLS, GPU_TERMINALS, IBM_MAINFRAME, LINUX, LINUX_LAYERS, LINUX_LIKE, LITTLE_ENDIAN, LOONGARCH, MULTIPLEXERS, NATIVE_TERMINALS, NON_CANONICAL_GROUPS, OTHER_POSIX, OTHER_SHELLS, POWERPC, RISCV, SYSTEM_V, UNIX, UNIX_LAYERS, UNIX_WITHOUT_MACOS, UNKNOWN, WEBASSEMBLY, WEB_TERMINALS, WINDOWS_SHELLS, X86
+```{python:render}
+from extra_platforms import ALL_GROUPS
+from extra_platforms._docs import generate_group_data_module_automodule
+print(generate_group_data_module_automodule(ALL_GROUPS))
 ```
-
-<!-- group-data-module-automodule-end -->

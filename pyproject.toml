@@ -287,8 +287,10 @@ docs = [
   # Click Extra 8.3 adds the {matrix} directive and refresh-directives command
   # used to build the Python compatibility table in docs/install.md. 8.5 moves
   # in the click_extra.sphinx.myst_docstrings extension (formerly shipped by
-  # repomatic) that converts MyST-flavored docstrings to reST for autodoc.
-  "click-extra[sphinx]>=8.5",
+  # repomatic) that converts MyST-flavored docstrings to reST for autodoc. 8.7
+  # adds the <!-- mirror-src --> comment form of :mirror: (readme.md renders its
+  # mindmaps from an invisible generator) and the public update_blocks helper.
+  "click-extra[sphinx]>=8.7",
   "furo>=2025.9.25",
   # myst-parser 5.1 adds the "alert" extension that renders GitHub-style
   # callouts (> [!NOTE], …) as admonitions. See docs/conf.py.
@@ -313,10 +315,12 @@ dependency-groups.docs = { requires-python = ">= 3.12" }
 # Relative dates are fine here because the Renovate lock-maintenance job
 # (sync-uv-lock) reverts uv.lock when the only diff is timestamp noise.
 exclude-newer = "1 week"
-# Cooldown bypass: adopt click-extra 8.5 early for the moved
-# click_extra.sphinx.myst_docstrings extension (see the docs dependency group).
-# sync-uv-lock prunes this once 8.5.0 ages past exclude-newer (~2026-07-29).
-exclude-newer-package = { click-extra = "2026-07-23T00:00:00Z" }
+# Cooldown bypass: adopt click-extra 8.7 early for the <!-- mirror-src --> comment
+# form of :mirror: (readme.md mindmaps) and the public block toolkit exports.
+# TODO: set this to click-extra 8.7.0's actual release date (it is unreleased as
+# of this edit — the feature lives on click-extra main), and regenerate uv.lock
+# with `uv lock`. sync-uv-lock prunes this once 8.7.0 ages past exclude-newer.
+exclude-newer-package = { click-extra = "2026-08-13T00:00:00Z" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 build-backend.source-exclude = [
@@ -535,6 +539,11 @@ exclude = [
 # 1.0.1 was frozen but never published to PyPI (the changelog marks it "not
 # available"), so lint-changelog skips it instead of warning it is missing.
 abandoned-versions = [ "1.0.1" ]
+# docs_update.py was removed: every generated region now renders live via
+# click_extra.sphinx {python:render} / :mirror: / <!-- mirror-src --> blocks,
+# refreshed by `click-extra refresh-directives` (update-docs Phase 4). Disable
+# the Phase 3 update-script (its default points at the deleted file).
+docs.update-script = ""
 # We don't need custom label configuration, and the debug workflow is not used in this project.
 exclude = [ "labels", "skills", "workflows/debug.yaml" ]
 # Building the package with Nuitka is overkill.

@@ -229,30 +229,8 @@ mindmap
    :no-index:
 ```
 
-<!-- terminal-data-autodata-start -->
-
-```{eval-rst}
-.. autodata:: extra_platforms.ALACRITTY
-.. autodata:: extra_platforms.APPLE_TERMINAL
-.. autodata:: extra_platforms.CONTOUR
-.. autodata:: extra_platforms.FOOT
-.. autodata:: extra_platforms.GHOSTTY
-.. autodata:: extra_platforms.GNOME_TERMINAL
-.. autodata:: extra_platforms.GNU_SCREEN
-.. autodata:: extra_platforms.HYPER
-.. autodata:: extra_platforms.ITERM2
-.. autodata:: extra_platforms.KITTY
-.. autodata:: extra_platforms.KONSOLE
-.. autodata:: extra_platforms.RIO
-.. autodata:: extra_platforms.TABBY
-.. autodata:: extra_platforms.TILIX
-.. autodata:: extra_platforms.TMUX
-.. autodata:: extra_platforms.UNKNOWN_TERMINAL
-.. autodata:: extra_platforms.VSCODE_TERMINAL
-.. autodata:: extra_platforms.WEZTERM
-.. autodata:: extra_platforms.WINDOWS_TERMINAL
-.. autodata:: extra_platforms.XTERM
-.. autodata:: extra_platforms.ZELLIJ
+```{python:render}
+from extra_platforms import ALL_TERMINALS, UNKNOWN_TERMINAL
+from extra_platforms._docs import generate_sphinx_directives
+print(generate_sphinx_directives(list(ALL_TERMINALS) + [UNKNOWN_TERMINAL], "autodata", "symbol_id"))
 ```
-
-<!-- terminal-data-autodata-end -->

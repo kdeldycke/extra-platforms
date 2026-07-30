@@ -261,7 +261,11 @@ frozenset({
 
 All recognized architectures and how they're grouped:
 
-<!-- architecture-mindmap-start -->
+<!-- mirror-src
+from extra_platforms import ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]))
+-->
 
 ```mermaid
 ---
@@ -305,13 +309,17 @@ mindmap
             (📱 ARMV8L)
 ```
 
-<!-- architecture-mindmap-end -->
+<!-- mirror-src-end -->
 
 ## Platforms
 
 All recognized platforms and how they're grouped:
 
-<!-- platform-mindmap-start -->
+<!-- mirror-src
+from extra_platforms import ALL_PLATFORMS, ALL_PLATFORM_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]))
+-->
 
 ```mermaid
 ---
@@ -390,7 +398,7 @@ mindmap
             (🪟 WINDOWS)
 ```
 
-<!-- platform-mindmap-end -->
+<!-- mirror-src-end -->
 
 > [!TIP]
 > More groups exist beyond those shown in the diagram, and more utilities are available for each platform. See the [platform documentation](https://kdeldycke.github.io/extra-platforms/platforms.html#groups-of-platforms) for details.
@@ -399,7 +407,11 @@ mindmap
 
 All recognized shells:
 
-<!-- shell-mindmap-start -->
+<!-- mirror-src
+from extra_platforms import ALL_SHELLS, ALL_SHELL_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]))
+-->
 
 ```mermaid
 ---
@@ -426,13 +438,17 @@ mindmap
             (ℤ ZSH)
 ```
 
-<!-- shell-mindmap-end -->
+<!-- mirror-src-end -->
 
 ## Terminals
 
 All recognized terminals:
 
-<!-- terminal-mindmap-start -->
+<!-- mirror-src
+from extra_platforms import ALL_TERMINALS, ALL_TERMINAL_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]))
+-->
 
 ```mermaid
 ---
@@ -466,13 +482,17 @@ mindmap
             (🔡 WEZTERM)
 ```
 
-<!-- terminal-mindmap-end -->
+<!-- mirror-src-end -->
 
 ## CI systems
 
 All recognized CI systems:
 
-<!-- ci-mindmap-start -->
+<!-- mirror-src
+from extra_platforms import ALL_CI, ALL_CI_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_CI_GROUPS) + [ALL_CI]))
+-->
 
 ```mermaid
 ---
@@ -494,13 +514,17 @@ mindmap
         (👷 TRAVIS_CI)
 ```
 
-<!-- ci-mindmap-end -->
+<!-- mirror-src-end -->
 
 ## Agents
 
 All recognized AI coding agents:
 
-<!-- agent-mindmap-start -->
+<!-- mirror-src
+from extra_platforms import ALL_AGENTS, ALL_AGENT_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_AGENT_GROUPS) + [ALL_AGENTS]))
+-->
 
 ```mermaid
 ---
@@ -513,7 +537,7 @@ mindmap
         (➤ CURSOR)
 ```
 
-<!-- agent-mindmap-end -->
+<!-- mirror-src-end -->
 
 ## Used in
 
