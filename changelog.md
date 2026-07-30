@@ -11,6 +11,9 @@
 
 ## [`13.5.1` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.0...v13.5.1)
 
+> [!NOTE]
+> `13.5.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.5.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.5.1).
+
 - Skip `test_github_runner_detection` unless `EXTRA_PLATFORMS_TEST_MATRIX` is set, instead of whenever GitHub CI is detected, so downstream packagers building the test suite inside GitHub Actions no longer fail on the absent matrix variable.
 
 ## [`13.5.0` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.4.0...v13.5.0)
