@@ -59,7 +59,6 @@ Independent derivative distributions each get a dedicated platform, even when th
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_PLATFORMS
 from extra_platforms._docs import generate_trait_table
 
@@ -148,7 +147,6 @@ platform is not recognized.
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_PLATFORM_GROUPS
 from extra_platforms._docs import generate_group_table
 
@@ -190,7 +188,6 @@ Here is the canonical groups and all platforms, visualized as a Sankey diagram:
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_PLATFORMS, ALL_PLATFORM_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_sankey
 
@@ -282,7 +279,6 @@ And the same groups visualized as a mindmap:
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_PLATFORMS, ALL_PLATFORM_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_traits_mindmap
 

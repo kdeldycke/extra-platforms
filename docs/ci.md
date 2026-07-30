@@ -55,7 +55,6 @@ Most vendors also set the generic `CI` variable, which is used as an expectation
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_CI
 from extra_platforms._docs import generate_trait_table
 
@@ -94,7 +93,6 @@ There is only one group defined for CI systems: `ALL_CI`, which includes all rec
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_CI_GROUPS
 from extra_platforms._docs import generate_group_table
 
@@ -111,7 +109,6 @@ print(generate_group_table(ALL_CI_GROUPS))
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_CI_GROUPS
 from extra_platforms._docs import generate_sankey
 
@@ -144,7 +141,6 @@ ALL_CI,TRAVIS_CI,1
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_CI, ALL_CI_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_traits_mindmap
 

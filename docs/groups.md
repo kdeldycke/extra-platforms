@@ -125,7 +125,6 @@ All recognized groups and their properties:
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_GROUPS
 from extra_platforms._docs import generate_group_table
 
