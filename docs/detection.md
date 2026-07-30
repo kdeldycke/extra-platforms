@@ -12,7 +12,6 @@
 
 ```{python:render}
 :mirror:
-
 from itertools import chain
 
 from extra_platforms import ALL_GROUPS, ALL_TRAITS

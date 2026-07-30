@@ -55,7 +55,6 @@ The `LLM` variable is used as an expectation signal: when it is set but no agent
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_AGENTS
 from extra_platforms._docs import generate_trait_table
 
@@ -85,7 +84,6 @@ There is only one group defined for agents: `ALL_AGENTS`, which includes all rec
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_AGENT_GROUPS
 from extra_platforms._docs import generate_group_table
 
@@ -102,7 +100,6 @@ print(generate_group_table(ALL_AGENT_GROUPS))
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_AGENT_GROUPS
 from extra_platforms._docs import generate_sankey
 
@@ -126,7 +123,6 @@ ALL_AGENTS,CURSOR,1
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_AGENTS, ALL_AGENT_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_traits_mindmap
 

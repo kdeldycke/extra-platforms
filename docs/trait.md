@@ -132,7 +132,6 @@ All recognized traits and their properties:
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_TRAITS
 from extra_platforms._docs import generate_trait_table
 

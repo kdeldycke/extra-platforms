@@ -98,7 +98,6 @@ Shell(id='fish', name='Fish')
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_SHELLS
 from extra_platforms._docs import generate_trait_table
 
@@ -136,7 +135,6 @@ shell is not recognized.
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_SHELL_GROUPS
 from extra_platforms._docs import generate_group_table
 
@@ -165,7 +163,6 @@ with canonical groups.
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_SHELLS, ALL_SHELL_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_sankey
 
@@ -203,7 +200,6 @@ C_SHELLS,TCSH,1
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_SHELLS, ALL_SHELL_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_traits_mindmap
 

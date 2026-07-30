@@ -55,7 +55,6 @@ Terminal multiplexers stack on top of a regular emulator, and their variables in
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_TERMINALS
 from extra_platforms._docs import generate_trait_table
 
@@ -100,7 +99,6 @@ terminal is not recognized.
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_TERMINAL_GROUPS
 from extra_platforms._docs import generate_group_table
 
@@ -129,7 +127,6 @@ with canonical groups.
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_TERMINALS, ALL_TERMINAL_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_sankey
 
@@ -174,7 +171,6 @@ MULTIPLEXERS,ZELLIJ,1
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_TERMINALS, ALL_TERMINAL_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_traits_mindmap
 

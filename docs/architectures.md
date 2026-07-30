@@ -55,7 +55,6 @@ Unlike [shells](shells.md), architectures are mutually exclusive: at most one de
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_ARCHITECTURES
 from extra_platforms._docs import generate_trait_table
 
@@ -107,7 +106,6 @@ architecture is not recognized.
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_ARCHITECTURE_GROUPS
 from extra_platforms._docs import generate_group_table
 
@@ -151,7 +149,6 @@ Here are the non-overlapping families that encompass all recognized architecture
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_sankey
 
@@ -208,7 +205,6 @@ And the same families visualized as a mindmap:
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, CANONICAL_GROUPS
 from extra_platforms._docs import generate_traits_mindmap
 
@@ -267,7 +263,6 @@ Architectures are also grouped by bitness (32-bit vs 64-bit), visualized as a Sa
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_ARCHITECTURES, ARCH_32_BIT, ARCH_64_BIT
 from extra_platforms._docs import generate_sankey
 
@@ -317,7 +312,6 @@ And the same bitness groups visualized as a mindmap:
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_ARCHITECTURES, ARCH_32_BIT, ARCH_64_BIT
 from extra_platforms._docs import generate_traits_mindmap
 
@@ -369,7 +363,6 @@ Architectures are also grouped by endianness (big-endian vs little-endian), visu
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_ARCHITECTURES, BIG_ENDIAN, LITTLE_ENDIAN
 from extra_platforms._docs import generate_sankey
 
@@ -419,7 +412,6 @@ And the same endianness groups visualized as a mindmap:
 
 ```{python:render}
 :mirror:
-
 from extra_platforms import ALL_ARCHITECTURES, BIG_ENDIAN, LITTLE_ENDIAN
 from extra_platforms._docs import generate_traits_mindmap
 

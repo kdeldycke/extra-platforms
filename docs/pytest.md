@@ -89,7 +89,6 @@ Some tests drive a command through a real subprocess. `write_fake_executable` wr
 
 ```{python:render}
 :mirror:
-
 from itertools import chain
 
 from extra_platforms import ALL_GROUPS, ALL_TRAITS
