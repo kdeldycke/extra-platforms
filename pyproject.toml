@@ -317,10 +317,9 @@ dependency-groups.docs = { requires-python = ">= 3.12" }
 exclude-newer = "1 week"
 # Cooldown bypass: adopt click-extra 8.7 early for the <!-- mirror-src --> comment
 # form of :mirror: (readme.md mindmaps) and the public block toolkit exports.
-# TODO: set this to click-extra 8.7.0's actual release date (it is unreleased as
-# of this edit — the feature lives on click-extra main), and regenerate uv.lock
-# with `uv lock`. sync-uv-lock prunes this once 8.7.0 ages past exclude-newer.
-exclude-newer-package = { click-extra = "2026-08-13T00:00:00Z" }
+# 8.7.0 shipped 2026-07-30, still inside the exclude-newer cooldown; the date is
+# its PyPI upload time. sync-uv-lock prunes this once 8.7.0 ages past exclude-newer.
+exclude-newer-package = { click-extra = "2026-07-30T17:07:28.533730Z" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 build-backend.source-exclude = [
