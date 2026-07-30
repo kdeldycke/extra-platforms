@@ -291,5 +291,6 @@ from itertools import chain
 
 from extra_platforms import ALL_GROUPS, ALL_TRAITS
 from extra_platforms._docs import generate_pytest_decorator_autodata
+
 print(generate_pytest_decorator_autodata(chain(ALL_TRAITS, ALL_GROUPS)))
 ```

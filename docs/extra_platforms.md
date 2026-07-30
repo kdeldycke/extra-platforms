@@ -5,6 +5,7 @@ from itertools import chain
 
 from extra_platforms import ALL_GROUPS, ALL_TRAITS
 from extra_platforms._docs import generate_extra_platforms_automodule
+
 print(generate_extra_platforms_automodule(chain(ALL_TRAITS, ALL_GROUPS)))
 ```
 
@@ -46,6 +47,7 @@ print(generate_extra_platforms_automodule(chain(ALL_TRAITS, ALL_GROUPS)))
 
 ```{python:render}
 from extra_platforms._docs import generate_noindex_automodule
+
 print(generate_noindex_automodule("extra_platforms.group"))
 ```
 
@@ -93,5 +95,6 @@ print(generate_noindex_automodule("extra_platforms.group"))
 
 ```{python:render}
 from extra_platforms._docs import generate_noindex_automodule
+
 print(generate_noindex_automodule("extra_platforms.trait"))
 ```

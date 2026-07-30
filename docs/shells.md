@@ -254,5 +254,10 @@ mindmap
 ```{python:render}
 from extra_platforms import ALL_SHELLS, UNKNOWN_SHELL
 from extra_platforms._docs import generate_sphinx_directives
-print(generate_sphinx_directives(list(ALL_SHELLS) + [UNKNOWN_SHELL], "autodata", "symbol_id"))
+
+print(
+    generate_sphinx_directives(
+        list(ALL_SHELLS) + [UNKNOWN_SHELL], "autodata", "symbol_id"
+    )
+)
 ```
