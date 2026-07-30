@@ -53,7 +53,16 @@ Terminal multiplexers stack on top of a regular emulator, and their variables in
 
 ## Recognized terminals
 
-<!-- terminal-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_TERMINALS
+from extra_platforms._docs import generate_trait_table
+
+print(generate_trait_table(ALL_TERMINALS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                    | Name             | Detection function           |
 | :--: | :------------------------ | :--------------- | :--------------------------- |
@@ -85,11 +94,20 @@ and will be returned by {func}`~current_terminal` if the current
 terminal is not recognized.
 ```
 
-<!-- terminal-table-end -->
+<!-- mirror-end -->
 
 ## Groups of terminals
 
-<!-- terminal-groups-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_TERMINAL_GROUPS
+from extra_platforms._docs import generate_group_table
+
+print(generate_group_table(ALL_TERMINAL_GROUPS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                    | Description               | [Detection](detection.md)    | {attr}`Canonical <Group.canonical>` |
 | :--: | :------------------------ | :------------------------ | :--------------------------- | :---------------------------------: |
@@ -107,9 +125,18 @@ Other groups are provided for convenience, but overlap with each other or
 with canonical groups.
 ```
 
-<!-- terminal-groups-table-end -->
+<!-- mirror-end -->
 
-<!-- terminal-sankey-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_TERMINALS, ALL_TERMINAL_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_sankey
+
+print(generate_sankey(list(CANONICAL_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -143,9 +170,18 @@ MULTIPLEXERS,TMUX,1
 MULTIPLEXERS,ZELLIJ,1
 ```
 
-<!-- terminal-sankey-end -->
+<!-- mirror-end -->
 
-<!-- terminal-mindmap-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_TERMINALS, ALL_TERMINAL_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -179,7 +215,7 @@ mindmap
             (🔡 WEZTERM)
 ```
 
-<!-- terminal-mindmap-end -->
+<!-- mirror-end -->
 
 ## Predefined terminals
 

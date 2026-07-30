@@ -53,7 +53,16 @@ Most vendors also set the generic `CI` variable, which is used as an expectation
 
 ## Recognized CI
 
-<!-- ci-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_CI
+from extra_platforms._docs import generate_trait_table
+
+print(generate_trait_table(ALL_CI))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                   | Name                  | Detection function          |
 | :--: | :----------------------- | :-------------------- | :-------------------------- |
@@ -77,21 +86,39 @@ and will be returned by {func}`~current_ci` if the current
 CI system is not recognized.
 ```
 
-<!-- ci-table-end -->
+<!-- mirror-end -->
 
 ## Groups of CI
 
 There is only one group defined for CI systems: `ALL_CI`, which includes all recognized CI systems.
 
-<!-- ci-groups-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_CI_GROUPS
+from extra_platforms._docs import generate_group_table
+
+print(generate_group_table(ALL_CI_GROUPS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol          | Description    | [Detection](detection.md) | {attr}`Canonical <Group.canonical>` |
 | :--: | :-------------- | :------------- | :------------------------ | :---------------------------------: |
 |  ♺   | {data}`~ALL_CI` | All CI systems | {func}`~is_any_ci`        |                  ⬥                  |
 
-<!-- ci-groups-table-end -->
+<!-- mirror-end -->
 
-<!-- ci-sankey-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_CI_GROUPS
+from extra_platforms._docs import generate_sankey
+
+print(generate_sankey(ALL_CI_GROUPS))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -113,9 +140,18 @@ ALL_CI,TEAMCITY,1
 ALL_CI,TRAVIS_CI,1
 ```
 
-<!-- ci-sankey-end -->
+<!-- mirror-end -->
 
-<!-- ci-mindmap-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_CI, ALL_CI_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_CI_GROUPS) + [ALL_CI]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -137,7 +173,7 @@ mindmap
         (👷 TRAVIS_CI)
 ```
 
-<!-- ci-mindmap-end -->
+<!-- mirror-end -->
 
 ## Predefined CI
 

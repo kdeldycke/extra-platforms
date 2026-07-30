@@ -53,7 +53,16 @@ Unlike [shells](shells.md), architectures are mutually exclusive: at most one de
 
 ## Recognized architectures
 
-<!-- architecture-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_ARCHITECTURES
+from extra_platforms._docs import generate_trait_table
+
+print(generate_trait_table(ALL_ARCHITECTURES))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol               | Name                           | Detection function      |
 | :--: | :------------------- | :----------------------------- | :---------------------- |
@@ -90,13 +99,22 @@ and will be returned by {func}`~current_architecture` if the current
 architecture is not recognized.
 ```
 
-<!-- architecture-table-end -->
+<!-- mirror-end -->
 
 ## Groups of architectures
 
 ### All architecture groups
 
-<!-- architecture-groups-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_ARCHITECTURE_GROUPS
+from extra_platforms._docs import generate_group_table
+
+print(generate_group_table(ALL_ARCHITECTURE_GROUPS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                     | Description                 | [Detection](detection.md)    | {attr}`Canonical <Group.canonical>` |
 | :--: | :------------------------- | :-------------------------- | :--------------------------- | :---------------------------------: |
@@ -123,7 +141,7 @@ Other groups are provided for convenience, but overlap with each other or
 with canonical groups.
 ```
 
-<!-- architecture-groups-table-end -->
+<!-- mirror-end -->
 
 ### Canonical groups
 
@@ -131,7 +149,16 @@ All recognized architectures are grouped in canonical families, with each archit
 
 Here are the non-overlapping families that encompass all recognized architectures, visualized as a Sankey diagram:
 
-<!-- architecture-canonical-sankey-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_sankey
+
+print(generate_sankey(list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -175,11 +202,20 @@ LOONGARCH,LOONGARCH64,1
 IBM_MAINFRAME,S390X,1
 ```
 
-<!-- architecture-canonical-sankey-end -->
+<!-- mirror-end -->
 
 And the same families visualized as a mindmap:
 
-<!-- architecture-canonical-mindmap-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_ARCHITECTURES, ALL_ARCHITECTURE_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -223,13 +259,22 @@ mindmap
             (📱 ARMV8L)
 ```
 
-<!-- architecture-canonical-mindmap-end -->
+<!-- mirror-end -->
 
 ### Bitness groups
 
 Architectures are also grouped by bitness (32-bit vs 64-bit), visualized as a Sankey diagram:
 
-<!-- architecture-bitness-sankey-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_ARCHITECTURES, ARCH_32_BIT, ARCH_64_BIT
+from extra_platforms._docs import generate_sankey
+
+print(generate_sankey([ARCH_32_BIT, ARCH_64_BIT, ALL_ARCHITECTURES]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -266,11 +311,20 @@ ARCH_64_BIT,WASM64,1
 ARCH_64_BIT,X86_64,1
 ```
 
-<!-- architecture-bitness-sankey-end -->
+<!-- mirror-end -->
 
 And the same bitness groups visualized as a mindmap:
 
-<!-- architecture-bitness-mindmap-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_ARCHITECTURES, ARCH_32_BIT, ARCH_64_BIT
+from extra_platforms._docs import generate_traits_mindmap
+
+print(generate_traits_mindmap([ARCH_32_BIT, ARCH_64_BIT, ALL_ARCHITECTURES]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -307,13 +361,22 @@ mindmap
             (🌐 WASM32)
 ```
 
-<!-- architecture-bitness-mindmap-end -->
+<!-- mirror-end -->
 
 ### Endianness groups
 
 Architectures are also grouped by endianness (big-endian vs little-endian), visualized as a Sankey diagram:
 
-<!-- architecture-endianness-sankey-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_ARCHITECTURES, BIG_ENDIAN, LITTLE_ENDIAN
+from extra_platforms._docs import generate_sankey
+
+print(generate_sankey([BIG_ENDIAN, LITTLE_ENDIAN, ALL_ARCHITECTURES]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -350,11 +413,20 @@ BIG_ENDIAN,SPARC,1
 BIG_ENDIAN,SPARC64,1
 ```
 
-<!-- architecture-endianness-sankey-end -->
+<!-- mirror-end -->
 
 And the same endianness groups visualized as a mindmap:
 
-<!-- architecture-endianness-mindmap-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_ARCHITECTURES, BIG_ENDIAN, LITTLE_ENDIAN
+from extra_platforms._docs import generate_traits_mindmap
+
+print(generate_traits_mindmap([BIG_ENDIAN, LITTLE_ENDIAN, ALL_ARCHITECTURES]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -391,7 +463,7 @@ mindmap
             (☀️ SPARC64)
 ```
 
-<!-- architecture-endianness-mindmap-end -->
+<!-- mirror-end -->
 
 ## Predefined architectures
 

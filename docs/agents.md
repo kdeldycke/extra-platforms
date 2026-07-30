@@ -53,7 +53,16 @@ The `LLM` variable is used as an expectation signal: when it is set but no agent
 
 ## Recognized agents
 
-<!-- agent-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_AGENTS
+from extra_platforms._docs import generate_trait_table
+
+print(generate_trait_table(ALL_AGENTS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol               | Name        | Detection function      |
 | :--: | :------------------- | :---------- | :---------------------- |
@@ -68,21 +77,39 @@ and will be returned by {func}`~current_agent` if the current
 agent is not recognized.
 ```
 
-<!-- agent-table-end -->
+<!-- mirror-end -->
 
 ## Groups of agents
 
 There is only one group defined for agents: `ALL_AGENTS`, which includes all recognized agents.
 
-<!-- agent-groups-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_AGENT_GROUPS
+from extra_platforms._docs import generate_group_table
+
+print(generate_group_table(ALL_AGENT_GROUPS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol              | Description          | [Detection](detection.md) | {attr}`Canonical <Group.canonical>` |
 | :--: | :------------------ | :------------------- | :------------------------ | :---------------------------------: |
 |  🧠  | {data}`~ALL_AGENTS` | All AI coding agents | {func}`~is_any_agent`     |                  ⬥                  |
 
-<!-- agent-groups-table-end -->
+<!-- mirror-end -->
 
-<!-- agent-sankey-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_AGENT_GROUPS
+from extra_platforms._docs import generate_sankey
+
+print(generate_sankey(ALL_AGENT_GROUPS))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -95,9 +122,18 @@ ALL_AGENTS,CLINE,1
 ALL_AGENTS,CURSOR,1
 ```
 
-<!-- agent-sankey-end -->
+<!-- mirror-end -->
 
-<!-- agent-mindmap-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_AGENTS, ALL_AGENT_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_AGENT_GROUPS) + [ALL_AGENTS]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -110,7 +146,7 @@ mindmap
         (➤ CURSOR)
 ```
 
-<!-- agent-mindmap-end -->
+<!-- mirror-end -->
 
 ## Predefined agents
 

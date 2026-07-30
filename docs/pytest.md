@@ -87,7 +87,18 @@ Some tests drive a command through a real subprocess. `write_fake_executable` wr
 
 ## All decorators
 
-<!-- decorators-table-start -->
+```{python:render}
+:mirror:
+
+from itertools import chain
+
+from extra_platforms import ALL_GROUPS, ALL_TRAITS
+from extra_platforms._docs import generate_decorators_table
+
+print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
+```
+
+<!-- mirror -->
 
 | Skip decorator                            | Unless decorator                            | Icon | Associated symbol             |
 | :---------------------------------------- | :------------------------------------------ | :--: | :---------------------------- |
@@ -273,7 +284,7 @@ Some tests drive a command through a real subprocess. `write_fake_executable` wr
 | {deco}`~pytest.skip_zellij`               | {deco}`~pytest.unless_zellij`               |  🪵  | {data}`~ZELLIJ`               |
 | {deco}`~pytest.skip_zsh`                  | {deco}`~pytest.unless_zsh`                  |  ℤ   | {data}`~ZSH`                  |
 
-<!-- decorators-table-end -->
+<!-- mirror-end -->
 
 <!-- pytest-decorators-autodata-start -->
 

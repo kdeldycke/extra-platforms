@@ -123,7 +123,16 @@ frozenset({BSD})
 
 All recognized groups and their properties:
 
-<!-- groups-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_GROUPS
+from extra_platforms._docs import generate_group_table
+
+print(generate_group_table(ALL_GROUPS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                      | Description                                                             | [Detection](detection.md)    | {attr}`Canonical <Group.canonical>` |
 | :--: | :-------------------------- | :---------------------------------------------------------------------- | :--------------------------- | :---------------------------------: |
@@ -176,7 +185,7 @@ Other groups are provided for convenience, but overlap with each other or
 with canonical groups.
 ```
 
-<!-- groups-table-end -->
+<!-- mirror-end -->
 
 ## Predefined groups
 

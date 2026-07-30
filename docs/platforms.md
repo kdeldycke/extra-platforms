@@ -57,7 +57,16 @@ A compatibility layer is detected alongside the system it hosts, so two platform
 
 Independent derivative distributions each get a dedicated platform, even when they build on a parent distribution: Ubuntu, Kali Linux, Linux Mint, Raspbian and PikaOS are all Debian derivatives, but each is managed by its own organization. Release channels, variants and flavors of a single distribution, managed by the same organization as the parent, are folded into the parent's platform: every openSUSE channel (Tumbleweed, Leap, Slowroll, MicroOS, ...) is detected as {data}`~OPENSUSE`, while the raw channel ID remains available through {meth}`~Platform.info`.
 
-<!-- platform-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_PLATFORMS
+from extra_platforms._docs import generate_trait_table
+
+print(generate_trait_table(ALL_PLATFORMS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                 | Name                           | Detection function        |
 | :--: | :--------------------- | :----------------------------- | :------------------------ |
@@ -131,13 +140,22 @@ and will be returned by {func}`~current_platform` if the current
 platform is not recognized.
 ```
 
-<!-- platform-table-end -->
+<!-- mirror-end -->
 
 ## Groups of platforms
 
 ### All platform groups
 
-<!-- platform-groups-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_PLATFORM_GROUPS
+from extra_platforms._docs import generate_group_table
+
+print(generate_group_table(ALL_PLATFORM_GROUPS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                      | Description                      | [Detection](detection.md)  | {attr}`Canonical <Group.canonical>` |
 | :--: | :-------------------------- | :------------------------------- | :------------------------- | :---------------------------------: |
@@ -162,7 +180,7 @@ Other groups are provided for convenience, but overlap with each other or
 with canonical groups.
 ```
 
-<!-- platform-groups-table-end -->
+<!-- mirror-end -->
 
 ### Canonical groups
 
@@ -170,7 +188,16 @@ All platforms are distributed in groups that are guaranteed to be non-overlappin
 
 Here is the canonical groups and all platforms, visualized as a Sankey diagram:
 
-<!-- platform-multi-level-sankey-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_PLATFORMS, ALL_PLATFORM_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_sankey
+
+print(generate_sankey(list(CANONICAL_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -249,11 +276,20 @@ LINUX_LAYERS,WSL2,1
 ALL_WINDOWS,WINDOWS,1
 ```
 
-<!-- platform-multi-level-sankey-end -->
+<!-- mirror-end -->
 
 And the same groups visualized as a mindmap:
 
-<!-- platform-mindmap-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_PLATFORMS, ALL_PLATFORM_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -332,7 +368,7 @@ mindmap
             (🪟 WINDOWS)
 ```
 
-<!-- platform-mindmap-end -->
+<!-- mirror-end -->
 
 ## Predefined platforms
 

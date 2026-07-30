@@ -130,7 +130,16 @@ The exact structure depends on the trait type.
 
 All recognized traits and their properties:
 
-<!-- all-traits-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_TRAITS
+from extra_platforms._docs import generate_trait_table
+
+print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                        | Name                           | Detection function               | Type         |
 | :--: | :---------------------------- | :----------------------------- | :------------------------------- | :----------- |
@@ -276,7 +285,7 @@ All recognized traits and their properties:
 |  🪵  | {data}`~ZELLIJ`               | Zellij                         | {func}`~is_zellij`               | Terminal     |
 |  ℤ   | {data}`~ZSH`                  | Zsh                            | {func}`~is_zsh`                  | Shell        |
 
-<!-- all-traits-table-end -->
+<!-- mirror-end -->
 
 ## Trait implementation
 

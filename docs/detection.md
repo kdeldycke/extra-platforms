@@ -10,7 +10,18 @@
 
 ## All detection functions
 
-<!-- all-detection-function-table-start -->
+```{python:render}
+:mirror:
+
+from itertools import chain
+
+from extra_platforms import ALL_GROUPS, ALL_TRAITS
+from extra_platforms._docs import generate_all_detection_function_table
+
+print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
+```
+
+<!-- mirror -->
 
 | Detection function               | Icon | Associated symbol             |
 | :------------------------------- | :--: | :---------------------------- |
@@ -196,7 +207,7 @@
 | {func}`~is_zellij`               |  🪵  | {data}`~ZELLIJ`               |
 | {func}`~is_zsh`                  |  ℤ   | {data}`~ZSH`                  |
 
-<!-- all-detection-function-table-end -->
+<!-- mirror-end -->
 
 ## Trait detection functions
 

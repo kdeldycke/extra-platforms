@@ -13,6 +13,16 @@
 # limitations under the License.
 """Automation to keep extra-platforms documentation up-to-date.
 
+:func:`update_docs` materializes the content that cannot render live: the
+``readme.md`` mindmaps (GitHub cannot execute Sphinx directives) and the reST
+autodoc regions (``{eval-rst}`` ``autodata``/``autofunction``/``automodule``).
+
+The trait and group pages render their own tables and diagrams live via
+``{python:render}`` ``:mirror:`` blocks calling :mod:`extra_platforms._docs`;
+their committed ``<!-- mirror -->`` regions are refreshed by
+``click-extra refresh-directives`` (the fourth ``repomatic update-docs`` phase),
+not by this script.
+
 .. tip::
 
     When run directly, it updates all documentation files in-place:
@@ -41,10 +51,9 @@ from collections.abc import Iterable
 from itertools import chain
 from operator import attrgetter
 from pathlib import Path
-from textwrap import dedent, indent
+from textwrap import dedent
 
-from click_extra.table import TableFormat, render_table
-from wcmatch import glob as wcglob
+from click_extra.sphinx._base import update_blocks
 
 from extra_platforms import (
     ALL_AGENT_GROUPS,
@@ -61,11 +70,7 @@ from extra_platforms import (
     ALL_TERMINAL_GROUPS,
     ALL_TERMINALS,
     ALL_TRAITS,
-    ARCH_32_BIT,
-    ARCH_64_BIT,
-    BIG_ENDIAN,
     CANONICAL_GROUPS,
-    LITTLE_ENDIAN,
     UNKNOWN_AGENT,
     UNKNOWN_ARCHITECTURE,
     UNKNOWN_CI,
@@ -75,6 +80,7 @@ from extra_platforms import (
     Group,
     Trait,
 )
+from extra_platforms._docs import generate_traits_mindmap
 
 _GROUP_API_FUNCTIONS = (
     "extract_members",
@@ -97,346 +103,38 @@ README_PATH = PROJECT_ROOT / "readme.md"
 """The path to the ``readme.md`` file."""
 
 
-def replace_content(
-    filepath: Path | Iterable[Path],
-    start_tag: str,
-    end_tag: str,
-    new_content: str,
-) -> None:
-    """Replace in the provided files the content surrounded by the provided tags.
+def replace_region(text: str, start_tag: str, end_tag: str, new_content: str) -> str:
+    """Return `text` with the content between the two tag comments replaced.
 
-    Tags are specified as simple names (e.g., "architecture-table-start") and will be
-    matched with flexible whitespace handling using HTML comment format
-    (``<!-- tag -->``).
+    Tags are matched as ``<!-- tag -->`` HTML comments with flexible whitespace
+    (e.g. ``start_tag="architecture-mindmap-start"``). When either tag is absent
+    the text is returned unchanged, so this is safe to apply to every file.
+
+    Pure transform: writing back to disk (and the ``--check`` dry-run) is handled
+    by :func:`click_extra.sphinx._base.update_blocks`.
     """
-    if isinstance(filepath, Path):
-        path_list = [filepath]
-    else:
-        path_list = list(filepath)
-
-    for path in path_list:
-        path = path.resolve()
-        assert path.exists(), f"File {path} does not exist."
-        assert path.is_file(), f"File {path} is not a file."
-
-        orig_content = path.read_text(encoding="utf-8")
-
-        # HTML comment format: <!-- tag -->
-        start_pattern = re.compile(
-            rf"<!--\s*{re.escape(start_tag)}\s*-->\s*",
-            re.MULTILINE | re.DOTALL,
-        )
-        end_pattern = re.compile(
-            rf"\s*<!--\s*{re.escape(end_tag)}\s*-->",
-            re.MULTILINE | re.DOTALL,
-        )
-        start_tag_formatted = f"<!-- {start_tag} -->\n\n"
-        end_tag_formatted = f"\n\n<!-- {end_tag} -->"
-
-        # Find start tag.
-        start_match = start_pattern.search(orig_content)
-        if not start_match:
-            continue
-
-        # Split at start tag.
-        pre_content = orig_content[: start_match.start()]
-        after_start = orig_content[start_match.end() :]
-
-        # Find end tag.
-        end_match = end_pattern.search(after_start)
-        if not end_match:
-            continue
-
-        # Split at end tag.
-        post_content = after_start[end_match.end() :]
-
-        path.write_text(
-            f"{pre_content}{start_tag_formatted}{new_content}{end_tag_formatted}{post_content}",
-            encoding="utf-8",
-        )
-
-
-def generate_trait_table(
-    traits: Iterable[Trait],
-    *,
-    include_type: bool = False,
-    include_hint: bool = True,
-) -> str:
-    """Produce a Markdown table for a collection of traits.
-
-    :param traits: The traits to include in the table.
-    :param include_type: If ``True``, add a "Type" column showing each trait's
-        class name.
-    :param include_hint: If ``True``, append a hint block explaining the unknown
-        trait for this trait type.  Requires all traits to be of the same class.
-    """
-    table_data = []
-    headers = ["Icon", "Symbol", "Name", "Detection function"]
-    alignments = ["center", "left", "left", "left"]
-    if include_type:
-        headers.append("Type")
-        alignments.append("left")
-
-    traits_list = list(traits)
-
-    if include_hint:
-        # All traits must be of the same class to produce the hint block.
-        all_classes = {type(trait) for trait in traits_list}
-        assert len(all_classes) == 1, (
-            "All traits must be of the same class to generate a trait table."
-        )
-        trait_class = all_classes.pop()
-
-    for trait in sorted(traits_list, key=attrgetter("id")):
-        row = [
-            trait.icon,
-            f"{{data}}`~{trait.symbol_id}`",
-            trait.name,
-            f"{{func}}`~{trait.detection_func_id}`",
-        ]
-        if include_type:
-            row.append(type(trait).__name__)
-        table_data.append(row)
-
-    table = render_table(
-        table_data,
-        headers,
-        table_format=TableFormat.GITHUB,
-        colalign=alignments,
+    start_pattern = re.compile(
+        rf"<!--\s*{re.escape(start_tag)}\s*-->\s*",
+        re.MULTILINE | re.DOTALL,
+    )
+    end_pattern = re.compile(
+        rf"\s*<!--\s*{re.escape(end_tag)}\s*-->",
+        re.MULTILINE | re.DOTALL,
     )
 
-    if include_hint:
-        hint = dedent(f"""
-            ```{{hint}}
-            The {{data}}`~{trait_class.unknown_symbol}` trait represents an unrecognized
-            {trait_class.type_name}. It is not included in the {{data}}`~{trait_class.all_group}` group,
-            and will be returned by {{func}}`~current_{trait_class.type_id}` if the current
-            {trait_class.type_name} is not recognized.
-            ```""")
-        table = f"{table}\n{hint}"
+    start_match = start_pattern.search(text)
+    if not start_match:
+        return text
+    after_start = text[start_match.end() :]
+    end_match = end_pattern.search(after_start)
+    if not end_match:
+        return text
 
-    return table
-
-
-def generate_group_table(groups: Iterable[Group]) -> str:
-    """Produce a Markdown table for a collection of groups.
-
-    The table contains the icon, symbol with link to documentation, description,
-    a linked detection function, and canonical status for each group.
-    A hint block is appended after the table to explain canonical groups.
-
-    :param groups: The groups to include in the table.
-    """
-    headers = [
-        "Icon",
-        "Symbol",
-        "Description",
-        "[Detection](detection.md)",
-        "{attr}`Canonical <Group.canonical>`",
-    ]
-    alignments = ["center", "left", "left", "left", "center"]
-
-    sorted_groups = sorted(groups, key=attrgetter("id"))
-    table_data = [
-        [
-            group.icon,
-            f"{{data}}`~{group.symbol_id}`",
-            group.name,
-            f"{{func}}`~{group.detection_func_id}`",
-            "⬥" if group.canonical else "",
-        ]
-        for group in sorted_groups
-    ]
-
-    table = render_table(
-        table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
-    )
-
-    # Append hint block explaining canonical groups
-    if len(sorted_groups) > 1:
-        hint = dedent("""
-            ```{hint}
-            Canonical groups are non-overlapping groups that together cover all
-            recognized traits. They are marked with a ⬥ icon in the table above.
-
-            Other groups are provided for convenience, but overlap with each other or
-            with canonical groups.
-            ```""")
-        table = f"{table}\n{hint}"
-
-    return table
-
-
-def _analyze_group_hierarchy(
-    groups: Iterable[Group],
-) -> tuple[Group, list[Group], list]:
-    """Analyze a collection of groups to identify the superset and missing traits.
-
-    :param groups: An iterable of groups including both the superset group (e.g.,
-        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups.
-    :returns: A tuple of ``(superset, intermediate_groups, missing_traits)`` where:
-
-        - ``superset``: The group that contains all others as subsets
-        - ``intermediate_groups``: All groups except the superset
-        - ``missing_traits``: Traits in the superset not covered by any
-          intermediate group
-    :raises ValueError: If no superset group is found among the inputs.
-    """
-    groups_list = list(groups)
-
-    # Find the superset group (the one that contains all others as subsets).
-    supersets = [
-        g
-        for g in groups_list
-        if all(g >= other for other in groups_list if other.id != g.id)
-    ]
-
-    if not supersets:
-        raise ValueError(
-            "No superset group found. The input must include a group that "
-            "contains all members of other groups (e.g., ALL_ARCHITECTURES, "
-            "ALL_PLATFORMS)."
-        )
-
-    superset = supersets[0]
-
-    # Separate intermediate groups from the superset.
-    intermediate_groups = [g for g in groups_list if g.id != superset.id]
-
-    # Compute the union of all intermediate groups to find missing traits.
-    union_of_intermediate: set[str] = set()
-    for group in intermediate_groups:
-        union_of_intermediate.update(group.member_ids)
-
-    # Find traits in the superset that aren't covered by any intermediate group.
-    missing_trait_ids = superset.member_ids - union_of_intermediate
-    missing_traits = sorted(
-        [superset[tid] for tid in missing_trait_ids],
-        key=lambda t: t.id,
-    )
-
-    return superset, intermediate_groups, missing_traits
-
-
-def generate_sankey(groups: Iterable[Group]) -> str:
-    """Produce a Sankey diagram showing trait hierarchy.
-
-    .. warning::
-        Output must stay compatible with the Mermaid version bundled in
-        ``sphinxcontrib-mermaid``. See module docstring for details.
-
-    The diagram shows connections from a top-level (superset) group to intermediate
-    groups to their individual members. The weights of the first layer reflect the
-    number of members in each intermediate group. Missing traits (present in the
-    superset but not in any intermediate group) are shown as direct children of
-    the superset, placed at the end of the diagram specification.
-
-    :param groups: An iterable of groups including both the superset group (e.g.,
-        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-        display (e.g., CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS).
-    :raises ValueError: If no superset group is found among the inputs.
-    """
-    superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
-
-    sorted_intermediates = sorted(
-        intermediate_groups, key=lambda g: (len(g), g.id), reverse=True
-    )
-
-    table = []
-
-    # First layer: superset -> intermediate groups (weight = number of members
-    # in group).
-    for group in sorted_intermediates:
-        member_count = len(group)
-        table.append(f"{superset.symbol_id},{group.symbol_id},{member_count}")
-
-    # Second layer: intermediate groups -> their members (weight = 1 each).
-    for group in sorted_intermediates:
-        # XXX Sankey diagrams does not supports emoji labels
-        # https://github.com/mermaid-js/mermaid/issues/1995
-        # https://github.com/mermaid-js/mermaid/issues/5308
-        table.extend(
-            f"{group.symbol_id},{member.symbol_id},1"
-            for member in group._members.values()
-        )
-
-    # Third layer: superset -> missing traits (weight = 1 each), placed at the end.
-    table.extend(
-        f"{superset.symbol_id},{trait.symbol_id},1" for trait in missing_traits
-    )
-    output = dedent("""\
-        ```mermaid
-        ---
-        config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
-        ---
-        sankey-beta\n
-        """)
-    output += "\n".join(table)
-    output += "\n```"
-    return output
-
-
-def generate_traits_mindmap(groups: Iterable[Group]) -> str:
-    """Produce a mindmap hierarchy to show the hierarchy of groups and their traits.
-
-    .. warning::
-        Output must stay compatible with the Mermaid version bundled in
-        ``sphinxcontrib-mermaid``. See module docstring for details.
-
-    Includes missing traits (present in the superset but not in any intermediate group)
-    as direct children of the superset.
-
-    :param groups: An iterable of groups including both the superset group (e.g.,
-        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-        display (e.g., CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS).
-    :raises ValueError: If no superset group is found among the inputs.
-    """
-    superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
-
-    group_map = ""
-    for group in sorted(intermediate_groups, key=attrgetter("id"), reverse=True):
-        group_map += f"){group.icon} {group.symbol_id}(\n"
-        for member in group:
-            group_map += f"    ({member.icon} {member.symbol_id})\n"
-
-    # Add missing traits as direct children of the superset.
-    for trait in missing_traits:
-        group_map += f"({trait.icon} {trait.symbol_id})\n"
-    name = f"{superset.icon} {superset.symbol_id}"
-    output = dedent(f"""\
-        ```mermaid
-        ---
-        config: {{"mindmap": {{"padding": 5}}}}
-        ---
-        mindmap
-            (({name}))
-        """)
-    output += indent(group_map, " " * 8)
-    output += "```"
-    return output
-
-
-def generate_decorators_table(objects: Iterable[Trait | Group]) -> str:
-    """Produce a Markdown table for pytest decorators.
-
-    The table contains the skip decorator (linked), unless decorator (linked),
-    icon, and source symbol link for each trait or group.
-    """
-    headers = ["Skip decorator", "Unless decorator", "Icon", "Associated symbol"]
-    alignments = ["left", "left", "center", "left"]
-
-    table_data = [
-        [
-            f"{{deco}}`~pytest.{obj.skip_decorator_id}`",
-            f"{{deco}}`~pytest.{obj.unless_decorator_id}`",
-            obj.icon,
-            f"{{data}}`~{obj.symbol_id}`",
-        ]
-        for obj in sorted(objects, key=attrgetter("id"))
-    ]
-
-    return render_table(
-        table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
+    pre_content = text[: start_match.start()]
+    post_content = after_start[end_match.end() :]
+    return (
+        f"{pre_content}<!-- {start_tag} -->\n\n{new_content}"
+        f"\n\n<!-- {end_tag} -->{post_content}"
     )
 
 
@@ -474,34 +172,6 @@ def generate_sphinx_directives(
 
     joined = "\n".join(directives)
     return f"```{{eval-rst}}\n{joined}\n```"
-
-
-def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> str:
-    """Generate a combined Markdown table for all detection functions.
-
-    This produces a single table listing all detection functions for both
-    individual traits (is_macos, is_ubuntu, etc.) and groups (is_linux, is_unix, etc.),
-    sorted by function name.
-
-    :param objects: The traits and groups whose detection functions should be
-        included.
-    :returns: A Markdown table with all detection functions.
-    """
-    headers = ["Detection function", "Icon", "Associated symbol"]
-    alignments = ["left", "center", "left"]
-
-    table_data = [
-        [
-            f"{{func}}`~{obj.detection_func_id}`",
-            obj.icon,
-            f"{{data}}`~{obj.symbol_id}`",
-        ]
-        for obj in sorted(objects, key=attrgetter("detection_func_id"))
-    ]
-
-    return render_table(
-        table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
-    )
 
 
 def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
@@ -670,12 +340,21 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
         ```""")
 
 
-def update_docs() -> None:
-    """Update documentation with dynamic content.
+def update_docs(*, check: bool = False) -> list[Path]:
+    """Materialize the regions that cannot render live at build time.
 
-    Dynamically discovers all markdown files in the documentation root
-    and applies content replacements based on HTML comment tags found
-    in each file.
+    Applies the marker-region replacements to ``readme.md`` and every
+    ``docs/**/*.md`` file through
+    :func:`click_extra.sphinx._base.update_blocks` — the same walk/write/``check``
+    primitive the ``:mirror:`` and ``{matrix}`` directives use, so this shares
+    their dry-run contract. Scope is limited to the ``readme.md`` mindmaps and
+    the reST autodoc regions; the trait and group pages render their own tables
+    and diagrams via ``{python:render}`` ``:mirror:`` blocks (see the module
+    docstring).
+
+    :param check: When ``True``, report the files that are out of date without
+        writing anything (for CI drift detection).
+    :return: The files that were (or, under ``check``, would be) rewritten.
 
     .. todo::
         Maybe one day we'll be able to generate [Euler diagrams](https://xkcd.com/2721/)
@@ -687,114 +366,16 @@ def update_docs() -> None:
     # Define all replacement rules as (start_tag, end_tag, content) tuples.
     # Tags are simple names that will be wrapped in HTML comments automatically.
     replacement_rules = [
-        # Trait tables.
-        (
-            "architecture-table-start",
-            "architecture-table-end",
-            generate_trait_table(ALL_ARCHITECTURES),
-        ),
-        (
-            "platform-table-start",
-            "platform-table-end",
-            generate_trait_table(ALL_PLATFORMS),
-        ),
-        (
-            "shell-table-start",
-            "shell-table-end",
-            generate_trait_table(ALL_SHELLS),
-        ),
-        (
-            "terminal-table-start",
-            "terminal-table-end",
-            generate_trait_table(ALL_TERMINALS),
-        ),
-        (
-            "ci-table-start",
-            "ci-table-end",
-            generate_trait_table(ALL_CI),
-        ),
-        (
-            "agent-table-start",
-            "agent-table-end",
-            generate_trait_table(ALL_AGENTS),
-        ),
-        # All traits table (for trait.md) - merged table of all traits.
-        (
-            "all-traits-table-start",
-            "all-traits-table-end",
-            generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False),
-        ),
-        # Sankey diagrams.
-        (
-            "architecture-canonical-sankey-start",
-            "architecture-canonical-sankey-end",
-            generate_sankey(
-                list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
-            ),
-        ),
-        (
-            "architecture-bitness-sankey-start",
-            "architecture-bitness-sankey-end",
-            generate_sankey([ARCH_32_BIT, ARCH_64_BIT, ALL_ARCHITECTURES]),
-        ),
-        (
-            "architecture-endianness-sankey-start",
-            "architecture-endianness-sankey-end",
-            generate_sankey([BIG_ENDIAN, LITTLE_ENDIAN, ALL_ARCHITECTURES]),
-        ),
-        (
-            "platform-multi-level-sankey-start",
-            "platform-multi-level-sankey-end",
-            generate_sankey(
-                list(CANONICAL_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
-            ),
-        ),
-        (
-            "shell-sankey-start",
-            "shell-sankey-end",
-            generate_sankey(list(CANONICAL_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]),
-        ),
-        (
-            "terminal-sankey-start",
-            "terminal-sankey-end",
-            generate_sankey(
-                list(CANONICAL_GROUPS & ALL_TERMINAL_GROUPS) + [ALL_TERMINALS]
-            ),
-        ),
-        (
-            "ci-sankey-start",
-            "ci-sankey-end",
-            generate_sankey(ALL_CI_GROUPS),
-        ),
-        (
-            "agent-sankey-start",
-            "agent-sankey-end",
-            generate_sankey(ALL_AGENT_GROUPS),
-        ),
-        # Mindmap diagrams.
-        (
-            "architecture-canonical-mindmap-start",
-            "architecture-canonical-mindmap-end",
-            generate_traits_mindmap(
-                list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
-            ),
-        ),
+        # Mindmaps for readme.md only. The docs pages render their own trait
+        # tables, group tables, sankeys and mindmaps live via {python:render};
+        # readme.md keeps static markers because GitHub cannot execute the
+        # render directives when browsing the file.
         (
             "architecture-mindmap-start",
             "architecture-mindmap-end",
             generate_traits_mindmap(
                 list(CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS) + [ALL_ARCHITECTURES]
             ),
-        ),
-        (
-            "architecture-bitness-mindmap-start",
-            "architecture-bitness-mindmap-end",
-            generate_traits_mindmap([ARCH_32_BIT, ARCH_64_BIT, ALL_ARCHITECTURES]),
-        ),
-        (
-            "architecture-endianness-mindmap-start",
-            "architecture-endianness-mindmap-end",
-            generate_traits_mindmap([BIG_ENDIAN, LITTLE_ENDIAN, ALL_ARCHITECTURES]),
         ),
         (
             "platform-mindmap-start",
@@ -828,48 +409,6 @@ def update_docs() -> None:
             generate_traits_mindmap(
                 list(CANONICAL_GROUPS & ALL_AGENT_GROUPS) + [ALL_AGENTS]
             ),
-        ),
-        # Group tables.
-        (
-            "architecture-groups-table-start",
-            "architecture-groups-table-end",
-            generate_group_table(ALL_ARCHITECTURE_GROUPS),
-        ),
-        (
-            "platform-groups-table-start",
-            "platform-groups-table-end",
-            generate_group_table(ALL_PLATFORM_GROUPS),
-        ),
-        (
-            "shell-groups-table-start",
-            "shell-groups-table-end",
-            generate_group_table(ALL_SHELL_GROUPS),
-        ),
-        (
-            "terminal-groups-table-start",
-            "terminal-groups-table-end",
-            generate_group_table(ALL_TERMINAL_GROUPS),
-        ),
-        (
-            "ci-groups-table-start",
-            "ci-groups-table-end",
-            generate_group_table(ALL_CI_GROUPS),
-        ),
-        (
-            "agent-groups-table-start",
-            "agent-groups-table-end",
-            generate_group_table(ALL_AGENT_GROUPS),
-        ),
-        (
-            "groups-table-start",
-            "groups-table-end",
-            generate_group_table(ALL_GROUPS),
-        ),
-        # Pytest decorators table.
-        (
-            "decorators-table-start",
-            "decorators-table-end",
-            generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)),
         ),
         # Autodata directives for Sphinx documentation of module-level constants.
         (
@@ -937,11 +476,6 @@ def update_docs() -> None:
         ),
         # Autofunction directives for all detection functions (traits and groups).
         (
-            "all-detection-function-table-start",
-            "all-detection-function-table-end",
-            generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)),
-        ),
-        (
             "trait-detection-autofunction-start",
             "trait-detection-autofunction-end",
             generate_sphinx_directives(ALL_TRAITS, "autofunction", "detection_func_id"),
@@ -990,38 +524,25 @@ def update_docs() -> None:
         ),
     ]
 
-    # Collect all markdown files from docs directory and project root.
-    all_doc_files = set()
+    def rewrite(text: str, path: Path) -> str:
+        for start_tag, end_tag, content in replacement_rules:
+            text = replace_region(text, start_tag, end_tag, content)
+        return text
 
-    # Add markdown files from docs directory using wcmatch glob.
-    for md_file in wcglob.iglob(str(DOCS_ROOT / "**/*.md"), flags=wcglob.GLOBSTAR):
-        all_doc_files.add(Path(md_file).resolve())
-
-    # Add readme.md from project root.
-    if README_PATH.exists():
-        all_doc_files.add(README_PATH.resolve())
-
-    # Apply each replacement rule to all matching files.
-    for start_tag, end_tag, content in replacement_rules:
-        matching_files: list[Path] = []
-        # Use regex to check if HTML comment tags exist (with flexible whitespace).
-        start_pattern = re.compile(
-            rf"<!--\s*{re.escape(start_tag)}\s*-->",
-            re.MULTILINE | re.DOTALL,
-        )
-        end_pattern = re.compile(
-            rf"<!--\s*{re.escape(end_tag)}\s*-->",
-            re.MULTILINE | re.DOTALL,
-        )
-
-        for filepath in all_doc_files:
-            file_content = filepath.read_text(encoding="utf-8")
-            if start_pattern.search(file_content) and end_pattern.search(file_content):
-                matching_files.append(filepath)
-        if matching_files:
-            replace_content(matching_files, start_tag, end_tag, content)
+    # readme.md plus every docs/**/*.md; a rule whose markers are absent from a
+    # file leaves it untouched.
+    return update_blocks([README_PATH, DOCS_ROOT], rewrite, check=check)
 
 
 if __name__ == "__main__":
-    print("Updating documentation...")
-    sys.exit(update_docs())  # type: ignore[func-returns-value]
+    check_mode = "--check" in sys.argv
+    changed = update_docs(check=check_mode)
+    if check_mode:
+        if changed:
+            print("Out-of-date documentation, run `python docs/docs_update.py`:")
+            for path in changed:
+                print(f"  {path}")
+            sys.exit(1)
+        print("Documentation is up to date.")
+    else:
+        print(f"Updated documentation ({len(changed)} file(s) changed).")

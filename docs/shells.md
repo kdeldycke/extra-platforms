@@ -96,7 +96,16 @@ Shell(id='fish', name='Fish')
 
 ## Recognized shells
 
-<!-- shell-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_SHELLS
+from extra_platforms._docs import generate_trait_table
+
+print(generate_trait_table(ALL_SHELLS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol              | Name           | Detection function     |
 | :--: | :------------------ | :------------- | :--------------------- |
@@ -121,11 +130,20 @@ and will be returned by {func}`~current_shell` if the current
 shell is not recognized.
 ```
 
-<!-- shell-table-end -->
+<!-- mirror-end -->
 
 ## Groups of shells
 
-<!-- shell-groups-table-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_SHELL_GROUPS
+from extra_platforms._docs import generate_group_table
+
+print(generate_group_table(ALL_SHELL_GROUPS))
+```
+
+<!-- mirror -->
 
 | Icon | Symbol                  | Description              | [Detection](detection.md)  | {attr}`Canonical <Group.canonical>` |
 | :--: | :---------------------- | :----------------------- | :------------------------- | :---------------------------------: |
@@ -143,9 +161,18 @@ Other groups are provided for convenience, but overlap with each other or
 with canonical groups.
 ```
 
-<!-- shell-groups-table-end -->
+<!-- mirror-end -->
 
-<!-- shell-sankey-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_SHELLS, ALL_SHELL_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_sankey
+
+print(generate_sankey(list(CANONICAL_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -172,9 +199,18 @@ C_SHELLS,CSH,1
 C_SHELLS,TCSH,1
 ```
 
-<!-- shell-sankey-end -->
+<!-- mirror-end -->
 
-<!-- shell-mindmap-start -->
+```{python:render}
+:mirror:
+
+from extra_platforms import ALL_SHELLS, ALL_SHELL_GROUPS, CANONICAL_GROUPS
+from extra_platforms._docs import generate_traits_mindmap
+
+print(generate_traits_mindmap(list(CANONICAL_GROUPS & ALL_SHELL_GROUPS) + [ALL_SHELLS]))
+```
+
+<!-- mirror -->
 
 ```mermaid
 ---
@@ -201,7 +237,7 @@ mindmap
             (ℤ ZSH)
 ```
 
-<!-- shell-mindmap-end -->
+<!-- mirror-end -->
 
 ## Predefined shells
 

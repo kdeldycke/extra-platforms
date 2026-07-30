@@ -393,7 +393,6 @@ docs = [
     { name = "sphinx-design", marker = "python_full_version >= '3.12'" },
     { name = "sphinxcontrib-mermaid", marker = "python_full_version >= '3.12'" },
     { name = "sphinxext-opengraph", marker = "python_full_version >= '3.12'" },
-    { name = "wcmatch", marker = "python_full_version >= '3.12'" },
 ]
 test = [
     { name = "coverage", extra = ["toml"] },
@@ -422,7 +421,6 @@ docs = [
     { name = "sphinx-design", marker = "python_full_version >= '3.12'", specifier = ">=0.6" },
     { name = "sphinxcontrib-mermaid", marker = "python_full_version >= '3.12'", specifier = ">=1.2.3" },
     { name = "sphinxext-opengraph", marker = "python_full_version >= '3.12'", specifier = ">=0.13" },
-    { name = "wcmatch", marker = "python_full_version >= '3.12'", specifier = ">=10" },
 ]
 test = [
     { name = "coverage", extras = ["toml"], specifier = ">=7.11" },

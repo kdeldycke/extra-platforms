@@ -304,8 +304,6 @@ docs = [
   # which docs/conf.py enables.
   "sphinxcontrib-mermaid>=1.2.3",
   "sphinxext-opengraph>=0.13",
-  # wcmatch 10.0 fix some inconsistencies in globbing and symlinks.
-  "wcmatch>=10",
 ]
 
 [tool.uv]
@@ -421,6 +419,13 @@ warn_return_any = true
 warn_unreachable = true
 pretty = true
 warn_unused_configs = true
+
+# extra_platforms._docs imports click_extra.table (a docs-group dependency) to
+# render the Sphinx trait/group tables. Type-checking runs in a venv without the
+# docs group, so tolerate the missing import there.
+[[tool.mypy.overrides]]
+module = "click_extra.*"
+ignore_missing_imports = true
 
 [tool.pytest]
 # Coverage and xdist flags (--cov, --cov-report, --numprocesses, --dist) are
