@@ -420,7 +420,7 @@ docs = [
     { name = "sphinx-autodoc-typehints", marker = "python_full_version >= '3.12'", specifier = ">=2.4" },
     { name = "sphinx-copybutton", marker = "python_full_version >= '3.12'", specifier = ">=0.5.2" },
     { name = "sphinx-design", marker = "python_full_version >= '3.12'", specifier = ">=0.6" },
-    { name = "sphinxcontrib-mermaid", marker = "python_full_version >= '3.12'", specifier = ">=1.2.2" },
+    { name = "sphinxcontrib-mermaid", marker = "python_full_version >= '3.12'", specifier = ">=1.2.3" },
     { name = "sphinxext-opengraph", marker = "python_full_version >= '3.12'", specifier = ">=0.13" },
     { name = "wcmatch", marker = "python_full_version >= '3.12'", specifier = ">=10" },
 ]

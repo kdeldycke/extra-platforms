@@ -69,6 +69,13 @@ myst_heading_slug_func = "docutils.nodes.make_id"
 
 mermaid_d3_zoom = True
 
+# Enable the `{python:run}` execution directive used by docs/cli.md to render
+# the CLI `--help` screen live at build time. Disabled by default upstream since
+# click-extra `v7.15.0` because these directives execute arbitrary Python at
+# build time; without the flag every directive reference logs an "Unknown
+# directive" warning and the live block renders empty.
+click_extra_enable_exec_directives = True
+
 exclude_patterns = ["_build", "_linkcheck", "html", "Thumbs.db", ".DS_Store"]
 
 nitpicky = True

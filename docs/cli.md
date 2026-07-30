@@ -36,14 +36,20 @@ $ uv run extra-platforms
 
 ## Options
 
-`--help`
-: Show usage information and exit.
+The full option list is rendered live from the CLI's own parser, so it never drifts from the code:
 
-`--version`
-: Print the package version and exit.
+```{python:run}
+import os
 
-`--json`
-: Output results as JSON instead of the default human-readable format. Useful for scripting and piping into tools like `jq`.
+# Pin the wrapping width so the rendered help is reproducible across build hosts.
+os.environ["COLUMNS"] = "80"
+
+from extra_platforms.__main__ import build_parser
+
+print(build_parser().format_help())
+```
+
+`--json` is the option worth highlighting: it swaps the default human-readable report for a single JSON object, handy for scripting and piping into tools like `jq` (see [JSON output](#json-output) below).
 
 ## Default output
 

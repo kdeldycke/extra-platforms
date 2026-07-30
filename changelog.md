@@ -7,6 +7,7 @@
 
 - Reorganize the installation page: quick start first, then `uvx` try-it tabs, install methods, the Python compatibility matrix and the dependency graph.
 - Register MyST heading anchors so in-page documentation links resolve at build time.
+- Render the CLI `--help` screen live in the documentation so its option list can't drift from the code.
 
 ## [`13.5.1` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.0...v13.5.1)
 

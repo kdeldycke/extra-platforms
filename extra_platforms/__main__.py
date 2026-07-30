@@ -170,8 +170,13 @@ def _group_dict(group: Group) -> dict:
     }
 
 
-def main() -> None:
-    """Print detected environment traits."""
+def build_parser() -> argparse.ArgumentParser:
+    """Build the command-line argument parser.
+
+    Kept separate from :func:`main` so the documentation can render the
+    ``--help`` screen live at build time (see ``docs/cli.md``) without
+    triggering detection or ``SystemExit``.
+    """
     parser = argparse.ArgumentParser(
         prog="extra-platforms",
         description=(
@@ -190,7 +195,12 @@ def main() -> None:
         action="version",
         version=f"extra-platforms {__version__}",
     )
-    args = parser.parse_args()
+    return parser
+
+
+def main() -> None:
+    """Print detected environment traits."""
+    args = build_parser().parse_args()
 
     # Force UTF-8 output on Windows where the default console encoding
     # (e.g. cp1252) cannot represent Unicode box-drawing characters and emoji.
