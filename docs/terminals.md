@@ -232,5 +232,10 @@ mindmap
 ```{python:render}
 from extra_platforms import ALL_TERMINALS, UNKNOWN_TERMINAL
 from extra_platforms._docs import generate_sphinx_directives
-print(generate_sphinx_directives(list(ALL_TERMINALS) + [UNKNOWN_TERMINAL], "autodata", "symbol_id"))
+
+print(
+    generate_sphinx_directives(
+        list(ALL_TERMINALS) + [UNKNOWN_TERMINAL], "autodata", "symbol_id"
+    )
+)
 ```

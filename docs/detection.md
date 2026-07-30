@@ -214,6 +214,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 ```{python:render}
 from extra_platforms import ALL_TRAITS
 from extra_platforms._docs import generate_sphinx_directives
+
 print(generate_sphinx_directives(ALL_TRAITS, "autofunction", "detection_func_id"))
 ```
 
@@ -226,6 +227,7 @@ These functions are dynamically generated for each [group](groups.md) and test w
 ```{python:render}
 from extra_platforms import ALL_GROUPS
 from extra_platforms._docs import generate_sphinx_directives
+
 print(generate_sphinx_directives(ALL_GROUPS, "autofunction", "detection_func_id"))
 ```
 

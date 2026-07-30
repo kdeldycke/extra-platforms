@@ -192,6 +192,7 @@ with canonical groups.
 ```{python:render}
 from extra_platforms import ALL_GROUPS
 from extra_platforms._docs import generate_sphinx_directives
+
 print(generate_sphinx_directives(ALL_GROUPS, "autodata", "symbol_id"))
 ```
 
@@ -243,6 +244,7 @@ print(generate_sphinx_directives(ALL_GROUPS, "autodata", "symbol_id"))
 
 ```{python:render}
 from extra_platforms._docs import generate_group_module_automodule
+
 print(generate_group_module_automodule())
 ```
 
@@ -254,5 +256,6 @@ print(generate_group_module_automodule())
 ```{python:render}
 from extra_platforms import ALL_GROUPS
 from extra_platforms._docs import generate_group_data_module_automodule
+
 print(generate_group_data_module_automodule(ALL_GROUPS))
 ```

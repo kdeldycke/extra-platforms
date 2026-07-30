@@ -384,5 +384,10 @@ mindmap
 ```{python:render}
 from extra_platforms import ALL_PLATFORMS, UNKNOWN_PLATFORM
 from extra_platforms._docs import generate_sphinx_directives
-print(generate_sphinx_directives(list(ALL_PLATFORMS) + [UNKNOWN_PLATFORM], "autodata", "symbol_id"))
+
+print(
+    generate_sphinx_directives(
+        list(ALL_PLATFORMS) + [UNKNOWN_PLATFORM], "autodata", "symbol_id"
+    )
+)
 ```
