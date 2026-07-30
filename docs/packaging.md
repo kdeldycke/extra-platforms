@@ -1,4 +1,4 @@
-# Downstream packaging
+# {octicon}`package-dependents` Downstream packaging
 
 This page is for distribution packagers building `extra-platforms` from source, either a PyPI sdist or a Git tag. To install it on your own system, use `pip install extra-platforms` or your distribution's package.
 

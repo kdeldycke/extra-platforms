@@ -5,6 +5,9 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Reorganize the installation page: quick start first, then `uvx` try-it tabs, install methods, the Python compatibility matrix and the dependency graph.
+- Register MyST heading anchors so in-page documentation links resolve at build time.
+
 ## [`13.5.1` (2026-07-27)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.0...v13.5.1)
 
 - Skip `test_github_runner_detection` unless `EXTRA_PLATFORMS_TEST_MATRIX` is set, instead of whenever GitHub CI is detected, so downstream packagers building the test suite inside GitHub Actions no longer fail on the absent matrix variable.

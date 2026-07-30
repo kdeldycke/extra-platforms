@@ -1,4 +1,4 @@
-# {octicon}`terminal` CLI
+# {octicon}`command-palette` CLI
 
 ```{py:currentmodule} extra_platforms
 ```
@@ -51,7 +51,7 @@ The default output prints each detected trait with its metadata, followed by sum
 
 ```{code-block} shell-session
 $ extra-platforms
-extra-platforms 13.4.0
+extra-platforms 13.5.1
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]────────────
             id: aarch64
@@ -81,7 +81,7 @@ $ extra-platforms --json
 
 ```{code-block} json
 {
-  "version": "13.4.0",
+  "version": "13.5.1",
   "architecture": {
     "id": "aarch64",
     "name": "ARM64 (AArch64)",
