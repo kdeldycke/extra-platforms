@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "uv_build"
-requires = [ "uv-build>=0.9,<0.12" ]
+requires = [ "uv-build>=0.9" ]
 
 [project]
 # Docs: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
@@ -309,7 +309,7 @@ docs = [
 ]
 
 [tool.uv]
-required-version = ">=0.11.23,<0.12"
+required-version = ">=0.11.23"
 dependency-groups.docs = { requires-python = ">= 3.12" }
 # Cooldown period: 7-day buffer before using newly released packages.
 # Relative dates are fine here because the Renovate lock-maintenance job
