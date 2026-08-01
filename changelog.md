@@ -1,5 +1,10 @@
 # Changelog
 
+## [`13.5.3.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.2...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`13.5.2` (2026-08-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.1...v13.5.2)
 
 - Reorganize the installation page: quick start first, then `uvx` try-it tabs, install methods, the Python compatibility matrix and the dependency graph.
