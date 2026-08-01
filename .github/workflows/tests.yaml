@@ -67,7 +67,7 @@ jobs:
       - name: Run repomatic metadata
         id: metadata
         run: >
-          uvx --no-progress 'repomatic==7.3.0' metadata
+          uvx --no-progress 'repomatic==7.4.0' metadata
           --format github-json --output "$GITHUB_OUTPUT"
           coverage_cells test_matrix test_matrix_pr
 
@@ -122,13 +122,13 @@ jobs:
 
       - name: CLI test suite via console script
         run: >
-          uvx --no-progress 'click-extra==8.5.0' test-suite
+          uvx --no-progress 'click-extra==8.6.0' test-suite
           --command "uv run --frozen -- extra-platforms"
           --suite-file tests/cli-test-suite.toml
           --jobs max
       - name: CLI test suite via python -m
         run: >
-          uvx --no-progress 'click-extra==8.5.0' test-suite
+          uvx --no-progress 'click-extra==8.6.0' test-suite
           --command "uv run --frozen -- python -m extra_platforms"
           --suite-file tests/cli-test-suite.toml
           --jobs max
