@@ -41,6 +41,18 @@ if TYPE_CHECKING:
     from extra_platforms import Group, Trait
 
 
+_GROUP_API_FUNCTIONS = (
+    "extract_members",
+    "groups_from_ids",
+    "reduce",
+    "traits_from_ids",
+)
+"""Trait and group operation functions documented in their own groups.md section.
+
+Excluded from automodule directives so groups.md stays their canonical location.
+"""
+
+
 def generate_trait_table(
     traits: Iterable[Trait],
     *,
@@ -240,10 +252,7 @@ def generate_sankey(groups: Iterable[Group]) -> str:
         # XXX Sankey diagrams does not supports emoji labels
         # https://github.com/mermaid-js/mermaid/issues/1995
         # https://github.com/mermaid-js/mermaid/issues/5308
-        table.extend(
-            f"{group.symbol_id},{member.symbol_id},1"
-            for member in group._members.values()
-        )
+        table.extend(f"{group.symbol_id},{member.symbol_id},1" for member in group)
 
     # Third layer: superset -> missing traits (weight = 1 each), placed at the end.
     table.extend(
@@ -351,18 +360,6 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
     return render_table(
         table_data, headers, table_format=TableFormat.GITHUB, colalign=alignments
     )
-
-
-_GROUP_API_FUNCTIONS = (
-    "extract_members",
-    "groups_from_ids",
-    "reduce",
-    "traits_from_ids",
-)
-"""Trait and group operation functions documented in their own groups.md section.
-
-Excluded from automodule directives so groups.md stays their canonical location.
-"""
 
 
 def generate_sphinx_directives(
