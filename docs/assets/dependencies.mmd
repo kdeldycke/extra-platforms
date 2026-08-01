@@ -18,6 +18,7 @@ flowchart LR
     sphinx_basic_ng(["`sphinx-basic-ng`"])
     tabulate(["`tabulate`"])
     typing_extensions(["`typing-extensions`"])
+    wcmatch(["`wcmatch`"])
     wcwidth(["`wcwidth`"])
     alabaster(["`alabaster`"])
     babel(["`babel`"])
@@ -50,11 +51,10 @@ flowchart LR
 
     subgraph grp_docs [--group docs]
         sphinx{{"`sphinx >=9.1`"}}
-        click_extra{{"`click-extra >=8.5`"}}
+        click_extra{{"`click-extra >=8.7`"}}
         myst_parser{{"`myst-parser >=5.1`"}}
         furo{{"`furo >=2025.9.25`"}}
-        sphinxcontrib_mermaid{{"`sphinxcontrib-mermaid >=1.2.2`"}}
-        wcmatch{{"`wcmatch >=10`"}}
+        sphinxcontrib_mermaid{{"`sphinxcontrib-mermaid >=1.2.3`"}}
         sphinx_autodoc_typehints{{"`sphinx-autodoc-typehints >=2.4`"}}
         sphinx_copybutton{{"`sphinx-copybutton >=0.5.2`"}}
         sphinx_design{{"`sphinx-design >=0.6`"}}
@@ -95,9 +95,9 @@ flowchart LR
     click_extra --> pygments
     click_extra --> click_0
     click_extra --> docutils
-    click_extra --> wcmatch
     click_extra --> cloup
     click_extra --> tabulate
+    click_extra --> wcmatch
     click_extra --> wcwidth
     click_extra --> boltons
     click_extra --> deepmerge
@@ -133,7 +133,6 @@ flowchart LR
     sphinxcontrib_mermaid --> jinja2
     sphinxcontrib_mermaid --> pyyaml
     coverage --> tomli
-    wcmatch --> bracex
     pytest_github_actions_annotate_failures --> pytest
     pytest_randomly --> pytest
     sphinx_autodoc_typehints --> sphinx
@@ -151,6 +150,7 @@ flowchart LR
     mdit_py_plugins --> markdown_it_py
     sphinx_basic_ng --> sphinx
     tabulate --> wcwidth
+    wcmatch --> bracex
     extra_platforms -.-> ext_pytest
     extra_platforms -.-> grp_docs
     extra_platforms -.-> grp_test
@@ -239,7 +239,6 @@ flowchart LR
     style sphinxcontrib_mermaid stroke-width:3px
     style sphinxext_opengraph stroke-width:3px
     style tomli stroke-width:3px
-    style wcmatch stroke-width:3px
     style ext_pytest_pytest stroke-width:3px,stroke-dasharray:5 5
     style grp_docs_pytest stroke-width:3px,stroke-dasharray:5 5
 
