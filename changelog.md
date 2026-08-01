@@ -7,6 +7,9 @@
 
 ## [`13.5.2` (2026-08-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.1...v13.5.2)
 
+> [!NOTE]
+> `13.5.2` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.5.2/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.5.2).
+
 - Reorganize the installation page: quick start first, then `uvx` try-it tabs, install methods, the Python compatibility matrix and the dependency graph.
 - Register MyST heading anchors so in-page documentation links resolve at build time.
 - Render the CLI `--help` screen live in the documentation so its option list can't drift from the code.
