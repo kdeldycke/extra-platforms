@@ -89,6 +89,8 @@ DRAGONFLY_BSD = Platform(
     "dragonfly_bsd", "DragonFly BSD", "🪰", "https://www.dragonflybsd.org"
 )
 
+ENDEAVOUROS = Platform("endeavouros", "EndeavourOS", "🚀", "https://endeavouros.com")
+
 EXHERBO = Platform("exherbo", "Exherbo Linux", "🐽", "https://exherbolinux.org")
 
 FEDORA = Platform("fedora", "Fedora", "🎩", "https://fedoraproject.org")

@@ -266,6 +266,7 @@ if TYPE_CHECKING:
     skip_dash: MarkDecorator
     skip_debian: MarkDecorator
     skip_dragonfly_bsd: MarkDecorator
+    skip_endeavouros: MarkDecorator
     skip_exherbo: MarkDecorator
     skip_fedora: MarkDecorator
     skip_fish: MarkDecorator
@@ -448,6 +449,7 @@ if TYPE_CHECKING:
     unless_dash: MarkDecorator
     unless_debian: MarkDecorator
     unless_dragonfly_bsd: MarkDecorator
+    unless_endeavouros: MarkDecorator
     unless_exherbo: MarkDecorator
     unless_fedora: MarkDecorator
     unless_fish: MarkDecorator

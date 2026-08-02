@@ -158,6 +158,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_dash`                 | {deco}`~pytest.unless_dash`                 |  💨  | {data}`~DASH`                 |
 | {deco}`~pytest.skip_debian`               | {deco}`~pytest.unless_debian`               |  🌀  | {data}`~DEBIAN`               |
 | {deco}`~pytest.skip_dragonfly_bsd`        | {deco}`~pytest.unless_dragonfly_bsd`        |  🪰  | {data}`~DRAGONFLY_BSD`        |
+| {deco}`~pytest.skip_endeavouros`          | {deco}`~pytest.unless_endeavouros`          |  🚀  | {data}`~ENDEAVOUROS`          |
 | {deco}`~pytest.skip_exherbo`              | {deco}`~pytest.unless_exherbo`              |  🐽  | {data}`~EXHERBO`              |
 | {deco}`~pytest.skip_fedora`               | {deco}`~pytest.unless_fedora`               |  🎩  | {data}`~FEDORA`               |
 | {deco}`~pytest.skip_fish`                 | {deco}`~pytest.unless_fish`                 |  🐟  | {data}`~FISH`                 |

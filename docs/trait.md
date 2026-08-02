@@ -181,6 +181,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  💨  | {data}`~DASH`                 | Dash                           | {func}`~is_dash`                 | Shell        |
 |  🌀  | {data}`~DEBIAN`               | Debian                         | {func}`~is_debian`               | Platform     |
 |  🪰  | {data}`~DRAGONFLY_BSD`        | DragonFly BSD                  | {func}`~is_dragonfly_bsd`        | Platform     |
+|  🚀  | {data}`~ENDEAVOUROS`          | EndeavourOS                    | {func}`~is_endeavouros`          | Platform     |
 |  🐽  | {data}`~EXHERBO`              | Exherbo Linux                  | {func}`~is_exherbo`              | Platform     |
 |  🎩  | {data}`~FEDORA`               | Fedora                         | {func}`~is_fedora`               | Platform     |
 |  🐟  | {data}`~FISH`                 | Fish                           | {func}`~is_fish`                 | Shell        |

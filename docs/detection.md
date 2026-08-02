@@ -81,6 +81,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_dash`                 |  💨  | {data}`~DASH`                 |
 | {func}`~is_debian`               |  🌀  | {data}`~DEBIAN`               |
 | {func}`~is_dragonfly_bsd`        |  🪰  | {data}`~DRAGONFLY_BSD`        |
+| {func}`~is_endeavouros`          |  🚀  | {data}`~ENDEAVOUROS`          |
 | {func}`~is_exherbo`              |  🐽  | {data}`~EXHERBO`              |
 | {func}`~is_fedora`               |  🎩  | {data}`~FEDORA`               |
 | {func}`~is_fish`                 |  🐟  | {data}`~FISH`                 |

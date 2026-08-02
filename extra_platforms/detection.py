@@ -548,6 +548,14 @@ def is_dragonfly_bsd() -> bool:
 
 
 @cache
+def is_endeavouros() -> bool:
+    """Return {data}`True` if current platform is
+    {data}`~extra_platforms.ENDEAVOUROS`.
+    """
+    return os_release_id() == "endeavouros"
+
+
+@cache
 def is_exherbo() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.EXHERBO`."""
     return os_release_id() == "exherbo"

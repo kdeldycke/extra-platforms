@@ -158,6 +158,7 @@ mappingproxy({
     'clearlinux': Platform(id='clearlinux', name='Clear Linux OS'),
     'cloudlinux': Platform(id='cloudlinux', name='CloudLinux OS'),
     'debian': Platform(id='debian', name='Debian'),
+    'endeavouros': Platform(id='endeavouros', name='EndeavourOS'),
     'exherbo': Platform(id='exherbo', name='Exherbo Linux'),
     'fedora': Platform(id='fedora', name='Fedora'),
     'generic_linux': Platform(id='generic_linux', name='Generic Linux'),
@@ -193,7 +194,7 @@ mappingproxy({
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux'})
+frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux'})
 >>> print("\n".join([p.name for p in LINUX]))
 AlmaLinux
 Alpine Linux
@@ -208,6 +209,7 @@ ChromeOS
 Clear Linux OS
 CloudLinux OS
 Debian
+EndeavourOS
 Exherbo Linux
 Fedora
 Generic Linux
@@ -356,6 +358,7 @@ mindmap
             (✳️ CLEARLINUX)
             (꩜ CLOUDLINUX)
             (🌀 DEBIAN)
+            (🚀 ENDEAVOUROS)
             (🐽 EXHERBO)
             (🎩 FEDORA)
             (🥚 GENERIC_LINUX)

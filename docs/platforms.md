@@ -85,6 +85,7 @@ print(generate_trait_table(ALL_PLATFORMS))
 |  Ͼ   | {data}`~CYGWIN`        | Cygwin                         | {func}`~is_cygwin`        |
 |  🌀  | {data}`~DEBIAN`        | Debian                         | {func}`~is_debian`        |
 |  🪰  | {data}`~DRAGONFLY_BSD` | DragonFly BSD                  | {func}`~is_dragonfly_bsd` |
+|  🚀  | {data}`~ENDEAVOUROS`   | EndeavourOS                    | {func}`~is_endeavouros`   |
 |  🐽  | {data}`~EXHERBO`       | Exherbo Linux                  | {func}`~is_exherbo`       |
 |  🎩  | {data}`~FEDORA`        | Fedora                         | {func}`~is_fedora`        |
 |  😈  | {data}`~FREEBSD`       | FreeBSD                        | {func}`~is_freebsd`       |
@@ -203,7 +204,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,46
+ALL_PLATFORMS,LINUX,47
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -223,6 +224,7 @@ LINUX,CHROMEOS,1
 LINUX,CLEARLINUX,1
 LINUX,CLOUDLINUX,1
 LINUX,DEBIAN,1
+LINUX,ENDEAVOUROS,1
 LINUX,EXHERBO,1
 LINUX,FEDORA,1
 LINUX,GENERIC_LINUX,1
@@ -322,6 +324,7 @@ mindmap
             (✳️ CLEARLINUX)
             (꩜ CLOUDLINUX)
             (🌀 DEBIAN)
+            (🚀 ENDEAVOUROS)
             (🐽 EXHERBO)
             (🎩 FEDORA)
             (🥚 GENERIC_LINUX)
