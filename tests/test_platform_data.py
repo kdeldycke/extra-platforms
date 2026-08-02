@@ -15,6 +15,9 @@
 
 from __future__ import annotations
 
+import ast
+from pathlib import Path
+
 from extra_platforms import (
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
@@ -108,3 +111,76 @@ def test_platform_logical_grouping():
     assert BSD_WITHOUT_MACOS.issubset(BSD)
     assert UNIX.issuperset(BSD_WITHOUT_MACOS)
     assert BSD.issuperset(BSD_WITHOUT_MACOS)
+
+
+def _in_private_use_area(char: str) -> bool:
+    """Return ``True`` for a Unicode Private Use Area codepoint.
+
+    NerdFont glyphs live in the PUA. Ordinary emoji sit above ``U+E000`` as well, so
+    a bare ``>= U+E000`` test misclassifies them; match the three PUA ranges instead.
+    """
+    codepoint = ord(char)
+    return (
+        0xE000 <= codepoint <= 0xF8FF
+        or 0xF0000 <= codepoint <= 0xFFFFD
+        or 0x100000 <= codepoint <= 0x10FFFD
+    )
+
+
+def test_nerdfont_icons_documented_in_source():
+    """Every platform with a NerdFont icon embeds that glyph in its docstring.
+
+    NerdFont glyphs live in the Unicode Private Use Area and render as an
+    invisible or placeholder character without a patched font, so
+    each such platform carries an attribute docstring warning about the font
+    requirement, whose icon link repeats the glyph. Because the glyph is invisible
+    in an editor, it is easy to drop from that link by accident, which then renders
+    as broken plaintext instead of a hyperlink. Lock the invariant by parsing the
+    source: every NerdFont-icon platform must have an attribute docstring, and that
+    docstring must contain the glyph itself.
+    """
+    source = (
+        Path(__file__).parent.parent / "extra_platforms" / "platform_data.py"
+    ).read_text(encoding="utf-8")
+    body = ast.parse(source).body
+
+    checked = []
+    for definition, following in zip(body, body[1:]):
+        # Match a module-level "NAME = Platform(id, name, icon, url)" assignment.
+        if not (
+            isinstance(definition, ast.Assign)
+            and len(definition.targets) == 1
+            and isinstance(definition.targets[0], ast.Name)
+            and isinstance(definition.value, ast.Call)
+            and isinstance(definition.value.func, ast.Name)
+            and definition.value.func.id == "Platform"
+            and len(definition.value.args) >= 3
+            and isinstance(definition.value.args[2], ast.Constant)
+            and isinstance(definition.value.args[2].value, str)
+        ):
+            continue
+
+        icon = definition.value.args[2].value
+        # Only NerdFont icons (Private Use Area codepoints) are concerned.
+        if not any(_in_private_use_area(char) for char in icon):
+            continue
+
+        name = definition.targets[0].id
+        checked.append(name)
+
+        # The assignment must be immediately followed by an attribute docstring.
+        assert (
+            isinstance(following, ast.Expr)
+            and isinstance(following.value, ast.Constant)
+            and isinstance(following.value.value, str)
+        ), (
+            f"Platform {name} uses NerdFont icon {icon!r} but has no attribute "
+            f"docstring documenting the font requirement."
+        )
+        # The docstring must embed the glyph, or the icon link renders broken.
+        assert icon in following.value.value, (
+            f"Platform {name}'s NerdFont icon {icon!r} is missing from its "
+            f"attribute docstring; the icon link renders as broken plaintext."
+        )
+
+    assert checked, "expected NerdFont-icon platforms such as ALMALINUX and NOBARA"
