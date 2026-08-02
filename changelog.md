@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.5.3.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.2...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.5.3` (2026-08-02)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.2...v13.5.3)
 
 - Sync CI tooling, workflow pins and dependency floors with the latest repomatic release; no functional changes to the package.
 
