@@ -9,6 +9,9 @@
 
 ## [`13.5.3` (2026-08-02)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.2...v13.5.3)
 
+> [!NOTE]
+> `13.5.3` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.5.3/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.5.3).
+
 - Sync CI tooling, workflow pins and dependency floors with the latest repomatic release; no functional changes to the package.
 
 ## [`13.5.2` (2026-08-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.1...v13.5.2)
