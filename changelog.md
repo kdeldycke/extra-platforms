@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Sync CI tooling, workflow pins and dependency floors with the latest repomatic release; no functional changes to the package.
+
 ## [`13.5.2` (2026-08-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.1...v13.5.2)
 
 > [!NOTE]
