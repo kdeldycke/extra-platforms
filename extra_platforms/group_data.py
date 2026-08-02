@@ -71,6 +71,7 @@ from .ci_data import (
 from .group import Group
 from .platform_data import (
     AIX,
+    ALMALINUX,
     ALPINE,
     ALTLINUX,
     AMZN,
@@ -399,6 +400,7 @@ ALL_PLATFORMS = Group(
     "⚙️",
     (
         AIX,
+        ALMALINUX,
         ALPINE,
         ALTLINUX,
         AMZN,
@@ -537,6 +539,7 @@ LINUX = Group(
     "Linux distributions",
     "🐧",
     (
+        ALMALINUX,
         ALPINE,
         ALTLINUX,
         AMZN,

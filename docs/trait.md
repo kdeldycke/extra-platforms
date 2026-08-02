@@ -145,6 +145,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  📱  | {data}`~AARCH64`              | ARM64 (AArch64)                | {func}`~is_aarch64`              | Architecture |
 |  ➿  | {data}`~AIX`                  | IBM AIX                        | {func}`~is_aix`                  | Platform     |
 |  🔳  | {data}`~ALACRITTY`            | Alacritty                      | {func}`~is_alacritty`            | Terminal     |
+|     | {data}`~ALMALINUX`            | AlmaLinux                      | {func}`~is_almalinux`            | Platform     |
 |  🏔️  | {data}`~ALPINE`               | Alpine Linux                   | {func}`~is_alpine`               | Platform     |
 |  Δ   | {data}`~ALTLINUX`             | ALT Linux                      | {func}`~is_altlinux`             | Platform     |
 |  ⤻   | {data}`~AMZN`                 | Amazon Linux                   | {func}`~is_amzn`                 | Platform     |

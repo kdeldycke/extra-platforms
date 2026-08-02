@@ -413,6 +413,12 @@ def is_aix() -> bool:
 
 
 @cache
+def is_almalinux() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.ALMALINUX`."""
+    return os_release_id() == "almalinux"
+
+
+@cache
 def is_alpine() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.ALPINE`."""
     return os_release_id() == "alpine"

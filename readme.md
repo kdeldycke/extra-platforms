@@ -145,6 +145,7 @@ List all platforms of a family:
 >>> from extra_platforms import LINUX
 >>> LINUX.members
 mappingproxy({
+    'almalinux': Platform(id='almalinux', name='AlmaLinux'),
     'alpine': Platform(id='alpine', name='Alpine Linux'),
     'altlinux': Platform(id='altlinux', name='ALT Linux'),
     'amzn': Platform(id='amzn', name='Amazon Linux'),
@@ -192,8 +193,9 @@ mappingproxy({
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux'})
+frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux'})
 >>> print("\n".join([p.name for p in LINUX]))
+AlmaLinux
 Alpine Linux
 ALT Linux
 Amazon Linux
@@ -341,6 +343,7 @@ mindmap
             (⊞ WSL1)
             (⊞ WSL2)
         )🐧 LINUX(
+            ( ALMALINUX)
             (🏔️ ALPINE)
             (Δ ALTLINUX)
             (⤻ AMZN)

@@ -223,6 +223,7 @@ if TYPE_CHECKING:
     skip_all_terminals: MarkDecorator
     skip_all_traits: MarkDecorator
     skip_all_windows: MarkDecorator
+    skip_almalinux: MarkDecorator
     skip_alpine: MarkDecorator
     skip_altlinux: MarkDecorator
     skip_amzn: MarkDecorator
@@ -393,6 +394,7 @@ if TYPE_CHECKING:
     unless_aarch64: MarkDecorator
     unless_aix: MarkDecorator
     unless_alacritty: MarkDecorator
+    unless_almalinux: MarkDecorator
     unless_alpine: MarkDecorator
     unless_altlinux: MarkDecorator
     unless_amzn: MarkDecorator

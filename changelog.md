@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add AlmaLinux platform detection: `ALMALINUX` / `is_almalinux()` (via `ID=almalinux` in `os-release`).
+
 ## [`13.5.3` (2026-08-02)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.2...v13.5.3)
 
 - Sync CI tooling, workflow pins and dependency floors with the latest repomatic release; no functional changes to the package.

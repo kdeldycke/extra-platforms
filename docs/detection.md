@@ -27,6 +27,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_aarch64`              |  📱  | {data}`~AARCH64`              |
 | {func}`~is_aix`                  |  ➿  | {data}`~AIX`                  |
 | {func}`~is_alacritty`            |  🔳  | {data}`~ALACRITTY`            |
+| {func}`~is_almalinux`            |     | {data}`~ALMALINUX`            |
 | {func}`~is_alpine`               |  🏔️  | {data}`~ALPINE`               |
 | {func}`~is_altlinux`             |  Δ   | {data}`~ALTLINUX`             |
 | {func}`~is_amzn`                 |  ⤻   | {data}`~AMZN`                 |

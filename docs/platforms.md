@@ -70,6 +70,7 @@ print(generate_trait_table(ALL_PLATFORMS))
 | Icon | Symbol                 | Name                           | Detection function        |
 | :--: | :--------------------- | :----------------------------- | :------------------------ |
 |  ➿  | {data}`~AIX`           | IBM AIX                        | {func}`~is_aix`           |
+|     | {data}`~ALMALINUX`     | AlmaLinux                      | {func}`~is_almalinux`     |
 |  🏔️  | {data}`~ALPINE`        | Alpine Linux                   | {func}`~is_alpine`        |
 |  Δ   | {data}`~ALTLINUX`      | ALT Linux                      | {func}`~is_altlinux`      |
 |  ⤻   | {data}`~AMZN`          | Amazon Linux                   | {func}`~is_amzn`          |
@@ -202,13 +203,14 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,45
+ALL_PLATFORMS,LINUX,46
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
 ALL_PLATFORMS,OTHER_POSIX,2
 ALL_PLATFORMS,LINUX_LAYERS,2
 ALL_PLATFORMS,ALL_WINDOWS,1
+LINUX,ALMALINUX,1
 LINUX,ALPINE,1
 LINUX,ALTLINUX,1
 LINUX,AMZN,1
@@ -307,6 +309,7 @@ mindmap
             (⊞ WSL1)
             (⊞ WSL2)
         )🐧 LINUX(
+            ( ALMALINUX)
             (🏔️ ALPINE)
             (Δ ALTLINUX)
             (⤻ AMZN)

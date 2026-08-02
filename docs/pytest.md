@@ -115,6 +115,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_all_terminals`        | {deco}`~pytest.unless_any_terminal`         |  💻  | {data}`~ALL_TERMINALS`        |
 | {deco}`~pytest.skip_all_traits`           | {deco}`~pytest.unless_any_trait`            |  ⁕   | {data}`~ALL_TRAITS`           |
 | {deco}`~pytest.skip_all_windows`          | {deco}`~pytest.unless_any_windows`          |  🪟  | {data}`~ALL_WINDOWS`          |
+| {deco}`~pytest.skip_almalinux`            | {deco}`~pytest.unless_almalinux`            |     | {data}`~ALMALINUX`            |
 | {deco}`~pytest.skip_alpine`               | {deco}`~pytest.unless_alpine`               |  🏔️  | {data}`~ALPINE`               |
 | {deco}`~pytest.skip_altlinux`             | {deco}`~pytest.unless_altlinux`             |  Δ   | {data}`~ALTLINUX`             |
 | {deco}`~pytest.skip_amzn`                 | {deco}`~pytest.unless_amzn`                 |  ⤻   | {data}`~AMZN`                 |

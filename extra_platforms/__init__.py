@@ -82,6 +82,7 @@ from .detection import (
     is_aarch64,
     is_aix,
     is_alacritty,
+    is_almalinux,
     is_alpine,
     is_altlinux,
     is_amzn,
@@ -284,6 +285,7 @@ from .group_data import (
 )
 from .platform_data import (
     AIX,
+    ALMALINUX,
     ALPINE,
     ALTLINUX,
     AMZN,
@@ -561,6 +563,7 @@ __all__ = (
     "ALL_TRAITS",
     "ALL_TRAIT_IDS",
     "ALL_WINDOWS",
+    "ALMALINUX",
     "ALPINE",
     "ALTLINUX",
     "AMZN",
@@ -752,6 +755,7 @@ __all__ = (
     "is_aarch64",
     "is_aix",
     "is_alacritty",
+    "is_almalinux",
     "is_alpine",
     "is_altlinux",
     "is_amzn",
