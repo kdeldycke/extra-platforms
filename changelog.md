@@ -7,6 +7,7 @@
 
 - Add AlmaLinux platform detection: `ALMALINUX` / `is_almalinux()` (via `ID=almalinux` in `os-release`).
 - Add EndeavourOS platform detection: `ENDEAVOUROS` / `is_endeavouros()` (via `ID=endeavouros` in `os-release`). Closes [#658](https://github.com/kdeldycke/extra-platforms/issues/658)
+- Unrecognized shell, terminal, CI and agent warnings now report the environment variables (`SHELL`, `TERM`, `CI`, `LLM`, ...) each is detected from, not just the architecture/platform primitives.
 
 ## [`13.5.3` (2026-08-02)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.2...v13.5.3)
 

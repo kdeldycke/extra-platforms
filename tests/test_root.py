@@ -85,7 +85,7 @@ from extra_platforms import (
     trait as trait_module,
 )
 from extra_platforms._deprecated import DEPRECATED_ALIASES, REMOVAL_VERSION
-from extra_platforms.detection import _unrecognized_message
+from extra_platforms.detection import _CATEGORY_ENV_SIGNALS, _unrecognized_message
 from extra_platforms.pytest import skip_hermetic_build
 
 from .conftest import github_runner_os
@@ -621,6 +621,52 @@ def test_unrecognized_message_format():
         assert "platform.machine:" in message
         assert "platform.architecture:" in message
         assert "os_release_id:" in message
+
+
+@pytest.mark.parametrize(
+    ("category", "gating_var"),
+    (
+        ("terminal", "TERM"),
+        ("CI", "CI"),
+        ("agent", "LLM"),
+    ),
+)
+def test_category_env_signals_gating_var(category, gating_var):
+    """The primary signal of each env-gated category is its ``expected=`` gate var."""
+    assert _CATEGORY_ENV_SIGNALS[category][0] == gating_var
+
+
+def test_shell_env_signals_cover_version_vars():
+    """Every shell startup variable in the registry is reported on a shell miss."""
+    version_vars = {
+        shell.version_env_var for shell in ALL_SHELLS if shell.version_env_var
+    }
+    assert version_vars <= set(_CATEGORY_ENV_SIGNALS["shell"])
+
+
+@pytest.mark.parametrize("category", ("shell", "terminal", "CI", "agent"))
+def test_unrecognized_message_reports_set_category_vars(monkeypatch, category):
+    """A set category variable, and its value, appear in that category's report."""
+    primary_var = _CATEGORY_ENV_SIGNALS[category][0]
+    monkeypatch.setenv(primary_var, "sentinel-value")
+    message = _unrecognized_message(category=category)
+    assert f"{primary_var}:" in message
+    assert "sentinel-value" in message
+
+
+def test_unrecognized_message_hides_unset_secondary_vars(monkeypatch):
+    """Unset non-primary category variables are omitted, keeping the report concise."""
+    monkeypatch.delenv("TERM_PROGRAM", raising=False)
+    message = _unrecognized_message(category="terminal")
+    assert "TERM_PROGRAM:" not in message
+
+
+def test_unrecognized_message_without_category_omits_env_block(monkeypatch):
+    """Architecture and platform reports carry only the system primitives."""
+    monkeypatch.setenv("TERM", "xterm-256color")
+    message = _unrecognized_message(category="platform")
+    assert "TERM:" not in message
+    assert "os_release_id:" in message
 
 
 @pytest.mark.skipif(

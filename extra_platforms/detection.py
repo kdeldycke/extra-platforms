@@ -105,17 +105,82 @@ detection functions without a fragile string-based module attribute search.
 """
 
 
-def _unrecognized_message(report: bool = True) -> str:
+_CATEGORY_ENV_SIGNALS: dict[str, tuple[str, ...]] = {
+    "shell": (
+        "SHELL",
+        "BASH_VERSION",
+        "FISH_VERSION",
+        "KSH_VERSION",
+        "NU_VERSION",
+        "XONSH_VERSION",
+        "ZSH_VERSION",
+        "PSModulePath",
+    ),
+    "terminal": (
+        "TERM",
+        "TERM_PROGRAM",
+        "TERM_PROGRAM_VERSION",
+        "COLORTERM",
+        "TERMINAL_NAME",
+    ),
+    "CI": ("CI",),
+    "agent": ("LLM",),
+}
+"""Environment variables to surface in an unrecognized-trait report, per category.
+
+Architectures and platforms are diagnosed from the ``sys.platform`` /
+``platform.*`` / ``os_release_id()`` primitives the report already prints. Shells,
+terminals, CI systems and agents are instead identified by environment variables,
+which those primitives never expose. This maps each such category (keyed by the
+label {func}`_single_match` passes) to the variables its ``is_*()`` heuristics read.
+
+The first entry is the category's primary signal, always shown (even when unset, so
+a reader sees why an unrecognized trait logged at ``INFO`` rather than ``WARNING``).
+The rest are shown only when set: an unrecognized trait leaves every presence-only
+marker unset, so the value-bearing variables (a ``SHELL`` path, a ``TERM_PROGRAM``
+name) are what carry the smoking gun.
+
+.. caution::
+    Only gating and value-bearing variables belong here, never a blanket dump of
+    :data:`os.environ`: the environment routinely holds credentials and tokens.
+
+.. note::
+    The ``shell`` entry must list every
+    {attr}`~extra_platforms.Shell.version_env_var` in the registry;
+    ``test_shell_env_signals_cover_version_vars`` enforces it.
+"""
+
+
+def _env_signal_lines(var_names: tuple[str, ...]) -> str:
+    """Render environment variables as aligned ``name: value`` report lines.
+
+    The first variable is always shown (rendering ``<not set>`` when absent); the
+    rest only when present. See {data}`_CATEGORY_ENV_SIGNALS`.
+    """
+    primary, *rest = var_names
+    shown = [primary, *(name for name in rest if name in environ)]
+    width = max(len(name) for name in shown) + 1  # +1 for the trailing colon.
+    rows: list[str] = []
+    for name in shown:
+        value = repr(environ[name]) if name in environ else "<not set>"
+        rows.append(f"  {name + ':':<{width}} {value}")
+    return "\n".join(rows)
+
+
+def _unrecognized_message(report: bool = True, category: str | None = None) -> str:
     """Generate a message for unrecognized environments.
 
-    ```{important}
-    This message must contain all the primitives used in the `detection` module so
-    maintainers can debug heuristics from user reports.
-    ```
+    The report opens with the ``sys.platform`` / ``platform.*`` / ``os_release_id()``
+    primitives that identify architectures and platforms. When ``category`` names an
+    environment-variable-driven trait type, the variables that category's heuristics
+    read are appended, since the primitives above never expose them (see
+    {data}`_CATEGORY_ENV_SIGNALS`).
 
     :param report: If `True`, append a request to report the issue on GitHub.
         Set to `False` for environments where the trait is legitimately absent
-        (e.g., no terminal in CI, no CI locally).
+        (like no terminal in CI, or no CI locally).
+    :param category: Trait category label (as passed to {func}`_single_match`) whose
+        environment-variable signals to append, or `None` for the primitives alone.
     """
     msg = (
         "Environment:\n"
@@ -128,6 +193,9 @@ def _unrecognized_message(report: bool = True) -> str:
         f"  platform.architecture: {platform.architecture()!r}\n"
         f"  os_release_id:         {os_release_id()!r}"
     )
+    env_signals = _CATEGORY_ENV_SIGNALS.get(category) if category else None
+    if env_signals:
+        msg += f"\n{_env_signal_lines(env_signals)}"
     if report:
         msg += (
             "\n\nPlease report this at "
@@ -142,17 +210,23 @@ def _report_unrecognized(
     *,
     strict: bool,
     expected: bool = True,
+    category: str | None = None,
 ) -> None:
     """Log or raise on unrecognized trait detection.
 
-    :param trait_name: Human-readable name of the trait type (e.g., `"architecture"`).
+    :param trait_name: Human-readable name of the trait type (like `"architecture"`).
     :param strict: If `True`, raise {exc}`SystemError` instead of logging.
     :param expected: If `True`, the trait is always expected to be detected
         (architecture, platform, shell), so an unrecognized result logs a `WARNING`
         and asks users to report the issue. If `False` (terminal, CI), the trait may
         legitimately be absent, so only `INFO` is logged without a report request.
+    :param category: Trait category label whose environment-variable signals to
+        include in the message (see {data}`_CATEGORY_ENV_SIGNALS`).
     """
-    msg = f"Unrecognized {trait_name}: {_unrecognized_message(report=expected)}"
+    msg = (
+        f"Unrecognized {trait_name}: "
+        f"{_unrecognized_message(report=expected, category=category)}"
+    )
     if strict:
         raise SystemError(msg)
     # Defer logging import to keep cold module load fast: stdlib logging pulls
@@ -2139,10 +2213,10 @@ def _single_match(
     if matching:
         raise RuntimeError(
             f"Multiple {plural or label + 's'} match: {matching!r}. "
-            f"{_unrecognized_message()}"
+            f"{_unrecognized_message(category=label)}"
         )
 
-    _report_unrecognized(label, strict=strict, expected=expected)
+    _report_unrecognized(label, strict=strict, expected=expected, category=label)
     return unknown
 
 
