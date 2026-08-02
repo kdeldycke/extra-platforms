@@ -57,7 +57,7 @@ The default output prints each detected trait with its metadata, followed by sum
 
 ```{code-block} shell-session
 $ extra-platforms
-extra-platforms 13.5.2
+extra-platforms 13.5.3
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]────────────
             id: aarch64
@@ -87,7 +87,7 @@ $ extra-platforms --json
 
 ```{code-block} json
 {
-  "version": "13.5.2",
+  "version": "13.5.3",
   "architecture": {
     "id": "aarch64",
     "name": "ARM64 (AArch64)",

@@ -50,7 +50,7 @@ ALMALINUX = Platform("almalinux", "AlmaLinux", "", "https://almalinux.org")
 AlmaLinux has no representative Unicode emoji, so like
 {data}`~extra_platforms.NOBARA` it uses a [NerdFont](https://www.nerdfonts.com)
 icon instead:
-[`` (i.e. `nf-linux-almalinux` /
+[`` (i.e. `nf-linux-almalinux` /
 `f31d`)](https://www.nerdfonts.com/cheat-sheet?glyphSearch=nf-linux-almalinux).
 
 The side-effect of using a NerdFont character is it will only display correctly
