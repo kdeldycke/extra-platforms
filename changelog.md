@@ -7,6 +7,9 @@
 
 ## [`13.6.0` (2026-08-03)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.3...v13.6.0)
 
+> [!NOTE]
+> `13.6.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.6.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.6.0).
+
 - Add AlmaLinux platform detection: `ALMALINUX` / `is_almalinux()` (via `ID=almalinux` in `os-release`).
 - Add EndeavourOS platform detection: `ENDEAVOUROS` / `is_endeavouros()` (via `ID=endeavouros` in `os-release`). Closes [#658](https://github.com/kdeldycke/extra-platforms/issues/658).
 - Unrecognized shell, terminal, CI and agent warnings now report the environment variables (`SHELL`, `TERM`, `CI`, `LLM`, ...) each is detected from, not just the architecture/platform primitives.
