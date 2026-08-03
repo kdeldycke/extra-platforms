@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.6.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.3...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.6.0` (2026-08-03)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.3...v13.6.0)
 
 - Add AlmaLinux platform detection: `ALMALINUX` / `is_almalinux()` (via `ID=almalinux` in `os-release`).
 - Add EndeavourOS platform detection: `ENDEAVOUROS` / `is_endeavouros()` (via `ID=endeavouros` in `os-release`). Closes [#658](https://github.com/kdeldycke/extra-platforms/issues/658).
