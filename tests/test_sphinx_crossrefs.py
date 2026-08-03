@@ -1026,12 +1026,18 @@ def test_all_crossreferences_point_to_correct_pages(
         "extend",
         "insert",
     }
+    # Standard-library members (like ``os.environ``) resolve via intersphinx to the
+    # Python docs, so they have no anchor on a local extra_platforms page to check.
+    stdlib_symbols = {
+        "os.environ",
+    }
     if (
         symbol in python_builtins
         or symbol.split(".")[-1] in python_builtins
         or (role == "meth" and symbol in python_builtin_methods)
+        or symbol in stdlib_symbols
     ):
-        pytest.skip("Skipping builtin symbol")
+        pytest.skip("Skipping builtin or standard-library symbol")
 
     if (
         symbol.startswith((

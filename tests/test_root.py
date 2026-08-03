@@ -639,7 +639,9 @@ def test_category_env_signals_gating_var(category, gating_var):
 def test_shell_env_signals_cover_version_vars():
     """Every shell startup variable in the registry is reported on a shell miss."""
     version_vars = {
-        shell.version_env_var for shell in ALL_SHELLS if shell.version_env_var
+        env_var
+        for shell in ALL_SHELLS
+        if (env_var := getattr(shell, "version_env_var", None))
     }
     assert version_vars <= set(_CATEGORY_ENV_SIGNALS["shell"])
 
