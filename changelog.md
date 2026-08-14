@@ -5,6 +5,9 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Drop the Codecov integration and its readme badge, following its removal from repomatic `7.8.0`. Coverage is now gated by a `[tool.coverage] report.fail_under` floor, so a local `pytest --cov` run fails below it.
+- Sync CI workflows with repomatic `7.11.0`; no functional changes to the package.
+
 ## [`13.6.0` (2026-08-03)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.3...v13.6.0)
 
 - Add AlmaLinux platform detection: `ALMALINUX` / `is_almalinux()` (via `ID=almalinux` in `os-release`).

@@ -71,20 +71,28 @@ jobs:
     if: >
       !contains(fromJSON('["major-version-increment","minor-version-increment","prepare-release"]'),
       github.head_ref)
-      && !startsWith(github.event.head_commit.message || '', 'Bump major version to ')
-      && !startsWith(github.event.head_commit.message || '', 'Bump minor version to ')
-    runs-on: ubuntu-slim
+      && !startsWith(github.event.head_commit.message || '', '[changelog] Bump major version to ')
+      && !startsWith(github.event.head_commit.message || '', '[changelog] Bump minor version to ')
+    runs-on: ubuntu-26.04
     outputs:
       metadata: ${{ steps.metadata.outputs.metadata }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.2"
       - name: Run repomatic metadata
         id: metadata
+        # `--exclude-newer-package repomatic=P0D` exempts this one package from the
+        # workflow-wide cooldown above: the self-pin always names a release minutes
+        # old, so the window it enforces on everything else would make it
+        # unresolvable. Spelled exactly as repomatic's release freeze writes it
+        # (repomatic.prepare_release.SELF_PIN_COOLDOWN_EXEMPTION), so
+        # `sync-workflow-pins` recognizes and moves it with the pin.
         run: >
-          uvx --no-progress 'repomatic==7.11.0' metadata
+          uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==7.11.0' metadata
           --format github-json --output "$GITHUB_OUTPUT"
-          coverage_cells test_matrix test_matrix_pr
+          test_matrix test_matrix_pr
 
   tests:
     needs:
@@ -104,11 +112,14 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.2"
       - name: Force native ARM64 Python on Windows ARM64
         # Workaround for https://github.com/astral-sh/uv/issues/12906: uv defaults to x86_64 Python on ARM64 Windows,
-        # relying on transparent emulation. Native extensions with Rust (e.g., test-results-parser from codecov-cli)
-        # fail to compile because the ARM64 Rust toolchain lacks the x86_64-pc-windows-msvc target. Setting UV_PYTHON
-        # to an architecture-qualified specifier forces uv (and uvx) to use native ARM64 Python for all steps.
+        # relying on transparent emulation, so the ARM64 Windows cells would silently test emulated x86_64 Python
+        # instead of native ARM64. Setting UV_PYTHON to an architecture-qualified specifier forces uv (and uvx) to
+        # use native ARM64 Python for all steps. This matters more here than in most repos: the suite asserts on
+        # detected architecture, so an emulated interpreter tests the wrong thing rather than merely the wrong build.
         if: runner.os == 'Windows' && runner.arch == 'ARM64'
         shell: bash
         env:
@@ -156,41 +167,16 @@ jobs:
         # [tool.pytest] addopts so a from-source packager build can run a plain
         # `pytest` without pytest-cov or pytest-xdist. --dist=loadgroup honors
         # the xdist_group markers (the sphinx tests must share one worker).
+        #
+        # The coverage floor is `[tool.coverage] report.fail_under`, which every
+        # cell must clear on its own. No --cov-fail-under flag is passed here: it
+        # would outrank the config and shadow the knob. The floor is set well
+        # below any single cell because coverage swings with the runner, most of
+        # the suite skipping whatever does not match the host platform.
         run: >
           uv --no-progress run --frozen -- pytest
-          --cov --cov-report=term --cov-report=xml
+          --cov --cov-report=term
           --numprocesses=auto --dist=loadgroup
-
-      - name: Upload coverage to Codecov
-        # Upload coverage only from the coverage-distinct cells: one runner per
-        # OS at released Python (the `coverage_cells` set, mirroring the PR
-        # matrix). Coverage depends on OS family and Python version, never CPU
-        # architecture, so architecture twins, prerelease, and free-threaded
-        # cells run the suite but produce coverage already captured by these.
-        #
-        # coverage_cells arrives as a space-joined string of `os|python-version`
-        # tokens (the GitHub list-output convention), so the membership test
-        # pads both operands with spaces to match a whole token, not a substring.
-        #
-        # Also skip sync-repomatic PRs (data-only changes with no coverable
-        # lines) and fork PRs (secrets are not available). The version-bump PR
-        # family is already filtered by the metadata job's `github.head_ref`
-        # gate above.
-        if: >
-          github.head_ref != 'sync-repomatic'
-          && env.CODECOV_TOKEN != ''
-          && contains(format(' {0} ', fromJSON(needs.metadata.outputs.metadata).coverage_cells),
-          format(' {0}|{1} ', matrix.os, matrix.python-version))
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        shell: bash
-        run: >
-          uvx --no-progress 'codecov-cli==11.3.1'
-          --auto-load-params-from githubactions
-          upload-process
-          --git-service github
-          --report-type coverage
-          --token "${CODECOV_TOKEN}"
 
   test-package-install:
     name: 📦 Package install
@@ -201,8 +187,9 @@ jobs:
     strategy:
       matrix:
         os:
+          - ubuntu-26.04-arm # arm64
+          - ubuntu-26.04     # x86
           - ubuntu-24.04-arm # arm64
-          - ubuntu-slim      # x86
           - ubuntu-24.04     # x86
           - ubuntu-22.04-arm # arm64
           - ubuntu-22.04     # x86
@@ -214,11 +201,20 @@ jobs:
           - windows-2025     # x86
           - windows-2022     # x86
     runs-on: ${{ matrix.os }}
+    env:
+      # The one job opting out of the workflow-wide supply-chain cooldown, by
+      # setting a zero-length window. Its subject IS the freshly published
+      # release: it answers "does the version that shipped minutes ago install
+      # and run?", which a cooldown makes unanswerable. Safe to scope here: the
+      # job inherits `permissions: {}`, takes no secrets, and only runs the CLI
+      # on a throwaway runner.
+      UV_EXCLUDE_NEWER: P0D
     steps:
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
           # windows-2025 runners have only Python 3.9 installed.
           python-version: ${{ matrix.os == 'windows-2025' && '3.10' || ''}}
+          version: "0.12.2"
       - name: Run stable CLI
         run: |
           uvx    extra-platforms

@@ -1,0 +1,18 @@
+---
+# actionlint validates `runs-on:` against a list of GitHub-hosted runner labels
+# baked into the binary. 1.7.12 (2026-03-30, the latest release) predates the
+# ubuntu-26.04 images and rejects them as unknown, which fails the Lint job on
+# workflows repomatic itself generates with `runs-on: ubuntu-26.04`.
+#
+# `self-hosted-runner.labels` is actionlint's documented escape hatch for a
+# label it does not know. These are ordinary GitHub-hosted runners, not
+# self-hosted ones.
+# https://github.com/rhysd/actionlint/blob/main/docs/config.md
+#
+# Delete this file once the pinned repomatic ships the same labels as a bundled
+# default: a native config here REPLACES the bundled one rather than layering
+# over it, so keeping both means maintaining the list twice.
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04
+    - ubuntu-26.04-arm

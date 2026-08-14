@@ -451,6 +451,19 @@ xfail_strict = true
 # https://coverage.readthedocs.io/en/latest/config.html
 run.branch = true
 run.source = [ "extra_platforms" ]
+# Coverage ratchet replacing the Codecov gate repomatic dropped in 7.8.0. The
+# suite fails below this. Deliberately conservative: every cell of the test
+# matrix must clear it on its own, and coverage here swings with the runner,
+# since most of the suite skips whatever does not match the host platform (a
+# macOS run skips ~3500 of ~5100 tests and lands at ~35%). Raise the floor once
+# a full matrix run reports the true per-cell minimum.
+#
+# Two structural effects keep the absolute number low, and neither is a
+# regression to chase: the skips above, and the `*_data.py` registries
+# reporting 0% because `extra_platforms` is imported as a pytest plugin
+# (`[project.entry-points.pytest11]`) before pytest-cov starts measuring, so
+# their module-level definitions execute untracked.
+report.fail_under = 30
 report.precision = 2
 
 [tool.bumpversion]
@@ -544,8 +557,11 @@ abandoned-versions = [ "1.0.1" ]
 # refreshed by `click-extra refresh-directives` (update-docs Phase 4). Disable
 # the Phase 3 update-script (its default points at the deleted file).
 docs.update-script = ""
-# We don't need custom label configuration, and the debug workflow is not used in this project.
-exclude = [ "labels", "skills", "workflows/debug.yaml" ]
+# The debug workflow is not used in this project. `labels`, `skills`, `agents`
+# and `plugin` need no entry here: repomatic already keeps them out of a bare
+# `init` on its own (`labels` is ephemeral, the other three default to
+# excluded), and naming a component explicitly bypasses this list anyway.
+exclude = [ "workflows/debug.yaml" ]
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
 # Extra-platforms needs exhaustive runner coverage because it tests platform detection.
