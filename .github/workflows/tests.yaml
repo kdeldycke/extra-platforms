@@ -80,7 +80,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          version: "0.12.2"
+          version: "0.12.3"
       - name: Run repomatic metadata
         id: metadata
         # `--exclude-newer-package repomatic=P0D` exempts this one package from the
@@ -113,7 +113,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          version: "0.12.2"
+          version: "0.12.3"
       - name: Force native ARM64 Python on Windows ARM64
         # Workaround for https://github.com/astral-sh/uv/issues/12906: uv defaults to x86_64 Python on ARM64 Windows,
         # relying on transparent emulation, so the ARM64 Windows cells would silently test emulated x86_64 Python
@@ -214,7 +214,7 @@ jobs:
         with:
           # windows-2025 runners have only Python 3.9 installed.
           python-version: ${{ matrix.os == 'windows-2025' && '3.10' || ''}}
-          version: "0.12.2"
+          version: "0.12.3"
       - name: Run stable CLI
         run: |
           uvx    extra-platforms
