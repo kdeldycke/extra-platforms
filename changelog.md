@@ -1,5 +1,10 @@
 # Changelog
 
+## [`13.6.2.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.6.1...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`13.6.1` (2026-08-20)](https://github.com/kdeldycke/extra-platforms/compare/v13.6.0...v13.6.1)
 
 - Drop the Codecov integration and its readme badge, following its removal from repomatic `7.8.0`. Coverage is now gated by a `[tool.coverage] report.fail_under` floor, so a local `pytest --cov` run fails below it.
