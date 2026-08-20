@@ -74,7 +74,6 @@ UNRENDERED_MODULES = frozenset((
     "extra_platforms/__main__.py",
     "extra_platforms/_deprecated.py",
     "extra_platforms/_docs.py",
-    "extra_platforms/platform_info.py",
 ))
 
 
@@ -770,6 +769,19 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     if role == "func" and symbol_clean == "invalidate_caches":
         return "detection.html"
 
+    # Platform information helpers are documented in platforms.html, next to
+    # the Platform.info() method they feed.
+    if symbol_clean in (
+        "MACOS_CODENAMES",
+        "get_macos_codename",
+        "invalidate_os_release_cache",
+        "linux_info",
+        "macos_info",
+        "os_release_id",
+        "windows_info",
+    ):
+        return "platforms.html"
+
     # Trait and group operations functions go to groups.html
     if role == "func" and symbol_clean in (
         "extract_members",
@@ -1087,12 +1099,15 @@ def test_all_crossreferences_point_to_correct_pages(
     else:
         expected_anchor = f"extra_platforms.{symbol_clean}"
 
-    # Symbols documented via automodule may have module-qualified anchors
+    # Symbols documented via automodule carry module-qualified anchors
     # (e.g. ``extra_platforms.group_data.ALL_GROUPS`` instead of
-    # ``extra_platforms.ALL_GROUPS``).
-    possible_anchors = [expected_anchor]
-    if "group_data" in source_file:
-        possible_anchors.append(f"extra_platforms.group_data.{symbol_clean}")
+    # ``extra_platforms.ALL_GROUPS``), so accept either form. Derived from the
+    # source file rather than listed per module, so a module joining the
+    # documentation needs no entry here.
+    possible_anchors = [
+        expected_anchor,
+        f"extra_platforms.{Path(source_file).stem}.{symbol_clean}",
+    ]
 
     found = False
     for html_file in built_docs.glob("**/*.html"):

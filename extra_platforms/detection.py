@@ -2047,10 +2047,10 @@ def is_hermetic_build() -> bool:
     differently, such as Bazel, Buck2 or Spack.
     ```
 
-    ```{note}
-    Only the ``/homeless-shelter`` signal is checked for now. The heuristic can
-    grow extra signals to recognize the other hermetic builders above, should
+    ```{todo}
+    Grow extra signals to recognize the other hermetic builders above, should
     users [ask for it](https://github.com/kdeldycke/extra-platforms/issues).
+    Only the ``/homeless-shelter`` signal is checked for now.
     ```
 
     ```{seealso}

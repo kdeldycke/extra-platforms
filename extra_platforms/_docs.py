@@ -232,6 +232,15 @@ def generate_sankey(groups: Iterable[Group]) -> str:
         ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
         display (e.g., CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS).
     :raises ValueError: If no superset group is found among the inputs.
+
+    ```{todo}
+    Label nodes with their trait icons once Mermaid supports emoji in Sankey
+    diagrams, as tracked in
+    [`mermaid-js/mermaid#1995`](https://github.com/mermaid-js/mermaid/issues/1995)
+    and
+    [`mermaid-js/mermaid#5308`](https://github.com/mermaid-js/mermaid/issues/5308).
+    Nodes fall back to bare ``symbol_id`` labels in the meantime.
+    ```
     """
     superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
 
@@ -249,9 +258,8 @@ def generate_sankey(groups: Iterable[Group]) -> str:
 
     # Second layer: intermediate groups -> their members (weight = 1 each).
     for group in sorted_intermediates:
-        # XXX Sankey diagrams does not supports emoji labels
-        # https://github.com/mermaid-js/mermaid/issues/1995
-        # https://github.com/mermaid-js/mermaid/issues/5308
+        # Bare symbol IDs: Mermaid Sankey diagrams do not support emoji
+        # labels. See the docstring above.
         table.extend(f"{group.symbol_id},{member.symbol_id},1" for member in group)
 
     # Third layer: superset -> missing traits (weight = 1 each), placed at the end.

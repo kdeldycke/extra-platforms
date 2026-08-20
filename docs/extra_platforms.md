@@ -67,6 +67,14 @@ print(generate_noindex_automodule("extra_platforms.group"))
    :no-members:
 ```
 
+### extra_platforms.platform_info module
+
+```{eval-rst}
+.. automodule:: extra_platforms.platform_info
+   :noindex:
+   :no-members:
+```
+
 ### extra_platforms.shell_data module
 
 ```{eval-rst}

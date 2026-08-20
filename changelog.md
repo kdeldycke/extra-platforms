@@ -7,6 +7,8 @@
 
 - Drop the Codecov integration and its readme badge, following its removal from repomatic `7.8.0`. Coverage is now gated by a `[tool.coverage] report.fail_under` floor, so a local `pytest --cov` run fails below it.
 - Sync CI workflows with repomatic `7.11.0`; no functional changes to the package.
+- Document the `platform_info` module on the platforms page, covering `os_release_id()`, `linux_info()`, `macos_info()` and `windows_info()`.
+- Collect the codebase's future-work notes as `todo` admonitions, so they all surface on the todo-list page.
 
 ## [`13.6.0` (2026-08-03)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.3...v13.6.0)
 
