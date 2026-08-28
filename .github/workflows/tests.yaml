@@ -11,6 +11,7 @@ name: 🔬 Tests
       - pyproject.toml
       - uv.lock
       - .github/workflows/tests.yaml
+      - docs/**
   pull_request:
     branches-ignore:
       # This filter matches the PR's *base* branch (always `main`), not its
@@ -30,6 +31,7 @@ name: 🔬 Tests
       - pyproject.toml
       - uv.lock
       - .github/workflows/tests.yaml
+      - docs/**
   schedule:
     # Run tests monthly to catch regressions from dependency or environment changes.
     - cron: "17 9 1 * *"
@@ -74,6 +76,7 @@ jobs:
       && !startsWith(github.event.head_commit.message || '', '[changelog] Bump major version to ')
       && !startsWith(github.event.head_commit.message || '', '[changelog] Bump minor version to ')
     runs-on: ubuntu-26.04
+    timeout-minutes: 15
     outputs:
       metadata: ${{ steps.metadata.outputs.metadata }}
     steps:
@@ -105,10 +108,18 @@ jobs:
         ${{ github.event_name != 'pull_request'
         && fromJSON(needs.metadata.outputs.metadata).test_matrix
         || fromJSON(needs.metadata.outputs.metadata).test_matrix_pr }}
-    name: "${{ matrix.state == 'stable' && '✅' || '⁉️' }} ${{ matrix.os }} / py${{ matrix.python-version }}"
+    # `python-label` is set by repomatic metadata only where the plain version
+    # would hide why a cell is continue-on-error (a prerelease reads `3.15-dev`);
+    # every other cell falls back to the version itself.
+    name: >-
+      ${{ matrix.state == 'stable' && '✅' || '⁉️' }} ${{ matrix.os }} /
+      py${{ matrix.python-label || matrix.python-version }}
     runs-on: ${{ matrix.os }}
     # We keep going when a job flagged as not stable fails.
     continue-on-error: ${{ matrix.state == 'unstable' }}
+    # Wider than the default: this job provisions a toolchain, so its runtime
+    # tracks how much it has to install.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
@@ -146,19 +157,6 @@ jobs:
         # Install all extras, so we can check any incompatibility.
         run: uv --no-progress sync --frozen --all-extras --group test --group docs
 
-      - name: CLI test suite via console script
-        run: >
-          uvx --no-progress 'click-extra==8.9.1' test-suite
-          --command "uv run --frozen -- extra-platforms"
-          --suite-file tests/cli-test-suite.toml
-          --jobs max
-      - name: CLI test suite via python -m
-        run: >
-          uvx --no-progress 'click-extra==8.9.1' test-suite
-          --command "uv run --frozen -- python -m extra_platforms"
-          --suite-file tests/cli-test-suite.toml
-          --jobs max
-
       - name: Unittests
         env:
           # Used by github_runner_os() in tests/test_detection.py to extract the GitHub runner image ID.
@@ -177,6 +175,31 @@ jobs:
           uv --no-progress run --frozen -- pytest
           --cov --cov-report=term
           --numprocesses=auto --dist=loadgroup
+
+      # click-extra owns the test-suite engine and CLI, and ships in the locked
+      # `docs` group installed above, so it runs from uv.lock rather than a
+      # second uvx-resolved copy: uv.lock is the only place it is hash-verified.
+      # The outer `uv run` provides the environment once, avoiding per-case uv
+      # lock contention between parallel workers.
+      #
+      # `!cancelled()` keeps these running after a failed pytest step: the two
+      # check different things, and letting a unit-test failure skip the CLI
+      # suite hides CLI drift until the next green run. Wrapped in `${{ }}`
+      # because a bare leading `!` is a YAML tag.
+      - name: CLI test suite via console script
+        if: ${{ !cancelled() }}
+        run: >
+          uv --no-progress run --frozen --
+          click-extra test-suite --command "extra-platforms"
+          --suite-file tests/cli-test-suite.toml
+          --jobs max
+      - name: CLI test suite via python -m
+        if: ${{ !cancelled() }}
+        run: >
+          uv --no-progress run --frozen --
+          click-extra test-suite --command "python -m extra_platforms"
+          --suite-file tests/cli-test-suite.toml
+          --jobs max
 
   test-package-install:
     name: 📦 Package install
@@ -201,6 +224,9 @@ jobs:
           - windows-2025     # x86
           - windows-2022     # x86
     runs-on: ${{ matrix.os }}
+    # Wider than the default: this job provisions a toolchain, so its runtime
+    # tracks how much it has to install.
+    timeout-minutes: 30
     env:
       # The one job opting out of the workflow-wide supply-chain cooldown, by
       # setting a zero-length window. Its subject IS the freshly published
