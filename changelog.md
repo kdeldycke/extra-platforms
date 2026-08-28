@@ -1,5 +1,10 @@
 # Changelog
 
+## [`13.7.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.0...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`13.7.0` (2026-08-28)](https://github.com/kdeldycke/extra-platforms/compare/v13.6.0...v13.7.0)
 
 - Identify a Linux distribution through `systemd-hostnamed` when neither `/etc/os-release` nor `/usr/lib/os-release` is readable.
