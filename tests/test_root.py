@@ -740,6 +740,7 @@ def test_invalidate_caches_clears_group_detection_functions():
     assert is_any_platform.cache_info().currsize == 0  # type: ignore[attr-defined]
 
 
+@pytest.mark.benchmark
 def test_import_time():
     """Guard against import time regressions.
 
@@ -758,6 +759,12 @@ def test_import_time():
     no code-level regression: local cold import held at ~30 ms, matching
     13.2.0. The larger budget keeps absorbing shared-VM tail latency while
     still catching grossly expensive import-time operations.
+
+    Carries the ``benchmark`` marker because no budget can hold on every
+    machine: an emulated architecture fails it with no code regression, as
+    Alpine's loongarch64 builder did at 2176 ms. A distribution build excludes
+    the class with ``-m "not benchmark"`` rather than deselecting this node by
+    name.
     """
     result = subprocess.run(
         [

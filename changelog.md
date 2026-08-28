@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add a `benchmark` marker to `test_import_time`, so a build on a slow or emulated architecture can exclude the wall-clock budget with `-m "not benchmark"`.
+
 ## [`13.7.0` (2026-08-28)](https://github.com/kdeldycke/extra-platforms/compare/v13.6.0...v13.7.0)
 
 - Identify a Linux distribution through `systemd-hostnamed` when neither `/etc/os-release` nor `/usr/lib/os-release` is readable.

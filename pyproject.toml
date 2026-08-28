@@ -466,6 +466,7 @@ addopts = [
 ]
 # https://docs.pytest.org/en/latest/customize.html#pyproject-toml
 markers = [
+  "benchmark: Tests that budget wall-clock time (excluded with -m 'not benchmark').",
   "network: Tests that require network access (excluded with -m 'not network').",
 ]
 # Restrict collection to the test suite, so pytest never descends into the
