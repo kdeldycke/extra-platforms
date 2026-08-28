@@ -49,7 +49,7 @@ Each AI coding agent advertises itself through a dedicated environment variable:
 
 Outside an agent session, every detection function returns `False` and {func}`~current_agent` returns {data}`~UNKNOWN_AGENT`. This makes {func}`~is_unknown_agent` the idiomatic "not driven by an agent" check.
 
-The `LLM` variable is used as an expectation signal: when it is set but no agent is recognized, the miss is logged as a `WARNING` (a detection heuristic is probably missing and worth [reporting](https://github.com/kdeldycke/extra-platforms/issues)); otherwise it is only logged as `INFO`.
+The `LLM` and `AI_AGENT` variables are used as expectation signals: when either is set but no agent is recognized, the miss is logged as a `WARNING` (a detection heuristic is probably missing and worth [reporting](https://github.com/kdeldycke/extra-platforms/issues)); otherwise it is only logged as `INFO`. `AI_AGENT` carries the agent's own name as its value, set by Crush and Pi among others, so an unrecognized value names the agent to add next.
 
 ## Recognized agents
 

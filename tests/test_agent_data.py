@@ -50,11 +50,11 @@ def test_agent_mutual_exclusion():
     assert len(matching) <= 1
 
 
-def _agent_log_levels(fake_environ, caplog):
-    """Resolve the current agent against ``fake_environ`` and collect log levels.
+def _agent_log_levels(caplog):
+    """Resolve the current agent and collect the levels it logged at.
 
-    Detection reads ``detection.environ`` and caches every answer, so the
-    environment is swapped wholesale and the caches are cleared on both sides of
+    Detection reads ``detection.environ`` and caches every answer, so callers
+    swap that attribute wholesale and the caches are cleared on both sides of
     the call: on entry so nothing carries over from the real environment, and on
     exit so the next caller recomputes against it.
     """
@@ -75,7 +75,7 @@ def test_agent_presence_var_escalates_unrecognized(env_var, monkeypatch, caplog)
     so a variable added there without being read by the gate fails here.
     """
     monkeypatch.setattr(detection, "environ", {env_var: "some-unreleased-agent"})
-    agent, levels = _agent_log_levels(detection.environ, caplog)
+    agent, levels = _agent_log_levels(caplog)
     assert agent is UNKNOWN_AGENT
     assert levels == [logging.WARNING]
 
@@ -83,7 +83,7 @@ def test_agent_presence_var_escalates_unrecognized(env_var, monkeypatch, caplog)
 def test_no_agent_presence_var_stays_informational(monkeypatch, caplog):
     """An environment naming no agent at all logs at INFO, not WARNING."""
     monkeypatch.setattr(detection, "environ", {})
-    agent, levels = _agent_log_levels(detection.environ, caplog)
+    agent, levels = _agent_log_levels(caplog)
     assert agent is UNKNOWN_AGENT
     assert levels == [logging.INFO]
 
@@ -92,6 +92,6 @@ def test_no_agent_presence_var_stays_informational(monkeypatch, caplog):
 def test_agent_presence_vars_are_reported(env_var, monkeypatch, caplog):
     """Each generic presence variable is surfaced in the unrecognized report."""
     monkeypatch.setattr(detection, "environ", {env_var: "some-unreleased-agent"})
-    _agent, _levels = _agent_log_levels(detection.environ, caplog)
+    _agent, _levels = _agent_log_levels(caplog)
     assert f"{env_var}:" in caplog.text
     assert "some-unreleased-agent" in caplog.text

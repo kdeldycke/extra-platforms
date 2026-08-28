@@ -6,16 +6,12 @@
 > This version is **not released yet** and is under active development.
 
 - Identify a Linux distribution through `systemd-hostnamed` when neither `/etc/os-release` nor `/usr/lib/os-release` is readable.
-- Add Gemini CLI agent detection: `GEMINI_CLI` / `is_gemini_cli()` (via the `GEMINI_CLI` environment variable).
-- Add GitHub Copilot CLI agent detection: `COPILOT_CLI` / `is_copilot_cli()` (via the `COPILOT_CLI` environment variable).
-- Add OpenAI Codex agent detection: `CODEX` / `is_codex()` (via the `CODEX_CI` environment variable).
-- Add Crush agent detection: `CRUSH` / `is_crush()` (via the `CRUSH` environment variable).
-- Add Pi agent detection: `PI` / `is_pi()` (via the `PI_CODING_AGENT` environment variable).
+- Add agent detection for OpenAI Codex, GitHub Copilot CLI, Crush, Gemini CLI and Pi: `CODEX`, `COPILOT_CLI`, `CRUSH`, `GEMINI_CLI` and `PI`.
 - Report an unrecognized agent at `WARNING` level when the generic `AI_AGENT` variable is set, as `LLM` already did.
-- Drop the Codecov integration and its readme badge, following its removal from repomatic `7.8.0`. Coverage is now gated by a `[tool.coverage] report.fail_under` floor, so a local `pytest --cov` run fails below it.
+- Drop the Codecov integration and its readme badge. Coverage is now gated by a local `[tool.coverage] report.fail_under` floor.
 - Sync CI workflows with repomatic `7.14.0`; no functional changes to the package.
 - Document the `platform_info` module on the platforms page, covering `os_release_id()`, `linux_info()`, `macos_info()` and `windows_info()`.
-- Collect the codebase's future-work notes as `todo` admonitions, so they all surface on the todo-list page.
+- Collect the codebase's future-work notes as `todo` admonitions, surfaced on the documentation's todo-list page.
 
 ## [`13.6.0` (2026-08-03)](https://github.com/kdeldycke/extra-platforms/compare/v13.5.3...v13.6.0)
 

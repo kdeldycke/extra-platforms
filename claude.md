@@ -75,6 +75,7 @@ Group - Collection of Traits with set-like operations (group.py)
 | `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`                   |
 | `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                                  |
 | `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                               |
+| `platform_info.py`     | Version, codename and CPE metadata behind `Platform.info()`                           |
 | `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                                         |
 | `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                               |
 | `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                                       |

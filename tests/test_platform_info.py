@@ -67,6 +67,23 @@ def fresh_os_release_caches():
     linux_info.cache_clear()
 
 
+@pytest.fixture
+def fresh_hostnamectl_caches():
+    """Clear the caches a `hostnamectl`-driving test fills.
+
+    ``_parse_os_release()`` memoizes whatever the fallback answered, so it is
+    cleared next to ``_hostnamectl_os_release()``. Both are cleared on entry and
+    exit, which ``fresh_os_release_caches`` cannot do for
+    ``_parse_os_release()``: no test using this fixture replaces either
+    function, so the real ``cache_clear()`` stays reachable on both sides.
+    """
+    _hostnamectl_os_release.cache_clear()
+    _parse_os_release.cache_clear()
+    yield
+    _hostnamectl_os_release.cache_clear()
+    _parse_os_release.cache_clear()
+
+
 @pytest.mark.parametrize(
     ("content", "expected"),
     (
@@ -226,14 +243,6 @@ def test_linux_info_empty_version(monkeypatch, fresh_os_release_caches):
     assert info["codename"] is None
 
 
-@pytest.fixture
-def fresh_hostnamectl_cache():
-    """Clear the `hostnamectl` cache around a test driving the fallback."""
-    _hostnamectl_os_release.cache_clear()
-    yield
-    _hostnamectl_os_release.cache_clear()
-
-
 @pytest.mark.parametrize(
     ("cpe_name", "distro_id"),
     (
@@ -374,7 +383,7 @@ def _fake_run(stdout):
     return run
 
 
-def test_hostnamectl_os_release(monkeypatch, fresh_hostnamectl_cache):
+def test_hostnamectl_os_release(monkeypatch, fresh_hostnamectl_caches):
     """A reachable systemd bus rebuilds the os-release fields."""
     monkeypatch.setattr(shutil, "which", lambda name: "/usr/bin/hostnamectl")
     monkeypatch.setattr(subprocess, "run", _fake_run(HOSTNAMECTL_CLOUDLINUX))
@@ -388,7 +397,7 @@ def test_hostnamectl_os_release(monkeypatch, fresh_hostnamectl_cache):
 
 
 def test_hostnamectl_os_release_skips_missing_binary(
-    monkeypatch, fresh_hostnamectl_cache
+    monkeypatch, fresh_hostnamectl_caches
 ):
     """No subprocess is spawned on a system shipping no `hostnamectl`."""
 
@@ -413,7 +422,7 @@ def test_hostnamectl_os_release_skips_missing_binary(
         ),
     ),
 )
-def test_hostnamectl_os_release_degrades(error, monkeypatch, fresh_hostnamectl_cache):
+def test_hostnamectl_os_release_degrades(error, monkeypatch, fresh_hostnamectl_caches):
     """Every failure to reach the bus degrades to an empty result."""
 
     def failing_run(*args, **kwargs):
@@ -425,32 +434,27 @@ def test_hostnamectl_os_release_degrades(error, monkeypatch, fresh_hostnamectl_c
 
 
 def test_parse_os_release_falls_back_to_hostnamectl(
-    monkeypatch, fresh_hostnamectl_cache, fresh_os_release_caches
+    monkeypatch, fresh_hostnamectl_caches, fresh_os_release_caches
 ):
     """A system hiding both os-release files is identified through the bus."""
-    _parse_os_release.cache_clear()
     monkeypatch.setattr(os.path, "isfile", lambda path: False)
     monkeypatch.setattr(shutil, "which", lambda name: "/usr/bin/hostnamectl")
     monkeypatch.setattr(subprocess, "run", _fake_run(HOSTNAMECTL_CLOUDLINUX))
-    try:
-        assert _parse_os_release()["id"] == "cloudlinux"
-        assert os_release_id() == "cloudlinux"
-        assert linux_info() == {
-            "id": "cloudlinux",
-            "version": "7.6",
-            "version_parts": {"major": "7", "minor": "6", "build_number": None},
-            "like": None,
-            "codename": "Vladimir Lyakhov",
-        }
-    finally:
-        _parse_os_release.cache_clear()
+    assert _parse_os_release()["id"] == "cloudlinux"
+    assert os_release_id() == "cloudlinux"
+    assert linux_info() == {
+        "id": "cloudlinux",
+        "version": "7.6",
+        "version_parts": {"major": "7", "minor": "6", "build_number": None},
+        "like": None,
+        "codename": "Vladimir Lyakhov",
+    }
 
 
 def test_parse_os_release_prefers_files_over_hostnamectl(
-    monkeypatch, fresh_hostnamectl_cache, fresh_os_release_caches
+    monkeypatch, fresh_hostnamectl_caches, fresh_os_release_caches
 ):
     """A readable os-release file is never second-guessed through the bus."""
-    _parse_os_release.cache_clear()
 
     def forbidden_run(*args, **kwargs):
         raise AssertionError("hostnamectl must not be spawned when a file is readable")
@@ -463,17 +467,15 @@ def test_parse_os_release_prefers_files_over_hostnamectl(
         lambda *args, **kwargs: io.StringIO("ID=ubuntu\n"),
         raising=False,
     )
-    try:
-        assert _parse_os_release() == {"id": "ubuntu"}
-    finally:
-        _parse_os_release.cache_clear()
+    assert _parse_os_release() == {"id": "ubuntu"}
 
 
-def test_invalidate_os_release_cache_clears_hostnamectl(monkeypatch):
+def test_invalidate_os_release_cache_clears_hostnamectl(
+    monkeypatch, fresh_hostnamectl_caches
+):
     """The hostnamectl result is re-read after a cache invalidation."""
     monkeypatch.setattr(shutil, "which", lambda name: "/usr/bin/hostnamectl")
     monkeypatch.setattr(subprocess, "run", _fake_run(HOSTNAMECTL_CLOUDLINUX))
-    _hostnamectl_os_release.cache_clear()
     assert _hostnamectl_os_release()["id"] == "cloudlinux"
 
     monkeypatch.setattr(
@@ -486,4 +488,3 @@ def test_invalidate_os_release_cache_clears_hostnamectl(monkeypatch):
 
     invalidate_os_release_cache()
     assert _hostnamectl_os_release() == {"pretty_name": "Fedora Linux 39"}
-    invalidate_os_release_cache()
