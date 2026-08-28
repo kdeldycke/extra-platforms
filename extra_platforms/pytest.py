@@ -265,7 +265,10 @@ if TYPE_CHECKING:
     skip_cloudlinux: MarkDecorator
     skip_cmd: MarkDecorator
     skip_codebuild: MarkDecorator
+    skip_codex: MarkDecorator
     skip_contour: MarkDecorator
+    skip_copilot_cli: MarkDecorator
+    skip_crush: MarkDecorator
     skip_csh: MarkDecorator
     skip_cursor: MarkDecorator
     skip_cygwin: MarkDecorator
@@ -278,6 +281,7 @@ if TYPE_CHECKING:
     skip_fish: MarkDecorator
     skip_foot: MarkDecorator
     skip_freebsd: MarkDecorator
+    skip_gemini_cli: MarkDecorator
     skip_generic_linux: MarkDecorator
     skip_gentoo: MarkDecorator
     skip_ghostty: MarkDecorator
@@ -334,6 +338,7 @@ if TYPE_CHECKING:
     skip_other_posix: MarkDecorator
     skip_other_shells: MarkDecorator
     skip_parallels: MarkDecorator
+    skip_pi: MarkDecorator
     skip_pidora: MarkDecorator
     skip_pikaos: MarkDecorator
     skip_powerpc: MarkDecorator
@@ -448,7 +453,10 @@ if TYPE_CHECKING:
     unless_cloudlinux: MarkDecorator
     unless_cmd: MarkDecorator
     unless_codebuild: MarkDecorator
+    unless_codex: MarkDecorator
     unless_contour: MarkDecorator
+    unless_copilot_cli: MarkDecorator
+    unless_crush: MarkDecorator
     unless_csh: MarkDecorator
     unless_cursor: MarkDecorator
     unless_cygwin: MarkDecorator
@@ -461,6 +469,7 @@ if TYPE_CHECKING:
     unless_fish: MarkDecorator
     unless_foot: MarkDecorator
     unless_freebsd: MarkDecorator
+    unless_gemini_cli: MarkDecorator
     unless_generic_linux: MarkDecorator
     unless_gentoo: MarkDecorator
     unless_ghostty: MarkDecorator
@@ -517,6 +526,7 @@ if TYPE_CHECKING:
     unless_other_posix: MarkDecorator
     unless_other_shells: MarkDecorator
     unless_parallels: MarkDecorator
+    unless_pi: MarkDecorator
     unless_pidora: MarkDecorator
     unless_pikaos: MarkDecorator
     unless_powerpc: MarkDecorator

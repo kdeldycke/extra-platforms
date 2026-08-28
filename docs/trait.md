@@ -174,7 +174,10 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  ꩜   | {data}`~CLOUDLINUX`           | CloudLinux OS                  | {func}`~is_cloudlinux`           | Platform     |
 |  ▶   | {data}`~CMD`                  | Command Prompt                 | {func}`~is_cmd`                  | Shell        |
 |  ᚙ   | {data}`~CODEBUILD`            | CodeBuild                      | {func}`~is_codebuild`            | CI           |
+|  📕  | {data}`~CODEX`                | OpenAI Codex                   | {func}`~is_codex`                | Agent        |
 |  ◰   | {data}`~CONTOUR`              | Contour                        | {func}`~is_contour`              | Terminal     |
+|  ✈️  | {data}`~COPILOT_CLI`          | GitHub Copilot CLI             | {func}`~is_copilot_cli`          | Agent        |
+|  💘  | {data}`~CRUSH`                | Crush                          | {func}`~is_crush`                | Agent        |
 |  𝐂   | {data}`~CSH`                  | C shell                        | {func}`~is_csh`                  | Shell        |
 |  ➤   | {data}`~CURSOR`               | Cursor                         | {func}`~is_cursor`               | Agent        |
 |  Ͼ   | {data}`~CYGWIN`               | Cygwin                         | {func}`~is_cygwin`               | Platform     |
@@ -187,6 +190,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  🐟  | {data}`~FISH`                 | Fish                           | {func}`~is_fish`                 | Shell        |
 |  🦶  | {data}`~FOOT`                 | foot                           | {func}`~is_foot`                 | Terminal     |
 |  😈  | {data}`~FREEBSD`              | FreeBSD                        | {func}`~is_freebsd`              | Platform     |
+|  ♊  | {data}`~GEMINI_CLI`           | Gemini CLI                     | {func}`~is_gemini_cli`           | Agent        |
 |  🥚  | {data}`~GENERIC_LINUX`        | Generic Linux                  | {func}`~is_generic_linux`        | Platform     |
 |  🗜️  | {data}`~GENTOO`               | Gentoo Linux                   | {func}`~is_gentoo`               | Platform     |
 |  👻  | {data}`~GHOSTTY`              | Ghostty                        | {func}`~is_ghostty`              | Terminal     |
@@ -232,6 +236,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  🦴  | {data}`~ORACLE`               | Oracle Linux                   | {func}`~is_oracle`               | Platform     |
 |  🟦  | {data}`~OS400`                | IBM i                          | {func}`~is_os400`                | Platform     |
 |  ∥   | {data}`~PARALLELS`            | Parallels                      | {func}`~is_parallels`            | Platform     |
+|  π   | {data}`~PI`                   | Pi                             | {func}`~is_pi`                   | Agent        |
 |  🍓  | {data}`~PIDORA`               | Pidora                         | {func}`~is_pidora`               | Platform     |
 |  🐹  | {data}`~PIKAOS`               | PikaOS                         | {func}`~is_pikaos`               | Platform     |
 |  🔷  | {data}`~POWERSHELL`           | PowerShell                     | {func}`~is_powershell`           | Shell        |

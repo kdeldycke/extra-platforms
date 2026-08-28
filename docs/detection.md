@@ -74,7 +74,10 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {func}`~is_cmd`                  |  ▶   | {data}`~CMD`                  |
 | {func}`~is_codebuild`            |  ᚙ   | {data}`~CODEBUILD`            |
+| {func}`~is_codex`                |  📕  | {data}`~CODEX`                |
 | {func}`~is_contour`              |  ◰   | {data}`~CONTOUR`              |
+| {func}`~is_copilot_cli`          |  ✈️  | {data}`~COPILOT_CLI`          |
+| {func}`~is_crush`                |  💘  | {data}`~CRUSH`                |
 | {func}`~is_csh`                  |  𝐂   | {data}`~CSH`                  |
 | {func}`~is_cursor`               |  ➤   | {data}`~CURSOR`               |
 | {func}`~is_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
@@ -87,6 +90,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_fish`                 |  🐟  | {data}`~FISH`                 |
 | {func}`~is_foot`                 |  🦶  | {data}`~FOOT`                 |
 | {func}`~is_freebsd`              |  😈  | {data}`~FREEBSD`              |
+| {func}`~is_gemini_cli`           |  ♊  | {data}`~GEMINI_CLI`           |
 | {func}`~is_generic_linux`        |  🥚  | {data}`~GENERIC_LINUX`        |
 | {func}`~is_gentoo`               |  🗜️  | {data}`~GENTOO`               |
 | {func}`~is_ghostty`              |  👻  | {data}`~GHOSTTY`              |
@@ -143,6 +147,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
 | {func}`~is_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
 | {func}`~is_parallels`            |  ∥   | {data}`~PARALLELS`            |
+| {func}`~is_pi`                   |  π   | {data}`~PI`                   |
 | {func}`~is_pidora`               |  🍓  | {data}`~PIDORA`               |
 | {func}`~is_pikaos`               |  🐹  | {data}`~PIKAOS`               |
 | {func}`~is_powerpc`              |  ⚡  | {data}`~POWERPC`              |

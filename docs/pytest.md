@@ -151,7 +151,10 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_cloudlinux`           | {deco}`~pytest.unless_cloudlinux`           |  ꩜   | {data}`~CLOUDLINUX`           |
 | {deco}`~pytest.skip_cmd`                  | {deco}`~pytest.unless_cmd`                  |  ▶   | {data}`~CMD`                  |
 | {deco}`~pytest.skip_codebuild`            | {deco}`~pytest.unless_codebuild`            |  ᚙ   | {data}`~CODEBUILD`            |
+| {deco}`~pytest.skip_codex`                | {deco}`~pytest.unless_codex`                |  📕  | {data}`~CODEX`                |
 | {deco}`~pytest.skip_contour`              | {deco}`~pytest.unless_contour`              |  ◰   | {data}`~CONTOUR`              |
+| {deco}`~pytest.skip_copilot_cli`          | {deco}`~pytest.unless_copilot_cli`          |  ✈️  | {data}`~COPILOT_CLI`          |
+| {deco}`~pytest.skip_crush`                | {deco}`~pytest.unless_crush`                |  💘  | {data}`~CRUSH`                |
 | {deco}`~pytest.skip_csh`                  | {deco}`~pytest.unless_csh`                  |  𝐂   | {data}`~CSH`                  |
 | {deco}`~pytest.skip_cursor`               | {deco}`~pytest.unless_cursor`               |  ➤   | {data}`~CURSOR`               |
 | {deco}`~pytest.skip_cygwin`               | {deco}`~pytest.unless_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
@@ -164,6 +167,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_fish`                 | {deco}`~pytest.unless_fish`                 |  🐟  | {data}`~FISH`                 |
 | {deco}`~pytest.skip_foot`                 | {deco}`~pytest.unless_foot`                 |  🦶  | {data}`~FOOT`                 |
 | {deco}`~pytest.skip_freebsd`              | {deco}`~pytest.unless_freebsd`              |  😈  | {data}`~FREEBSD`              |
+| {deco}`~pytest.skip_gemini_cli`           | {deco}`~pytest.unless_gemini_cli`           |  ♊  | {data}`~GEMINI_CLI`           |
 | {deco}`~pytest.skip_generic_linux`        | {deco}`~pytest.unless_generic_linux`        |  🥚  | {data}`~GENERIC_LINUX`        |
 | {deco}`~pytest.skip_gentoo`               | {deco}`~pytest.unless_gentoo`               |  🗜️  | {data}`~GENTOO`               |
 | {deco}`~pytest.skip_ghostty`              | {deco}`~pytest.unless_ghostty`              |  👻  | {data}`~GHOSTTY`              |
@@ -220,6 +224,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_other_posix`          | {deco}`~pytest.unless_other_posix`          |  🅟   | {data}`~OTHER_POSIX`          |
 | {deco}`~pytest.skip_other_shells`         | {deco}`~pytest.unless_other_shells`         |  ◇   | {data}`~OTHER_SHELLS`         |
 | {deco}`~pytest.skip_parallels`            | {deco}`~pytest.unless_parallels`            |  ∥   | {data}`~PARALLELS`            |
+| {deco}`~pytest.skip_pi`                   | {deco}`~pytest.unless_pi`                   |  π   | {data}`~PI`                   |
 | {deco}`~pytest.skip_pidora`               | {deco}`~pytest.unless_pidora`               |  🍓  | {data}`~PIDORA`               |
 | {deco}`~pytest.skip_pikaos`               | {deco}`~pytest.unless_pikaos`               |  🐹  | {data}`~PIKAOS`               |
 | {deco}`~pytest.skip_powerpc`              | {deco}`~pytest.unless_powerpc`              |  ⚡  | {data}`~POWERPC`              |

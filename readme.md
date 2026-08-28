@@ -539,7 +539,12 @@ mindmap
     ((🧠 ALL_AGENTS))
         (✴️ CLAUDE_CODE)
         (👾 CLINE)
+        (📕 CODEX)
+        (✈️ COPILOT_CLI)
+        (💘 CRUSH)
         (➤ CURSOR)
+        (♊ GEMINI_CLI)
+        (π PI)
 ```
 
 <!-- mirror-src-end -->

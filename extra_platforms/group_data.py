@@ -22,7 +22,12 @@ from __future__ import annotations
 from .agent_data import (
     CLAUDE_CODE,
     CLINE,
+    CODEX,
+    COPILOT_CLI,
+    CRUSH,
     CURSOR,
+    GEMINI_CLI,
+    PI,
     UNKNOWN_AGENT,
 )
 from .architecture_data import (
@@ -884,7 +889,12 @@ ALL_AGENTS = Group(
     (
         CLAUDE_CODE,
         CLINE,
+        CODEX,
+        COPILOT_CLI,
+        CRUSH,
         CURSOR,
+        GEMINI_CLI,
+        PI,
     ),
 )
 """All recognized AI coding agents.

@@ -63,11 +63,16 @@ print(generate_trait_table(ALL_AGENTS))
 
 <!-- mirror -->
 
-| Icon | Symbol               | Name        | Detection function      |
-| :--: | :------------------- | :---------- | :---------------------- |
-|  ✴️  | {data}`~CLAUDE_CODE` | Claude Code | {func}`~is_claude_code` |
-|  👾  | {data}`~CLINE`       | Cline       | {func}`~is_cline`       |
-|  ➤   | {data}`~CURSOR`      | Cursor      | {func}`~is_cursor`      |
+| Icon | Symbol               | Name               | Detection function      |
+| :--: | :------------------- | :----------------- | :---------------------- |
+|  ✴️  | {data}`~CLAUDE_CODE` | Claude Code        | {func}`~is_claude_code` |
+|  👾  | {data}`~CLINE`       | Cline              | {func}`~is_cline`       |
+|  📕  | {data}`~CODEX`       | OpenAI Codex       | {func}`~is_codex`       |
+|  ✈️  | {data}`~COPILOT_CLI` | GitHub Copilot CLI | {func}`~is_copilot_cli` |
+|  💘  | {data}`~CRUSH`       | Crush              | {func}`~is_crush`       |
+|  ➤   | {data}`~CURSOR`      | Cursor             | {func}`~is_cursor`      |
+|  ♊  | {data}`~GEMINI_CLI`  | Gemini CLI         | {func}`~is_gemini_cli`  |
+|  π   | {data}`~PI`          | Pi                 | {func}`~is_pi`          |
 
 ```{hint}
 The {data}`~UNKNOWN_AGENT` trait represents an unrecognized
@@ -116,7 +121,12 @@ sankey-beta
 
 ALL_AGENTS,CLAUDE_CODE,1
 ALL_AGENTS,CLINE,1
+ALL_AGENTS,CODEX,1
+ALL_AGENTS,COPILOT_CLI,1
+ALL_AGENTS,CRUSH,1
 ALL_AGENTS,CURSOR,1
+ALL_AGENTS,GEMINI_CLI,1
+ALL_AGENTS,PI,1
 ```
 
 <!-- mirror-end -->
@@ -139,7 +149,12 @@ mindmap
     ((🧠 ALL_AGENTS))
         (✴️ CLAUDE_CODE)
         (👾 CLINE)
+        (📕 CODEX)
+        (✈️ COPILOT_CLI)
+        (💘 CRUSH)
         (➤ CURSOR)
+        (♊ GEMINI_CLI)
+        (π PI)
 ```
 
 <!-- mirror-end -->

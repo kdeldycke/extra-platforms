@@ -6,6 +6,12 @@
 > This version is **not released yet** and is under active development.
 
 - Identify a Linux distribution through `systemd-hostnamed` when neither `/etc/os-release` nor `/usr/lib/os-release` is readable.
+- Add Gemini CLI agent detection: `GEMINI_CLI` / `is_gemini_cli()` (via the `GEMINI_CLI` environment variable).
+- Add GitHub Copilot CLI agent detection: `COPILOT_CLI` / `is_copilot_cli()` (via the `COPILOT_CLI` environment variable).
+- Add OpenAI Codex agent detection: `CODEX` / `is_codex()` (via the `CODEX_CI` environment variable).
+- Add Crush agent detection: `CRUSH` / `is_crush()` (via the `CRUSH` environment variable).
+- Add Pi agent detection: `PI` / `is_pi()` (via the `PI_CODING_AGENT` environment variable).
+- Report an unrecognized agent at `WARNING` level when the generic `AI_AGENT` variable is set, as `LLM` already did.
 - Drop the Codecov integration and its readme badge, following its removal from repomatic `7.8.0`. Coverage is now gated by a `[tool.coverage] report.fail_under` floor, so a local `pytest --cov` run fails below it.
 - Sync CI workflows with repomatic `7.14.0`; no functional changes to the package.
 - Document the `platform_info` module on the platforms page, covering `os_release_id()`, `linux_info()`, `macos_info()` and `windows_info()`.

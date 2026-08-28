@@ -21,7 +21,27 @@ CLAUDE_CODE = Agent("claude_code", "Claude Code", "✴️", "https://claude.ai/c
 
 CLINE = Agent("cline", "Cline", "👾", "https://cline.bot")
 
+CODEX = Agent("codex", "OpenAI Codex", "📕", "https://github.com/openai/codex")
+
+COPILOT_CLI = Agent(
+    "copilot_cli",
+    "GitHub Copilot CLI",
+    "✈️",
+    "https://github.com/github/copilot-cli",
+)
+
+CRUSH = Agent("crush", "Crush", "💘", "https://github.com/charmbracelet/crush")
+
 CURSOR = Agent("cursor", "Cursor", "➤", "https://cursor.com")
+
+GEMINI_CLI = Agent(
+    "gemini_cli",
+    "Gemini CLI",
+    "♊",
+    "https://github.com/google-gemini/gemini-cli",
+)
+
+PI = Agent("pi", "Pi", "π", "https://github.com/earendil-works/pi")
 
 UNKNOWN_AGENT = Agent(
     "unknown_agent",

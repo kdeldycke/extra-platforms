@@ -100,6 +100,31 @@ detection functions without a fragile string-based module attribute search.
 """
 
 
+_AGENT_PRESENCE_ENV_VARS = ("LLM", "AI_AGENT")
+"""Environment variables signalling an AI agent runs, whichever one it is.
+
+Unlike the per-agent markers the ``is_*()`` heuristics read, these carry no
+product identity of their own, so they cannot name an agent. They answer the
+weaker question {func}`current_agent` needs when nothing matched: was an agent
+expected here at all? A miss with one of these set is a gap in the registry and
+logs at ``WARNING``; a miss without them is a machine running no agent, and logs
+at ``INFO``.
+
+``AI_AGENT`` carries the agent's own name as its value, and is set by at least
+[Crush](https://github.com/charmbracelet/crush) (``AI_AGENT=crush``, from
+``CrushEnvMarkers()`` in ``internal/shell/shell.go``) and
+[Pi](https://github.com/earendil-works/pi) (``AI_AGENT=pi``, from
+``packages/coding-agent/src/cli.ts``). Both document it as a marker for other
+tools to read, so an unrecognized value here names the agent to add next.
+
+```{note}
+Crush also sets a bare ``AGENT=crush``, deliberately left out: the word is too
+common to attribute to an AI agent on its own, and Crush is already covered by
+{func}`is_crush` and by ``AI_AGENT``.
+```
+"""
+
+
 _CATEGORY_ENV_SIGNALS: dict[str, tuple[str, ...]] = {
     "shell": (
         "SHELL",
@@ -119,7 +144,7 @@ _CATEGORY_ENV_SIGNALS: dict[str, tuple[str, ...]] = {
         "TERMINAL_NAME",
     ),
     "CI": ("CI",),
-    "agent": ("LLM",),
+    "agent": _AGENT_PRESENCE_ENV_VARS,
 }
 """Environment variables to surface in an unrecognized-trait report, per category.
 
@@ -2129,6 +2154,48 @@ def is_cline() -> bool:
 
 
 @cache
+def is_codex() -> bool:
+    """Return {data}`True` if current agent is {data}`~extra_platforms.CODEX`.
+
+    ```{seealso}
+    Codex sets the `CODEX_CI` environment variable when running. The name says
+    CI, but the variable is one entry of the `UNIFIED_EXEC_ENV` array Codex
+    applies to every process it spawns, in
+    [`codex-rs/core/src/unified_exec/process_manager.rs`](https://github.com/openai/codex/blob/main/codex-rs/core/src/unified_exec/process_manager.rs).
+    ```
+    """
+    return "CODEX_CI" in environ
+
+
+@cache
+def is_copilot_cli() -> bool:
+    """Return {data}`True` if current agent is
+    {data}`~extra_platforms.COPILOT_CLI`.
+
+    ```{seealso}
+    GitHub Copilot CLI sets the `COPILOT_CLI` environment variable in its
+    subprocesses, so [git hooks can detect
+    it](https://github.com/github/copilot-cli/blob/main/changelog.md).
+    ```
+    """
+    return "COPILOT_CLI" in environ
+
+
+@cache
+def is_crush() -> bool:
+    """Return {data}`True` if current agent is {data}`~extra_platforms.CRUSH`.
+
+    ```{seealso}
+    Crush sets the `CRUSH` environment variable on every shell it spawns, next
+    to `AGENT=crush` and `AI_AGENT=crush`, from `CrushEnvMarkers()` in
+    [`internal/shell/shell.go`](https://github.com/charmbracelet/crush/blob/main/internal/shell/shell.go).
+    The bash tool and the hook runner both apply them.
+    ```
+    """
+    return "CRUSH" in environ
+
+
+@cache
 def is_cursor() -> bool:
     """Return {data}`True` if current agent is {data}`~extra_platforms.CURSOR`.
 
@@ -2137,6 +2204,35 @@ def is_cursor() -> bool:
     ```
     """
     return "CURSOR_AGENT" in environ
+
+
+@cache
+def is_gemini_cli() -> bool:
+    """Return {data}`True` if current agent is
+    {data}`~extra_platforms.GEMINI_CLI`.
+
+    ```{seealso}
+    Gemini CLI sets the `GEMINI_CLI` environment variable in the subprocesses it
+    spawns, so [scripts can detect
+    it](https://github.com/google-gemini/gemini-cli/blob/main/docs/reference/commands.md).
+    ```
+    """
+    return "GEMINI_CLI" in environ
+
+
+@cache
+def is_pi() -> bool:
+    """Return {data}`True` if current agent is {data}`~extra_platforms.PI`.
+
+    ```{seealso}
+    Pi sets the `PI_CODING_AGENT` environment variable at startup, next to a
+    generic `AI_AGENT=pi` marker, in
+    [`packages/coding-agent/src/cli.ts`](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/src/cli.ts).
+    Child processes inherit both, but neither is set when Pi is embedded through
+    its SDK.
+    ```
+    """
+    return "PI_CODING_AGENT" in environ
 
 
 @cache
@@ -2543,9 +2639,9 @@ def current_agent(strict: bool = False) -> Agent:
     Unlike architectures, platforms, and shells, an agent is not always present.
     Local development without AI agents has no agent running.
 
-    If the `LLM` environment variable is set, an unrecognized agent logs at
-    `WARNING` level, as it suggests an AI agent is present but not recognized.
-    Otherwise, it logs at `INFO` level.
+    If any variable of `_AGENT_PRESENCE_ENV_VARS` is set, an unrecognized
+    agent logs at `WARNING` level, as it suggests an AI agent is present but not
+    recognized. Otherwise, it logs at `INFO` level.
     ```
     """
     # Lazy imports to avoid circular dependencies.
@@ -2559,13 +2655,12 @@ def current_agent(strict: bool = False) -> Agent:
         if agent.current
     }
 
-    # The LLM env var signals an AI agent is expected to be present.
     return _single_match(
         matching,
         UNKNOWN_AGENT,
         "agent",
         strict=strict,
-        expected="LLM" in environ,
+        expected=any(var in environ for var in _AGENT_PRESENCE_ENV_VARS),
     )
 
 
