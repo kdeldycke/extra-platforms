@@ -148,13 +148,13 @@ jobs:
 
       - name: CLI test suite via console script
         run: >
-          uvx --no-progress 'click-extra==8.8.1' test-suite
+          uvx --no-progress 'click-extra==8.9.1' test-suite
           --command "uv run --frozen -- extra-platforms"
           --suite-file tests/cli-test-suite.toml
           --jobs max
       - name: CLI test suite via python -m
         run: >
-          uvx --no-progress 'click-extra==8.8.1' test-suite
+          uvx --no-progress 'click-extra==8.9.1' test-suite
           --command "uv run --frozen -- python -m extra_platforms"
           --suite-file tests/cli-test-suite.toml
           --jobs max
