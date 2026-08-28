@@ -111,6 +111,7 @@ def test_github_runner_detection():
     # X86-64 runners.
     if github_runner_os() in {
         "ubuntu-slim",
+        "ubuntu-26.04",
         "ubuntu-24.04",
         "ubuntu-22.04",
         "macos-15-intel",
@@ -142,6 +143,8 @@ def test_github_runner_detection():
     if github_runner_os() in {
         "ubuntu-latest",
         "ubuntu-slim",
+        "ubuntu-26.04",
+        "ubuntu-26.04-arm",
         "ubuntu-24.04",
         "ubuntu-24.04-arm",
         "ubuntu-22.04",
