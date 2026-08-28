@@ -456,9 +456,9 @@ markers = [
 xfail_strict = true
 
 [tool.coverage]
+run.source = [ "extra_platforms" ]
 # https://coverage.readthedocs.io/en/latest/config.html
 run.branch = true
-run.source = [ "extra_platforms" ]
 # Coverage ratchet replacing the Codecov gate repomatic dropped in 7.8.0. The
 # suite fails below this. Deliberately conservative: every cell of the test
 # matrix must clear it on its own, and coverage here swings with the runner,
