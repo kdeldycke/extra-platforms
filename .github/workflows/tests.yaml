@@ -90,7 +90,7 @@ jobs:
         # (repomatic.prepare_release.SELF_PIN_COOLDOWN_EXEMPTION), so
         # `sync-workflow-pins` recognizes and moves it with the pin.
         run: >
-          uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==7.11.0' metadata
+          uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==7.14.0' metadata
           --format github-json --output "$GITHUB_OUTPUT"
           test_matrix test_matrix_pr
 
