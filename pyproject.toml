@@ -565,11 +565,6 @@ abandoned-versions = [ "1.0.1" ]
 # refreshed by `click-extra refresh-directives` (update-docs Phase 4). Disable
 # the Phase 3 update-script (its default points at the deleted file).
 docs.update-script = ""
-# The debug workflow is not used in this project. `labels`, `skills`, `agents`
-# and `plugin` need no entry here: repomatic already keeps them out of a bare
-# `init` on its own (`labels` is ephemeral, the other three default to
-# excluded), and naming a component explicitly bypasses this list anyway.
-exclude = [ "workflows/debug.yaml" ]
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
 # Extra-platforms needs exhaustive runner coverage because it tests platform detection.
