@@ -16,6 +16,10 @@
 This module provides utilities to fetch detailed version and codename information
 for all platforms: Linux distributions (via `/etc/os-release`), macOS and Windows.
 
+Linux reads `/etc/os-release`, then `/usr/lib/os-release`. When neither file is
+readable, `_hostnamectl_os_release()` asks `systemd-hostnamed` for the same
+identity over D-Bus and rebuilds the os-release fields from its answer.
+
 ```{seealso}
 The [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html)
 defines the format and fields of `/etc/os-release`.
@@ -28,12 +32,41 @@ import os
 import platform
 import re
 import shlex
+import shutil
+import subprocess
 from functools import cache
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from typing import Any
+
+
+CODENAME_RE = re.compile(r"\((\D+)\)|,\s*(\D+)")
+"""Matches a codename trailing a version string.
+
+The [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html)
+puts no codename in `VERSION`, but distributions append one anyway, either
+parenthesized (``22.04.3 LTS (Jammy Jellyfish)``) or after a comma
+(``10, Buster``). Both forms exclude digits, which keeps the version itself out
+of the match.
+"""
+
+
+def _codename_from_version(version: str) -> str:
+    """Extract the codename trailing a version string.
+
+    Reads the same parenthesized or comma-separated forms from an os-release
+    `VERSION` field and from a `PRETTY_NAME`, since a pretty name ends on the
+    version its `VERSION` field carries.
+
+    :param version: A version string, or any string ending on one.
+    :return: The codename, or an empty string when the version carries none.
+    """
+    match = CODENAME_RE.search(version)
+    if not match:
+        return ""
+    return (match.group(1) or match.group(2)).strip()
 
 
 def _parse_os_release_content(lines: Iterable[str]) -> dict[str, str]:
@@ -65,10 +98,9 @@ def _parse_os_release_content(lines: Iterable[str]) -> dict[str, str]:
 
     # Extract codename from VERSION field if not already present.
     if "version_codename" not in result and "version" in result:
-        # Match patterns like "(Focal Fossa)" or ", Focal Fossa".
-        match = re.search(r"\((\D+)\)|,\s*(\D+)", result["version"])
-        if match:
-            result["version_codename"] = (match.group(1) or match.group(2)).strip()
+        codename = _codename_from_version(result["version"])
+        if codename:
+            result["version_codename"] = codename
 
     # UBUNTU_CODENAME is a fallback for VERSION_CODENAME.
     if "version_codename" not in result and "ubuntu_codename" in result:
@@ -77,12 +109,184 @@ def _parse_os_release_content(lines: Iterable[str]) -> dict[str, str]:
     return result
 
 
+CPE_ID_OVERRIDES: dict[str, str] = {
+    "alt:server": "altlinux",
+    "amazon:amazon_linux": "amzn",
+    "amazon:linux": "amzn",
+    "opensuse:leap": "opensuse-leap",
+    "oracle:linux": "ol",
+    "redhat:enterprise_linux": "rhel",
+    # Scientific Linux 7 declares ID="rhel" in its own os-release file.
+    "scientificlinux:scientificlinux": "rhel",
+    "slackware:slackware_linux": "slackware",
+}
+"""Maps a CPE ``vendor:product`` pair to the os-release `ID` of the same system.
+
+A CPE product name and an os-release `ID` are set by different bodies, so they
+agree for most distributions and diverge for some. Only the divergent pairs are
+listed here: `_parse_cpe_name()` uses the product itself for all the others,
+which covers `almalinux`, `centos`, `cloudlinux`, `fedora`, `kvmibm`,
+`opensuse`, `rocky` and `sles`.
+
+Each entry is read from a real os-release file declaring both fields, as
+collected in
+[python-distro's test resources](https://github.com/python-distro/distro/tree/master/tests/resources/distros).
+Add an entry only from such a file: the rule is to reproduce the `ID` the system
+itself declares, never to pick the ID that looks right.
+"""
+
+
+def _parse_cpe_name(cpe_name: str) -> dict[str, str]:
+    """Extract os-release fields from a CPE name.
+
+    A [CPE](https://csrc.nist.gov/projects/security-content-automation-protocol/specifications/cpe)
+    name reaches an os-release file in either of two bindings, which list their
+    components in the same order. One positional read covers the pair:
+
+    - the 2.2 URI binding, ``cpe:/o:fedoraproject:fedora:19``
+    - the 2.3 formatted string, ``cpe:2.3:o:amazon:amazon_linux:2023``
+
+    Components past the version (update, edition, language, ...) are ignored:
+    ``cpe:/o:cloudlinux:cloudlinux:7.3:GA:server`` yields the same fields as
+    ``cpe:/o:cloudlinux:cloudlinux:7.3``.
+
+    :param cpe_name: A CPE name, in either binding.
+    :return: Dictionary of os-release fields, or empty dict when the name is not
+        a CPE naming an operating system.
+    """
+    if cpe_name.startswith("cpe:2.3:"):
+        components = cpe_name[len("cpe:2.3:") :].split(":")
+    elif cpe_name.startswith("cpe:/"):
+        components = cpe_name[len("cpe:/") :].split(":")
+    else:
+        return {}
+
+    part, vendor, product, version = ([*components, "", "", "", ""])[:4]
+    # An os-release CPE_NAME always names an operating system.
+    if part != "o":
+        return {}
+
+    # "*" (any) and "-" (not applicable) are CPE placeholders, not values.
+    vendor, product, version = (
+        "" if value in ("*", "-") else value for value in (vendor, product, version)
+    )
+
+    result = {"cpe_name": cpe_name}
+    distro_id = CPE_ID_OVERRIDES.get(f"{vendor}:{product}", product)
+    if distro_id:
+        result["id"] = distro_id
+    if version:
+        result["version_id"] = version
+    return result
+
+
+def _parse_hostnamectl_content(lines: Iterable[str]) -> dict[str, str]:
+    """Parse `hostnamectl` status output into os-release fields.
+
+    The output is a list of ``Label: value`` lines, of which two carry the
+    operating system identity:
+
+    ```text
+      Operating System: CloudLinux 7.6 (Vladimir Lyakhov)
+           CPE OS Name: cpe:/o:cloudlinux:cloudlinux:7.6:GA:server
+    ```
+
+    `Operating System` is the `PRETTY_NAME` of the system, and `CPE OS Name` its
+    `CPE_NAME`. All other lines describe the host, not the distribution, and are
+    dropped.
+
+    :param lines: Iterable of lines from `hostnamectl` status output.
+    :return: Dictionary of os-release fields, empty when the output names no
+        operating system.
+    """
+    fields: dict[str, str] = {}
+    for line in lines:
+        # Split on the first colon only: a CPE name holds colons of its own,
+        # but a label never does.
+        label, separator, value = line.partition(":")
+        if not separator:
+            continue
+        fields[label.strip().lower()] = value.strip()
+
+    result: dict[str, str] = {}
+
+    cpe_name = fields.get("cpe os name", "")
+    if cpe_name:
+        result.update(_parse_cpe_name(cpe_name))
+
+    pretty_name = fields.get("operating system", "")
+    if pretty_name:
+        result["pretty_name"] = pretty_name
+        codename = _codename_from_version(pretty_name)
+        if codename:
+            result["version_codename"] = codename
+
+    return result
+
+
+@cache
+def _hostnamectl_os_release() -> dict[str, str]:
+    """Rebuild os-release fields from `systemd-hostnamed`.
+
+    `hostnamectl` reads the operating system identity from `systemd-hostnamed`
+    over D-Bus, so it answers from the init system's view of the file system
+    instead of the caller's. That is what makes it a distinct source and not a
+    second read of the same file: a process jailed away from `/etc/os-release`
+    still reaches the real one through the bus. CloudLinux VMs virtualizing
+    `/etc` per user are the reported case, where every other strategy comes back
+    empty, as reported in
+    [`python-distro/distro#240`](https://github.com/python-distro/distro/issues/240).
+
+    ```{caution}
+    The same property makes the answer the *host* identity when a container
+    reaches the host bus. Reaching that case needs an image shipping no
+    os-release file at all, which in practice ships no `hostnamectl` either, so
+    this returns an empty result without ever querying the bus.
+    ```
+
+    Any failure degrades to an empty result: no `hostnamectl` binary, no
+    systemd, or an unreachable bus.
+
+    :return: Dictionary of os-release fields, or empty dict when the identity
+        cannot be read.
+    """
+    # Testing for the binary rather than for Linux covers a systemd-less
+    # distribution too, and spares every other platform a subprocess it can only
+    # fail to spawn.
+    if shutil.which("hostnamectl") is None:
+        return {}
+
+    try:
+        result = subprocess.run(
+            ("hostnamectl", "status"),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            # An unreadable pretty name must not raise where a missing one does
+            # not.
+            errors="replace",
+            check=True,
+            # The bus call hangs when systemd is up but unresponsive.
+            timeout=2,
+            # Force the C locale to keep the labels parsed above stable.
+            env={**os.environ, "LC_ALL": "C"},
+        )
+    except (OSError, subprocess.SubprocessError):
+        return {}
+
+    # str() coerces an unexpected stdout (like a globally mocked subprocess.run
+    # returning a Mock) to text, so parsing degrades to an empty result instead
+    # of raising.
+    return _parse_hostnamectl_content(str(result.stdout).splitlines())
+
+
 @cache
 def _parse_os_release() -> dict[str, str]:
     """Read and parse the os-release file.
 
     Tries `/etc/os-release` first, then `/usr/lib/os-release` as fallback per the
-    specification.
+    specification. Falls back to `_hostnamectl_os_release()` when neither
+    file is readable, which is the only source left on a system hiding both.
 
     :return: Dictionary of parsed key-value pairs, or empty dict if no file found.
     """
@@ -90,7 +294,7 @@ def _parse_os_release() -> dict[str, str]:
         if os.path.isfile(path):
             with open(path, encoding="utf-8") as f:
                 return _parse_os_release_content(f)
-    return {}
+    return _hostnamectl_os_release()
 
 
 @cache
@@ -160,6 +364,7 @@ def linux_info() -> dict[str, Any]:
 
 def invalidate_os_release_cache() -> None:
     """Clear caches for all os-release functions."""
+    _hostnamectl_os_release.cache_clear()
     _parse_os_release.cache_clear()
     os_release_id.cache_clear()
     linux_info.cache_clear()

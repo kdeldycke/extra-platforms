@@ -5,6 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Identify a Linux distribution through `systemd-hostnamed` when neither `/etc/os-release` nor `/usr/lib/os-release` is readable.
 - Drop the Codecov integration and its readme badge, following its removal from repomatic `7.8.0`. Coverage is now gated by a `[tool.coverage] report.fail_under` floor, so a local `pytest --cov` run fails below it.
 - Sync CI workflows with repomatic `7.14.0`; no functional changes to the package.
 - Document the `platform_info` module on the platforms page, covering `os_release_id()`, `linux_info()`, `macos_info()` and `windows_info()`.

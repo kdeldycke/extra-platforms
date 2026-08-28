@@ -45,7 +45,9 @@ for considering multiple systems at the same time.
 
 Detection of Linux distributions relies on `/etc/os-release`, as specified by the
 [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html).
-Every modern Linux distribution (since 2012) ships this file.
+Every modern Linux distribution (since 2012) ships this file. A system hiding
+both copies of it is identified through `systemd-hostnamed` instead, as
+implemented in {mod}`~extra_platforms.platform_info`.
 
 For all other traits, we either rely on:
 
@@ -53,13 +55,6 @@ For all other traits, we either rely on:
 - [`platform.platform`](https://docs.python.org/3/library/platform.html#platform.platform)
 - [`platform.release`](https://docs.python.org/3/library/platform.html#platform.release)
 - environment variables
-
-```{todo}
-`hostnamectl` could be used as a fallback detection source when
-`/etc/os-release` is missing (e.g., stripped CloudLinux VMs). This approach was
-[proposed upstream in python-distro](https://github.com/python-distro/distro/pull/369)
-but rejected. The technique is sound and could be implemented here.
-```
 
 ```{seealso}
 Other source of inspiration for platform detection:
@@ -652,9 +647,9 @@ def is_generic_linux() -> bool:
     """Return {data}`True` if current platform is
     {data}`~extra_platforms.GENERIC_LINUX`.
 
-    Matches when running on a Linux kernel but `distro` cannot identify
-    the specific distribution (like minimal containers or build chroots without
-    `/etc/os-release`).
+    Matches when running on a Linux kernel whose distribution cannot be
+    identified: minimal containers and build chroots shipping no `/etc/os-release`
+    and reaching no `systemd-hostnamed`.
     """
     return sys.platform == "linux" and not os_release_id()
 

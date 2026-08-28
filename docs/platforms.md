@@ -400,7 +400,8 @@ print(
 ```
 
 Version and codename details behind {meth}`~Platform.info` are gathered by the
-`platform_info` module: Linux distributions through `/etc/os-release`, macOS and
+`platform_info` module: Linux distributions through `/etc/os-release`, with
+`systemd-hostnamed` as a fallback for systems hiding that file, macOS and
 Windows through their own {mod}`platform` primitives.
 
 ```{eval-rst}
