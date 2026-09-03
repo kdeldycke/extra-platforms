@@ -11,6 +11,9 @@
 
 ## [`13.7.0` (2026-08-28)](https://github.com/kdeldycke/extra-platforms/compare/v13.6.0...v13.7.0)
 
+> [!NOTE]
+> `13.7.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.7.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.7.0).
+
 - Identify a Linux distribution through `systemd-hostnamed` when neither `/etc/os-release` nor `/usr/lib/os-release` is readable.
 - Add agent detection for OpenAI Codex, GitHub Copilot CLI, Crush, Gemini CLI and Pi: `CODEX`, `COPILOT_CLI`, `CRUSH`, `GEMINI_CLI` and `PI`.
 - Report an unrecognized agent at `WARNING` level when the generic `AI_AGENT` variable is set, as `LLM` already did.
