@@ -30,6 +30,7 @@ import pytest
 import extra_platforms
 from extra_platforms import (
     ALL_GROUPS,
+    ALL_PLATFORMS,
     ALL_TRAITS,
     ILLUMOS,
     Group,
@@ -239,8 +240,9 @@ def test_x86_64_machine_aliases(monkeypatch, machine):
     """Every string reported for 64-bit x86 resolves to X86_64.
 
     Solaris and illumos answer ``i86pc``, which names the machine family and not
-    the ISA, mirroring the ``sun4u`` and ``sun4v`` aliases :func:`is_sparc64`
-    already accepts. Captured on OpenIndiana Hipster 2026.04.
+    the ISA, mirroring the ``sun4u`` and ``sun4v`` aliases
+    :func:`~extra_platforms.is_sparc64` already accepts. Captured on
+    OpenIndiana Hipster 2026.04.
     """
     invalidate_caches()
     monkeypatch.setattr(detection_module.platform, "machine", lambda: machine)
@@ -250,20 +252,146 @@ def test_x86_64_machine_aliases(monkeypatch, machine):
     invalidate_caches()
 
 
+PLATFORM_HOST_SIGNALS = frozenset((
+    "Path",
+    "environ",
+    "os_release_id",
+    "platform.platform",
+    "platform.release",
+    "platform.uname",
+    "sys.platform",
+))
+"""Every host signal the platform detection heuristics read.
+
+:func:`mock_platform_host` controls exactly these, and
+:func:`test_platform_signals_are_all_mocked` keeps the two in step.
+"""
+
+
+@functools.cache
+def _platform_heuristic_signals() -> frozenset[str]:
+    """Collect the host signals read by every ``is_<platform>()`` heuristic.
+
+    Walks the source of the heuristic backing each member of
+    :data:`~extra_platforms.ALL_PLATFORMS`, and keeps the module-level names it
+    reads: an attribute of an imported module (``sys.platform``), or an imported
+    object (``os_release_id``). Names bound inside the function are skipped, and
+    so are calls to sibling ``is_*()`` heuristics, which this walk covers on
+    their own.
+    """
+    heuristic_ids = {f"is_{plat.id}" for plat in ALL_PLATFORMS}
+    signals = set()
+
+    for node in ast.parse(inspect.getsource(detection_module)).body:
+        if not isinstance(node, ast.FunctionDef) or node.name not in heuristic_ids:
+            continue
+        # Walk statements rather than the function node, to skip its decorators.
+        nodes = [sub for stmt in node.body for sub in ast.walk(stmt)]
+
+        bound = {
+            sub.id
+            for sub in nodes
+            if isinstance(sub, ast.Name) and isinstance(sub.ctx, ast.Store)
+        }
+        bound |= {
+            alias.asname or alias.name
+            for sub in nodes
+            if isinstance(sub, ast.ImportFrom)
+            for alias in sub.names
+        }
+
+        for sub in nodes:
+            if isinstance(sub, ast.Attribute) and isinstance(sub.value, ast.Name):
+                module_id = sub.value.id
+                if module_id not in bound and inspect.ismodule(
+                    getattr(detection_module, module_id, None)
+                ):
+                    signals.add(f"{module_id}.{sub.attr}")
+            elif isinstance(sub, ast.Name) and isinstance(sub.ctx, ast.Load):
+                if sub.id in bound or sub.id.startswith("is_"):
+                    continue
+                imported = getattr(detection_module, sub.id, None)
+                if imported is not None and not inspect.ismodule(imported):
+                    signals.add(sub.id)
+
+    return frozenset(signals)
+
+
+def test_platform_signals_are_all_mocked():
+    """Every signal a platform heuristic reads is one the host mock pins.
+
+    :func:`~extra_platforms.current_platform` evaluates all platform heuristics
+    and raises as soon as two match. A signal left reading the real host
+    therefore makes the result depend on where the suite runs. A heuristic
+    added with a new signal fails here until :func:`mock_platform_host`
+    controls that signal too.
+    """
+    assert _platform_heuristic_signals() == PLATFORM_HOST_SIGNALS
+
+
+def mock_platform_host(
+    monkeypatch,
+    *,
+    sys_platform: str,
+    os_release: str = "",
+    platform_string: str = "",
+    release: str = "",
+    uname: SimpleNamespace | None = None,
+) -> None:
+    """Make every :data:`PLATFORM_HOST_SIGNALS` entry answer for one host.
+
+    A test asserting on :func:`~extra_platforms.current_platform` must set every
+    signal, not only the ones its own heuristic reads: the resolver runs all of
+    them, and a second match raises. Leaving
+    :func:`~extra_platforms.platform_info.os_release_id` on the real host is what
+    made ``test_illumos_excludes_solaris`` match UBUNTU next to ILLUMOS on the
+    Linux runners, while it passed on the macOS and Windows ones, which carry no
+    os-release file.
+
+    Each default is the value an absent signal produces, so a caller states only
+    what its simulated host reports.
+
+    :param monkeypatch: Fixture undoing every patch at the end of the test.
+    :param sys_platform: Value of :data:`sys.platform`.
+    :param os_release: Distribution ID from
+        :func:`~extra_platforms.platform_info.os_release_id`, empty on a host
+        with no os-release file.
+    :param platform_string: Return value of :func:`platform.platform`.
+    :param release: Return value of :func:`platform.release`.
+    :param uname: Return value of :func:`platform.uname`, defaulting to a record
+        whose every field is empty.
+    """
+    if uname is None:
+        uname = SimpleNamespace(system="", node="", release="", version="", machine="")
+
+    monkeypatch.setattr(sys, "platform", sys_platform)
+    monkeypatch.setattr(detection_module, "os_release_id", lambda: os_release)
+    monkeypatch.setattr(detection_module.platform, "release", lambda: release)
+    monkeypatch.setattr(detection_module.platform, "uname", lambda: uname)
+    monkeypatch.setattr(
+        detection_module.platform, "platform", lambda **kwargs: platform_string
+    )
+
+    # The simulated host sets no environment marker and carries no marker file.
+    monkeypatch.setattr(detection_module, "environ", {})
+    monkeypatch.setattr(detection_module.Path, "is_file", lambda self: False)
+
+
 def test_illumos_excludes_solaris(monkeypatch):
     """An illumos distribution matches ILLUMOS alone, never SOLARIS as well.
 
     illumos inherits the SunOS 5.11 release string from OpenSolaris, so
     :func:`platform.platform` answers ``Solaris-2.11`` there. Both heuristics
-    used to match at once, which made :func:`current_platform` raise on every
-    illumos host. Values captured on OpenIndiana Hipster 2026.04.
+    used to match at once, which made :func:`~extra_platforms.current_platform`
+    raise on every illumos host. Values captured on OpenIndiana Hipster 2026.04.
     """
     invalidate_caches()
-    monkeypatch.setattr(sys, "platform", "sunos5")
-    monkeypatch.setattr(
-        detection_module.platform,
-        "uname",
-        lambda: SimpleNamespace(
+    mock_platform_host(
+        monkeypatch,
+        sys_platform="sunos5",
+        platform_string="Solaris-2.11",
+        release="5.11",
+        uname=SimpleNamespace(
             system="SunOS",
             node="openindiana",
             release="5.11",
@@ -271,15 +399,12 @@ def test_illumos_excludes_solaris(monkeypatch):
             machine="i86pc",
         ),
     )
-    monkeypatch.setattr(
-        detection_module.platform, "platform", lambda **kwargs: "Solaris-2.11"
-    )
 
     assert is_illumos()
     assert not is_solaris()
     assert current_platform() is ILLUMOS
 
-    # Clear cached results computed from the mocked environment.
+    # Clear cached results computed from the mocked host.
     invalidate_caches()
 
 
