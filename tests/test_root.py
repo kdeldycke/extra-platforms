@@ -744,21 +744,23 @@ def test_invalidate_caches_clears_group_detection_functions():
 def test_import_time():
     """Guard against import time regressions.
 
-    Spawns a fresh subprocess to measure cold import time, avoiding
+    Spawns fresh subprocesses to measure cold import time, avoiding
     ``sys.modules`` cache effects from pytest's own imports.
 
-    The 2000 ms threshold is deliberately loose to absorb CI runner variability
-    on shared VMs and slower architectures (like i586, where cold import
-    measured ~340 ms in 11.x and ~613 ms in 12.0.0). This will not catch small
-    drifts, but reliably prevents reintroducing expensive import-time
-    operations (like the ~120 ms regression from redundant AST parsing that
-    was fixed by caching in ``_docstrings.py``).
+    Asserts on the fastest of several samples. One sample on a shared CI runner
+    measures that runner's worst moment rather than the code: the budget was
+    doubled from 1000 ms to 2000 ms in the 13.3.0 cycle after macos-15-intel
+    measured ~1088 ms on py3.14 with no code-level regression, and that same
+    runner still reached 2236 ms on a single sample afterwards. Sampling
+    targets the variance instead, because a real regression slows every sample
+    while a scheduling stall slows one.
 
-    The budget doubled from 1000 ms to 2000 ms in the 13.3.0 cycle after the
-    shared macos-15-intel runner measured ~1088 ms cold import on py3.14 with
-    no code-level regression: local cold import held at ~30 ms, matching
-    13.2.0. The larger budget keeps absorbing shared-VM tail latency while
-    still catching grossly expensive import-time operations.
+    The 2000 ms budget stays deliberately loose to absorb slower architectures
+    (on i586 cold import measured ~340 ms in 11.x and ~613 ms in 12.0.0),
+    against a local cold import of ~30 ms. This will not catch small drifts,
+    but reliably prevents reintroducing expensive import-time operations (like
+    the ~120 ms regression from redundant AST parsing that was fixed by
+    caching in ``_docstrings.py``).
 
     Carries the ``benchmark`` marker because no budget can hold on every
     machine: an emulated architecture fails it with no code regression, as
@@ -766,19 +768,27 @@ def test_import_time():
     the class with ``-m "not benchmark"`` rather than deselecting this node by
     name.
     """
-    result = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            "import time; t = time.perf_counter(); import extra_platforms; "
-            "print(time.perf_counter() - t)",
-        ],
-        capture_output=True,
-        text=True,
-        check=True,
+    timings = []
+    for _ in range(3):
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import time; t = time.perf_counter(); import extra_platforms; "
+                "print(time.perf_counter() - t)",
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        timings.append(float(result.stdout.strip()) * 1000)
+
+    elapsed_ms = min(timings)
+    samples = ", ".join(f"{t:.1f}" for t in timings)
+    assert elapsed_ms < 2000, (
+        f"Fastest of {len(timings)} cold imports took {elapsed_ms:.1f} ms, "
+        f"expected < 2000 ms (samples: {samples} ms)."
     )
-    elapsed_ms = float(result.stdout.strip()) * 1000
-    assert elapsed_ms < 2000, f"Import took {elapsed_ms:.1f} ms, expected < 2000 ms"
 
 
 def test_invalidate_caches_clears_trait_current_property():
