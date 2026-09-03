@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import ast
+from itertools import pairwise
 from pathlib import Path
 
 from extra_platforms import (
@@ -145,7 +146,7 @@ def test_nerdfont_icons_documented_in_source():
     body = ast.parse(source).body
 
     checked = []
-    for definition, following in zip(body, body[1:]):
+    for definition, following in pairwise(body):
         # Match a module-level "NAME = Platform(id, name, icon, url)" assignment.
         if not (
             isinstance(definition, ast.Assign)

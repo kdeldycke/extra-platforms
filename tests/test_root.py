@@ -774,8 +774,10 @@ def test_import_time():
             [
                 sys.executable,
                 "-c",
-                "import time; t = time.perf_counter(); import extra_platforms; "
-                "print(time.perf_counter() - t)",
+                (
+                    "import time; t = time.perf_counter(); "
+                    "import extra_platforms; print(time.perf_counter() - t)"
+                ),
             ],
             capture_output=True,
             text=True,

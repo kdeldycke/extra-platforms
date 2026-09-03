@@ -71,8 +71,8 @@ def _agent_log_levels(caplog):
 def test_agent_presence_var_escalates_unrecognized(env_var, monkeypatch, caplog):
     """Each generic presence variable raises an unrecognized agent to a warning.
 
-    Covers every member of {data}`~extra_platforms.detection._AGENT_PRESENCE_ENV_VARS`,
-    so a variable added there without being read by the gate fails here.
+    Covers every member of `_AGENT_PRESENCE_ENV_VARS`, so a variable added there
+    without being read by the gate fails here.
     """
     monkeypatch.setattr(detection, "environ", {env_var: "some-unreleased-agent"})
     agent, levels = _agent_log_levels(caplog)

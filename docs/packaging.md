@@ -6,6 +6,14 @@ This page is for distribution packagers building `extra-platforms` from source, 
 
 The wheel is built with [`uv_build`](https://docs.astral.sh/uv/), declared as the `[build-system]` backend. Distributions that do not yet package `uv-build` can fall back to `setuptools`: `extra-platforms` is a pure-Python, single-package project, so `setuptools.build_meta` builds it with no extra configuration (setuptools' own defaults exclude `tests/` and `docs/` from package discovery).
 
+## Dependencies
+
+This is a graph of the Python package's dependencies. The package itself has no runtime dependency: boxes hold the directly-declared dependencies of each extra and development group, drawn as hexagons; transitive dependencies render outside the boxes as ovals:
+
+```mermaid assets/dependencies.mmd
+:align: center
+```
+
 ## Test suite
 
 Since `extra-platforms` > `13.3.1`, the PyPI sdist ships `tests/` and `docs/`, so the suite runs straight from the sdist. Earlier releases shipped no tests; those builds must start from [a Git tag tarball](https://github.com/kdeldycke/extra-platforms/tags) instead.

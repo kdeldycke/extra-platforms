@@ -7,6 +7,7 @@
 
 - Fix `current_platform()` raising on illumos, where `is_solaris()` matched too: illumos inherits the `Solaris-2.11` release string from OpenSolaris.
 - Detect `i86pc`, the machine string Solaris and illumos report, as `X86_64` instead of an unrecognized architecture.
+- Name the installer in the `ImportError` raised when the `pytest` extra is missing: it now prints `uv pip install 'extra-platforms[pytest]'`.
 - Add a `benchmark` marker to `test_import_time`, so a build on a slow or emulated architecture can exclude the wall-clock budget with `-m "not benchmark"`.
 
 ## [`13.7.0` (2026-08-28)](https://github.com/kdeldycke/extra-platforms/compare/v13.6.0...v13.7.0)

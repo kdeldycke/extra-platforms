@@ -32,8 +32,8 @@ try:
     import pytest
 except ImportError:
     raise ImportError(
-        "You need to install extra_platforms[pytest] extra dependencies to use this "
-        "module."
+        "You need to install the pytest extra to use this module: "
+        "uv pip install 'extra-platforms[pytest]'"
     )
 
 import sys

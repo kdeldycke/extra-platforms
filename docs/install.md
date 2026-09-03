@@ -148,7 +148,7 @@ $ make install clean
 ````
 `````
 
-For the [Pytest decorators](pytest.md), install the `pytest` extra: `uv pip install extra-platforms[pytest]`.
+For the [Pytest decorators](pytest.md), install the `pytest` extra: `uv pip install 'extra-platforms[pytest]'`.
 
 ## Python compatibility
 
@@ -169,11 +169,7 @@ The table below shows which Python versions each `extra-platforms` release range
 
 ## Dependencies
 
-This is a graph of the Python package's dependencies. The package itself has no runtime dependency: boxes hold the directly-declared dependencies of each extra and development group, drawn as hexagons; transitive dependencies render outside the boxes as ovals:
-
-```mermaid assets/dependencies.mmd
-:align: center
-```
+`extra-platforms` has no runtime dependency. The [dependency graph](packaging.md#dependencies) on the packaging page covers the extras and development groups.
 
 ## Naming
 

@@ -497,9 +497,11 @@ def test_shell_name(command, expected):
         # https://github.com/sarugaku/shellingham/issues/99 where shellingham's
         # Linux-style /proc parsing fails but extra-platforms detects ksh.
         (
-            "1500 (ksh) S 1 1500 1500 1280 1500 0 0 0 0 0 50 100 0 0 "
-            "20 0 1 0 1234567 4194304 512 18446744073709551615 0 0 0 0 0 "
-            "0 0 0 0 0 0 0 0 0 0 0 0 0",
+            (
+                "1500 (ksh) S 1 1500 1500 1280 1500 0 0 0 0 0 50 100 0 0 "
+                "20 0 1 0 1234567 4194304 512 18446744073709551615 0 0 0 0 0 "
+                "0 0 0 0 0 0 0 0 0 0 0 0 0"
+            ),
             1,
         ),
         # NetBSD /proc/<pid>/status (BSD format from procfs_status.c):

@@ -9,6 +9,15 @@
 
 ## Submodules
 
+### tests.test_agent_data module
+
+```{eval-rst}
+.. automodule:: tests.test_agent_data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+```
+
 ### tests.test_architecture_data module
 
 ```{eval-rst}
@@ -63,6 +72,15 @@
    :undoc-members:
 ```
 
+### tests.test_platform_info module
+
+```{eval-rst}
+.. automodule:: tests.test_platform_info
+   :members:
+   :show-inheritance:
+   :undoc-members:
+```
+
 ### tests.test_pytest module
 
 ```{eval-rst}
@@ -81,6 +99,15 @@
    :undoc-members:
 ```
 
+### tests.test_shell_data module
+
+```{eval-rst}
+.. automodule:: tests.test_shell_data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+```
+
 ### tests.test_sphinx_crossrefs module
 
 ```{eval-rst}
@@ -90,10 +117,28 @@
    :undoc-members:
 ```
 
+### tests.test_terminal_data module
+
+```{eval-rst}
+.. automodule:: tests.test_terminal_data
+   :members:
+   :show-inheritance:
+   :undoc-members:
+```
+
 ### tests.test_trait module
 
 ```{eval-rst}
 .. automodule:: tests.test_trait
+   :members:
+   :show-inheritance:
+   :undoc-members:
+```
+
+### tests.test_trait_data module
+
+```{eval-rst}
+.. automodule:: tests.test_trait_data
    :members:
    :show-inheritance:
    :undoc-members:
