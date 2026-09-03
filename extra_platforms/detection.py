@@ -364,8 +364,15 @@ def is_x86_64() -> bool:
     ```{caution}
     Windows returns `AMD64` in uppercase, so we normalize to lowercase.
     ```
+
+    ```{hint}
+    Solaris and illumos answer `i86pc`, which names the machine family rather
+    than the ISA, the same way `sun4u` and `sun4v` do for {func}`is_sparc64`.
+    Both keep that string on 64-bit hardware, and neither ships a 32-bit kernel
+    any more. Measured on OpenIndiana Hipster 2026.04.
+    ```
     """
-    return platform.machine().lower() in ("x86_64", "amd64")
+    return platform.machine().lower() in ("x86_64", "amd64", "i86pc")
 
 
 @cache
@@ -965,6 +972,14 @@ def is_slitaz() -> bool:
 def is_solaris() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.SOLARIS`.
 
+    ```{hint}
+    An illumos distribution reports `Solaris-2.11` from {func}`platform.platform`,
+    because it inherits the SunOS 5.11 release string from OpenSolaris. That
+    prefix alone therefore cannot tell Oracle Solaris from its fork, and
+    {func}`is_illumos` has to exclude it, or both match at once and
+    {func}`current_platform` raises. Measured on OpenIndiana Hipster 2026.04.
+    ```
+
     .. note::
         Gates on {data}`sys.platform` being ``"sunos5"`` before invoking
         {func}`platform.platform`, which on Windows would shell out via
@@ -973,9 +988,11 @@ def is_solaris() -> bool:
         to tell them apart, but only when we already know we're on a SunOS-based
         host.
     """
-    return sys.platform == "sunos5" and platform.platform(
-        aliased=True, terse=True
-    ).startswith("Solaris")
+    return (
+        sys.platform == "sunos5"
+        and platform.platform(aliased=True, terse=True).startswith("Solaris")
+        and not is_illumos()
+    )
 
 
 @cache

@@ -20,8 +20,10 @@ import inspect
 import os
 import re
 import subprocess
+import sys
 from itertools import chain
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -29,8 +31,10 @@ import extra_platforms
 from extra_platforms import (
     ALL_GROUPS,
     ALL_TRAITS,
+    ILLUMOS,
     Group,
     Trait,
+    current_platform,
     detection as detection_module,
     invalidate_caches,
     is_aarch64,
@@ -38,8 +42,10 @@ from extra_platforms import (
     is_armv7l,
     is_github_ci,
     is_gitlab_ci,
+    is_illumos,
     is_opensuse,
     is_oracle,
+    is_solaris,
     is_windows,
     is_x86_64,
 )
@@ -225,6 +231,55 @@ def test_oracle_raw_id_detection(monkeypatch):
     assert is_oracle()
 
     # Clear cached results computed from the mocked distribution ID.
+    invalidate_caches()
+
+
+@pytest.mark.parametrize("machine", ("x86_64", "AMD64", "amd64", "i86pc"))
+def test_x86_64_machine_aliases(monkeypatch, machine):
+    """Every string reported for 64-bit x86 resolves to X86_64.
+
+    Solaris and illumos answer ``i86pc``, which names the machine family and not
+    the ISA, mirroring the ``sun4u`` and ``sun4v`` aliases :func:`is_sparc64`
+    already accepts. Captured on OpenIndiana Hipster 2026.04.
+    """
+    invalidate_caches()
+    monkeypatch.setattr(detection_module.platform, "machine", lambda: machine)
+    assert is_x86_64()
+
+    # Clear cached results computed from the mocked machine string.
+    invalidate_caches()
+
+
+def test_illumos_excludes_solaris(monkeypatch):
+    """An illumos distribution matches ILLUMOS alone, never SOLARIS as well.
+
+    illumos inherits the SunOS 5.11 release string from OpenSolaris, so
+    :func:`platform.platform` answers ``Solaris-2.11`` there. Both heuristics
+    used to match at once, which made :func:`current_platform` raise on every
+    illumos host. Values captured on OpenIndiana Hipster 2026.04.
+    """
+    invalidate_caches()
+    monkeypatch.setattr(sys, "platform", "sunos5")
+    monkeypatch.setattr(
+        detection_module.platform,
+        "uname",
+        lambda: SimpleNamespace(
+            system="SunOS",
+            node="openindiana",
+            release="5.11",
+            version="illumos-4648b9b8c3",
+            machine="i86pc",
+        ),
+    )
+    monkeypatch.setattr(
+        detection_module.platform, "platform", lambda **kwargs: "Solaris-2.11"
+    )
+
+    assert is_illumos()
+    assert not is_solaris()
+    assert current_platform() is ILLUMOS
+
+    # Clear cached results computed from the mocked environment.
     invalidate_caches()
 
 
