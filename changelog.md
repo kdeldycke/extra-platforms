@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.7.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.0...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.7.1` (2026-09-03)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.0...v13.7.1)
 
 - Fix `current_platform()` raising on illumos, where `is_solaris()` matched too: illumos inherits the `Solaris-2.11` release string from OpenSolaris.
 - Detect `i86pc`, the machine string Solaris and illumos report, as `X86_64` instead of an unrecognized architecture.
