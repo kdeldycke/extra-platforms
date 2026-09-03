@@ -4,12 +4,12 @@ flowchart LR
     pygments(["`pygments`"])
     jinja2(["`jinja2`"])
     beautifulsoup4(["`beautifulsoup4`"])
-    click_0(["`click`"])
-    colorama(["`colorama`"])
     docutils(["`docutils`"])
     markdown_it_py(["`markdown-it-py`"])
     accessible_pygments(["`accessible-pygments`"])
+    click_0(["`click`"])
     cloup(["`cloup`"])
+    colorama(["`colorama`"])
     exceptiongroup(["`exceptiongroup`"])
     mdit_py_plugins(["`mdit-py-plugins`"])
     packaging(["`packaging`"])
@@ -76,8 +76,8 @@ flowchart LR
     sphinx --> requests
     sphinx --> pygments
     sphinx --> jinja2
-    sphinx --> colorama
     sphinx --> docutils
+    sphinx --> colorama
     sphinx --> packaging
     sphinx --> alabaster
     sphinx --> babel
@@ -93,8 +93,8 @@ flowchart LR
     click_extra --> sphinx
     click_extra --> extra_platforms
     click_extra --> pygments
-    click_extra --> click_0
     click_extra --> docutils
+    click_extra --> click_0
     click_extra --> cloup
     click_extra --> tabulate
     click_extra --> wcmatch
@@ -102,8 +102,8 @@ flowchart LR
     click_extra --> boltons
     click_extra --> deepmerge
     pytest --> pygments
-    pytest --> colorama
     pytest --> tomli
+    pytest --> colorama
     pytest --> exceptiongroup
     pytest --> packaging
     pytest --> pluggy
@@ -142,7 +142,6 @@ flowchart LR
     jinja2 --> markupsafe
     beautifulsoup4 --> typing_extensions
     beautifulsoup4 --> soupsieve
-    click_0 --> colorama
     markdown_it_py --> mdurl
     accessible_pygments --> pygments
     cloup --> click_0
