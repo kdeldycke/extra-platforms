@@ -9,6 +9,9 @@
 
 ## [`13.7.1` (2026-09-03)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.0...v13.7.1)
 
+> [!NOTE]
+> `13.7.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.7.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.7.1).
+
 - Fix `current_platform()` raising on illumos, where `is_solaris()` matched too: illumos inherits the `Solaris-2.11` release string from OpenSolaris.
 - Detect `i86pc`, the machine string Solaris and illumos report, as `X86_64` instead of an unrecognized architecture.
 - Name the installer in the `ImportError` raised when the `pytest` extra is missing: it now prints `uv pip install 'extra-platforms[pytest]'`.
