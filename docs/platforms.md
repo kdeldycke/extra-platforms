@@ -206,7 +206,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,47
+ALL_PLATFORMS,LINUX,49
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -225,6 +225,7 @@ LINUX,CENTOS,1
 LINUX,CHROMEOS,1
 LINUX,CLEARLINUX,1
 LINUX,CLOUDLINUX,1
+LINUX,CRUX,1
 LINUX,DEBIAN,1
 LINUX,ENDEAVOUROS,1
 LINUX,EXHERBO,1
@@ -241,6 +242,7 @@ LINUX,MANDRIVA,1
 LINUX,MANJARO,1
 LINUX,NIXOS,1
 LINUX,NOBARA,1
+LINUX,NUTYX,1
 LINUX,OPENSUSE,1
 LINUX,OPENWRT,1
 LINUX,ORACLE,1
@@ -325,6 +327,7 @@ mindmap
             (🧿 CHROMEOS)
             (✳️ CLEARLINUX)
             (꩜ CLOUDLINUX)
+            (✜ CRUX)
             (🌀 DEBIAN)
             (🚀 ENDEAVOUROS)
             (🐽 EXHERBO)
@@ -341,6 +344,7 @@ mindmap
             (▲ MANJARO)
             (❄️ NIXOS)
             ( NOBARA)
+            (🃏 NUTYX)
             (🦎 OPENSUSE)
             (📶 OPENWRT)
             (🦴 ORACLE)
