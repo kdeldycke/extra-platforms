@@ -26,6 +26,7 @@ from extra_platforms import (
     ALL_GROUP_IDS,
     ALL_GROUPS,
     ALL_IDS,
+    ALL_PLATFORMS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
     CANONICAL_GROUPS,
@@ -260,4 +261,94 @@ def test_shared_icons_belong_to_same_canonical_group():
         assert len(canonical_groups) == 1, (
             f"Traits sharing icon {icon!r} span multiple canonical groups: "
             f"traits={trait_ids}, canonical_groups={canonical_groups}"
+        )
+
+
+_TRAIT_IDS = frozenset(trait.id for trait in ALL_TRAITS)
+_GROUP_IDS = frozenset(group.id for group in ALL_GROUPS)
+_PLATFORM_IDS = frozenset(platform.id for platform in ALL_PLATFORMS)
+
+_SYMBOL_REF = re.compile(r"\{data\}`~([A-Z0-9_]+)`")
+
+
+def _roster_rows(page: str, header: str) -> list[list[str]]:
+    """Return the cells of each data row of the roster table `header` opens.
+
+    :param page: file name under ``docs/``.
+    :param header: first characters of the line opening the table.
+    """
+    doc = Path(__file__).parent.parent / "docs" / page
+    lines = doc.read_text(encoding="UTF-8").splitlines()
+    start = next(i for i, line in enumerate(lines) if line.startswith(header))
+    rows = []
+    # Step over the header and its alignment row, then read the body until the
+    # first line that is not a row.
+    for line in lines[start + 2 :]:
+        if not line.startswith("|"):
+            break
+        rows.append([cell.strip() for cell in line.split("|")[1:-1]])
+    return rows
+
+
+def _row_symbol(page: str, cells: list[str]) -> str:
+    """Return the lower-case ID the row points at through its ``{data}`` link."""
+    match = _SYMBOL_REF.search("|".join(cells))
+    assert match, f"a row of docs/{page} names no symbol: {cells}"
+    return match.group(1).lower()
+
+
+@pytest.mark.parametrize(
+    ("page", "header", "population"),
+    (
+        ("detection.md", "| Detection function", _TRAIT_IDS | _GROUP_IDS),
+        ("platforms.md", "| Icon | Symbol", _PLATFORM_IDS),
+        ("pytest.md", "| Skip decorator", _TRAIT_IDS | _GROUP_IDS),
+        ("trait.md", "| Icon | Symbol", _TRAIT_IDS),
+    ),
+    ids=("detection", "platforms", "pytest", "trait"),
+)
+def test_doc_roster_covers_its_population(page, header, population):
+    """Each roster table of the documentation names its whole population.
+
+    These tables are written by hand, and nothing reads them back, so a trait
+    added without touching them leaves a hole no build reports: the page just
+    lists one platform fewer. The reverse direction matters as much, a row
+    outliving its trait pointing at a symbol that no longer resolves.
+    """
+    listed = [_row_symbol(page, cells) for cells in _roster_rows(page, header)]
+
+    repeated = sorted({tid for tid in listed if listed.count(tid) > 1})
+    assert not repeated, f"docs/{page} lists {repeated} more than once"
+
+    assert set(listed) == population, (
+        f"docs/{page} disagrees with the code: "
+        f"missing {sorted(population - set(listed))}, "
+        f"stale {sorted(set(listed) - population)}"
+    )
+
+
+@pytest.mark.parametrize(
+    ("page", "header"),
+    (("platforms.md", "| Icon | Symbol"), ("trait.md", "| Icon | Symbol")),
+    ids=("platforms", "trait"),
+)
+def test_doc_roster_repeats_icon_and_name(page, header):
+    """The rosters carrying an Icon and a Name column repeat what the code says.
+
+    Copying either into a table forks it, so a renamed trait or a swapped icon
+    would otherwise leave the page stating the old value for good.
+    """
+    by_id: dict[str, Trait | Group] = {trait.id: trait for trait in ALL_TRAITS}
+    by_id.update({group.id: group for group in ALL_GROUPS})
+
+    for cells in _roster_rows(page, header):
+        icon, _symbol, name = cells[:3]
+        owner = by_id[_row_symbol(page, cells)]
+        assert icon == owner.icon, (
+            f"docs/{page} shows icon {icon!r} for {owner.id!r}, which declares "
+            f"{owner.icon!r}"
+        )
+        assert name == owner.name, (
+            f"docs/{page} shows name {name!r} for {owner.id!r}, which declares "
+            f"{owner.name!r}"
         )
