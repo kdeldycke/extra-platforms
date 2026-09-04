@@ -81,6 +81,8 @@ CLEARLINUX = Platform("clearlinux", "Clear Linux OS", "✳️", "https://clearli
 
 CLOUDLINUX = Platform("cloudlinux", "CloudLinux OS", "꩜", "https://cloudlinux.com")
 
+CRUX = Platform("crux", "CRUX", "✜", "https://crux.nu")
+
 CYGWIN = Platform("cygwin", "Cygwin", "Ͼ", "https://cygwin.com")
 
 DEBIAN = Platform("debian", "Debian", "🌀", "https://debian.org")
@@ -161,6 +163,8 @@ In the future, we may want to have two icons for each platform, one that is
 Unicode-based, the other that is NerdFont-based.
 ```
 """
+
+NUTYX = Platform("nutyx", "NuTyX", "🃏", "https://nutyx.org")
 
 OPENBSD = Platform("openbsd", "OpenBSD", "🐡", "https://openbsd.org")
 

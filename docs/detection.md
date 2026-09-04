@@ -78,6 +78,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_contour`              |  ◰   | {data}`~CONTOUR`              |
 | {func}`~is_copilot_cli`          |  ✈️  | {data}`~COPILOT_CLI`          |
 | {func}`~is_crush`                |  💘  | {data}`~CRUSH`                |
+| {func}`~is_crux`                 |  ✜   | {data}`~CRUX`                 |
 | {func}`~is_csh`                  |  𝐂   | {data}`~CSH`                  |
 | {func}`~is_cursor`               |  ➤   | {data}`~CURSOR`               |
 | {func}`~is_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
@@ -139,6 +140,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_nixos`                |  ❄️  | {data}`~NIXOS`                |
 | {func}`~is_nobara`               |     | {data}`~NOBARA`               |
 | {func}`~is_nushell`              |  𝜈   | {data}`~NUSHELL`              |
+| {func}`~is_nutyx`                |  🃏  | {data}`~NUTYX`                |
 | {func}`~is_openbsd`              |  🐡  | {data}`~OPENBSD`              |
 | {func}`~is_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {func}`~is_openwrt`              |  📶  | {data}`~OPENWRT`              |

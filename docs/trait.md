@@ -178,6 +178,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  ◰   | {data}`~CONTOUR`              | Contour                        | {func}`~is_contour`              | Terminal     |
 |  ✈️  | {data}`~COPILOT_CLI`          | GitHub Copilot CLI             | {func}`~is_copilot_cli`          | Agent        |
 |  💘  | {data}`~CRUSH`                | Crush                          | {func}`~is_crush`                | Agent        |
+|  ✜   | {data}`~CRUX`                 | CRUX                           | {func}`~is_crux`                 | Platform     |
 |  𝐂   | {data}`~CSH`                  | C shell                        | {func}`~is_csh`                  | Shell        |
 |  ➤   | {data}`~CURSOR`               | Cursor                         | {func}`~is_cursor`               | Agent        |
 |  Ͼ   | {data}`~CYGWIN`               | Cygwin                         | {func}`~is_cygwin`               | Platform     |
@@ -230,6 +231,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  ❄️  | {data}`~NIXOS`                | NixOS                          | {func}`~is_nixos`                | Platform     |
 |     | {data}`~NOBARA`               | Nobara                         | {func}`~is_nobara`               | Platform     |
 |  𝜈   | {data}`~NUSHELL`              | Nushell                        | {func}`~is_nushell`              | Shell        |
+|  🃏  | {data}`~NUTYX`                | NuTyX                          | {func}`~is_nutyx`                | Platform     |
 |  🐡  | {data}`~OPENBSD`              | OpenBSD                        | {func}`~is_openbsd`              | Platform     |
 |  🦎  | {data}`~OPENSUSE`             | openSUSE                       | {func}`~is_opensuse`             | Platform     |
 |  📶  | {data}`~OPENWRT`              | OpenWrt                        | {func}`~is_openwrt`              | Platform     |

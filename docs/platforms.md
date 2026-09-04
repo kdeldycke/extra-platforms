@@ -82,6 +82,7 @@ print(generate_trait_table(ALL_PLATFORMS))
 |  🧿  | {data}`~CHROMEOS`      | ChromeOS                       | {func}`~is_chromeos`      |
 |  ✳️  | {data}`~CLEARLINUX`    | Clear Linux OS                 | {func}`~is_clearlinux`    |
 |  ꩜   | {data}`~CLOUDLINUX`    | CloudLinux OS                  | {func}`~is_cloudlinux`    |
+|  ✜   | {data}`~CRUX`          | CRUX                           | {func}`~is_crux`          |
 |  Ͼ   | {data}`~CYGWIN`        | Cygwin                         | {func}`~is_cygwin`        |
 |  🌀  | {data}`~DEBIAN`        | Debian                         | {func}`~is_debian`        |
 |  🪰  | {data}`~DRAGONFLY_BSD` | DragonFly BSD                  | {func}`~is_dragonfly_bsd` |
@@ -107,6 +108,7 @@ print(generate_trait_table(ALL_PLATFORMS))
 |  🚩  | {data}`~NETBSD`        | NetBSD                         | {func}`~is_netbsd`        |
 |  ❄️  | {data}`~NIXOS`         | NixOS                          | {func}`~is_nixos`         |
 |     | {data}`~NOBARA`        | Nobara                         | {func}`~is_nobara`        |
+|  🃏  | {data}`~NUTYX`         | NuTyX                          | {func}`~is_nutyx`         |
 |  🐡  | {data}`~OPENBSD`       | OpenBSD                        | {func}`~is_openbsd`       |
 |  🦎  | {data}`~OPENSUSE`      | openSUSE                       | {func}`~is_opensuse`      |
 |  📶  | {data}`~OPENWRT`       | OpenWrt                        | {func}`~is_openwrt`       |

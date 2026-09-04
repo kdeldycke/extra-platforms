@@ -155,6 +155,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_contour`              | {deco}`~pytest.unless_contour`              |  ◰   | {data}`~CONTOUR`              |
 | {deco}`~pytest.skip_copilot_cli`          | {deco}`~pytest.unless_copilot_cli`          |  ✈️  | {data}`~COPILOT_CLI`          |
 | {deco}`~pytest.skip_crush`                | {deco}`~pytest.unless_crush`                |  💘  | {data}`~CRUSH`                |
+| {deco}`~pytest.skip_crux`                 | {deco}`~pytest.unless_crux`                 |  ✜   | {data}`~CRUX`                 |
 | {deco}`~pytest.skip_csh`                  | {deco}`~pytest.unless_csh`                  |  𝐂   | {data}`~CSH`                  |
 | {deco}`~pytest.skip_cursor`               | {deco}`~pytest.unless_cursor`               |  ➤   | {data}`~CURSOR`               |
 | {deco}`~pytest.skip_cygwin`               | {deco}`~pytest.unless_cygwin`               |  Ͼ   | {data}`~CYGWIN`               |
@@ -216,6 +217,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_nixos`                | {deco}`~pytest.unless_nixos`                |  ❄️  | {data}`~NIXOS`                |
 | {deco}`~pytest.skip_nobara`               | {deco}`~pytest.unless_nobara`               |     | {data}`~NOBARA`               |
 | {deco}`~pytest.skip_nushell`              | {deco}`~pytest.unless_nushell`              |  𝜈   | {data}`~NUSHELL`              |
+| {deco}`~pytest.skip_nutyx`                | {deco}`~pytest.unless_nutyx`                |  🃏  | {data}`~NUTYX`                |
 | {deco}`~pytest.skip_openbsd`              | {deco}`~pytest.unless_openbsd`              |  🐡  | {data}`~OPENBSD`              |
 | {deco}`~pytest.skip_opensuse`             | {deco}`~pytest.unless_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {deco}`~pytest.skip_openwrt`              | {deco}`~pytest.unless_openwrt`              |  📶  | {data}`~OPENWRT`              |

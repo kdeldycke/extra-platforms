@@ -269,6 +269,7 @@ if TYPE_CHECKING:
     skip_contour: MarkDecorator
     skip_copilot_cli: MarkDecorator
     skip_crush: MarkDecorator
+    skip_crux: MarkDecorator
     skip_csh: MarkDecorator
     skip_cursor: MarkDecorator
     skip_cygwin: MarkDecorator
@@ -330,6 +331,7 @@ if TYPE_CHECKING:
     skip_nixos: MarkDecorator
     skip_nobara: MarkDecorator
     skip_nushell: MarkDecorator
+    skip_nutyx: MarkDecorator
     skip_openbsd: MarkDecorator
     skip_opensuse: MarkDecorator
     skip_openwrt: MarkDecorator
@@ -457,6 +459,7 @@ if TYPE_CHECKING:
     unless_contour: MarkDecorator
     unless_copilot_cli: MarkDecorator
     unless_crush: MarkDecorator
+    unless_crux: MarkDecorator
     unless_csh: MarkDecorator
     unless_cursor: MarkDecorator
     unless_cygwin: MarkDecorator
@@ -518,6 +521,7 @@ if TYPE_CHECKING:
     unless_nixos: MarkDecorator
     unless_nobara: MarkDecorator
     unless_nushell: MarkDecorator
+    unless_nutyx: MarkDecorator
     unless_openbsd: MarkDecorator
     unless_opensuse: MarkDecorator
     unless_openwrt: MarkDecorator
