@@ -1,9 +1,11 @@
 # Changelog
 
-## [`13.7.2.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.1...main)
+## [`13.7.3.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.2...main)
 
 > [!WARNING]
 > This version is **not released yet** and is under active development.
+
+## [`13.7.2` (2026-09-04)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.1...v13.7.2)
 
 - Detect CRUX and NuTyX, two source-based Linux distributions, through the `crux` and `nutyx` IDs their own `/etc/os-release` carries.
 
