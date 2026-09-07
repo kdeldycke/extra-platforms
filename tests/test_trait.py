@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 import re
+from collections import Counter
 from operator import attrgetter
 from pathlib import Path
 from string import ascii_lowercase, digits
@@ -264,21 +265,31 @@ def test_shared_icons_belong_to_same_canonical_group():
         )
 
 
-_TRAIT_IDS = frozenset(trait.id for trait in ALL_TRAITS)
+_TRAIT_IDS = ALL_TRAITS.member_ids
 _GROUP_IDS = frozenset(group.id for group in ALL_GROUPS)
-_PLATFORM_IDS = frozenset(platform.id for platform in ALL_PLATFORMS)
 
 _SYMBOL_REF = re.compile(r"\{data\}`~([A-Z0-9_]+)`")
 
+# Hand-written roster tables of the documentation. Each page maps to the first
+# characters of the line opening its table, and to the population its rows cover.
+_ROSTERS = {
+    "detection.md": ("| Detection function", _TRAIT_IDS | _GROUP_IDS),
+    "platforms.md": ("| Icon | Symbol", ALL_PLATFORMS.member_ids),
+    "pytest.md": ("| Skip decorator", _TRAIT_IDS | _GROUP_IDS),
+    "trait.md": ("| Icon | Symbol", _TRAIT_IDS),
+}
 
-def _roster_rows(page: str, header: str) -> list[list[str]]:
-    """Return the cells of each data row of the roster table `header` opens.
 
-    :param page: file name under ``docs/``.
-    :param header: first characters of the line opening the table.
+def _roster_rows(page: str) -> list[tuple[str, list[str]]]:
+    """Return the ID and the cells of each data row of the roster table of `page`.
+
+    The ID is the lower-cased symbol the row points at through its `{data}` link.
+
+    :param page: file name of the page, under `docs/`.
     """
+    header, _population = _ROSTERS[page]
     doc = Path(__file__).parent.parent / "docs" / page
-    lines = doc.read_text(encoding="UTF-8").splitlines()
+    lines = doc.read_text(encoding="utf-8").splitlines()
     start = next(i for i, line in enumerate(lines) if line.startswith(header))
     rows = []
     # Step over the header and its alignment row, then read the body until the
@@ -286,28 +297,15 @@ def _roster_rows(page: str, header: str) -> list[list[str]]:
     for line in lines[start + 2 :]:
         if not line.startswith("|"):
             break
-        rows.append([cell.strip() for cell in line.split("|")[1:-1]])
+        match = _SYMBOL_REF.search(line)
+        assert match, f"a row of docs/{page} names no symbol: {line}"
+        cells = [cell.strip() for cell in line.split("|")[1:-1]]
+        rows.append((match.group(1).lower(), cells))
     return rows
 
 
-def _row_symbol(page: str, cells: list[str]) -> str:
-    """Return the lower-case ID the row points at through its ``{data}`` link."""
-    match = _SYMBOL_REF.search("|".join(cells))
-    assert match, f"a row of docs/{page} names no symbol: {cells}"
-    return match.group(1).lower()
-
-
-@pytest.mark.parametrize(
-    ("page", "header", "population"),
-    (
-        ("detection.md", "| Detection function", _TRAIT_IDS | _GROUP_IDS),
-        ("platforms.md", "| Icon | Symbol", _PLATFORM_IDS),
-        ("pytest.md", "| Skip decorator", _TRAIT_IDS | _GROUP_IDS),
-        ("trait.md", "| Icon | Symbol", _TRAIT_IDS),
-    ),
-    ids=("detection", "platforms", "pytest", "trait"),
-)
-def test_doc_roster_covers_its_population(page, header, population):
+@pytest.mark.parametrize("page", tuple(_ROSTERS))
+def test_doc_roster_covers_its_population(page):
     """Each roster table of the documentation names its whole population.
 
     These tables are written by hand, and nothing reads them back, so a trait
@@ -315,9 +313,10 @@ def test_doc_roster_covers_its_population(page, header, population):
     lists one platform fewer. The reverse direction matters as much, a row
     outliving its trait pointing at a symbol that no longer resolves.
     """
-    listed = [_row_symbol(page, cells) for cells in _roster_rows(page, header)]
+    _header, population = _ROSTERS[page]
+    listed = [row_id for row_id, _cells in _roster_rows(page)]
 
-    repeated = sorted({tid for tid in listed if listed.count(tid) > 1})
+    repeated = sorted(row_id for row_id, count in Counter(listed).items() if count > 1)
     assert not repeated, f"docs/{page} lists {repeated} more than once"
 
     assert set(listed) == population, (
@@ -327,23 +326,18 @@ def test_doc_roster_covers_its_population(page, header, population):
     )
 
 
-@pytest.mark.parametrize(
-    ("page", "header"),
-    (("platforms.md", "| Icon | Symbol"), ("trait.md", "| Icon | Symbol")),
-    ids=("platforms", "trait"),
-)
-def test_doc_roster_repeats_icon_and_name(page, header):
+@pytest.mark.parametrize("page", ("platforms.md", "trait.md"))
+def test_doc_roster_repeats_icon_and_name(page):
     """The rosters carrying an Icon and a Name column repeat what the code says.
 
     Copying either into a table forks it, so a renamed trait or a swapped icon
     would otherwise leave the page stating the old value for good.
     """
-    by_id: dict[str, Trait | Group] = {trait.id: trait for trait in ALL_TRAITS}
-    by_id.update({group.id: group for group in ALL_GROUPS})
+    by_id = {trait.id: trait for trait in ALL_TRAITS}
 
-    for cells in _roster_rows(page, header):
+    for row_id, cells in _roster_rows(page):
         icon, _symbol, name = cells[:3]
-        owner = by_id[_row_symbol(page, cells)]
+        owner = by_id[row_id]
         assert icon == owner.icon, (
             f"docs/{page} shows icon {icon!r} for {owner.id!r}, which declares "
             f"{owner.icon!r}"

@@ -165,9 +165,16 @@ def test_pyproject_classifiers():
     # -m 'not network'.
     import requests
 
-    # Fetch official trove classifiers from PyPI.
-    response = requests.get("https://pypi.org/pypi?%3Aaction=list_classifiers")
-    assert response.ok, f"{response.url} is not reachable: {response}"
+    # A runner that loses DNS or egress is an environment failure, not a defect
+    # in our metadata: skip rather than redden a required matrix cell.
+    try:
+        response = requests.get(
+            "https://pypi.org/pypi?%3Aaction=list_classifiers", timeout=30
+        )
+        response.raise_for_status()
+    except requests.exceptions.RequestException as error:
+        pytest.skip(f"PyPI classifier list is unreachable: {error}")
+
     official_classifiers = response.text.splitlines()
 
     # Load our trove classifiers from pyproject.toml.
