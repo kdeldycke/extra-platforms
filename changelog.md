@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.9.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.8.0...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.9.0` (2026-09-07)](https://github.com/kdeldycke/extra-platforms/compare/v13.8.0...v13.9.0)
 
 - Detect Solus through the `solus` ID its own `/etc/os-release` carries.
 
