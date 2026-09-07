@@ -210,11 +210,12 @@ def test_aliases_are_unique_across_traits():
 
 
 def test_shared_icons_belong_to_same_canonical_group():
-    """Icons are unique across traits and groups, apart from two allowances.
+    """Icons are unique across traits and groups, with two exceptions.
 
     A canonical group may share its icon with its members, but only when *all*
-    of them carry it. Traits may also share an icon with each other, provided
-    they belong to the same canonical group and no group claims that icon.
+    of them carry it. Traits may also share an icon between themselves,
+    provided no group uses that icon and every sharer belongs to the same
+    canonical group (`🎩` is both Fedora and RHEL).
     """
     # Collect every (icon, owner) pair for traits and groups.
     icon_owners: dict[str, list[Trait | Group]] = {}
