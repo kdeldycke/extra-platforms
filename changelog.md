@@ -7,6 +7,9 @@
 
 ## [`13.8.0` (2026-09-07)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.1...v13.8.0)
 
+> [!NOTE]
+> `13.8.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.8.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.8.0).
+
 - Detect CRUX and NuTyX, two source-based Linux distributions, through the `crux` and `nutyx` IDs their own `/etc/os-release` carries.
 
 ## [`13.7.1` (2026-09-03)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.0...v13.7.1)
