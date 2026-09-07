@@ -391,6 +391,7 @@ mindmap
             (🚬 SLACKWARE)
             (🦎 SLES)
             (🕷️ SLITAZ)
+            ( SOLUS)
             (🧙 SOURCEMAGE)
             (🤵 TUXEDO)
             (🎯 UBUNTU)
