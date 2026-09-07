@@ -1,5 +1,10 @@
 # Changelog
 
+## [`13.8.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.8.0...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`13.8.0` (2026-09-07)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.1...v13.8.0)
 
 - Detect CRUX and NuTyX, two source-based Linux distributions, through the `crux` and `nutyx` IDs their own `/etc/os-release` carries.
