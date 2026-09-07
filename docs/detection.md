@@ -171,6 +171,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_sles`                 |  🦎  | {data}`~SLES`                 |
 | {func}`~is_slitaz`               |  🕷️  | {data}`~SLITAZ`               |
 | {func}`~is_solaris`              |  🌞  | {data}`~SOLARIS`              |
+| {func}`~is_solus`                |     | {data}`~SOLUS`                |
 | {func}`~is_sourcemage`           |  🧙  | {data}`~SOURCEMAGE`           |
 | {func}`~is_sparc`                |  ☀️  | {data}`~SPARC`                |
 | {func}`~is_sparc64`              |  ☀️  | {data}`~SPARC64`              |

@@ -248,6 +248,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_sles`                 | {deco}`~pytest.unless_sles`                 |  🦎  | {data}`~SLES`                 |
 | {deco}`~pytest.skip_slitaz`               | {deco}`~pytest.unless_slitaz`               |  🕷️  | {data}`~SLITAZ`               |
 | {deco}`~pytest.skip_solaris`              | {deco}`~pytest.unless_solaris`              |  🌞  | {data}`~SOLARIS`              |
+| {deco}`~pytest.skip_solus`                | {deco}`~pytest.unless_solus`                |     | {data}`~SOLUS`                |
 | {deco}`~pytest.skip_sourcemage`           | {deco}`~pytest.unless_sourcemage`           |  🧙  | {data}`~SOURCEMAGE`           |
 | {deco}`~pytest.skip_sparc`                | {deco}`~pytest.unless_sparc`                |  ☀️  | {data}`~SPARC`                |
 | {deco}`~pytest.skip_sparc64`              | {deco}`~pytest.unless_sparc64`              |  ☀️  | {data}`~SPARC64`              |

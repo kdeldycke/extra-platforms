@@ -1008,6 +1008,12 @@ def is_solaris() -> bool:
 
 
 @cache
+def is_solus() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.SOLUS`."""
+    return os_release_id() == "solus"
+
+
+@cache
 def is_sourcemage() -> bool:
     """Return {data}`True` if current platform is
     {data}`~extra_platforms.SOURCEMAGE`.

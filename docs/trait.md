@@ -258,6 +258,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  🦎  | {data}`~SLES`                 | SUSE Linux Enterprise Server   | {func}`~is_sles`                 | Platform     |
 |  🕷️  | {data}`~SLITAZ`               | SliTaz GNU/Linux               | {func}`~is_slitaz`               | Platform     |
 |  🌞  | {data}`~SOLARIS`              | Solaris                        | {func}`~is_solaris`              | Platform     |
+|     | {data}`~SOLUS`                | Solus                          | {func}`~is_solus`                | Platform     |
 |  🧙  | {data}`~SOURCEMAGE`           | Source Mage GNU/Linux          | {func}`~is_sourcemage`           | Platform     |
 |  ☀️  | {data}`~SPARC`                | SPARC (32-bit)                 | {func}`~is_sparc`                | Architecture |
 |  ☀️  | {data}`~SPARC64`              | SPARC (64-bit)                 | {func}`~is_sparc64`              | Architecture |

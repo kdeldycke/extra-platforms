@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Detect Solus through the `solus` ID its own `/etc/os-release` carries.
+
 ## [`13.8.0` (2026-09-07)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.1...v13.8.0)
 
 > [!NOTE]

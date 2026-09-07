@@ -125,6 +125,7 @@ print(generate_trait_table(ALL_PLATFORMS))
 |  🦎  | {data}`~SLES`          | SUSE Linux Enterprise Server   | {func}`~is_sles`          |
 |  🕷️  | {data}`~SLITAZ`        | SliTaz GNU/Linux               | {func}`~is_slitaz`        |
 |  🌞  | {data}`~SOLARIS`       | Solaris                        | {func}`~is_solaris`       |
+|     | {data}`~SOLUS`         | Solus                          | {func}`~is_solus`         |
 |  🧙  | {data}`~SOURCEMAGE`    | Source Mage GNU/Linux          | {func}`~is_sourcemage`    |
 |  🌅  | {data}`~SUNOS`         | SunOS                          | {func}`~is_sunos`         |
 |  🤵  | {data}`~TUXEDO`        | Tuxedo OS                      | {func}`~is_tuxedo`        |
@@ -206,7 +207,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,49
+ALL_PLATFORMS,LINUX,50
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -256,6 +257,7 @@ LINUX,SCIENTIFIC,1
 LINUX,SLACKWARE,1
 LINUX,SLES,1
 LINUX,SLITAZ,1
+LINUX,SOLUS,1
 LINUX,SOURCEMAGE,1
 LINUX,TUXEDO,1
 LINUX,UBUNTU,1
@@ -358,6 +360,7 @@ mindmap
             (🚬 SLACKWARE)
             (🦎 SLES)
             (🕷️ SLITAZ)
+            ( SOLUS)
             (🧙 SOURCEMAGE)
             (🤵 TUXEDO)
             (🎯 UBUNTU)

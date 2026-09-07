@@ -362,6 +362,7 @@ if TYPE_CHECKING:
     skip_sles: MarkDecorator
     skip_slitaz: MarkDecorator
     skip_solaris: MarkDecorator
+    skip_solus: MarkDecorator
     skip_sourcemage: MarkDecorator
     skip_sparc: MarkDecorator
     skip_sparc64: MarkDecorator
@@ -552,6 +553,7 @@ if TYPE_CHECKING:
     unless_sles: MarkDecorator
     unless_slitaz: MarkDecorator
     unless_solaris: MarkDecorator
+    unless_solus: MarkDecorator
     unless_sourcemage: MarkDecorator
     unless_sparc: MarkDecorator
     unless_sparc64: MarkDecorator
