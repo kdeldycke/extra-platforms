@@ -28,7 +28,7 @@ Quickly inspect your current environment without installing anything, thanks to 
 
 ```shell-session
 $ uvx extra-platforms
-extra-platforms 13.7.1
+extra-platforms 13.8.0
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]────────────
             id: aarch64
@@ -71,7 +71,7 @@ $ uvx --with extra-platforms python
 ```pycon
 >>> import extra_platforms
 >>> extra_platforms.__version__
-'13.7.1'
+'13.8.0'
 ```
 
 ## Examples
@@ -187,6 +187,7 @@ mappingproxy({
     'slackware': Platform(id='slackware', name='Slackware'),
     'sles': Platform(id='sles', name='SUSE Linux Enterprise Server'),
     'slitaz': Platform(id='slitaz', name='SliTaz GNU/Linux'),
+    'solus': Platform(id='solus', name='Solus'),
     'sourcemage': Platform(id='sourcemage', name='Source Mage GNU/Linux'),
     'tuxedo': Platform(id='tuxedo', name='Tuxedo OS'),
     'ubuntu': Platform(id='ubuntu', name='Ubuntu'),
@@ -195,7 +196,7 @@ mappingproxy({
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'crux', 'nutyx', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux'})
+frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'crux', 'nutyx', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux', 'solus'})
 >>> print("\n".join([p.name for p in LINUX]))
 AlmaLinux
 Alpine Linux
@@ -240,6 +241,7 @@ Scientific Linux
 Slackware
 SUSE Linux Enterprise Server
 SliTaz GNU/Linux
+Solus
 Source Mage GNU/Linux
 Tuxedo OS
 Ubuntu
@@ -391,6 +393,7 @@ mindmap
             (🚬 SLACKWARE)
             (🦎 SLES)
             (🕷️ SLITAZ)
+            ( SOLUS)
             (🧙 SOURCEMAGE)
             (🤵 TUXEDO)
             (🎯 UBUNTU)

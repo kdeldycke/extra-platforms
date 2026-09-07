@@ -35,17 +35,17 @@ $ uv run --group test pytest -n auto
 ### Type checking
 
 ```shell-session
-$ uvx repomatic run mypy
+$ uvx --exclude-newer '1 week' repomatic run mypy
 ```
 
 Pass no file list. The tool runner resolves mypy's targets from the repository's Python file inventory, which covers `extra_platforms`, `tests` and `docs`. This is the exact command the Lint workflow runs, so naming a single package here would type-check less than CI does.
 
 ### Documentation
 
-Build Sphinx documentation locally:
+Build Sphinx documentation locally, on Python 3.12 or newer (the floor the `docs` group sets):
 
 ```shell-session
-$ uv run sphinx-build -b html ./docs ./docs/_build
+$ uv run --group docs sphinx-build -b html ./docs ./docs/_build
 ```
 
 ## Architecture
@@ -70,6 +70,7 @@ Group - Collection of Traits with set-like operations (group.py)
 
 | Module                 | Purpose                                                                               |
 | ---------------------- | ------------------------------------------------------------------------------------- |
+| `__init__.py`          | Public API re-exports, and generation of the group detection functions at import time |
 | `trait.py`             | Base classes: `Trait`, `Architecture`, `Platform`, `Shell`, `Terminal`, `CI`, `Agent` |
 | `detection.py`         | All `is_<id>()` detection functions                                                   |
 | `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`                   |
@@ -82,16 +83,21 @@ Group - Collection of Traits with set-like operations (group.py)
 | `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                              |
 | `group_data.py`        | All `Group` instances and ID collections                                              |
 | `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                                  |
-| `_utils.py`            | Internal utilities                                                                    |
+| `__main__.py`          | `extra-platforms` console script and `python -m extra_platforms` entry point          |
+| `_deprecated.py`       | Alias registry behind the `DeprecationWarning` shims for renamed symbols              |
+| `_docs.py`             | Documentation-build-only table and diagram generators; needs the `docs` group         |
+| `_docstrings.py`       | Attribute-docstring extraction that fills each trait and group `__doc__`              |
 | `_types.py`            | Type aliases                                                                          |
+| `_utils.py`            | Internal utilities                                                                    |
+| `_windows.py`          | Win32 parent-process-tree helpers, imported lazily and only on Windows                |
 
 ### Detection pattern
 
-Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trait.current` cached property calls `detection.is_{self.id}()` to check if the trait matches the current environment.
+Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trait.current` cached property does not reach that function by attribute: it looks `Trait.detection_func_id` (`is_<id>`) up in `detection._detection_registry`, and raises `NotImplementedError` when the key is missing. Patching the module-level `detection.is_<id>` therefore leaves `Trait.current` unchanged: replace the registry entry instead.
 
 ### Dynamic code generation
 
-- `__init__.py` generates `is_<group_id>()` functions for all groups at import time
+- `__init__.py` generates one detection function per group at import time, and registers each one both at the package root and in `detection._detection_registry`. The name comes from `Group.detection_func_id`, not from the raw ID: an `all_*` group becomes `is_any_<singular>()` (`ALL_ARM` gives `is_any_arm()`) and a `*_without_*` group becomes `is_*_not_*()` (`UNIX_WITHOUT_MACOS` gives `is_unix_not_macos()`)
 - `pytest.py` generates `skip_<id>` and `unless_<id>` decorators for all traits and groups
 
 ## Documentation requirements
@@ -139,7 +145,7 @@ Icons are inspired by [Starship](https://starship.rs/) and [NerdFonts](https://w
 
 **General rules:**
 
-- Icons must be unique across all traits and groups, with one exception: a canonical group may share its icon with its members, but only if *all* members use that same icon (all ARM architectures share `📱` with the `ALL_ARM` group).
+- Icons must be unique across all traits and groups, with two exceptions. A canonical group may share its icon with its members, but only if *all* members use that same icon (all ARM architectures share `📱` with the `ALL_ARM` group). Traits may also share an icon between themselves, provided no group uses that icon and every sharer belongs to the same canonical group (`🎩` is both Fedora and RHEL): see the **Traits** rules below for when to do so.
 - Never use a multi-character suffix like `+` to derive a group icon from a related icon.
 - When proposing a new icon, always check for conflicts against existing traits *and* groups.
 
@@ -147,11 +153,12 @@ Icons are inspired by [Starship](https://starship.rs/) and [NerdFonts](https://w
 
 - Prefer mascots, logos, or symbols associated with the project (`🍎` macOS, `😈` FreeBSD, `🐙` GitHub Actions, `🎩` Fedora/RHEL).
 - Fall back to a thematic pictographic emoji when no obvious brand symbol exists (`🌅` SunOS, `🦬` GNU/Hurd).
+- Fall back to a [NerdFont](https://www.nerdfonts.com) glyph when neither exists (`` AlmaLinux, `` Nobara, `` Solus). Such a glyph renders only in a patched font, so reach for it last, and record its NerdFont name, codepoint and cheat-sheet link in the trait docstring.
 - Traits in the same canonical group may share the same icon when they are closely related variants (`📱` for all ARM architectures, `🔲` for all MIPS, `☀️` for SPARC/SPARC64).
 
 **Groups** use boxy, abstract, or geometric icons:
 
-- Prefer enclosed or squared letters and geometric symbols: `🅱️`, `🅲`, `🅟`, `Ⓑ`, `⊞`.
+- Prefer enclosed or squared letters and geometric symbols: `🅱️`, `🅲`, `🅟`, `Ⓑ`, `▦`.
 - Arrows and mathematical symbols work well: `⬆️`, `⬇️`, `⨷`, `⨂`, `≚`, `≛`, `♺`.
 - Superscript and subscript characters for numeric concepts: `⁶⁴`, `³²`.
 - Stylized letters for named families: `𝐕` (System V), `𝘅` (x86), `Ⅴ` (RISC-V).

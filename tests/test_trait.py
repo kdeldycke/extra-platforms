@@ -27,11 +27,13 @@ from extra_platforms import (
     ALL_GROUP_IDS,
     ALL_GROUPS,
     ALL_IDS,
+    ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
     CANONICAL_GROUPS,
     CI,
+    LINUX,
     UNKNOWN,
     Agent,
     Architecture,
@@ -41,6 +43,7 @@ from extra_platforms import (
     Terminal,
     Trait,
 )
+from extra_platforms._docs import generate_traits_mindmap
 
 
 @pytest.mark.parametrize(
@@ -207,10 +210,11 @@ def test_aliases_are_unique_across_traits():
 
 
 def test_shared_icons_belong_to_same_canonical_group():
-    """Icons must be unique across all traits and groups, with one exception.
+    """Icons are unique across traits and groups, apart from two allowances.
 
-    A canonical group may share its icon with its members, but only if *all*
-    members of that group use the same icon as the group itself.
+    A canonical group may share its icon with its members, but only when *all*
+    of them carry it. Traits may also share an icon with each other, provided
+    they belong to the same canonical group and no group claims that icon.
     """
     # Collect every (icon, owner) pair for traits and groups.
     icon_owners: dict[str, list[Trait | Group]] = {}
@@ -346,3 +350,125 @@ def test_doc_roster_repeats_icon_and_name(page):
             f"docs/{page} shows name {name!r} for {owner.id!r}, which declares "
             f"{owner.name!r}"
         )
+
+
+# Roster regions of the readme. The pages above expose Markdown tables, but these
+# are console transcripts and a diagram, so each region needs its own extractor.
+_README = Path(__file__).parent.parent / "readme.md"
+
+
+def _readme_block(pattern: str, region: str) -> str:
+    """Return the single capture of `pattern` in the readme.
+
+    Failing here keeps a readme restructure from quietly reducing a roster to an
+    empty set, which would then be reported as every platform going missing.
+
+    :param pattern: regular expression carrying exactly one capturing group.
+    :param region: name of the region, used in the failure message.
+    """
+    text = _README.read_text(encoding="UTF-8")
+    match = re.search(pattern, text, re.MULTILINE | re.DOTALL)
+    if not match:
+        pytest.fail(f"readme.md no longer holds the {region} block")
+    return match.group(1)
+
+
+def _linux_members_dict() -> frozenset[str]:
+    """IDs of the `LINUX.members` mapping the readme prints."""
+    block = _readme_block(
+        r"^>>> LINUX\.members\nmappingproxy\(\{\n(.*?)^\}\)$", "LINUX.members"
+    )
+    return frozenset(re.findall(r"^ +'([^']+)': Platform\(", block, re.MULTILINE))
+
+
+def _linux_member_ids() -> frozenset[str]:
+    """IDs of the `LINUX.member_ids` frozenset the readme prints.
+
+    A frozenset repr is hash-ordered, so only its contents carry meaning.
+    """
+    block = _readme_block(
+        r"^>>> LINUX\.member_ids\nfrozenset\(\{(.*?)\}\)$", "LINUX.member_ids"
+    )
+    return frozenset(re.findall(r"'([^']+)'", block))
+
+
+def _linux_names() -> frozenset[str]:
+    """Platform names the readme prints for the LINUX group."""
+    block = _readme_block(
+        r'^>>> print\("\\n"\.join\(\[p\.name for p in LINUX\]\)\)\n(.*?)^```$',
+        "LINUX names",
+    )
+    return frozenset(block.strip("\n").split("\n"))
+
+
+def _all_platforms_mermaid() -> str:
+    """Return the mermaid block of the readme holding the platform mindmap.
+
+    The readme carries one mindmap per trait category, so the root node is what
+    tells the platform one apart.
+    """
+    text = _README.read_text(encoding="UTF-8")
+    blocks: list[str] = re.findall(
+        r"^```mermaid\n.*?^```$", text, re.MULTILINE | re.DOTALL
+    )
+    for block in blocks:
+        if re.search(r"^ +\(\(\S+ ALL_PLATFORMS\)\)$", block, re.MULTILINE):
+            return block
+    pytest.fail("readme.md no longer holds the ALL_PLATFORMS mindmap")
+
+
+def _all_platforms_mindmap() -> frozenset[str]:
+    """Trait symbols the platform mindmap of the readme names.
+
+    Groups render as `)icon SYMBOL(` and traits as `(icon SYMBOL)`, so only the
+    latter are collected.
+    """
+    return frozenset(
+        re.findall(r"^ +\(\S+ ([A-Z0-9_]+)\)$", _all_platforms_mermaid(), re.MULTILINE)
+    )
+
+
+_README_ROSTERS = {
+    "LINUX.members dict": (_linux_members_dict, LINUX.member_ids),
+    "LINUX.member_ids frozenset": (_linux_member_ids, LINUX.member_ids),
+    "LINUX names list": (
+        _linux_names,
+        frozenset(platform.name for platform in LINUX),
+    ),
+    "ALL_PLATFORMS mindmap": (
+        _all_platforms_mindmap,
+        frozenset(platform.symbol_id for platform in ALL_PLATFORMS),
+    ),
+}
+
+
+@pytest.mark.parametrize("region", tuple(_README_ROSTERS))
+def test_readme_roster_covers_its_population(region):
+    """Each roster region of the readme names its whole population.
+
+    These regions are pasted by hand and nothing reads them back, so a trait
+    added without touching the readme leaves a hole no build reports. The
+    reverse direction matters as much, an entry outliving the trait it names.
+    """
+    extract, population = _README_ROSTERS[region]
+    listed = extract()
+
+    assert listed == population, (
+        f"readme.md {region} disagrees with the code: "
+        f"missing {sorted(population - listed)}, "
+        f"stale {sorted(listed - population)}"
+    )
+
+
+def test_readme_mindmap_matches_its_generator():
+    """The platform mindmap of the readme still matches what produces it.
+
+    The readme pastes the output of `generate_traits_mindmap()` under a
+    `mirror-src` comment holding the call that produced it. Comparing the block
+    against a fresh call catches what a roster check cannot: a swapped icon, a
+    renamed group, or a trait that moved between groups.
+    """
+    expected = generate_traits_mindmap(
+        list(CANONICAL_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
+    )
+    assert _all_platforms_mermaid() == expected
