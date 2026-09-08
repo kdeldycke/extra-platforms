@@ -7,6 +7,9 @@
 
 ## [`13.9.0` (2026-09-07)](https://github.com/kdeldycke/extra-platforms/compare/v13.8.0...v13.9.0)
 
+> [!NOTE]
+> `13.9.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.9.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.9.0).
+
 - Detect Solus through the `solus` ID its own `/etc/os-release` carries.
 
 ## [`13.8.0` (2026-09-07)](https://github.com/kdeldycke/extra-platforms/compare/v13.7.1...v13.8.0)
