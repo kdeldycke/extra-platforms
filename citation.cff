@@ -8,6 +8,6 @@ authors:
     email: kevin@deldycke.com
     orcid: "https://orcid.org/0000-0001-9748-9014"
 doi: 10.5281/zenodo.13341712
-version: 13.9.1.dev0
-date-released: 2026-09-07
+version: 13.10.0.dev0
+date-released: 2026-09-12
 url: "https://github.com/kdeldycke/extra-platforms"
