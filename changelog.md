@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.10.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.9.0...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.10.0` (2026-09-17)](https://github.com/kdeldycke/extra-platforms/compare/v13.9.0...v13.10.0)
 
 - Add `Shell.executables` and `Shell.executable_names`: the file names a shell's binary goes by, `pwsh` and `powershell_ise` for PowerShell and `nu` for Nushell.
 - Add `shell_from_path()` to resolve a shell binary path, like the value of `SHELL`, to its `Shell`.
