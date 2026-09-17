@@ -43,7 +43,19 @@ The current shell can be obtained via the `current_shell()` function:
 Shell(id='unknown_shell', name='Unknown shell')
 ```
 
-The path to the running shell's executable is available via {func}`~extra_platforms.current_shell_path`. It prefers the actual ancestor process binary (read from `/proc` on Linux, `ps` on macOS and the BSDs) over the `SHELL` environment variable, so it stays accurate when `SHELL` is unset or points to a different shell than the one executing.
+The path to the running shell's executable is available via {func}`~current_shell_path`. It prefers the actual ancestor process binary (read from `/proc` on Linux, `ps` on macOS and the BSDs, the Win32 API on Windows) over the `SHELL` environment variable, so it stays accurate when `SHELL` is unset or points to a different shell than the one executing.
+
+To get the {class}`~Shell` that a binary path names, use {func}`~shell_from_path`. It also recognizes a binary whose file name is not the shell ID, like `pwsh` for PowerShell:
+
+```pycon
+>>> from extra_platforms import shell_from_path
+>>> shell_from_path("/usr/local/bin/pwsh")
+Shell(id='powershell', name='PowerShell')
+```
+
+```{eval-rst}
+.. autofunction:: extra_platforms.shell_from_path
+```
 
 ## Symlink resolution: implementation over interface
 
@@ -56,7 +68,8 @@ On most modern Unix systems, `/bin/sh` is a symlink to a concrete shell:
 | Debian, Ubuntu | `/bin/dash`      |
 | Fedora, RHEL   | `/bin/bash`      |
 | Alpine         | `/bin/busybox`   |
-| macOS          | `/bin/bash`      |
+
+On macOS, `/bin/sh` is a regular binary that re-executes the shell that `/private/var/select/sh` links to (bash by default), so symlink resolution stops at `sh`.
 
 When `/bin/sh` symlinks to `/bin/bash`:
 

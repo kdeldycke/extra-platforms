@@ -57,7 +57,7 @@ The default output prints each detected trait with its metadata, followed by sum
 
 ```{code-block} shell-session
 $ extra-platforms
-extra-platforms 13.8.0
+extra-platforms 13.9.0
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]────────────
             id: aarch64
@@ -87,7 +87,7 @@ $ extra-platforms --json
 
 ```{code-block} json
 {
-  "version": "13.8.0",
+  "version": "13.9.0",
   "architecture": {
     "id": "aarch64",
     "name": "ARM64 (AArch64)",
@@ -148,9 +148,9 @@ List all detected group names:
 
 ```{code-block} shell-session
 $ extra-platforms --json | jq --raw-output '.groups[].name'
+All architectures
 ARM architectures
-All BSD
-All Unix
+All platforms
 (...)
 ```
 

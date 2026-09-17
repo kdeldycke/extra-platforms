@@ -106,7 +106,7 @@ Symbols exposed at the root `extra_platforms` module automatically link to their
 
 - {func}`~extra_platforms.current_traits` links to `detection.html`
 - {class}`~extra_platforms.Platform` links to `trait.html`
-- {data}`~extra_platforms.UBUNTU` links to `platform_data.html`
+- {data}`~extra_platforms.UBUNTU` links to `platforms.html`
 
 This ensures documentation remains accurate even when symbols are re-exported from submodules.
 

@@ -782,6 +782,11 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     ):
         return "platforms.html"
 
+    # Shell path lookup is documented in shells.html, next to the shell usage
+    # examples.
+    if role == "func" and symbol_clean == "shell_from_path":
+        return "shells.html"
+
     # Trait and group operations functions go to groups.html
     if role == "func" and symbol_clean in (
         "extract_members",

@@ -1563,21 +1563,20 @@ def _parent_process_exe_names() -> frozenset[str]:
     return frozenset(name for name, _ in _parent_process_tree())
 
 
-def _running_shell_path(names: str | Iterable[str]) -> str | None:
+def _running_shell_path(names: frozenset[str]) -> str | None:
     """Return the executable path of the nearest ancestor named in ``names``.
 
-    ``names`` is a shell's {attr}`~extra_platforms.Shell.executable_names`, or a
-    single name. Walks {func}`_parent_process_tree` and returns the first
-    (nearest) absolute path whose normalized name is one of them. Non-absolute sources (a
-    login dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
+    ``names`` is a shell's {attr}`~extra_platforms.Shell.executable_names`.
+    Walks {func}`_parent_process_tree` and returns the first (nearest) absolute
+    path whose normalized name is one of them. Non-absolute sources (a login
+    dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
     callers can fall back to ``SHELL``. A path is considered absolute when it
     starts with ``/`` (POSIX) or satisfies ``os.path.isabs`` (Windows drive
     paths like ``C:\\...``). Returns {data}`None` when no running path is
     found.
     """
-    wanted = frozenset((names,)) if isinstance(names, str) else frozenset(names)
     for name, path in _parent_process_tree():
-        if name in wanted and (path.startswith("/") or os.path.isabs(path)):
+        if name in names and (path.startswith("/") or os.path.isabs(path)):
             return path
     return None
 
@@ -1599,7 +1598,7 @@ def _detect_shell(
 
     1. Checks for shell-specific version environment variable (most reliable).
     2. Resolves symlinks in the ``SHELL`` environment variable path, then
-       matches the resolved executable name against known shell IDs. This
+       matches the resolved executable name against ``shell_ids``. This
        reports the actual shell implementation rather than the interface name:
        when ``/bin/sh`` symlinks to ``/bin/bash``, ``bash`` is detected, not
        ``sh``.
@@ -1610,7 +1609,8 @@ def _detect_shell(
     :param version_env_var: Shell-specific environment variable name
         (like ``"BASH_VERSION"``).
     :param shell_ids: Shell executable name(s) to match. Can be a single string
-        (like ``"bash"``) or a tuple of strings (like ``("powershell", "pwsh")``).
+        (like ``"bash"``) or a shell's
+        {attr}`~extra_platforms.Shell.executable_names`.
     :returns: ``True`` if the shell is detected, ``False`` otherwise.
     """
     # Check shell-specific version environment variable.
@@ -1753,7 +1753,7 @@ def is_nushell() -> bool:
     from .shell_data import NUSHELL
 
     return _detect_shell(
-        version_env_var="NU_VERSION", shell_ids=NUSHELL.executable_names
+        version_env_var=NUSHELL.version_env_var, shell_ids=NUSHELL.executable_names
     )
 
 

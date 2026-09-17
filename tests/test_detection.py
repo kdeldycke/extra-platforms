@@ -31,9 +31,11 @@ import extra_platforms
 from extra_platforms import (
     ALL_GROUPS,
     ALL_PLATFORMS,
+    ALL_SHELLS,
     ALL_TRAITS,
     ILLUMOS,
     Group,
+    Shell,
     Trait,
     current_platform,
     detection as detection_module,
@@ -763,7 +765,7 @@ def test_tree_from_windows_smoke():
 
 
 def test_running_shell_path(monkeypatch):
-    """The nearest absolute path for a shell id wins; non-absolute is skipped."""
+    """The nearest absolute path for a shell name wins; non-absolute is skipped."""
     tree = (
         ("python3", "/usr/bin/python3"),
         ("zsh", "/bin/zsh"),  # Nearest zsh.
@@ -771,15 +773,16 @@ def test_running_shell_path(monkeypatch):
         ("launchd", "/sbin/launchd"),
     )
     monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: tree)
-    assert detection_module._running_shell_path("zsh") == "/bin/zsh"
-    assert detection_module._running_shell_path("launchd") == "/sbin/launchd"
-    assert detection_module._running_shell_path("fish") is None
+    running = detection_module._running_shell_path
+    assert running(frozenset({"zsh"})) == "/bin/zsh"
+    assert running(frozenset({"launchd"})) == "/sbin/launchd"
+    assert running(frozenset({"fish"})) is None
 
     # A non-absolute name (truncated BSD comm, login dash) is not a path.
     monkeypatch.setattr(
         detection_module, "_parent_process_tree", lambda: (("zsh", "zsh"),)
     )
-    assert detection_module._running_shell_path("zsh") is None
+    assert running(frozenset({"zsh"})) is None
 
 
 def test_running_shell_path_matches_every_executable_name(monkeypatch):
@@ -795,7 +798,22 @@ def test_running_shell_path_matches_every_executable_name(monkeypatch):
     running = detection_module._running_shell_path
     assert running(NUSHELL.executable_names) == "/opt/homebrew/bin/nu"
     assert running(POWERSHELL.executable_names) == "/usr/local/bin/pwsh"
-    assert running("powershell") is None
+    assert running(frozenset({"powershell"})) is None
+
+
+def unset_shell_startup_vars(monkeypatch) -> None:
+    """Unset the variables shells set at startup, ``PSModulePath`` included.
+
+    ``SHELL`` and the parent process tree are then the only shell signals, so
+    the shell running the suite cannot leak into the test.
+
+    :param monkeypatch: Fixture undoing every patch at the end of the test.
+    """
+    for shell in ALL_SHELLS:
+        assert isinstance(shell, Shell)
+        if shell.version_env_var:
+            monkeypatch.delenv(shell.version_env_var, raising=False)
+    monkeypatch.delenv("PSModulePath", raising=False)
 
 
 def test_current_shell_prefers_a_running_pwsh_over_configured_shell(monkeypatch):
@@ -808,16 +826,7 @@ def test_current_shell_prefers_a_running_pwsh_over_configured_shell(monkeypatch)
         lambda: (("pwsh", "/usr/local/bin/pwsh"),),
     )
     monkeypatch.setenv("SHELL", "/bin/zsh")
-    for var in (
-        "BASH_VERSION",
-        "FISH_VERSION",
-        "KSH_VERSION",
-        "NU_VERSION",
-        "XONSH_VERSION",
-        "ZSH_VERSION",
-    ):
-        monkeypatch.delenv(var, raising=False)
-    monkeypatch.delenv("PSModulePath", raising=False)
+    unset_shell_startup_vars(monkeypatch)
     invalidate_caches()
     assert current_shell() is POWERSHELL
     invalidate_caches()
@@ -846,8 +855,12 @@ def test_shell_from_path_resolves_symlinks(tmp_path):
     """``sh`` linking to ``bash`` names bash: the implementation, not the interface."""
     from extra_platforms import BASH, shell_from_path
 
+    # Link to a file under tmp_path, never the host's /bin/bash: a hermetic build
+    # sandbox may have no such file, and a missing target resolves to "sh".
+    target = tmp_path / "bash"
+    target.touch()
     link = tmp_path / "sh"
-    link.symlink_to("/bin/bash")
+    link.symlink_to(target)
     assert shell_from_path(link) is BASH
 
 
@@ -858,13 +871,13 @@ def test_current_shell_path(monkeypatch):
     monkeypatch.setattr(detection_module, "current_shell", lambda strict=False: ZSH)
 
     # The process tree yields the running binary: prefer it over SHELL.
-    monkeypatch.setattr(detection_module, "_running_shell_path", lambda sid: "/bin/zsh")
+    monkeypatch.setattr(detection_module, "_running_shell_path", lambda _: "/bin/zsh")
     monkeypatch.setenv("SHELL", "/bin/sh")
     invalidate_caches()
     assert current_shell_path() == "/bin/zsh"
 
     # No running path: fall back to the configured login shell.
-    monkeypatch.setattr(detection_module, "_running_shell_path", lambda sid: None)
+    monkeypatch.setattr(detection_module, "_running_shell_path", lambda _: None)
     invalidate_caches()
     assert current_shell_path() == "/bin/sh"
 
@@ -894,16 +907,7 @@ def test_current_shell_prefers_running_shell_over_configured_shell(monkeypatch):
     # SHELL still points at the configured login shell, zsh.
     monkeypatch.setenv("SHELL", "/bin/zsh")
     # No shell-startup version variables leak into the environment.
-    for var in (
-        "BASH_VERSION",
-        "FISH_VERSION",
-        "KSH_VERSION",
-        "NU_VERSION",
-        "XONSH_VERSION",
-        "ZSH_VERSION",
-    ):
-        monkeypatch.delenv(var, raising=False)
-    monkeypatch.delenv("PSModulePath", raising=False)
+    unset_shell_startup_vars(monkeypatch)
     invalidate_caches()
     assert current_shell() is FISH
     invalidate_caches()
@@ -935,16 +939,7 @@ def test_nested_ancestor_shells_all_detected(monkeypatch):
     # `su - abuild` reset SHELL to the build user's login shell.
     monkeypatch.setenv("SHELL", "/bin/bash")
     # No shell-startup version variables leak into the environment.
-    for var in (
-        "BASH_VERSION",
-        "FISH_VERSION",
-        "KSH_VERSION",
-        "NU_VERSION",
-        "XONSH_VERSION",
-        "ZSH_VERSION",
-    ):
-        monkeypatch.delenv(var, raising=False)
-    monkeypatch.delenv("PSModulePath", raising=False)
+    unset_shell_startup_vars(monkeypatch)
     invalidate_caches()
     assert is_bash()
     assert is_fish()

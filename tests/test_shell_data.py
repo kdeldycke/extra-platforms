@@ -20,6 +20,7 @@ from extra_platforms import (
     NUSHELL,
     POWERSHELL,
     UNKNOWN_SHELL,
+    Shell,
     current_shell,
     is_unknown_shell,
 )
@@ -47,5 +48,6 @@ def test_executable_names():
     assert NUSHELL.executable_names == {"nushell", "nu"}
     assert POWERSHELL.executable_names == {"powershell", "pwsh", "powershell_ise"}
     for shell in ALL_SHELLS:
+        assert isinstance(shell, Shell)
         if shell not in {NUSHELL, POWERSHELL}:
             assert shell.executable_names == {shell.id}

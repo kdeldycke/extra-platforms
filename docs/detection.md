@@ -229,7 +229,7 @@ print(generate_sphinx_directives(ALL_TRAITS, "autofunction", "detection_func_id"
 
 ## Group detection functions
 
-Contrary to individual trait detection functions like `is_linux()` or `is_x86_64()`, group detection functions check for membership in a collection of traits.
+Contrary to individual trait detection functions like `is_ubuntu()` or `is_x86_64()`, group detection functions check for membership in a collection of traits.
 
 These functions are dynamically generated for each [group](groups.md) and test whether **at least one trait** from the group matches the current system:
 

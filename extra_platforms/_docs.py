@@ -517,7 +517,7 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
     automodule output, since they are documented in other files:
 
     - Detection functions in detection.md.
-    - Utility functions in detection.md and groups.md.
+    - Utility functions in detection.md, groups.md and shells.md.
     - Core classes in trait.md and groups.md.
 
     Uses ``{eval-rst}`` for the same reason as :func:`generate_sphinx_directives`.
@@ -547,6 +547,9 @@ def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str
 
     # Also exclude group utility functions documented in groups.md.
     exclude_list.extend(_GROUP_API_FUNCTIONS)
+
+    # Also exclude shell utility functions documented in shells.md.
+    exclude_list.append("shell_from_path")
 
     # Also exclude core classes documented in trait.md and groups.md.
     exclude_list.extend([
