@@ -29,6 +29,7 @@ from extra_platforms import (
     ALL_IDS,
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
+    ALL_SHELLS,
     ALL_TRAIT_IDS,
     ALL_TRAITS,
     CANONICAL_GROUPS,
@@ -207,6 +208,33 @@ def test_aliases_are_unique_across_traits():
                 f"by trait '{seen_aliases[alias]}' and trait '{trait.id}'."
             )
             seen_aliases[alias] = trait.id
+
+
+def test_shell_executables_are_lowercase_and_distinct_from_ids():
+    """A shell's executables are lowercase file names no shell claims as its ID."""
+    shell_ids = {shell.id for shell in ALL_SHELLS}
+    for shell in ALL_SHELLS:
+        assert isinstance(shell, Shell)
+        for executable in shell.executables:
+            assert executable == executable.lower(), (
+                f"Executable '{executable}' of shell '{shell.id}' is not lowercase."
+            )
+            assert executable not in shell_ids, (
+                f"Executable '{executable}' of shell '{shell.id}' is a shell ID."
+            )
+
+
+def test_shell_executables_are_unique_across_shells():
+    """No file name is claimed by two shells."""
+    seen: dict[str, str] = {}
+    for shell in ALL_SHELLS:
+        assert isinstance(shell, Shell)
+        for executable in shell.executables:
+            assert executable not in seen, (
+                f"Executable '{executable}' is defined multiple times: "
+                f"by shell '{seen[executable]}' and shell '{shell.id}'."
+            )
+            seen[executable] = shell.id
 
 
 def test_shared_icons_belong_to_same_canonical_group():

@@ -53,11 +53,20 @@ KSH = Shell(
 )
 
 NUSHELL = Shell(
-    "nushell", "Nushell", "𝜈", "https://www.nushell.sh", version_env_var="NU_VERSION"
+    "nushell",
+    "Nushell",
+    "𝜈",
+    "https://www.nushell.sh",
+    version_env_var="NU_VERSION",
+    executables=("nu",),
 )
 
 POWERSHELL = Shell(
-    "powershell", "PowerShell", "🔷", "https://learn.microsoft.com/en-us/powershell/"
+    "powershell",
+    "PowerShell",
+    "🔷",
+    "https://learn.microsoft.com/en-us/powershell/",
+    executables=("pwsh", "powershell_ise"),
 )
 
 SH = Shell("sh", "Bourne Shell", "𝐒", "https://en.wikipedia.org/wiki/Bourne_shell")

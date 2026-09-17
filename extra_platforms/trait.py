@@ -435,6 +435,37 @@ class Shell(Trait):
     startup environment variable. ``None`` for standalone shells.
     """
 
+    executables: tuple[str, ...] = field(repr=False, default=())
+    """File names the shell's binary goes by, when they differ from its ID.
+
+    Most shells answer to their {attr}`~extra_platforms.Trait.id` alone, so the
+    field stays empty. {data}`~extra_platforms.POWERSHELL` ships as ``pwsh`` on
+    every platform since ``6.0`` and as ``powershell_ise`` on Windows, and
+    {data}`~extra_platforms.NUSHELL` as ``nu``. Detection matches the resolved
+    ``SHELL`` path and the parent process tree against
+    {attr}`executable_names`, and so does
+    {func}`~extra_platforms.shell_from_path`.
+    """
+
+    @property
+    def executable_names(self) -> frozenset[str]:
+        """Every file name the shell's binary goes by: its
+        {attr}`~extra_platforms.Trait.id` and its {attr}`executables`."""
+        return frozenset((self.id, *self.executables))
+
+    def __post_init__(self) -> None:
+        """Validate the executables on top of the trait checks: lowercase, and
+        distinct from the ID."""
+        super().__post_init__()
+        for executable in self.executables:
+            assert executable, f"{self.id} executable name cannot be empty."
+            assert executable == executable.lower(), (
+                f"Executable '{executable}' must be lowercase for {self.id}."
+            )
+            assert executable != self.id, (
+                f"Executable '{executable}' of {self.id} is already its ID."
+            )
+
     def info(self) -> dict[str, str | bool | None]:
         """Returns all shell attributes we can gather."""
         info: dict[str, str | bool | None] = {
@@ -449,7 +480,9 @@ class Shell(Trait):
             # configured login shell in SHELL.
             from .detection import _running_shell_path
 
-            info["path"] = _running_shell_path(self.id) or environ.get("SHELL")
+            info["path"] = _running_shell_path(self.executable_names) or environ.get(
+                "SHELL"
+            )
         return info
 
 

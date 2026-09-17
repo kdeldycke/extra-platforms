@@ -235,6 +235,7 @@ from .detection import (
     is_xterm,
     is_zellij,
     is_zsh,
+    shell_from_path,
 )
 from .group import (
     Group,
@@ -971,6 +972,7 @@ __all__ = (
     "is_zellij",
     "is_zsh",
     "reduce",
+    "shell_from_path",
     "traits_from_ids",
 )
 """Expose all package-wide elements.

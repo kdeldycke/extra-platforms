@@ -782,6 +782,75 @@ def test_running_shell_path(monkeypatch):
     assert detection_module._running_shell_path("zsh") is None
 
 
+def test_running_shell_path_matches_every_executable_name(monkeypatch):
+    """A shell is found under any of its executable names, not its ID alone."""
+    from extra_platforms import NUSHELL, POWERSHELL
+
+    tree = (
+        ("python3", "/usr/bin/python3"),
+        ("nu", "/opt/homebrew/bin/nu"),
+        ("pwsh", "/usr/local/bin/pwsh"),
+    )
+    monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: tree)
+    running = detection_module._running_shell_path
+    assert running(NUSHELL.executable_names) == "/opt/homebrew/bin/nu"
+    assert running(POWERSHELL.executable_names) == "/usr/local/bin/pwsh"
+    assert running("powershell") is None
+
+
+def test_current_shell_prefers_a_running_pwsh_over_configured_shell(monkeypatch):
+    """A ``pwsh`` parent process names PowerShell, whose ID is not its binary name."""
+    from extra_platforms import POWERSHELL, current_shell
+
+    monkeypatch.setattr(
+        detection_module,
+        "_parent_process_tree",
+        lambda: (("pwsh", "/usr/local/bin/pwsh"),),
+    )
+    monkeypatch.setenv("SHELL", "/bin/zsh")
+    for var in (
+        "BASH_VERSION",
+        "FISH_VERSION",
+        "KSH_VERSION",
+        "NU_VERSION",
+        "XONSH_VERSION",
+        "ZSH_VERSION",
+    ):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.delenv("PSModulePath", raising=False)
+    invalidate_caches()
+    assert current_shell() is POWERSHELL
+    invalidate_caches()
+
+
+@pytest.mark.parametrize(
+    ("path", "expected_id"),
+    [
+        ("/bin/zsh", "zsh"),
+        ("/opt/homebrew/bin/pwsh", "powershell"),
+        (r"C:\Program Files\PowerShell\7\pwsh.exe", "powershell"),
+        ("/usr/local/bin/nu", "nushell"),
+        ("/usr/local/bin/elvish", "unknown_shell"),
+    ],
+)
+def test_shell_from_path(path, expected_id):
+    """A shell path resolves to its catalog entry by file name, or to the
+    unknown shell."""
+    from extra_platforms import shell_from_path
+
+    assert shell_from_path(path).id == expected_id
+
+
+@skip_windows
+def test_shell_from_path_resolves_symlinks(tmp_path):
+    """``sh`` linking to ``bash`` names bash: the implementation, not the interface."""
+    from extra_platforms import BASH, shell_from_path
+
+    link = tmp_path / "sh"
+    link.symlink_to("/bin/bash")
+    assert shell_from_path(link) is BASH
+
+
 def test_current_shell_path(monkeypatch):
     """current_shell_path() prefers the running binary, then falls back to SHELL."""
     from extra_platforms import ZSH, current_shell_path

@@ -5,6 +5,10 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add `Shell.executables` and `Shell.executable_names`: the file names a shell's binary goes by, `pwsh` and `powershell_ise` for PowerShell and `nu` for Nushell.
+- Add `shell_from_path()` to resolve a shell binary path, like the value of `SHELL`, to its `Shell`.
+- Fix `current_shell()` and `current_shell_path()` overlooking a running `pwsh` or `nu` parent process, which they matched by ID alone.
+
 ## [`13.9.0` (2026-09-07)](https://github.com/kdeldycke/extra-platforms/compare/v13.8.0...v13.9.0)
 
 - Detect Solus through the `solus` ID its own `/etc/os-release` carries.

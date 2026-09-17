@@ -75,7 +75,7 @@ import subprocess
 import sys
 from functools import cache
 from os import environ
-from pathlib import Path, PurePosixPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import TypeVar
 
 from .platform_info import os_release_id
@@ -1132,6 +1132,21 @@ def is_unknown_platform() -> bool:
 # =============================================================================
 
 
+def _shell_stem(path: str | os.PathLike[str]) -> str:
+    """Lowercased file name of a shell path, suffix dropped, resolved through
+    symlinks when the file exists.
+
+    ``/bin/sh`` on a system linking it to ``/bin/bash`` gives ``"bash"``, and
+    ``pwsh.exe`` gives ``"pwsh"``.
+    """
+    try:
+        return Path(path).resolve(strict=True).stem.lower()
+    except OSError:
+        # A path that does not exist here is read as text, whichever separator
+        # it uses: the Windows flavor accepts both.
+        return PureWindowsPath(path).stem.lower()
+
+
 @cache
 def _resolved_shell_id() -> str | None:
     """Resolve the ``SHELL`` environment variable through symlinks.
@@ -1143,10 +1158,32 @@ def _resolved_shell_id() -> str | None:
     shell_path = environ.get("SHELL", "")
     if not shell_path:
         return None
-    try:
-        return Path(shell_path).resolve(strict=True).stem.lower()
-    except OSError:
-        return PurePosixPath(shell_path).stem.lower()
+    return _shell_stem(shell_path)
+
+
+def shell_from_path(path: str | os.PathLike[str]) -> Shell:
+    """Return the {class}`~extra_platforms.Shell` a binary path names.
+
+    For a shell path read from configuration rather than from the running
+    process: the ``SHELL`` variable, a passwd entry, a terminal profile.
+    {func}`current_shell` answers a different question, which shell the process
+    runs in.
+
+    The path is resolved through symlinks when it exists, so ``/bin/sh`` on a
+    system linking it to ``bash`` gives {data}`~extra_platforms.BASH`, and its
+    lowercased file name, suffix dropped, is matched against every shell's
+    {attr}`~extra_platforms.Shell.executable_names`. An unmatched name gives
+    {data}`~extra_platforms.UNKNOWN_SHELL`.
+    """
+    # Lazy imports to avoid circular dependencies.
+    from .group_data import ALL_SHELLS
+    from .shell_data import UNKNOWN_SHELL
+
+    stem = _shell_stem(path)
+    for shell in ALL_SHELLS:
+        if stem in getattr(shell, "executable_names", ()):
+            return shell  # type: ignore[return-value]
+    return UNKNOWN_SHELL
 
 
 @cache
@@ -1526,19 +1563,21 @@ def _parent_process_exe_names() -> frozenset[str]:
     return frozenset(name for name, _ in _parent_process_tree())
 
 
-def _running_shell_path(shell_id: str) -> str | None:
-    """Return the executable path of the nearest ancestor matching ``shell_id``.
+def _running_shell_path(names: str | Iterable[str]) -> str | None:
+    """Return the executable path of the nearest ancestor named in ``names``.
 
-    Walks {func}`_parent_process_tree` and returns the first (nearest) absolute
-    path whose normalized name equals ``shell_id``. Non-absolute sources (a
+    ``names`` is a shell's {attr}`~extra_platforms.Shell.executable_names`, or a
+    single name. Walks {func}`_parent_process_tree` and returns the first
+    (nearest) absolute path whose normalized name is one of them. Non-absolute sources (a
     login dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
     callers can fall back to ``SHELL``. A path is considered absolute when it
     starts with ``/`` (POSIX) or satisfies ``os.path.isabs`` (Windows drive
     paths like ``C:\\...``). Returns {data}`None` when no running path is
     found.
     """
+    wanted = frozenset((names,)) if isinstance(names, str) else frozenset(names)
     for name, path in _parent_process_tree():
-        if name == shell_id and (path.startswith("/") or os.path.isabs(path)):
+        if name in wanted and (path.startswith("/") or os.path.isabs(path)):
             return path
     return None
 
@@ -1710,7 +1749,12 @@ def is_nushell() -> bool:
     on startup), or via the `SHELL` path as a fallback.
     ```
     """
-    return _detect_shell(version_env_var="NU_VERSION", shell_ids="nu")
+    # Lazy import to avoid circular dependencies.
+    from .shell_data import NUSHELL
+
+    return _detect_shell(
+        version_env_var="NU_VERSION", shell_ids=NUSHELL.executable_names
+    )
 
 
 @cache
@@ -1746,7 +1790,10 @@ def is_powershell() -> bool:
     # inline instead of routing through _detect_shell(version_env_var=...).
     if "PSModulePath" in environ:
         return True
-    return _detect_shell(shell_ids=("powershell", "powershell_ise", "pwsh"))
+    # Lazy import to avoid circular dependencies.
+    from .shell_data import POWERSHELL
+
+    return _detect_shell(shell_ids=POWERSHELL.executable_names)
 
 
 @cache
@@ -2512,7 +2559,9 @@ def current_shell(strict: bool = False) -> Shell:
     # running the step.
     proc_names = _parent_process_exe_names()
     if proc_names:
-        proc_matches = {s for s in matching if s.id in proc_names}
+        proc_matches = {
+            s for s in matching if not proc_names.isdisjoint(s.executable_names)
+        }
         if len(proc_matches) == 1:
             return proc_matches.pop()
         if proc_matches:
@@ -2521,7 +2570,7 @@ def current_shell(strict: bool = False) -> Shell:
     # Tier 3: prefer the shell resolved from SHELL= over remaining matches.
     resolved = _resolved_shell_id()
     if resolved:
-        resolved_matches = {s for s in matching if s.id == resolved}
+        resolved_matches = {s for s in matching if resolved in s.executable_names}
         if len(resolved_matches) == 1:
             return resolved_matches.pop()
 
@@ -2563,7 +2612,7 @@ def current_shell_path() -> str | None:
     the name is {func}`current_shell` and the path is this function.
     ```
     """
-    path = _running_shell_path(current_shell().id)
+    path = _running_shell_path(current_shell().executable_names)
     if path:
         return path
     return environ.get("SHELL") or None
