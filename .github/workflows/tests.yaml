@@ -166,7 +166,7 @@ jobs:
 
       - name: Unittests
         env:
-          # Used by github_runner_os() in tests/test_detection.py to extract the GitHub runner image ID.
+          # Used by github_runner_os() in tests/conftest.py to extract the GitHub runner image ID.
           EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
         # Coverage and parallelism flags live here rather than in
         # [tool.pytest] addopts so a from-source packager build can run a plain
