@@ -108,17 +108,11 @@ def test_github_runner_detection():
     assert not is_unknown_shell()
     assert not is_unknown_ci()
 
+    # GitHub sets RUNNER_ARCH to the runner's own architecture: X86, X64, ARM or
+    # ARM64. The package never reads it, so it is an independent reference.
+    runner_arch = os.environ.get("RUNNER_ARCH")
     # X86-64 runners.
-    if github_runner_os() in {
-        "ubuntu-slim",
-        "ubuntu-26.04",
-        "ubuntu-24.04",
-        "ubuntu-22.04",
-        "macos-15-intel",
-        "macos-26-intel",
-        "windows-2025",
-        "windows-2022",
-    } or (
+    if runner_arch == "X64" or (
         # XXX Python <= 3.10.x on Windows ARM runners reports x86_64.
         github_runner_os() == "windows-11-arm" and sys.version_info < (3, 11)
     ):
@@ -128,6 +122,7 @@ def test_github_runner_detection():
         assert X86_64 in current_traits()
     # AArch64 runners.
     else:
+        assert runner_arch == "ARM64"
         assert is_aarch64()
         assert not is_arm()
         assert is_any_arm()
