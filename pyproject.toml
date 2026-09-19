@@ -631,7 +631,8 @@ test-matrix.variations.os = [
   "windows-2022",
 ]
 # tests/test_sphinx_crossrefs.py runs sphinx-build over ./docs and asserts on
-# the result, so a docs-only change must trigger the test suite. The canonical
+# the result, and tests/test_trait.py checks the rosters and mindmap in
+# readme.md, so a change to either must trigger the test suite. The canonical
 # `paths:` filter tests.yaml inherits lists only source, tests and packaging
 # files.
-workflow.extra-paths = [ "docs/**" ]
+workflow.extra-paths = [ "docs/**", "readme.md" ]
