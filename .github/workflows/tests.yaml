@@ -84,7 +84,7 @@ jobs:
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           version: "0.12.4"
-      - name: Run repomatic metadata
+      - name: Run repomatic show-metadata
         id: metadata
         # `--exclude-newer-package repomatic=P0D` exempts this one package from the
         # workflow-wide cooldown above: the self-pin always names a release minutes
@@ -93,7 +93,7 @@ jobs:
         # (repomatic.prepare_release.SELF_PIN_COOLDOWN_EXEMPTION), so
         # `sync-workflow-pins` recognizes and moves it with the pin.
         run: >
-          uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==7.16.0' metadata
+          uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==7.16.0' show-metadata
           --format github-json --output "$GITHUB_OUTPUT"
           test_matrix test_matrix_pr
 
@@ -102,13 +102,13 @@ jobs:
       - metadata
     strategy:
       fail-fast: false
-      # Matrix is pre-computed by repomatic metadata. PRs get a reduced matrix
+      # Matrix is pre-computed by repomatic show-metadata. PRs get a reduced matrix
       # (fewer OS variants and Python versions) to save CI minutes.
       matrix: >-
         ${{ github.event_name != 'pull_request'
         && fromJSON(needs.metadata.outputs.metadata).test_matrix
         || fromJSON(needs.metadata.outputs.metadata).test_matrix_pr }}
-    # `python-label` is set by repomatic metadata only where the plain version
+    # `python-label` is set by repomatic show-metadata only where the plain version
     # would hide why a cell is continue-on-error (a prerelease reads `3.15-dev`);
     # every other cell falls back to the version itself.
     name: >-
