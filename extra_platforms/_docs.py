@@ -34,7 +34,7 @@ from collections.abc import Iterable
 from operator import attrgetter
 from textwrap import dedent, indent
 
-from click_extra.table import TableFormat, render_table
+from click_extra import TableFormat, render_table
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
