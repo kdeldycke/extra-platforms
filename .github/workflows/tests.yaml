@@ -120,6 +120,11 @@ jobs:
     # Wider than the default: this job provisions a toolchain, so its runtime
     # tracks how much it has to install.
     timeout-minutes: 30
+    env:
+      # The docs group needs Python >= 3.12 (`dependency-groups.docs` in pyproject.toml). Requested on an older cell,
+      # it makes uv replace the cell's interpreter with a newer one, so the cell would test the wrong Python. Those
+      # cells run without it, the way distribution builds do.
+      WITH_DOCS_GROUP: ${{ !contains(fromJSON('["3.10", "3.11"]'), matrix.python-version) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
@@ -155,7 +160,9 @@ jobs:
         run: echo "PYTHONIOENCODING=utf8" >> "$GITHUB_ENV"
       - name: Install project
         # Install all extras, so we can check any incompatibility.
-        run: uv --no-progress sync --frozen --all-extras --group test --group docs
+        run: >
+          uv --no-progress sync --frozen --all-extras --group test
+          ${{ env.WITH_DOCS_GROUP == 'true' && '--group docs' || '' }}
 
       - name: Unittests
         env:
@@ -180,21 +187,22 @@ jobs:
       # `docs` group installed above, so it runs from uv.lock rather than a
       # second uvx-resolved copy: uv.lock is the only place it is hash-verified.
       # The outer `uv run` provides the environment once, avoiding per-case uv
-      # lock contention between parallel workers.
+      # lock contention between parallel workers. Cells without the docs group
+      # have no click-extra, so these steps skip there.
       #
       # `!cancelled()` keeps these running after a failed pytest step: the two
       # check different things, and letting a unit-test failure skip the CLI
       # suite hides CLI drift until the next green run. Wrapped in `${{ }}`
       # because a bare leading `!` is a YAML tag.
       - name: CLI test suite via console script
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && env.WITH_DOCS_GROUP == 'true' }}
         run: >
           uv --no-progress run --frozen --
           click-extra test-suite --command "extra-platforms"
           --suite-file tests/cli-test-suite.toml
           --jobs max
       - name: CLI test suite via python -m
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && env.WITH_DOCS_GROUP == 'true' }}
         run: >
           uv --no-progress run --frozen --
           click-extra test-suite --command "python -m extra_platforms"
