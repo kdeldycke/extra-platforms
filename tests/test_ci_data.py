@@ -16,7 +16,6 @@
 from __future__ import annotations
 
 import os
-import sys
 
 import pytest
 
@@ -112,10 +111,7 @@ def test_github_runner_detection():
     # ARM64. The package never reads it, so it is an independent reference.
     runner_arch = os.environ.get("RUNNER_ARCH")
     # X86-64 runners.
-    if runner_arch == "X64" or (
-        # XXX Python <= 3.10.x on Windows ARM runners reports x86_64.
-        github_runner_os() == "windows-11-arm" and sys.version_info < (3, 11)
-    ):
+    if runner_arch == "X64":
         assert is_x86_64()
         assert is_x86()
         assert current_architecture() is X86_64
