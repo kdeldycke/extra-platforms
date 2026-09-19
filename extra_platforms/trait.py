@@ -377,9 +377,9 @@ class Platform(Trait):
     ```
     """
 
-    def info(self) -> dict[str, str | bool | None | dict[str, str | None]]:
+    def info(self) -> dict[str, str | bool | dict[str, str | None] | None]:
         """Returns all platform attributes we can gather."""
-        info: dict[str, str | bool | None | dict[str, str | None]] = {
+        info: dict[str, str | bool | dict[str, str | None] | None] = {
             **super().info(),
             # Extra fields from distro.info().
             "distro_id": None,

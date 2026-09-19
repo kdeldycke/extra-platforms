@@ -759,7 +759,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     :returns: The expected HTML filename (like ``"platforms.html"``).
     """
     # Clean symbol name (remove module prefix if present)
-    symbol_clean = symbol.split(".")[-1]
+    symbol_clean = symbol.rsplit(".", maxsplit=1)[-1]
 
     # Detection functions always go to detection.html
     if role == "func" and (symbol_clean.startswith(("is_", "current_"))):
