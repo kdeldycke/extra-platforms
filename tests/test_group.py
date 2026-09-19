@@ -817,15 +817,17 @@ def randomize_case(strings: Iterable[str]) -> set[str]:
     test_strings = set()
     for string in strings:
         test_strings.add(string)
-        for str_func in (
-            str.upper,
-            str.lower,
-            str.title,
-            str.capitalize,
-            str.casefold,
-            str.swapcase,
-        ):
-            test_strings.add(str_func(string))
+        test_strings.update(
+            str_func(string)
+            for str_func in (
+                str.upper,
+                str.lower,
+                str.title,
+                str.capitalize,
+                str.casefold,
+                str.swapcase,
+            )
+        )
         test_strings.add(
             "".join(
                 char.upper() if i % 2 else char.lower() for i, char in enumerate(string)
