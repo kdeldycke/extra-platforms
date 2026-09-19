@@ -431,7 +431,7 @@ Pytest optional.
 """
 
 
-__version__ = "13.10.1"
+__version__ = "13.10.2.dev0"
 
 
 def _initialize_group_detection_functions() -> None:
