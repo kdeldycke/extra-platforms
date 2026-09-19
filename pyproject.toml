@@ -10,6 +10,7 @@ description = "🔎 Detect architectures, platforms, shells, terminals, CI syste
 readme = "readme.md"
 keywords = [
   "Agent detection",
+  "AIX",
   "Alacritty",
   "AlmaLinux",
   "Almquist Shell",
@@ -77,6 +78,7 @@ keywords = [
   "Hardware detection",
   "Hermetic Build",
   "Heroku CI",
+  "Hurd",
   "Hyper",
   "IBM AIX",
   "IBM i",
@@ -121,6 +123,7 @@ keywords = [
   "Pi",
   "Pidora",
   "PikaOS",
+  "Platform",
   "Platform detection",
   "PowerPC (32-bit)",
   "PowerPC 64-bit (big-endian)",
@@ -146,6 +149,7 @@ keywords = [
   "SPARC (64-bit)",
   "SunOS",
   "SUSE Linux Enterprise Server",
+  "sysinfo",
   "System information",
   "Tabby",
   "tcsh",

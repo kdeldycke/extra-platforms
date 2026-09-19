@@ -127,23 +127,28 @@ def test_pyproject_keywords():
         UNIX.name.split(" ", 1)[1],
         SYSTEM_V.name,
     ))
-    # Manually add extra keywords.
+    # Manually add extra keywords. AIX, Hurd, Platform and sysinfo mirror GitHub
+    # topics: `repomatic lint-repo` warns on a topic missing from the keywords.
     ideal_keywords.extend((
         "Agent detection",
+        "AIX",
         "Architecture detection",
         "CI detection",
         "CPU architecture",
         "Distro detection",
         "Hardware detection",
+        "Hurd",
         "Linux distribution",
         "multiplatform",
         "OS detection",
         "OS info",
+        "Platform",
         "Platform detection",
         "Pytest",
         "Pytest fixtures",
         "Pytest plugin",
         "Shell detection",
+        "sysinfo",
         "System information",
         "Terminal detection",
     ))
