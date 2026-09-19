@@ -7,6 +7,12 @@
 
 ## [`13.10.1` (2026-09-19)](https://github.com/kdeldycke/extra-platforms/compare/v13.10.0...v13.10.1)
 
+> [!NOTE]
+> `13.10.1` is available on [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.10.1).
+
+> [!WARNING]
+> `13.10.1` is **not available** on 🐍 PyPI.
+
 - Add `AIX`, `Hurd`, `Platform` and `sysinfo` to the package keywords, and the `Programming Language :: Python :: 3.15` classifier.
 - Run the test suite without click-extra or `pytest-xdist`, as distribution builds do: the readme mindmap test now skips instead of stopping collection, and the `xdist_group` marker no longer warns.
 
