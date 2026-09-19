@@ -44,7 +44,6 @@ from extra_platforms import (
     Terminal,
     Trait,
 )
-from extra_platforms._docs import generate_traits_mindmap
 
 
 @pytest.mark.parametrize(
@@ -497,6 +496,12 @@ def test_readme_mindmap_matches_its_generator():
     against a fresh call catches what a roster check cannot: a swapped icon, a
     renamed group, or a trait that moved between groups.
     """
+    # The generator needs click-extra, a docs-group dependency that distribution
+    # builds lack. Skip on its absence alone, and import the generator here: a
+    # top-level import would stop pytest from collecting this whole module.
+    pytest.importorskip("click_extra")
+    from extra_platforms._docs import generate_traits_mindmap
+
     expected = generate_traits_mindmap(
         list(CANONICAL_GROUPS & ALL_PLATFORM_GROUPS) + [ALL_PLATFORMS]
     )

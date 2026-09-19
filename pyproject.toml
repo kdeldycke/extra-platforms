@@ -471,6 +471,7 @@ addopts = [
 markers = [
   "benchmark: Tests that budget wall-clock time (excluded with -m 'not benchmark').",
   "network: Tests that require network access (excluded with -m 'not network').",
+  "xdist_group: Tests sharing one pytest-xdist worker (declared for runs without pytest-xdist).",
 ]
 # Restrict collection to the test suite, so pytest never descends into the
 # package or an installed copy of it in dual-copy builds.
