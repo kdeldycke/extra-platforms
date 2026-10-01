@@ -7,6 +7,9 @@
 
 ## [`13.11.0` (2026-10-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.10.1...v13.11.0)
 
+> [!NOTE]
+> `13.11.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.11.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.11.0).
+
 - Add a `release` key to `Platform.info()`, holding the product release on Windows, like `11`, and `None` on other platforms.
 - Detect the Korn shell from its `ksh93` binary, which Fedora and illumos link `ksh` to.
 - Detect BusyBox's shell as `ash`, through Alpine's `/bin/sh` and `/bin/ash` links or `busybox sh`, instead of matching no shell.
