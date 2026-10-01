@@ -876,16 +876,41 @@ def test_current_shell_path(monkeypatch):
     invalidate_caches()
     assert current_shell_path() == "/bin/zsh"
 
-    # No running path: fall back to the configured login shell.
+    # No running path: fall back to the configured login shell, when it names
+    # the current shell. A path that does not exist here is read as text.
     monkeypatch.setattr(detection_module, "_running_shell_path", lambda _: None)
+    monkeypatch.setenv("SHELL", "/nonexistent/bin/zsh")
     invalidate_caches()
-    assert current_shell_path() == "/bin/sh"
+    assert current_shell_path() == "/nonexistent/bin/zsh"
+
+    # A login shell of another kind is no fallback: illumos runs the suite from
+    # a bare `sh` under a bash login, and must not report bash's path for it.
+    monkeypatch.setenv("SHELL", "/nonexistent/bin/bash")
+    invalidate_caches()
+    assert current_shell_path() is None
 
     # Neither source available.
     monkeypatch.delenv("SHELL", raising=False)
     invalidate_caches()
     assert current_shell_path() is None
 
+    invalidate_caches()
+
+
+def test_shell_info_path_ignores_another_login_shell(monkeypatch):
+    """``Shell.info()`` reports no path rather than the path of another shell."""
+    from extra_platforms import SH
+
+    monkeypatch.setitem(detection_module._detection_registry, "is_sh", lambda: True)
+    # The running sh shows as a bare argv[0], the way illumos' ps reports it.
+    monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: (("sh", ""),))
+    monkeypatch.setenv("SHELL", "/nonexistent/bin/bash")
+    invalidate_caches()
+    assert SH.info()["path"] is None
+
+    monkeypatch.setenv("SHELL", "/nonexistent/bin/sh")
+    invalidate_caches()
+    assert SH.info()["path"] == "/nonexistent/bin/sh"
     invalidate_caches()
 
 

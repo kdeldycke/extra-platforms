@@ -478,11 +478,9 @@ class Shell(Trait):
                 info["version"] = environ.get(self.version_env_var)
             # Prefer the actual running binary from the process tree over the
             # configured login shell in SHELL.
-            from .detection import _running_shell_path
+            from .detection import _shell_path
 
-            info["path"] = _running_shell_path(self.executable_names) or environ.get(
-                "SHELL"
-            )
+            info["path"] = _shell_path(self.executable_names)
         return info
 
 

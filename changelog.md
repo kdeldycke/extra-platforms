@@ -7,6 +7,7 @@
 
 - Fix `current_shell()` reporting the login shell over a nearer shell running the process, like a bash script launched from a zsh session.
 - Fix the process-tree shell detection on FreeBSD and illumos, where `ps` printed the PID column alone.
+- Fix `current_shell_path()` and the `path` of `Shell.info()` returning the `SHELL` path of another shell when the running one shows none, as on illumos.
 - Fix `test_current_funcs` failing when the suite runs under another shell than the `SHELL` login shell, like a Debian build calling pytest from `/bin/sh`.
 - Fix `test_skip_linux`, `test_skip_macos`, `test_skip_ubuntu` and `test_skip_windows` failing on platforms other than Linux, macOS and Windows, like FreeBSD.
 

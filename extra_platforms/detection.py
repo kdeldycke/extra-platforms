@@ -1588,6 +1588,21 @@ def _running_shell_path(names: frozenset[str]) -> str | None:
     return None
 
 
+def _shell_path(names: frozenset[str]) -> str | None:
+    """Return the executable path of the shell going by ``names``.
+
+    Prefers the running binary from {func}`_running_shell_path`. Falls back to
+    the ``SHELL`` environment variable only when it names that same shell: a
+    login shell of another kind says nothing about where this one lives.
+    Returns {data}`None` otherwise.
+    """
+    if path := _running_shell_path(names):
+        return path
+    if _resolved_shell_id() in names:
+        return environ["SHELL"]
+    return None
+
+
 def _nearest_running_shell(shells: Iterable[Shell]) -> Shell | None:
     """Return the shell of ``shells`` running nearest to the current process.
 
@@ -2622,14 +2637,15 @@ def current_shell_path() -> str | None:
        ``/proc`` on Linux, ``ps`` on macOS and the BSDs). This is the true
        interpreter, even when ``SHELL`` is unset or points elsewhere.
     2. The ``SHELL`` environment variable (the configured login shell), as a
-       fallback.
+       fallback, when it names the same shell as {func}`current_shell`.
 
-    Returns {data}`None` when neither is available: no recognized shell, or a
-    stripped environment without ``SHELL``.
+    Returns {data}`None` when neither is available: no recognized shell, a
+    stripped environment without ``SHELL``, or a ``SHELL`` naming another
+    shell.
 
     ```{note}
-    On some BSDs, ``ps`` reports only a truncated process name rather than a
-    full path. The non-absolute name is discarded, so this falls back to
+    On some BSDs and illumos, ``ps`` reports only the bare ``argv[0]`` rather
+    than a full path. The non-absolute name is discarded, so this falls back to
     ``SHELL`` there.
     ```
 
@@ -2639,10 +2655,7 @@ def current_shell_path() -> str | None:
     the name is {func}`current_shell` and the path is this function.
     ```
     """
-    path = _running_shell_path(current_shell().executable_names)
-    if path:
-        return path
-    return environ.get("SHELL") or None
+    return _shell_path(current_shell().executable_names)
 
 
 @cache
