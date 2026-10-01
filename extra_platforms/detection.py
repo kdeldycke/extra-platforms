@@ -171,6 +171,16 @@ name) are what carry the smoking gun.
 """
 
 
+_DUMB_TERMS = frozenset(("", "dumb", "su", "unknown"))
+"""``TERM`` values declaring a terminal with no capabilities, so no emulator.
+
+``dumb`` is that terminal's terminfo entry, and FreeBSD's termcap lists ``su`` and
+``unknown`` as its aliases (``dumb|su|unknown`` in ``/usr/share/misc/termcap``).
+Non-interactive SSH sessions set them: ``TERM=dumb`` on NixOS, ``TERM=su`` on
+FreeBSD. {func}`current_terminal` does not expect a terminal emulator there.
+"""
+
+
 def _env_signal_lines(var_names: tuple[str, ...]) -> str:
     """Render environment variables as aligned ``name: value`` report lines.
 
@@ -2717,9 +2727,10 @@ def current_terminal(strict: bool = False) -> Terminal:
     Headless environments (CI runners, cron jobs, Docker containers, SSH
     non-interactive commands) have no terminal emulator attached.
 
-    If the `TERM` environment variable is set, an unrecognized terminal logs at
-    `WARNING` level, as it suggests a terminal emulator is present but not
-    recognized. Otherwise, it logs at `INFO` level.
+    If the `TERM` environment variable names a terminal type, an unrecognized
+    terminal logs at `WARNING` level, as it suggests a terminal emulator is
+    present but not recognized. Otherwise, it logs at `INFO` level: `TERM` is
+    unset, or declares a dumb terminal (see `_DUMB_TERMS`).
     ```
     """
     # Lazy imports to avoid circular dependencies.
@@ -2740,13 +2751,14 @@ def current_terminal(strict: bool = False) -> Terminal:
         if len(non_mux) == 1:
             return non_mux.pop()
 
-    # The TERM env var signals a terminal emulator is expected to be present.
+    # A TERM naming a terminal type signals a terminal emulator is expected to
+    # be present. A dumb terminal declares there is none.
     return _single_match(
         matching,
         UNKNOWN_TERMINAL,
         "terminal",
         strict=strict,
-        expected="TERM" in environ,
+        expected=environ.get("TERM", "") not in _DUMB_TERMS,
     )
 
 

@@ -15,10 +15,16 @@
 
 from __future__ import annotations
 
+import logging
+
+import pytest
+
 from extra_platforms import (
     ALL_TERMINALS,
     UNKNOWN_TERMINAL,
     current_terminal,
+    detection,
+    invalidate_caches,
     is_unknown_terminal,
 )
 
@@ -37,3 +43,26 @@ def test_terminal_detection():
     else:
         assert current_terminal_result is not UNKNOWN_TERMINAL
         assert current_terminal_result in ALL_TERMINALS
+
+
+@pytest.mark.parametrize(
+    ("term", "level"),
+    [
+        ("xterm-256color", logging.WARNING),
+        # Dumb terminals, as non-interactive SSH sessions declare them.
+        ("dumb", logging.INFO),
+        ("su", logging.INFO),
+        ("unknown", logging.INFO),
+        ("", logging.INFO),
+    ],
+)
+def test_unrecognized_terminal_log_level(term, level, monkeypatch, caplog):
+    """Only a ``TERM`` naming a terminal type makes an unrecognized one a warning."""
+    monkeypatch.setattr(detection, "environ", {"TERM": term})
+    invalidate_caches()
+    caplog.set_level(logging.INFO)
+    try:
+        assert current_terminal() is UNKNOWN_TERMINAL
+        assert [record.levelno for record in caplog.records] == [level]
+    finally:
+        invalidate_caches()
