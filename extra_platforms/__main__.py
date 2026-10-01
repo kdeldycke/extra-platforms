@@ -68,6 +68,15 @@ def _pad(text: str, target: int) -> str:
     return text + " " * max(0, target - _display_width(text))
 
 
+def _rule(header: str) -> str:
+    """Extend a section header with a rule up to `_SEPARATOR_WIDTH` display columns.
+
+    Measures display columns rather than characters, like the tables do: a wide icon
+    in the header takes two columns but counts as one character.
+    """
+    return header + "─" * max(0, _SEPARATOR_WIDTH - _display_width(header))
+
+
 def _column_widths(items: Iterable[Trait | Group]) -> tuple[int, int, int, int]:
     """Compute column widths for a set of traits or groups."""
     rows = list(items)
@@ -116,7 +125,7 @@ def _print_trait(label: str, trait: Trait) -> None:
     # Section header with integrated separator. Right-align the label so the
     # colon lines up with the info key-value colons at column 18.
     header = f"── {label} ── {trait.icon} {trait.name} ──[{trait.symbol_id}]──"
-    print(f"\n{header}{'─' * max(0, _SEPARATOR_WIDTH - len(header))}")
+    print(f"\n{_rule(header)}")
 
     # Print all info key-value pairs, skipping None values.
     info = trait.info()
@@ -265,12 +274,10 @@ def main() -> None:
         _column_widths(sorted_groups),
     )
 
-    header = "── Detected traits ──"
-    print(f"\n{header}{'─' * max(0, _SEPARATOR_WIDTH - len(header))}")
+    print(f"\n{_rule('── Detected traits ──')}")
     _print_table(sorted_traits, widths)
 
-    header = "── Detected groups ──"
-    print(f"\n{header}{'─' * max(0, _SEPARATOR_WIDTH - len(header))}")
+    print(f"\n{_rule('── Detected groups ──')}")
     _print_table(sorted_groups, widths)
 
 
