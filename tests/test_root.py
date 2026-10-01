@@ -38,6 +38,7 @@ from extra_platforms import (
     GITHUB_CI,
     GITLAB_CI,
     MACOS,
+    POWERSHELL,
     SYSTEM_V,
     UBUNTU,
     UNIX,
@@ -319,6 +320,10 @@ def test_current_funcs():
             login_shell = shell_from_path(os.environ["SHELL"])
             if login_shell.current:
                 extra_shells.add(login_shell)
+        # XXX PSModulePath detects PowerShell wherever it is set: Windows sets it
+        # machine-wide, and Azure leaks it into GitHub's Ubuntu runners.
+        if "PSModulePath" in os.environ:
+            extra_shells.add(POWERSHELL)
         detected_traits += len(extra_shells - {current_shell(), UNKNOWN_SHELL})
     # Terminal is optional: headless/CI environments may not have one.
     if is_any_terminal():
@@ -327,14 +332,10 @@ def test_current_funcs():
     if is_any_ci():
         # +1 CI.
         detected_traits += 1
-        if is_github_ci():
-            # XXX Azure infrastructure leaks into GitHub Ubuntu runners.
-            if github_runner_os() == "ubuntu-slim":
-                # +1 platform (WSL2).
-                detected_traits += 1
-            elif is_ubuntu():
-                # +1 shell (PowerShell from Azure).
-                detected_traits += 1
+        # XXX GitHub's ubuntu-slim runner is a WSL2 container.
+        if is_github_ci() and github_runner_os() == "ubuntu-slim":
+            # +1 platform (WSL2).
+            detected_traits += 1
     # Agent is optional: we may not be running under an AI agent.
     if is_any_agent():
         detected_traits += 1
