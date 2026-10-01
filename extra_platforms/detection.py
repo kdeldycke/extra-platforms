@@ -688,8 +688,27 @@ def is_generic_linux() -> bool:
     Matches when running on a Linux kernel whose distribution cannot be
     identified: minimal containers and build chroots shipping no `/etc/os-release`
     and reaching no `systemd-hostnamed`.
+
+    ```{note}
+    A distribution identified by another marker is no generic Linux, like
+    {data}`~extra_platforms.SLITAZ` from its `/etc/slitaz-release` file.
+    {data}`~extra_platforms.CHROMEOS` does not count: it hosts the Crostini
+    container, whose own distribution stays unidentified.
+    ```
     """
-    return sys.platform == "linux" and not os_release_id()
+    # Lazy imports to avoid circular dependencies.
+    from .group_data import LINUX
+    from .platform_data import CHROMEOS, GENERIC_LINUX
+
+    return (
+        sys.platform == "linux"
+        and not os_release_id()
+        and not any(
+            platform.current
+            for platform in LINUX
+            if platform not in (CHROMEOS, GENERIC_LINUX)
+        )
+    )
 
 
 @cache

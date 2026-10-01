@@ -19,6 +19,8 @@ import ast
 from itertools import pairwise
 from pathlib import Path
 
+import pytest
+
 from extra_platforms import (
     ALL_PLATFORM_GROUPS,
     ALL_PLATFORMS,
@@ -26,6 +28,7 @@ from extra_platforms import (
     BSD,
     BSD_WITHOUT_MACOS,
     CHROMEOS,
+    GENERIC_LINUX,
     LINUX,
     LINUX_LAYERS,
     LINUX_LIKE,
@@ -38,6 +41,8 @@ from extra_platforms import (
     WSL1,
     WSL2,
     current_platform,
+    detection as detection_module,
+    invalidate_caches,
     is_any_platform,
     is_any_trait,
     is_unknown_platform,
@@ -70,6 +75,29 @@ def test_platform_mutual_exclusion():
     # A detected layer either stands alone or hosts a Linux distribution.
     if layers:
         assert all(host in LINUX for host in hosts)
+
+
+@pytest.mark.parametrize(
+    ("marker", "generic"),
+    [
+        # SliTaz ships no os-release, only its own /etc/slitaz-release.
+        ("is_slitaz", False),
+        # ChromeOS hosts the Crostini container, whose distribution stays unknown.
+        ("is_chromeos", True),
+    ],
+)
+def test_generic_linux_without_os_release(monkeypatch, marker, generic):
+    """A Linux kernel with no os-release is generic until a distribution shows."""
+    monkeypatch.setattr(detection_module.sys, "platform", "linux")
+    monkeypatch.setattr(detection_module, "os_release_id", lambda: "")
+    registry = detection_module._detection_registry
+    for platform in LINUX:
+        if platform is not GENERIC_LINUX:
+            func_id = platform.detection_func_id
+            monkeypatch.setitem(registry, func_id, lambda f=func_id: f == marker)
+    invalidate_caches()
+    assert GENERIC_LINUX.current is generic
+    invalidate_caches()
 
 
 def test_platform_logical_grouping():
