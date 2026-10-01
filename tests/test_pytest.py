@@ -25,10 +25,16 @@ import pytest
 import extra_platforms
 from extra_platforms import (
     ALL_GROUPS,
+    ALL_PLATFORMS,
     ALL_TRAITS,
+    ALL_WINDOWS,
+    LINUX,
+    MACOS,
+    UBUNTU,
     UNKNOWN,
     Group,
     Trait,
+    current_platform,
     current_traits,
     is_aarch64,
     is_any_agent,
@@ -492,7 +498,7 @@ def test_skip_linux():
     assert is_any_platform()
     assert not is_linux()
     assert not is_ubuntu()
-    assert is_any_windows() or is_macos() or is_windows()
+    assert current_platform() in ALL_PLATFORMS.difference(LINUX)
 
 
 @unless_linux
@@ -508,7 +514,7 @@ def test_unless_linux():
 def test_skip_macos():
     assert is_any_platform()
     assert not is_macos()
-    assert is_any_windows() or is_linux() or is_ubuntu() or is_windows()
+    assert current_platform() in ALL_PLATFORMS.difference(MACOS)
 
 
 @unless_macos
@@ -525,7 +531,7 @@ def test_unless_macos():
 def test_skip_ubuntu():
     assert is_any_platform()
     assert not is_ubuntu()
-    assert is_any_windows() or is_linux() or is_macos() or is_windows()
+    assert current_platform() in ALL_PLATFORMS.difference(UBUNTU)
 
 
 @unless_ubuntu
@@ -543,7 +549,7 @@ def test_skip_windows():
     assert is_any_platform()
     assert not is_windows()
     assert not is_any_windows()
-    assert is_linux() or is_macos() or is_ubuntu()
+    assert current_platform() in ALL_PLATFORMS.difference(ALL_WINDOWS)
 
 
 @unless_windows
