@@ -600,7 +600,10 @@ exclude = [
   "archive\\.ph",
   "sci-hub\\.st",
   "ycombinator\\.com",
-  "x\\.com",
+  # Anchored, unlike its neighbours: these patterns are substring matches, and a
+  # bare `x\.com` also swallows every domain ending in it, like cloudlinux.com,
+  # which is then silently never checked.
+  "^https://(www\\.)?x\\.com(/.*)?$",
   # VirusTotal analysis pages are a JS app that rate-limits bots.
   "^https://www\\.virustotal\\.com/gui/.*$",
   # Bitdefender returns 403 to bots.
