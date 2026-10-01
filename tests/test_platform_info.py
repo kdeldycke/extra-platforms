@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import io
 import os
+import platform
 import shutil
 import subprocess
 
@@ -31,6 +32,7 @@ from extra_platforms.platform_info import (
     invalidate_os_release_cache,
     linux_info,
     os_release_id,
+    windows_info,
 )
 
 HOSTNAMECTL_CLOUDLINUX = """\
@@ -488,3 +490,19 @@ def test_invalidate_os_release_cache_clears_hostnamectl(
 
     invalidate_os_release_cache()
     assert _hostnamectl_os_release() == {"pretty_name": "Fedora Linux 39"}
+
+
+def test_windows_info(monkeypatch):
+    """The version is the NT one, build number included; the release names it."""
+    # As reported by a Windows 11 24H2 guest.
+    monkeypatch.setattr(
+        platform,
+        "win32_ver",
+        lambda: ("11", "10.0.26100", "SP0", "Multiprocessor Free"),
+    )
+    monkeypatch.setattr(platform, "win32_edition", lambda: "Professional")
+    assert windows_info() == {
+        "version": "10.0.26100",
+        "version_parts": {"major": "10", "minor": "0", "build_number": "26100"},
+        "codename": "11 Professional",
+    }
