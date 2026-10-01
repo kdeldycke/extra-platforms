@@ -5,6 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Detect the Korn shell from its `ksh93` binary, which Fedora and illumos link `ksh` to.
 - Fix `current_shell()` reporting the login shell over a nearer shell running the process, like a bash script launched from a zsh session.
 - Fix the process-tree shell detection on FreeBSD and illumos, where `ps` printed the PID column alone.
 - Fix `current_shell_path()` and the `path` of `Shell.info()` returning the `SHELL` path of another shell when the running one shows none, as on illumos.

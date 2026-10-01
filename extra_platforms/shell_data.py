@@ -50,6 +50,7 @@ KSH = Shell(
     "𝐊",
     "https://en.wikipedia.org/wiki/KornShell",
     version_env_var="KSH_VERSION",
+    executables=("ksh93",),
 )
 
 NUSHELL = Shell(

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from extra_platforms import (
     ALL_SHELLS,
+    KSH,
     NUSHELL,
     POWERSHELL,
     UNKNOWN_SHELL,
@@ -43,11 +44,12 @@ def test_shell_detection():
 
 
 def test_executable_names():
-    """The two shells whose binary is not named after their ID declare it, and
+    """The shells whose binary is not named after their ID declare it, and
     every other shell answers to its ID alone."""
+    assert KSH.executable_names == {"ksh", "ksh93"}
     assert NUSHELL.executable_names == {"nushell", "nu"}
     assert POWERSHELL.executable_names == {"powershell", "pwsh", "powershell_ise"}
     for shell in ALL_SHELLS:
         assert isinstance(shell, Shell)
-        if shell not in {NUSHELL, POWERSHELL}:
+        if shell not in {KSH, NUSHELL, POWERSHELL}:
             assert shell.executable_names == {shell.id}

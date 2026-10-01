@@ -1790,7 +1790,12 @@ def is_ksh() -> bool:
     shell on startup), or via the `SHELL` path as a fallback.
     ```
     """
-    return _detect_shell(version_env_var="KSH_VERSION", shell_ids="ksh")
+    # Lazy import to avoid circular dependencies.
+    from .shell_data import KSH
+
+    return _detect_shell(
+        version_env_var=KSH.version_env_var, shell_ids=KSH.executable_names
+    )
 
 
 @cache

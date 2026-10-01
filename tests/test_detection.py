@@ -816,6 +816,35 @@ def unset_shell_startup_vars(monkeypatch) -> None:
     monkeypatch.delenv("PSModulePath", raising=False)
 
 
+@pytest.mark.parametrize(
+    ("shell", "executable"),
+    [
+        pytest.param(shell, name, id=name)
+        for shell in ALL_SHELLS
+        if isinstance(shell, Shell)
+        for name in shell.executables
+    ],
+)
+@pytest.mark.parametrize("source", ["SHELL", "process tree"])
+def test_shell_detected_by_every_executable_name(
+    monkeypatch, shell, executable, source
+):
+    """Each file name a shell's binary goes by detects it, as its ID does."""
+    path = f"/nonexistent/bin/{executable}"
+    unset_shell_startup_vars(monkeypatch)
+    if source == "SHELL":
+        monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: ())
+        monkeypatch.setenv("SHELL", path)
+    else:
+        monkeypatch.setattr(
+            detection_module, "_parent_process_tree", lambda: ((executable, path),)
+        )
+        monkeypatch.delenv("SHELL", raising=False)
+    invalidate_caches()
+    assert shell.current
+    invalidate_caches()
+
+
 def test_current_shell_prefers_a_running_pwsh_over_configured_shell(monkeypatch):
     """A ``pwsh`` parent process names PowerShell, whose ID is not its binary name."""
     from extra_platforms import POWERSHELL, current_shell

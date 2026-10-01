@@ -440,8 +440,10 @@ class Shell(Trait):
 
     Most shells answer to their {attr}`~extra_platforms.Trait.id` alone, so the
     field stays empty. {data}`~extra_platforms.POWERSHELL` ships as ``pwsh`` on
-    every platform since ``6.0`` and as ``powershell_ise`` on Windows, and
-    {data}`~extra_platforms.NUSHELL` as ``nu``. Detection matches the resolved
+    every platform since ``6.0`` and as ``powershell_ise`` on Windows,
+    {data}`~extra_platforms.NUSHELL` as ``nu``, and
+    {data}`~extra_platforms.KSH` as ``ksh93`` on Fedora and illumos, where
+    ``ksh`` links to it. Detection matches the resolved
     ``SHELL`` path and the parent process tree against
     {attr}`executable_names`, and so does
     {func}`~extra_platforms.shell_from_path`.
