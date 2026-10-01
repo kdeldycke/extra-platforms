@@ -20,9 +20,9 @@ these catch real regressions in the actual documentation.
 
 from __future__ import annotations
 
+import importlib.util
 import inspect
 import re
-import shutil
 import subprocess
 import sys
 from collections.abc import Iterator
@@ -45,6 +45,30 @@ from extra_platforms import (
 )
 from extra_platforms.pytest import unless_linux
 
+# Third-party modules the docs build imports: the theme and every extension
+# docs/conf.py loads that Sphinx does not ship.
+DOCS_BUILD_MODULES = (
+    "click_extra",
+    "furo",
+    "myst_parser",
+    "sphinx",
+    "sphinx_autodoc_typehints",
+    "sphinx_copybutton",
+    "sphinx_design",
+    "sphinxcontrib.mermaid",
+    "sphinxext.opengraph",
+)
+
+
+def importable(module: str) -> bool:
+    """Tell whether ``module`` resolves in the running interpreter."""
+    try:
+        return importlib.util.find_spec(module) is not None
+    except ModuleNotFoundError:
+        # A dotted name whose parent package is missing.
+        return False
+
+
 # The docs workflow builds on ubuntu-slim with Python >= 3.12 (the docs dependency
 # group minimum). Only run sphinx tests under the same conditions.
 pytestmark = [
@@ -53,9 +77,12 @@ pytestmark = [
         sys.version_info < (3, 12),
         reason="docs dependency group requires Python >= 3.12",
     ),
+    # The docs are built with the running interpreter, so its environment must
+    # hold the docs group. A uv binary alone is no proof: openSUSE ships one in
+    # its own archive, and a build from it cannot resolve the docs group offline.
     pytest.mark.skipif(
-        shutil.which("uv") is None,
-        reason="needs uv to build the docs",
+        not all(map(importable, DOCS_BUILD_MODULES)),
+        reason="needs the docs dependency group to build the docs",
     ),
     # Sphinx crashes with a FileNotFoundError on searchindex.js.tmp when
     # concurrent builds share the same output directory (sphinx-doc/sphinx#13702).
@@ -84,9 +111,9 @@ def built_docs() -> Path:
     This fixture builds the documentation if it doesn't exist or is outdated.
     """
     if not DOCS_HTML_DIR.exists():
-        # Build the documentation.
+        # Build the documentation with the interpreter the module gate checked.
         subprocess.run(
-            ["uv", "run", "sphinx-build", "-b", "html", "./docs", "./docs/_build"],
+            [sys.executable, "-m", "sphinx", "-b", "html", "./docs", "./docs/_build"],
             check=True,
             cwd=Path(__file__).parent.parent,
         )
