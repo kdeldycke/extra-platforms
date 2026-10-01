@@ -1,9 +1,11 @@
 # Changelog
 
-## [`13.11.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.11.0...main)
+## [`13.11.2.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.11.1...main)
 
 > [!WARNING]
 > This version is **not released yet** and is under active development.
+
+## [`13.11.1` (2026-10-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.11.0...v13.11.1)
 
 ## [`13.11.0` (2026-10-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.10.1...v13.11.0)
 
