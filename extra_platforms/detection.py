@@ -1419,6 +1419,13 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     header-name differences (``COMMAND`` vs ``CMD``) that complicate name-based
     parsing. Mirrors [shellingham](https://github.com/sarugaku/shellingham).
 
+    ```{caution}
+    Each field takes its own ``-o``. POSIX reads everything after a ``=`` as the
+    header text, so FreeBSD's ``ps`` takes ``-o pid=,ppid=,args=`` as the
+    ``pid`` column under a ``,ppid=,args=`` header, and prints nothing else.
+    Linux and macOS accept the combined form, which hides the difference.
+    ```
+
     ```{important}
     ``-A`` (select every process) is essential, not merely convenient. Without
     it, `ps` defaults to processes sharing the caller's controlling terminal,
@@ -1429,7 +1436,7 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     """
     try:
         result = subprocess.run(
-            ("ps", "-A", "-o", "pid=,ppid=,args="),
+            ("ps", "-A", "-o", "pid=", "-o", "ppid=", "-o", "args="),
             capture_output=True,
             text=True,
             check=True,

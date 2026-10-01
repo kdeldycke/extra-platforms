@@ -622,9 +622,9 @@ def test_tree_from_ps_uses_portable_flags(monkeypatch):
     monkeypatch.setattr(subprocess, "run", fake_run)
     detection_module._tree_from_ps()
     # `args` (POSIX), not `command` (absent on Solaris/AIX); no `-ww` (rejected
-    # by the System V ps on Solaris and AIX).
-    assert "pid=,ppid=,args=" in captured["args"]
-    assert "-ww" not in captured["args"]
+    # by the System V ps on Solaris and AIX). One `-o` per field: FreeBSD reads
+    # `-o pid=,ppid=,args=` as a single `pid` column with a `,ppid=,args=` header.
+    assert captured["args"] == ("ps", "-A", "-o", "pid=", "-o", "ppid=", "-o", "args=")
 
 
 @pytest.mark.parametrize(
