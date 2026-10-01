@@ -43,7 +43,7 @@ The current shell can be obtained via the `current_shell()` function:
 Shell(id='unknown_shell', name='Unknown shell')
 ```
 
-The path to the running shell's executable is available via {func}`~current_shell_path`. It prefers the actual ancestor process binary (read from `/proc` on Linux, `ps` on macOS and the BSDs, the Win32 API on Windows) over the `SHELL` environment variable, so it stays accurate when `SHELL` is unset or points to a different shell than the one executing.
+The path to the running shell's executable is available via {func}`~current_shell_path`. It prefers the actual ancestor process binary (read from `/proc` on Linux, `ps` on macOS, the BSDs and illumos, the Win32 API on Windows) over the `SHELL` environment variable, so it stays accurate when `SHELL` is unset or points to a different shell than the one executing. It falls back to `SHELL` only when that variable names the same shell, and returns `None` otherwise. The `path` key of {meth}`Shell.info` follows the same rules.
 
 To get the {class}`~Shell` that a binary path names, use {func}`~shell_from_path`. It also recognizes a binary whose file name is not the shell ID, like `pwsh` for PowerShell:
 
@@ -59,7 +59,7 @@ Shell(id='powershell', name='PowerShell')
 
 ## Symlink resolution: implementation over interface
 
-Shell detection resolves symlinks in the `SHELL` environment variable before identifying the shell. This means detection always reports the **concrete shell implementation** rather than the POSIX interface name.
+Shell detection resolves symlinks in the `SHELL` environment variable before identifying the shell. This means detection reports the **concrete shell implementation** rather than the POSIX interface name.
 
 On most modern Unix systems, `/bin/sh` is a symlink to a concrete shell:
 
@@ -72,6 +72,8 @@ On most modern Unix systems, `/bin/sh` is a symlink to a concrete shell:
 On macOS, `/bin/sh` is a regular binary that re-executes the shell that `/private/var/select/sh` links to (bash by default), so symlink resolution stops at `sh`.
 
 On Alpine, `/bin/sh` and `/bin/ash` both link to BusyBox, a multi-call binary that runs the program named by the name it is called by. Its `sh` applet is its Almquist shell, so both, like `busybox sh` called by name, are detected as {data}`~ASH`.
+
+On illumos, `sh` runs `ksh93`. Detection reads the binary each process runs from `/proc/<pid>/path/a.out`, so {func}`~current_shell` reports a running `sh` as {data}`~KSH`.
 
 When `/bin/sh` symlinks to `/bin/bash`:
 
@@ -87,7 +89,7 @@ Shell detection functions are independent heuristics. Each one reads three chann
 
 1. A version environment variable that only the shell itself sets on startup (like `FISH_VERSION`).
 2. The `SHELL` environment variable: the configured login shell, resolved through symlinks as described above.
-3. The parent process tree (read from `/proc` on Linux, `ps` on macOS and the BSDs, the Win32 API on Windows): the shells actually running as ancestors of the current process.
+3. The parent process tree (read from `/proc` on Linux, `ps` on macOS, the BSDs and illumos, the Win32 API on Windows): the shells actually running as ancestors of the current process.
 
 These channels describe different things, so several detection functions can legitimately return `True` at the same time:
 

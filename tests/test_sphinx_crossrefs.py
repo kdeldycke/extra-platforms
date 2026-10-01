@@ -78,8 +78,7 @@ pytestmark = [
         reason="docs dependency group requires Python >= 3.12",
     ),
     # The docs are built with the running interpreter, so its environment must
-    # hold the docs group. A uv binary alone is no proof: openSUSE ships one in
-    # its own archive, and a build from it cannot resolve the docs group offline.
+    # hold the docs group.
     pytest.mark.skipif(
         not all(map(importable, DOCS_BUILD_MODULES)),
         reason="needs the docs dependency group to build the docs",

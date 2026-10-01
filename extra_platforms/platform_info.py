@@ -465,7 +465,7 @@ def windows_info() -> dict[str, Any]:
     """Fetch detailed Windows version information.
 
     Returns a dictionary with the same structure as `distro.info()` for
-    consistency, including:
+    consistency, plus a `release` key. It includes:
 
     - `release`: Product release (e.g., "11", or "2022Server" on Windows Server)
     - `version`: Full NT version string (e.g., "10.0.26100")

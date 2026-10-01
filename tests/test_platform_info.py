@@ -499,15 +499,19 @@ def test_invalidate_os_release_cache_clears_hostnamectl(
     assert _hostnamectl_os_release() == {"pretty_name": "Fedora Linux 39"}
 
 
-def test_windows_info(monkeypatch):
-    """The version is the NT one, build number included; the release names it."""
-    # As reported by a Windows 11 24H2 guest.
+@pytest.fixture
+def windows_11(monkeypatch):
+    """Report the Windows version the way a Windows 11 24H2 guest does."""
     monkeypatch.setattr(
         platform,
         "win32_ver",
         lambda: ("11", "10.0.26100", "SP0", "Multiprocessor Free"),
     )
     monkeypatch.setattr(platform, "win32_edition", lambda: "Professional")
+
+
+def test_windows_info(windows_11):
+    """The version is the NT one, build number included; the release names it."""
     assert windows_info() == {
         "release": "11",
         "version": "10.0.26100",
@@ -516,17 +520,11 @@ def test_windows_info(monkeypatch):
     }
 
 
-def test_windows_platform_info_release(monkeypatch):
+def test_windows_platform_info_release(monkeypatch, windows_11):
     """``Platform.info()`` carries the Windows release beside the NT version."""
     monkeypatch.setitem(
         detection_module._detection_registry, "is_windows", lambda: True
     )
-    monkeypatch.setattr(
-        platform,
-        "win32_ver",
-        lambda: ("11", "10.0.26100", "SP0", "Multiprocessor Free"),
-    )
-    monkeypatch.setattr(platform, "win32_edition", lambda: "Professional")
     invalidate_caches()
     try:
         info = WINDOWS.info()

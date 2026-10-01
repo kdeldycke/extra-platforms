@@ -725,9 +725,7 @@ def is_generic_linux() -> bool:
         sys.platform == "linux"
         and not os_release_id()
         and not any(
-            platform.current
-            for platform in LINUX
-            if platform not in (CHROMEOS, GENERIC_LINUX)
+            plat.current for plat in LINUX if plat not in (CHROMEOS, GENERIC_LINUX)
         )
     )
 
@@ -1174,7 +1172,8 @@ def is_unknown_platform() -> bool:
 
 def _busybox_applet(name: str) -> str:
     """Name the shell a BusyBox applet runs: ``ash`` for its Almquist shell
-    applets, the applet name otherwise."""
+    applets, the applet name otherwise.
+    """
     return "ash" if name in _BUSYBOX_ASH_APPLETS else name
 
 
@@ -1197,10 +1196,10 @@ def _shell_stem(path: str | os.PathLike[str]) -> str:
     ``pwsh.exe`` gives ``"pwsh"``. A link keeps its own name when its target goes
     by no shell's name, the way a multi-call binary picks its program from the
     name it is called by. BusyBox is one: Alpine's ``/bin/sh`` and ``/bin/ash``
-    both give ``"ash"``, see `_BUSYBOX_ASH_APPLETS`.
+    both give ``"ash"``, see {data}`_BUSYBOX_ASH_APPLETS`.
     """
-    # A path that does not exist here is read as text, whichever separator it
-    # uses: the Windows flavor accepts both.
+    # The file name as written, read as text: the Windows flavor accepts both
+    # separators, and the path need not exist here.
     stem = PureWindowsPath(path).stem.lower()
     try:
         resolved = Path(path).resolve(strict=True).stem.lower()
@@ -1236,7 +1235,10 @@ def shell_from_path(path: str | os.PathLike[str]) -> Shell:
     The path is resolved through symlinks when it exists, so ``/bin/sh`` on a
     system linking it to ``bash`` gives {data}`~extra_platforms.BASH`, and its
     lowercased file name, suffix dropped, is matched against every shell's
-    {attr}`~extra_platforms.Shell.executable_names`. An unmatched name gives
+    {attr}`~extra_platforms.Shell.executable_names`. A link to a binary going by
+    no shell's name keeps its own name, the way a multi-call binary picks its
+    program, and Alpine's ``/bin/sh`` and ``/bin/ash``, both links to BusyBox,
+    give {data}`~extra_platforms.ASH`. An unmatched name gives
     {data}`~extra_platforms.UNKNOWN_SHELL`.
     """
     # Lazy imports to avoid circular dependencies.
@@ -1397,21 +1399,26 @@ def _unwrap_emulator(argv: list[str]) -> list[str]:
     return argv
 
 
-def _pairs_from_argv(argv: list[str], busybox: bool = False) -> list[tuple[str, str]]:
-    """Derive ``(name, path)`` pairs a single process contributes from its argv.
+def _pairs_from_process(executable: str, argv: list[str]) -> list[tuple[str, str]]:
+    """Derive ``(name, path)`` pairs a single process contributes.
 
-    Unwraps a user-mode emulator prefix (so the emulated shell is seen), then
-    yields the ``argv[0]`` shell name (with its path only when absolute, since a
-    login dash carries none) plus any interpreter-hosted shell found in the
-    arguments (like xonsh run under python). Shared by the ``/proc`` and ``ps``
-    walks, which differ only in how they obtain ``argv``.
+    Yields the pair of ``executable`` first, the resolved binary the process runs
+    (``""`` when the walk cannot read it). Then unwraps a user-mode emulator
+    prefix from ``argv`` (so the emulated shell is seen), and yields the
+    ``argv[0]`` shell name (with its path only when absolute, since a login dash
+    carries none) plus any interpreter-hosted shell found in the arguments (like
+    xonsh run under python). Shared by the ``/proc`` and ``ps`` walks, which
+    differ only in how they obtain ``executable`` and ``argv``.
 
-    BusyBox called by its own name runs the applet its first argument names, and
-    ``busybox`` tells a process runs BusyBox under an applet name, which only its
-    resolved executable shows. The applet then names the shell, see
-    `_BUSYBOX_ASH_APPLETS`.
+    BusyBox runs the applet named by its first argument when called by its own
+    name, and by ``argv[0]`` when called through a link, which only an
+    ``executable`` resolving to BusyBox reveals. The applet then names the shell,
+    see {data}`_BUSYBOX_ASH_APPLETS`.
     """
     pairs: list[tuple[str, str]] = []
+    if exe_name := _shell_name(executable):
+        pairs.append((exe_name, executable))
+    busybox = exe_name == "busybox"
     argv = _unwrap_emulator(argv)
     if len(argv) >= 2 and _shell_name(argv[0]) == "busybox":
         argv, busybox = argv[1:], True
@@ -1451,15 +1458,13 @@ def _tree_from_proc() -> tuple[tuple[str, str], ...]:
             target = os.readlink(f"/proc/{pid}/exe")
         except OSError:
             target = ""
-        if name := _shell_name(target):
-            pairs.append((name, target))
         # Full argv from the raw, null-separated command line.
         try:
             raw = Path(f"/proc/{pid}/cmdline").read_bytes()
             argv = [a for a in raw.decode(errors="replace").split("\0") if a]
         except OSError:
             argv = []
-        pairs.extend(_pairs_from_argv(argv, busybox=_shell_name(target) == "busybox"))
+        pairs.extend(_pairs_from_process(target, argv))
         ppid = _ppid_from_proc(pid)
         if ppid is None:
             break
@@ -1496,7 +1501,7 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     login shell (``-zsh``) or a bare name carries no path, so callers fall back
     to ``SHELL``. Where System V procfs links each process to its executable,
     that link adds the binary actually running, ahead of ``argv`` (see
-    `_system_v_executable`).
+    {func}`_system_v_executable`).
 
     The invocation is the portable POSIX form (``-A``, ``-o field=``, and the
     ``args`` specifier) with no ``-ww``, so it works across macOS, the BSDs,
@@ -1558,12 +1563,7 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     while pid > 1 and pid in table and pid not in visited:
         visited.add(pid)
         ppid, command = table[pid]
-        target = _system_v_executable(pid)
-        if name := _shell_name(target):
-            pairs.append((name, target))
-        pairs.extend(
-            _pairs_from_argv(command.split(), busybox=_shell_name(target) == "busybox")
-        )
+        pairs.extend(_pairs_from_process(_system_v_executable(pid), command.split()))
         pid = ppid
     return tuple(pairs)
 
@@ -1635,7 +1635,8 @@ def _parent_process_tree() -> tuple[tuple[str, str], ...]:
 
     - ``/proc`` when present (Linux always, BSDs that mount procfs): no
       subprocess is spawned.
-    - ``ps`` otherwise (macOS, BSDs without procfs).
+    - ``ps`` otherwise (macOS, BSDs without procfs, and the System V ``/proc``
+      of illumos and Solaris).
     - The Win32 Tool Help API on Windows.
     - An empty tuple on platforms exposing none of these.
     """
@@ -1670,11 +1671,10 @@ def _running_shell_path(names: frozenset[str]) -> str | None:
     ``names`` is a shell's {attr}`~extra_platforms.Shell.executable_names`.
     Walks {func}`_parent_process_tree` and returns the first (nearest) absolute
     path whose normalized name is one of them. Non-absolute sources (a login
-    dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
-    callers can fall back to ``SHELL``. A path is considered absolute when it
-    starts with ``/`` (POSIX) or satisfies ``os.path.isabs`` (Windows drive
-    paths like ``C:\...``). Returns {data}`None` when no running path is
-    found.
+    dash or a bare ``argv[0]``) are skipped so callers can fall back to
+    ``SHELL``. A path is considered absolute when it starts with ``/`` (POSIX)
+    or satisfies ``os.path.isabs`` (Windows drive paths like ``C:\...``).
+    Returns {data}`None` when no running path is found.
     """
     for name, path in _parent_process_tree():
         if name in names and (path.startswith("/") or os.path.isabs(path)):
@@ -1734,8 +1734,8 @@ def _detect_shell(
        when ``/bin/sh`` symlinks to ``/bin/bash``, ``bash`` is detected, not
        ``sh``.
     3. Falls back to walking the parent process tree (via `/proc` on Linux,
-       `ps` on macOS and the BSDs) to find the active shell, for stripped
-       environments without shell env vars.
+       `ps` on macOS, the BSDs and illumos) to find the active shell, for
+       stripped environments without shell env vars.
 
     :param version_env_var: Shell-specific environment variable name
         (like ``"BASH_VERSION"``).
@@ -2624,8 +2624,8 @@ def current_shell(strict: bool = False) -> Shell:
 
     1. Shell-specific environment variables (strongest: the Python process
        *is* the shell).
-    2. Parent process tree, read from ``/proc`` on Linux or ``ps`` on macOS
-       and the BSDs (strong: the shell is an ancestor process actively
+    2. Parent process tree, read from ``/proc`` on Linux or ``ps`` on macOS,
+       the BSDs and illumos (strong: the shell is an ancestor process actively
        running). When shells nest, the nearest ancestor wins.
     3. ``SHELL`` environment variable resolved through symlinks (weak:
        configured login shell, may differ from the active shell).
@@ -2735,8 +2735,8 @@ def current_shell_path() -> str | None:
 
     1. The actual running shell binary, taken from the nearest ancestor in the
        parent process tree that matches {func}`current_shell` (read from
-       ``/proc`` on Linux, ``ps`` on macOS and the BSDs). This is the true
-       interpreter, even when ``SHELL`` is unset or points elsewhere.
+       ``/proc`` on Linux, ``ps`` on macOS, the BSDs and illumos). This is the
+       true interpreter, even when ``SHELL`` is unset or points elsewhere.
     2. The ``SHELL`` environment variable (the configured login shell), as a
        fallback, when it names the same shell as {func}`current_shell`.
 

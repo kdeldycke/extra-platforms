@@ -676,22 +676,30 @@ def test_unwrap_emulator(argv, expected):
 
 
 @pytest.mark.parametrize(
-    ("argv", "busybox", "expected"),
+    ("executable", "argv", "expected"),
     (
         # BusyBox called by its own name runs the applet its argument names.
-        (["/usr/bin/busybox", "sh", "-c", "x"], False, [("ash", "")]),
-        (["busybox", "ash"], False, [("ash", "")]),
-        (["busybox", "hush", "-c", "x"], False, [("hush", "")]),
+        ("", ["/usr/bin/busybox", "sh", "-c", "x"], [("ash", "")]),
+        ("", ["busybox", "ash"], [("ash", "")]),
+        ("", ["busybox", "hush", "-c", "x"], [("hush", "")]),
         # BusyBox called through a link, as its resolved executable reveals.
-        (["/bin/sh", "script.sh"], True, [("ash", "/bin/sh")]),
-        (["-sh"], True, [("ash", "")]),
+        (
+            "/bin/busybox",
+            ["/bin/sh", "script.sh"],
+            [("busybox", "/bin/busybox"), ("ash", "/bin/sh")],
+        ),
+        ("/bin/busybox", ["-sh"], [("busybox", "/bin/busybox"), ("ash", "")]),
         # Any other sh keeps its name.
-        (["/bin/sh", "script.sh"], False, [("sh", "/bin/sh")]),
+        (
+            "/usr/bin/dash",
+            ["/bin/sh", "script.sh"],
+            [("dash", "/usr/bin/dash"), ("sh", "/bin/sh")],
+        ),
     ),
 )
-def test_pairs_from_argv_busybox(argv, busybox, expected):
+def test_pairs_from_process_busybox(executable, argv, expected):
     """BusyBox's sh and ash applets both run its Almquist shell."""
-    assert detection_module._pairs_from_argv(argv, busybox=busybox) == expected
+    assert detection_module._pairs_from_process(executable, argv) == expected
 
 
 def test_tree_from_ps_unwraps_emulator(monkeypatch):
@@ -825,7 +833,7 @@ def test_running_shell_path(monkeypatch):
     assert running(frozenset({"launchd"})) == "/sbin/launchd"
     assert running(frozenset({"fish"})) is None
 
-    # A non-absolute name (truncated BSD comm, login dash) is not a path.
+    # A non-absolute name (a bare argv[0], a login dash) is not a path.
     monkeypatch.setattr(
         detection_module, "_parent_process_tree", lambda: (("zsh", "zsh"),)
     )

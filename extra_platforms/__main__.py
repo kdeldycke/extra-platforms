@@ -122,8 +122,7 @@ def _print_trait(label: str, trait: Trait) -> None:
     :param label: The section label (e.g., "Architecture", "Platform").
     :param trait: The detected trait instance.
     """
-    # Section header with integrated separator. Right-align the label so the
-    # colon lines up with the info key-value colons at column 18.
+    # Section header, extended by a rule to the separator width.
     header = f"── {label} ── {trait.icon} {trait.name} ──[{trait.symbol_id}]──"
     print(f"\n{_rule(header)}")
 

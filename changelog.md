@@ -5,16 +5,17 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add a `release` key to `Platform.info()`, holding the product release on Windows, like `11`, and `None` on other platforms.
 - Detect the Korn shell from its `ksh93` binary, which Fedora and illumos link `ksh` to.
-- Pad every `extra-platforms` section header to the same width when its icon spans two columns.
-- Fix `Platform.info()` on Windows reporting the release (`11`) as `version`: `version` is now the NT version with its build number, like `10.0.26100`, and a new `release` key holds `11`.
+- Detect BusyBox's shell as `ash`, through Alpine's `/bin/sh` and `/bin/ash` links or `busybox sh`, instead of matching no shell.
+- Report the shell behind a bare `sh` on illumos, `ksh93`, and its path.
+- Log an unrecognized terminal at `INFO` instead of `WARNING` in SSH sessions, and when `TERM` declares a dumb terminal, as NixOS and FreeBSD do.
+- Fix `Platform.info()` on Windows reporting the release (`11`) as `version`: it now reports the NT version with its build number, like `10.0.26100`.
 - Fix `current_shell()` reporting the login shell over a nearer shell running the process, like a bash script launched from a zsh session.
 - Fix the process-tree shell detection on FreeBSD and illumos, where `ps` printed the PID column alone.
-- Fix `current_shell_path()` and the `path` of `Shell.info()` returning the `SHELL` path of another shell when the running one shows none, as on illumos.
-- Read the binary each process runs from `/proc/<pid>/path/a.out` on illumos, which names the shell behind a bare `sh` (`ksh93`) and its path.
-- Detect BusyBox's shell as `ash`, through Alpine's `/bin/sh` and `/bin/ash` links or `busybox sh` called by name, instead of matching no shell.
+- Fix `current_shell_path()` and the `path` of `Shell.info()` returning the `SHELL` path of another shell when the running one shows no path.
 - Fix `is_generic_linux()` matching beside a distribution identified without `os-release`, like SliTaz, which put both platforms in `current_traits()`.
-- Log an unrecognized terminal at `INFO` instead of `WARNING` in SSH sessions, and when `TERM` declares a dumb terminal, as NixOS and FreeBSD do.
+- Fix `extra-platforms` section headers whose width varied with the width of their icon.
 - Fix `test_current_funcs` failing when a shell besides the running one is detected: the `SHELL` login shell, like a Debian build calling pytest from `/bin/sh`, or PowerShell from `PSModulePath` under Windows `cmd`.
 - Fix `test_skip_linux`, `test_skip_macos`, `test_skip_ubuntu` and `test_skip_windows` failing on platforms other than Linux, macOS and Windows, like FreeBSD.
 - Skip the Sphinx cross-reference tests when the docs dependencies are missing, instead of erroring on any system shipping `uv`, like openSUSE.
