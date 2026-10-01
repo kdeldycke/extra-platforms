@@ -20,9 +20,16 @@ import os
 import platform
 import shutil
 import subprocess
+from operator import attrgetter
 
 import pytest
 
+from extra_platforms import (
+    ALL_PLATFORMS,
+    WINDOWS,
+    detection as detection_module,
+    invalidate_caches,
+)
 from extra_platforms.platform_info import (
     _hostnamectl_os_release,
     _parse_cpe_name,
@@ -502,7 +509,40 @@ def test_windows_info(monkeypatch):
     )
     monkeypatch.setattr(platform, "win32_edition", lambda: "Professional")
     assert windows_info() == {
+        "release": "11",
         "version": "10.0.26100",
         "version_parts": {"major": "10", "minor": "0", "build_number": "26100"},
         "codename": "11 Professional",
     }
+
+
+def test_windows_platform_info_release(monkeypatch):
+    """``Platform.info()`` carries the Windows release beside the NT version."""
+    monkeypatch.setitem(
+        detection_module._detection_registry, "is_windows", lambda: True
+    )
+    monkeypatch.setattr(
+        platform,
+        "win32_ver",
+        lambda: ("11", "10.0.26100", "SP0", "Multiprocessor Free"),
+    )
+    monkeypatch.setattr(platform, "win32_edition", lambda: "Professional")
+    invalidate_caches()
+    try:
+        info = WINDOWS.info()
+        assert info["release"] == "11"
+        assert info["version"] == "10.0.26100"
+        assert info["codename"] == "11 Professional"
+    finally:
+        invalidate_caches()
+
+
+@pytest.mark.parametrize(
+    "plat",
+    sorted(set(ALL_PLATFORMS) - {WINDOWS}, key=attrgetter("id")),
+    ids=attrgetter("id"),
+)
+def test_release_is_windows_only(plat):
+    """No other platform fills ``release``: on macOS, CPython's own
+    ``platform.release()`` names the Darwin kernel, another meaning."""
+    assert plat.info()["release"] is None

@@ -97,6 +97,7 @@ Platform(id='macos', name='macOS')
     'url': 'https://apple.com/macos/',
     'current': True,
     'distro_id': None,
+    'release': None,
     'version': '26.2',
     'version_parts': {'major': '26', 'minor': '2', 'build_number': None},
     'like': None,

@@ -383,6 +383,8 @@ class Platform(Trait):
             **super().info(),
             # Extra fields from distro.info().
             "distro_id": None,
+            # Product release a version does not carry, like Windows "11".
+            "release": None,
             "version": None,
             "version_parts": {"major": None, "minor": None, "build_number": None},
             "like": None,

@@ -7,7 +7,7 @@
 
 - Detect the Korn shell from its `ksh93` binary, which Fedora and illumos link `ksh` to.
 - Pad every `extra-platforms` section header to the same width when its icon spans two columns.
-- Fix `Platform.info()` on Windows reporting the release (`11`) as `version`: it now reports the NT version with its build number, like `10.0.26100`, as documented.
+- Fix `Platform.info()` on Windows reporting the release (`11`) as `version`: `version` is now the NT version with its build number, like `10.0.26100`, and a new `release` key holds `11`.
 - Fix `current_shell()` reporting the login shell over a nearer shell running the process, like a bash script launched from a zsh session.
 - Fix the process-tree shell detection on FreeBSD and illumos, where `ps` printed the PID column alone.
 - Fix `current_shell_path()` and the `path` of `Shell.info()` returning the `SHELL` path of another shell when the running one shows none, as on illumos.

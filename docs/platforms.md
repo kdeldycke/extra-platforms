@@ -24,7 +24,7 @@ Platform(id='debian', name='Debian')
 >>> DEBIAN.current
 False
 >>> DEBIAN.info()
-{'id': 'debian', 'name': 'Debian', 'icon': '🌀', 'url': 'https://debian.org', 'current': False, 'distro_id': None, 'version': None, 'version_parts': {'major': None, 'minor': None, 'build_number': None}, 'like': None, 'codename': None}
+{'id': 'debian', 'name': 'Debian', 'icon': '🌀', 'url': 'https://debian.org', 'current': False, 'distro_id': None, 'release': None, 'version': None, 'version_parts': {'major': None, 'minor': None, 'build_number': None}, 'like': None, 'codename': None}
 ```
 
 To check if the current platform matches a specific platform, use the corresponding [detection function](detection.md):

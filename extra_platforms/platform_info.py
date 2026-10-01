@@ -467,14 +467,16 @@ def windows_info() -> dict[str, Any]:
     Returns a dictionary with the same structure as `distro.info()` for
     consistency, including:
 
+    - `release`: Product release (e.g., "11", or "2022Server" on Windows Server)
     - `version`: Full NT version string (e.g., "10.0.26100")
     - `version_parts`: Dictionary with `major`, `minor`, `build_number`
     - `codename`: A combination of release and edition (e.g., "11 Professional")
 
     ```{note}
-    Windows 11 kept the NT version of Windows 10, `10.0`: only the build number
-    tells them apart, and names the feature update (`26100` is 24H2). The
-    release, `10` or `11`, goes into the codename.
+    Windows 11 kept the NT version of Windows 10, `10.0`, so `version_parts`
+    reads major `10` on both: only the build number tells them apart, and names
+    the feature update (`26100` is 24H2). {func}`platform.win32_ver` derives the
+    release from that build number.
     ```
 
     :returns: A dictionary containing Windows version details.
@@ -486,6 +488,7 @@ def windows_info() -> dict[str, Any]:
     """
     release, version, _csd, _ptype = platform.win32_ver()
     return {
+        "release": release,
         "version": version,
         "version_parts": _version_parts(version),
         "codename": f"{release} {platform.win32_edition()}",
