@@ -529,12 +529,40 @@ def test_tree_from_ps(monkeypatch):
         lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
     )
     monkeypatch.setattr(os, "getpid", lambda: 300)
+    # Keep the real procfs of an illumos host out of these made-up processes.
+    monkeypatch.setattr(detection_module, "_system_v_executable", lambda pid: "")
     # Ordered nearest-first. The login shell's argv[0] (-zsh) yields no path, and
     # "-m pytest" must not be mistaken for an interpreter-hosted shell.
     assert detection_module._tree_from_ps() == (
         ("python3", "/usr/bin/python3"),
         ("zsh", ""),
         ("launchd", "/sbin/launchd"),
+    )
+
+
+def test_tree_from_ps_reads_system_v_executable(monkeypatch):
+    """System V procfs names the binary a bare ``argv[0]`` hides, as on illumos."""
+    table = (
+        "  100     1 /usr/lib/ssh/sshd\n"
+        "  200   100 sh probe.sh\n"
+        "  300   200 /usr/bin/python3.14 report.py\n"
+    )
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
+    )
+    monkeypatch.setattr(os, "getpid", lambda: 300)
+    links = {200: "/usr/bin/i86/ksh93", 300: "/usr/bin/python3.14"}
+    monkeypatch.setattr(
+        detection_module, "_system_v_executable", lambda pid: links.get(pid, "")
+    )
+    assert detection_module._tree_from_ps() == (
+        ("python3", "/usr/bin/python3.14"),
+        ("python3", "/usr/bin/python3.14"),
+        ("ksh93", "/usr/bin/i86/ksh93"),
+        ("sh", ""),
+        ("sshd", "/usr/lib/ssh/sshd"),
     )
 
 

@@ -1467,6 +1467,20 @@ def _tree_from_proc() -> tuple[tuple[str, str], ...]:
     return tuple(pairs)
 
 
+def _system_v_executable(pid: int) -> str:
+    """Return the executable System V procfs links for ``pid``, or ``""``.
+
+    illumos and Solaris link ``/proc/<pid>/path/a.out`` to the resolved binary a
+    process runs: on illumos, a shell started as a bare ``sh`` runs
+    ``/usr/bin/i86/ksh93``. A process of another user, or a system without that
+    link, gives an empty string.
+    """
+    try:
+        return os.readlink(f"/proc/{pid}/path/a.out")
+    except OSError:
+        return ""
+
+
 def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     """Walk the parent process tree through ``ps``.
 
@@ -1480,7 +1494,9 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     that interpreter-hosted shells (like xonsh under python) can be recognized
     from their arguments. ``path`` is taken from ``argv[0]`` when absolute; a
     login shell (``-zsh``) or a bare name carries no path, so callers fall back
-    to ``SHELL``.
+    to ``SHELL``. Where System V procfs links each process to its executable,
+    that link adds the binary actually running, ahead of ``argv`` (see
+    `_system_v_executable`).
 
     The invocation is the portable POSIX form (``-A``, ``-o field=``, and the
     ``args`` specifier) with no ``-ww``, so it works across macOS, the BSDs,
@@ -1542,7 +1558,12 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     while pid > 1 and pid in table and pid not in visited:
         visited.add(pid)
         ppid, command = table[pid]
-        pairs.extend(_pairs_from_argv(command.split()))
+        target = _system_v_executable(pid)
+        if name := _shell_name(target):
+            pairs.append((name, target))
+        pairs.extend(
+            _pairs_from_argv(command.split(), busybox=_shell_name(target) == "busybox")
+        )
         pid = ppid
     return tuple(pairs)
 
@@ -2724,9 +2745,10 @@ def current_shell_path() -> str | None:
     shell.
 
     ```{note}
-    On some BSDs and illumos, ``ps`` reports only the bare ``argv[0]`` rather
-    than a full path. The non-absolute name is discarded, so this falls back to
-    ``SHELL`` there.
+    On some BSDs, ``ps`` reports only the bare ``argv[0]`` rather than a full
+    path. The non-absolute name is discarded, so this falls back to ``SHELL``
+    there. illumos and Solaris get the path from procfs instead (see
+    `_system_v_executable`).
     ```
 
     ```{seealso}
