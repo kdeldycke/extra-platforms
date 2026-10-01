@@ -1581,6 +1581,21 @@ def _running_shell_path(names: frozenset[str]) -> str | None:
     return None
 
 
+def _nearest_running_shell(shells: Iterable[Shell]) -> Shell | None:
+    """Return the shell of ``shells`` running nearest to the current process.
+
+    Walks {func}`_parent_process_tree` from the current process up, and returns
+    the first shell one of whose {attr}`~extra_platforms.Shell.executable_names`
+    names an ancestor. Returns {data}`None` when no ancestor runs any of
+    ``shells``.
+    """
+    for name, _ in _parent_process_tree():
+        for shell in shells:
+            if name in shell.executable_names:
+                return shell
+    return None
+
+
 def _detect_shell(
     version_env_var: str | None = None,
     shell_ids: str | Iterable[str] | None = None,
@@ -2488,7 +2503,7 @@ def current_shell(strict: bool = False) -> Shell:
        *is* the shell).
     2. Parent process tree, read from ``/proc`` on Linux or ``ps`` on macOS
        and the BSDs (strong: the shell is an ancestor process actively
-       running).
+       running). When shells nest, the nearest ancestor wins.
     3. ``SHELL`` environment variable resolved through symlinks (weak:
        configured login shell, may differ from the active shell).
 
@@ -2565,6 +2580,11 @@ def current_shell(strict: bool = False) -> Shell:
         if len(proc_matches) == 1:
             return proc_matches.pop()
         if proc_matches:
+            # Shells nest: the nearest ancestor launched this process, whatever
+            # runs above it, the login shell included. SH stays the fallback
+            # described below, so any other running shell outranks it.
+            if nearest := _nearest_running_shell(proc_matches - {SH}):
+                return nearest
             matching = proc_matches
 
     # Tier 3: prefer the shell resolved from SHELL= over remaining matches.

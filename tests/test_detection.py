@@ -945,3 +945,54 @@ def test_nested_ancestor_shells_all_detected(monkeypatch):
     assert is_fish()
     assert current_shell() is BASH
     invalidate_caches()
+
+
+@pytest.mark.parametrize(
+    ("tree", "login_shell", "expected_id"),
+    [
+        # A bash script run from a zsh session.
+        (
+            (
+                ("python3", "/usr/bin/python3"),
+                ("bash", "/bin/bash"),
+                ("zsh", "/bin/zsh"),
+            ),
+            "/bin/zsh",
+            "bash",
+        ),
+        # Dash invoked as sh from a bash session: the /proc walk yields the
+        # resolved binary and the argv[0] of the same process.
+        (
+            (
+                ("python3", "/usr/bin/python3.14"),
+                ("dash", "/usr/bin/dash"),
+                ("sh", ""),
+                ("bash", "/usr/bin/bash"),
+            ),
+            "/bin/bash",
+            "dash",
+        ),
+        # SH stays the fallback: a zsh session running `sh -c` reports zsh.
+        (
+            (
+                ("python3", "/usr/bin/python3"),
+                ("sh", "/bin/sh"),
+                ("zsh", "/bin/zsh"),
+            ),
+            "/bin/zsh",
+            "zsh",
+        ),
+    ],
+)
+def test_current_shell_prefers_nearest_running_shell(
+    monkeypatch, tree, login_shell, expected_id
+):
+    """When shells nest, the nearest one wins over the login shell above it."""
+    from extra_platforms import current_shell
+
+    monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: tree)
+    monkeypatch.setenv("SHELL", login_shell)
+    unset_shell_startup_vars(monkeypatch)
+    invalidate_caches()
+    assert current_shell().id == expected_id
+    invalidate_caches()

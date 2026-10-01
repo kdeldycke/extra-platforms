@@ -93,7 +93,7 @@ These channels describe different things, so several detection functions can leg
 - Shells nest: a build chroot driven from a fish terminal keeps fish in the ancestor tree, above the bash chain running the build, and both are real ancestor processes.
 - PowerShell modifies `PSModulePath` on startup and every child process inherits it, so {func}`~is_powershell` can stay `True` alongside the shell really executing your code. This is a permanent fixture of GitHub Ubuntu runners, where the variable leaks from the Azure infrastructure.
 
-An `is_*()` function therefore answers "is this shell part of the current environment?", not "is this the shell executing me?". For the latter, use {func}`~current_shell`: it arbitrates all matches down to a single primary shell, preferring active version variables, then running ancestor processes, then the configured login shell. {func}`~current_traits` applies no such arbitration, so it may contain several shells.
+An `is_*()` function therefore answers "is this shell part of the current environment?", not "is this the shell executing me?". For the latter, use {func}`~current_shell`: it arbitrates all matches down to a single primary shell, preferring active version variables, then running ancestor processes (the nearest one when shells nest), then the configured login shell. {func}`~current_traits` applies no such arbitration, so it may contain several shells.
 
 For example, on a Mac where the terminal is configured to launch fish while `SHELL` still points at the stock zsh:
 
