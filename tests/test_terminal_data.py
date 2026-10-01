@@ -56,9 +56,17 @@ def test_terminal_detection():
         ("", logging.INFO),
     ],
 )
-def test_unrecognized_terminal_log_level(term, level, monkeypatch, caplog):
-    """Only a ``TERM`` naming a terminal type makes an unrecognized one a warning."""
-    monkeypatch.setattr(detection, "environ", {"TERM": term})
+@pytest.mark.parametrize("ssh", [False, True])
+def test_unrecognized_terminal_log_level(term, level, ssh, monkeypatch, caplog):
+    """Only a ``TERM`` naming a terminal type makes an unrecognized one a warning.
+
+    An SSH session forwards ``TERM`` alone, from the client running the emulator.
+    """
+    env = {"TERM": term}
+    if ssh:
+        env["SSH_CONNECTION"] = "192.0.2.10 50000 192.0.2.20 22"
+        level = logging.INFO
+    monkeypatch.setattr(detection, "environ", env)
     invalidate_caches()
     caplog.set_level(logging.INFO)
     try:

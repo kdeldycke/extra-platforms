@@ -11,7 +11,7 @@
 - Fix `current_shell_path()` and the `path` of `Shell.info()` returning the `SHELL` path of another shell when the running one shows none, as on illumos.
 - Fix `shell_from_path()` and `SHELL`-based detection resolving Alpine's `/bin/sh` and `/bin/ash` to BusyBox, a binary named after no shell.
 - Fix `is_generic_linux()` matching beside a distribution identified without `os-release`, like SliTaz, which put both platforms in `current_traits()`.
-- Log an unrecognized terminal at `INFO` instead of `WARNING` when `TERM` declares a dumb terminal, as non-interactive SSH sessions on NixOS and FreeBSD do.
+- Log an unrecognized terminal at `INFO` instead of `WARNING` in SSH sessions, and when `TERM` declares a dumb terminal, as NixOS and FreeBSD do.
 - Fix `test_current_funcs` failing when the suite runs under another shell than the `SHELL` login shell, like a Debian build calling pytest from `/bin/sh`.
 - Fix `test_skip_linux`, `test_skip_macos`, `test_skip_ubuntu` and `test_skip_windows` failing on platforms other than Linux, macOS and Windows, like FreeBSD.
 - Skip the Sphinx cross-reference tests when the docs dependencies are missing, instead of erroring on any system shipping `uv`, like openSUSE.

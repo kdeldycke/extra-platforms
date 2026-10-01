@@ -1616,7 +1616,7 @@ def _parent_process_exe_names() -> frozenset[str]:
 
 
 def _running_shell_path(names: frozenset[str]) -> str | None:
-    """Return the executable path of the nearest ancestor named in ``names``.
+    r"""Return the executable path of the nearest ancestor named in ``names``.
 
     ``names`` is a shell's {attr}`~extra_platforms.Shell.executable_names`.
     Walks {func}`_parent_process_tree` and returns the first (nearest) absolute
@@ -1624,7 +1624,7 @@ def _running_shell_path(names: frozenset[str]) -> str | None:
     dash, a bare name, or a truncated BSD ``ps`` ``comm``) are skipped so
     callers can fall back to ``SHELL``. A path is considered absolute when it
     starts with ``/`` (POSIX) or satisfies ``os.path.isabs`` (Windows drive
-    paths like ``C:\\...``). Returns {data}`None` when no running path is
+    paths like ``C:\...``). Returns {data}`None` when no running path is
     found.
     """
     for name, path in _parent_process_tree():
@@ -2730,7 +2730,9 @@ def current_terminal(strict: bool = False) -> Terminal:
     If the `TERM` environment variable names a terminal type, an unrecognized
     terminal logs at `WARNING` level, as it suggests a terminal emulator is
     present but not recognized. Otherwise, it logs at `INFO` level: `TERM` is
-    unset, or declares a dumb terminal (see `_DUMB_TERMS`).
+    unset, or declares a dumb terminal (see `_DUMB_TERMS`). An SSH session also
+    logs at `INFO`: its emulator runs on the client, out of reach of any
+    heuristic on the remote end.
     ```
     """
     # Lazy imports to avoid circular dependencies.
@@ -2752,13 +2754,17 @@ def current_terminal(strict: bool = False) -> Terminal:
             return non_mux.pop()
 
     # A TERM naming a terminal type signals a terminal emulator is expected to
-    # be present. A dumb terminal declares there is none.
+    # be present. A dumb terminal declares there is none, and an SSH session
+    # forwards TERM alone from the client running the emulator.
     return _single_match(
         matching,
         UNKNOWN_TERMINAL,
         "terminal",
         strict=strict,
-        expected=environ.get("TERM", "") not in _DUMB_TERMS,
+        expected=(
+            environ.get("TERM", "") not in _DUMB_TERMS
+            and "SSH_CONNECTION" not in environ
+        ),
     )
 
 
