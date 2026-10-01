@@ -125,6 +125,17 @@ common to attribute to an AI agent on its own, and Crush is already covered by
 """
 
 
+_BUSYBOX_ASH_APPLETS = frozenset(("ash", "sh"))
+"""BusyBox applets running its Almquist shell.
+
+[BusyBox](https://busybox.net) is a multi-call binary: it runs the applet named by
+the name it is called by (Alpine links ``/bin/sh`` and ``/bin/ash`` to
+``/bin/busybox``), or by its first argument when called by its own name
+(``busybox sh -c ...``). Its ``sh`` applet is its ``ash``: on Alpine, both set
+``BB_ASH_VERSION``. Both names therefore give {data}`~extra_platforms.ASH`.
+"""
+
+
 _CATEGORY_ENV_SIGNALS: dict[str, tuple[str, ...]] = {
     "shell": (
         "SHELL",
@@ -1161,6 +1172,12 @@ def is_unknown_platform() -> bool:
 # =============================================================================
 
 
+def _busybox_applet(name: str) -> str:
+    """Name the shell a BusyBox applet runs: ``ash`` for its Almquist shell
+    applets, the applet name otherwise."""
+    return "ash" if name in _BUSYBOX_ASH_APPLETS else name
+
+
 @cache
 def _shell_executable_names() -> frozenset[str]:
     """Every file name a shell of the registry goes by."""
@@ -1178,9 +1195,9 @@ def _shell_stem(path: str | os.PathLike[str]) -> str:
 
     ``/bin/sh`` on a system linking it to ``/bin/bash`` gives ``"bash"``, and
     ``pwsh.exe`` gives ``"pwsh"``. A link keeps its own name when its target goes
-    by no shell's name: Alpine links ``/bin/sh`` and ``/bin/ash`` to
-    ``/bin/busybox``, a multi-call binary picking its applet from the name it is
-    called by, so they give ``"sh"`` and ``"ash"``.
+    by no shell's name, the way a multi-call binary picks its program from the
+    name it is called by. BusyBox is one: Alpine's ``/bin/sh`` and ``/bin/ash``
+    both give ``"ash"``, see `_BUSYBOX_ASH_APPLETS`.
     """
     # A path that does not exist here is read as text, whichever separator it
     # uses: the Windows flavor accepts both.
@@ -1189,6 +1206,8 @@ def _shell_stem(path: str | os.PathLike[str]) -> str:
         resolved = Path(path).resolve(strict=True).stem.lower()
     except OSError:
         return stem
+    if resolved == "busybox":
+        return _busybox_applet(stem)
     return resolved if resolved in _shell_executable_names() else stem
 
 
@@ -1378,7 +1397,7 @@ def _unwrap_emulator(argv: list[str]) -> list[str]:
     return argv
 
 
-def _pairs_from_argv(argv: list[str]) -> list[tuple[str, str]]:
+def _pairs_from_argv(argv: list[str], busybox: bool = False) -> list[tuple[str, str]]:
     """Derive ``(name, path)`` pairs a single process contributes from its argv.
 
     Unwraps a user-mode emulator prefix (so the emulated shell is seen), then
@@ -1386,13 +1405,22 @@ def _pairs_from_argv(argv: list[str]) -> list[tuple[str, str]]:
     login dash carries none) plus any interpreter-hosted shell found in the
     arguments (like xonsh run under python). Shared by the ``/proc`` and ``ps``
     walks, which differ only in how they obtain ``argv``.
+
+    BusyBox called by its own name runs the applet its first argument names, and
+    ``busybox`` tells a process runs BusyBox under an applet name, which only its
+    resolved executable shows. The applet then names the shell, see
+    `_BUSYBOX_ASH_APPLETS`.
     """
     pairs: list[tuple[str, str]] = []
     argv = _unwrap_emulator(argv)
+    if len(argv) >= 2 and _shell_name(argv[0]) == "busybox":
+        argv, busybox = argv[1:], True
     if argv:
         # argv[0] recovers login shells and survives an unreadable exe; keep it
         # as a path only when absolute (a login dash carries none).
         if name := _shell_name(argv[0]):
+            if busybox:
+                name = _busybox_applet(name)
             pairs.append((name, argv[0] if argv[0].startswith("/") else ""))
         # A shell hosted by an interpreter (like xonsh run under python).
         if hosted := _interpreter_shell(argv):
@@ -1421,17 +1449,17 @@ def _tree_from_proc() -> tuple[tuple[str, str], ...]:
         # Resolved executable: an absolute path that follows symlinks.
         try:
             target = os.readlink(f"/proc/{pid}/exe")
-            if name := _shell_name(target):
-                pairs.append((name, target))
         except OSError:
-            pass
+            target = ""
+        if name := _shell_name(target):
+            pairs.append((name, target))
         # Full argv from the raw, null-separated command line.
         try:
             raw = Path(f"/proc/{pid}/cmdline").read_bytes()
             argv = [a for a in raw.decode(errors="replace").split("\0") if a]
         except OSError:
             argv = []
-        pairs.extend(_pairs_from_argv(argv))
+        pairs.extend(_pairs_from_argv(argv, busybox=_shell_name(target) == "busybox"))
         ppid = _ppid_from_proc(pid)
         if ppid is None:
             break
@@ -1727,9 +1755,11 @@ def is_ash() -> bool:
 
     ```{note}
     [BusyBox](https://busybox.net)'s built-in shell is an {data}`~extra_platforms.ASH`
-    derivative. On BusyBox-based systems ({data}`~extra_platforms.ALPINE`,
-    {data}`~extra_platforms.OPENWRT`), `$SHELL` typically resolves to `/bin/ash`,
-    so BusyBox environments are detected as {data}`~extra_platforms.ASH`.
+    derivative, which its ``sh`` and ``ash`` applets both run (see
+    `_BUSYBOX_ASH_APPLETS`). On BusyBox-based systems ({data}`~extra_platforms.ALPINE`,
+    {data}`~extra_platforms.OPENWRT`), `/bin/sh` and `/bin/ash` both link to
+    BusyBox, so either one, as `$SHELL` or running, is detected as
+    {data}`~extra_platforms.ASH`.
     ```
     """
     return _detect_shell(shell_ids="ash")

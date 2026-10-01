@@ -11,7 +11,7 @@
 - Fix `current_shell()` reporting the login shell over a nearer shell running the process, like a bash script launched from a zsh session.
 - Fix the process-tree shell detection on FreeBSD and illumos, where `ps` printed the PID column alone.
 - Fix `current_shell_path()` and the `path` of `Shell.info()` returning the `SHELL` path of another shell when the running one shows none, as on illumos.
-- Fix `shell_from_path()` and `SHELL`-based detection resolving Alpine's `/bin/sh` and `/bin/ash` to BusyBox, a binary named after no shell.
+- Detect BusyBox's shell as `ash`, through Alpine's `/bin/sh` and `/bin/ash` links or `busybox sh` called by name, instead of matching no shell.
 - Fix `is_generic_linux()` matching beside a distribution identified without `os-release`, like SliTaz, which put both platforms in `current_traits()`.
 - Log an unrecognized terminal at `INFO` instead of `WARNING` in SSH sessions, and when `TERM` declares a dumb terminal, as NixOS and FreeBSD do.
 - Fix `test_current_funcs` failing when a shell besides the running one is detected: the `SHELL` login shell, like a Debian build calling pytest from `/bin/sh`, or PowerShell from `PSModulePath` under Windows `cmd`.

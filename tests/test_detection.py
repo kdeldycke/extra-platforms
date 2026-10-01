@@ -647,6 +647,25 @@ def test_unwrap_emulator(argv, expected):
     assert detection_module._unwrap_emulator(argv) == expected
 
 
+@pytest.mark.parametrize(
+    ("argv", "busybox", "expected"),
+    (
+        # BusyBox called by its own name runs the applet its argument names.
+        (["/usr/bin/busybox", "sh", "-c", "x"], False, [("ash", "")]),
+        (["busybox", "ash"], False, [("ash", "")]),
+        (["busybox", "hush", "-c", "x"], False, [("hush", "")]),
+        # BusyBox called through a link, as its resolved executable reveals.
+        (["/bin/sh", "script.sh"], True, [("ash", "/bin/sh")]),
+        (["-sh"], True, [("ash", "")]),
+        # Any other sh keeps its name.
+        (["/bin/sh", "script.sh"], False, [("sh", "/bin/sh")]),
+    ),
+)
+def test_pairs_from_argv_busybox(argv, busybox, expected):
+    """BusyBox's sh and ash applets both run its Almquist shell."""
+    assert detection_module._pairs_from_argv(argv, busybox=busybox) == expected
+
+
 def test_tree_from_ps_unwraps_emulator(monkeypatch):
     """An emulated shell (qemu-aarch64 /bin/bash) is seen as the real shell."""
     table = "  300   200 qemu-aarch64 /bin/bash\n  200     1 /sbin/launchd\n"
@@ -894,20 +913,23 @@ def test_shell_from_path_resolves_symlinks(tmp_path):
 
 
 @skip_windows
-def test_shell_from_path_keeps_link_name_of_multicall_binary(tmp_path):
-    """A link to a binary going by no shell's name keeps its own name.
+@pytest.mark.parametrize(
+    ("target", "link", "expected_id"),
+    [
+        # Alpine links both to BusyBox, whose sh applet is its ash.
+        ("busybox", "ash", "ash"),
+        ("busybox", "sh", "ash"),
+        # A link to a binary going by no shell's name keeps its own name.
+        ("multicall", "sh", "sh"),
+    ],
+)
+def test_shell_from_path_resolves_multicall_binary(tmp_path, target, link, expected_id):
+    """A link to a multi-call binary names the program the link name picks."""
+    from extra_platforms import shell_from_path
 
-    Alpine links ``/bin/ash`` and ``/bin/sh`` to ``/bin/busybox``, which picks its
-    applet from the name it is called by.
-    """
-    from extra_platforms import ASH, SH, shell_from_path
-
-    target = tmp_path / "busybox"
-    target.touch()
-    for name, shell in (("ash", ASH), ("sh", SH)):
-        link = tmp_path / name
-        link.symlink_to(target)
-        assert shell_from_path(link) is shell
+    (tmp_path / target).touch()
+    (tmp_path / link).symlink_to(tmp_path / target)
+    assert shell_from_path(tmp_path / link).id == expected_id
 
 
 def test_current_shell_path(monkeypatch):

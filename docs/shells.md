@@ -71,6 +71,8 @@ On most modern Unix systems, `/bin/sh` is a symlink to a concrete shell:
 
 On macOS, `/bin/sh` is a regular binary that re-executes the shell that `/private/var/select/sh` links to (bash by default), so symlink resolution stops at `sh`.
 
+On Alpine, `/bin/sh` and `/bin/ash` both link to BusyBox, a multi-call binary that runs the program named by the name it is called by. Its `sh` applet is its Almquist shell, so both, like `busybox sh` called by name, are detected as {data}`~ASH`.
+
 When `/bin/sh` symlinks to `/bin/bash`:
 
 - {func}`~is_bash` returns `True` (the actual binary running is bash).
