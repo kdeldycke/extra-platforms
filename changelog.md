@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.11.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.10.1...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.11.0` (2026-10-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.10.1...v13.11.0)
 
 - Add a `release` key to `Platform.info()`, holding the product release on Windows, like `11`, and `None` on other platforms.
 - Detect the Korn shell from its `ksh93` binary, which Fedora and illumos link `ksh` to.
