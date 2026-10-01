@@ -1132,19 +1132,35 @@ def is_unknown_platform() -> bool:
 # =============================================================================
 
 
+@cache
+def _shell_executable_names() -> frozenset[str]:
+    """Every file name a shell of the registry goes by."""
+    # Lazy import to avoid circular dependencies.
+    from .group_data import ALL_SHELLS
+
+    return frozenset(
+        name for shell in ALL_SHELLS for name in getattr(shell, "executable_names", ())
+    )
+
+
 def _shell_stem(path: str | os.PathLike[str]) -> str:
     """Lowercased file name of a shell path, suffix dropped, resolved through
     symlinks when the file exists.
 
     ``/bin/sh`` on a system linking it to ``/bin/bash`` gives ``"bash"``, and
-    ``pwsh.exe`` gives ``"pwsh"``.
+    ``pwsh.exe`` gives ``"pwsh"``. A link keeps its own name when its target goes
+    by no shell's name: Alpine links ``/bin/sh`` and ``/bin/ash`` to
+    ``/bin/busybox``, a multi-call binary picking its applet from the name it is
+    called by, so they give ``"sh"`` and ``"ash"``.
     """
+    # A path that does not exist here is read as text, whichever separator it
+    # uses: the Windows flavor accepts both.
+    stem = PureWindowsPath(path).stem.lower()
     try:
-        return Path(path).resolve(strict=True).stem.lower()
+        resolved = Path(path).resolve(strict=True).stem.lower()
     except OSError:
-        # A path that does not exist here is read as text, whichever separator
-        # it uses: the Windows flavor accepts both.
-        return PureWindowsPath(path).stem.lower()
+        return stem
+    return resolved if resolved in _shell_executable_names() else stem
 
 
 @cache

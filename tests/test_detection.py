@@ -864,6 +864,23 @@ def test_shell_from_path_resolves_symlinks(tmp_path):
     assert shell_from_path(link) is BASH
 
 
+@skip_windows
+def test_shell_from_path_keeps_link_name_of_multicall_binary(tmp_path):
+    """A link to a binary going by no shell's name keeps its own name.
+
+    Alpine links ``/bin/ash`` and ``/bin/sh`` to ``/bin/busybox``, which picks its
+    applet from the name it is called by.
+    """
+    from extra_platforms import ASH, SH, shell_from_path
+
+    target = tmp_path / "busybox"
+    target.touch()
+    for name, shell in (("ash", ASH), ("sh", SH)):
+        link = tmp_path / name
+        link.symlink_to(target)
+        assert shell_from_path(link) is shell
+
+
 def test_current_shell_path(monkeypatch):
     """current_shell_path() prefers the running binary, then falls back to SHELL."""
     from extra_platforms import ZSH, current_shell_path
