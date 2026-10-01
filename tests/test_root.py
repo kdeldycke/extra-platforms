@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import ast
 import inspect
+import os
 import re
 import subprocess
 import sys
@@ -51,6 +52,7 @@ from extra_platforms import (
     WSL1,
     WSL2,
     X86_64,
+    Shell,
     agent_data as agent_data_module,
     architecture_data as architecture_data_module,
     ci_data as ci_data_module,
@@ -71,7 +73,6 @@ from extra_platforms import (
     is_any_platform,
     is_any_terminal,
     is_bsd,
-    is_dash,
     is_fedora,
     is_github_ci,
     is_linux,
@@ -81,6 +82,7 @@ from extra_platforms import (
     is_windows,
     platform_data as platform_data_module,
     shell_data as shell_data_module,
+    shell_from_path,
     terminal_data as terminal_data_module,
     trait as trait_module,
 )
@@ -303,12 +305,21 @@ def test_current_funcs():
         # running an `osc build` chroot from a fish terminal gets fish in the
         # ancestor tree, above the bash chain rpmbuild runs the tests with.
         ancestor_names = detection_module._parent_process_exe_names()
-        extra_ancestor_shells = {
+        extra_shells = {
             shell
             for shell in ALL_SHELLS
-            if shell.current and shell.id in ancestor_names
-        } - {current_shell()}
-        detected_traits += len(extra_ancestor_shells)
+            if isinstance(shell, Shell)
+            and shell.current
+            and not ancestor_names.isdisjoint(shell.executable_names)
+        }
+        # XXX The configured login shell is detected too when another shell
+        # runs the suite, like a Debian package build calling pytest from
+        # `/bin/sh` (dash) while SHELL names bash.
+        if os.environ.get("SHELL"):
+            login_shell = shell_from_path(os.environ["SHELL"])
+            if login_shell.current:
+                extra_shells.add(login_shell)
+        detected_traits += len(extra_shells - {current_shell(), UNKNOWN_SHELL})
     # Terminal is optional: headless/CI environments may not have one.
     if is_any_terminal():
         detected_traits += 1
@@ -324,10 +335,6 @@ def test_current_funcs():
             elif is_ubuntu():
                 # +1 shell (PowerShell from Azure).
                 detected_traits += 1
-                # XXX On some Ubuntu runners SHELL=/bin/sh resolves to
-                # /bin/dash, so is_dash() is True independently.
-                if is_dash():
-                    detected_traits += 1
     # Agent is optional: we may not be running under an AI agent.
     if is_any_agent():
         detected_traits += 1

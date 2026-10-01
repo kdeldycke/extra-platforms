@@ -6,6 +6,7 @@
 > This version is **not released yet** and is under active development.
 
 - Fix `current_shell()` reporting the login shell over a nearer shell running the process, like a bash script launched from a zsh session.
+- Fix `test_current_funcs` failing when the suite runs under another shell than the `SHELL` login shell, like a Debian build calling pytest from `/bin/sh`.
 
 ## [`13.10.1` (2026-09-19)](https://github.com/kdeldycke/extra-platforms/compare/v13.10.0...v13.10.1)
 
