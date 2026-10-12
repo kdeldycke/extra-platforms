@@ -815,11 +815,21 @@ def test_import_time():
     )
 
 
-def test_docstrings_are_generated_on_first_read():
+@pytest.mark.parametrize(
+    "flags",
+    (
+        pytest.param((), id="default"),
+        # -OO strips every class docstring, and @dataclass then writes the
+        # signature of the class in its place.
+        pytest.param(("-OO",), id="no_docstrings"),
+    ),
+)
+def test_docstrings_are_generated_on_first_read(flags):
     """Importing the package generates no docstring: the first read does.
 
     Runs in a fresh interpreter, because an earlier test of the session may
-    have read a docstring already.
+    have read a docstring already. The interpreter flags do not change the
+    result: a generated docstring does not depend on the class docstring.
     """
     script = dedent(
         """\
@@ -845,7 +855,7 @@ def test_docstrings_are_generated_on_first_read():
         """
     )
     result = subprocess.run(
-        [sys.executable, "-c", script],
+        [sys.executable, *flags, "-c", script],
         capture_output=True,
         text=True,
         encoding="UTF-8",

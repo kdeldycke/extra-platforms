@@ -44,9 +44,14 @@ if TYPE_CHECKING:
 class _LazyDocstring:
     """The class docstring, or a generated one on a predefined trait or group.
 
-    {meth}`_Identifiable.__init_subclass__` installs one in place of the
-    docstring of every subclass. Read on the class, it hands back that
-    docstring, so `help()` and autodoc see the class as written.
+    {meth}`_Identifiable.__post_init__` installs one in place of the docstring
+    of a class when the class gets its first instance. Read on the class, it
+    hands back that docstring, so `help()` and autodoc see the class as written.
+
+    The class definition is too early to install it. `@dataclass` runs after
+    `__init_subclass__` and replaces an empty class docstring with the
+    signature of the class, and `python -OO` leaves every class docstring
+    empty.
 
     Read on a member of `ALL_TRAITS` or `ALL_GROUPS`, it calls the instance's
     `generate_docstring()` once and keeps the result in the instance's own
@@ -183,9 +188,6 @@ class _Identifiable:
         """
         super().__init_subclass__(**kwargs)
 
-        # Serve the docstring of each instance on first read: see _LazyDocstring.
-        cls.__doc__ = _LazyDocstring(cls.__doc__)  # type: ignore[assignment]
-
         # Derive type_id from class name if not explicitly set.
         if "type_id" in cls.__dict__:
             assert cls.type_id, f"{cls.__name__} must define a non-empty type_id."
@@ -218,7 +220,14 @@ class _Identifiable:
         - Set the symbolic ID.
         - Set the detection function ID.
         - Set the Pytest decorator IDs.
+        - Install the lazy docstring on the class of the instance.
         """
+        # Serve the docstring of each instance on first read: see _LazyDocstring.
+        cls = type(self)
+        class_doc = cls.__dict__.get("__doc__")
+        if not isinstance(class_doc, _LazyDocstring):
+            cls.__doc__ = _LazyDocstring(class_doc)  # type: ignore[assignment]
+
         assert self.id, f"{self.__class__.__name__} ID cannot be empty."
 
         object.__setattr__(self, "symbol_id", self.id.upper())
