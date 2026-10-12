@@ -32,8 +32,6 @@ import os
 import platform
 import re
 import shlex
-import shutil
-import subprocess
 from functools import cache
 
 TYPE_CHECKING = False
@@ -253,6 +251,11 @@ def _hostnamectl_os_release() -> dict[str, str]:
     # Testing for the binary rather than for Linux covers a systemd-less
     # distribution too, and spares every other platform a subprocess it can only
     # fail to spawn.
+    # Deferred imports: keep shutil and subprocess off the import path of the
+    # package.
+    import shutil
+    import subprocess
+
     if shutil.which("hostnamectl") is None:
         return {}
 

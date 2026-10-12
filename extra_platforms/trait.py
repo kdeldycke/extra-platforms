@@ -41,6 +41,34 @@ if TYPE_CHECKING:
     from .group import Group
 
 
+class _LazyDocstring:
+    """The class docstring on the class, a generated one on each instance.
+
+    {meth}`_Identifiable.__init_subclass__` installs one in place of the
+    docstring of every subclass. Read on the class, it hands back that
+    docstring, so `help()` and autodoc see the class as written. Read on an
+    instance, it calls the instance's `generate_docstring()` once and keeps the
+    result in the instance's own `__dict__`, where later reads find it first.
+
+    Generating on first read, rather than for every trait and group when the
+    package is imported, is what spares `import extra_platforms` the parse of
+    each data module's source and the membership walk of every trait.
+    """
+
+    __slots__ = ("class_doc",)
+
+    def __init__(self, class_doc: str | None) -> None:
+        self.class_doc = class_doc
+
+    def __get__(self, instance: object | None, owner: type | None = None) -> str | None:
+        if instance is None:
+            return self.class_doc
+        doc: str = instance.generate_docstring()  # type: ignore[attr-defined]
+        # Bypasses the frozen dataclass guard, like the other derived fields.
+        object.__setattr__(instance, "__doc__", doc)
+        return doc
+
+
 @dataclass(frozen=True)
 class _Identifiable:
     """Base class for identifiable objects with common documentation fields.
@@ -134,6 +162,9 @@ class _Identifiable:
         """
         super().__init_subclass__(**kwargs)
 
+        # Serve the docstring of each instance on first read: see _LazyDocstring.
+        cls.__doc__ = _LazyDocstring(cls.__doc__)  # type: ignore[assignment]
+
         # Derive type_id from class name if not explicitly set.
         if "type_id" in cls.__dict__:
             assert cls.type_id, f"{cls.__name__} must define a non-empty type_id."
@@ -218,11 +249,11 @@ class Trait(_Identifiable, ABC):
 
         - Ensure the URL is not empty and starts with `https://`.
         - Validate aliases are lowercase and distinct from the canonical ID.
-        - Populate the docstring (deferred until after module initialization).
 
         ```{hint}
-        Docstring generation is deferred to avoid circular imports during module
-        initialization. See _docstrings._initialize_all_docstrings().
+        The docstring is not built here: `_LazyDocstring` generates it on the
+        first read of `__doc__`, once every module is imported and the groups a
+        trait belongs to are known.
         ```
         """
         super().__post_init__()

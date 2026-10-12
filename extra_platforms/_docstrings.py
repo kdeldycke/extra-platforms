@@ -14,11 +14,10 @@
 """Utilities for generating runtime docstrings for traits and groups.
 
 This module provides functions to extract attribute docstrings from source
-files and generate comprehensive documentation for trait and group instances.
-
-The {func}`_initialize_all_docstrings` function should be called from
-`__init__.py` after all trait and group instances are imported to populate
-their `__doc__` attributes.
+files, which the `generate_docstring()` method of a trait or group folds into
+its own documentation. `trait._LazyDocstring` calls that method on the first
+read of an instance's `__doc__`, so nothing here runs when the package is
+imported.
 
 ```{note}
 AST parse results are cached per module to avoid redundant work. Without
@@ -35,12 +34,6 @@ import ast
 import importlib
 import inspect
 from pathlib import Path
-
-TYPE_CHECKING = False
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-
-    from . import Group, Trait
 
 # Per-module cache of attribute name to docstring. Populated lazily by
 # `_parse_module_docstrings` on first access to a given module.
@@ -128,28 +121,3 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
     if module_name not in _module_docstrings_cache:
         _module_docstrings_cache[module_name] = _parse_module_docstrings(module_name)
     return _module_docstrings_cache[module_name].get(attr_name)
-
-
-def _initialize_all_docstrings(
-    traits: Iterable[Trait], groups: Iterable[Group]
-) -> None:
-    """Initialize docstrings for all trait and group instances.
-
-    This function should be called from `__init__.py` after all trait and
-    group instances are imported. It iterates through all instances and sets
-    their `__doc__` attributes by calling their `generate_docstring()`
-    methods.
-
-    This approach avoids circular import issues that would occur if docstrings
-    were generated in `__post_init__` during module initialization.
-
-    :param traits: All trait instances to initialize docstrings for.
-    :param groups: All group instances to initialize docstrings for.
-    """
-    # Initialize trait docstrings.
-    for trait in traits:
-        object.__setattr__(trait, "__doc__", trait.generate_docstring())
-
-    # Initialize group docstrings.
-    for group in groups:
-        object.__setattr__(group, "__doc__", group.generate_docstring())

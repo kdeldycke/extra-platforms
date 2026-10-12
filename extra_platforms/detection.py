@@ -71,7 +71,6 @@ from __future__ import annotations
 import os
 import platform
 import re
-import subprocess
 import sys
 from functools import cache
 from os import environ
@@ -1528,6 +1527,9 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
     ``-A`` makes the snapshot tty-independent.
     ```
     """
+    # Deferred import: keeps subprocess off the import path of the package.
+    import subprocess
+
     try:
         result = subprocess.run(
             ("ps", "-A", "-o", "pid=", "-o", "ppid=", "-o", "args="),

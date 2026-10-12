@@ -20,7 +20,6 @@ import sys
 from functools import cache
 
 from . import detection
-from ._docstrings import _initialize_all_docstrings
 from .agent_data import (
     CLAUDE_CODE,
     CLINE,
@@ -983,11 +982,6 @@ Sorting of `__all__` is enforced by `ruff` via rule `RUF022`.
 Completeness (no missing or extra entries) is checked in unittests.
 ```
 """
-
-# Initialize docstrings for all trait and group instances after all imports
-# are complete. This avoids circular import issues during module initialization.
-
-_initialize_all_docstrings(ALL_TRAITS, ALL_GROUPS)
 
 
 def __getattr__(name: str) -> Any:
