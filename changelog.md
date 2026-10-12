@@ -1,5 +1,10 @@
 # Changelog
 
+## [`13.12.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`13.12.0` (2026-10-12)](https://github.com/kdeldycke/extra-platforms/compare/v13.11.0...v13.12.0)
 
 - Generate the docstring of a trait or group on its first read instead of building all of them when the package is imported, which halves the import time.
