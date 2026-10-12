@@ -22,6 +22,7 @@ from functools import cache, cached_property
 from types import MappingProxyType
 from typing import TypeVar, cast
 
+from ._docstrings import get_attribute_docstring
 from .trait import Trait, _Identifiable, _resolve_alias
 
 TYPE_CHECKING = False
@@ -134,8 +135,9 @@ class Group(_Identifiable):
         """Normalize members to a sorted, deduplicated mapping.
 
         ```{hint}
-        The docstring is not built here: `_LazyDocstring` generates it on the
-        first read of `__doc__`, once every module is imported.
+        The docstring is not built here. For a predefined group,
+        `_LazyDocstring` generates it on the first read of `__doc__`, once
+        every module is imported.
         ```
         """
         super().__post_init__()
@@ -185,8 +187,6 @@ class Group(_Identifiable):
 
         Combines the attribute docstring from the source module with various metadata.
         """
-        from extra_platforms._docstrings import get_attribute_docstring
-
         lines = []
 
         # Fetch attribute docstring from source module.

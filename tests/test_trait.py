@@ -35,6 +35,7 @@ from extra_platforms import (
     CANONICAL_GROUPS,
     CI,
     LINUX,
+    LINUX_LIKE,
     UNKNOWN,
     Agent,
     Architecture,
@@ -156,6 +157,10 @@ def test_all_traits_generated_constants(trait):
                         assert v1
     assert trait.info()["id"] == trait.id
 
+    # Docstring.
+    assert trait.__doc__ is not None
+    assert f"- **ID**: ``{trait.id}``" in trait.__doc__.splitlines()
+
 
 def test_detection_function_missing(caplog):
 
@@ -175,6 +180,61 @@ def test_detection_function_missing(caplog):
         match=r"Detection function is_dummy_trait\(\) is not implemented\.",
     ):
         _ = trait.current
+
+
+def _instances_outside_registries() -> dict[str, Trait | Group]:
+    """Build one instance of each kind that `ALL_TRAITS` and `ALL_GROUPS` lack.
+
+    Both classes stand for classes defined outside the package. They are local:
+    a `Trait` subclass defined at module level would stay in
+    `Trait.__subclasses__()` for the whole session.
+    """
+
+    class Weather(Trait):
+        """Atmospheric conditions."""
+
+    class Season(Group):
+        """A part of the year."""
+
+    url = "https://example.com"
+    return {
+        "external_trait": Weather(id="sunny", name="Sunny", icon="🌞", url=url),
+        "external_group": Season(id="summer", name="Summer", icon="🌻"),
+        "unregistered_platform": Platform(id="pear", name="Pear", icon="🍐", url=url),
+        # A derived group that reuses the ID of a predefined group.
+        "derived_group": LINUX_LIKE.copy(id="linux"),
+    }
+
+
+@pytest.mark.parametrize(
+    "kind",
+    ("external_trait", "external_group", "unregistered_platform", "derived_group"),
+)
+def test_docstring_outside_registries_is_class_docstring(kind):
+    """An instance outside `ALL_TRAITS` and `ALL_GROUPS` reads its class docstring.
+
+    A generated docstring describes a predefined object. On any other instance
+    it would name a detection function that does not exist, and a derived group
+    would borrow the attribute docstring of the predefined group whose ID it
+    carries.
+    """
+    instance = _instances_outside_registries()[kind]
+
+    assert type(instance).__doc__
+    assert instance.__doc__ == type(instance).__doc__
+
+
+@pytest.mark.parametrize("kind", ("external_trait", "external_group"))
+def test_generate_docstring_of_class_defined_outside_package(kind):
+    """`generate_docstring()` works for a class defined outside the package.
+
+    The package holds no data module for such a class, so there is no attribute
+    docstring to fold in: the result is the metadata alone.
+    """
+    instance = _instances_outside_registries()[kind]
+
+    first_line = instance.generate_docstring().splitlines()[0]
+    assert first_line == f"- **ID**: ``{instance.id}``"
 
 
 def test_aliases_do_not_conflict_with_trait_ids():

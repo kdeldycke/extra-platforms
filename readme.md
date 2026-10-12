@@ -28,13 +28,13 @@ Quickly inspect your current environment without installing anything, thanks to 
 
 ```shell-session
 $ uvx extra-platforms
-extra-platforms 13.10.1
+extra-platforms 13.11.0
 
-── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]────────────
+── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]───────────
             id: aarch64
           (...)
 
-── Platform ── 🍎 macOS ──[MACOS]────────────────────────────
+── Platform ── 🍎 macOS ──[MACOS]───────────────────────────
             id: macos
           (...)
 
@@ -42,14 +42,14 @@ extra-platforms 13.10.1
             id: zsh
           (...)
 
-── Terminal ── 🍏 Apple Terminal ──[APPLE_TERMINAL]──────────
+── Terminal ── 🍏 Apple Terminal ──[APPLE_TERMINAL]─────────
             id: apple_terminal
           (...)
 
-── CI ── ❓ Unknown CI ──[UNKNOWN_CI]────────────────────────
+── CI ── ❓ Unknown CI ──[UNKNOWN_CI]───────────────────────
           (...)
 
-── Agent ── ✴️ Claude Code ──[CLAUDE_CODE]──────────────────
+── Agent ── ✴️ Claude Code ──[CLAUDE_CODE]───────────────────
           (...)
 ```
 
@@ -71,7 +71,7 @@ $ uvx --with extra-platforms python
 ```pycon
 >>> import extra_platforms
 >>> extra_platforms.__version__
-'13.10.1'
+'13.11.0'
 ```
 
 ## Examples

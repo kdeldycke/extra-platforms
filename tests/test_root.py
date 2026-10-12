@@ -16,11 +16,13 @@ from __future__ import annotations
 
 import ast
 import inspect
+import json
 import os
 import re
 import subprocess
 import sys
 from pathlib import Path
+from textwrap import dedent
 
 import pytest
 
@@ -777,7 +779,7 @@ def test_import_time():
 
     The 2000 ms budget stays deliberately loose to absorb slower architectures
     (on i586 cold import measured ~340 ms in 11.x and ~613 ms in 12.0.0),
-    against a local cold import of ~30 ms. This will not catch small drifts,
+    against a local cold import of ~22 ms. This will not catch small drifts,
     but reliably prevents reintroducing expensive import-time operations (like
     the ~120 ms regression from redundant AST parsing that was fixed by
     caching in ``_docstrings.py``).
@@ -810,6 +812,93 @@ def test_import_time():
     assert elapsed_ms < 2000, (
         f"Fastest of {len(timings)} cold imports took {elapsed_ms:.1f} ms, "
         f"expected < 2000 ms (samples: {samples} ms)."
+    )
+
+
+def test_docstrings_are_generated_on_first_read():
+    """Importing the package generates no docstring: the first read does.
+
+    Runs in a fresh interpreter, because an earlier test of the session may
+    have read a docstring already.
+    """
+    script = dedent(
+        """\
+        import json
+
+        from extra_platforms import ALL_GROUPS, ALL_TRAITS, UBUNTU, _docstrings
+
+
+        def state():
+            return {
+                "parsed_modules": sorted(_docstrings._module_docstrings_cache),
+                "documented": sorted(
+                    item.id
+                    for item in (*ALL_TRAITS, *ALL_GROUPS)
+                    if "__doc__" in vars(item)
+                ),
+            }
+
+
+        at_import = state()
+        _ = UBUNTU.__doc__
+        print(json.dumps([at_import, state()]))
+        """
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        capture_output=True,
+        text=True,
+        encoding="UTF-8",
+        check=True,
+    )
+    at_import, after_read = json.loads(result.stdout)
+
+    assert at_import == {"parsed_modules": [], "documented": []}
+    assert after_read == {
+        "parsed_modules": ["extra_platforms.platform_data"],
+        "documented": ["ubuntu"],
+    }
+
+
+def test_subprocess_and_shutil_are_not_imported_at_module_level():
+    """No module of the package imports `subprocess` or `shutil` when it loads.
+
+    Both serve only the detection paths that spawn a process, which import them
+    in the function body. The check reads the source, because `sys.modules`
+    cannot tell: on Python 3.10 the standard library `platform` module imports
+    `subprocess` itself.
+    """
+    offenders = []
+    package_dir = Path(inspect.getfile(extra_platforms)).parent
+    for path in package_dir.rglob("*.py"):
+        pending: list[ast.AST] = [ast.parse(path.read_bytes())]
+        while pending:
+            node = pending.pop()
+            # A function body runs when the function is called.
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            # The body of a TYPE_CHECKING block never runs. Its else branch does.
+            if (
+                isinstance(node, ast.If)
+                and isinstance(node.test, ast.Name)
+                and node.test.id == "TYPE_CHECKING"
+            ):
+                pending.extend(node.orelse)
+                continue
+            if isinstance(node, (ast.Import, ast.ImportFrom)):
+                if isinstance(node, ast.Import):
+                    imported = {alias.name for alias in node.names}
+                else:
+                    # A relative import names a module of the package.
+                    imported = set() if node.level else {node.module or ""}
+                if imported & {"shutil", "subprocess"}:
+                    module = path.relative_to(package_dir).as_posix()
+                    offenders.append(f"{module}:{node.lineno}")
+            pending.extend(ast.iter_child_nodes(node))
+
+    assert not offenders, (
+        "subprocess or shutil imported at module level in "
+        + ", ".join(sorted(offenders))
     )
 
 

@@ -16,23 +16,24 @@
 This module provides functions to extract attribute docstrings from source
 files, which the `generate_docstring()` method of a trait or group folds into
 its own documentation. `trait._LazyDocstring` calls that method on the first
-read of an instance's `__doc__`, so nothing here runs when the package is
-imported.
+read of the `__doc__` of a predefined trait or group, so nothing here runs when
+the package is imported.
 
 ```{note}
-AST parse results are cached per module to avoid redundant work. Without
-caching, each of the ~170 trait/group instances triggers a full
-{func}`ast.parse` of its source module, totaling ~300 parses at import time
-(~115 ms). With per-module caching this drops to ~7 parses (~2.5 ms),
-reducing `import extra_platforms` from ~120 ms to ~10 ms.
+The attribute docstrings of a module are cached. A data module is therefore
+read and parsed once, on the first docstring read of one of its traits or
+groups. Without the cache, each read runs {func}`ast.parse` on a whole data
+module again. Reading the docstring of every trait and group then takes
+~110 ms instead of ~4 ms. Both figures are medians over 30 fresh CPython 3.12
+interpreters on Apple Silicon.
 ```
 """
 
 from __future__ import annotations
 
 import ast
-import importlib
 import inspect
+import sys
 from pathlib import Path
 
 # Per-module cache of attribute name to docstring. Populated lazily by
@@ -49,9 +50,15 @@ def _parse_module_docstrings(module_name: str) -> dict[str, str]:
     :param module_name: The full module name (e.g.,
         'extra_platforms.platform_data').
     :returns: A mapping of attribute names to their docstrings. Empty dict if
-        the source is unavailable.
+        the module is not loaded or its source is unavailable.
     """
-    module = importlib.import_module(module_name)
+    # A trait or group exists only once its data module is loaded, so there is
+    # nothing to import here. A name absent from sys.modules matches no data
+    # module: a class defined outside the package derives such a name.
+    module = sys.modules.get(module_name)
+    if module is None:
+        return {}
+
     source_file = inspect.getsourcefile(module)
     if not source_file:
         # Source file not available (e.g., compiled module).
@@ -115,8 +122,8 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
     :param module_name: The full module name (e.g.,
         'extra_platforms.platform_data').
     :param attr_name: The attribute name to look for (e.g., 'NOBARA').
-    :returns: The attribute docstring if found, or `None` if not found or
-        source is unavailable.
+    :returns: The attribute docstring if found, or `None` if not found, or if
+        the module is not loaded or its source is unavailable.
     """
     if module_name not in _module_docstrings_cache:
         _module_docstrings_cache[module_name] = _parse_module_docstrings(module_name)

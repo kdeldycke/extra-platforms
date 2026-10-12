@@ -7,6 +7,7 @@
 
 - Generate the docstring of a trait or group on its first read instead of building all of them when the package is imported, which halves the import time.
 - Import `subprocess` and `shutil` only in the two detection paths that spawn a process.
+- Fix `generate_docstring()` raising `ModuleNotFoundError` on a trait or group whose class is defined outside the package.
 
 ## [`13.11.0` (2026-10-01)](https://github.com/kdeldycke/extra-platforms/compare/v13.10.1...v13.11.0)
 
