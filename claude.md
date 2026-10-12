@@ -115,7 +115,10 @@ Update `readme.md` whenever you add or change a public API, class, or function.
 
 ### Imports
 
-Function-level imports are allowed in the `*_data.py` registries when they keep a registry readable. This is a deliberate exception to the general rule against local imports: see [§ Data registry priority](#data-registry-priority). Everywhere else, imports go at the top of the file.
+Imports go at the top of the file. A function-level import is a deliberate exception to the general rule against local imports, accepted for two reasons:
+
+- To break an import cycle around the registries. Each `*_data.py` registry imports `trait.py` or `group.py` to build its instances. A registry import at the top of `trait.py` or `group.py` therefore fails as circular. Both import a registry inside the function that needs it. `detection.py` reads the registries the same way, and `trait.py` calls `detection.py` the same way. Neither then depends on the other at load time. The registries themselves hold no function-level import: see [§ Data registry priority](#data-registry-priority).
+- To keep a module off the import path of the package. `import extra_platforms` must stay cheap. A module that only a rare code path needs is imported in that path, like `subprocess`, `shutil` and `logging`. `tests/test_root.py::test_subprocess_and_shutil_are_not_imported_at_module_level` guards the first two.
 
 ## Testing guidelines
 
