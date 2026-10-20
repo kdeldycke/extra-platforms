@@ -7,6 +7,9 @@
 
 ## [`13.12.0` (2026-10-12)](https://github.com/kdeldycke/extra-platforms/compare/v13.11.0...v13.12.0)
 
+> [!NOTE]
+> `13.12.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.12.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.12.0).
+
 - Generate the docstring of a trait or group on its first read instead of building all of them when the package is imported, which halves the import time.
 - Import `subprocess` and `shutil` only in the two detection paths that spawn a process.
 - Fix `generate_docstring()` raising `ModuleNotFoundError` on a trait or group whose class is defined outside the package.
