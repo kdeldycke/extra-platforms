@@ -67,6 +67,10 @@ myst_fence_as_directive = ["mermaid"]
 myst_heading_anchors = 6
 myst_heading_slug_func = "docutils.nodes.make_id"
 
+# A fragment link that resolves nowhere fails the build: myst-parser only warns
+# with `myst.xref_missing`, then ships the link dead.
+click_extra_fail_on_warnings = ["myst.xref_missing"]
+
 mermaid_d3_zoom = True
 
 # Enable the `{python:run}` execution directive used by docs/cli.md to render
@@ -99,10 +103,6 @@ suppress_warnings = [
     # reStructuredText parsing warnings. These are typically in test files and don't
     # affect the main documentation.
     "docutils",
-    # Example: "local id not found in doc 'groups': 'extra_platforms.Group.canonical'"
-    # Explanation: MyST validates cross-reference anchors before autodoc has generated
-    # them. These are false positives — the anchors exist in the final output.
-    "myst.xref_missing",
     # Example: "Domain 'click_extra.sphinx.click::click' has not implemented a
     # `resolve_any_xref` method"
     # Explanation: Upstream limitation in the click-extra Sphinx extension.

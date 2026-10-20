@@ -511,7 +511,7 @@ provides-extras = ["pytest"]
 
 [package.metadata.requires-dev]
 docs = [
-    { name = "click-extra", extras = ["sphinx"], marker = "python_full_version >= '3.12'", specifier = ">=8.7" },
+    { name = "click-extra", extras = ["sphinx"], marker = "python_full_version >= '3.12'", specifier = ">=9.4" },
     { name = "furo", marker = "python_full_version >= '3.12'", specifier = ">=2025.9.25" },
     { name = "myst-parser", marker = "python_full_version >= '3.12'", specifier = ">=5.1" },
     { name = "pytest", marker = "python_full_version >= '3.12'", specifier = ">=8.2.1" },
