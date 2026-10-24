@@ -1,9 +1,6 @@
 # Changelog
 
-## [`13.13.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`13.13.0` (2026-10-24)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...v13.13.0)
 
 - Detect Artix Linux through the `artix` ID its own `/etc/os-release` carries. Closes [#720](https://github.com/kdeldycke/extra-platforms/issues/720).
 - Detect a Linux distribution with an unrecognized `os-release` ID as `GENERIC_LINUX` instead of `UNKNOWN_PLATFORM`, so it stays in the `LINUX` group.
