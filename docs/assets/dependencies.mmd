@@ -6,6 +6,7 @@ flowchart LR
     beautifulsoup4(["`beautifulsoup4`"])
     docutils(["`docutils`"])
     markdown_it_py(["`markdown-it-py`"])
+    typing_extensions(["`typing-extensions`"])
     accessible_pygments(["`accessible-pygments`"])
     click_0(["`click`"])
     cloup(["`cloup`"])
@@ -17,7 +18,6 @@ flowchart LR
     pyyaml(["`pyyaml`"])
     sphinx_basic_ng(["`sphinx-basic-ng`"])
     tabulate(["`tabulate`"])
-    typing_extensions(["`typing-extensions`"])
     wcmatch(["`wcmatch`"])
     wcwidth(["`wcwidth`"])
     alabaster(["`alabaster`"])
@@ -51,7 +51,7 @@ flowchart LR
 
     subgraph grp_docs [--group docs]
         sphinx{{"`sphinx >=9.1`"}}
-        click_extra{{"`click-extra >=8.7`"}}
+        click_extra{{"`click-extra >=9.4`"}}
         myst_parser{{"`myst-parser >=5.1`"}}
         furo{{"`furo >=2025.9.25`"}}
         sphinxcontrib_mermaid{{"`sphinxcontrib-mermaid >=1.2.3`"}}
@@ -133,9 +133,10 @@ flowchart LR
     sphinxcontrib_mermaid --> jinja2
     sphinxcontrib_mermaid --> pyyaml
     coverage --> tomli
+    sphinx_autodoc_typehints --> sphinx
+    sphinx_autodoc_typehints --> typing_extensions
     pytest_github_actions_annotate_failures --> pytest
     pytest_randomly --> pytest
-    sphinx_autodoc_typehints --> sphinx
     sphinx_copybutton --> sphinx
     sphinx_design --> sphinx
     sphinxext_opengraph --> sphinx
