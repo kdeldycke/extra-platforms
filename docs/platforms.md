@@ -51,7 +51,7 @@ A compatibility layer is detected alongside the system it hosts, so two platform
 
 {func}`~current_platform` narrows the matches down to the most informative one by dropping the layers ({data}`~WSL1`, {data}`~WSL2`, {data}`~CHROMEOS`) in favor of the hosted distribution. {func}`~current_traits` keeps every match.
 
-{data}`~GENERIC_LINUX` plays the opposite role: it is not an extra match but a fallback, only firing when the kernel is Linux and the distribution cannot be identified (like minimal containers or build chroots shipping no `os-release` file). {func}`~current_platform` still returns it in that situation, while logging a warning inviting you to [report](https://github.com/kdeldycke/extra-platforms/issues) the unrecognized distribution.
+{data}`~GENERIC_LINUX` plays the opposite role: it is not an extra match but a fallback, only firing when the kernel is Linux and no other platform identifies the distribution: a distribution whose `os-release` ID is not recognized yet, or a minimal container or build chroot shipping no `os-release` file. This keeps the system in the {data}`~LINUX` group. {func}`~current_platform` still returns it in that situation, while logging a warning inviting you to [report](https://github.com/kdeldycke/extra-platforms/issues) the unrecognized distribution.
 
 ## Recognized platforms
 

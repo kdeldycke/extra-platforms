@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import ast
+import logging
 from itertools import pairwise
 from pathlib import Path
 
@@ -45,6 +46,7 @@ from extra_platforms import (
     invalidate_caches,
     is_any_platform,
     is_any_trait,
+    is_linux,
     is_unknown_platform,
 )
 from extra_platforms.pytest import skip_hermetic_build
@@ -78,18 +80,26 @@ def test_platform_mutual_exclusion():
 
 
 @pytest.mark.parametrize(
-    ("marker", "generic"),
+    ("marker", "os_release", "generic"),
     [
+        # A Linux kernel with no os-release and no other marker.
+        (None, "", True),
+        # An os-release ID that no platform recognizes yet.
+        (None, "kumquat", True),
         # SliTaz ships no os-release, only its own /etc/slitaz-release.
-        ("is_slitaz", False),
+        ("is_slitaz", "", False),
         # ChromeOS hosts the Crostini container, whose distribution stays unknown.
-        ("is_chromeos", True),
+        ("is_chromeos", "", True),
+        ("is_chromeos", "kumquat", True),
+        # The ChromeOS host identifies itself through its own os-release ID.
+        ("is_chromeos", "chromeos", False),
+        ("is_chromeos", "chromiumos", False),
     ],
 )
-def test_generic_linux_without_os_release(monkeypatch, marker, generic):
-    """A Linux kernel with no os-release is generic until a distribution shows."""
+def test_generic_linux_fallback(monkeypatch, marker, os_release, generic):
+    """A Linux kernel is generic until a platform identifies its distribution."""
     monkeypatch.setattr(detection_module.sys, "platform", "linux")
-    monkeypatch.setattr(detection_module, "os_release_id", lambda: "")
+    monkeypatch.setattr(detection_module, "os_release_id", lambda: os_release)
     registry = detection_module._detection_registry
     for platform in LINUX:
         if platform is not GENERIC_LINUX:
@@ -98,6 +108,42 @@ def test_generic_linux_without_os_release(monkeypatch, marker, generic):
     invalidate_caches()
     assert GENERIC_LINUX.current is generic
     invalidate_caches()
+
+
+@pytest.mark.parametrize(
+    ("os_release", "strict_raises"),
+    [
+        # No os-release leaves nothing more to identify.
+        ("", False),
+        # An os-release ID that no platform recognizes is a missing heuristic.
+        ("kumquat", True),
+    ],
+)
+def test_unrecognized_linux_distribution(
+    monkeypatch, caplog, os_release, strict_raises
+):
+    """An unrecognized distribution is generic Linux, so it stays in ``LINUX``."""
+    monkeypatch.setattr(detection_module.sys, "platform", "linux")
+    monkeypatch.setattr(detection_module, "os_release_id", lambda: os_release)
+    registry = detection_module._detection_registry
+    for platform in ALL_PLATFORMS:
+        if platform is not GENERIC_LINUX:
+            monkeypatch.setitem(registry, platform.detection_func_id, lambda: False)
+    invalidate_caches()
+    caplog.set_level(logging.WARNING)
+    try:
+        assert current_platform() is GENERIC_LINUX
+        assert "Unrecognized Linux distribution" in caplog.text
+        assert not is_unknown_platform()
+        assert is_linux()
+        invalidate_caches()
+        if strict_raises:
+            with pytest.raises(SystemError, match="Unrecognized Linux distribution"):
+                current_platform(strict=True)
+        else:
+            assert current_platform(strict=True) is GENERIC_LINUX
+    finally:
+        invalidate_caches()
 
 
 def test_platform_logical_grouping():

@@ -181,6 +181,15 @@ name) are what carry the smoking gun.
 """
 
 
+_CHROMEOS_IDS = frozenset(("chromeos", "chromiumos"))
+"""``os-release`` IDs of ChromeOS and of the open-source ChromiumOS builds.
+
+Only these IDs identify the running system as {data}`~extra_platforms.CHROMEOS`.
+The Crostini marker that {func}`is_chromeos` also reads shows inside a container
+too, so {func}`is_generic_linux` checks the IDs alone.
+"""
+
+
 _DUMB_TERMS = frozenset(("", "dumb", "su", "unknown"))
 """``TERM`` values declaring a terminal with no capabilities, so no emulator.
 
@@ -624,10 +633,7 @@ def is_chromeos() -> bool:
     own distribution.
     ```
     """
-    return (
-        os_release_id() in ("chromeos", "chromiumos")
-        or Path("/dev/.cros_milestone").is_file()
-    )
+    return os_release_id() in _CHROMEOS_IDS or Path("/dev/.cros_milestone").is_file()
 
 
 @cache
@@ -711,15 +717,18 @@ def is_generic_linux() -> bool:
     """Return {data}`True` if current platform is
     {data}`~extra_platforms.GENERIC_LINUX`.
 
-    Matches when running on a Linux kernel whose distribution cannot be
-    identified: minimal containers and build chroots shipping no `/etc/os-release`
-    and reaching no `systemd-hostnamed`.
+    Matches when running on a Linux kernel whose distribution no other platform
+    identifies: a distribution with an `os-release` ID no platform recognizes yet,
+    or a minimal container or build chroot shipping no `/etc/os-release` and
+    reaching no `systemd-hostnamed`. This keeps an unrecognized distribution in the
+    {data}`~extra_platforms.LINUX` group, and in every group built on it.
 
     ```{note}
     A distribution identified by another marker is no generic Linux, like
     {data}`~extra_platforms.SLITAZ` from its `/etc/slitaz-release` file.
-    {data}`~extra_platforms.CHROMEOS` does not count: it hosts the Crostini
-    container, whose own distribution stays unidentified.
+    {data}`~extra_platforms.CHROMEOS` counts only through its own `os-release`
+    ID: its Crostini marker also shows inside a container, whose own
+    distribution stays unidentified.
     ```
     """
     # Lazy imports to avoid circular dependencies.
@@ -728,7 +737,7 @@ def is_generic_linux() -> bool:
 
     return (
         sys.platform == "linux"
-        and not os_release_id()
+        and os_release_id() not in _CHROMEOS_IDS
         and not any(
             plat.current for plat in LINUX if plat not in (CHROMEOS, GENERIC_LINUX)
         )
@@ -2579,6 +2588,14 @@ def current_platform(strict: bool = False) -> Platform:
     Returns {data}`~extra_platforms.UNKNOWN_PLATFORM` if not running inside a recognized
     platform. To raise an error instead, set `strict` to `True`.
 
+    ```{note}
+    When {data}`sys.platform` is `linux`, the result is never
+    {data}`~extra_platforms.UNKNOWN_PLATFORM`. A distribution that no platform
+    recognizes gives {data}`~extra_platforms.GENERIC_LINUX`, and logs a warning
+    that asks for a report. In `strict` mode, an unrecognized `os-release` ID
+    raises an error instead.
+    ```
+
     ```{important}
     If multiple platforms match the current environment, this function will try to
     select the best, informative one. Raises an error if we can't decide on a single,
@@ -2603,9 +2620,13 @@ def current_platform(strict: bool = False) -> Platform:
     }
 
     # A lone GENERIC_LINUX match means the Linux distribution itself was not
-    # identified, which is worth reporting.
+    # identified, which is worth reporting. Strict mode raises only on an
+    # os-release ID that no platform recognizes: a system with no os-release
+    # leaves nothing more to identify.
     if matching == {GENERIC_LINUX}:
-        _report_unrecognized("Linux distribution", strict=False)
+        _report_unrecognized(
+            "Linux distribution", strict=strict and bool(os_release_id())
+        )
         return GENERIC_LINUX
 
     # Remove low-specificity platforms until a single match remains. Starts

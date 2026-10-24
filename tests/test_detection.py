@@ -279,7 +279,9 @@ def _platform_heuristic_signals() -> frozenset[str]:
     reads: an attribute of an imported module (``sys.platform``), or an imported
     object (``os_release_id``). Names bound inside the function are skipped, and
     so are calls to sibling ``is_*()`` heuristics, which this walk covers on
-    their own.
+    their own. Upper-case names are skipped too: they name module-level
+    constants (``_CHROMEOS_IDS``), which hold fixed data and read nothing from
+    the host.
     """
     heuristic_ids = {f"is_{plat.id}" for plat in ALL_PLATFORMS}
     signals = set()
@@ -310,7 +312,11 @@ def _platform_heuristic_signals() -> frozenset[str]:
                 ):
                     signals.add(f"{module_id}.{sub.attr}")
             elif isinstance(sub, ast.Name) and isinstance(sub.ctx, ast.Load):
-                if sub.id in bound or sub.id.startswith("is_"):
+                if (
+                    sub.id in bound
+                    or sub.id.startswith("is_")
+                    or sub.id.lstrip("_").isupper()
+                ):
                     continue
                 imported = getattr(detection_module, sub.id, None)
                 if imported is not None and not inspect.ismodule(imported):
