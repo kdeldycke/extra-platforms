@@ -151,6 +151,7 @@ mappingproxy({
     'amzn': Platform(id='amzn', name='Amazon Linux'),
     'android': Platform(id='android', name='Android'),
     'arch': Platform(id='arch', name='Arch Linux'),
+    'artix': Platform(id='artix', name='Artix Linux'),
     'buildroot': Platform(id='buildroot', name='Buildroot'),
     'cachyos': Platform(id='cachyos', name='CachyOS'),
     'centos': Platform(id='centos', name='CentOS'),
@@ -197,7 +198,7 @@ mappingproxy({
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'crux', 'nutyx', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux', 'solus'})
+frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'artix', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'crux', 'nutyx', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux', 'solus'})
 >>> print("\n".join([p.name for p in LINUX]))
 AlmaLinux
 Alpine Linux
@@ -205,6 +206,7 @@ ALT Linux
 Amazon Linux
 Android
 Arch Linux
+Artix Linux
 Buildroot
 CachyOS
 CentOS
@@ -357,6 +359,7 @@ mindmap
             (⤻ AMZN)
             (🤖 ANDROID)
             (🎗️ ARCH)
+            (⟁ ARTIX)
             (⛑️ BUILDROOT)
             (⌬ CACHYOS)
             (💠 CENTOS)

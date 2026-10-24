@@ -129,6 +129,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_armv6l`               | {deco}`~pytest.unless_armv6l`               |  📱  | {data}`~ARMV6L`               |
 | {deco}`~pytest.skip_armv7l`               | {deco}`~pytest.unless_armv7l`               |  📱  | {data}`~ARMV7L`               |
 | {deco}`~pytest.skip_armv8l`               | {deco}`~pytest.unless_armv8l`               |  📱  | {data}`~ARMV8L`               |
+| {deco}`~pytest.skip_artix`                | {deco}`~pytest.unless_artix`                |  ⟁   | {data}`~ARTIX`                |
 | {deco}`~pytest.skip_ash`                  | {deco}`~pytest.unless_ash`                  |  🪶  | {data}`~ASH`                  |
 | {deco}`~pytest.skip_azure_pipelines`      | {deco}`~pytest.unless_azure_pipelines`      |  ═   | {data}`~AZURE_PIPELINES`      |
 | {deco}`~pytest.skip_bamboo`               | {deco}`~pytest.unless_bamboo`               |  ⟲   | {data}`~BAMBOO`               |

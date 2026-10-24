@@ -157,6 +157,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  📱  | {data}`~ARMV6L`               | ARMv6 (little-endian)          | {func}`~is_armv6l`               | Architecture |
 |  📱  | {data}`~ARMV7L`               | ARMv7 (little-endian)          | {func}`~is_armv7l`               | Architecture |
 |  📱  | {data}`~ARMV8L`               | ARMv8 (32-bit, little-endian)  | {func}`~is_armv8l`               | Architecture |
+|  ⟁   | {data}`~ARTIX`                | Artix Linux                    | {func}`~is_artix`                | Platform     |
 |  🪶  | {data}`~ASH`                  | Almquist Shell                 | {func}`~is_ash`                  | Shell        |
 |  ═   | {data}`~AZURE_PIPELINES`      | Azure Pipelines                | {func}`~is_azure_pipelines`      | CI           |
 |  ⟲   | {data}`~BAMBOO`               | Bamboo                         | {func}`~is_bamboo`               | CI           |

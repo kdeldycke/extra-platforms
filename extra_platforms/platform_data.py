@@ -69,6 +69,8 @@ ANDROID = Platform("android", "Android", "🤖", "https://android.com")
 
 ARCH = Platform("arch", "Arch Linux", "🎗️", "https://archlinux.org")
 
+ARTIX = Platform("artix", "Artix Linux", "⟁", "https://artixlinux.org")
+
 BUILDROOT = Platform("buildroot", "Buildroot", "⛑️", "https://buildroot.org")
 
 CACHYOS = Platform("cachyos", "CachyOS", "⌬", "https://cachyos.org")

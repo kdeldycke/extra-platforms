@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Detect Artix Linux through the `artix` ID its own `/etc/os-release` carries. Closes [#720](https://github.com/kdeldycke/extra-platforms/issues/720).
+
 ## [`13.12.0` (2026-10-12)](https://github.com/kdeldycke/extra-platforms/compare/v13.11.0...v13.12.0)
 
 > [!NOTE]

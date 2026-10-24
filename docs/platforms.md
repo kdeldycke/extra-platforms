@@ -76,6 +76,7 @@ print(generate_trait_table(ALL_PLATFORMS))
 |  ⤻   | {data}`~AMZN`          | Amazon Linux                   | {func}`~is_amzn`          |
 |  🤖  | {data}`~ANDROID`       | Android                        | {func}`~is_android`       |
 |  🎗️  | {data}`~ARCH`          | Arch Linux                     | {func}`~is_arch`          |
+|  ⟁   | {data}`~ARTIX`         | Artix Linux                    | {func}`~is_artix`         |
 |  ⛑️  | {data}`~BUILDROOT`     | Buildroot                      | {func}`~is_buildroot`     |
 |  ⌬   | {data}`~CACHYOS`       | CachyOS                        | {func}`~is_cachyos`       |
 |  💠  | {data}`~CENTOS`        | CentOS                         | {func}`~is_centos`        |
@@ -207,7 +208,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,50
+ALL_PLATFORMS,LINUX,51
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -220,6 +221,7 @@ LINUX,ALTLINUX,1
 LINUX,AMZN,1
 LINUX,ANDROID,1
 LINUX,ARCH,1
+LINUX,ARTIX,1
 LINUX,BUILDROOT,1
 LINUX,CACHYOS,1
 LINUX,CENTOS,1
@@ -323,6 +325,7 @@ mindmap
             (⤻ AMZN)
             (🤖 ANDROID)
             (🎗️ ARCH)
+            (⟁ ARTIX)
             (⛑️ BUILDROOT)
             (⌬ CACHYOS)
             (💠 CENTOS)

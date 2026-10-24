@@ -27,6 +27,7 @@ keywords = [
   "ARMv6 (little-endian)",
   "ARMv7 (little-endian)",
   "ARMv8 (32-bit, little-endian)",
+  "Artix Linux",
   "AT&T System Five",
   "Azure Pipelines",
   "Bamboo",

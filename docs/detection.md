@@ -52,6 +52,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_armv6l`               |  📱  | {data}`~ARMV6L`               |
 | {func}`~is_armv7l`               |  📱  | {data}`~ARMV7L`               |
 | {func}`~is_armv8l`               |  📱  | {data}`~ARMV8L`               |
+| {func}`~is_artix`                |  ⟁   | {data}`~ARTIX`                |
 | {func}`~is_ash`                  |  🪶  | {data}`~ASH`                  |
 | {func}`~is_azure_pipelines`      |  ═   | {data}`~AZURE_PIPELINES`      |
 | {func}`~is_bamboo`               |  ⟲   | {data}`~BAMBOO`               |

@@ -243,6 +243,7 @@ if TYPE_CHECKING:
     skip_armv6l: MarkDecorator
     skip_armv7l: MarkDecorator
     skip_armv8l: MarkDecorator
+    skip_artix: MarkDecorator
     skip_ash: MarkDecorator
     skip_azure_pipelines: MarkDecorator
     skip_bamboo: MarkDecorator
@@ -434,6 +435,7 @@ if TYPE_CHECKING:
     unless_armv6l: MarkDecorator
     unless_armv7l: MarkDecorator
     unless_armv8l: MarkDecorator
+    unless_artix: MarkDecorator
     unless_ash: MarkDecorator
     unless_azure_pipelines: MarkDecorator
     unless_bamboo: MarkDecorator

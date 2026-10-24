@@ -576,6 +576,12 @@ def is_arch() -> bool:
 
 
 @cache
+def is_artix() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.ARTIX`."""
+    return os_release_id() == "artix"
+
+
+@cache
 def is_buildroot() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.BUILDROOT`."""
     return os_release_id() == "buildroot"
