@@ -80,14 +80,14 @@ def extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
     Can return duplicates.
     ```
     """
+    # A group needs no case of its own: _flatten() already iterates it into its
+    # traits.
     for item in _flatten(other):
         match item:
             case None:
                 continue
             case Trait():
                 yield item
-            case Group():
-                yield from item._members.values()
             case str():
                 yield from traits_from_ids(item)
             case _:
