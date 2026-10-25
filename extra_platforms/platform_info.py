@@ -405,11 +405,9 @@ MACOS_CODENAMES: dict[tuple[str, str | None], str] = {
 - https://docs.python.org/3/library/platform.html#platform.mac_ver
 ```
 
-```{todo}
-Handle the oddity where some beta releases of macOS Tahoe report their major
-version as `16` instead of `15` or `26`. Left unhandled for now, as we consider
-this a glitch in macOS history, and do not have a proper way to detect beta
-versions at this time.
+```{note}
+Some beta releases of macOS Tahoe reported their major version as `16` instead of
+`26`. This map has no entry for `16`, because no final release of macOS uses it.
 ```
 """
 

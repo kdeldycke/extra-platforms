@@ -234,11 +234,9 @@ def generate_sankey(groups: Iterable[Group]) -> str:
     :raises ValueError: If no superset group is found among the inputs.
 
     ```{todo}
-    Label nodes with their trait icons once Mermaid supports emoji in Sankey
-    diagrams, as tracked in
-    [`mermaid-js/mermaid#1995`](https://github.com/mermaid-js/mermaid/issues/1995)
-    and
-    [`mermaid-js/mermaid#5308`](https://github.com/mermaid-js/mermaid/issues/5308).
+    Label nodes with their trait icons once the Mermaid Sankey parser accepts
+    non-ASCII characters, as tracked in
+    [`mermaid-js/mermaid#6822`](https://github.com/mermaid-js/mermaid/issues/6822).
     Nodes fall back to bare ``symbol_id`` labels in the meantime.
     ```
     """

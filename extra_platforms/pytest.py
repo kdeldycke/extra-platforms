@@ -19,10 +19,10 @@ each platform and group.
 ```{currentmodule} extra_platforms
 ```
 
-```{todo}
-Drop the explicit ``MarkDecorator`` declarations listed under ``TYPE_CHECKING``
-at the end of this module once mypy resolves dynamically generated module
-attributes on its own.
+```{note}
+Type checkers like mypy do not run module code, so they cannot see the decorators
+generated at import time. The `MarkDecorator` declarations under `TYPE_CHECKING` at
+the end of this module make them visible.
 ```
 """
 
