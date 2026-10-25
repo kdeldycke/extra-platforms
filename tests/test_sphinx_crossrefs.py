@@ -20,6 +20,7 @@ these catch real regressions in the actual documentation.
 
 from __future__ import annotations
 
+import functools
 import importlib.util
 import inspect
 import re
@@ -119,8 +120,13 @@ def built_docs() -> Path:
     return DOCS_HTML_DIR
 
 
+@functools.cache
 def read_html(built_docs: Path, filename: str) -> str:
-    """Read an HTML file from the built documentation."""
+    """Read an HTML file from the built documentation, once per session.
+
+    Only the top level of the build is read: `_modules/` holds viewcode pages
+    sharing the basenames of the real pages, like `detection.html`.
+    """
     html_path = built_docs / filename
     assert html_path.exists(), f"HTML file not found: {html_path}"
     return html_path.read_text(encoding="utf-8")
@@ -286,496 +292,6 @@ def test_rendered_links_point_to_correct_targets(
     )
 
 
-def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str, str]:
-    """Return the (myst_html, rst_html, rendering_html) tuple for `myst`.
-
-    Search the Reference matrix table and return the first row whose first
-    column (stripped of HTML) exactly matches the provided `myst` directive
-    string (e.g. ``"{data}`~UBUNTU`"``). The returned values are the raw HTML
-    contents of the MyST, reST, and Rendering ``<td>`` cells for that row. If
-    not found, fail the test.
-    """
-    idx = html.find("Reference matrix")
-    assert idx != -1, "Reference matrix section not found in sphinx.html"
-    table_start = html.find("<table", idx)
-    assert table_start != -1, "Reference matrix table not found"
-    table_end = html.find("</table>", table_start)
-    assert table_end != -1, "Reference matrix table not terminated"
-    table_html = html[table_start : table_end + len("</table>")]
-
-    for row in re.findall(r"<tr[^>]*>(.*?)</tr>", table_html, re.DOTALL):
-        tds = re.findall(r"<td[^>]*>(.*?)</td>", row, re.DOTALL)
-        if len(tds) < 3:
-            continue
-        first = re.sub(r"<[^>]+>", "", tds[0]).strip()
-        if first == myst:
-            return tds[0], tds[1], tds[2]
-
-    pytest.fail(f"Reference matrix first-column entry not found: {myst}")
-
-
-@pytest.mark.parametrize(
-    "myst,expected_text,expected_link",
-    [
-        # Traits
-        ("{data}`~UBUNTU`", "UBUNTU", "platforms.html#extra_platforms.UBUNTU"),
-        (
-            "{func}`~is_ubuntu`",
-            "is_ubuntu()",
-            "detection.html#extra_platforms.is_ubuntu",
-        ),
-        (
-            "{data}`~pytest.skip_ubuntu`",
-            "skip_ubuntu",
-            "pytest.html#extra_platforms.pytest.skip_ubuntu",
-        ),
-        (
-            "{data}`~pytest.unless_ubuntu`",
-            "unless_ubuntu",
-            "pytest.html#extra_platforms.pytest.unless_ubuntu",
-        ),
-        # Architectures
-        ("{data}`~AARCH64`", "AARCH64", "architectures.html#extra_platforms.AARCH64"),
-        (
-            "{func}`~is_aarch64`",
-            "is_aarch64()",
-            "detection.html#extra_platforms.is_aarch64",
-        ),
-        (
-            "{data}`~pytest.skip_aarch64`",
-            "skip_aarch64",
-            "pytest.html#extra_platforms.pytest.skip_aarch64",
-        ),
-        (
-            "{data}`~pytest.unless_aarch64`",
-            "unless_aarch64",
-            "pytest.html#extra_platforms.pytest.unless_aarch64",
-        ),
-        # Shells
-        ("{data}`~BASH`", "BASH", "shells.html#extra_platforms.BASH"),
-        ("{func}`~is_bash`", "is_bash()", "detection.html#extra_platforms.is_bash"),
-        (
-            "{data}`~pytest.skip_bash`",
-            "skip_bash",
-            "pytest.html#extra_platforms.pytest.skip_bash",
-        ),
-        (
-            "{data}`~pytest.unless_bash`",
-            "unless_bash",
-            "pytest.html#extra_platforms.pytest.unless_bash",
-        ),
-        # CI
-        ("{data}`~GITHUB_CI`", "GITHUB_CI", "ci.html#extra_platforms.GITHUB_CI"),
-        (
-            "{func}`~is_github_ci`",
-            "is_github_ci()",
-            "detection.html#extra_platforms.is_github_ci",
-        ),
-        (
-            "{data}`~pytest.skip_github_ci`",
-            "skip_github_ci",
-            "pytest.html#extra_platforms.pytest.skip_github_ci",
-        ),
-        (
-            "{data}`~pytest.unless_github_ci`",
-            "unless_github_ci",
-            "pytest.html#extra_platforms.pytest.unless_github_ci",
-        ),
-        # Terminals
-        ("{data}`~KITTY`", "KITTY", "terminals.html#extra_platforms.KITTY"),
-        (
-            "{func}`~is_kitty`",
-            "is_kitty()",
-            "detection.html#extra_platforms.is_kitty",
-        ),
-        (
-            "{data}`~pytest.skip_kitty`",
-            "skip_kitty",
-            "pytest.html#extra_platforms.pytest.skip_kitty",
-        ),
-        (
-            "{data}`~pytest.unless_kitty`",
-            "unless_kitty",
-            "pytest.html#extra_platforms.pytest.unless_kitty",
-        ),
-        # Agents
-        (
-            "{data}`~CLAUDE_CODE`",
-            "CLAUDE_CODE",
-            "agents.html#extra_platforms.CLAUDE_CODE",
-        ),
-        (
-            "{func}`~is_claude_code`",
-            "is_claude_code()",
-            "detection.html#extra_platforms.is_claude_code",
-        ),
-        (
-            "{data}`~pytest.skip_claude_code`",
-            "skip_claude_code",
-            "pytest.html#extra_platforms.pytest.skip_claude_code",
-        ),
-        (
-            "{data}`~pytest.unless_claude_code`",
-            "unless_claude_code",
-            "pytest.html#extra_platforms.pytest.unless_claude_code",
-        ),
-        # Groups
-        ("{data}`~LINUX`", "LINUX", "groups.html#extra_platforms.LINUX"),
-        ("{func}`~is_linux`", "is_linux()", "detection.html#extra_platforms.is_linux"),
-        (
-            "{data}`~pytest.skip_linux`",
-            "skip_linux",
-            "pytest.html#extra_platforms.pytest.skip_linux",
-        ),
-        (
-            "{data}`~pytest.unless_linux`",
-            "unless_linux",
-            "pytest.html#extra_platforms.pytest.unless_linux",
-        ),
-        (
-            "{data}`~ALL_PLATFORMS`",
-            "ALL_PLATFORMS",
-            "groups.html#extra_platforms.ALL_PLATFORMS",
-        ),
-        (
-            "{func}`~is_any_platform`",
-            "is_any_platform()",
-            "detection.html#extra_platforms.is_any_platform",
-        ),
-        (
-            "{data}`~pytest.skip_all_platforms`",
-            "skip_all_platforms",
-            "pytest.html#extra_platforms.pytest.skip_all_platforms",
-        ),
-        (
-            "{data}`~pytest.unless_any_platform`",
-            "unless_any_platform",
-            "pytest.html#extra_platforms.pytest.unless_any_platform",
-        ),
-        (
-            "{data}`~UNKNOWN_PLATFORM`",
-            "UNKNOWN_PLATFORM",
-            "platforms.html#extra_platforms.UNKNOWN_PLATFORM",
-        ),
-        (
-            "{func}`~is_unknown_platform`",
-            "is_unknown_platform()",
-            "detection.html#extra_platforms.is_unknown_platform",
-        ),
-        (
-            "{data}`~pytest.skip_unknown_platform`",
-            "skip_unknown_platform",
-            "pytest.html#extra_platforms.pytest.skip_unknown_platform",
-        ),
-        (
-            "{data}`~pytest.unless_unknown_platform`",
-            "unless_unknown_platform",
-            "pytest.html#extra_platforms.pytest.unless_unknown_platform",
-        ),
-        (
-            "{data}`~ALL_SHELLS`",
-            "ALL_SHELLS",
-            "groups.html#extra_platforms.ALL_SHELLS",
-        ),
-        (
-            "{func}`~is_any_shell`",
-            "is_any_shell()",
-            "detection.html#extra_platforms.is_any_shell",
-        ),
-        (
-            "{data}`~pytest.skip_all_shells`",
-            "skip_all_shells",
-            "pytest.html#extra_platforms.pytest.skip_all_shells",
-        ),
-        (
-            "{data}`~pytest.unless_any_shell`",
-            "unless_any_shell",
-            "pytest.html#extra_platforms.pytest.unless_any_shell",
-        ),
-        (
-            "{data}`~ALL_TERMINALS`",
-            "ALL_TERMINALS",
-            "groups.html#extra_platforms.ALL_TERMINALS",
-        ),
-        (
-            "{func}`~is_any_terminal`",
-            "is_any_terminal()",
-            "detection.html#extra_platforms.is_any_terminal",
-        ),
-        (
-            "{data}`~pytest.skip_all_terminals`",
-            "skip_all_terminals",
-            "pytest.html#extra_platforms.pytest.skip_all_terminals",
-        ),
-        (
-            "{data}`~pytest.unless_any_terminal`",
-            "unless_any_terminal",
-            "pytest.html#extra_platforms.pytest.unless_any_terminal",
-        ),
-        (
-            "{data}`~ALL_AGENTS`",
-            "ALL_AGENTS",
-            "groups.html#extra_platforms.ALL_AGENTS",
-        ),
-        (
-            "{func}`~is_any_agent`",
-            "is_any_agent()",
-            "detection.html#extra_platforms.is_any_agent",
-        ),
-        (
-            "{data}`~pytest.skip_all_agents`",
-            "skip_all_agents",
-            "pytest.html#extra_platforms.pytest.skip_all_agents",
-        ),
-        (
-            "{data}`~pytest.unless_any_agent`",
-            "unless_any_agent",
-            "pytest.html#extra_platforms.pytest.unless_any_agent",
-        ),
-        (
-            "{data}`~UNKNOWN_SHELL`",
-            "UNKNOWN_SHELL",
-            "shells.html#extra_platforms.UNKNOWN_SHELL",
-        ),
-        (
-            "{func}`~is_unknown_shell`",
-            "is_unknown_shell()",
-            "detection.html#extra_platforms.is_unknown_shell",
-        ),
-        (
-            "{data}`~pytest.skip_unknown_shell`",
-            "skip_unknown_shell",
-            "pytest.html#extra_platforms.pytest.skip_unknown_shell",
-        ),
-        (
-            "{data}`~pytest.unless_unknown_shell`",
-            "unless_unknown_shell",
-            "pytest.html#extra_platforms.pytest.unless_unknown_shell",
-        ),
-        (
-            "{data}`~UNKNOWN_ARCHITECTURE`",
-            "UNKNOWN_ARCHITECTURE",
-            "architectures.html#extra_platforms.UNKNOWN_ARCHITECTURE",
-        ),
-        (
-            "{func}`~is_unknown_architecture`",
-            "is_unknown_architecture()",
-            "detection.html#extra_platforms.is_unknown_architecture",
-        ),
-        (
-            "{data}`~pytest.skip_unknown_architecture`",
-            "skip_unknown_architecture",
-            "pytest.html#extra_platforms.pytest.skip_unknown_architecture",
-        ),
-        (
-            "{data}`~pytest.unless_unknown_architecture`",
-            "unless_unknown_architecture",
-            "pytest.html#extra_platforms.pytest.unless_unknown_architecture",
-        ),
-        ("{data}`~UNKNOWN_CI`", "UNKNOWN_CI", "ci.html#extra_platforms.UNKNOWN_CI"),
-        (
-            "{func}`~is_unknown_ci`",
-            "is_unknown_ci()",
-            "detection.html#extra_platforms.is_unknown_ci",
-        ),
-        (
-            "{data}`~pytest.skip_unknown_ci`",
-            "skip_unknown_ci",
-            "pytest.html#extra_platforms.pytest.skip_unknown_ci",
-        ),
-        (
-            "{data}`~pytest.unless_unknown_ci`",
-            "unless_unknown_ci",
-            "pytest.html#extra_platforms.pytest.unless_unknown_ci",
-        ),
-        (
-            "{data}`~UNKNOWN_TERMINAL`",
-            "UNKNOWN_TERMINAL",
-            "terminals.html#extra_platforms.UNKNOWN_TERMINAL",
-        ),
-        (
-            "{func}`~is_unknown_terminal`",
-            "is_unknown_terminal()",
-            "detection.html#extra_platforms.is_unknown_terminal",
-        ),
-        (
-            "{data}`~pytest.skip_unknown_terminal`",
-            "skip_unknown_terminal",
-            "pytest.html#extra_platforms.pytest.skip_unknown_terminal",
-        ),
-        (
-            "{data}`~pytest.unless_unknown_terminal`",
-            "unless_unknown_terminal",
-            "pytest.html#extra_platforms.pytest.unless_unknown_terminal",
-        ),
-        (
-            "{data}`~UNKNOWN_AGENT`",
-            "UNKNOWN_AGENT",
-            "agents.html#extra_platforms.UNKNOWN_AGENT",
-        ),
-        (
-            "{func}`~is_unknown_agent`",
-            "is_unknown_agent()",
-            "detection.html#extra_platforms.is_unknown_agent",
-        ),
-        (
-            "{data}`~pytest.skip_unknown_agent`",
-            "skip_unknown_agent",
-            "pytest.html#extra_platforms.pytest.skip_unknown_agent",
-        ),
-        (
-            "{data}`~pytest.unless_unknown_agent`",
-            "unless_unknown_agent",
-            "pytest.html#extra_platforms.pytest.unless_unknown_agent",
-        ),
-        # UNIX_WITHOUT_MACOS / translation example
-        (
-            "{data}`~UNIX_WITHOUT_MACOS`",
-            "UNIX_WITHOUT_MACOS",
-            "groups.html#extra_platforms.UNIX_WITHOUT_MACOS",
-        ),
-        (
-            "{func}`~is_unix_not_macos`",
-            "is_unix_not_macos()",
-            "detection.html#extra_platforms.is_unix_not_macos",
-        ),
-        # Detection Methods
-        (
-            "{func}`~current_platform`",
-            "current_platform()",
-            "detection.html#extra_platforms.current_platform",
-        ),
-        (
-            "{func}`~current_architecture`",
-            "current_architecture()",
-            "detection.html#extra_platforms.current_architecture",
-        ),
-        (
-            "{func}`~current_shell`",
-            "current_shell()",
-            "detection.html#extra_platforms.current_shell",
-        ),
-        (
-            "{func}`~current_ci`",
-            "current_ci()",
-            "detection.html#extra_platforms.current_ci",
-        ),
-        (
-            "{func}`~current_terminal`",
-            "current_terminal()",
-            "detection.html#extra_platforms.current_terminal",
-        ),
-        (
-            "{func}`~current_agent`",
-            "current_agent()",
-            "detection.html#extra_platforms.current_agent",
-        ),
-        (
-            "{func}`~current_traits`",
-            "current_traits()",
-            "detection.html#extra_platforms.current_traits",
-        ),
-        # Classes
-        ("{class}`~Platform`", "Platform", "trait.html#extra_platforms.Platform"),
-        (
-            "{class}`~Architecture`",
-            "Architecture",
-            "trait.html#extra_platforms.Architecture",
-        ),
-        ("{class}`~Shell`", "Shell", "trait.html#extra_platforms.Shell"),
-        ("{class}`~Terminal`", "Terminal", "trait.html#extra_platforms.Terminal"),
-        ("{class}`~CI`", "CI", "trait.html#extra_platforms.CI"),
-        ("{class}`~Agent`", "Agent", "trait.html#extra_platforms.Agent"),
-        ("{class}`~Trait`", "Trait", "trait.html#extra_platforms.Trait"),
-        ("{class}`~Group`", "Group", "groups.html#extra_platforms.Group"),
-        # Utilities
-        ("{func}`~reduce`", "reduce()", "groups.html#extra_platforms.reduce"),
-        (
-            "{func}`~extract_members`",
-            "extract_members()",
-            "groups.html#extra_platforms.extract_members",
-        ),
-        (
-            "{func}`~traits_from_ids`",
-            "traits_from_ids()",
-            "groups.html#extra_platforms.traits_from_ids",
-        ),
-        (
-            "{func}`~groups_from_ids`",
-            "groups_from_ids()",
-            "groups.html#extra_platforms.groups_from_ids",
-        ),
-        (
-            "{func}`~invalidate_caches`",
-            "invalidate_caches()",
-            "detection.html#extra_platforms.invalidate_caches",
-        ),
-    ],
-)
-def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
-    """Parametrized check: the MyST directive in column 1 renders to a link in column 2.
-
-    `myst` is the literal MyST role example as shown in the first column of the
-    Reference matrix. `expected_link` is the expected href target used in the
-    rendered Rendering column.
-    """
-    html = read_html(built_docs, "sphinx.html")
-    first_html, rst_html, rendering_html = _extract_reference_table_rows(html, myst)
-
-    # Ensure the first-column MyST example is wrapped in <span class="pre">...
-    m1 = re.search(r'<span class="pre">(.*?)</span>', first_html, re.DOTALL)
-    assert m1, (
-        f"Reference matrix first-column for '{myst}' is not wrapped in "
-        '<span class="pre">..."'
-    )
-    first_plain = re.sub(r"<[^>]+>", "", m1.group(1)).strip()
-    assert first_plain == myst, (
-        f"Reference matrix first-column span content '{first_plain}' does not "
-        f"match expected myst '{myst}'"
-    )
-
-    # Verify the reST column contains the equivalent reST syntax.
-    # The transformation is mechanical: {role} -> :role:.
-    expected_rst = re.sub(r"\{(\w+)\}", r":\1:", myst)
-    rst_span = re.search(r'<span class="pre">(.*?)</span>', rst_html, re.DOTALL)
-    if rst_span:
-        rst_plain = re.sub(r"<[^>]+>", "", rst_span.group(1)).strip()
-        assert rst_plain == expected_rst, (
-            f"Reference matrix reST column for '{myst}' has '{rst_plain}', "
-            f"expected '{expected_rst}'"
-        )
-
-    # Ensure the rendering column is wrapped in <span class="pre">...
-    m2 = re.search(r'<span class="pre">(.*?)</span>', rendering_html, re.DOTALL)
-    assert m2, (
-        f"Reference matrix rendering column for '{myst}' is not wrapped in "
-        '<span class="pre">..."'
-    )
-    # span exists (m2.group(1) available if needed for future checks)
-
-    # Find the <a> tag that points to the expected href and check its text.
-    # The anchor may or may not be inside the <span class="pre">; search
-    # the entire rendering_html for robustness while still asserting the
-    # presence of the <span class="pre"> wrapper above.
-    pattern = r'<a\s[^>]*href="([^"]*)"[^>]*>(.*?)</a>'
-    for m in re.finditer(pattern, rendering_html, re.DOTALL):
-        href, content = m.groups()
-        if expected_link in href:
-            plain_text = re.sub(r"<[^>]+>", "", content).strip()
-            assert plain_text == expected_text, (
-                f"Reference matrix example '{myst}' rendered text '{plain_text}' "
-                f"does not match expected '{expected_text}' for "
-                f"{expected_link}"
-            )
-            break
-    else:
-        hrefs = re.findall(r'href="([^"]+)"', rendering_html)
-        pytest.fail(
-            f"Reference matrix example '{myst}' did not render to "
-            f"{expected_link}; found {hrefs}"
-        )
-
-
 def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     """Determine the expected HTML page for a given symbol.
 
@@ -905,6 +421,126 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     return "extra_platforms.html"
 
 
+def _reference_matrix_rows() -> list[tuple[str, str, str]]:
+    """Read the parameters of each example row of the Reference matrix.
+
+    Each row of the table in `docs/sphinx.md` yields the MyST example of its first
+    column, the text its rendered link must show, and the page and anchor that
+    link must point to. Reading them from the page covers every row it holds,
+    including one added later.
+    """
+    page = Path(__file__).parent.parent / "docs" / "sphinx.md"
+    section = page.read_text(encoding="utf-8").split("## Reference matrix", 1)[1]
+    section = section.split("\n## ", 1)[0]
+    rows = []
+    for myst in re.findall(r"^\|\s*`` (\{\w+\}`[^`]+`) ``\s*\|", section, re.MULTILINE):
+        role_match = re.fullmatch(r"\{(\w+)\}`~?([^`]+)`", myst)
+        assert role_match, f"Unparsable Reference matrix example: {myst}"
+        role, target = role_match.groups()
+        leaf = target.rsplit(".", 1)[-1]
+        text = f"{leaf}()" if role in ("func", "meth") else leaf
+        link = f"{get_expected_page_for_symbol(role, target)}#extra_platforms.{target}"
+        rows.append((myst, text, link))
+    # An empty list would collect no case at all, and pass silently.
+    assert rows, f"No Reference matrix example found in {page}"
+    return rows
+
+
+def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str, str]:
+    """Return the (myst_html, rst_html, rendering_html) tuple for `myst`.
+
+    Search the Reference matrix table and return the first row whose first
+    column (stripped of HTML) exactly matches the provided `myst` directive
+    string (e.g. ``"{data}`~UBUNTU`"``). The returned values are the raw HTML
+    contents of the MyST, reST, and Rendering ``<td>`` cells for that row. If
+    not found, fail the test.
+    """
+    idx = html.find("Reference matrix")
+    assert idx != -1, "Reference matrix section not found in sphinx.html"
+    table_start = html.find("<table", idx)
+    assert table_start != -1, "Reference matrix table not found"
+    table_end = html.find("</table>", table_start)
+    assert table_end != -1, "Reference matrix table not terminated"
+    table_html = html[table_start : table_end + len("</table>")]
+
+    for row in re.findall(r"<tr[^>]*>(.*?)</tr>", table_html, re.DOTALL):
+        tds = re.findall(r"<td[^>]*>(.*?)</td>", row, re.DOTALL)
+        if len(tds) < 3:
+            continue
+        first = re.sub(r"<[^>]+>", "", tds[0]).strip()
+        if first == myst:
+            return tds[0], tds[1], tds[2]
+
+    pytest.fail(f"Reference matrix first-column entry not found: {myst}")
+
+
+@pytest.mark.parametrize(
+    ("myst", "expected_text", "expected_link"), _reference_matrix_rows()
+)
+def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
+    """Parametrized check: the MyST directive in column 1 renders to a link in column 2.
+
+    `myst` is the literal MyST role example as shown in the first column of the
+    Reference matrix. `expected_link` is the expected href target used in the
+    rendered Rendering column.
+    """
+    html = read_html(built_docs, "sphinx.html")
+    first_html, rst_html, rendering_html = _extract_reference_table_rows(html, myst)
+
+    # Ensure the first-column MyST example is wrapped in <span class="pre">...
+    m1 = re.search(r'<span class="pre">(.*?)</span>', first_html, re.DOTALL)
+    assert m1, (
+        f"Reference matrix first-column for '{myst}' is not wrapped in "
+        '<span class="pre">..."'
+    )
+    first_plain = re.sub(r"<[^>]+>", "", m1.group(1)).strip()
+    assert first_plain == myst, (
+        f"Reference matrix first-column span content '{first_plain}' does not "
+        f"match expected myst '{myst}'"
+    )
+
+    # Verify the reST column contains the equivalent reST syntax.
+    # The transformation is mechanical: {role} -> :role:.
+    expected_rst = re.sub(r"\{(\w+)\}", r":\1:", myst)
+    rst_span = re.search(r'<span class="pre">(.*?)</span>', rst_html, re.DOTALL)
+    assert rst_span, f"Reference matrix reST column for '{myst}' holds no example"
+    rst_plain = re.sub(r"<[^>]+>", "", rst_span.group(1)).strip()
+    assert rst_plain == expected_rst, (
+        f"Reference matrix reST column for '{myst}' has '{rst_plain}', "
+        f"expected '{expected_rst}'"
+    )
+
+    # Ensure the rendering column is wrapped in <span class="pre">...
+    m2 = re.search(r'<span class="pre">(.*?)</span>', rendering_html, re.DOTALL)
+    assert m2, (
+        f"Reference matrix rendering column for '{myst}' is not wrapped in "
+        '<span class="pre">..."'
+    )
+    # span exists (m2.group(1) available if needed for future checks)
+
+    # Find the <a> tag that points to the expected href and check its text.
+    # The anchor may or may not be inside the <span class="pre">; search
+    # the entire rendering_html for robustness while still asserting the
+    # presence of the <span class="pre"> wrapper above.
+    pattern = r'<a\s[^>]*href="([^"]*)"[^>]*>(.*?)</a>'
+    for m in re.finditer(pattern, rendering_html, re.DOTALL):
+        href, content = m.groups()
+        if expected_link in href:
+            plain_text = re.sub(r"<[^>]+>", "", content).strip()
+            assert plain_text == expected_text, (
+                f"Reference matrix example '{myst}' rendered text '{plain_text}' "
+                f"does not match expected '{expected_text}' for "
+                f"{expected_link}"
+            )
+            break
+    else:
+        hrefs = re.findall(r'href="([^"]+)"', rendering_html)
+        pytest.fail(
+            f"Reference matrix example '{myst}' did not render to "
+            f"{expected_link}; found {hrefs}"
+        )
+
+
 def _get_all_public_symbols() -> Iterator[str]:
     """Collect all public symbols from extra_platforms and pytest modules.
 
@@ -970,7 +606,9 @@ def collect_all_refs() -> list[tuple[str, str, str]]:
     """Collect all cross-reference tuples (role, symbol, source_file).
 
     This helper is intentionally executed at collection time to generate
-    parametrization values for the comprehensive cross-reference test.
+    parametrization values for the comprehensive cross-reference test. A file
+    citing the same reference twice yields one tuple, and the tuples are sorted,
+    so the order does not depend on the file system.
     """
     project_root = Path(__file__).parent.parent
     docs_dir = project_root / "docs"
@@ -995,7 +633,7 @@ def collect_all_refs() -> list[tuple[str, str, str]]:
             for role, symbol in re.findall(pattern, content):
                 all_refs.append((role, symbol, str(py_file.relative_to(project_root))))
 
-    return all_refs
+    return sorted(set(all_refs))
 
 
 @pytest.mark.parametrize("role,symbol,source_file", collect_all_refs())
@@ -1140,24 +778,15 @@ def test_all_crossreferences_point_to_correct_pages(
         f"extra_platforms.{Path(source_file).stem}.{symbol_clean}",
     ]
 
-    found = False
-    for html_file in built_docs.glob("**/*.html"):
-        if html_file.name != expected_page:
-            continue
-        html_content = html_file.read_text(encoding="utf-8")
-        if any(f'id="{anchor}"' in html_content for anchor in possible_anchors):
-            found = True
-            break
+    html_content = read_html(built_docs, expected_page)
+    found = any(f'id="{anchor}"' in html_content for anchor in possible_anchors)
 
-    if not found and (
-        not symbol_clean.startswith("_")
-        and "test" not in source_file.lower()
-        and not symbol_clean.startswith("UNKNOWN_")
-    ):
-        assert found, (
-            f"Symbol {role}:`{symbol}` from {source_file} "
-            f"expected in {expected_page} but anchor {expected_anchor} not found"
-        )
+    if not found and symbol_clean.startswith(("_", "UNKNOWN_")):
+        pytest.skip("Private and unknown-trait symbols carry no anchor of their own")
+    assert found, (
+        f"Symbol {role}:`{symbol}` from {source_file} "
+        f"expected in {expected_page} but anchor {expected_anchor} not found"
+    )
 
 
 def extract_docstring_from_html(html: str, symbol_id: str) -> str:
