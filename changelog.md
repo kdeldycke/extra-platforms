@@ -7,6 +7,9 @@
 
 ## [`13.13.0` (2026-10-25)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...v13.13.0)
 
+> [!NOTE]
+> `13.13.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/13.13.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v13.13.0).
+
 - Detect Artix Linux through the `artix` ID its own `/etc/os-release` carries. Closes [#720](https://github.com/kdeldycke/extra-platforms/issues/720).
 - Detect a Linux distribution with an unrecognized `os-release` ID as `GENERIC_LINUX` instead of `UNKNOWN_PLATFORM`, so it stays in the `LINUX` group.
 - Fix platform detection raising on an `os-release` file that cannot be read, holds invalid UTF-8 or leaves a quote unclosed.
