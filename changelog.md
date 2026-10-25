@@ -11,6 +11,7 @@
 - Fix platform detection raising on an `os-release` file that cannot be read, holds invalid UTF-8 or leaves a quote unclosed.
 - Fix shell detection raising where it reads the process tree from `ps`, like on macOS, when any process holds bytes that are no UTF-8 in its arguments.
 - Fix the warning for a trait alias like `amd64` pointing inside the package instead of at the line that used it.
+- Fix reading the docstring of a trait or group raising `TypeError` when its data module has no `__file__`.
 - Fix the test suite aborting with `Different tests were collected` under `pytest-xdist` when `pytest-randomly` is disabled.
 
 ## [`13.12.0` (2026-10-12)](https://github.com/kdeldycke/extra-platforms/compare/v13.11.0...v13.12.0)

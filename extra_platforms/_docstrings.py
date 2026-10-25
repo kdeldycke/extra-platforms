@@ -59,14 +59,18 @@ def _parse_module_docstrings(module_name: str) -> dict[str, str]:
     if module is None:
         return {}
 
-    source_file = inspect.getsourcefile(module)
+    try:
+        source_file = inspect.getsourcefile(module)
+    except TypeError:
+        # The module has no __file__, like one a freezer loads from memory.
+        return {}
     if not source_file:
         # Source file not available (e.g., compiled module).
         return {}
 
     try:
         source = Path(source_file).read_text(encoding="utf-8")
-    except (FileNotFoundError, OSError):
+    except OSError:
         # Source file doesn't exist on disk (e.g., Nuitka-compiled binary).
         return {}
 

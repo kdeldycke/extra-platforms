@@ -15,10 +15,12 @@
 from __future__ import annotations
 
 import re
+import sys
 from collections import Counter
 from operator import attrgetter
 from pathlib import Path
 from string import ascii_lowercase, digits
+from types import ModuleType
 
 import pytest
 
@@ -45,6 +47,7 @@ from extra_platforms import (
     Terminal,
     Trait,
 )
+from extra_platforms._docstrings import _parse_module_docstrings
 
 
 @pytest.mark.parametrize(
@@ -310,6 +313,35 @@ def test_generate_docstring_of_class_defined_outside_package(kind):
 
     first_line = instance.generate_docstring().splitlines()[0]
     assert first_line == f"- **ID**: ``{instance.id}``"
+
+
+@pytest.mark.parametrize(
+    ("kind", "expected"),
+    (
+        pytest.param("source_on_disk", {"APPLE": "A red fruit."}, id="source_on_disk"),
+        pytest.param("no_file", {}, id="no_file"),
+        pytest.param("missing_file", {}, id="missing_file"),
+        pytest.param("missing_file_with_loader", {}, id="missing_file_with_loader"),
+    ),
+)
+def test_attribute_docstrings_without_source(kind, expected, tmp_path, monkeypatch):
+    """A data module without readable source yields no attribute docstring.
+
+    Frozen and compiled builds load modules without a source file, or without
+    a `__file__` at all: reading the docstring of a trait there must not raise.
+    """
+    source = tmp_path / "fruit_data.py"
+    module = ModuleType("fruit_data")
+    if kind == "source_on_disk":
+        source.write_text('APPLE = 1\n"""A red fruit."""\n', encoding="UTF-8")
+    if kind != "no_file":
+        module.__file__ = str(source)
+    if kind == "missing_file_with_loader":
+        # A loader makes inspect.getsourcefile() trust a path that is missing.
+        module.__loader__ = object()  # type: ignore[assignment]
+    monkeypatch.setitem(sys.modules, "fruit_data", module)
+
+    assert _parse_module_docstrings("fruit_data") == expected
 
 
 def test_aliases_do_not_conflict_with_trait_ids():
