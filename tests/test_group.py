@@ -31,7 +31,6 @@ from extra_platforms import (
     ALL_WINDOWS,
     BSD,
     BSD_WITHOUT_MACOS,
-    CANONICAL_GROUPS,
     DEBIAN,
     DRAGONFLY_BSD,
     FREEBSD,
@@ -49,12 +48,10 @@ from extra_platforms import (
     UNIX,
     UNIX_LAYERS,
     UNIX_WITHOUT_MACOS,
-    UNKNOWN,
     WINDOWS,
     WSL1,
     Group,
     Platform,
-    Trait,
     extract_members,
     groups_from_ids,
     reduce,
@@ -94,7 +91,7 @@ def test_membership():
     # Test platform ID getter.
     assert my_group["aix"] == AIX
     assert my_group["pidora"] == PIDORA
-    with pytest.raises(KeyError):
+    with pytest.raises(KeyError, match="No trait found whose ID is rhel"):
         my_group["rhel"]
 
     # Test platform items getter.
@@ -112,6 +109,7 @@ def test_membership():
         ([None], []),
         ([None, None, None], []),
         ([None, (None, None, [])], []),
+        ((AIX, None, None), [AIX]),
         (AIX, [AIX]),
         ("aix", [AIX]),
         ([AIX], [AIX]),
@@ -125,6 +123,7 @@ def test_membership():
         ([LINUX_LAYERS, LINUX_LAYERS], tuple(LINUX_LAYERS) * 2),
         ([LINUX_LAYERS, (LINUX_LAYERS, LINUX_LAYERS)], tuple(LINUX_LAYERS) * 3),
         ([LINUX_LAYERS, ("linux_layers", LINUX_LAYERS)], tuple(LINUX_LAYERS) * 3),
+        ([LINUX, [UBUNTU]], (*LINUX, UBUNTU)),
     ],
 )
 def test_extract_members(items, expected):
@@ -135,7 +134,7 @@ def test_extract_members(items, expected):
     "item", (42, 42.0, object(), lambda: None, [42], [42, 42], [42, [42, 42]])
 )
 def test_extract_members_bad_type(item):
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError, match="Unsupported type"):
         tuple(extract_members(item))
 
 
@@ -159,253 +158,63 @@ def test_canonical_property():
     assert not modified_linux.canonical
 
 
-def test_simple_union():
-    new_group = ALL_WINDOWS.union(LINUX_LAYERS)
-
-    assert ALL_WINDOWS.issubset(new_group)
-    assert LINUX_LAYERS.issubset(new_group)
-    assert new_group.issuperset(ALL_WINDOWS)
-    assert new_group.issuperset(LINUX_LAYERS)
-
-    assert new_group.id == ALL_WINDOWS.id
-    assert new_group.id != LINUX_LAYERS.id
-    assert new_group.name == ALL_WINDOWS.name
-    assert new_group.name != LINUX_LAYERS.name
-    assert new_group.icon == ALL_WINDOWS.icon
-    assert new_group.icon != LINUX_LAYERS.icon
-
-    assert set(new_group.members) != set(ALL_WINDOWS.members)
-    assert set(new_group.member_ids) != set(ALL_WINDOWS.member_ids)
-    assert set(new_group.members) != set(LINUX_LAYERS.members)
-    assert set(new_group.member_ids) != set(LINUX_LAYERS.member_ids)
-
-    assert set(new_group.members) == set(ALL_WINDOWS.members).union(
-        LINUX_LAYERS.members
-    )
-    assert set(new_group.member_ids) == set(ALL_WINDOWS.member_ids).union(
-        LINUX_LAYERS.member_ids
-    )
-
-
-def test_multiple_union():
-    new_group = ALL_WINDOWS.union(LINUX_LAYERS, UNIX_LAYERS)
-
-    assert new_group.member_ids == frozenset((
-        "windows",
-        "wsl1",
-        "wsl2",
-        "cygwin",
-        "os400",
-    ))
-
-    assert ALL_WINDOWS.issubset(new_group)
-    assert LINUX_LAYERS.issubset(new_group)
-    assert UNIX_LAYERS.issubset(new_group)
-
-    assert new_group.issuperset(ALL_WINDOWS)
-    assert new_group.issuperset(LINUX_LAYERS)
-    assert new_group.issuperset(UNIX_LAYERS)
-
-    assert new_group.id == ALL_WINDOWS.id
-    assert new_group.id != LINUX_LAYERS.id
-    assert new_group.id != UNIX_LAYERS.id
-    assert new_group.name == ALL_WINDOWS.name
-    assert new_group.name != LINUX_LAYERS.name
-    assert new_group.name != UNIX_LAYERS.name
-    assert new_group.icon == ALL_WINDOWS.icon
-    assert new_group.icon != LINUX_LAYERS.icon
-    assert new_group.icon != UNIX_LAYERS.icon
-
-    assert set(new_group.members) != set(ALL_WINDOWS.members)
-    assert set(new_group.member_ids) != set(ALL_WINDOWS.member_ids)
-    assert set(new_group.members) != set(LINUX_LAYERS.members)
-    assert set(new_group.member_ids) != set(LINUX_LAYERS.member_ids)
-    assert set(new_group.members) != set(UNIX_LAYERS.members)
-    assert set(new_group.member_ids) != set(UNIX_LAYERS.member_ids)
-
-    assert set(new_group.members) == set(ALL_WINDOWS.members).union(
-        LINUX_LAYERS.members
-    ).union(UNIX_LAYERS.members)
-    assert set(new_group.member_ids) == set(ALL_WINDOWS.member_ids).union(
-        LINUX_LAYERS.member_ids
-    ).union(UNIX_LAYERS.member_ids)
-
-
-def test_single_intersection():
-    new_group = ALL_PLATFORMS.intersection(ALL_WINDOWS)
-
-    assert new_group.member_ids == frozenset(("windows",))
-
-    assert ALL_WINDOWS.issubset(new_group)
-    assert not ALL_PLATFORMS.issubset(new_group)
-    assert new_group.issuperset(ALL_WINDOWS)
-    assert not new_group.issuperset(ALL_PLATFORMS)
-
-    assert new_group.id == ALL_PLATFORMS.id
-    assert new_group.id != ALL_WINDOWS.id
-    assert new_group.name == ALL_PLATFORMS.name
-    assert new_group.name != ALL_WINDOWS.name
-    assert new_group.icon == ALL_PLATFORMS.icon
-    assert new_group.icon != ALL_WINDOWS.icon
-
-    assert set(new_group.members) != set(ALL_PLATFORMS.members)
-    assert set(new_group.member_ids) != set(ALL_PLATFORMS.member_ids)
-
-    assert set(new_group.members) == set(ALL_WINDOWS.members)
-    assert set(new_group.member_ids) == set(ALL_WINDOWS.member_ids)
-
-
-def test_multiple_intersection():
-    new_group = ALL_PLATFORMS.intersection(UNIX_WITHOUT_MACOS, BSD_WITHOUT_MACOS)
-
-    assert new_group.member_ids == frozenset((
-        "dragonfly_bsd",
-        "freebsd",
-        "midnightbsd",
-        "netbsd",
-        "openbsd",
-        "sunos",
-    ))
-
-    assert new_group.issubset(ALL_PLATFORMS)
-    assert new_group.issubset(UNIX_WITHOUT_MACOS)
-    assert new_group.issubset(BSD_WITHOUT_MACOS)
-    assert ALL_PLATFORMS.issuperset(new_group)
-    assert UNIX_WITHOUT_MACOS.issuperset(new_group)
-    assert BSD_WITHOUT_MACOS.issuperset(new_group)
-
-    assert new_group.id == ALL_PLATFORMS.id
-    assert new_group.id != UNIX_WITHOUT_MACOS.id
-    assert new_group.id != BSD_WITHOUT_MACOS.id
-    assert new_group.name == ALL_PLATFORMS.name
-    assert new_group.name != UNIX_WITHOUT_MACOS.name
-    assert new_group.name != BSD_WITHOUT_MACOS.name
-    assert new_group.icon == ALL_PLATFORMS.icon
-    assert new_group.icon != UNIX_WITHOUT_MACOS.icon
-    assert new_group.icon != BSD_WITHOUT_MACOS.icon
-
-    assert set(new_group.members) != set(ALL_PLATFORMS.members)
-    assert set(new_group.member_ids) != set(ALL_PLATFORMS.member_ids)
-    assert set(new_group.members) != set(UNIX_WITHOUT_MACOS.members)
-    assert set(new_group.member_ids) != set(UNIX_WITHOUT_MACOS.member_ids)
-
-    assert set(new_group.members) == set(BSD_WITHOUT_MACOS.members)
-    assert set(new_group.member_ids) == set(BSD_WITHOUT_MACOS.member_ids)
-
-
-def test_single_difference():
-    new_group = BSD.difference(BSD_WITHOUT_MACOS)
-
-    assert new_group.member_ids == frozenset(("macos",))
-
-    assert not BSD.issubset(new_group)
-    assert BSD.issuperset(new_group)
-    assert not BSD_WITHOUT_MACOS.issubset(new_group)
-    assert not BSD_WITHOUT_MACOS.issuperset(new_group)
-
-    assert not new_group.issuperset(BSD)
-    assert not new_group.issuperset(BSD_WITHOUT_MACOS)
-    assert new_group.issubset(BSD)
-    assert not new_group.issubset(BSD_WITHOUT_MACOS)
-
-    assert new_group.id == BSD.id
-    assert new_group.id != BSD_WITHOUT_MACOS.id
-    assert new_group.name == BSD.name
-    assert new_group.name != BSD_WITHOUT_MACOS.name
-    assert new_group.icon == BSD.icon
-    assert new_group.icon != BSD_WITHOUT_MACOS.icon
-
-    assert set(new_group.members) != set(BSD.members)
-    assert set(new_group.member_ids) != set(BSD.member_ids)
-    assert set(new_group.members) != set(BSD_WITHOUT_MACOS.members)
-    assert set(new_group.member_ids) != set(BSD_WITHOUT_MACOS.member_ids)
-
-    assert set(new_group.members) == set(BSD.members).difference(
-        BSD_WITHOUT_MACOS.members
-    )
-    assert set(new_group.member_ids) == set(BSD.member_ids).difference(
-        BSD_WITHOUT_MACOS.member_ids
-    )
-
-
-def test_multiple_difference():
-    new_group = ALL_PLATFORMS.difference(LINUX, UNIX, ALL_CI)
-
-    assert new_group.member_ids == frozenset(("windows",))
-
-    assert not ALL_PLATFORMS.issubset(new_group)
-    assert ALL_PLATFORMS.issuperset(new_group)
-    assert not LINUX.issubset(new_group)
-    assert not LINUX.issuperset(new_group)
-    assert not UNIX.issubset(new_group)
-    assert not UNIX.issuperset(new_group)
-
-    assert not new_group.issuperset(ALL_PLATFORMS)
-    assert not new_group.issuperset(LINUX)
-    assert not new_group.issuperset(UNIX)
-    assert new_group.issubset(ALL_PLATFORMS)
-    assert not new_group.issubset(LINUX)
-    assert not new_group.issubset(UNIX)
-
-    assert new_group.id == ALL_PLATFORMS.id
-    assert new_group.id != LINUX.id
-    assert new_group.id != UNIX.id
-    assert new_group.name == ALL_PLATFORMS.name
-    assert new_group.name != LINUX.name
-    assert new_group.name != UNIX.name
-    assert new_group.icon == ALL_PLATFORMS.icon
-    assert new_group.icon != LINUX.icon
-    assert new_group.icon != UNIX.icon
-
-    assert set(new_group.members) != set(ALL_PLATFORMS.members)
-    assert set(new_group.member_ids) != set(ALL_PLATFORMS.member_ids)
-    assert set(new_group.members) != set(LINUX.members)
-    assert set(new_group.member_ids) != set(LINUX.member_ids)
-    assert set(new_group.members) != set(UNIX.members)
-    assert set(new_group.member_ids) != set(UNIX.member_ids)
-
-    assert set(new_group.members) == set(ALL_PLATFORMS.members).difference(
-        LINUX.members
-    ).difference(UNIX.members).difference(ALL_CI.members)
-    assert set(new_group.member_ids) == set(ALL_PLATFORMS.member_ids).difference(
-        LINUX.member_ids
-    ).difference(UNIX.member_ids).difference(ALL_CI.member_ids)
-
-
-def test_symmetric_difference():
-    win_and_bsd = ALL_WINDOWS.union(BSD_WITHOUT_MACOS)
-    new_group = win_and_bsd.symmetric_difference(BSD)
-
-    assert new_group.member_ids == frozenset(("macos", "windows"))
-
-    assert not win_and_bsd.issubset(new_group)
-    assert not win_and_bsd.issuperset(new_group)
-    assert not BSD.issubset(new_group)
-    assert not BSD.issuperset(new_group)
-
-    assert not new_group.issuperset(win_and_bsd)
-    assert not new_group.issuperset(BSD)
-    assert not new_group.issubset(win_and_bsd)
-    assert not new_group.issubset(BSD)
-
-    assert new_group.id == win_and_bsd.id
-    assert new_group.id != BSD.id
-    assert new_group.name == win_and_bsd.name
-    assert new_group.name != BSD.name
-    assert new_group.icon == win_and_bsd.icon
-    assert new_group.icon != BSD.icon
-
-    assert set(new_group.members) != set(BSD.members)
-    assert set(new_group.member_ids) != set(BSD.member_ids)
-    assert set(new_group.members) != set(win_and_bsd.members)
-    assert set(new_group.member_ids) != set(win_and_bsd.member_ids)
-
-    assert set(new_group.members) == set(win_and_bsd.members).symmetric_difference(
-        BSD.members
-    )
-    assert set(new_group.member_ids) == set(
-        win_and_bsd.member_ids
-    ).symmetric_difference(BSD.member_ids)
+@pytest.mark.parametrize(
+    ("method", "first", "others", "expected"),
+    (
+        pytest.param(
+            "union",
+            ALL_WINDOWS,
+            (LINUX_LAYERS,),
+            {"windows", "wsl1", "wsl2"},
+            id="union",
+        ),
+        pytest.param(
+            "union",
+            ALL_WINDOWS,
+            (LINUX_LAYERS, UNIX_LAYERS),
+            {"windows", "wsl1", "wsl2", "cygwin", "os400"},
+            id="union_of_many",
+        ),
+        pytest.param(
+            "intersection",
+            ALL_PLATFORMS,
+            (ALL_WINDOWS,),
+            {"windows"},
+            id="intersection",
+        ),
+        pytest.param(
+            "intersection",
+            ALL_PLATFORMS,
+            (UNIX_WITHOUT_MACOS, BSD_WITHOUT_MACOS),
+            {"dragonfly_bsd", "freebsd", "midnightbsd", "netbsd", "openbsd", "sunos"},
+            id="intersection_of_many",
+        ),
+        pytest.param(
+            "difference", BSD, (BSD_WITHOUT_MACOS,), {"macos"}, id="difference"
+        ),
+        pytest.param(
+            "difference",
+            ALL_PLATFORMS,
+            (LINUX, UNIX, ALL_CI),
+            {"windows"},
+            id="difference_of_many",
+        ),
+        pytest.param(
+            "symmetric_difference",
+            ALL_WINDOWS | BSD_WITHOUT_MACOS,
+            (BSD,),
+            {"macos", "windows"},
+            id="symmetric_difference",
+        ),
+    ),
+)
+def test_set_operation(method, first, others, expected):
+    """A set operation acts on the members, and keeps the metadata of the first group."""
+    result = getattr(first, method)(*others)
+    assert result.member_ids == frozenset(expected)
+    # The members match what the same operation gives on native sets.
+    assert set(result) == getattr(set(first), method)(*map(set, others))
+    assert (result.id, result.name, result.icon) == (first.id, first.name, first.icon)
 
 
 def test_copy():
@@ -664,26 +473,6 @@ def test_set_operations_with_new_methods():
     assert len(after_discard) == 0
 
 
-def test_extract_members_with_unsupported_type():
-    """Test that extract_members raises TypeError for unsupported types."""
-    # Pass an unsupported type.
-    with pytest.raises(TypeError, match="Unsupported type"):
-        list(extract_members(123))  # type: ignore[arg-type]
-
-
-def test_getitem_with_missing_key():
-    """Test that __getitem__ raises KeyError with proper message."""
-    with pytest.raises(KeyError, match="No trait found whose ID is nonexistent"):
-        _ = LINUX["nonexistent"]
-
-
-def test_empty_group_bool():
-    """Test that empty groups evaluate to False."""
-    empty_group = Group(id="empty", name="Empty Group", icon="❌", members=())
-    assert bool(empty_group) is False
-    assert len(empty_group) == 0
-
-
 def test_group_operations_with_empty_groups():
     """Test group operations with empty groups."""
     empty_group = Group(id="empty", name="Empty Group", icon="❌", members=())
@@ -705,27 +494,6 @@ def test_group_operations_with_empty_groups():
     assert empty_group.isdisjoint(LINUX)
 
 
-def test_group_with_duplicate_members():
-    """Test that duplicate members in constructor are deduplicated."""
-    # Create a group with duplicate members.
-    group = Group(
-        id="test_dupe",
-        name="Test Duplicate",
-        icon="🔁",
-        members=[UBUNTU, UBUNTU, UBUNTU],
-    )
-
-    # Should only have one UBUNTU.
-    assert len(group) == 1
-    assert UBUNTU in group
-
-
-def test_group_contains_with_string():
-    """Test Group.__contains__ with string IDs."""
-    assert "ubuntu" in LINUX
-    assert "nonexistent" not in LINUX
-
-
 def test_group_contains_with_wrong_trait_object():
     """Test that Group.__contains__ checks object identity, not just ID."""
     # Create a fake trait with the same ID as Ubuntu but different object.
@@ -743,32 +511,6 @@ def test_group_contains_with_wrong_trait_object():
     assert fake_ubuntu not in LINUX
 
 
-def test_group_items():
-    """Test Group.items() returns key-value pairs."""
-    items = list(BSD.items())
-    assert len(items) > 0
-    for trait_id, trait in items:
-        assert isinstance(trait_id, str)
-        assert isinstance(trait, Trait)
-        assert trait.id == trait_id
-
-
-def test_group_extract_members_with_none():
-    """Test that extract_members ignores None values."""
-    result = list(extract_members(UBUNTU, None, None))
-    assert result == [UBUNTU]
-
-
-def test_group_extract_members_nested():
-    """Test that extract_members handles nested structures."""
-    # Nested list of groups and traits.
-    result = list(extract_members([LINUX, [UBUNTU]]))
-    # Should include all members of LINUX plus UBUNTU.
-    assert UBUNTU in result
-    # LINUX members should also be in result.
-    assert any(t.id == "debian" for t in result)
-
-
 def test_group_fullyintersects():
     """Test fullyintersects method."""
     # LINUX and BSD should be disjoint (no full intersection).
@@ -782,40 +524,15 @@ def test_group_fullyintersects():
     assert not BSD_WITHOUT_MACOS.fullyintersects(BSD)
 
 
-def test_group_canonical_property():
-    """Test that Group.canonical property works correctly."""
-    # LINUX is canonical.
-    if LINUX in CANONICAL_GROUPS:
-        assert LINUX.canonical is True
-
-    # UNIX is not canonical (overlaps with others).
-    if UNIX not in CANONICAL_GROUPS:
-        assert UNIX.canonical is False
-
-
 def test_unique_ids():
-    """Traits and group IDs must be unique."""
-    all_trait_ids = [p.id for p in ALL_TRAITS]
+    """Group IDs are unique, and no trait shares one.
 
-    # Traits are expected to be sorted by ID.
-    assert sorted(all_trait_ids) == all_trait_ids
-    assert len(set(all_trait_ids)) == len(all_trait_ids)
-    assert len(all_trait_ids) == len(ALL_TRAITS)
-    assert len(all_trait_ids) == len(ALL_TRAITS.member_ids)
-
+    No check of the trait IDs belongs here: a group keys its members by ID, so
+    `ALL_TRAITS` hides a duplicate. `test_trait_data.py` checks them instead.
+    """
     all_group_ids = {g.id for g in ALL_GROUPS}
     assert len(all_group_ids) == len(ALL_GROUPS)
-
-    # Check there is no overlap between trait and group IDs.
-    assert all_group_ids.isdisjoint(all_trait_ids)
-
-    assert len(ALL_TRAIT_IDS) == len(ALL_TRAITS) - len(UNKNOWN)
-    assert ALL_TRAIT_IDS.issubset(ALL_IDS)
-    assert ALL_TRAIT_IDS.isdisjoint(ALL_GROUP_IDS)
-
-    assert len(ALL_GROUP_IDS) == len(ALL_GROUPS) - 1  # Exclude UNKNOWN group.
-    assert ALL_GROUP_IDS.issubset(ALL_IDS)
-    assert ALL_GROUP_IDS.isdisjoint(ALL_TRAIT_IDS)
+    assert all_group_ids.isdisjoint(ALL_TRAITS.member_ids)
 
 
 def randomize_case(strings: Iterable[str]) -> list[str]:
@@ -921,6 +638,7 @@ def test_groups_from_ids(group_id):
         ([UNIX, ALL_WINDOWS, ALL_CI], {ALL_PLATFORMS, ALL_CI}),
         ([BSD_WITHOUT_MACOS, UNIX], {UNIX}),
         ([BSD_WITHOUT_MACOS, MACOS], {BSD}),
+        ([LINUX, BSD, UNIX], {UNIX}),
         (
             # Every individual platform, plus the ALL_CI group and every
             # individual CI system: reduces to the two "all" groups.
@@ -970,28 +688,19 @@ def test_reduce_custom_targets(items, expected):
     assert isinstance(results, frozenset)
 
 
-def test_traits_from_ids_with_invalid_id():
-    """Test that traits_from_ids raises ValueError for invalid IDs."""
-    with pytest.raises(ValueError, match="Unrecognized group or trait IDs"):
-        traits_from_ids("invalid_id_that_does_not_exist")
-
-
-def test_groups_from_ids_with_invalid_id():
-    """Test that groups_from_ids raises ValueError for invalid IDs."""
-    with pytest.raises(ValueError, match="Unrecognized group IDs"):
-        groups_from_ids("invalid_group_id_that_does_not_exist")
-
-
-def test_traits_from_ids_with_empty_list():
-    """Test that traits_from_ids works with empty input."""
-    result = traits_from_ids()
-    assert result == ()
-
-
-def test_groups_from_ids_with_empty_list():
-    """Test that groups_from_ids works with empty input."""
-    result = groups_from_ids()
-    assert result == ()
+@pytest.mark.parametrize(
+    ("from_ids", "message"),
+    (
+        (traits_from_ids, "Unrecognized group or trait IDs"),
+        (groups_from_ids, "Unrecognized group IDs"),
+    ),
+    ids=lambda value: getattr(value, "__name__", ""),
+)
+def test_from_ids_edge_cases(from_ids, message):
+    """No ID resolves to nothing, and an unknown ID raises."""
+    assert from_ids() == ()
+    with pytest.raises(ValueError, match=message):
+        from_ids("cucumber")
 
 
 def test_traits_from_ids_with_multiple_valid_ids():
@@ -1010,35 +719,6 @@ def test_groups_from_ids_with_multiple_valid_ids():
     assert LINUX in result
     assert BSD in result
     assert UNIX in result
-
-
-def test_reduce_with_already_minimal_group():
-    """Test reduce with groups that cannot be further reduced."""
-    # AIX is a single platform, can't be reduced further.
-    result = reduce([AIX])
-    assert result == {AIX}
-
-
-def test_reduce_with_complex_overlap():
-    """Test reduce with complex overlapping groups."""
-    # Test with multiple groups that have complex overlaps.
-    result = reduce([LINUX, BSD, UNIX])
-    # Should return the minimal covering set.
-    assert isinstance(result, frozenset)
-    # UNIX covers both LINUX and BSD, so it's the minimal representation.
-    assert UNIX in result
-    assert len(result) == 1
-
-
-def test_reduce_returns_frozenset():
-    """Test that reduce always returns a frozenset."""
-    result1 = reduce([])
-    result2 = reduce([MACOS])
-    result3 = reduce([LINUX, BSD])
-
-    assert isinstance(result1, frozenset)
-    assert isinstance(result2, frozenset)
-    assert isinstance(result3, frozenset)
 
 
 def test_all_ids_constant():
