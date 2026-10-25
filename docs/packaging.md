@@ -20,7 +20,7 @@ Since `extra-platforms` > `13.3.1`, the PyPI sdist ships `tests/` and `docs/`, s
 
 A plain `pytest` run is friendly to a hermetic build sandbox:
 
-- **No coverage or xdist plugins are required.** Coverage (`--cov`) and parallelism (`--numprocesses`, `--dist`) are passed by the project's own CI workflow, not baked into `addopts`, so a from-source build needs neither `pytest-cov` nor `pytest-xdist` just to start pytest.
+- **No coverage or xdist plugins are required.** The project's own CI workflow wraps pytest in `coverage run` and passes the parallelism flags (`--numprocesses`, `--dist`). Nothing of this is baked into `addopts`, so a from-source build needs neither `coverage` nor `pytest-xdist` just to start pytest.
 - **Network tests are marked.** Exclude them with `-m "not network"`: the build sandbox has no outbound network.
 - **The wall-clock budget is marked.** `test_import_time` asserts a cold import of the package stays under 2000 ms. No budget holds on every machine: an emulated or slow architecture fails it with no code regression. Alpine's `loongarch64` builder measured 2176 ms. Exclude it with `-m "not benchmark"`.
 - **Environment-detection tests self-skip in hermetic builds.** `test_platform_detection` and `test_current_funcs` read a real runtime environment (OS-release files, a shell, a terminal, a CI system) that a build sandbox does not provide, so they carry `@skip_hermetic_build`. That decorator fires whenever `HOME=/homeless-shelter`: the non-existent home directory Nix pioneered and GNU Guix inherited to seal a build off from the host.

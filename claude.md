@@ -19,8 +19,13 @@ It provides:
 ### Testing
 
 ```shell-session
-# Run all tests with coverage.
+# Run all tests.
 $ uv run --group test pytest
+
+# Run all tests with coverage, the way the tests workflow does.
+$ uv run --group test coverage run --module pytest --numprocesses=auto --dist=loadgroup
+$ uv run --group test coverage combine
+$ uv run --group test coverage report --show-missing
 
 # Run a single test file.
 $ uv run --group test pytest tests/test_platform_data.py
@@ -124,9 +129,9 @@ Imports go at the top of the file. A function-level import is a deliberate excep
 
 - Use `@pytest.mark.parametrize` when testing the same logic across multiple traits or groups.
 - Enforce naming conventions for traits and groups via tests.
-- Test coverage is measured with `pytest-cov` and gated by the `[tool.coverage] report.fail_under` ratchet. No external coverage service is involved: repomatic dropped its Codecov integration in `7.8.0`.
+- **Test coverage is measured with `coverage run`, not pytest-cov.** This departs from the generic rule. The `pytest11` entry point imports the whole package before pytest-cov starts, so pytest-cov reports every module-level line as missed. The `[tool.coverage] report.fail_under` ratchet gates the result. No external coverage service is involved: repomatic dropped its Codecov integration in `7.8.0`.
 - **`@pytest.mark.once` is not used here yet.** Upstream repomatic tags matrix-insensitive tests with a custom `once` marker, filters them out of the main matrix, and runs them on a single runner. Nearly every test here exercises platform-sensitive behavior worth running on every cell. Adopt the full convention (marker in `[tool.pytest].markers`, `-m` filters in `tests.yaml`) the day a genuinely matrix-insensitive test appears.
-- **Pytest flags needing an optional plugin belong in workflow steps, not `[tool.pytest].addopts`.** This departs from the generic rule, which puts `--cov` and `--numprocesses` in `addopts`. Here every coverage and xdist flag (`--cov`, `--cov-report`, `--numprocesses`, `--dist`) is passed by `tests.yaml` instead, so a from-source packager build (Guix, Nixpkgs, ...) can run a plain `pytest` without having to supply `pytest-cov` and `pytest-xdist` just to start. `addopts` carries only flags that need no extra dependency.
+- **Pytest flags needing an optional plugin belong in workflow steps, not `[tool.pytest].addopts`.** This departs from the generic rule, which puts `--cov` and `--numprocesses` in `addopts`. Here `tests.yaml` passes the xdist flags (`--numprocesses`, `--dist`) and wraps pytest in `coverage run` instead, so a from-source packager build (Guix, Nixpkgs, ...) can run a plain `pytest` without having to supply `pytest-xdist` or coverage just to start. `addopts` carries only flags that need no extra dependency.
 - **Write conformance tests when fixing a class of bugs.** Iterate over every member of the set (traits, groups, detection functions, data files) and assert the property uniformly. Model: `tests/test_group_data.py::test_each_trait_in_exactly_one_canonical_group`.
 
 ## Design principles

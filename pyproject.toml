@@ -474,11 +474,11 @@ overrides = [
 ]
 
 [tool.pytest]
-# Coverage and xdist flags (--cov, --cov-report, --numprocesses, --dist) are
-# passed by the tests workflow, not here: keeping them out of addopts lets a
+# The tests workflow passes the xdist flags (--numprocesses, --dist) and runs
+# pytest under `coverage run`, not here: keeping both out of addopts lets a
 # from-source build (Guix, Nixpkgs, ...) run a plain `pytest` without having to
-# provide pytest-cov and pytest-xdist just to start. See "Testing guidelines"
-# in claude.md.
+# provide pytest-xdist or coverage just to start. See "Testing guidelines" in
+# claude.md.
 addopts = [
   # Show the N slowest tests.
   "--durations=10",
@@ -502,19 +502,21 @@ xfail_strict = true
 # https://coverage.readthedocs.io/en/latest/config.html
 [tool.coverage]
 run.source = [ "extra_platforms" ]
+# Imported only under `TYPE_CHECKING`, so it never runs.
+run.omit = [ "*/extra_platforms/_types.py" ]
 run.branch = true
+# The tests workflow measures with `coverage run --module pytest`, not
+# pytest-cov: the `[project.entry-points.pytest11]` plugin imports the whole
+# package before pytest-cov starts, which left every module-level line
+# unmeasured. `parallel` and `patch` extend the measurement to each xdist
+# worker, and `coverage combine` merges their data files.
+run.parallel = true
+run.patch = [ "subprocess" ]
 # Coverage ratchet replacing the Codecov gate repomatic dropped in 7.8.0. The
-# suite fails below this. Deliberately conservative: every cell of the test
-# matrix must clear it on its own, and coverage here swings with the runner,
-# since most of the suite skips whatever does not match the host platform (a
-# macOS run skips ~3500 of ~5100 tests and lands at ~35%). Raise the floor once
-# a full matrix run reports the true per-cell minimum.
-#
-# Two structural effects keep the absolute number low, and neither is a
-# regression to chase: the skips above, and the `*_data.py` registries
-# reporting 0% because `extra_platforms` is imported as a pytest plugin
-# (`[project.entry-points.pytest11]`) before pytest-cov starts measuring, so
-# their module-level definitions execute untracked.
+# suite fails below this. Every cell of the test matrix must clear it on its
+# own, and coverage here swings with the runner, since most of the suite skips
+# whatever does not match the host platform. Raise the floor once a full matrix
+# run reports the true per-cell minimum.
 report.fail_under = 30
 report.precision = 2
 

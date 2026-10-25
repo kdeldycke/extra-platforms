@@ -159,20 +159,24 @@ jobs:
         env:
           # Used by github_runner_os() in tests/conftest.py to extract the GitHub runner image ID.
           EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
-        # Coverage and parallelism flags live here rather than in
-        # [tool.pytest] addopts so a from-source packager build can run a plain
-        # `pytest` without pytest-cov or pytest-xdist. --dist=loadgroup honors
-        # the xdist_group markers (the sphinx tests must share one worker).
+        # Coverage and parallelism live here rather than in [tool.pytest]
+        # addopts so a from-source packager build can run a plain `pytest`
+        # without coverage or pytest-xdist. --dist=loadgroup honors the
+        # xdist_group markers (the sphinx tests must share one worker).
         #
-        # The coverage floor is `[tool.coverage] report.fail_under`, which every
-        # cell must clear on its own. No --cov-fail-under flag is passed here: it
-        # would outrank the config and shadow the knob. The floor is set well
-        # below any single cell because coverage swings with the runner, most of
-        # the suite skipping whatever does not match the host platform.
+        # `coverage run` starts measuring before pytest imports the package as a
+        # plugin. See `[tool.coverage]` in pyproject.toml for the rationale.
         run: >
-          uv --no-progress run --frozen -- pytest
-          --cov --cov-report=term
+          uv --no-progress run --frozen -- coverage run --module pytest
           --numprocesses=auto --dist=loadgroup
+      - name: Coverage report
+        # Merge the data files of the xdist workers, then check them against
+        # `[tool.coverage] report.fail_under`, which every cell must clear on its
+        # own. No --fail-under flag is passed here: it would outrank the config
+        # and shadow the knob.
+        run: >
+          uv --no-progress run --frozen -- coverage combine --quiet
+          && uv --no-progress run --frozen -- coverage report --show-missing
 
       # click-extra owns the test-suite engine and CLI, and ships in the locked
       # `docs` group installed above, so it runs from uv.lock rather than a
