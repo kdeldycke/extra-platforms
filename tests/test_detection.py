@@ -135,10 +135,9 @@ def test_detection_heuristics_sorting():
         assert not any(name.startswith("is_unknown_") for name in specific)
 
 
-def test_is_arm_depends_on_arm_variants(monkeypatch):
+def test_is_arm_depends_on_arm_variants(monkeypatch, fresh_caches):
     """Test that is_arm() is a fallback excluded by specific ARM variants."""
     # A machine claimed by a specific variant is not generic ARM.
-    invalidate_caches()
     monkeypatch.setattr("platform.machine", lambda: "armv7l")
     assert is_armv7l()
     assert not is_arm()
@@ -148,9 +147,6 @@ def test_is_arm_depends_on_arm_variants(monkeypatch):
     monkeypatch.setattr("platform.machine", lambda: "armv4tl")
     assert not is_armv7l()
     assert is_arm()
-
-    # Clear cached results computed from the mocked machine value.
-    invalidate_caches()
 
 
 @pytest.mark.parametrize(
@@ -164,28 +160,20 @@ def test_is_arm_depends_on_arm_variants(monkeypatch):
         "opensuse-tumbleweed",
     ),
 )
-def test_opensuse_channel_folding(monkeypatch, distro_id):
+def test_opensuse_channel_folding(monkeypatch, distro_id, fresh_caches):
     """Any openSUSE release channel is detected as the OPENSUSE platform."""
-    invalidate_caches()
     monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: distro_id)
     assert is_opensuse()
 
-    # Clear cached results computed from the mocked distribution ID.
-    invalidate_caches()
 
-
-def test_oracle_raw_id_detection(monkeypatch):
+def test_oracle_raw_id_detection(monkeypatch, fresh_caches):
     """Oracle Linux is detected from its raw ``ol`` os-release ID."""
-    invalidate_caches()
     monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: "ol")
     assert is_oracle()
 
-    # Clear cached results computed from the mocked distribution ID.
-    invalidate_caches()
-
 
 @pytest.mark.parametrize("machine", ("x86_64", "AMD64", "amd64", "i86pc"))
-def test_x86_64_machine_aliases(monkeypatch, machine):
+def test_x86_64_machine_aliases(monkeypatch, machine, fresh_caches):
     """Every string reported for 64-bit x86 resolves to X86_64.
 
     Solaris and illumos answer ``i86pc``, which names the machine family and not
@@ -193,12 +181,8 @@ def test_x86_64_machine_aliases(monkeypatch, machine):
     :func:`~extra_platforms.is_sparc64` already accepts. Captured on
     OpenIndiana Hipster 2026.04.
     """
-    invalidate_caches()
     monkeypatch.setattr(detection_module.platform, "machine", lambda: machine)
     assert is_x86_64()
-
-    # Clear cached results computed from the mocked machine string.
-    invalidate_caches()
 
 
 PLATFORM_HOST_SIGNALS = frozenset((
@@ -332,7 +316,7 @@ def mock_platform_host(
     monkeypatch.setattr(detection_module.Path, "is_file", lambda self: False)
 
 
-def test_illumos_excludes_solaris(monkeypatch):
+def test_illumos_excludes_solaris(monkeypatch, fresh_caches):
     """An illumos distribution matches ILLUMOS alone, never SOLARIS as well.
 
     illumos inherits the SunOS 5.11 release string from OpenSolaris, so
@@ -340,7 +324,6 @@ def test_illumos_excludes_solaris(monkeypatch):
     used to match at once, which made :func:`~extra_platforms.current_platform`
     raise on every illumos host. Values captured on OpenIndiana Hipster 2026.04.
     """
-    invalidate_caches()
     mock_platform_host(
         monkeypatch,
         sys_platform="sunos5",
@@ -359,14 +342,10 @@ def test_illumos_excludes_solaris(monkeypatch):
     assert not is_solaris()
     assert current_platform() is ILLUMOS
 
-    # Clear cached results computed from the mocked host.
-    invalidate_caches()
 
-
-def test_detection_functions_cached():
+def test_detection_functions_cached(fresh_caches):
     """Test that detection functions are cached with @cache decorator."""
     # Clear caches first.
-    invalidate_caches()
 
     # Call each function twice.
     _ = is_aarch64()
@@ -381,12 +360,9 @@ def test_detection_functions_cached():
     assert is_windows.cache_info().hits >= 1
     assert is_x86_64.cache_info().hits >= 1
 
-    invalidate_caches()
 
-
-def test_environment_variable_ci_detection(monkeypatch):
+def test_environment_variable_ci_detection(monkeypatch, fresh_caches):
     """Test CI detection based on environment variables."""
-    invalidate_caches()
 
     # Mock GitHub CI environment variable.
     monkeypatch.setenv("GITHUB_ACTIONS", "true")
@@ -401,20 +377,15 @@ def test_environment_variable_ci_detection(monkeypatch):
 
     # Clean up.
     monkeypatch.delenv("GITLAB_CI", raising=False)
-    invalidate_caches()
 
 
-def test_detection_no_circular_dependencies():
+def test_detection_no_circular_dependencies(fresh_caches):
     """Test that detection functions can all be called without circular dependency issues."""
-    invalidate_caches()
 
     # Call all trait detection functions.
     for trait in ALL_TRAITS:
         # Access the current property, which calls the detection function.
         _ = trait.current
-
-    # If no exception was raised, there are no circular dependencies.
-    invalidate_caches()
 
 
 @pytest.mark.parametrize(
@@ -709,7 +680,9 @@ def test_ppid_from_proc_netbsd_status_fallback(monkeypatch):
 
 
 @skip_windows
-def test_parent_process_tree_falls_back_to_ps_when_proc_empty(monkeypatch):
+def test_parent_process_tree_falls_back_to_ps_when_proc_empty(
+    monkeypatch, fresh_caches
+):
     """System V /proc (illumos, Solaris) yields nothing, so fall back to ps."""
     monkeypatch.setattr(detection_module, "_tree_from_proc", lambda: ())
     sentinel = (("zsh", "/usr/bin/zsh"),)
@@ -718,18 +691,15 @@ def test_parent_process_tree_falls_back_to_ps_when_proc_empty(monkeypatch):
     monkeypatch.setattr(detection_module.Path, "is_dir", lambda self: True)
     invalidate_caches()
     assert detection_module._parent_process_tree() == sentinel
-    invalidate_caches()
 
 
-def test_parent_process_exe_names():
+def test_parent_process_exe_names(fresh_caches):
     """The dispatcher returns a clean frozenset on every platform."""
-    invalidate_caches()
     names = detection_module._parent_process_exe_names()
     assert isinstance(names, frozenset)
     # Whatever is discovered must be non-empty, lowercased stems. The set itself
     # may be empty on sandboxed builders with neither /proc, ps, nor Win32.
     assert all(name and name == name.lower() for name in names)
-    invalidate_caches()
 
 
 def test_walk_process_map():
@@ -835,7 +805,7 @@ def unset_shell_startup_vars(monkeypatch) -> None:
 )
 @pytest.mark.parametrize("source", ["SHELL", "process tree"])
 def test_shell_detected_by_every_executable_name(
-    monkeypatch, shell, executable, source
+    monkeypatch, shell, executable, source, fresh_caches
 ):
     """Each file name a shell's binary goes by detects it, as its ID does."""
     path = f"/nonexistent/bin/{executable}"
@@ -850,10 +820,11 @@ def test_shell_detected_by_every_executable_name(
         monkeypatch.delenv("SHELL", raising=False)
     invalidate_caches()
     assert shell.current
-    invalidate_caches()
 
 
-def test_current_shell_prefers_a_running_pwsh_over_configured_shell(monkeypatch):
+def test_current_shell_prefers_a_running_pwsh_over_configured_shell(
+    monkeypatch, fresh_caches
+):
     """A ``pwsh`` parent process names PowerShell, whose ID is not its binary name."""
     from extra_platforms import POWERSHELL, current_shell
 
@@ -866,7 +837,6 @@ def test_current_shell_prefers_a_running_pwsh_over_configured_shell(monkeypatch)
     unset_shell_startup_vars(monkeypatch)
     invalidate_caches()
     assert current_shell() is POWERSHELL
-    invalidate_caches()
 
 
 @pytest.mark.parametrize(
@@ -921,7 +891,7 @@ def test_shell_from_path_resolves_multicall_binary(tmp_path, target, link, expec
     assert shell_from_path(tmp_path / link).id == expected_id
 
 
-def test_current_shell_path(monkeypatch):
+def test_current_shell_path(monkeypatch, fresh_caches):
     """current_shell_path() prefers the running binary, then falls back to SHELL."""
     from extra_platforms import ZSH, current_shell_path
 
@@ -951,10 +921,8 @@ def test_current_shell_path(monkeypatch):
     invalidate_caches()
     assert current_shell_path() is None
 
-    invalidate_caches()
 
-
-def test_shell_info_path_ignores_another_login_shell(monkeypatch):
+def test_shell_info_path_ignores_another_login_shell(monkeypatch, fresh_caches):
     """``Shell.info()`` reports no path rather than the path of another shell."""
     from extra_platforms import SH
 
@@ -968,10 +936,11 @@ def test_shell_info_path_ignores_another_login_shell(monkeypatch):
     monkeypatch.setenv("SHELL", "/nonexistent/bin/sh")
     invalidate_caches()
     assert SH.info()["path"] == "/nonexistent/bin/sh"
-    invalidate_caches()
 
 
-def test_current_shell_prefers_running_shell_over_configured_shell(monkeypatch):
+def test_current_shell_prefers_running_shell_over_configured_shell(
+    monkeypatch, fresh_caches
+):
     """A running shell (process tree) wins over a different configured ``SHELL``.
 
     Regression guard for the macOS Terminal.app case where the app launches a
@@ -992,10 +961,9 @@ def test_current_shell_prefers_running_shell_over_configured_shell(monkeypatch):
     unset_shell_startup_vars(monkeypatch)
     invalidate_caches()
     assert current_shell() is FISH
-    invalidate_caches()
 
 
-def test_nested_ancestor_shells_all_detected(monkeypatch):
+def test_nested_ancestor_shells_all_detected(monkeypatch, fresh_caches):
     """A session shell above the running shell chain is detected in parallel.
 
     Regression guard for openSUSE OBS chroot builds run from a fish terminal:
@@ -1026,7 +994,6 @@ def test_nested_ancestor_shells_all_detected(monkeypatch):
     assert is_bash()
     assert is_fish()
     assert current_shell() is BASH
-    invalidate_caches()
 
 
 @pytest.mark.parametrize(
@@ -1067,7 +1034,7 @@ def test_nested_ancestor_shells_all_detected(monkeypatch):
     ],
 )
 def test_current_shell_prefers_nearest_running_shell(
-    monkeypatch, tree, login_shell, expected_id
+    monkeypatch, tree, login_shell, expected_id, fresh_caches
 ):
     """When shells nest, the nearest one wins over the login shell above it."""
     from extra_platforms import current_shell
@@ -1077,4 +1044,3 @@ def test_current_shell_prefers_nearest_running_shell(
     unset_shell_startup_vars(monkeypatch)
     invalidate_caches()
     assert current_shell().id == expected_id
-    invalidate_caches()

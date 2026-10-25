@@ -39,7 +39,9 @@ from extra_platforms import (
     ],
 )
 @pytest.mark.parametrize("ssh", [False, True])
-def test_unrecognized_terminal_log_level(term, level, ssh, monkeypatch, caplog):
+def test_unrecognized_terminal_log_level(
+    term, level, ssh, monkeypatch, caplog, fresh_caches
+):
     """Only a ``TERM`` naming a terminal type makes an unrecognized one a warning.
 
     An SSH session forwards ``TERM`` alone, from the client running the emulator.
@@ -51,8 +53,5 @@ def test_unrecognized_terminal_log_level(term, level, ssh, monkeypatch, caplog):
     monkeypatch.setattr(detection, "environ", env)
     invalidate_caches()
     caplog.set_level(logging.INFO)
-    try:
-        assert current_terminal() is UNKNOWN_TERMINAL
-        assert [record.levelno for record in caplog.records] == [level]
-    finally:
-        invalidate_caches()
+    assert current_terminal() is UNKNOWN_TERMINAL
+    assert [record.levelno for record in caplog.records] == [level]

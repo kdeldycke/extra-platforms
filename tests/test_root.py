@@ -413,6 +413,7 @@ def test_current_strict_mode(
     trait_type,
     error_message,
     monkeypatch,
+    fresh_caches,
 ):
     """Test that ``current_*(strict=True)`` raises an error when unrecognized."""
     # First verify that without mocking, current_* works normally.
@@ -438,9 +439,6 @@ def test_current_strict_mode(
     invalidate_caches()
     with pytest.raises(SystemError, match=error_message):
         current_func(strict=True)
-
-    # Cleanup: restore the original property.
-    invalidate_caches()
 
 
 def test_group_membership_funcs():

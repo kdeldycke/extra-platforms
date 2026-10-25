@@ -96,7 +96,7 @@ def test_platform_mutual_exclusion():
         ("is_chromeos", "chromiumos", False),
     ],
 )
-def test_generic_linux_fallback(monkeypatch, marker, os_release, generic):
+def test_generic_linux_fallback(monkeypatch, marker, os_release, generic, fresh_caches):
     """A Linux kernel is generic until a platform identifies its distribution."""
     monkeypatch.setattr(detection_module.sys, "platform", "linux")
     monkeypatch.setattr(detection_module, "os_release_id", lambda: os_release)
@@ -107,7 +107,6 @@ def test_generic_linux_fallback(monkeypatch, marker, os_release, generic):
             monkeypatch.setitem(registry, func_id, lambda f=func_id: f == marker)
     invalidate_caches()
     assert GENERIC_LINUX.current is generic
-    invalidate_caches()
 
 
 @pytest.mark.parametrize(
@@ -120,7 +119,7 @@ def test_generic_linux_fallback(monkeypatch, marker, os_release, generic):
     ],
 )
 def test_unrecognized_linux_distribution(
-    monkeypatch, caplog, os_release, strict_raises
+    monkeypatch, caplog, os_release, strict_raises, fresh_caches
 ):
     """An unrecognized distribution is generic Linux, so it stays in ``LINUX``."""
     monkeypatch.setattr(detection_module.sys, "platform", "linux")
@@ -131,19 +130,16 @@ def test_unrecognized_linux_distribution(
             monkeypatch.setitem(registry, platform.detection_func_id, lambda: False)
     invalidate_caches()
     caplog.set_level(logging.WARNING)
-    try:
-        assert current_platform() is GENERIC_LINUX
-        assert "Unrecognized Linux distribution" in caplog.text
-        assert not is_unknown_platform()
-        assert is_linux()
-        invalidate_caches()
-        if strict_raises:
-            with pytest.raises(SystemError, match="Unrecognized Linux distribution"):
-                current_platform(strict=True)
-        else:
-            assert current_platform(strict=True) is GENERIC_LINUX
-    finally:
-        invalidate_caches()
+    assert current_platform() is GENERIC_LINUX
+    assert "Unrecognized Linux distribution" in caplog.text
+    assert not is_unknown_platform()
+    assert is_linux()
+    invalidate_caches()
+    if strict_raises:
+        with pytest.raises(SystemError, match="Unrecognized Linux distribution"):
+            current_platform(strict=True)
+    else:
+        assert current_platform(strict=True) is GENERIC_LINUX
 
 
 def test_platform_logical_grouping():

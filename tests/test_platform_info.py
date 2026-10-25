@@ -629,19 +629,16 @@ def test_windows_info(windows_11):
     }
 
 
-def test_windows_platform_info_release(monkeypatch, windows_11):
+def test_windows_platform_info_release(monkeypatch, windows_11, fresh_caches):
     """``Platform.info()`` carries the Windows release beside the NT version."""
     monkeypatch.setitem(
         detection_module._detection_registry, "is_windows", lambda: True
     )
     invalidate_caches()
-    try:
-        info = WINDOWS.info()
-        assert info["release"] == "11"
-        assert info["version"] == "10.0.26100"
-        assert info["codename"] == "11 Professional"
-    finally:
-        invalidate_caches()
+    info = WINDOWS.info()
+    assert info["release"] == "11"
+    assert info["version"] == "10.0.26100"
+    assert info["codename"] == "11 Professional"
 
 
 @pytest.mark.parametrize(
@@ -649,7 +646,9 @@ def test_windows_platform_info_release(monkeypatch, windows_11):
     ((MACOS, "14.2.1"), (UBUNTU, "22.04")),
     ids=lambda value: value.id if hasattr(value, "id") else value,
 )
-def test_release_is_windows_only(plat, version, monkeypatch, macos_sonoma):
+def test_release_is_windows_only(
+    plat, version, monkeypatch, macos_sonoma, fresh_caches
+):
     """No other platform fills ``release``: on macOS, CPython's own
     ``platform.release()`` names the Darwin kernel, another meaning.
 
@@ -664,10 +663,7 @@ def test_release_is_windows_only(plat, version, monkeypatch, macos_sonoma):
         lambda: {"id": "ubuntu", "version": "22.04"},
     )
     invalidate_caches()
-    try:
-        info = plat.info()
-        # The version proves the fetchers of the platform ran.
-        assert info["version"] == version
-        assert info["release"] is None
-    finally:
-        invalidate_caches()
+    info = plat.info()
+    # The version proves the fetchers of the platform ran.
+    assert info["version"] == version
+    assert info["release"] is None
