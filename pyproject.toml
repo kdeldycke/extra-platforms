@@ -515,9 +515,9 @@ run.patch = [ "subprocess" ]
 # Coverage ratchet replacing the Codecov gate repomatic dropped in 7.8.0. The
 # suite fails below this. Every cell of the test matrix must clear it on its
 # own, and coverage here swings with the runner, since most of the suite skips
-# whatever does not match the host platform. Raise the floor once a full matrix
-# run reports the true per-cell minimum.
-report.fail_under = 30
+# whatever does not match the host platform. The lowest cells are the macOS
+# ones without the docs group: keep the floor a few points under them.
+report.fail_under = 85
 report.precision = 2
 
 [tool.bumpversion]
