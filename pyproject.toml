@@ -372,6 +372,13 @@ format.docstring-code-format = true
 #   PEP 597's `PYTHONWARNDEFAULTENCODING=1` remains the complete runtime net.
 #   See: https://docs.astral.sh/ruff/rules/unspecified-encoding/
 lint.extend-select = [ "PLW1514" ]
+# D301: Use `r"""` if any backslashes in a docstring.
+#   A Click command's docstring is its `--help` text, and `\b` marks a paragraph
+#   Click must not rewrap. The raw prefix this rule asks for turns that backspace
+#   character into two printable ones, so the marker stops working and shows up
+#   in the help output. No Click command exists here today; kept ignored to
+#   stay aligned with repomatic's bundled Ruff defaults.
+#   See: https://docs.astral.sh/ruff/rules/escape-sequence-in-docstring/
 # D400: First line should end with a period.
 #   Allows docstrings to end up with any punctuation, not just a period.
 #   See: https://github.com/astral-sh/ruff/issues/1858#issuecomment-1382640623
@@ -382,7 +389,7 @@ lint.extend-select = [ "PLW1514" ]
 #   No root-logger calls exist here today; kept ignored to stay aligned with
 #   repomatic's bundled Ruff defaults.
 #   See: https://docs.astral.sh/ruff/rules/root-logger-call/
-lint.ignore = [ "D400", "ERA001", "LOG015" ]
+lint.ignore = [ "D301", "D400", "ERA001", "LOG015" ]
 lint.isort.combine-as-imports = true
 # Allow rules to add `from __future__ import annotations` in cases where
 # this would simplify a fix or enable a new diagnostic.
@@ -426,12 +433,6 @@ default.extend-ignore-identifiers-re = [
   #    │     ("11", None): "Big Sur",
   #    ╰╴                       ━━━
   "Sur",
-  # error: `certifi` should be `certify`, `certifies`, `certified`
-  #     ╭▸ ./docs/assets/dependencies.mmd:173:11
-  #     │
-  # 173 │     click certifi "https://pypi.org/project/certifi/" _blank
-  #     ╰╴           ^^^^^^^
-  "certifi",
 ]
 # Check hidden files and directories too, which typos skips by default: the
 # `.github/` workflows and the `.claude/` agents and skills live there.
@@ -464,6 +465,12 @@ overrides = [
   # or 3.11: it tolerates the missing import, but mypy still reports the `Any`
   # that `render_table` then returns.
   { module = "click_extra.*", ignore_missing_imports = true },
+  # `repomatic run mypy` checks at the `requires-python` floor. Sphinx 9.1.0
+  # uses the `type` statement of Python 3.12, which stops the whole run on a
+  # syntax error below that floor. Skipping the import types every Sphinx
+  # name as `Any`. No checked module imports Sphinx yet, so each run notes this
+  # section as unused.
+  { module = [ "sphinx.*" ], ignore_missing_imports = true, follow_imports = "skip" },
 ]
 
 [tool.pytest]
@@ -613,6 +620,9 @@ exclude = [
   "^https://star-history\\.com/.*$",
   # githubstatus.com returns 405 to HEAD requests from bots.
   "githubstatus\\.com",
+  # claude.ai sits behind a Cloudflare challenge that answers 403 to some
+  # crawlers. The stock header of an agent instructions file links it.
+  "^https://claude\\.ai/.*$",
 ]
 
 [tool.repomatic]
@@ -624,6 +634,17 @@ abandoned-versions = [ "1.0.1" ]
 # refreshed by `click-extra refresh-directives` (update-docs Phase 4). Disable
 # the Phase 3 update-script (its default points at the deleted file).
 docs.update-script = ""
+# Bundled template entries the seeded tool configs leave out on purpose.
+# lint-repo prints each reason in place of a missing-entry warning.
+lint-repo.declined.pytest.addopts."--cov-report=term" = """\
+  The tests workflow passes all coverage flags, so a from-source build runs plain pytest without pytest-cov.\
+  """
+lint-repo.declined.pytest.addopts."--numprocesses=auto" = """\
+  The tests workflow passes all xdist flags, so a from-source build runs plain pytest without pytest-xdist.\
+  """
+lint-repo.declined.pytest.markers."once: Tests that only need to run once, not across the full CI matrix." = """\
+  No test here is matrix-insensitive yet: nearly every test checks platform-specific behavior on each cell.\
+  """
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
 # Extra-platforms needs exhaustive runner coverage because it tests platform detection.
