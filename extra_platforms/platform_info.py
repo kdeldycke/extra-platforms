@@ -91,7 +91,11 @@ def _parse_os_release_content(lines: Iterable[str]) -> dict[str, str]:
         # Use shlex to unquote the value.
         lexer = shlex.shlex(value, posix=True)
         lexer.whitespace_split = True
-        tokens = list(lexer)
+        try:
+            tokens = list(lexer)
+        except ValueError:
+            # An unclosed quote, like `NAME="Fedora`: keep the value, unquoted.
+            tokens = [value.strip().strip("\"'")]
         result[key] = " ".join(tokens) if tokens else ""
 
     # Extract codename from VERSION field if not already present.
@@ -294,9 +298,15 @@ def _parse_os_release() -> dict[str, str]:
     :return: Dictionary of parsed key-value pairs, or empty dict if no file found.
     """
     for path in ("/etc/os-release", "/usr/lib/os-release"):
-        if os.path.isfile(path):
-            with open(path, encoding="utf-8") as f:
+        if not os.path.isfile(path):
+            continue
+        try:
+            # An invalid byte only spoils the value holding it.
+            with open(path, encoding="utf-8", errors="replace") as f:
                 return _parse_os_release_content(f)
+        except OSError:
+            # The file exists but cannot be read, like one denied to the caller.
+            continue
     return _hostnamectl_os_release()
 
 

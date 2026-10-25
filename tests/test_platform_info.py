@@ -180,6 +180,21 @@ def fresh_hostnamectl_caches():
             {"id": "test", "pretty_name": "Test"},
             id="keys_lowercased",
         ),
+        pytest.param(
+            "a line with no separator\nID=arch\n",
+            {"id": "arch"},
+            id="line_without_equal_sign",
+        ),
+        pytest.param(
+            'VERSION="39"\nID=fedora\n',
+            {"version": "39", "id": "fedora"},
+            id="version_without_codename",
+        ),
+        pytest.param(
+            'NAME="Fedora Linux\nID=fedora\n',
+            {"name": "Fedora Linux", "id": "fedora"},
+            id="unclosed_quote",
+        ),
     ),
 )
 def test_parse_os_release_content(content, expected):
@@ -376,6 +391,11 @@ def test_parse_cpe_name(cpe_name, expected):
             {},
             id="bus_error_message",
         ),
+        pytest.param(
+            "a line with no separator\n  Operating System: Arch Linux\n",
+            {"pretty_name": "Arch Linux"},
+            id="line_without_colon",
+        ),
     ),
 )
 def test_parse_hostnamectl_content(content, expected):
@@ -477,6 +497,52 @@ def test_parse_os_release_prefers_files_over_hostnamectl(
         raising=False,
     )
     assert _parse_os_release() == {"id": "ubuntu"}
+
+
+@pytest.mark.parametrize(
+    ("unreadable", "expected"),
+    (
+        pytest.param(
+            {"/etc/os-release"}, {"id": "fedora"}, id="falls_back_to_second_file"
+        ),
+        pytest.param(
+            {"/etc/os-release", "/usr/lib/os-release"}, {}, id="both_files_unreadable"
+        ),
+    ),
+)
+def test_parse_os_release_skips_unreadable_file(
+    unreadable, expected, monkeypatch, fresh_hostnamectl_caches
+):
+    """An os-release file that exists but cannot be read is skipped, not raised."""
+
+    def guarded_open(path, *args, **kwargs):
+        if path in unreadable:
+            raise PermissionError(13, "Permission denied", path)
+        return io.StringIO("ID=fedora\n")
+
+    monkeypatch.setattr(os.path, "isfile", lambda path: True)
+    monkeypatch.setattr(shutil, "which", lambda name: None)
+    monkeypatch.setattr(
+        "extra_platforms.platform_info.open", guarded_open, raising=False
+    )
+    assert _parse_os_release() == expected
+
+
+def test_parse_os_release_replaces_invalid_bytes(monkeypatch, fresh_hostnamectl_caches):
+    """A byte that is not UTF-8 spoils its own value, not the whole file."""
+    content = b'ID=fedora\nNAME="F\xffdora"\n'
+
+    monkeypatch.setattr(os.path, "isfile", lambda path: path == "/etc/os-release")
+    # Decode the bytes with the arguments the code under test passes to open().
+    monkeypatch.setattr(
+        "extra_platforms.platform_info.open",
+        lambda path, **kwargs: io.TextIOWrapper(io.BytesIO(content), **kwargs),
+        raising=False,
+    )
+    assert _parse_os_release() == {
+        "id": "fedora",
+        "name": "F\N{REPLACEMENT CHARACTER}dora",
+    }
 
 
 def test_invalidate_os_release_cache_clears_hostnamectl(
