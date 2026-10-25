@@ -591,7 +591,7 @@ def test_tree_from_ps_replaces_undecodable_bytes(tmp_path, monkeypatch):
         f"#!{sys.executable}\n"
         "import sys\n"
         "sys.stdout.buffer.write(\n"
-        "    b'  300     1 /bin/zsh\\n  400     1 /usr/bin/python3 caf\\xe9\\n'\n"
+        "    b'  300     1 /bin/zsh\\n  400     1 /usr/bin/python3 calf\\xe9\\n'\n"
         ")\n",
         encoding="UTF-8",
     )
