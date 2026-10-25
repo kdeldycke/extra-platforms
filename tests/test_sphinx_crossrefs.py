@@ -133,9 +133,10 @@ def read_html(built_docs: Path, filename: str) -> str:
 
 
 def find_links_with_text(html: str, link_text: str) -> list[str]:
-    """Find all href values for links containing the given text.
+    """Find all href values for links whose text is exactly the given text.
 
-    Returns a list of href values for <a> tags that contain the specified text.
+    Returns a list of href values for <a> tags whose plain text equals the
+    specified text, so a link to `LINUX_LIKE` never stands in for one to `LINUX`.
     The function handles nested tags like <a href="..."><code><span>text</span></code></a>.
     """
     results = []
@@ -145,7 +146,7 @@ def find_links_with_text(html: str, link_text: str) -> list[str]:
         href, content = match.groups()
         # Strip HTML tags from content to get plain text.
         plain_text = re.sub(r"<[^>]+>", "", content)
-        if link_text in plain_text:
+        if plain_text.strip() == link_text:
             results.append(href)
     return results
 
@@ -155,12 +156,13 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
 
     :param html: The HTML content to search.
     :param text: The link text to find (like ``"AARCH64"``, ``"is_linux()"``).
-    :param expected_href_fragment: A fragment that should be in the href
-        (like ``"architectures.html#extra_platforms.AARCH64"``).
+    :param expected_href_fragment: The end of the expected href (like
+        ``"architectures.html#extra_platforms.AARCH64"``), so an anchor that only
+        starts with it, like ``#extra_platforms.ARMV6L`` for ``ARM``, does not match.
     :returns: ``True`` if a matching link is found.
     """
     hrefs = find_links_with_text(html, text)
-    return any(expected_href_fragment in href for href in hrefs)
+    return any(href.endswith(expected_href_fragment) for href in hrefs)
 
 
 @pytest.mark.parametrize(
