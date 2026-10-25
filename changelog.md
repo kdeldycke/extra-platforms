@@ -7,11 +7,12 @@
 
 - Detect Artix Linux through the `artix` ID its own `/etc/os-release` carries. Closes [#720](https://github.com/kdeldycke/extra-platforms/issues/720).
 - Detect a Linux distribution with an unrecognized `os-release` ID as `GENERIC_LINUX` instead of `UNKNOWN_PLATFORM`, so it stays in the `LINUX` group.
-- Measure test coverage with `coverage run` instead of `pytest-cov`, which the `test` dependency group no longer installs.
 - Fix platform detection raising on an `os-release` file that cannot be read, holds invalid UTF-8 or leaves a quote unclosed.
-- Fix shell detection raising where it reads the process tree from `ps`, like on macOS, when any process holds bytes that are no UTF-8 in its arguments.
+- Fix shell detection raising where it reads the process tree from `ps`, like on macOS, when a process argument holds invalid UTF-8.
 - Fix the warning for a trait alias like `amd64` pointing inside the package instead of at the line that used it.
 - Fix reading the docstring of a trait or group raising `TypeError` when its data module has no `__file__`.
+- Fix the documentation examples of `reduce()` and `Architecture.info()`, which showed output the current code does not produce.
+- Measure test coverage with `coverage run` instead of `pytest-cov`, which the `test` dependency group no longer installs.
 - Fix the test suite aborting with `Different tests were collected` under `pytest-xdist` when `pytest-randomly` is disabled.
 
 ## [`13.12.0` (2026-10-12)](https://github.com/kdeldycke/extra-platforms/compare/v13.11.0...v13.12.0)

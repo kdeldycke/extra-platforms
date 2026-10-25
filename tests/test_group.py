@@ -694,7 +694,7 @@ def test_reduce_custom_targets(items, expected):
         (traits_from_ids, "Unrecognized group or trait IDs"),
         (groups_from_ids, "Unrecognized group IDs"),
     ),
-    ids=lambda value: getattr(value, "__name__", ""),
+    ids=("traits_from_ids", "groups_from_ids"),
 )
 def test_from_ids_edge_cases(from_ids, message):
     """No ID resolves to nothing, and an unknown ID raises."""

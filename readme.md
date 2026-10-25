@@ -28,7 +28,7 @@ Quickly inspect your current environment without installing anything, thanks to 
 
 ```shell-session
 $ uvx extra-platforms
-extra-platforms 13.11.0
+extra-platforms 13.12.0
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]───────────
             id: aarch64
@@ -71,7 +71,7 @@ $ uvx --with extra-platforms python
 ```pycon
 >>> import extra_platforms
 >>> extra_platforms.__version__
-'13.11.0'
+'13.12.0'
 ```
 
 ## Examples
@@ -256,13 +256,13 @@ XenServer
 Reduce a disparate collection of groups and platforms into a minimal descriptive set, by grouping all platforms into families:
 
 ```pycon
->>> from extra_platforms import AIX, MACOS, SOLARIS, reduce
+>>> from extra_platforms import AIX, ILLUMOS, MACOS, SOLARIS, reduce
 >>> reduce([AIX, MACOS])
 frozenset({
     Platform(id='macos', name='macOS'),
     Platform(id='aix', name='IBM AIX'),
 })
->>> reduce([AIX, MACOS, SOLARIS])
+>>> reduce([AIX, ILLUMOS, MACOS, SOLARIS])
 frozenset({
     Group(id='system_v', name='AT&T System Five'),
     Platform(id='macos', name='macOS'),

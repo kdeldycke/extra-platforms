@@ -432,7 +432,7 @@ def _reference_matrix_rows() -> list[tuple[str, str, str]]:
     including one added later.
     """
     page = Path(__file__).parent.parent / "docs" / "sphinx.md"
-    section = page.read_text(encoding="utf-8").split("## Reference matrix", 1)[1]
+    section = page.read_text(encoding="UTF-8").split("## Reference matrix", 1)[1]
     section = section.split("\n## ", 1)[0]
     rows = []
     for myst in re.findall(r"^\|\s*`` (\{\w+\}`[^`]+`) ``\s*\|", section, re.MULTILINE):
@@ -518,29 +518,13 @@ def test_reference_matrix_links(built_docs, myst, expected_text, expected_link):
         f"Reference matrix rendering column for '{myst}' is not wrapped in "
         '<span class="pre">..."'
     )
-    # span exists (m2.group(1) available if needed for future checks)
-
-    # Find the <a> tag that points to the expected href and check its text.
-    # The anchor may or may not be inside the <span class="pre">; search
-    # the entire rendering_html for robustness while still asserting the
-    # presence of the <span class="pre"> wrapper above.
-    pattern = r'<a\s[^>]*href="([^"]*)"[^>]*>(.*?)</a>'
-    for m in re.finditer(pattern, rendering_html, re.DOTALL):
-        href, content = m.groups()
-        if expected_link in href:
-            plain_text = re.sub(r"<[^>]+>", "", content).strip()
-            assert plain_text == expected_text, (
-                f"Reference matrix example '{myst}' rendered text '{plain_text}' "
-                f"does not match expected '{expected_text}' for "
-                f"{expected_link}"
-            )
-            break
-    else:
-        hrefs = re.findall(r'href="([^"]+)"', rendering_html)
-        pytest.fail(
-            f"Reference matrix example '{myst}' did not render to "
-            f"{expected_link}; found {hrefs}"
-        )
+    # The link may or may not sit inside the <span class="pre">: search the whole
+    # rendering column.
+    hrefs = re.findall(r'href="([^"]+)"', rendering_html)
+    assert has_linked_reference(rendering_html, expected_text, expected_link), (
+        f"Reference matrix example '{myst}' did not render a '{expected_text}' "
+        f"link to {expected_link}; found {hrefs}"
+    )
 
 
 def _get_all_public_symbols() -> Iterator[str]:

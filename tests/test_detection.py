@@ -345,8 +345,6 @@ def test_illumos_excludes_solaris(monkeypatch, fresh_caches):
 
 def test_detection_functions_cached(fresh_caches):
     """Test that detection functions are cached with @cache decorator."""
-    # Clear caches first.
-
     # Call each function twice.
     _ = is_aarch64()
     _ = is_aarch64()
@@ -363,7 +361,6 @@ def test_detection_functions_cached(fresh_caches):
 
 def test_environment_variable_ci_detection(monkeypatch, fresh_caches):
     """Test CI detection based on environment variables."""
-
     # Mock GitHub CI environment variable.
     monkeypatch.setenv("GITHUB_ACTIONS", "true")
     invalidate_caches()
@@ -375,13 +372,9 @@ def test_environment_variable_ci_detection(monkeypatch, fresh_caches):
     invalidate_caches()
     assert is_gitlab_ci() is True
 
-    # Clean up.
-    monkeypatch.delenv("GITLAB_CI", raising=False)
-
 
 def test_detection_no_circular_dependencies(fresh_caches):
     """Test that detection functions can all be called without circular dependency issues."""
-
     # Call all trait detection functions.
     for trait in ALL_TRAITS:
         # Access the current property, which calls the detection function.
@@ -605,8 +598,11 @@ def test_tree_from_ps_replaces_undecodable_bytes(tmp_path, monkeypatch):
     a Latin-1 `piña`.
     """
     ps = tmp_path / "ps"
+    # A Python shebang, not /bin/sh, as for write_fake_executable(). -S skips the
+    # site module and the coverage hook it loads: their start-up can outlast the
+    # timeout of the `ps` call on a busy runner.
     ps.write_text(
-        f"#!{sys.executable}\n"
+        f"#!{sys.executable} -S\n"
         "import sys\n"
         "sys.stdout.buffer.write(\n"
         "    b'  300     1 /bin/zsh\\n  400     1 /usr/bin/python3 pi\\xf1a\\n'\n"

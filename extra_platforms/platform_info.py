@@ -302,7 +302,7 @@ def _parse_os_release() -> dict[str, str]:
             continue
         try:
             # An invalid byte only spoils the value holding it.
-            with open(path, encoding="utf-8", errors="replace") as f:
+            with open(path, encoding="UTF-8", errors="replace") as f:
                 return _parse_os_release_content(f)
         except OSError:
             # The file exists but cannot be read, like one denied to the caller.

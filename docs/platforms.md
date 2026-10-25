@@ -411,10 +411,7 @@ print(
 ```{py:currentmodule} extra_platforms
 ```
 
-Version and codename details behind {meth}`~Platform.info` are gathered by the
-`platform_info` module: Linux distributions through `/etc/os-release`, with
-`systemd-hostnamed` as a fallback for systems hiding that file, macOS and
-Windows through their own {mod}`platform` primitives.
+The `platform_info` module gathers the version and codename details behind {meth}`~Platform.info`. On Linux, it reads `/etc/os-release`. If it cannot read that file, it reads `/usr/lib/os-release`, and if it cannot read either file, it asks `systemd-hostnamed`. On macOS and Windows, it uses their own {mod}`platform` primitives.
 
 ```{eval-rst}
 .. automodule:: extra_platforms.platform_info

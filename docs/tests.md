@@ -63,6 +63,15 @@
    :undoc-members:
 ```
 
+### tests.test_main module
+
+```{eval-rst}
+.. automodule:: tests.test_main
+   :members:
+   :show-inheritance:
+   :undoc-members:
+```
+
 ### tests.test_platform_data module
 
 ```{eval-rst}
@@ -112,6 +121,15 @@
 
 ```{eval-rst}
 .. automodule:: tests.test_sphinx_crossrefs
+   :members:
+   :show-inheritance:
+   :undoc-members:
+```
+
+### tests.test_suite_hygiene module
+
+```{eval-rst}
+.. automodule:: tests.test_suite_hygiene
    :members:
    :show-inheritance:
    :undoc-members:
