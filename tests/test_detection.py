@@ -22,6 +22,7 @@ import re
 import subprocess
 import sys
 from itertools import chain
+from operator import attrgetter
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -56,7 +57,9 @@ from extra_platforms.pytest import skip_windows, unless_windows
 
 
 @pytest.mark.parametrize(
-    "obj", list(chain(ALL_TRAITS, ALL_GROUPS)), ids=lambda obj: obj.id
+    "obj",
+    sorted(chain(ALL_TRAITS, ALL_GROUPS), key=attrgetter("id")),
+    ids=attrgetter("id"),
 )
 def test_detection_trait_functions(obj: Trait | Group):
     # All traits must implement a real function in the detection module.

@@ -18,6 +18,7 @@ import ast
 import inspect
 import re
 from itertools import combinations
+from operator import attrgetter
 from pathlib import Path
 from string import ascii_lowercase, digits
 
@@ -111,7 +112,9 @@ def test_group_data_ordering():
         assert group_id in ALL_GROUP_IDS or group_id == UNKNOWN.id
 
 
-@pytest.mark.parametrize("group", tuple(ALL_GROUPS), ids=lambda g: g.id)
+@pytest.mark.parametrize(
+    "group", sorted(ALL_GROUPS, key=attrgetter("id")), ids=attrgetter("id")
+)
 def test_group_definitions(group: Group):
     assert isinstance(group, Group)
 

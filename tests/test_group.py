@@ -812,8 +812,11 @@ def test_unique_ids():
     assert ALL_GROUP_IDS.isdisjoint(ALL_TRAIT_IDS)
 
 
-def randomize_case(strings: Iterable[str]) -> set[str]:
-    """Generate variations of strings with different case."""
+def randomize_case(strings: Iterable[str]) -> list[str]:
+    """Generate variations of strings with different case.
+
+    Sorted, so every xdist worker collects the same parameters in the same order.
+    """
     test_strings = set()
     for string in strings:
         test_strings.add(string)
@@ -833,7 +836,7 @@ def randomize_case(strings: Iterable[str]) -> set[str]:
                 char.upper() if i % 2 else char.lower() for i, char in enumerate(string)
             )
         )
-    return test_strings
+    return sorted(test_strings)
 
 
 @pytest.mark.parametrize("trait_id", randomize_case(ALL_TRAIT_IDS))
