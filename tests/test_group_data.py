@@ -17,7 +17,6 @@ from __future__ import annotations
 import ast
 import inspect
 import re
-from itertools import combinations
 from operator import attrgetter
 from pathlib import Path
 from string import ascii_lowercase, digits
@@ -355,73 +354,20 @@ def test_sets_of_groups():
     )
 
 
-def test_non_overlapping_groups():
-    """Check non-overlapping groups are mutually exclusive."""
-    for combination in combinations(CANONICAL_GROUPS, 2):
-        group1, group2 = combination
-        assert group1.isdisjoint(group2)
-        assert group2.isdisjoint(group1)
-        assert group1.canonical
-        assert group2.canonical
-
-
-def test_overlapping_groups():
-    """Check all extra groups overlaps with at least one non-overlapping."""
-    for extra_group in NON_CANONICAL_GROUPS:
-        overlap = False
-        for group in CANONICAL_GROUPS:
-            if not extra_group.isdisjoint(group):
-                overlap = True
-                break
-        assert overlap is True
-        assert not extra_group.canonical
-
-
 def test_each_trait_in_exactly_one_canonical_group():
-    """Check each trait belongs to exactly one canonical group."""
+    """Check each trait belongs to exactly one canonical group.
+
+    With the per-group checks of `test_group_definitions` (no empty group, and
+    `canonical` set exactly on the members of `CANONICAL_GROUPS`), this also
+    proves the canonical groups are disjoint, cover every trait, and that each
+    non-canonical group overlaps one of them.
+    """
     for trait in ALL_TRAITS:
         canonical_groups = [group for group in CANONICAL_GROUPS if trait in group]
         assert len(canonical_groups) == 1, (
             f"Trait {trait.id!r} is in {len(canonical_groups)} canonical groups: "
             f"{[g.id for g in canonical_groups]}"
         )
-
-
-def test_canonical_groups_dont_overlap():
-    """Test that canonical groups have no members in common with each other."""
-    canonical_list = list(CANONICAL_GROUPS)
-    for i, group1 in enumerate(canonical_list):
-        for group2 in canonical_list[i + 1 :]:
-            assert group1.isdisjoint(group2), (
-                f"Canonical groups {group1.id} and {group2.id} overlap"
-            )
-
-
-def test_canonical_groups_cover_all_traits():
-    """Test that canonical groups together cover all recognized traits."""
-    # Union all canonical groups, excluding unknown traits.
-    all_canonical_members = set()
-    for group in CANONICAL_GROUPS:
-        for member in group:
-            # Exclude unknown traits.
-            if not member.id.startswith("unknown_"):
-                all_canonical_members.add(member)
-
-    # Should cover all traits except UNKNOWN.
-    # ALL_TRAITS - UNKNOWN returns a Group, so we compare to its set.
-    assert all_canonical_members == set(ALL_TRAITS - UNKNOWN), (
-        "Canonical groups don't cover all non-UNKNOWN traits"
-    )
-
-
-def test_non_overlapping_groups_completeness():
-    """Test that CANONICAL_GROUPS is properly defined."""
-    # Should have at least 3 canonical groups (architectures, platforms, CI).
-    assert len(CANONICAL_GROUPS) >= 3
-
-    # Each group in CANONICAL_GROUPS should have canonical=True.
-    for group in CANONICAL_GROUPS:
-        assert group.canonical is True
 
 
 def test_canonical_group_marker():
