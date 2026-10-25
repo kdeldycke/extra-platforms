@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -506,9 +506,6 @@ test = [
     { name = "requests" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
-
-[package.group-requires-python]
-docs = ">=3.12"
 
 [package.metadata]
 requires-dist = [{ name = "pytest", marker = "extra == 'pytest'", specifier = ">=8.2.1" }]
@@ -1036,15 +1033,15 @@ wheels = [
 
 [[package]]
 name = "sphinx-autodoc-typehints"
-version = "3.17.1"
+version = "3.17.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "sphinx" },
     { name = "typing-extensions", marker = "python_full_version < '3.15'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/30/d5/b1778a086a2b3df8b7f6f2abcb35e83919b3d5b5d076c3b6fd54a74f37d4/sphinx_autodoc_typehints-3.17.1.tar.gz", hash = "sha256:1921a9c2418b4ccd2d06c5aee4215af622455575f7a969d31cfdb96fa5db6e01", size = 569671, upload-time = "2026-10-17T02:48:06.289Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9c/fa/c967fd665cc102c90338a90292aba336f852ee6f9b3477ffe4da565edb11/sphinx_autodoc_typehints-3.17.2.tar.gz", hash = "sha256:de41ed4001f4818bb6d37c22fd10ee44a93e6c8e945c6c7e3984e28a9df87d1c", size = 570767, upload-time = "2026-10-17T18:30:30.923Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4b/d6/d986d8040df3ab18d88344cd4b48cb29998aedfcdbd9158c30c38d7f0acd/sphinx_autodoc_typehints-3.17.1-py3-none-any.whl", hash = "sha256:85781f33f7e4fad8fe3df8fccfb3d8858644ecc9c872c2e15542807cda3d564b", size = 140130, upload-time = "2026-10-17T02:48:04.618Z" },
+    { url = "https://files.pythonhosted.org/packages/78/d4/8fc500ff2fafe8a6e1847abd8b1072494dc1a5f136f8e890e973db7de4eb/sphinx_autodoc_typehints-3.17.2-py3-none-any.whl", hash = "sha256:b0ad1f96503d69b63c2a1c043f12e2a727c9549e6503d4adbf2125dbf5ff50ed", size = 140285, upload-time = "2026-10-17T18:30:28.728Z" },
 ]
 
 [[package]]
