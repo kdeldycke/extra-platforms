@@ -114,7 +114,16 @@ You can check my other Meta Package Manager project for a real life example, whe
 The {func}`~reduce` function finds the minimal set of groups and traits that covers a given collection:
 
 ```pycon
->>> from extra_platforms import reduce, DRAGONFLY_BSD, FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS
+>>> from extra_platforms import (
+...     reduce,
+...     DRAGONFLY_BSD,
+...     FREEBSD,
+...     MACOS,
+...     MIDNIGHTBSD,
+...     NETBSD,
+...     OPENBSD,
+...     SUNOS,
+... )
 >>> reduce([DRAGONFLY_BSD, FREEBSD, MACOS, MIDNIGHTBSD, NETBSD, OPENBSD, SUNOS])
 frozenset({Group(id='bsd', name='All BSD')})
 ```
