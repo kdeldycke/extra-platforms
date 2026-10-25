@@ -19,6 +19,26 @@ import functools
 import json
 import os
 
+import pytest
+
+from extra_platforms import invalidate_caches
+
+
+@pytest.fixture
+def fresh_caches():
+    """Clear every detection cache before and after the test.
+
+    A test that mocks a detection input leaves the mocked answer cached for the
+    rest of its worker's session. This teardown clears it even when the test
+    fails, which a call at the end of the test body does not.
+
+    Request it before `monkeypatch` in a test that replaces a cached function
+    itself: teardown then restores the function first, and clears its cache next.
+    """
+    invalidate_caches()
+    yield
+    invalidate_caches()
+
 
 @functools.cache
 def github_runner_os() -> str | None:

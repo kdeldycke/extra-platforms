@@ -28,7 +28,6 @@ import pytest
 
 import extra_platforms
 from extra_platforms import (
-    AARCH64,
     ALL_AGENTS,
     ALL_ARCHITECTURES,
     ALL_CI,
@@ -37,12 +36,8 @@ from extra_platforms import (
     ALL_SHELLS,
     ALL_TERMINALS,
     ALL_TRAITS,
-    GITHUB_CI,
-    GITLAB_CI,
-    MACOS,
     POWERSHELL,
     SYSTEM_V,
-    UBUNTU,
     UNIX,
     UNKNOWN,
     UNKNOWN_AGENT,
@@ -51,10 +46,8 @@ from extra_platforms import (
     UNKNOWN_PLATFORM,
     UNKNOWN_SHELL,
     UNKNOWN_TERMINAL,
-    WINDOWS,
     WSL1,
     WSL2,
-    X86_64,
     Shell,
     agent_data as agent_data_module,
     architecture_data as architecture_data_module,
@@ -70,19 +63,11 @@ from extra_platforms import (
     group as group_module,
     group_data as group_data_module,
     invalidate_caches,
-    is_aarch64,
     is_any_agent,
     is_any_ci,
-    is_any_platform,
     is_any_terminal,
-    is_bsd,
-    is_fedora,
     is_github_ci,
-    is_linux,
-    is_macos,
-    is_ubuntu,
     is_unknown_shell,
-    is_windows,
     platform_data as platform_data_module,
     shell_data as shell_data_module,
     shell_from_path,
@@ -502,92 +487,62 @@ def test_group_detection_type_stubs():
 
 
 def test_invalidate_caches():
-    """Test that invalidate_caches() properly clears all caches."""
+    """`invalidate_caches()` empties every cache that detection fills."""
+    registry = detection_module._detection_registry
+    for func in registry.values():
+        func()
+    for trait in ALL_TRAITS:
+        assert trait.current in (True, False)
+    current_traits()
 
-    # Call detection functions to populate caches.
-    _ = is_ubuntu()
-    _ = is_macos()
-    # Call global functions.
-    _ = current_traits()
-    _ = current_platform()
-    # Call group membership functions.
-    _ = is_windows()
-
-    # Verify caches are populated.
-    assert hasattr(is_ubuntu, "__wrapped__")
-    assert hasattr(is_macos, "__wrapped__")
-    assert hasattr(current_traits, "__wrapped__")
-    assert hasattr(current_platform, "__wrapped__")
-    assert hasattr(is_windows, "__wrapped__")
-
-    # Access Platform.current to populate their caches.
-    for platform_obj in ALL_PLATFORMS:
-        _ = platform_obj.current
-        # For cached_property, the value is stored in the instance's __dict__.
-        assert "current" in vars(platform_obj), (
-            f"'current' not cached for {platform_obj.id}"
-        )
-
-    # Check that caches have hits (values are cached).
-    assert is_ubuntu.cache_info().hits > 0 or is_ubuntu.cache_info().currsize > 0
-    assert is_macos.cache_info().hits > 0 or is_macos.cache_info().currsize > 0
-    assert (
-        current_traits.cache_info().hits > 0 or current_traits.cache_info().currsize > 0
+    # Every cached callable of the detection module, and the group detection
+    # functions generated at the package root.
+    cached = {
+        name: func
+        for name, func in (*vars(detection_module).items(), *registry.items())
+        if callable(func) and hasattr(func, "cache_info")
+    }
+    assert all(
+        func.cache_info().currsize  # type: ignore[attr-defined]
+        for func in registry.values()
     )
-    assert (
-        current_platform.cache_info().hits > 0
-        or current_platform.cache_info().currsize > 0
+    assert all("current" in vars(trait) for trait in ALL_TRAITS)
+
+    invalidate_caches()
+
+    assert not [name for name, func in cached.items() if func.cache_info().currsize]
+    assert not [trait.id for trait in ALL_TRAITS if "current" in vars(trait)]
+
+
+@pytest.mark.parametrize(
+    ("traits", "current_func", "message"),
+    (
+        (ALL_ARCHITECTURES, current_architecture, "Multiple architectures match"),
+        (ALL_PLATFORMS, current_platform, "Multiple platforms match"),
+        (ALL_TERMINALS, current_terminal, "Multiple terminals match"),
+        (ALL_CI, current_ci, "Multiple CI systems match"),
+        (ALL_AGENTS, current_agent, "Multiple agents match"),
+    ),
+    ids=("architecture", "platform", "terminal", "ci", "agent"),
+)
+def test_multiple_traits_match(
+    traits, current_func, message, monkeypatch, fresh_caches
+):
+    """A category whose traits all match at once raises, instead of picking one.
+
+    Shells take their own test: their resolver breaks ties through running
+    processes before it gives up.
+    """
+    # The traits of a category share one class, so this patches all of them.
+    monkeypatch.setattr(
+        type(next(iter(traits))), "current", property(lambda self: True)
     )
-    assert is_windows.cache_info().hits > 0 or is_windows.cache_info().currsize > 0
-
-    # Invalidate all caches.
-    invalidate_caches()
-
-    # Verify caches were cleared (currsize should be 0).
-    assert is_ubuntu.cache_info().currsize == 0
-    assert is_macos.cache_info().currsize == 0
-    assert current_traits.cache_info().currsize == 0
-    assert current_platform.cache_info().currsize == 0
-    assert is_windows.cache_info().currsize == 0
-
-    for platform_obj in ALL_PLATFORMS:
-        assert "current" not in vars(platform_obj), (
-            f"'current' cache not cleared for {platform_obj.id}"
-        )
+    with pytest.raises(RuntimeError, match=message):
+        current_func()
 
 
-def test_multiple_architectures_match(monkeypatch):
-    """Test RuntimeError when multiple architectures match."""
-    invalidate_caches()
-
-    # Mock two architectures to both return True.
-    monkeypatch.setattr(type(AARCH64), "current", property(lambda self: True))
-    monkeypatch.setattr(type(X86_64), "current", property(lambda self: True))
-
-    with pytest.raises(RuntimeError, match="Multiple architectures match"):
-        current_architecture()
-
-    invalidate_caches()
-
-
-def test_multiple_platforms_match_non_wsl(monkeypatch):
-    """Test RuntimeError when multiple non-WSL platforms match."""
-    invalidate_caches()
-
-    # Mock two non-WSL platforms to both return True.
-    monkeypatch.setattr(type(MACOS), "current", property(lambda self: True))
-    monkeypatch.setattr(type(UBUNTU), "current", property(lambda self: True))
-
-    with pytest.raises(RuntimeError, match="Multiple platforms match"):
-        current_platform()
-
-    invalidate_caches()
-
-
-def test_multiple_shells_match(monkeypatch):
+def test_multiple_shells_match(monkeypatch, fresh_caches):
     """Test RuntimeError when multiple shells match."""
-    invalidate_caches()
-
     # Mock detection functions in the registry (where Trait.current looks
     # them up) so exactly BASH and FISH match. Disable cached signal helpers
     # so the disambiguation fast paths do not short-circuit.
@@ -596,32 +551,12 @@ def test_multiple_shells_match(monkeypatch):
         func_name = f"is_{shell.id}"
         should_match = shell.id in ("bash", "fish")
         monkeypatch.setitem(registry, func_name, lambda m=should_match: m)
-    monkeypatch.setattr(
-        detection_module, "_active_env_var_shell_ids", lambda: frozenset()
-    )
+    monkeypatch.setattr(detection_module, "_active_env_var_shell_ids", frozenset)
     monkeypatch.setattr(detection_module, "_resolved_shell_id", lambda: None)
-    monkeypatch.setattr(
-        detection_module, "_parent_process_exe_names", lambda: frozenset()
-    )
+    monkeypatch.setattr(detection_module, "_parent_process_exe_names", frozenset)
 
     with pytest.raises(RuntimeError, match="Multiple shells match"):
         current_shell()
-
-    invalidate_caches()
-
-
-def test_multiple_ci_systems_match(monkeypatch):
-    """Test RuntimeError when multiple CI systems match."""
-    invalidate_caches()
-
-    # Mock two CI systems to both return True.
-    monkeypatch.setattr(type(GITHUB_CI), "current", property(lambda self: True))
-    monkeypatch.setattr(type(GITLAB_CI), "current", property(lambda self: True))
-
-    with pytest.raises(RuntimeError, match="Multiple CI systems match"):
-        current_ci()
-
-    invalidate_caches()
 
 
 def test_unrecognized_message_format():
@@ -713,53 +648,6 @@ def test_invalidate_caches_python_314(monkeypatch):
 
     # On Python 3.14+, platform.invalidate_caches should be called.
     assert len(called) > 0, "platform.invalidate_caches was not called"
-
-
-def test_invalidate_caches_clears_all_detection_functions():
-    """Test that invalidate_caches clears all detection function caches."""
-    # Call some detection functions to populate caches.
-    _ = is_aarch64()
-    _ = is_fedora()
-    _ = is_windows()
-
-    # Verify they have cache entries.
-    assert is_aarch64.cache_info().currsize > 0 or is_aarch64.cache_info().hits > 0
-    assert is_fedora.cache_info().currsize > 0 or is_fedora.cache_info().hits > 0
-    assert is_windows.cache_info().currsize > 0 or is_windows.cache_info().hits > 0
-
-    # Invalidate caches.
-    invalidate_caches()
-
-    # Verify all detection function caches are cleared.
-    for func_id in dir(detection_module):
-        func = getattr(detection_module, func_id)
-        if callable(func) and hasattr(func, "cache_info"):
-            assert func.cache_info().currsize == 0, f"{func_id} cache not cleared"
-
-
-def test_invalidate_caches_clears_group_detection_functions():
-    """Test that invalidate_caches clears dynamically generated group detection functions."""
-    # Call some group detection functions.
-    _ = is_linux()
-    _ = is_bsd()
-    _ = is_any_platform()
-
-    # Verify they have cache entries. The type stubs declare these as plain
-    # callables, but at runtime they are @cache-wrapped and expose cache_info().
-    assert is_linux.cache_info().currsize > 0 or is_linux.cache_info().hits > 0  # type: ignore[attr-defined]
-    assert is_bsd.cache_info().currsize > 0 or is_bsd.cache_info().hits > 0  # type: ignore[attr-defined]
-    assert (
-        is_any_platform.cache_info().currsize > 0  # type: ignore[attr-defined]
-        or is_any_platform.cache_info().hits > 0  # type: ignore[attr-defined]
-    )
-
-    # Invalidate caches.
-    invalidate_caches()
-
-    # Verify group detection function caches are cleared.
-    assert is_linux.cache_info().currsize == 0  # type: ignore[attr-defined]
-    assert is_bsd.cache_info().currsize == 0  # type: ignore[attr-defined]
-    assert is_any_platform.cache_info().currsize == 0  # type: ignore[attr-defined]
 
 
 @pytest.mark.benchmark
@@ -910,31 +798,6 @@ def test_subprocess_and_shutil_are_not_imported_at_module_level():
         "subprocess or shutil imported at module level in "
         + ", ".join(sorted(offenders))
     )
-
-
-def test_invalidate_caches_clears_trait_current_property():
-    """Test that invalidate_caches clears Trait.current cached_property."""
-    # Access current property for a few traits to populate their caches.
-    # Note: LINUX is a Group, not a Trait, so we use UBUNTU instead.
-    _ = MACOS.current
-    _ = UBUNTU.current
-    _ = WINDOWS.current
-    _ = X86_64.current
-
-    # Verify the properties are cached.
-    assert "current" in vars(MACOS)
-    assert "current" in vars(UBUNTU)
-    assert "current" in vars(WINDOWS)
-    assert "current" in vars(X86_64)
-
-    # Invalidate caches.
-    invalidate_caches()
-
-    # Verify the cached properties are cleared.
-    assert "current" not in vars(MACOS)
-    assert "current" not in vars(UBUNTU)
-    assert "current" not in vars(WINDOWS)
-    assert "current" not in vars(X86_64)
 
 
 # Registry-derived: every alias in DEPRECATED_ALIASES["extra_platforms"] is
