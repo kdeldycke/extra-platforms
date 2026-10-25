@@ -128,24 +128,18 @@ def test_github_runner_detection():
     assert is_little_endian()
     assert not is_big_endian()
 
+    runner = github_runner_os()
+    assert runner, "the matrix context names no runner image"
+
     # Linux runners.
-    if github_runner_os() in {
-        "ubuntu-latest",
-        "ubuntu-slim",
-        "ubuntu-26.04",
-        "ubuntu-26.04-arm",
-        "ubuntu-24.04",
-        "ubuntu-24.04-arm",
-        "ubuntu-22.04",
-        "ubuntu-22.04-arm",
-    }:
+    if runner.startswith("ubuntu-"):
         assert is_ubuntu()
         assert is_linux()
         assert is_linux_like()
         assert is_unix()
         assert is_unix_not_macos()
         assert current_platform() is UBUNTU
-        if github_runner_os() == "ubuntu-slim":
+        if runner == "ubuntu-slim":
             # XXX ubuntu-slim is a stripped-down WSL2 container.
             assert is_wsl2()
             assert is_linux_layers()
@@ -184,20 +178,7 @@ def test_github_runner_detection():
             assert current_traits() == expected_traits
 
     # macOS runners.
-    if github_runner_os() in {
-        "macos-latest",
-        "macos-latest-large",
-        "macos-26",
-        "macos-26-intel",
-        "macos-26-xlarge",
-        "macos-15",
-        "macos-15-intel",
-        "macos-15-large",
-        "macos-15-xlarge",
-        "macos-14",
-        "macos-14-large",
-        "macos-14-xlarge",
-    }:
+    elif runner.startswith("macos-"):
         assert is_macos()
         assert is_bsd()
         assert is_unix()
@@ -213,12 +194,7 @@ def test_github_runner_detection():
         }
 
     # Windows runners.
-    if github_runner_os() in {
-        "windows-latest",
-        "windows-11-arm",
-        "windows-2025",
-        "windows-2022",
-    }:
+    elif runner.startswith("windows-"):
         assert is_windows()
         assert is_any_windows()
         assert current_platform() is WINDOWS
@@ -231,3 +207,7 @@ def test_github_runner_detection():
             POWERSHELL,
             GITHUB_CI,
         }
+
+    # A runner of another family would leave the platform half unchecked.
+    else:
+        pytest.fail(f"Unrecognized GitHub runner image: {runner}")
