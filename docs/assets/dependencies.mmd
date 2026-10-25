@@ -14,7 +14,6 @@ flowchart LR
     exceptiongroup(["`exceptiongroup`"])
     mdit_py_plugins(["`mdit-py-plugins`"])
     packaging(["`packaging`"])
-    pluggy(["`pluggy`"])
     pyyaml(["`pyyaml`"])
     sphinx_basic_ng(["`sphinx-basic-ng`"])
     tabulate(["`tabulate`"])
@@ -33,6 +32,7 @@ flowchart LR
     iniconfig(["`iniconfig`"])
     markupsafe(["`markupsafe`"])
     mdurl(["`mdurl`"])
+    pluggy(["`pluggy`"])
     psutil(["`psutil`"])
     roman_numerals(["`roman-numerals`"])
     snowballstemmer(["`snowballstemmer`"])
@@ -65,10 +65,9 @@ flowchart LR
     subgraph grp_test [--group test]
         pytest{{"`pytest`"}}
         requests{{"`requests >=2.34`"}}
-        pytest_cov{{"`pytest-cov >=7`"}}
         pytest_xdist{{"`pytest-xdist >=3.7`"}}
-        coverage{{"`coverage >=7.11`"}}
         tomli{{"`tomli >=2.3`"}}
+        coverage{{"`coverage >=7.13`"}}
         pytest_github_actions_annotate_failures{{"`pytest-github-actions-annotate-failures >=0.3`"}}
         pytest_randomly{{"`pytest-randomly >=4`"}}
     end
@@ -106,8 +105,8 @@ flowchart LR
     pytest --> colorama
     pytest --> exceptiongroup
     pytest --> packaging
-    pytest --> pluggy
     pytest --> iniconfig
+    pytest --> pluggy
     myst_parser --> sphinx
     myst_parser --> jinja2
     myst_parser --> docutils
@@ -123,18 +122,15 @@ flowchart LR
     requests --> charset_normalizer
     requests --> idna
     requests --> urllib3
-    pytest_cov --> pytest
-    pytest_cov --> coverage
-    pytest_cov --> pluggy
     pytest_xdist --> pytest
     pytest_xdist --> execnet
     pytest_xdist --> psutil
     sphinxcontrib_mermaid --> sphinx
     sphinxcontrib_mermaid --> jinja2
     sphinxcontrib_mermaid --> pyyaml
-    coverage --> tomli
     sphinx_autodoc_typehints --> sphinx
     sphinx_autodoc_typehints --> typing_extensions
+    coverage --> tomli
     pytest_github_actions_annotate_failures --> pytest
     pytest_randomly --> pytest
     sphinx_copybutton --> sphinx
@@ -190,7 +186,6 @@ flowchart LR
     click psutil "https://pypi.org/project/psutil/" _blank
     click pygments "https://pypi.org/project/pygments/" _blank
     click pytest "https://pypi.org/project/pytest/" _blank
-    click pytest_cov "https://pypi.org/project/pytest-cov/" _blank
     click pytest_github_actions_annotate_failures "https://pypi.org/project/pytest-github-actions-annotate-failures/" _blank
     click pytest_randomly "https://pypi.org/project/pytest-randomly/" _blank
     click pytest_xdist "https://pypi.org/project/pytest-xdist/" _blank
@@ -227,7 +222,6 @@ flowchart LR
     style furo stroke-width:3px
     style myst_parser stroke-width:3px
     style pytest stroke-width:3px
-    style pytest_cov stroke-width:3px
     style pytest_github_actions_annotate_failures stroke-width:3px
     style pytest_randomly stroke-width:3px
     style pytest_xdist stroke-width:3px

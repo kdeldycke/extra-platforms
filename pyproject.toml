@@ -283,11 +283,11 @@ entry-points.pytest11.extra-platforms = "extra_platforms.pytest"
 
 [dependency-groups]
 test = [
-  # coverage 7.11.0 is the first version to drop support for Python 3.9.
-  "coverage[toml]>=7.11",
+  # coverage 7.13.0 is the first version to ship the permanent .pth file behind
+  # `[tool.coverage] run.patch = ["subprocess"]`: older versions write it into
+  # site-packages at run time, which fails when that directory is read-only.
+  "coverage[toml]>=7.13",
   "pytest",
-  # pytest-cov 7.0.0 is the first version to be repackaged with pyproject-metadata.
-  "pytest-cov>=7",
   # pytest-github-actions-annotate-failures 0.3.0 is the first version to support Python 3.13.
   "pytest-github-actions-annotate-failures>=0.3",
   # pytest-randomly 4.0.0 is the first version to support Python 3.14.
@@ -639,7 +639,8 @@ docs.update-script = ""
 # Bundled template entries the seeded tool configs leave out on purpose.
 # lint-repo prints each reason in place of a missing-entry warning.
 lint-repo.declined.pytest.addopts."--cov-report=term" = """\
-  The tests workflow passes all coverage flags, so a from-source build runs plain pytest without pytest-cov.\
+  The tests workflow runs pytest under coverage run, which also counts the lines the pytest11 plugin imports before \
+  pytest-cov could start.\
   """
 lint-repo.declined.pytest.addopts."--numprocesses=auto" = """\
   The tests workflow passes all xdist flags, so a from-source build runs plain pytest without pytest-xdist.\
