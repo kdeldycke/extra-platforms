@@ -19,243 +19,133 @@ import pytest
 from extra_platforms._utils import _recursive_update, _remove_blanks
 
 
-def test_recursive_update_basic():
-    """Test basic recursive update."""
-    a = {"key1": "value1", "key2": {"nested": "old"}}
-    b = {"key2": {"nested": "new"}}
-
+@pytest.mark.parametrize(
+    ("a", "b", "expected"),
+    (
+        pytest.param(
+            {"apple": "red", "citrus": {"lemon": "green"}},
+            {"citrus": {"lemon": "yellow"}},
+            {"apple": "red", "citrus": {"lemon": "yellow"}},
+            id="nested_value",
+        ),
+        pytest.param(
+            {"fruit": {"citrus": {"lemon": {"color": "green", "taste": "sour"}}}},
+            {"fruit": {"citrus": {"lemon": {"color": "yellow"}}}},
+            {"fruit": {"citrus": {"lemon": {"color": "yellow", "taste": "sour"}}}},
+            id="deep_nesting",
+        ),
+        pytest.param(
+            {"apple": "red"},
+            {"apple": "green", "pear": "yellow"},
+            {"apple": "green"},
+            id="unknown_key_ignored",
+        ),
+        pytest.param(
+            {"citrus": {"lemon": "green"}},
+            {"citrus": "none"},
+            {"citrus": "none"},
+            id="dict_replaced_by_value",
+        ),
+        pytest.param(
+            {"citrus": "none"},
+            {"citrus": {"lemon": "green"}},
+            {"citrus": {"lemon": "green"}},
+            id="value_replaced_by_dict",
+        ),
+    ),
+)
+def test_recursive_update(a, b, expected):
+    """The second dict updates the first one in place, at every depth."""
     result = _recursive_update(a, b)
-
-    assert result["key1"] == "value1"
-    assert result["key2"]["nested"] == "new"
-
-
-def test_recursive_update_adds_new_keys():
-    """Test that recursive update ignores keys not in first dict."""
-    a = {"existing": "value"}
-    b = {"existing": "updated", "new_key": "new_value"}
-
-    result = _recursive_update(a, b)
-
-    assert result["existing"] == "updated"
-    assert "new_key" not in result
-
-
-def test_recursive_update_strict_mode():
-    """Test strict mode raises ValueError for unregistered keys."""
-    a = {"existing": "value"}
-    b = {"existing": "updated", "unregistered": "value"}
-
-    with pytest.raises(
-        ValueError, match="Parameter 'unregistered' found in second dict"
-    ):
-        _recursive_update(a, b, strict=True)
-
-
-def test_recursive_update_deep_nesting():
-    """Test recursive update with deep nesting (3+ levels)."""
-    a = {
-        "level1": {
-            "level2": {
-                "level3": {
-                    "level4": "old_value",
-                    "keep": "this",
-                },
-            },
-        },
-    }
-    b = {
-        "level1": {
-            "level2": {
-                "level3": {
-                    "level4": "new_value",
-                },
-            },
-        },
-    }
-
-    result = _recursive_update(a, b)
-
-    assert result["level1"]["level2"]["level3"]["level4"] == "new_value"
-    assert result["level1"]["level2"]["level3"]["keep"] == "this"
-
-
-def test_recursive_update_overwrites_non_dict():
-    """Test that non-dict values are overwritten, not merged."""
-    a = {"key": "old_value"}
-    b = {"key": "new_value"}
-
-    result = _recursive_update(a, b)
-
-    assert result["key"] == "new_value"
-
-
-def test_recursive_update_preserves_original():
-    """Test that original dict is modified in place."""
-    a = {"key": "value"}
-    b = {"key": "updated"}
-
-    result = _recursive_update(a, b)
-
-    # The function returns a, so result is the same object.
     assert result is a
-    assert a["key"] == "updated"
+    assert result == expected
 
 
 @pytest.mark.parametrize(
-    "blank_type,tree,remove_kwargs,should_remove",
-    [
-        # Test removing None values
-        (
-            "none",
-            {
-                "key1": "value",
-                "key2": None,
-                "key3": {"nested": None, "other": "keep"},
-            },
-            {"remove_none": True},
-            True,
-        ),
-        # Test keeping None values
-        (
-            "none",
-            {"key1": "value", "key2": None},
-            {"remove_none": False},
-            False,
-        ),
-        # Test removing empty strings
-        (
-            "empty_string",
-            {
-                "key1": "value",
-                "key2": "",
-                "key3": {"nested": "", "other": "keep"},
-            },
-            {"remove_str": True},
-            True,
-        ),
-        # Test keeping empty strings
-        (
-            "empty_string",
-            {"key1": "value", "key2": ""},
-            {"remove_str": False},
-            False,
-        ),
-        # Test removing empty dicts
-        (
-            "empty_dict",
-            {
-                "key1": "value",
-                "key2": {},
-                "key3": {"nested": {}, "other": "keep"},
-            },
-            {"remove_dicts": True},
-            True,
-        ),
-        # Test keeping empty dicts
-        (
-            "empty_dict",
-            {"key1": "value", "key2": {}},
-            {"remove_dicts": False},
-            False,
-        ),
-    ],
+    ("b", "key"),
+    (
+        pytest.param({"pear": "yellow"}, "pear", id="top_level"),
+        pytest.param({"citrus": {"lime": "green"}}, "lime", id="nested"),
+    ),
 )
-def test_remove_blanks_options(blank_type, tree, remove_kwargs, should_remove):
-    """Test removing or keeping different types of blank values."""
-    result = _remove_blanks(tree, **remove_kwargs)
-
-    assert "key1" in result
-
-    if should_remove:
-        # When removing, blank values should be gone
-        assert "key2" not in result
-        if "key3" in tree:
-            assert "nested" not in result["key3"]
-            assert result["key3"]["other"] == "keep"
-    else:
-        # When keeping, blank values should remain
-        assert "key2" in result
-        if blank_type == "none":
-            assert result["key2"] is None
-        elif blank_type == "empty_string":
-            assert result["key2"] == ""
-        elif blank_type == "empty_dict":
-            assert result["key2"] == {}
+def test_recursive_update_strict_rejects_unknown_key(b, key):
+    """In strict mode, a key the first dict lacks raises, at any depth."""
+    a = {"apple": "red", "citrus": {"lemon": "green"}}
+    with pytest.raises(ValueError, match=f"Parameter '{key}' found in second dict"):
+        _recursive_update(a, b, strict=True)
 
 
-def test_remove_blanks_mixed_scenario():
-    """Test removing all blank types in a mixed scenario."""
-    tree = {
-        "keep_value": "value",
-        "remove_none": None,
-        "remove_empty_str": "",
-        "remove_empty_dict": {},
-        "nested": {
-            "keep": "this",
-            "remove_none": None,
-            "remove_empty": "",
-            "deeply_nested": {
-                "remove_all": None,
+@pytest.mark.parametrize(
+    ("tree", "options", "expected"),
+    (
+        pytest.param(
+            {"apple": "red", "pear": None, "citrus": {"lemon": None, "lime": "green"}},
+            {},
+            {"apple": "red", "citrus": {"lime": "green"}},
+            id="none_removed",
+        ),
+        pytest.param(
+            {"apple": "red", "pear": None, "citrus": {"lemon": None}},
+            {"remove_none": False},
+            {"apple": "red", "pear": None, "citrus": {"lemon": None}},
+            id="none_kept",
+        ),
+        pytest.param(
+            {"apple": "red", "pear": "", "citrus": {"lemon": "", "lime": "green"}},
+            {},
+            {"apple": "red", "citrus": {"lime": "green"}},
+            id="empty_string_removed",
+        ),
+        pytest.param(
+            {"apple": "red", "pear": "", "citrus": {"lemon": ""}},
+            {"remove_str": False},
+            {"apple": "red", "pear": "", "citrus": {"lemon": ""}},
+            id="empty_string_kept",
+        ),
+        pytest.param(
+            {"apple": "red", "pear": {}, "citrus": {"lemon": {}, "lime": "green"}},
+            {},
+            {"apple": "red", "citrus": {"lime": "green"}},
+            id="empty_dict_removed",
+        ),
+        pytest.param(
+            {"apple": "red", "pear": {}, "citrus": {"lemon": {}}},
+            {"remove_dicts": False},
+            {"apple": "red", "pear": {}, "citrus": {"lemon": {}}},
+            id="empty_dict_kept",
+        ),
+        pytest.param(
+            {"fruit": {"citrus": {"lemon": None}}},
+            {},
+            {},
+            id="emptied_dicts_removed",
+        ),
+        pytest.param(
+            {
+                "apple": "red",
+                "pear": None,
+                "plum": "",
+                "fig": {},
+                "citrus": {"lime": "green", "lemon": None, "yuzu": "", "kumquat": {}},
             },
-        },
-    }
-
-    result = _remove_blanks(tree, remove_none=True, remove_str=True, remove_dicts=True)
-
-    assert result == {
-        "keep_value": "value",
-        "nested": {
-            "keep": "this",
-        },
-    }
-
-
-def test_remove_blanks_all_options_disabled():
-    """Test that nothing is removed when all options are disabled."""
-    tree: dict[str, str | dict | None] = {
-        "key1": "value",
-        "key2": None,
-        "key3": "",
-        "key4": {},
-    }
-
-    result = _remove_blanks(
-        tree, remove_none=False, remove_str=False, remove_dicts=False
-    )
-
-    assert result == tree
-
-
-def test_remove_blanks_recursive_cleanup():
-    """Test that nested dicts are cleaned recursively."""
-    tree = {
-        "level1": {
-            "level2": {
-                "level3": {
-                    "remove": None,
-                },
-            },
-        },
-    }
-
-    result = _remove_blanks(tree, remove_none=True, remove_dicts=True)
-
-    # All nested empty dicts should be removed.
-    assert result == {}
-
-
-def test_remove_blanks_preserves_non_blank_values():
-    """Test that non-blank values of all types are preserved."""
-    tree = {
-        "string": "text",
-        "number": 42,
-        "zero": 0,
-        "false": False,
-        "list": [1, 2, 3],
-        "dict": {"key": "value"},
-    }
-
-    result = _remove_blanks(tree)
-
-    assert result == tree
+            {},
+            {"apple": "red", "citrus": {"lime": "green"}},
+            id="mixed_blanks_removed",
+        ),
+        pytest.param(
+            {"apple": None, "pear": "", "plum": {}},
+            {"remove_none": False, "remove_str": False, "remove_dicts": False},
+            {"apple": None, "pear": "", "plum": {}},
+            id="nothing_removed",
+        ),
+        pytest.param(
+            {"count": 0, "ripe": False, "seeds": [1, 2], "citrus": {"lime": "green"}},
+            {},
+            {"count": 0, "ripe": False, "seeds": [1, 2], "citrus": {"lime": "green"}},
+            id="falsy_values_kept",
+        ),
+    ),
+)
+def test_remove_blanks(tree, options, expected):
+    """Blank values go at every depth, unless the option for their kind is off."""
+    assert _remove_blanks(tree, **options) == expected
