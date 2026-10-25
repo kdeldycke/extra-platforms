@@ -45,12 +45,6 @@ def test_architecture_detection():
     assert is_little_endian() or is_big_endian()
 
 
-def test_architecture_mutual_exclusion():
-    """Exactly one architecture matches the current environment."""
-    matching = {arch for arch in ALL_ARCHITECTURES if arch.current}
-    assert len(matching) == 1
-
-
 def test_architecture_logical_grouping():
     """Check partitions specific to architectures.
 

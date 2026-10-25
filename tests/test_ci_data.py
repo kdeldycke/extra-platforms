@@ -21,14 +21,12 @@ import pytest
 
 from extra_platforms import (
     AARCH64,
-    ALL_CI,
     BASH,
     DASH,
     GITHUB_CI,
     MACOS,
     POWERSHELL,
     UBUNTU,
-    UNKNOWN_CI,
     WINDOWS,
     WSL2,
     X86_64,
@@ -233,22 +231,3 @@ def test_github_runner_detection():
             POWERSHELL,
             GITHUB_CI,
         }
-
-
-def test_ci_detection():
-    # We don't always expect to detect a CI.
-    assert current_ci()
-    if is_unknown_ci():
-        assert current_ci() is UNKNOWN_CI
-        assert current_ci() not in ALL_CI
-        assert not is_any_ci()
-    else:
-        assert current_ci() is not UNKNOWN_CI
-        assert current_ci() in ALL_CI
-        assert is_any_ci()
-
-
-def test_ci_mutual_exclusion():
-    """At most one CI system matches the current environment."""
-    matching = {ci for ci in ALL_CI if ci.current}
-    assert len(matching) <= 1

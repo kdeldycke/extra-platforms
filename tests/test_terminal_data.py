@@ -20,29 +20,11 @@ import logging
 import pytest
 
 from extra_platforms import (
-    ALL_TERMINALS,
     UNKNOWN_TERMINAL,
     current_terminal,
     detection,
     invalidate_caches,
-    is_unknown_terminal,
 )
-
-
-def test_terminal_detection():
-    """Basic terminal detection sanity checks.
-
-    Family partitions and canonical flags are enforced generically in
-    ``test_trait_data.py`` and ``test_group_data.py``.
-    """
-    current_terminal_result = current_terminal()
-    assert current_terminal_result
-    if is_unknown_terminal():
-        assert current_terminal_result is UNKNOWN_TERMINAL
-        assert current_terminal_result not in ALL_TERMINALS
-    else:
-        assert current_terminal_result is not UNKNOWN_TERMINAL
-        assert current_terminal_result in ALL_TERMINALS
 
 
 @pytest.mark.parametrize(

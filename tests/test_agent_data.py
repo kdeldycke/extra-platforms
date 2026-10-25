@@ -20,34 +20,12 @@ import logging
 import pytest
 
 from extra_platforms import (
-    ALL_AGENTS,
     UNKNOWN_AGENT,
     current_agent,
     detection,
     invalidate_caches,
-    is_any_agent,
-    is_unknown_agent,
 )
 from extra_platforms.detection import _AGENT_PRESENCE_ENV_VARS
-
-
-def test_agent_detection():
-    # We don't always expect to detect an agent.
-    assert current_agent()
-    if is_unknown_agent():
-        assert current_agent() is UNKNOWN_AGENT
-        assert current_agent() not in ALL_AGENTS
-        assert not is_any_agent()
-    else:
-        assert current_agent() is not UNKNOWN_AGENT
-        assert current_agent() in ALL_AGENTS
-        assert is_any_agent()
-
-
-def test_agent_mutual_exclusion():
-    """At most one agent matches the current environment."""
-    matching = {agent for agent in ALL_AGENTS if agent.current}
-    assert len(matching) <= 1
 
 
 def _agent_log_levels(caplog):

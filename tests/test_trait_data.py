@@ -64,6 +64,20 @@ def test_trait_data_sorting(klass):
 
 
 @pytest.mark.parametrize("klass", TRAIT_CLASSES, ids=attrgetter("__name__"))
+def test_current_trait_is_consistent(klass):
+    """`current_*()`, `is_any_*()` and the `ALL_*` group agree on the current trait.
+
+    `current_*()` raises when two traits of its category match, so this also
+    checks that the traits of each category exclude each other.
+    """
+    current = getattr(extra_platforms, f"current_{klass.type_id}")()
+    all_group = getattr(extra_platforms, klass.all_group)
+    is_any = getattr(extra_platforms, all_group.detection_func_id)
+    unknown = getattr(extra_platforms, klass.unknown_symbol)
+    assert (current is not unknown) == is_any() == (current in all_group)
+
+
+@pytest.mark.parametrize("klass", TRAIT_CLASSES, ids=attrgetter("__name__"))
 def test_groups_are_subsets(klass):
     """All groups of a trait type are subsets of the corresponding ALL_* group."""
     all_group = getattr(extra_platforms, klass.all_group)
