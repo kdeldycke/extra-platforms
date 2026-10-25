@@ -61,6 +61,16 @@ HOSTNAMECTL_CLOUDLINUX = """\
 where no os-release file is readable.
 """
 
+CLOUDLINUX_OS_RELEASE = {
+    "cpe_name": "cpe:/o:cloudlinux:cloudlinux:7.6:GA:server",
+    "id": "cloudlinux",
+    "version_id": "7.6",
+    "pretty_name": "CloudLinux 7.6 (Vladimir Lyakhov)",
+    # Codename extracted from the pretty name parenthetical.
+    "version_codename": "Vladimir Lyakhov",
+}
+"""The os-release fields rebuilt from `HOSTNAMECTL_CLOUDLINUX`."""
+
 
 @pytest.fixture
 def fresh_os_release_caches():
@@ -355,18 +365,7 @@ def test_parse_cpe_name(cpe_name, expected):
     ("content", "expected"),
     (
         pytest.param("", {}, id="empty_input"),
-        pytest.param(
-            HOSTNAMECTL_CLOUDLINUX,
-            {
-                "cpe_name": "cpe:/o:cloudlinux:cloudlinux:7.6:GA:server",
-                "id": "cloudlinux",
-                "version_id": "7.6",
-                "pretty_name": "CloudLinux 7.6 (Vladimir Lyakhov)",
-                # Codename extracted from the pretty name parenthetical.
-                "version_codename": "Vladimir Lyakhov",
-            },
-            id="cloudlinux_vm",
-        ),
+        pytest.param(HOSTNAMECTL_CLOUDLINUX, CLOUDLINUX_OS_RELEASE, id="cloudlinux_vm"),
         pytest.param(
             "  Operating System: Ubuntu 22.04.3 LTS\n"
             "            Kernel: Linux 6.5.0-14-generic\n",
@@ -407,37 +406,34 @@ def test_parse_hostnamectl_content(content, expected):
 
 
 def _fake_run(stdout):
-    """Build a `subprocess.run` stand-in returning ``stdout``."""
+    """Build a `subprocess.run` stand-in returning ``stdout``.
 
-    def run(*args, **kwargs):
+    It also checks the call it stands in for: `hostnamectl status` in the C
+    locale, which keeps the labels parseable, raising on failure, and with a
+    timeout against an unresponsive bus.
+    """
+
+    def run(args, **kwargs):
+        assert tuple(args) == ("hostnamectl", "status")
+        assert kwargs["env"]["LC_ALL"] == "C"
+        assert kwargs["check"] is True
+        assert kwargs["timeout"]
         return subprocess.CompletedProcess(args, 0, stdout=stdout, stderr="")
 
     return run
 
 
-def test_hostnamectl_os_release(monkeypatch, fresh_hostnamectl_caches):
-    """A reachable systemd bus rebuilds the os-release fields."""
-    monkeypatch.setattr(shutil, "which", lambda name: "/usr/bin/hostnamectl")
-    monkeypatch.setattr(subprocess, "run", _fake_run(HOSTNAMECTL_CLOUDLINUX))
-    assert _hostnamectl_os_release() == {
-        "cpe_name": "cpe:/o:cloudlinux:cloudlinux:7.6:GA:server",
-        "id": "cloudlinux",
-        "version_id": "7.6",
-        "pretty_name": "CloudLinux 7.6 (Vladimir Lyakhov)",
-        "version_codename": "Vladimir Lyakhov",
-    }
+def _forbidden_run(*args, **kwargs):
+    """A `subprocess.run` stand-in failing the test that reaches it."""
+    raise AssertionError("hostnamectl must not be spawned")
 
 
 def test_hostnamectl_os_release_skips_missing_binary(
     monkeypatch, fresh_hostnamectl_caches
 ):
     """No subprocess is spawned on a system shipping no `hostnamectl`."""
-
-    def forbidden_run(*args, **kwargs):
-        raise AssertionError("hostnamectl must not be spawned when absent")
-
     monkeypatch.setattr(shutil, "which", lambda name: None)
-    monkeypatch.setattr(subprocess, "run", forbidden_run)
+    monkeypatch.setattr(subprocess, "run", _forbidden_run)
     assert _hostnamectl_os_release() == {}
 
 
@@ -472,7 +468,7 @@ def test_parse_os_release_falls_back_to_hostnamectl(
     monkeypatch.setattr(os.path, "isfile", lambda path: False)
     monkeypatch.setattr(shutil, "which", lambda name: "/usr/bin/hostnamectl")
     monkeypatch.setattr(subprocess, "run", _fake_run(HOSTNAMECTL_CLOUDLINUX))
-    assert _parse_os_release()["id"] == "cloudlinux"
+    assert _parse_os_release() == CLOUDLINUX_OS_RELEASE
     assert os_release_id() == "cloudlinux"
     assert linux_info() == {
         "id": "cloudlinux",
@@ -487,13 +483,9 @@ def test_parse_os_release_prefers_files_over_hostnamectl(
     monkeypatch, fresh_hostnamectl_caches, fresh_os_release_caches
 ):
     """A readable os-release file is never second-guessed through the bus."""
-
-    def forbidden_run(*args, **kwargs):
-        raise AssertionError("hostnamectl must not be spawned when a file is readable")
-
     monkeypatch.setattr(os.path, "isfile", lambda path: path == "/etc/os-release")
     monkeypatch.setattr(shutil, "which", lambda name: "/usr/bin/hostnamectl")
-    monkeypatch.setattr(subprocess, "run", forbidden_run)
+    monkeypatch.setattr(subprocess, "run", _forbidden_run)
     monkeypatch.setattr(
         "extra_platforms.platform_info.open",
         lambda *args, **kwargs: io.StringIO("ID=ubuntu\n"),
