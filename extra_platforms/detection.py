@@ -311,6 +311,32 @@ def is_aarch64() -> bool:
 
 
 @cache
+def is_arm() -> bool:
+    """Return {data}`True` if current architecture is {data}`~extra_platforms.ARM`.
+
+    ```{hint}
+    This is a fallback detection for generic ARM architecture. It will return
+    `True` for any ARM architecture not specifically covered by the more precise
+    variants: {func}`~extra_platforms.is_aarch64`,
+    {func}`~extra_platforms.is_armv5tel`,
+    {func}`~extra_platforms.is_armv6l`,
+    {func}`~extra_platforms.is_armv7l` or
+    {func}`~extra_platforms.is_armv8l`.
+    ```
+    """
+    return bool(
+        platform.machine().startswith("arm")
+        and not any((
+            is_aarch64(),
+            is_armv5tel(),
+            is_armv6l(),
+            is_armv7l(),
+            is_armv8l(),
+        ))
+    )
+
+
+@cache
 def is_armv5tel() -> bool:
     """Return {data}`True` if current architecture is
     {data}`~extra_platforms.ARMV5TEL`.
@@ -343,32 +369,6 @@ def is_armv8l() -> bool:
 
 
 @cache
-def is_arm() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.ARM`.
-
-    ```{hint}
-    This is a fallback detection for generic ARM architecture. It will return
-    `True` for any ARM architecture not specifically covered by the more precise
-    variants: {func}`~extra_platforms.is_aarch64`,
-    {func}`~extra_platforms.is_armv5tel`,
-    {func}`~extra_platforms.is_armv6l`,
-    {func}`~extra_platforms.is_armv7l` or
-    {func}`~extra_platforms.is_armv8l`.
-    ```
-    """
-    return bool(
-        platform.machine().startswith("arm")
-        and not any((
-            is_aarch64(),
-            is_armv5tel(),
-            is_armv6l(),
-            is_armv7l(),
-            is_armv8l(),
-        ))
-    )
-
-
-@cache
 def is_i386() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.I386`."""
     return platform.machine() in ("i386", "i486")
@@ -387,35 +387,17 @@ def is_i686() -> bool:
 
 
 @cache
-def is_x86_64() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.X86_64`.
-
-    ```{caution}
-    Windows returns `AMD64` in uppercase, so we normalize to lowercase.
-    ```
-
-    ```{hint}
-    Solaris and illumos answer `i86pc`, which names the machine family rather
-    than the ISA, the same way `sun4u` and `sun4v` do for {func}`is_sparc64`.
-    Both keep that string on 64-bit hardware, and neither ships a 32-bit kernel
-    any more. Measured on OpenIndiana Hipster 2026.04.
-    ```
+def is_loongarch64() -> bool:
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.LOONGARCH64`.
     """
-    return platform.machine().lower() in ("x86_64", "amd64", "i86pc")
+    return platform.machine() == "loongarch64"
 
 
 @cache
 def is_mips() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.MIPS`."""
     return platform.machine() == "mips"
-
-
-@cache
-def is_mipsel() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.MIPSEL`.
-    """
-    return platform.machine() == "mipsel"
 
 
 @cache
@@ -432,6 +414,14 @@ def is_mips64el() -> bool:
     {data}`~extra_platforms.MIPS64EL`.
     """
     return platform.machine() == "mips64el"
+
+
+@cache
+def is_mipsel() -> bool:
+    """Return {data}`True` if current architecture is
+    {data}`~extra_platforms.MIPSEL`.
+    """
+    return platform.machine() == "mipsel"
 
 
 @cache
@@ -471,6 +461,12 @@ def is_riscv64() -> bool:
 
 
 @cache
+def is_s390x() -> bool:
+    """Return {data}`True` if current architecture is {data}`~extra_platforms.S390X`."""
+    return platform.machine() == "s390x"
+
+
+@cache
 def is_sparc() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.SPARC`."""
     return platform.machine() == "sparc"
@@ -482,20 +478,6 @@ def is_sparc64() -> bool:
     {data}`~extra_platforms.SPARC64`.
     """
     return platform.machine() in ("sparc64", "sun4u", "sun4v")
-
-
-@cache
-def is_s390x() -> bool:
-    """Return {data}`True` if current architecture is {data}`~extra_platforms.S390X`."""
-    return platform.machine() == "s390x"
-
-
-@cache
-def is_loongarch64() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.LOONGARCH64`.
-    """
-    return platform.machine() == "loongarch64"
 
 
 @cache
@@ -518,6 +500,24 @@ def is_wasm64() -> bool:
     ```
     """
     return sys.platform == "emscripten" and platform.architecture()[0] == "64bit"
+
+
+@cache
+def is_x86_64() -> bool:
+    """Return {data}`True` if current architecture is {data}`~extra_platforms.X86_64`.
+
+    ```{caution}
+    Windows returns `AMD64` in uppercase, so we normalize to lowercase.
+    ```
+
+    ```{hint}
+    Solaris and illumos answer `i86pc`, which names the machine family rather
+    than the ISA, the same way `sun4u` and `sun4v` do for {func}`is_sparc64`.
+    Both keep that string on 64-bit hardware, and neither ships a 32-bit kernel
+    any more. Measured on OpenIndiana Hipster 2026.04.
+    ```
+    """
+    return platform.machine().lower() in ("x86_64", "amd64", "i86pc")
 
 
 @cache
@@ -2138,17 +2138,6 @@ def is_tmux() -> bool:
 
 
 @cache
-def is_unknown_terminal() -> bool:
-    """Return {data}`True` if current terminal is
-    {data}`~extra_platforms.UNKNOWN_TERMINAL`.
-    """
-    # Lazy import to avoid circular dependencies.
-    from .terminal_data import UNKNOWN_TERMINAL
-
-    return current_terminal() is UNKNOWN_TERMINAL
-
-
-@cache
 def is_vscode_terminal() -> bool:
     """Return {data}`True` if current terminal is
     {data}`~extra_platforms.VSCODE_TERMINAL`.
@@ -2188,6 +2177,17 @@ def is_xterm() -> bool:
 def is_zellij() -> bool:
     """Return {data}`True` if current terminal is {data}`~extra_platforms.ZELLIJ`."""
     return "ZELLIJ" in environ
+
+
+@cache
+def is_unknown_terminal() -> bool:
+    """Return {data}`True` if current terminal is
+    {data}`~extra_platforms.UNKNOWN_TERMINAL`.
+    """
+    # Lazy import to avoid circular dependencies.
+    from .terminal_data import UNKNOWN_TERMINAL
+
+    return current_terminal() is UNKNOWN_TERMINAL
 
 
 # =============================================================================

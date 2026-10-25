@@ -21,7 +21,7 @@ import os
 import re
 import subprocess
 import sys
-from itertools import chain
+from itertools import chain, pairwise
 from operator import attrgetter
 from pathlib import Path
 from types import SimpleNamespace
@@ -91,104 +91,48 @@ def test_detection_trait_functions(obj: Trait | Group):
     )
 
 
+DETECTION_SECTIONS = (
+    "Architecture detection heuristics",
+    "Platform detection heuristics",
+    "Shell detection heuristics",
+    "Terminal detection heuristics",
+    "CI/CD detection heuristics",
+    "Agent detection heuristics",
+)
+"""Comment headers splitting `detection.py`, in trait category order."""
+
+
 def test_detection_heuristics_sorting():
-    """Detection heuristics must be sorted within each section."""
+    """Each section sorts its heuristics by ID, then closes on its generic one."""
     detection_path = Path(inspect.getfile(detection_module))
-    tree = ast.parse(detection_path.read_bytes())
     source_lines = detection_path.read_text(encoding="utf-8").splitlines()
 
-    # Find section boundaries by looking for comment markers.
-    arch_section_start = None
-    platform_section_start = None
-    shell_section_start = None
-    terminal_section_start = None
-    ci_section_start = None
-    agent_section_start = None
+    starts = []
+    for header in DETECTION_SECTIONS:
+        found = [i for i, line in enumerate(source_lines, start=1) if header in line]
+        assert len(found) == 1, f"{header!r} heads {len(found)} sections"
+        starts.append(found[0])
+    assert starts == sorted(starts), "Sections are out of the trait category order"
 
-    for i, line in enumerate(source_lines, start=1):
-        if "Architecture detection heuristics" in line:
-            arch_section_start = i
-        elif "Platform detection heuristics" in line:
-            platform_section_start = i
-        elif "Shell detection heuristics" in line:
-            shell_section_start = i
-        elif "Terminal detection heuristics" in line:
-            terminal_section_start = i
-        elif "CI/CD detection heuristics" in line:
-            ci_section_start = i
-        elif "Agent detection heuristics" in line:
-            agent_section_start = i
+    heuristics = [
+        node
+        for node in ast.parse(detection_path.read_bytes()).body
+        if isinstance(node, ast.FunctionDef) and node.name.startswith("is_")
+    ]
+    # Every trait, unknown ones included, has exactly one heuristic.
+    assert sorted(node.name for node in heuristics) == sorted(
+        trait.detection_func_id for trait in ALL_TRAITS
+    )
 
-    assert arch_section_start is not None, "Architecture section not found"
-    assert platform_section_start is not None, "Platform section not found"
-    assert shell_section_start is not None, "Shell section not found"
-    assert terminal_section_start is not None, "Terminal section not found"
-    assert ci_section_start is not None, "CI/CD section not found"
-    assert agent_section_start is not None, "Agent section not found"
-
-    assert arch_section_start < platform_section_start
-    assert platform_section_start < shell_section_start
-    assert shell_section_start < terminal_section_start
-    assert terminal_section_start < ci_section_start
-    assert ci_section_start < agent_section_start
-
-    # Collect heuristic functions by section.
-    all_heuristic_ids = []
-    arch_heuristics = []
-    platform_heuristics = []
-    shell_heuristics = []
-    terminal_heuristics = []
-    ci_heuristics = []
-    agent_heuristics = []
-
-    for node in tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name.startswith("is_"):
-            func_id = node.name
-            assert func_id.islower()
-            all_heuristic_ids.append(func_id)
-
-            line_no = node.lineno
-            if line_no >= arch_section_start and line_no < platform_section_start:
-                arch_heuristics.append(func_id)
-            elif line_no >= platform_section_start and line_no < shell_section_start:
-                platform_heuristics.append(func_id)
-            elif line_no >= shell_section_start and line_no < terminal_section_start:
-                shell_heuristics.append(func_id)
-            elif line_no >= terminal_section_start and line_no < ci_section_start:
-                terminal_heuristics.append(func_id)
-            elif line_no >= ci_section_start and line_no < agent_section_start:
-                ci_heuristics.append(func_id)
-            elif line_no >= agent_section_start:
-                agent_heuristics.append(func_id)
-
-    # Check there is no extra "is_" function.
-    # All traits, including UNKNOWN traits, must have detection functions.
-    assert {f"is_{p.id}" for p in ALL_TRAITS} == set(all_heuristic_ids)
-
-    # We only allow one generic "is_unknown*()" detection heuristics per category.
-    for heuristics in [
-        arch_heuristics,
-        platform_heuristics,
-        shell_heuristics,
-        terminal_heuristics,
-        ci_heuristics,
-        agent_heuristics,
-    ]:
-        non_generic_func_ids = [
-            func_id for func_id in heuristics if func_id.startswith("is_unknown")
+    for start, end in pairwise([*starts, len(source_lines) + 1]):
+        *specific, generic = [
+            node.name for node in heuristics if start <= node.lineno < end
         ]
-
-        assert len(non_generic_func_ids) <= 1, (
-            f"More than 1 is_unknown*() detection heuristics defined in {heuristics!r}"
+        assert generic.startswith("is_unknown_"), (
+            f"Section at line {start} does not end on its is_unknown_*() heuristic"
         )
-
-        if len(non_generic_func_ids):
-            assert non_generic_func_ids[-1].startswith("is_unknown")
-
-        # Verify each category is sorted alphabetically within itself.
-        assert non_generic_func_ids == sorted(non_generic_func_ids), (
-            f"Heuristics are not sorted: {non_generic_func_ids!r}"
-        )
+        assert specific == sorted(specific), f"Heuristics are not sorted: {specific}"
+        assert not any(name.startswith("is_unknown_") for name in specific)
 
 
 def test_is_arm_depends_on_arm_variants(monkeypatch):
