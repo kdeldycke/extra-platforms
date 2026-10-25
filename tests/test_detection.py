@@ -584,14 +584,14 @@ def test_tree_from_ps_replaces_undecodable_bytes(tmp_path, monkeypatch):
     """A byte that is no UTF-8, in the arguments of another process, is replaced.
 
     The fake `ps` lists the current process, and a second one whose argument is
-    a Latin-1 `café`.
+    a Latin-1 `piña`.
     """
     ps = tmp_path / "ps"
     ps.write_text(
         f"#!{sys.executable}\n"
         "import sys\n"
         "sys.stdout.buffer.write(\n"
-        "    b'  300     1 /bin/zsh\\n  400     1 /usr/bin/python3 caf\\xe9\\n'\n"
+        "    b'  300     1 /bin/zsh\\n  400     1 /usr/bin/python3 pi\\xf1a\\n'\n"
         ")\n",
         encoding="UTF-8",
     )
