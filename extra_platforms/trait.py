@@ -24,10 +24,12 @@ computed based on environment-dependent values.
 from __future__ import annotations
 
 import platform
+import sys
 from abc import ABC
 from dataclasses import dataclass, field
 from functools import cached_property, lru_cache
-from os import environ
+from os import environ, sep
+from pathlib import Path
 from typing import ClassVar
 
 from ._docstrings import get_attribute_docstring
@@ -39,6 +41,10 @@ if TYPE_CHECKING:
     from typing import Any
 
     from .group import Group
+
+
+_PACKAGE_DIR = f"{Path(__file__).parent}{sep}"
+"""Prefix of the source files of the package, which tells its frames from a caller's."""
 
 
 class _LazyDocstring:
@@ -622,11 +628,20 @@ def _resolve_alias(id_: str) -> str:
         if id_ in trait.aliases:
             import warnings
 
+            # Point the warning at the first caller outside the package: each
+            # public entry point reaches here through a call chain of its own
+            # depth.
+            frame = sys._getframe()
+            stacklevel = 1
+            while frame.f_back and frame.f_code.co_filename.startswith(_PACKAGE_DIR):
+                frame = frame.f_back
+                stacklevel += 1
+
             warnings.warn(
                 f"'{id_}' is an alias for '{trait.id}'. "
                 f"Use the canonical ID '{trait.id}' instead.",
                 UserWarning,
-                stacklevel=4,
+                stacklevel=stacklevel,
             )
             return trait.id
     return id_

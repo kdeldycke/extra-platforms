@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from operator import attrgetter
 
 import pytest
 
@@ -59,6 +60,7 @@ from extra_platforms import (
     reduce,
     traits_from_ids,
 )
+from extra_platforms.trait import _resolve_alias
 
 
 def test_deduplication():
@@ -848,6 +850,31 @@ def test_traits_from_ids(trait_id):
     trait = traits[0]
     assert trait.id == trait_id.lower()
     assert trait in ALL_TRAITS
+
+
+@pytest.mark.parametrize(
+    ("alias", "trait"),
+    # ALL_TRAITS iterates in ID order, so sorting each set of aliases is enough
+    # to collect the same order on every xdist worker.
+    [(alias, trait) for trait in ALL_TRAITS for alias in sorted(trait.aliases)],
+    ids=lambda value: value if isinstance(value, str) else value.id,
+)
+@pytest.mark.parametrize(
+    "resolve", (traits_from_ids, extract_members), ids=attrgetter("__name__")
+)
+def test_alias_resolves_with_warning(resolve, alias, trait):
+    """An alias resolves to its trait, with a warning naming the canonical ID.
+
+    The warning points at the caller, whatever call chain inside the package
+    reached the resolution.
+    """
+    # The resolution is cached, so it warns on its first call only.
+    _resolve_alias.cache_clear()
+    with pytest.warns(
+        UserWarning, match=f"'{alias}' is an alias for '{trait.id}'"
+    ) as record:
+        assert tuple(resolve(alias.upper())) == (trait,)
+    assert record[0].filename == __file__
 
 
 @pytest.mark.parametrize("group_id", randomize_case(ALL_GROUP_IDS))
