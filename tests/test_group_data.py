@@ -193,9 +193,11 @@ def test_group_definitions(group: Group):
     if group != ALL_TRAITS:
         assert ALL_TRAITS > group
 
-    # Each group is both a subset and a superset of itself.
+    # Each group is both a subset and a superset of itself, but not a strict one.
     assert group.issubset(group)
     assert group.issuperset(group)
+    assert not group < group
+    assert not group > group
     assert group.issubset(group._members.values())
     assert group.issuperset(group._members.values())
 

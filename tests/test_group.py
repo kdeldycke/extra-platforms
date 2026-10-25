@@ -777,6 +777,10 @@ def test_group_fullyintersects():
     # LINUX should fully intersect with itself.
     assert LINUX.fullyintersects(LINUX)
 
+    # A strict superset or subset is no full intersection.
+    assert not BSD.fullyintersects(BSD_WITHOUT_MACOS)
+    assert not BSD_WITHOUT_MACOS.fullyintersects(BSD)
+
 
 def test_group_canonical_property():
     """Test that Group.canonical property works correctly."""
