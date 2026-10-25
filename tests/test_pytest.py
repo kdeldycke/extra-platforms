@@ -15,7 +15,6 @@
 from __future__ import annotations
 
 import ast
-import re
 import subprocess
 from itertools import chain
 from operator import attrgetter
@@ -31,7 +30,6 @@ from extra_platforms import (
     Trait,
     is_unknown_architecture,
 )
-from extra_platforms._deprecated import DEPRECATED_ALIASES, REMOVAL_VERSION
 from extra_platforms.pytest import (
     _DeferredCondition,
     skip_all_architectures,
@@ -92,30 +90,6 @@ def test_type_annotations():
         f"- Missing: {set(expected_annotations) - set(decorator_annotations)}\n"
         f"- Extra: {set(decorator_annotations) - set(expected_annotations)}"
     )
-
-
-# Registry-derived: every alias in DEPRECATED_ALIASES["extra_platforms.pytest"]
-# is exercised, so a new entry cannot slip in without test coverage.
-@pytest.mark.parametrize(
-    "deprecated_id,replacement_id",
-    sorted(DEPRECATED_ALIASES["extra_platforms.pytest"].items()),
-)
-def test_deprecated_decorator_aliases(deprecated_id, replacement_id):
-    """Deprecated decorators resolve to their replacement and emit a warning."""
-    with pytest.deprecated_call(
-        match=f"{re.escape(deprecated_id)} is deprecated and will be removed in "
-        f"extra-platforms {re.escape(REMOVAL_VERSION)}, "
-        f"use {re.escape(replacement_id)} instead."
-    ):
-        assert getattr(extra_platforms.pytest, deprecated_id) is getattr(
-            extra_platforms.pytest, replacement_id
-        )
-
-
-def test_unknown_pytest_attribute():
-    """Unknown attributes still raise a standard AttributeError."""
-    with pytest.raises(AttributeError, match="has no attribute 'DOES_NOT_EXIST'"):
-        _ = extra_platforms.pytest.DOES_NOT_EXIST
 
 
 @pytest.mark.parametrize(

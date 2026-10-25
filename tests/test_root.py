@@ -21,6 +21,7 @@ import os
 import re
 import subprocess
 import sys
+from importlib import import_module
 from pathlib import Path
 from textwrap import dedent
 
@@ -798,32 +799,38 @@ def test_subprocess_and_shutil_are_not_imported_at_module_level():
     )
 
 
-# Registry-derived: every alias in DEPRECATED_ALIASES["extra_platforms"] is
-# exercised, so a new entry cannot slip in without test coverage.
+# Registry-derived: every alias in DEPRECATED_ALIASES gets a case, so a new entry
+# cannot slip in without test coverage.
 @pytest.mark.parametrize(
-    "deprecated_id,replacement_id",
-    sorted(DEPRECATED_ALIASES["extra_platforms"].items()),
+    ("module_id", "deprecated_id", "replacement_id"),
+    [
+        (module_id, deprecated_id, replacement_id)
+        for module_id, aliases in sorted(DEPRECATED_ALIASES.items())
+        for deprecated_id, replacement_id in sorted(aliases.items())
+    ],
 )
-def test_deprecated_aliases(deprecated_id, replacement_id):
-    """Deprecated aliases resolve to their replacement and emit a warning."""
+def test_deprecated_aliases(module_id, deprecated_id, replacement_id):
+    """A deprecated alias resolves to its replacement, with a warning at the caller.
+
+    The alias stays out of the advertised API, unlike its replacement.
+    """
+    module = import_module(module_id)
     with pytest.deprecated_call(
         match=f"{re.escape(deprecated_id)} is deprecated and will be removed in "
         f"extra-platforms {re.escape(REMOVAL_VERSION)}, "
         f"use {re.escape(replacement_id)} instead."
-    ):
-        assert getattr(extra_platforms, deprecated_id) is getattr(
-            extra_platforms, replacement_id
-        )
+    ) as record:
+        assert getattr(module, deprecated_id) is getattr(module, replacement_id)
+    assert record[0].filename == __file__
+
+    advertised = getattr(module, "__all__", ())
+    assert deprecated_id not in advertised
+    if advertised:
+        assert replacement_id in advertised
 
 
-def test_deprecated_aliases_not_advertised():
-    """Deprecated aliases are resolvable but not part of the public API surface."""
-    for deprecated_id, replacement_id in DEPRECATED_ALIASES["extra_platforms"].items():
-        assert deprecated_id not in extra_platforms.__all__
-        assert replacement_id in extra_platforms.__all__
-
-
-def test_unknown_root_attribute():
-    """Unknown attributes still raise a standard AttributeError."""
+@pytest.mark.parametrize("module_id", sorted(DEPRECATED_ALIASES))
+def test_unknown_attribute(module_id):
+    """An unknown attribute still raises a standard AttributeError."""
     with pytest.raises(AttributeError, match="has no attribute 'DOES_NOT_EXIST'"):
-        _ = extra_platforms.DOES_NOT_EXIST
+        _ = import_module(module_id).DOES_NOT_EXIST
