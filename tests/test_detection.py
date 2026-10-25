@@ -579,6 +579,29 @@ def test_tree_from_ps_uses_portable_flags(monkeypatch):
     assert captured["args"] == ("ps", "-A", "-o", "pid=", "-o", "ppid=", "-o", "args=")
 
 
+@skip_windows
+def test_tree_from_ps_replaces_undecodable_bytes(tmp_path, monkeypatch):
+    """A byte that is no UTF-8, in the arguments of another process, is replaced.
+
+    The fake `ps` lists the current process, and a second one whose argument is
+    a Latin-1 `café`.
+    """
+    ps = tmp_path / "ps"
+    ps.write_text(
+        f"#!{sys.executable}\n"
+        "import sys\n"
+        "sys.stdout.buffer.write(\n"
+        "    b'  300     1 /bin/zsh\\n  400     1 /usr/bin/python3 caf\\xe9\\n'\n"
+        ")\n",
+        encoding="UTF-8",
+    )
+    ps.chmod(0o755)
+    monkeypatch.setenv("PATH", str(tmp_path), prepend=os.pathsep)
+    monkeypatch.setattr(os, "getpid", lambda: 300)
+    monkeypatch.setattr(detection_module, "_system_v_executable", lambda pid: "")
+    assert detection_module._tree_from_ps() == (("zsh", "/bin/zsh"),)
+
+
 @pytest.mark.parametrize(
     ("argv", "expected"),
     (

@@ -1550,6 +1550,10 @@ def _tree_from_ps() -> tuple[tuple[str, str], ...]:
             ("ps", "-A", "-o", "pid=", "-o", "ppid=", "-o", "args="),
             capture_output=True,
             text=True,
+            # Any process on the host can hold bytes that are no UTF-8 in its
+            # arguments: replace them, as _tree_from_proc does.
+            encoding="UTF-8",
+            errors="replace",
             check=True,
             timeout=2,
         )
