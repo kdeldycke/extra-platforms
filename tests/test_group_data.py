@@ -196,8 +196,8 @@ def test_group_definitions(group: Group):
     # Each group is both a subset and a superset of itself, but not a strict one.
     assert group.issubset(group)
     assert group.issuperset(group)
-    assert not group < group
-    assert not group > group
+    assert not group < tuple(group)
+    assert not group > tuple(group)
     assert group.issubset(group._members.values())
     assert group.issuperset(group._members.values())
 
