@@ -439,55 +439,74 @@ def test_parse_proc_ppid(record, expected):
     assert detection_module._parse_proc_ppid(record) == expected
 
 
-def test_tree_from_ps(monkeypatch):
-    """The ps-based walk (macOS/BSD) climbs from the current process to root."""
-    # pid ppid command: argv[0] is a path, except a login shell's "-zsh".
-    table = (
-        "  100     1 /sbin/launchd\n"
-        "  200   100 -zsh\n"
-        "  300   200 /usr/bin/python3 -m pytest\n"
-    )
+def _mock_ps(monkeypatch, table: str, links: dict[int, str] | None = None) -> None:
+    """Serve ``table`` as the output of ``ps``, seen from process 300.
+
+    ``links`` stands in for the System V procfs link to the binary of each PID.
+    Every process gets one, empty by default, so the real procfs of an illumos
+    host stays out of these made-up processes.
+    """
     monkeypatch.setattr(
         subprocess,
         "run",
         lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
     )
     monkeypatch.setattr(os, "getpid", lambda: 300)
-    # Keep the real procfs of an illumos host out of these made-up processes.
-    monkeypatch.setattr(detection_module, "_system_v_executable", lambda pid: "")
-    # Ordered nearest-first. The login shell's argv[0] (-zsh) yields no path, and
-    # "-m pytest" must not be mistaken for an interpreter-hosted shell.
-    assert detection_module._tree_from_ps() == (
-        ("python3", "/usr/bin/python3"),
-        ("zsh", ""),
-        ("launchd", "/sbin/launchd"),
+    monkeypatch.setattr(
+        detection_module, "_system_v_executable", lambda pid: (links or {}).get(pid, "")
     )
 
 
-def test_tree_from_ps_reads_system_v_executable(monkeypatch):
-    """System V procfs names the binary a bare ``argv[0]`` hides, as on illumos."""
-    table = (
-        "  100     1 /usr/lib/ssh/sshd\n"
-        "  200   100 sh probe.sh\n"
-        "  300   200 /usr/bin/python3.14 report.py\n"
-    )
-    monkeypatch.setattr(
-        subprocess,
-        "run",
-        lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
-    )
-    monkeypatch.setattr(os, "getpid", lambda: 300)
-    links = {200: "/usr/bin/i86/ksh93", 300: "/usr/bin/python3.14"}
-    monkeypatch.setattr(
-        detection_module, "_system_v_executable", lambda pid: links.get(pid, "")
-    )
-    assert detection_module._tree_from_ps() == (
-        ("python3", "/usr/bin/python3.14"),
-        ("python3", "/usr/bin/python3.14"),
-        ("ksh93", "/usr/bin/i86/ksh93"),
-        ("sh", ""),
-        ("sshd", "/usr/lib/ssh/sshd"),
-    )
+@pytest.mark.parametrize(
+    ("table", "links", "expected"),
+    (
+        pytest.param(
+            # pid ppid command: argv[0] is a path, except a login shell's "-zsh".
+            "  100     1 /sbin/launchd\n"
+            "  200   100 -zsh\n"
+            "  300   200 /usr/bin/python3 -m pytest\n",
+            None,
+            # The login shell's argv[0] yields no path, and "-m pytest" must not
+            # be mistaken for an interpreter-hosted shell.
+            (
+                ("python3", "/usr/bin/python3"),
+                ("zsh", ""),
+                ("launchd", "/sbin/launchd"),
+            ),
+            id="login_shell",
+        ),
+        pytest.param(
+            # System V procfs names the binary a bare argv[0] hides, as on illumos.
+            "  100     1 /usr/lib/ssh/sshd\n"
+            "  200   100 sh probe.sh\n"
+            "  300   200 /usr/bin/python3.14 report.py\n",
+            {200: "/usr/bin/i86/ksh93", 300: "/usr/bin/python3.14"},
+            (
+                ("python3", "/usr/bin/python3.14"),
+                ("python3", "/usr/bin/python3.14"),
+                ("ksh93", "/usr/bin/i86/ksh93"),
+                ("sh", ""),
+                ("sshd", "/usr/lib/ssh/sshd"),
+            ),
+            id="system_v_executable",
+        ),
+        pytest.param(
+            # An emulated shell is seen as the real one, and its qemu wrapper is
+            # no process of its own.
+            "  300   200 qemu-aarch64 /bin/bash\n  200     1 /sbin/launchd\n",
+            None,
+            (("bash", "/bin/bash"), ("launchd", "/sbin/launchd")),
+            id="emulated_shell",
+        ),
+    ),
+)
+def test_tree_from_ps(table, links, expected, monkeypatch):
+    """The ps-based walk (macOS/BSD) climbs from the current process to root.
+
+    The pairs come nearest-first.
+    """
+    _mock_ps(monkeypatch, table, links)
+    assert detection_module._tree_from_ps() == expected
 
 
 def test_tree_from_ps_tolerates_mocked_run(monkeypatch):
@@ -550,17 +569,16 @@ def test_interpreter_shell(tmp_path):
 def test_tree_from_ps_detects_interpreter_shell(tmp_path, monkeypatch):
     """The ps walk surfaces xonsh when python runs its launcher script."""
     launcher = tmp_path / "xonsh"
-    launcher.write_text("")
-    table = f"  300   200 /usr/bin/python3 {launcher}\n  200     1 /sbin/launchd\n"
-    monkeypatch.setattr(
-        subprocess,
-        "run",
-        lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
+    launcher.write_text("", encoding="UTF-8")
+    _mock_ps(
+        monkeypatch,
+        f"  300   200 /usr/bin/python3 {launcher}\n  200     1 /sbin/launchd\n",
     )
-    monkeypatch.setattr(os, "getpid", lambda: 300)
-    pairs = detection_module._tree_from_ps()
-    assert ("python3", "/usr/bin/python3") in pairs
-    assert ("xonsh", str(launcher)) in pairs
+    assert detection_module._tree_from_ps() == (
+        ("python3", "/usr/bin/python3"),
+        ("xonsh", str(launcher)),
+        ("launchd", "/sbin/launchd"),
+    )
 
 
 def test_tree_from_ps_uses_portable_flags(monkeypatch):
@@ -647,21 +665,6 @@ def test_unwrap_emulator(argv, expected):
 def test_pairs_from_process_busybox(executable, argv, expected):
     """BusyBox's sh and ash applets both run its Almquist shell."""
     assert detection_module._pairs_from_process(executable, argv) == expected
-
-
-def test_tree_from_ps_unwraps_emulator(monkeypatch):
-    """An emulated shell (qemu-aarch64 /bin/bash) is seen as the real shell."""
-    table = "  300   200 qemu-aarch64 /bin/bash\n  200     1 /sbin/launchd\n"
-    monkeypatch.setattr(
-        subprocess,
-        "run",
-        lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
-    )
-    monkeypatch.setattr(os, "getpid", lambda: 300)
-    pairs = detection_module._tree_from_ps()
-    assert ("bash", "/bin/bash") in pairs
-    # The qemu wrapper itself is not reported as a shell.
-    assert not any(name.startswith("qemu") for name, _ in pairs)
 
 
 def test_ppid_from_proc_tolerates_binary_status(monkeypatch):
