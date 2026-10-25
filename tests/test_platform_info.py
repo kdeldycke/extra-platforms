@@ -20,24 +20,27 @@ import os
 import platform
 import shutil
 import subprocess
-from operator import attrgetter
 
 import pytest
 
 from extra_platforms import (
-    ALL_PLATFORMS,
+    MACOS,
+    UBUNTU,
     WINDOWS,
     detection as detection_module,
     invalidate_caches,
 )
 from extra_platforms.platform_info import (
+    MACOS_CODENAMES,
     _hostnamectl_os_release,
     _parse_cpe_name,
     _parse_hostnamectl_content,
     _parse_os_release,
     _parse_os_release_content,
+    get_macos_codename,
     invalidate_os_release_cache,
     linux_info,
+    macos_info,
     os_release_id,
     windows_info,
 )
@@ -566,6 +569,46 @@ def test_invalidate_os_release_cache_clears_hostnamectl(
 
 
 @pytest.fixture
+def macos_sonoma(monkeypatch):
+    """Report the macOS version the way a macOS 14.2.1 host does."""
+    monkeypatch.setattr(platform, "mac_ver", lambda: ("14.2.1", ("", "", ""), "arm64"))
+
+
+def test_macos_info(macos_sonoma):
+    """The version splits into its parts, and its major part names the release."""
+    assert macos_info() == {
+        "version": "14.2.1",
+        "version_parts": {"major": "14", "minor": "2", "build_number": "1"},
+        "codename": "Sonoma",
+    }
+
+
+@pytest.mark.parametrize(
+    ("major", "minor", "codename"),
+    [
+        pytest.param(major, minor, codename, id=codename)
+        for (major, minor), codename in MACOS_CODENAMES.items()
+    ],
+)
+def test_get_macos_codename(major, minor, codename):
+    """Every version the table lists resolves to its own codename."""
+    assert get_macos_codename(major, minor) == codename
+
+
+def test_get_macos_codename_unknown_version():
+    """A version no codename covers raises, like the `16` of some Tahoe betas."""
+    with pytest.raises(ValueError, match=r"No macOS codename match version \('16'"):
+        get_macos_codename("16", "0")
+
+
+def test_get_macos_codename_ambiguous_version(monkeypatch):
+    """A version two codenames claim raises, instead of picking one of them."""
+    monkeypatch.setitem(MACOS_CODENAMES, ("14", "2"), "Sonoma Two")
+    with pytest.raises(ValueError, match="match multiple codenames"):
+        get_macos_codename("14", "2")
+
+
+@pytest.fixture
 def windows_11(monkeypatch):
     """Report the Windows version the way a Windows 11 24H2 guest does."""
     monkeypatch.setattr(
@@ -602,11 +645,29 @@ def test_windows_platform_info_release(monkeypatch, windows_11):
 
 
 @pytest.mark.parametrize(
-    "plat",
-    sorted(set(ALL_PLATFORMS) - {WINDOWS}, key=attrgetter("id")),
-    ids=attrgetter("id"),
+    ("plat", "version"),
+    ((MACOS, "14.2.1"), (UBUNTU, "22.04")),
+    ids=lambda value: value.id if hasattr(value, "id") else value,
 )
-def test_release_is_windows_only(plat):
+def test_release_is_windows_only(plat, version, monkeypatch, macos_sonoma):
     """No other platform fills ``release``: on macOS, CPython's own
-    ``platform.release()`` names the Darwin kernel, another meaning."""
-    assert plat.info()["release"] is None
+    ``platform.release()`` names the Darwin kernel, another meaning.
+
+    Each platform is forced current, since ``info()`` fills nothing for a
+    platform that is not.
+    """
+    monkeypatch.setitem(
+        detection_module._detection_registry, plat.detection_func_id, lambda: True
+    )
+    monkeypatch.setattr(
+        "extra_platforms.trait.linux_info",
+        lambda: {"id": "ubuntu", "version": "22.04"},
+    )
+    invalidate_caches()
+    try:
+        info = plat.info()
+        # The version proves the fetchers of the platform ran.
+        assert info["version"] == version
+        assert info["release"] is None
+    finally:
+        invalidate_caches()
