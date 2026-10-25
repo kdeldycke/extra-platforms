@@ -11,7 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Expose package-wide elements."""
+"""Expose package-wide elements.
+
+```{todo}
+Remove the deprecated aliases that `extra_platforms/_deprecated.py` registers,
+and their tests, in `14.0.0`.
+```
+"""
 
 from __future__ import annotations
 

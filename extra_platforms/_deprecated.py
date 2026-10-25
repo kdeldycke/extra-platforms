@@ -23,9 +23,8 @@ Aliases registered here are scheduled for removal in the major release recorded
 in {data}`REMOVAL_VERSION`.
 ```
 
-```{todo}
-Remove all registered aliases (and their tests) in ``14.0.0``.
-```
+The `{todo}` that schedules their removal is in the docstring of `__init__.py`,
+where the todo list collects it.
 """
 
 from __future__ import annotations

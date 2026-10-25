@@ -203,6 +203,10 @@ IBM_MAINFRAME,S390X,1
 
 <!-- mirror-end -->
 
+```{todo}
+Label the nodes of every Sankey diagram in this documentation with their icons, once the Mermaid Sankey parser accepts non-ASCII characters, as tracked in [`mermaid-js/mermaid#6822`](https://github.com/mermaid-js/mermaid/issues/6822).
+```
+
 And the same families visualized as a mindmap:
 
 ```{python:render}
