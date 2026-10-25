@@ -303,7 +303,9 @@ docs = [
   # Click Extra 9.4 adds click_extra_fail_on_warnings, which docs/conf.py sets to
   # fail the build on a fragment link that resolves nowhere.
   "click-extra[sphinx]>=9.4",
-  "furo>=2025.9.25",
+  # furo 2025.12.19 is the first release to accept Sphinx 9, which this group
+  # requires.
+  "furo>=2025.12.19",
   # myst-parser 5.1 adds the "alert" extension that renders GitHub-style
   # callouts (> [!NOTE], …) as admonitions. See docs/conf.py.
   "myst-parser>=5.1",
@@ -311,13 +313,21 @@ docs = [
   "pytest>=8.2.1",
   # We hard code links with a format that Sphinx only supports from 9.1 onwards.
   "sphinx>=9.1",
-  "sphinx-autodoc-typehints>=2.4",
-  "sphinx-copybutton>=0.5.2",
-  "sphinx-design>=0.6",
+  # sphinx-autodoc-typehints 2.0 adds the always_use_bars_union option that
+  # docs/conf.py sets.
+  "sphinx-autodoc-typehints>=2",
+  # sphinx-copybutton 0.5 inlines its icon as an SVG, which furo colors to match
+  # the theme.
+  "sphinx-copybutton>=0.5",
+  # sphinx-design 0.7 is the first release to accept Sphinx 9, which this group
+  # requires.
+  "sphinx-design>=0.7",
   # sphinxcontrib-mermaid 1.2.3 fixed mermaid_d3_zoom configuration support,
   # which docs/conf.py enables.
   "sphinxcontrib-mermaid>=1.2.3",
-  "sphinxext-opengraph>=0.13",
+  # sphinxext-opengraph 0.11 escapes HTML characters in og:description, like the
+  # <id> in the summary of the pytest page.
+  "sphinxext-opengraph>=0.11",
 ]
 
 [tool.uv]

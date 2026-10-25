@@ -514,15 +514,15 @@ provides-extras = ["pytest"]
 [package.metadata.requires-dev]
 docs = [
     { name = "click-extra", extras = ["sphinx"], marker = "python_full_version >= '3.12'", specifier = ">=9.4" },
-    { name = "furo", marker = "python_full_version >= '3.12'", specifier = ">=2025.9.25" },
+    { name = "furo", marker = "python_full_version >= '3.12'", specifier = ">=2025.12.19" },
     { name = "myst-parser", marker = "python_full_version >= '3.12'", specifier = ">=5.1" },
     { name = "pytest", marker = "python_full_version >= '3.12'", specifier = ">=8.2.1" },
     { name = "sphinx", marker = "python_full_version >= '3.12'", specifier = ">=9.1" },
-    { name = "sphinx-autodoc-typehints", marker = "python_full_version >= '3.12'", specifier = ">=2.4" },
-    { name = "sphinx-copybutton", marker = "python_full_version >= '3.12'", specifier = ">=0.5.2" },
-    { name = "sphinx-design", marker = "python_full_version >= '3.12'", specifier = ">=0.6" },
+    { name = "sphinx-autodoc-typehints", marker = "python_full_version >= '3.12'", specifier = ">=2" },
+    { name = "sphinx-copybutton", marker = "python_full_version >= '3.12'", specifier = ">=0.5" },
+    { name = "sphinx-design", marker = "python_full_version >= '3.12'", specifier = ">=0.7" },
     { name = "sphinxcontrib-mermaid", marker = "python_full_version >= '3.12'", specifier = ">=1.2.3" },
-    { name = "sphinxext-opengraph", marker = "python_full_version >= '3.12'", specifier = ">=0.13" },
+    { name = "sphinxext-opengraph", marker = "python_full_version >= '3.12'", specifier = ">=0.11" },
 ]
 test = [
     { name = "coverage", extras = ["toml"], specifier = ">=7.13" },
