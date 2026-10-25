@@ -139,6 +139,7 @@ def test_generated_decorators(obj):
         assert decorator.mark.name == "skipif"
         assert bool(decorator.mark.args[0]) is skips
         assert decorator.mark.kwargs["reason"] == f"{reason_prefix} {obj.name}"
+        assert decorator.__doc__ is not None
         assert decorator.__doc__.startswith(doc_prefix)
         assert symbol_link in decorator.__doc__
 
@@ -170,7 +171,7 @@ def test_unless_any_architecture():
 )
 def test_deferred_condition(result, invert, expected):
     """The condition runs only when its value is read, inverted on request."""
-    calls = []
+    calls: list[None] = []
 
     def condition():
         calls.append(None)
