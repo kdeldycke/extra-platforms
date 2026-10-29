@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- **Breaking:** Drop Python 3.10, past its end of life: `extra-platforms` now needs Python 3.11 or newer.
+
 ## [`13.13.0` (2026-10-25)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...v13.13.0)
 
 > [!NOTE]

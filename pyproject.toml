@@ -182,7 +182,7 @@ license = "Apache-2.0"
 license-files = [ "license" ]
 authors = [ { name = "Kevin Deldycke", email = "kevin@deldycke.com" } ]
 # Python versions and their status: https://devguide.python.org/versions/
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 # See: https://pypi.org/pypi?%3Aaction=list_classifiers
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -239,7 +239,6 @@ classifiers = [
   "Operating System :: RISC OS",
   "Operating System :: Unix",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -297,7 +296,6 @@ test = [
   # requests 2.34 is the first version to ship inline type hints (PEP 561),
   # which lets us drop the types-requests stub package from the typing group.
   "requests>=2.34",
-  "tomli>=2.3; python_version<'3.11'",
 ]
 docs = [
   # Click Extra 9.4 adds click_extra_fail_on_warnings, which docs/conf.py sets to
@@ -478,8 +476,8 @@ warn_unused_configs = true
 overrides = [
   # extra_platforms._docs imports click_extra (a docs-group dependency) to
   # render the Sphinx trait/group tables. The lint job installs every group, so
-  # this only matters in a venv without the docs group, like one on Python 3.10
-  # or 3.11: it tolerates the missing import, but mypy still reports the `Any`
+  # this only matters in a venv without the docs group, like one on Python 3.11:
+  # it tolerates the missing import, but mypy still reports the `Any`
   # that `render_table` then returns.
   { module = "click_extra.*", ignore_missing_imports = true },
   # `repomatic run mypy` checks at the `requires-python` floor. Sphinx 9.1.0

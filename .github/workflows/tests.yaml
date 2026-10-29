@@ -139,7 +139,7 @@ jobs:
       # The docs group needs Python >= 3.12 (`dependency-groups.docs` in pyproject.toml). Requested on an older cell,
       # it makes uv replace the cell's interpreter with a newer one, so the cell would test the wrong Python. Those
       # cells run without it, the way distribution builds do.
-      WITH_DOCS_GROUP: ${{ !contains(fromJSON('["3.10", "3.11"]'), matrix.python-version) }}
+      WITH_DOCS_GROUP: ${{ !contains(fromJSON('["3.11"]'), matrix.python-version) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa # v10.3.1
@@ -264,7 +264,7 @@ jobs:
       - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa # v10.3.1
         with:
           # windows-2025 runners have only Python 3.9 installed.
-          python-version: ${{ matrix.os == 'windows-2025' && '3.10' || ''}}
+          python-version: ${{ matrix.os == 'windows-2025' && '3.11' || ''}}
           version: "0.13.4"
       - name: Run stable CLI
         run: |

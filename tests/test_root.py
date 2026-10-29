@@ -21,6 +21,7 @@ import os
 import re
 import subprocess
 import sys
+import tomllib
 from importlib import import_module
 from pathlib import Path
 from textwrap import dedent
@@ -80,12 +81,6 @@ from extra_platforms.detection import _CATEGORY_ENV_SIGNALS, _unrecognized_messa
 from extra_platforms.pytest import skip_hermetic_build
 
 from .conftest import github_runner_os
-
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib  # type: ignore[import-not-found]
-
 
 PROJECT_ROOT = Path(__file__).parent.parent
 """The root path of the project."""
