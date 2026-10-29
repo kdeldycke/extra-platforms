@@ -6,17 +6,16 @@ flowchart LR
     beautifulsoup4(["`beautifulsoup4`"])
     docutils(["`docutils`"])
     markdown_it_py(["`markdown-it-py`"])
-    typing_extensions(["`typing-extensions`"])
     accessible_pygments(["`accessible-pygments`"])
     click_0(["`click`"])
     cloup(["`cloup`"])
     colorama(["`colorama`"])
-    exceptiongroup(["`exceptiongroup`"])
     mdit_py_plugins(["`mdit-py-plugins`"])
     packaging(["`packaging`"])
     pyyaml(["`pyyaml`"])
     sphinx_basic_ng(["`sphinx-basic-ng`"])
     tabulate(["`tabulate`"])
+    typing_extensions(["`typing-extensions`"])
     wcmatch(["`wcmatch`"])
     wcwidth(["`wcwidth`"])
     alabaster(["`alabaster`"])
@@ -43,6 +42,7 @@ flowchart LR
     sphinxcontrib_jsmath(["`sphinxcontrib-jsmath`"])
     sphinxcontrib_qthelp(["`sphinxcontrib-qthelp`"])
     sphinxcontrib_serializinghtml(["`sphinxcontrib-serializinghtml`"])
+    tomli(["`tomli`"])
     urllib3(["`urllib3`"])
 
     subgraph ext_pytest [--extra pytest]
@@ -66,7 +66,6 @@ flowchart LR
         pytest{{"`pytest`"}}
         requests{{"`requests >=2.34`"}}
         pytest_xdist{{"`pytest-xdist >=3.7`"}}
-        tomli{{"`tomli >=2.3`"}}
         coverage{{"`coverage >=7.13`"}}
         pytest_github_actions_annotate_failures{{"`pytest-github-actions-annotate-failures >=0.3`"}}
         pytest_randomly{{"`pytest-randomly >=4`"}}
@@ -101,9 +100,7 @@ flowchart LR
     click_extra --> boltons
     click_extra --> deepmerge
     pytest --> pygments
-    pytest --> tomli
     pytest --> colorama
-    pytest --> exceptiongroup
     pytest --> packaging
     pytest --> iniconfig
     pytest --> pluggy
@@ -142,7 +139,6 @@ flowchart LR
     markdown_it_py --> mdurl
     accessible_pygments --> pygments
     cloup --> click_0
-    exceptiongroup --> typing_extensions
     mdit_py_plugins --> markdown_it_py
     sphinx_basic_ng --> sphinx
     tabulate --> wcwidth
@@ -168,7 +164,6 @@ flowchart LR
     click coverage "https://pypi.org/project/coverage/" _blank
     click deepmerge "https://pypi.org/project/deepmerge/" _blank
     click docutils "https://pypi.org/project/docutils/" _blank
-    click exceptiongroup "https://pypi.org/project/exceptiongroup/" _blank
     click execnet "https://pypi.org/project/execnet/" _blank
     click extra_platforms "https://pypi.org/project/extra-platforms/" _blank
     click furo "https://pypi.org/project/furo/" _blank
@@ -232,7 +227,6 @@ flowchart LR
     style sphinx_design stroke-width:3px
     style sphinxcontrib_mermaid stroke-width:3px
     style sphinxext_opengraph stroke-width:3px
-    style tomli stroke-width:3px
     style ext_pytest_pytest stroke-width:3px,stroke-dasharray:5 5
     style grp_docs_pytest stroke-width:3px,stroke-dasharray:5 5
 
