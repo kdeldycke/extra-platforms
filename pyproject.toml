@@ -546,8 +546,8 @@ run.patch = [ "subprocess" ]
 # suite fails below this. Every cell of the test matrix must clear it on its
 # own, and coverage here swings with the runner, since most of the suite skips
 # whatever does not match the host platform. The lowest cells are the macOS
-# ones without the docs group: keep the floor a few points under them.
-report.fail_under = 85
+# ones without the docs group: keep the floor about one point under them.
+report.fail_under = 86.5
 report.precision = 2
 
 [tool.bumpversion]
