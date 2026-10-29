@@ -331,7 +331,7 @@ docs = [
 ]
 
 [tool.uv]
-required-version = ">=0.11.15"
+required-version = ">=0.12.22"
 dependency-groups.docs = { requires-python = ">= 3.12" }
 # Cooldown period: 7-day buffer before using newly released packages.
 # Relative dates are fine here because the Renovate lock-maintenance job
