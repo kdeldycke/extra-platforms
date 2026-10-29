@@ -338,33 +338,25 @@ def is_arm() -> bool:
 
 @cache
 def is_armv5tel() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.ARMV5TEL`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.ARMV5TEL`."""
     return platform.machine() == "armv5tel"
 
 
 @cache
 def is_armv6l() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.ARMV6L`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.ARMV6L`."""
     return platform.machine() == "armv6l"
 
 
 @cache
 def is_armv7l() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.ARMV7L`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.ARMV7L`."""
     return platform.machine() == "armv7l"
 
 
 @cache
 def is_armv8l() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.ARMV8L`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.ARMV8L`."""
     return platform.machine() == "armv8l"
 
 
@@ -388,9 +380,7 @@ def is_i686() -> bool:
 
 @cache
 def is_loongarch64() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.LOONGARCH64`.
-    """
+    """Return {data}`True` on {data}`~extra_platforms.LOONGARCH64`."""
     return platform.machine() == "loongarch64"
 
 
@@ -402,25 +392,19 @@ def is_mips() -> bool:
 
 @cache
 def is_mips64() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.MIPS64`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.MIPS64`."""
     return platform.machine() == "mips64"
 
 
 @cache
 def is_mips64el() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.MIPS64EL`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.MIPS64EL`."""
     return platform.machine() == "mips64el"
 
 
 @cache
 def is_mipsel() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.MIPSEL`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.MIPSEL`."""
     return platform.machine() == "mipsel"
 
 
@@ -438,25 +422,19 @@ def is_ppc64() -> bool:
 
 @cache
 def is_ppc64le() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.PPC64LE`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.PPC64LE`."""
     return platform.machine() == "ppc64le"
 
 
 @cache
 def is_riscv32() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.RISCV32`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.RISCV32`."""
     return platform.machine() == "riscv32"
 
 
 @cache
 def is_riscv64() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.RISCV64`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.RISCV64`."""
     return platform.machine() == "riscv64"
 
 
@@ -474,9 +452,7 @@ def is_sparc() -> bool:
 
 @cache
 def is_sparc64() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.SPARC64`.
-    """
+    """Return {data}`True` if the architecture is {data}`~extra_platforms.SPARC64`."""
     return platform.machine() in ("sparc64", "sun4u", "sun4v")
 
 
@@ -522,8 +498,9 @@ def is_x86_64() -> bool:
 
 @cache
 def is_unknown_architecture() -> bool:
-    """Return {data}`True` if current architecture is
-    {data}`~extra_platforms.UNKNOWN_ARCHITECTURE`.
+    """Return {data}`True` if the architecture is unknown.
+
+    See {data}`~extra_platforms.UNKNOWN_ARCHITECTURE`.
     """
     # Lazy import to avoid circular dependencies.
     from .architecture_data import UNKNOWN_ARCHITECTURE
@@ -638,8 +615,7 @@ def is_chromeos() -> bool:
 
 @cache
 def is_clearlinux() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.CLEARLINUX`.
+    """Return {data}`True` if current platform is {data}`~extra_platforms.CLEARLINUX`.
 
     ```{note}
     Clear Linux OS sets ``ID=clear-linux-os`` in its ``os-release`` file. Being a
@@ -654,9 +630,7 @@ def is_clearlinux() -> bool:
 
 @cache
 def is_cloudlinux() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.CLOUDLINUX`.
-    """
+    """Return {data}`True` if the platform is {data}`~extra_platforms.CLOUDLINUX`."""
     return os_release_id() == "cloudlinux"
 
 
@@ -680,17 +654,13 @@ def is_debian() -> bool:
 
 @cache
 def is_dragonfly_bsd() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.DRAGONFLY_BSD`.
-    """
+    """Return {data}`True` if the platform is {data}`~extra_platforms.DRAGONFLY_BSD`."""
     return sys.platform.startswith("dragonfly")
 
 
 @cache
 def is_endeavouros() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.ENDEAVOUROS`.
-    """
+    """Return {data}`True` if the platform is {data}`~extra_platforms.ENDEAVOUROS`."""
     return os_release_id() == "endeavouros"
 
 
@@ -714,8 +684,7 @@ def is_freebsd() -> bool:
 
 @cache
 def is_generic_linux() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.GENERIC_LINUX`.
+    """Return {data}`True` if the platform is {data}`~extra_platforms.GENERIC_LINUX`.
 
     Matches when running on a Linux kernel whose distribution no other platform
     identifies: a distribution with an `os-release` ID no platform recognizes yet,
@@ -776,9 +745,7 @@ def is_hurd() -> bool:
 
 @cache
 def is_ibm_powerkvm() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.IBM_POWERKVM`.
-    """
+    """Return {data}`True` if the platform is {data}`~extra_platforms.IBM_POWERKVM`."""
     return os_release_id() == "ibm_powerkvm"
 
 
@@ -859,9 +826,7 @@ def is_manjaro() -> bool:
 
 @cache
 def is_midnightbsd() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.MIDNIGHTBSD`.
-    """
+    """Return {data}`True` if the platform is {data}`~extra_platforms.MIDNIGHTBSD`."""
     return sys.platform.startswith("midnightbsd") or os_release_id() == "midnightbsd"
 
 
@@ -1000,9 +965,7 @@ def is_rocky() -> bool:
 
 @cache
 def is_scientific() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.SCIENTIFIC`.
-    """
+    """Return {data}`True` if the platform is {data}`~extra_platforms.SCIENTIFIC`."""
     return os_release_id() == "scientific"
 
 
@@ -1067,9 +1030,7 @@ def is_solus() -> bool:
 
 @cache
 def is_sourcemage() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.SOURCEMAGE`.
-    """
+    """Return {data}`True` if the platform is {data}`~extra_platforms.SOURCEMAGE`."""
     return os_release_id() == "sourcemage"
 
 
@@ -1100,9 +1061,7 @@ def is_ubuntu() -> bool:
 
 @cache
 def is_ultramarine() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.ULTRAMARINE`.
-    """
+    """Return {data}`True` if the platform is {data}`~extra_platforms.ULTRAMARINE`."""
     return os_release_id() == "ultramarine"
 
 
@@ -1170,8 +1129,9 @@ def is_xenserver() -> bool:
 
 @cache
 def is_unknown_platform() -> bool:
-    """Return {data}`True` if current platform is
-    {data}`~extra_platforms.UNKNOWN_PLATFORM`.
+    """Return {data}`True` if the platform is unknown.
+
+    See {data}`~extra_platforms.UNKNOWN_PLATFORM`.
     """
     # Lazy import to avoid circular dependencies.
     from .platform_data import UNKNOWN_PLATFORM
@@ -1185,8 +1145,9 @@ def is_unknown_platform() -> bool:
 
 
 def _busybox_applet(name: str) -> str:
-    """Name the shell a BusyBox applet runs: ``ash`` for its Almquist shell
-    applets, the applet name otherwise.
+    """Name the shell a BusyBox applet runs.
+
+    That is ``ash`` for its Almquist shell applets, the applet name otherwise.
     """
     return "ash" if name in _BUSYBOX_ASH_APPLETS else name
 
@@ -1203,8 +1164,9 @@ def _shell_executable_names() -> frozenset[str]:
 
 
 def _shell_stem(path: str | os.PathLike[str]) -> str:
-    """Lowercased file name of a shell path, suffix dropped, resolved through
-    symlinks when the file exists.
+    """Lowercased file name of a shell path, with its suffix dropped.
+
+    The path is resolved through symlinks when the file exists.
 
     ``/bin/sh`` on a system linking it to ``/bin/bash`` gives ``"bash"``, and
     ``pwsh.exe`` gives ``"pwsh"``. A link keeps its own name when its target goes
@@ -2031,9 +1993,7 @@ def is_zsh() -> bool:
 
 @cache
 def is_unknown_shell() -> bool:
-    """Return {data}`True` if current shell is
-    {data}`~extra_platforms.UNKNOWN_SHELL`.
-    """
+    """Return {data}`True` if the shell is {data}`~extra_platforms.UNKNOWN_SHELL`."""
     # Lazy import to avoid circular dependencies.
     from .shell_data import UNKNOWN_SHELL
 
@@ -2053,9 +2013,7 @@ def is_alacritty() -> bool:
 
 @cache
 def is_apple_terminal() -> bool:
-    """Return {data}`True` if current terminal is
-    {data}`~extra_platforms.APPLE_TERMINAL`.
-    """
+    """Return {data}`True` in {data}`~extra_platforms.APPLE_TERMINAL`."""
     return environ.get("TERM_PROGRAM") == "Apple_Terminal"
 
 
@@ -2079,17 +2037,13 @@ def is_ghostty() -> bool:
 
 @cache
 def is_gnome_terminal() -> bool:
-    """Return {data}`True` if current terminal is
-    {data}`~extra_platforms.GNOME_TERMINAL`.
-    """
+    """Return {data}`True` in {data}`~extra_platforms.GNOME_TERMINAL`."""
     return "GNOME_TERMINAL_SCREEN" in environ
 
 
 @cache
 def is_gnu_screen() -> bool:
-    """Return {data}`True` if current terminal is
-    {data}`~extra_platforms.GNU_SCREEN`.
-    """
+    """Return {data}`True` if the terminal is {data}`~extra_platforms.GNU_SCREEN`."""
     return "STY" in environ
 
 
@@ -2143,9 +2097,7 @@ def is_tmux() -> bool:
 
 @cache
 def is_vscode_terminal() -> bool:
-    """Return {data}`True` if current terminal is
-    {data}`~extra_platforms.VSCODE_TERMINAL`.
-    """
+    """Return {data}`True` in {data}`~extra_platforms.VSCODE_TERMINAL`."""
     return environ.get("TERM_PROGRAM") == "vscode"
 
 
@@ -2157,9 +2109,7 @@ def is_wezterm() -> bool:
 
 @cache
 def is_windows_terminal() -> bool:
-    """Return {data}`True` if current terminal is
-    {data}`~extra_platforms.WINDOWS_TERMINAL`.
-    """
+    """Return {data}`True` in {data}`~extra_platforms.WINDOWS_TERMINAL`."""
     return "WT_SESSION" in environ
 
 
@@ -2185,8 +2135,9 @@ def is_zellij() -> bool:
 
 @cache
 def is_unknown_terminal() -> bool:
-    """Return {data}`True` if current terminal is
-    {data}`~extra_platforms.UNKNOWN_TERMINAL`.
+    """Return {data}`True` if the terminal is unknown.
+
+    See {data}`~extra_platforms.UNKNOWN_TERMINAL`.
     """
     # Lazy import to avoid circular dependencies.
     from .terminal_data import UNKNOWN_TERMINAL
@@ -2410,8 +2361,7 @@ def is_codex() -> bool:
 
 @cache
 def is_copilot_cli() -> bool:
-    """Return {data}`True` if current agent is
-    {data}`~extra_platforms.COPILOT_CLI`.
+    """Return {data}`True` if current agent is {data}`~extra_platforms.COPILOT_CLI`.
 
     ```{seealso}
     GitHub Copilot CLI sets the `COPILOT_CLI` environment variable in its
@@ -2449,8 +2399,7 @@ def is_cursor() -> bool:
 
 @cache
 def is_gemini_cli() -> bool:
-    """Return {data}`True` if current agent is
-    {data}`~extra_platforms.GEMINI_CLI`.
+    """Return {data}`True` if current agent is {data}`~extra_platforms.GEMINI_CLI`.
 
     ```{seealso}
     Gemini CLI sets the `GEMINI_CLI` environment variable in the subprocesses it
@@ -2478,9 +2427,7 @@ def is_pi() -> bool:
 
 @cache
 def is_unknown_agent() -> bool:
-    """Return {data}`True` if current agent is
-    {data}`~extra_platforms.UNKNOWN_AGENT`.
-    """
+    """Return {data}`True` if the agent is {data}`~extra_platforms.UNKNOWN_AGENT`."""
     # Lazy import to avoid circular dependencies.
     from .agent_data import UNKNOWN_AGENT
 
@@ -2554,8 +2501,7 @@ def _single_match(
 
 @cache
 def current_architecture(strict: bool = False) -> Architecture:
-    """Returns the {class}`~extra_platforms.Architecture` matching the
-    current environment.
+    """Return the {class}`~extra_platforms.Architecture` of the environment.
 
     Returns {data}`~extra_platforms.UNKNOWN_ARCHITECTURE` if not running inside a
     recognized architecture. To raise an error instead, set `strict` to `True`.
@@ -2586,8 +2532,7 @@ def current_architecture(strict: bool = False) -> Architecture:
 
 @cache
 def current_platform(strict: bool = False) -> Platform:
-    """Always returns the best matching {class}`~extra_platforms.Platform`
-    for the current environment.
+    """Return the best matching {class}`~extra_platforms.Platform`, always.
 
     Returns {data}`~extra_platforms.UNKNOWN_PLATFORM` if not running inside a recognized
     platform. To raise an error instead, set `strict` to `True`.

@@ -14,7 +14,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 from operator import attrgetter
 
 import pytest
@@ -58,6 +57,10 @@ from extra_platforms import (
     traits_from_ids,
 )
 from extra_platforms.trait import _resolve_alias
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 def test_deduplication():
@@ -209,7 +212,7 @@ def test_canonical_property():
     ),
 )
 def test_set_operation(method, first, others, expected):
-    """A set operation acts on the members, and keeps the metadata of the first group."""
+    """A set operation acts on the members, keeping the first group's metadata."""
     result = getattr(first, method)(*others)
     assert result.member_ids == frozenset(expected)
     # The members match what the same operation gives on native sets.

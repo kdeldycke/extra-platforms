@@ -96,8 +96,9 @@ def extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
 
 @dataclass(frozen=True)
 class Group(_Identifiable):
-    """A {class}`~extra_platforms.Group` identifies a collection of
-    {class}`~extra_platforms.Trait` members.
+    """A {class}`~extra_platforms.Group` names a collection of traits.
+
+    Its members are {class}`~extra_platforms.Trait` instances.
 
     Additionally of the common fields inherited from `_Identifiable`,
     each group provides:
@@ -131,7 +132,7 @@ class Group(_Identifiable):
         `# type: ignore` comments throughout the class.
         ```
         """
-        return cast(_MembersMapping, self.members)
+        return cast("_MembersMapping", self.members)
 
     def __post_init__(self):
         """Normalize members to a sorted, deduplicated mapping.
@@ -207,7 +208,8 @@ class Group(_Identifiable):
             f"- **Canonical**: ``{self.canonical}`` {'⬥' if self.canonical else ''}",
             f"- **Detection function**: {{func}}`~{self.detection_func_id}`",
             (
-                f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
+                "- **Pytest decorators**: "
+                f"{{deco}}`~pytest.{self.skip_decorator_id}` / "
                 f"{{deco}}`~pytest.{self.unless_decorator_id}`"
             ),
         ))
@@ -242,8 +244,7 @@ class Group(_Identifiable):
 
     @cached_property
     def canonical(self) -> bool:
-        """Returns {data}`True` if the group is canonical (non-overlapping),
-        {data}`False` otherwise.
+        """Return {data}`True` if the group is canonical (non-overlapping).
 
         A canonical group is one that does not share any members with other canonical
         groups. All canonical groups are non-overlapping.
@@ -273,9 +274,7 @@ class Group(_Identifiable):
         return len(self._members) > 0
 
     def __contains__(self, item: Trait | str) -> bool:
-        """Test if {class}`~extra_platforms.Trait` object or its ID is
-        part of the group.
-        """
+        """Test if a {class}`~extra_platforms.Trait` or its ID is in the group."""
         if isinstance(item, str):
             return item in self._members
         return item.id in self._members and self._members[item.id] == item
@@ -342,8 +341,7 @@ class Group(_Identifiable):
         return self_members > other_members
 
     def union(self, *others: _TNestedReferences) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with members from
-        the group and all others.
+        """Return a new {class}`~extra_platforms.Group` with members of all groups.
 
         ```{caution}
         The new {class}`~extra_platforms.Group` inherits the metadata of the
@@ -361,8 +359,9 @@ class Group(_Identifiable):
     __or__ = union
 
     def intersection(self, *others: _TNestedReferences) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with members
-        common to the group and all others.
+        """Return a new {class}`~extra_platforms.Group` with the shared members.
+
+        A member is kept when the group and all others contain it.
 
         ```{caution}
         The new {class}`~extra_platforms.Group` inherits the metadata of the
@@ -378,8 +377,9 @@ class Group(_Identifiable):
     __and__ = intersection
 
     def difference(self, *others: _TNestedReferences) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with members in the
-        group that are not in the others.
+        """Return a new {class}`~extra_platforms.Group` without the others' members.
+
+        A member is kept when the group contains it and no other does.
 
         ```{caution}
         The new {class}`~extra_platforms.Group` inherits the metadata of the
@@ -395,8 +395,9 @@ class Group(_Identifiable):
     __sub__ = difference
 
     def symmetric_difference(self, other: _TNestedReferences) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with members in
-        either the group or other but not both.
+        """Return a new {class}`~extra_platforms.Group` with unshared members.
+
+        A member is kept when either the group or other contains it, but not both.
 
         ```{caution}
         The new {class}`~extra_platforms.Group` inherits the metadata of the
@@ -445,8 +446,7 @@ class Group(_Identifiable):
         return self.copy(members=set(self._members.values()) | {member})
 
     def remove(self, member: Trait | str) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with the specified
-        trait removed.
+        """Return a new {class}`~extra_platforms.Group` without the given trait.
 
         Raises {exc}`KeyError` if the trait is not in the group.
 
@@ -466,8 +466,7 @@ class Group(_Identifiable):
         )
 
     def discard(self, member: Trait | str) -> Group:
-        """Return a new {class}`~extra_platforms.Group` with the specified
-        trait removed if present.
+        """Return a new {class}`~extra_platforms.Group` without the trait, if present.
 
         Unlike {meth}`remove`, this does not raise an error if the trait
         is not found.

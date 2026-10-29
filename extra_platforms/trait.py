@@ -335,7 +335,8 @@ class Trait(_Identifiable, ABC):
             f"- **Reference**: <{self.url}>_",
             f"- **Detection function**: {{func}}`~{self.detection_func_id}`",
             (
-                f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
+                "- **Pytest decorators**: "
+                f"{{deco}}`~pytest.{self.skip_decorator_id}` / "
                 f"{{deco}}`~pytest.{self.unless_decorator_id}`"
             ),
         ))
@@ -431,8 +432,9 @@ class Architecture(Trait):
 
 @dataclass(frozen=True)
 class Platform(Trait):
-    """A platform can identify multiple distributions or OSes with the same
-    characteristics.
+    """A platform identifies one or more operating systems.
+
+    Distributions or systems that share the same characteristics share a platform.
 
     See the ``platform_data`` module for the granularity policy deciding when a
     distribution gets a dedicated platform, and when it is folded into an
@@ -522,14 +524,16 @@ class Shell(Trait):
 
     @property
     def executable_names(self) -> frozenset[str]:
-        """Every file name the shell's binary goes by: its
-        {attr}`~extra_platforms.Trait.id` and its {attr}`executables`.
+        """Every file name the shell's binary goes by.
+
+        That is its {attr}`~extra_platforms.Trait.id` and its {attr}`executables`.
         """
         return frozenset((self.id, *self.executables))
 
     def __post_init__(self) -> None:
-        """Validate the executables on top of the trait checks: lowercase, and
-        distinct from the ID.
+        """Validate the executables on top of the trait checks.
+
+        Each executable must be lowercase and distinct from the ID.
         """
         super().__post_init__()
         for executable in self.executables:

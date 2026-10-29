@@ -187,7 +187,7 @@ def test_pyproject_classifiers():
 
 def test_module_root_declarations():
     def fetch_module_implements(module) -> set[str]:
-        """Fetch all methods, classes and constants implemented locally in a module's file."""
+        """Fetch the methods, classes and constants a module's own file defines."""
         members = set()
         tree = ast.parse(Path(inspect.getfile(module)).read_bytes())
         for node in tree.body:

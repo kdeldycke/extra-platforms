@@ -26,7 +26,6 @@ import inspect
 import re
 import subprocess
 import sys
-from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -45,6 +44,10 @@ from extra_platforms import (
     Trait,
 )
 from extra_platforms.pytest import unless_linux
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 # Third-party modules the docs build imports: the theme and every extension
 # docs/conf.py loads that Sphinx does not ship.
@@ -136,7 +139,8 @@ def find_links_with_text(html: str, link_text: str) -> list[str]:
 
     Returns a list of href values for <a> tags whose plain text equals the
     specified text, so a link to `LINUX_LIKE` never stands in for one to `LINUX`.
-    The function handles nested tags like <a href="..."><code><span>text</span></code></a>.
+    The function handles nested tags, like
+    <a href="..."><code><span>text</span></code></a>.
     """
     results = []
     # Pattern to match <a ...href="..."...>...</a> including nested tags.
@@ -151,7 +155,7 @@ def find_links_with_text(html: str, link_text: str) -> list[str]:
 
 
 def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> bool:
-    """Check if the HTML contains a link with the given text pointing to the expected href.
+    """Check that the HTML links the given text to the expected href.
 
     :param html: The HTML content to search.
     :param text: The link text to find (like ``"AARCH64"``, ``"is_linux()"``).
@@ -736,8 +740,8 @@ def test_all_crossreferences_point_to_correct_pages(
 
     expected_page = get_expected_page_for_symbol(role, symbol)
 
-    # Strip domain qualifier if present (e.g. "extra_platforms:extra_platforms.pytest.skip_linux"
-    # becomes "extra_platforms.pytest.skip_linux").
+    # Strip the domain qualifier if present: "extra_platforms:" goes from
+    # "extra_platforms:extra_platforms.pytest.skip_linux".
     symbol_bare = symbol.split(":", 1)[-1] if ":" in symbol else symbol
 
     symbol_clean = symbol.split(".")[-1]
@@ -907,7 +911,7 @@ def test_no_links_to_generic_api_page(built_docs, page):
 
 
 def test_generic_api_page_no_stolen_targets(built_docs):
-    """Enforce the policy that extra_platforms.html does not steal targets from specialized pages.
+    """The extra_platforms.html page steals no target from a specialized page.
 
     The ``extra_platforms.rst`` file uses ``:noindex:`` and ``:no-members:``
     on all submodule ``automodule`` directives to prevent members documented

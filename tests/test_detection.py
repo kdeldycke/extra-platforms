@@ -374,7 +374,7 @@ def test_environment_variable_ci_detection(monkeypatch, fresh_caches):
 
 
 def test_detection_no_circular_dependencies(fresh_caches):
-    """Test that detection functions can all be called without circular dependency issues."""
+    """Every detection function runs without a circular dependency."""
     # Call all trait detection functions.
     for trait in ALL_TRAITS:
         # Access the current property, which calls the detection function.
@@ -872,9 +872,7 @@ def test_current_shell_prefers_a_running_pwsh_over_configured_shell(
     ],
 )
 def test_shell_from_path(path, expected_id):
-    """A shell path resolves to its catalog entry by file name, or to the
-    unknown shell.
-    """
+    """A shell path resolves to its catalog entry by name, or to the unknown shell."""
     from extra_platforms import shell_from_path
 
     assert shell_from_path(path).id == expected_id

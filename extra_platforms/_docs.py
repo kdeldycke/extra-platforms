@@ -30,7 +30,6 @@ time.
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 from operator import attrgetter
 from textwrap import dedent, indent
 
@@ -38,6 +37,8 @@ from click_extra import TableFormat, render_table
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from extra_platforms import Group, Trait
 
 
@@ -103,13 +104,23 @@ def generate_trait_table(
     )
 
     if include_hint:
-        hint = dedent(f"""
-            ```{{hint}}
-            The {{data}}`~{trait_class.unknown_symbol}` trait represents an unrecognized
-            {trait_class.type_name}. It is not included in the {{data}}`~{trait_class.all_group}` group,
-            and will be returned by {{func}}`~current_{trait_class.type_id}` if the current
-            {trait_class.type_name} is not recognized.
-            ```""")
+        hint = "\n" + "\n".join((
+            "```{hint}",
+            (
+                f"The {{data}}`~{trait_class.unknown_symbol}` trait represents an "
+                "unrecognized"
+            ),
+            (
+                f"{trait_class.type_name}. It is not included in the "
+                f"{{data}}`~{trait_class.all_group}` group,"
+            ),
+            (
+                f"and will be returned by {{func}}`~current_{trait_class.type_id}` "
+                "if the current"
+            ),
+            f"{trait_class.type_name} is not recognized.",
+            "```",
+        ))
         table = f"{table}\n{hint}"
 
     return table

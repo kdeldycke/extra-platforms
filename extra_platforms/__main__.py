@@ -20,7 +20,6 @@ import json
 import logging
 import sys
 import unicodedata
-from collections.abc import Iterable
 
 from . import (
     Group,
@@ -34,6 +33,10 @@ from . import (
     current_terminal,
     current_traits,
 )
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 # Section separator width.
 _SEPARATOR_WIDTH = 60

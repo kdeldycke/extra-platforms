@@ -74,8 +74,9 @@ CLOUDLINUX_OS_RELEASE = {
 
 @pytest.fixture
 def fresh_os_release_caches():
-    """Clear derived os-release caches around a test patching
-    ``_parse_os_release``.
+    """Clear derived os-release caches around a test.
+
+    The test patches ``_parse_os_release``.
 
     Only the caches of ``os_release_id()`` and ``linux_info()`` are cleared:
     ``_parse_os_release()`` itself is replaced by ``monkeypatch``, whose
@@ -641,8 +642,10 @@ def test_windows_platform_info_release(monkeypatch, windows_11, fresh_caches):
 def test_release_is_windows_only(
     plat, version, monkeypatch, macos_sonoma, fresh_caches
 ):
-    """No other platform fills ``release``: on macOS, CPython's own
-    ``platform.release()`` names the Darwin kernel, another meaning.
+    """No other platform fills ``release``.
+
+    On macOS, CPython's own ``platform.release()`` names the Darwin kernel,
+    another meaning.
 
     Each platform is forced current, since ``info()`` fills nothing for a
     platform that is not.
