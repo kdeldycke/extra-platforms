@@ -49,7 +49,6 @@ TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
-    from typing import Any
 
     from _pytest.mark.structures import MarkDecorator
 
@@ -599,16 +598,3 @@ if TYPE_CHECKING:
     unless_xterm: MarkDecorator
     unless_zellij: MarkDecorator
     unless_zsh: MarkDecorator
-
-
-def __getattr__(name: str) -> Any:
-    """Resolve deprecated decorator aliases lazily.
-
-    Implements the [PEP 562](https://peps.python.org/pep-0562/) module
-    ``__getattr__`` hook: it only fires for attributes not found in the module,
-    so current symbols are served without overhead. Deprecated symbols emit a
-    {exc}`DeprecationWarning`. See ``_deprecated.py``.
-    """
-    from ._deprecated import resolve_deprecated
-
-    return resolve_deprecated(__name__, name)

@@ -11,13 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Expose package-wide elements.
-
-```{todo}
-Remove the deprecated aliases that `extra_platforms/_deprecated.py` registers,
-and their tests, in `14.0.0`.
-```
-"""
+"""Expose package-wide elements."""
 
 from __future__ import annotations
 
@@ -482,7 +476,6 @@ _initialize_group_detection_functions()
 # `_initialize_group_detection_functions()` above.
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Any
 
     def is_any_agent() -> bool: ...
     def is_any_architecture() -> bool: ...
@@ -991,15 +984,3 @@ Sorting of `__all__` is enforced by `ruff` via rule `RUF022`.
 Completeness (no missing or extra entries) is checked in unittests.
 ```
 """
-
-
-def __getattr__(name: str) -> Any:
-    """Resolve deprecated symbols lazily, emitting a {exc}`DeprecationWarning`.
-
-    Implements the [PEP 562](https://peps.python.org/pep-0562/) module
-    ``__getattr__`` hook: it only fires for attributes not found in the module,
-    so current symbols are served without overhead. See ``_deprecated.py``.
-    """
-    from ._deprecated import resolve_deprecated
-
-    return resolve_deprecated(__name__, name)

@@ -99,7 +99,6 @@ DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "_build"
 # entry to re-arm anchor checks the day its module joins the documentation.
 UNRENDERED_MODULES = frozenset((
     "extra_platforms/__main__.py",
-    "extra_platforms/_deprecated.py",
     "extra_platforms/_docs.py",
 ))
 

@@ -89,7 +89,6 @@ Group - Collection of Traits with set-like operations (group.py)
 | `group_data.py`        | All `Group` instances and ID collections                                              |
 | `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                                  |
 | `__main__.py`          | `extra-platforms` console script and `python -m extra_platforms` entry point          |
-| `_deprecated.py`       | Alias registry behind the `DeprecationWarning` shims for renamed symbols              |
 | `_docs.py`             | Documentation-build-only table and diagram generators; needs the `docs` group         |
 | `_docstrings.py`       | Attribute-docstring extraction that fills each trait and group `__doc__`              |
 | `_types.py`            | Type aliases                                                                          |

@@ -6,6 +6,7 @@
 > This version is **not released yet** and is under active development.
 
 - **Breaking:** Drop Python 3.10, past its end of life: `extra-platforms` now needs Python 3.11 or newer.
+- **Breaking:** Remove the deprecated aliases `EXTRA_GROUPS`, `NON_OVERLAPPING_GROUPS`, `GUIX_BUILD`, `TUMBLEWEED`, `is_guix_build()`, `is_tumbleweed()` and their `skip_*` and `unless_*` decorators. Use `NON_CANONICAL_GROUPS`, `CANONICAL_GROUPS`, `HERMETIC_BUILD` and `OPENSUSE` instead.
 
 ## [`13.13.0` (2026-10-25)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...v13.13.0)
 
