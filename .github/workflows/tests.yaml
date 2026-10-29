@@ -96,9 +96,9 @@ jobs:
       metadata: ${{ steps.metadata.outputs.metadata }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa # v10.3.1
         with:
-          version: "0.13.0"
+          version: "0.13.4"
       - name: Run repomatic show-metadata
         id: metadata
         # `--exclude-newer-package repomatic=P0D` exempts this one package from the
@@ -109,7 +109,7 @@ jobs:
         # `sync-workflow-pins` recognizes and moves it with the pin.
         run: >
           uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==8.0.0' show-metadata
-          --format github-json --output "$GITHUB_OUTPUT"
+          --output-format github-json --output "$GITHUB_OUTPUT"
           test_matrix test_matrix_pr
 
   tests:
@@ -142,9 +142,9 @@ jobs:
       WITH_DOCS_GROUP: ${{ !contains(fromJSON('["3.10", "3.11"]'), matrix.python-version) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa # v10.3.1
         with:
-          version: "0.13.0"
+          version: "0.13.4"
       - name: Install Python ${{ matrix.python-version }}
         # If UV cannot find the requested Python version, it exits with code 2, which let the job pass unnoticed on
         # Windows. So we force the shell to bash, even on Windows, and "set -e" to ensure any error in the install
@@ -181,7 +181,7 @@ jobs:
         # plugin. See `[tool.coverage]` in pyproject.toml for the rationale.
         run: >
           uv --no-progress run --frozen -- coverage run --module pytest
-          --numprocesses=auto --dist=loadgroup
+          --numprocesses=logical --dist=loadgroup
       - name: Coverage report
         # Merge the data files of the xdist workers, then check them against
         # `[tool.coverage] report.fail_under`, which every cell must clear on its
@@ -190,6 +190,15 @@ jobs:
         run: >
           uv --no-progress run --frozen -- coverage combine --quiet
           && uv --no-progress run --frozen -- coverage report --show-missing
+      - name: Check the coverage floor
+        # Warns when the floor sits more than two points under the coverage total,
+        # so the ratchet gets raised instead of drifting. `!cancelled()` reads the
+        # data after a failed test too: its total stays sound.
+        if: ${{ !cancelled() }}
+        run: >
+          uv --no-progress run --frozen -- coverage json --quiet -o "${{ runner.temp }}/coverage.json"
+          && uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==8.0.0' lint-coverage
+          --report "${{ runner.temp }}/coverage.json" --no-fatal
 
       # click-extra owns the test-suite engine and CLI, and ships in the locked
       # `docs` group installed above, so it runs from uv.lock rather than a
@@ -252,11 +261,11 @@ jobs:
       # on a throwaway runner.
       UV_EXCLUDE_NEWER: P0D
     steps:
-      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa # v10.3.1
         with:
           # windows-2025 runners have only Python 3.9 installed.
           python-version: ${{ matrix.os == 'windows-2025' && '3.10' || ''}}
-          version: "0.13.0"
+          version: "0.13.4"
       - name: Run stable CLI
         run: |
           uvx    extra-platforms

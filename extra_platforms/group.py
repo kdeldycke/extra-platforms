@@ -20,7 +20,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field, replace
 from functools import cache, cached_property
 from types import MappingProxyType
-from typing import TypeVar, cast
+from typing import ClassVar, TypeVar, cast
 
 from ._docstrings import get_attribute_docstring
 from .trait import Trait, _Identifiable, _resolve_alias
@@ -110,7 +110,7 @@ class Group(_Identifiable):
     - various {class}`set`-like operations (union, intersection, difference, etc.).
     """
 
-    unknown_symbol = "UNKNOWN"
+    unknown_symbol: ClassVar[str] = "UNKNOWN"
     """Groups use `UNKNOWN` instead of `UNKNOWN_GROUP`."""
 
     members: Iterable[Trait] = field(repr=False, default_factory=tuple)
@@ -200,17 +200,17 @@ class Group(_Identifiable):
             lines.append("")
 
         # Add metadata.
-        lines.append(f"- **ID**: ``{self.id}``")
-        lines.append(f"- **Name**: {self.name}")
-        lines.append(f"- **Icon**: {self.icon}")
-        lines.append(
-            f"- **Canonical**: ``{self.canonical}`` {'⬥' if self.canonical else ''}"
-        )
-        lines.append(f"- **Detection function**: {{func}}`~{self.detection_func_id}`")
-        lines.append(
-            f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
-            f"{{deco}}`~pytest.{self.unless_decorator_id}`"
-        )
+        lines.extend((
+            f"- **ID**: ``{self.id}``",
+            f"- **Name**: {self.name}",
+            f"- **Icon**: {self.icon}",
+            f"- **Canonical**: ``{self.canonical}`` {'⬥' if self.canonical else ''}",
+            f"- **Detection function**: {{func}}`~{self.detection_func_id}`",
+            (
+                f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
+                f"{{deco}}`~pytest.{self.unless_decorator_id}`"
+            ),
+        ))
 
         # Add list of members with links to their definitions.
         member_links = [f"{{data}}`~{m.symbol_id}`" for m in self]
@@ -274,7 +274,8 @@ class Group(_Identifiable):
 
     def __contains__(self, item: Trait | str) -> bool:
         """Test if {class}`~extra_platforms.Trait` object or its ID is
-        part of the group."""
+        part of the group.
+        """
         if isinstance(item, str):
             return item in self._members
         return item.id in self._members and self._members[item.id] == item

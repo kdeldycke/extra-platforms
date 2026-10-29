@@ -375,13 +375,20 @@ show-fixes = true
 # Enable reformatting of code snippets in docstrings.
 # https://docs.astral.sh/ruff/formatter/#docstring-formatting
 format.docstring-code-format = true
+# D209: Multi-line docstring closing quotes should be on a separate line.
+#   See: https://docs.astral.sh/ruff/rules/new-line-after-last-paragraph/
 # PLW1514: `open` and friends called without an explicit `encoding` argument.
 #   Windows defaults text I/O to cp1252, so a bare `open()`, `read_text()` or
 #   `write_text()` breaks on non-ASCII content, and only on Windows runners.
 #   Preview rule; its type inference misses unannotated `Path` locals, so
 #   PEP 597's `PYTHONWARNDEFAULTENCODING=1` remains the complete runtime net.
 #   See: https://docs.astral.sh/ruff/rules/unspecified-encoding/
-lint.extend-select = [ "PLW1514" ]
+# RUF100, RUF102, RUF103, RUF104: a `# noqa` that no rule needs, that names a
+#   rule ruff does not know, or that is malformed, is a suppression nobody
+#   reviews. Correct under the full rule set only: selected alone, RUF100 reads
+#   every `# noqa` as unused.
+#   See: https://docs.astral.sh/ruff/rules/unused-noqa/
+lint.extend-select = [ "D209", "PLW1514", "RUF100", "RUF102", "RUF103", "RUF104" ]
 # D301: Use `r"""` if any backslashes in a docstring.
 #   A Click command's docstring is its `--help` text, and `\b` marks a paragraph
 #   Click must not rewrap. The raw prefix this rule asks for turns that backspace
@@ -503,6 +510,9 @@ markers = [
   "network: Tests that require network access (excluded with -m 'not network').",
   "xdist_group: Tests sharing one pytest-xdist worker (declared for runs without pytest-xdist).",
 ]
+# Fail on an unknown configuration key or an undeclared marker, instead of a warning.
+strict_config = true
+strict_markers = true
 # Restrict collection to the test suite, so pytest never descends into the
 # package or an installed copy of it in dual-copy builds.
 testpaths = [ "tests" ]
@@ -627,9 +637,6 @@ exclude = [
   "bitdefender\\.com",
   # npmjs.com returns 403 to bots.
   "^https://www\\.npmjs\\.com/package/.*$",
-  # star-history.com builds its chart and its anchor with JavaScript, so both
-  # the link and its fragment are invisible to lychee.
-  "^https://star-history\\.com/.*$",
   # githubstatus.com returns 405 to HEAD requests from bots.
   "githubstatus\\.com",
   # claude.ai sits behind a Cloudflare challenge that answers 403 to some
@@ -652,11 +659,18 @@ lint-repo.declined.pytest.addopts."--cov-report=term" = """\
   The tests workflow runs pytest under coverage run, which also counts the lines the pytest11 plugin imports before \
   pytest-cov could start.\
   """
-lint-repo.declined.pytest.addopts."--numprocesses=auto" = """\
+lint-repo.declined.pytest.addopts."--numprocesses=logical" = """\
+  The tests workflow passes all xdist flags, so a from-source build runs plain pytest without pytest-xdist.\
+  """
+lint-repo.declined.pytest.addopts."--dist=loadgroup" = """\
   The tests workflow passes all xdist flags, so a from-source build runs plain pytest without pytest-xdist.\
   """
 lint-repo.declined.pytest.markers."once: Tests that only need to run once, not across the full CI matrix." = """\
   No test here is matrix-insensitive yet: nearly every test checks platform-specific behavior on each cell.\
+  """
+lint-repo.declined.ruff.lint.extend-select.PLC0415 = """\
+  Function-level imports are deliberate here: they break the import cycle around the data registries and keep rare \
+  modules off the import path of the package. See Imports in claude.md.\
   """
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false

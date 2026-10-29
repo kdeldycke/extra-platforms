@@ -26,7 +26,8 @@ from extra_platforms import (
 
 def test_executable_names():
     """The shells whose binary is not named after their ID declare it, and
-    every other shell answers to its ID alone."""
+    every other shell answers to its ID alone.
+    """
     assert KSH.executable_names == {"ksh", "ksh93"}
     assert NUSHELL.executable_names == {"nushell", "nu"}
     assert POWERSHELL.executable_names == {"powershell", "pwsh", "powershell_ise"}

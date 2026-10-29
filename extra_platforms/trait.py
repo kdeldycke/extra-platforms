@@ -328,15 +328,17 @@ class Trait(_Identifiable, ABC):
             alias_list = ", ".join(f"``{a}``" for a in sorted(self.aliases))
         else:
             alias_list = "-"
-        lines.append(f"- **Aliases**: {alias_list}")
-        lines.append(f"- **Name**: {self.name}")
-        lines.append(f"- **Icon**: {self.icon}")
-        lines.append(f"- **Reference**: <{self.url}>_")
-        lines.append(f"- **Detection function**: {{func}}`~{self.detection_func_id}`")
-        lines.append(
-            f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
-            f"{{deco}}`~pytest.{self.unless_decorator_id}`"
-        )
+        lines.extend((
+            f"- **Aliases**: {alias_list}",
+            f"- **Name**: {self.name}",
+            f"- **Icon**: {self.icon}",
+            f"- **Reference**: <{self.url}>_",
+            f"- **Detection function**: {{func}}`~{self.detection_func_id}`",
+            (
+                f"- **Pytest decorators**: {{deco}}`~pytest.{self.skip_decorator_id}` / "
+                f"{{deco}}`~pytest.{self.unless_decorator_id}`"
+            ),
+        ))
 
         # Add list of groups this trait belongs to.
         group_links = [
@@ -521,12 +523,14 @@ class Shell(Trait):
     @property
     def executable_names(self) -> frozenset[str]:
         """Every file name the shell's binary goes by: its
-        {attr}`~extra_platforms.Trait.id` and its {attr}`executables`."""
+        {attr}`~extra_platforms.Trait.id` and its {attr}`executables`.
+        """
         return frozenset((self.id, *self.executables))
 
     def __post_init__(self) -> None:
         """Validate the executables on top of the trait checks: lowercase, and
-        distinct from the ID."""
+        distinct from the ID.
+        """
         super().__post_init__()
         for executable in self.executables:
             assert executable, f"{self.id} executable name cannot be empty."
@@ -597,13 +601,13 @@ class Terminal(Trait):
 class CI(Trait):
     """A CI/CD environment identifies a continuous integration platform."""
 
-    type_name = "CI system"
+    type_name: ClassVar[str] = "CI system"
     """Override the default `ci` type name."""
 
-    all_group = "ALL_CI"
+    all_group: ClassVar[str] = "ALL_CI"
     """Override the default `ALL_CIS` name with a more natural `ALL_CI`."""
 
-    doc_page = "ci.md"
+    doc_page: ClassVar[str] = "ci.md"
     """Override the default `cis.md` filename."""
 
 

@@ -873,7 +873,8 @@ def test_current_shell_prefers_a_running_pwsh_over_configured_shell(
 )
 def test_shell_from_path(path, expected_id):
     """A shell path resolves to its catalog entry by file name, or to the
-    unknown shell."""
+    unknown shell.
+    """
     from extra_platforms import shell_from_path
 
     assert shell_from_path(path).id == expected_id

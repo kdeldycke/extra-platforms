@@ -543,9 +543,8 @@ def invalidate_caches():
 
     # Invalidate cached properties of trait classes.
     for member in ALL_TRAITS:
-        if "current" in vars(member):
-            # Use object.__delattr__ to bypass frozen dataclass restriction.
-            object.__delattr__(member, "current")
+        # Pop from the instance dictionary: a frozen dataclass blocks `del`.
+        vars(member).pop("current", None)
 
     # Invalidate every cached callable of the detection module: trait
     # heuristics, current_*() resolvers, and private signal caches (like the
