@@ -104,23 +104,17 @@ def generate_trait_table(
     )
 
     if include_hint:
-        hint = "\n" + "\n".join((
-            "```{hint}",
-            (
-                f"The {{data}}`~{trait_class.unknown_symbol}` trait represents an "
-                "unrecognized"
-            ),
-            (
-                f"{trait_class.type_name}. It is not included in the "
-                f"{{data}}`~{trait_class.all_group}` group,"
-            ),
-            (
-                f"and will be returned by {{func}}`~current_{trait_class.type_id}` "
-                "if the current"
-            ),
-            f"{trait_class.type_name} is not recognized.",
-            "```",
-        ))
+        unknown = f"{{data}}`~{trait_class.unknown_symbol}`"
+        all_group = f"{{data}}`~{trait_class.all_group}`"
+        resolver = f"{{func}}`~current_{trait_class.type_id}`"
+        name = trait_class.type_name
+        hint = dedent(f"""
+            ```{{hint}}
+            The {unknown} trait represents an unrecognized
+            {name}. It is not included in the {all_group} group,
+            and will be returned by {resolver} if the current
+            {name} is not recognized.
+            ```""")
         table = f"{table}\n{hint}"
 
     return table

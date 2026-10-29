@@ -753,9 +753,8 @@ def test_subprocess_and_shutil_are_not_imported_at_module_level():
     """No module of the package imports `subprocess` or `shutil` when it loads.
 
     Both serve only the detection paths that spawn a process, which import them
-    in the function body. The check reads the source, because `sys.modules`
-    cannot tell: on Python 3.10 the standard library `platform` module imports
-    `subprocess` itself.
+    in the function body. The check reads the source rather than `sys.modules`,
+    so it also covers the modules the package loads lazily, like `_windows.py`.
     """
     offenders = []
     package_dir = Path(inspect.getfile(extra_platforms)).parent
