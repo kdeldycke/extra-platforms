@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 This file provides guidance to [Claude Code](https://claude.ai/code) when working with code in this repository.
 
@@ -106,12 +106,12 @@ Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trai
 
 ## Documentation requirements
 
-### Scope of `CLAUDE.md` versus `readme.md`
+### Scope of `AGENTS.md` versus `readme.md`
 
-- **`CLAUDE.md`**: contributor and Claude-focused directives, covering code style, testing guidelines, design principles, and internal development guidance.
+- **`AGENTS.md`**: contributor and Claude-focused directives, covering code style, testing guidelines, design principles, and internal development guidance.
 - **`readme.md`**: user-facing documentation, covering installation, usage, and the public API.
 
-When adding new content, decide whether it helps end users (`readme.md`) or contributors and Claude working on the codebase (`CLAUDE.md`).
+When adding new content, decide whether it helps end users (`readme.md`) or contributors and Claude working on the codebase (`AGENTS.md`).
 
 Update `readme.md` whenever you add or change a public API, class, or function.
 

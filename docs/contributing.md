@@ -5,8 +5,8 @@ To add a new Linux distribution, you can get inspiration from these pull request
 - [#156](https://github.com/kdeldycke/extra-platforms/pull/156)
 - [#94](https://github.com/kdeldycke/extra-platforms/pull/94)
 
-## `claude.md` file
+## `AGENTS.md` file
 
-```{include} ../claude.md
+```{include} ../AGENTS.md
 :start-line: 2
 ```

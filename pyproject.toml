@@ -505,7 +505,7 @@ overrides = [
 # pytest under `coverage run`, not here: keeping both out of addopts lets a
 # from-source build (Guix, Nixpkgs, ...) run a plain `pytest` without having to
 # provide pytest-xdist or coverage just to start. See "Testing guidelines" in
-# claude.md.
+# AGENTS.md.
 addopts = [
   # Show the N slowest tests.
   "--durations=10",
@@ -680,7 +680,7 @@ lint-repo.declined.pytest.markers."once: Tests that only need to run once, not a
   """
 lint-repo.declined.ruff.lint.extend-select.PLC0415 = """\
   Function-level imports are deliberate here: they break the import cycle around the data registries and keep rare \
-  modules off the import path of the package. See Imports in claude.md.\
+  modules off the import path of the package. See Imports in AGENTS.md.\
   """
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
