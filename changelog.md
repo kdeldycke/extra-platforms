@@ -5,6 +5,8 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Fix `test_typing_is_not_imported` failing on CPython 3.13.13 and later 3.13 releases. Closes [#745](https://github.com/kdeldycke/extra-platforms/issues/745)
+
 ## [`14.0.0` (2026-10-31)](https://github.com/kdeldycke/extra-platforms/compare/v13.13.0...v14.0.0)
 
 > [!NOTE]

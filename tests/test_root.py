@@ -739,7 +739,7 @@ def test_docstrings_are_generated_on_first_read(flags):
 
 
 def test_typing_is_not_imported():
-    """Importing the package loads no `typing`, which nothing needs at runtime.
+    """The package loads no `typing` itself, which nothing needs at runtime.
 
     Annotations need `typing` under `TYPE_CHECKING` only. A dataclass reads a
     `ClassVar` field at runtime, so the class metadata of traits and groups goes
@@ -747,9 +747,15 @@ def test_typing_is_not_imported():
 
     Runs in a fresh interpreter, and only counts the modules the package import
     adds: a coverage hook started with the interpreter may load `typing` first.
+
+    The count also starts after `dataclasses` loads. `dataclasses` imports
+    `inspect`, which imports `typing` from CPython 3.13.13 on the 3.13 branch
+    ([python/cpython#146491](https://github.com/python/cpython/pull/146491)).
+    On these releases the test misses a `typing` import by the package. Every
+    other Python version still catches it.
     """
     script = (
-        "import sys; before = set(sys.modules); import extra_platforms; "
+        "import sys, dataclasses; before = set(sys.modules); import extra_platforms; "
         "print(' '.join(sorted(set(sys.modules) - before)))"
     )
     result = subprocess.run(
