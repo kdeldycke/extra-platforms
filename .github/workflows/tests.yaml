@@ -98,7 +98,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
-          version: "0.13.4"
+          version: "0.13.5"
       - name: Run repomatic show-metadata
         id: metadata
         # `--exclude-newer-package repomatic=P0D` exempts this one package from the
@@ -144,7 +144,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
-          version: "0.13.4"
+          version: "0.13.5"
       - name: Install Python ${{ matrix.python-version }}
         # If UV cannot find the requested Python version, it exits with code 2, which let the job pass unnoticed on
         # Windows. So we force the shell to bash, even on Windows, and "set -e" to ensure any error in the install
@@ -265,7 +265,7 @@ jobs:
         with:
           # windows-2025 runners have only Python 3.9 installed.
           python-version: ${{ matrix.os == 'windows-2025' && '3.11' || ''}}
-          version: "0.13.4"
+          version: "0.13.5"
       - name: Run stable CLI
         run: |
           uvx    extra-platforms
