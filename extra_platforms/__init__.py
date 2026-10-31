@@ -23,6 +23,16 @@ checked in unittests.
 The content of `pytest.py` file is not imported here to make dependency on
 Pytest optional.
 ```
+
+```{todo}
+In `14.1.0`, stop [Click Extra](https://github.com/kdeldycke/click-extra) from
+importing private names of this package: `_utils._remove_blanks()`,
+`_utils._recursive_update()` and `_types._TNestedReferences`. Click Extra requires
+`extra-platforms>=13.4` with no upper bound, so a release that drops these names
+breaks every published Click Extra. Publish the type alias under a public name,
+and let Click Extra vendor the two dict helpers. Keep the private names, with a
+`DeprecationWarning`, until a major release removes them.
+```
 """
 
 from __future__ import annotations

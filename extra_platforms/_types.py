@@ -28,6 +28,12 @@ These types are designed to be imported as follows:
 because `TYPE_CHECKING` is always evaluated to `False` at runtime, and to
 `True` [during static analysis](https://github.com/python/mypy/blob/6aa44da/mypy/reachability.py#L152).
 ```
+
+```{important}
+[Click Extra](https://github.com/kdeldycke/click-extra) imports
+`_TNestedReferences` from this module to type its test-suite fields: keep the
+name stable.
+```
 """
 
 from __future__ import annotations
