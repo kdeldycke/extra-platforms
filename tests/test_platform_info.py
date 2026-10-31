@@ -594,11 +594,14 @@ def test_get_macos_codename_unknown_version():
         get_macos_codename("16", "0")
 
 
-def test_get_macos_codename_ambiguous_version(monkeypatch):
-    """A version two codenames claim raises, instead of picking one of them."""
-    monkeypatch.setitem(MACOS_CODENAMES, ("14", "2"), "Sonoma Two")
-    with pytest.raises(ValueError, match="match multiple codenames"):
-        get_macos_codename("14", "2")
+def test_macos_codenames_key_each_major_one_way():
+    """A major version keys its codenames either alone or with its minor versions.
+
+    Both ways at once would make a version match two codenames.
+    """
+    by_major_alone = {major for major, minor in MACOS_CODENAMES if minor is None}
+    with_minor = {major for major, minor in MACOS_CODENAMES if minor is not None}
+    assert not by_major_alone & with_minor
 
 
 @pytest.fixture

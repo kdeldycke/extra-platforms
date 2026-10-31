@@ -1,6 +1,6 @@
 version = 1
 revision = 5
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.13'",
     "python_full_version == '3.12.*'",
@@ -471,7 +471,7 @@ test = [
 docs = ">=3.12"
 
 [package.metadata]
-requires-dist = [{ name = "pytest", marker = "extra == 'pytest'", specifier = ">=8.2.1" }]
+requires-dist = [{ name = "pytest", marker = "extra == 'pytest'", specifier = ">=8.4" }]
 provides-extras = ["pytest"]
 
 [package.metadata.requires-dev]
@@ -479,7 +479,7 @@ docs = [
     { name = "click-extra", extras = ["sphinx"], marker = "python_full_version >= '3.12'", specifier = ">=9.4" },
     { name = "furo", marker = "python_full_version >= '3.12'", specifier = ">=2025.12.19" },
     { name = "myst-parser", marker = "python_full_version >= '3.12'", specifier = ">=5.1" },
-    { name = "pytest", marker = "python_full_version >= '3.12'", specifier = ">=8.2.1" },
+    { name = "pytest", marker = "python_full_version >= '3.12'", specifier = ">=8.4" },
     { name = "sphinx", marker = "python_full_version >= '3.12'", specifier = ">=9.1" },
     { name = "sphinx-autodoc-typehints", marker = "python_full_version >= '3.12'", specifier = ">=2" },
     { name = "sphinx-copybutton", marker = "python_full_version >= '3.12'", specifier = ">=0.5" },
@@ -489,7 +489,7 @@ docs = [
 ]
 test = [
     { name = "coverage", extras = ["toml"], specifier = ">=7.13" },
-    { name = "pytest" },
+    { name = "pytest", specifier = ">=9" },
     { name = "pytest-github-actions-annotate-failures", specifier = ">=0.3" },
     { name = "pytest-randomly", specifier = ">=4" },
     { name = "pytest-xdist", extras = ["psutil"], specifier = ">=3.7" },

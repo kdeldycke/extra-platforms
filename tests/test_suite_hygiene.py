@@ -16,9 +16,16 @@
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).parent.parent
+"""The root path of the project."""
+
+ENCODING_ARGUMENT = re.compile(r"""encoding=(["'])(?P<name>utf-?8)\1""", re.IGNORECASE)
+"""An ``encoding`` keyword argument naming UTF-8, in any spelling."""
 
 
 def _collect(hash_seed: str) -> list[str]:
@@ -58,3 +65,22 @@ def test_collection_order_ignores_hash_seed():
     assert sorted(first) == sorted(second)
     unstable = sorted({a.split("[")[0] for a, b in zip(first, second) if a != b})
     assert not unstable, f"Collection order follows the hash seed in: {unstable}"
+
+
+def test_encoding_argument_spelling_is_uniform():
+    """Every ``encoding`` argument naming UTF-8 spells it ``UTF-8``.
+
+    Python reads ``utf-8``, ``utf8`` and ``UTF-8`` the same, so a mixed spelling
+    carries no meaning and only makes a reader stop to check it.
+    """
+    offenders = [
+        f"{path.relative_to(PROJECT_ROOT)}:{line_number}"
+        for folder in ("docs", "extra_platforms", "tests")
+        for path in sorted((PROJECT_ROOT / folder).rglob("*.py"))
+        for line_number, line in enumerate(
+            path.read_text(encoding="UTF-8").splitlines(), start=1
+        )
+        for match in ENCODING_ARGUMENT.finditer(line)
+        if match["name"] != "UTF-8"
+    ]
+    assert not offenders, f"Spell the encoding UTF-8 in: {', '.join(offenders)}"

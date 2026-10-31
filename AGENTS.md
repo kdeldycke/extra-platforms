@@ -73,35 +73,36 @@ Group - Collection of Traits with set-like operations (group.py)
 
 ### Module layout
 
-| Module                 | Purpose                                                                               |
-| ---------------------- | ------------------------------------------------------------------------------------- |
-| `__init__.py`          | Public API re-exports, and generation of the group detection functions at import time |
-| `trait.py`             | Base classes: `Trait`, `Architecture`, `Platform`, `Shell`, `Terminal`, `CI`, `Agent` |
-| `detection.py`         | All `is_<id>()` detection functions                                                   |
-| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`                   |
-| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                                  |
-| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                               |
-| `platform_info.py`     | Version, codename and CPE metadata behind `Platform.info()`                           |
-| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                                         |
-| `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                               |
-| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                                       |
-| `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                              |
-| `group_data.py`        | All `Group` instances and ID collections                                              |
-| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                                  |
-| `__main__.py`          | `extra-platforms` console script and `python -m extra_platforms` entry point          |
-| `_docs.py`             | Documentation-build-only table and diagram generators; needs the `docs` group         |
-| `_docstrings.py`       | Attribute-docstring extraction that fills each trait and group `__doc__`              |
-| `_types.py`            | Type aliases                                                                          |
-| `_utils.py`            | Internal utilities                                                                    |
-| `_windows.py`          | Win32 parent-process-tree helpers, imported lazily and only on Windows                |
+| Module                 | Purpose                                                                                |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| `__init__.py`          | Public API re-exports                                                                  |
+| `trait.py`             | Base classes: `Trait`, `Architecture`, `Platform`, `Shell`, `Terminal`, `CI`, `Agent`  |
+| `detection.py`         | All `is_<id>()` detection functions, `current_*()` resolvers and `invalidate_caches()` |
+| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`                    |
+| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                                   |
+| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                                |
+| `platform_info.py`     | Version, codename and CPE metadata behind `Platform.info()`                            |
+| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                                          |
+| `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                                |
+| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                                        |
+| `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                               |
+| `group_data.py`        | All `Group` instances and ID collections                                               |
+| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                                   |
+| `__main__.py`          | `extra-platforms` console script and `python -m extra_platforms` entry point           |
+| `_docs.py`             | Documentation-build-only table and diagram generators; needs the `docs` group          |
+| `_docstrings.py`       | Attribute-docstring extraction that fills each trait and group `__doc__`               |
+| `_process_tree.py`     | Walk of the parent process tree (`/proc`, `ps`, Win32) behind shell detection          |
+| `_types.py`            | Type aliases                                                                           |
+| `_utils.py`            | Internal utilities                                                                     |
+| `_windows.py`          | Win32 parent-process-tree helpers, imported lazily and only on Windows                 |
 
 ### Detection pattern
 
-Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trait.current` cached property does not reach that function by attribute: it looks `Trait.detection_func_id` (`is_<id>`) up in `detection._detection_registry`, and raises `NotImplementedError` when the key is missing. Patching the module-level `detection.is_<id>` therefore leaves `Trait.current` unchanged: replace the registry entry instead.
+Each trait has a corresponding `is_<id>()` function in `detection.py`. The `Trait.current` property does not reach that function by attribute: on each read, it looks `Trait.detection_func_id` (`is_<id>`) up in `detection._detection_registry`, and raises `NotImplementedError` when the key is missing. Patching the module-level `detection.is_<id>` therefore leaves `Trait.current` unchanged: replace the registry entry instead. The property caches nothing itself: the detection function does.
 
 ### Dynamic code generation
 
-- `__init__.py` generates one detection function per group at import time, and registers each one both at the package root and in `detection._detection_registry`. The name comes from `Group.detection_func_id`, not from the raw ID: an `all_*` group becomes `is_any_<singular>()` (`ALL_ARM` gives `is_any_arm()`) and a `*_without_*` group becomes `is_*_not_*()` (`UNIX_WITHOUT_MACOS` gives `is_unix_not_macos()`)
+- `detection.py` generates one detection function per group at import time, registers each one in `detection._detection_registry`, and declares it as a type stub under `TYPE_CHECKING`; `__init__.py` re-exports them. A group function runs the detection functions of its own members, and no other. The name comes from `Group.detection_func_id`, not from the raw ID: an `all_*` group becomes `is_any_<singular>()` (`ALL_ARM` gives `is_any_arm()`) and a `*_without_*` group becomes `is_*_not_*()` (`UNIX_WITHOUT_MACOS` gives `is_unix_not_macos()`)
 - `pytest.py` generates `skip_<id>` and `unless_<id>` decorators for all traits and groups
 
 ## Documentation requirements
@@ -121,8 +122,10 @@ Update `readme.md` whenever you add or change a public API, class, or function.
 
 Imports go at the top of the file. A function-level import is a deliberate exception to the general rule against local imports, accepted for two reasons:
 
-- To break an import cycle around the registries. Each `*_data.py` registry imports `trait.py` or `group.py` to build its instances. A registry import at the top of `trait.py` or `group.py` therefore fails as circular. Both import a registry inside the function that needs it. `detection.py` reads the registries the same way, and `trait.py` calls `detection.py` the same way. Neither then depends on the other at load time. The registries themselves hold no function-level import: see [§ Data registry priority](#data-registry-priority).
+- To break an import cycle around the registries. Each `*_data.py` registry imports `trait.py` or `group.py` to build its instances. A registry import at the top of `trait.py` or `group.py` therefore fails as circular. Both import a registry, or `detection.py`, inside the function that needs it. `detection.py` and `_process_tree.py` import the registries at the top: nothing they load imports them back. The registries themselves hold no function-level import: see [§ Data registry priority](#data-registry-priority).
 - To keep a module off the import path of the package. `import extra_platforms` must stay cheap. A module that only a rare code path needs is imported in that path, like `subprocess`, `shutil` and `logging`. `tests/test_root.py::test_subprocess_and_shutil_are_not_imported_at_module_level` guards the first two.
+
+`typing` stays out of the runtime imports, which shortens the cold import of the package. Import from it under `TYPE_CHECKING` only, `TypeVar` included. A dataclass reads a `ClassVar` field at runtime, so a trait or group class passes its class-level metadata as class keyword arguments instead, like `class CI(Trait, type_name="CI system")`. `tests/test_root.py::test_typing_is_not_imported` guards it.
 
 ## Testing guidelines
 

@@ -265,8 +265,8 @@ classifiers = [
 # - aligns minimal Python requirements to ours,
 # - adds new explicit support Python version.
 optional-dependencies.pytest = [
-  # pytest 8.2.1 is the first version to support Python 3.13.
-  "pytest>=8.2.1",
+  # pytest 8.4.0 is the first version to support Python 3.14.
+  "pytest>=8.4",
 ]
 urls.Changelog = "https://github.com/kdeldycke/extra-platforms/blob/main/changelog.md"
 urls.Documentation = "https://kdeldycke.github.io/extra-platforms"
@@ -286,7 +286,9 @@ test = [
   # `[tool.coverage] run.patch = ["subprocess"]`: older versions write it into
   # site-packages at run time, which fails when that directory is read-only.
   "coverage[toml]>=7.13",
-  "pytest",
+  # pytest 9.0.0 is the first version to read the native [tool.pytest] table that
+  # configures this suite: older versions ignore it, and run without its options.
+  "pytest>=9",
   # pytest-github-actions-annotate-failures 0.3.0 is the first version to support Python 3.13.
   "pytest-github-actions-annotate-failures>=0.3",
   # pytest-randomly 4.0.0 is the first version to support Python 3.14.
@@ -307,8 +309,9 @@ docs = [
   # myst-parser 5.1 adds the "alert" extension that renders GitHub-style
   # callouts (> [!NOTE], …) as admonitions. See docs/conf.py.
   "myst-parser>=5.1",
-  # Required so autodoc can import extra_platforms.pytest and document decorators.
-  "pytest>=8.2.1",
+  # Autodoc imports extra_platforms.pytest to document its decorators, which needs
+  # the pytest of the pytest extra.
+  "pytest>=8.4",
   # We hard code links with a format that Sphinx only supports from 9.1 onwards.
   "sphinx>=9.1",
   # sphinx-autodoc-typehints 2.0 adds the always_use_bars_union option that

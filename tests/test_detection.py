@@ -17,9 +17,7 @@ from __future__ import annotations
 import ast
 import functools
 import inspect
-import os
 import re
-import subprocess
 import sys
 from itertools import chain, pairwise
 from operator import attrgetter
@@ -38,6 +36,7 @@ from extra_platforms import (
     Group,
     Shell,
     Trait,
+    _process_tree,
     current_platform,
     detection as detection_module,
     invalidate_caches,
@@ -53,7 +52,7 @@ from extra_platforms import (
     is_windows,
     is_x86_64,
 )
-from extra_platforms.pytest import skip_windows, unless_windows
+from extra_platforms.pytest import skip_windows
 
 
 @pytest.mark.parametrize(
@@ -62,20 +61,24 @@ from extra_platforms.pytest import skip_windows, unless_windows
     ids=attrgetter("id"),
 )
 def test_detection_trait_functions(obj: Trait | Group):
-    # All traits must implement a real function in the detection module.
+    """Every trait and group has a cached detection function in the module.
+
+    A trait heuristic is written by hand, a group one is generated, and both are
+    registered and exported at the package root.
+    """
+    check_func = getattr(detection_module, obj.detection_func_id)
+    assert getattr(extra_platforms, obj.detection_func_id) is check_func
+    assert detection_module._detection_registry[obj.detection_func_id] is check_func
+    assert check_func.__name__ == obj.detection_func_id
+
     if isinstance(obj, Trait):
-        check_func = getattr(detection_module, obj.detection_func_id)
-        assert hasattr(extra_platforms, obj.detection_func_id)
         # current property is aligned with detection function.
         assert check_func() == obj.current
-
-    # All groups' detection functions are dynamically generated, but still must exist.
     else:
-        assert not hasattr(detection_module, obj.detection_func_id)
-        check_func = getattr(extra_platforms, obj.detection_func_id)
-
         # Groups do not have a "current" property.
         assert not hasattr(obj, "current")
+        # A group matches when one of its members does.
+        assert check_func() == any(trait.current for trait in obj)
 
     assert isinstance(check_func, functools._lru_cache_wrapper)
     assert isinstance(check_func(), bool)
@@ -83,12 +86,28 @@ def test_detection_trait_functions(obj: Trait | Group):
     assert obj.detection_func_id.islower()
 
     # Verify the docstring contains a cross-reference to the symbol.
-    # Detection functions use MyST syntax ({data}`...`), while generated group
-    # detection functions use reST syntax (:data:`...`).
     assert check_func.__doc__ is not None and re.search(
-        rf"[\{{:]data[:\}}]`~?(?:extra_platforms\.)?{re.escape(obj.symbol_id)}`",
+        rf"\{{data\}}`~?(?:extra_platforms\.)?{re.escape(obj.symbol_id)}`",
         check_func.__doc__,
     )
+
+
+def test_group_detection_reads_its_members_alone(fresh_caches, monkeypatch):
+    """A group detection function runs the heuristics of its own members only.
+
+    Checking a platform group never runs a shell heuristic, whose fallback walks
+    the parent process tree through a ``ps`` subprocess on macOS.
+    """
+
+    def forbidden() -> bool:
+        raise AssertionError("A shell heuristic ran.")
+
+    for shell in ALL_SHELLS:
+        monkeypatch.setitem(
+            detection_module._detection_registry, shell.detection_func_id, forbidden
+        )
+    assert isinstance(extra_platforms.is_linux(), bool)
+    assert isinstance(extra_platforms.is_any_windows(), bool)
 
 
 DETECTION_SECTIONS = (
@@ -105,7 +124,7 @@ DETECTION_SECTIONS = (
 def test_detection_heuristics_sorting():
     """Each section sorts its heuristics by ID, then closes on its generic one."""
     detection_path = Path(inspect.getfile(detection_module))
-    source_lines = detection_path.read_text(encoding="utf-8").splitlines()
+    source_lines = detection_path.read_text(encoding="UTF-8").splitlines()
 
     starts = []
     for header in DETECTION_SECTIONS:
@@ -381,426 +400,6 @@ def test_detection_no_circular_dependencies(fresh_caches):
         _ = trait.current
 
 
-@pytest.mark.parametrize(
-    ("command", "expected"),
-    (
-        ("/usr/bin/bash", "bash"),
-        ("/bin/zsh", "zsh"),
-        ("zsh", "zsh"),
-        ("/opt/homebrew/bin/fish", "fish"),
-        # Login shells carry a leading dash on argv[0].
-        ("-bash", "bash"),
-        ("-zsh", "zsh"),
-        # The name is lowercased.
-        ("/usr/bin/PYTHON3", "python3"),
-        # Nothing extractable.
-        ("", ""),
-        ("-", ""),
-    ),
-)
-def test_shell_name(command, expected):
-    assert detection_module._shell_name(command) == expected
-
-
-@pytest.mark.parametrize(
-    ("record", "expected"),
-    (
-        # Linux /proc/<pid>/stat: "pid (comm) state ppid ...".
-        ("4242 (bash) S 4200 4242 4200 0 ...", 4200),
-        # The comm field may itself contain spaces and parentheses.
-        ("4242 (a (weird) name) S 7 1 1 0 ...", 7),
-        # BSD /proc/<pid>/status: "comm pid ppid pgid ...".
-        ("zsh 4242 4200 4200 ...", 4200),
-        # NetBSD /proc/<pid>/stat (Linux-compat format from
-        # sys/miscfs/procfs/procfs_linux.c). Confirmed in
-        # https://github.com/sarugaku/shellingham/issues/99 where shellingham's
-        # Linux-style /proc parsing fails but extra-platforms detects ksh.
-        (
-            (
-                "1500 (ksh) S 1 1500 1500 1280 1500 0 0 0 0 0 50 100 0 0 "
-                "20 0 1 0 1234567 4194304 512 18446744073709551615 0 0 0 0 0 "
-                "0 0 0 0 0 0 0 0 0 0 0 0 0"
-            ),
-            1,
-        ),
-        # NetBSD /proc/<pid>/status (BSD format from procfs_status.c):
-        # "comm pid ppid pgid sid tdev,minor flags,flags start,ns ...".
-        ("ksh 1500 1 1500 1500 -1,-1 noflags,noflags 1234567,890 - 1000", 1),
-    ),
-)
-def test_parse_proc_ppid(record, expected):
-    assert detection_module._parse_proc_ppid(record) == expected
-
-
-def _mock_ps(monkeypatch, table: str, links: dict[int, str] | None = None) -> None:
-    """Serve ``table`` as the output of ``ps``, seen from process 300.
-
-    ``links`` stands in for the System V procfs link to the binary of each PID.
-    Every process gets one, empty by default, so the real procfs of an illumos
-    host stays out of these made-up processes.
-    """
-    monkeypatch.setattr(
-        subprocess,
-        "run",
-        lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout=table),
-    )
-    monkeypatch.setattr(os, "getpid", lambda: 300)
-    monkeypatch.setattr(
-        detection_module, "_system_v_executable", lambda pid: (links or {}).get(pid, "")
-    )
-
-
-@pytest.mark.parametrize(
-    ("table", "links", "expected"),
-    (
-        pytest.param(
-            # pid ppid command: argv[0] is a path, except a login shell's "-zsh".
-            "  100     1 /sbin/launchd\n"
-            "  200   100 -zsh\n"
-            "  300   200 /usr/bin/python3 -m pytest\n",
-            None,
-            # The login shell's argv[0] yields no path, and "-m pytest" must not
-            # be mistaken for an interpreter-hosted shell.
-            (
-                ("python3", "/usr/bin/python3"),
-                ("zsh", ""),
-                ("launchd", "/sbin/launchd"),
-            ),
-            id="login_shell",
-        ),
-        pytest.param(
-            # System V procfs names the binary a bare argv[0] hides, as on illumos.
-            "  100     1 /usr/lib/ssh/sshd\n"
-            "  200   100 sh probe.sh\n"
-            "  300   200 /usr/bin/python3.14 report.py\n",
-            {200: "/usr/bin/i86/ksh93", 300: "/usr/bin/python3.14"},
-            (
-                ("python3", "/usr/bin/python3.14"),
-                ("python3", "/usr/bin/python3.14"),
-                ("ksh93", "/usr/bin/i86/ksh93"),
-                ("sh", ""),
-                ("sshd", "/usr/lib/ssh/sshd"),
-            ),
-            id="system_v_executable",
-        ),
-        pytest.param(
-            # An emulated shell is seen as the real one, and its qemu wrapper is
-            # no process of its own.
-            "  300   200 qemu-aarch64 /bin/bash\n  200     1 /sbin/launchd\n",
-            None,
-            (("bash", "/bin/bash"), ("launchd", "/sbin/launchd")),
-            id="emulated_shell",
-        ),
-    ),
-)
-def test_tree_from_ps(table, links, expected, monkeypatch):
-    """The ps-based walk (macOS/BSD) climbs from the current process to root.
-
-    The pairs come nearest-first.
-    """
-    _mock_ps(monkeypatch, table, links)
-    assert detection_module._tree_from_ps() == expected
-
-
-def test_tree_from_ps_tolerates_mocked_run(monkeypatch):
-    """A globally mocked subprocess.run must not break the walk."""
-
-    class _Sentinel:
-        stdout = object()  # Non-string stdout, like a MagicMock attribute.
-
-    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: _Sentinel())
-    assert detection_module._tree_from_ps() == ()
-
-    def _boom(*args, **kwargs):
-        raise FileNotFoundError("ps")
-
-    monkeypatch.setattr(subprocess, "run", _boom)
-    assert detection_module._tree_from_ps() == ()
-
-
-def test_interpreter_shell_specs_includes_xonsh():
-    """Xonsh declares python as its interpreter, so it appears in the specs."""
-    launchers = {
-        launcher for _, launcher in detection_module._interpreter_shell_specs()
-    }
-    assert "xonsh" in launchers
-
-
-def test_interpreter_shell(tmp_path):
-    """An interpreter running a launcher file named after a shell is detected."""
-    launcher = tmp_path / "xonsh"
-    launcher.write_text("#!/usr/bin/python\n")
-    launcher_str = str(launcher)
-
-    # A python interpreter running the xonsh launcher file.
-    assert detection_module._interpreter_shell(["/usr/bin/python3", launcher_str]) == (
-        "xonsh",
-        launcher_str,
-    )
-    # The version-tolerant pattern also matches python3.11.
-    assert detection_module._interpreter_shell([
-        "/usr/bin/python3.11",
-        launcher_str,
-    ]) == ("xonsh", launcher_str)
-
-    # `-m xonsh` names a module, not a file: no match.
-    assert (
-        detection_module._interpreter_shell(["/usr/bin/python3", "-m", "xonsh"]) is None
-    )
-    # A non-interpreter argv[0] is not scanned.
-    assert detection_module._interpreter_shell(["/bin/zsh", launcher_str]) is None
-    # A file whose basename is not exactly the launcher (xonsh.py) is ignored.
-    script = tmp_path / "xonsh.py"
-    script.write_text("")
-    assert (
-        detection_module._interpreter_shell(["/usr/bin/python3", str(script)]) is None
-    )
-    # Empty argv.
-    assert detection_module._interpreter_shell([]) is None
-
-
-def test_tree_from_ps_detects_interpreter_shell(tmp_path, monkeypatch):
-    """The ps walk surfaces xonsh when python runs its launcher script."""
-    launcher = tmp_path / "xonsh"
-    launcher.write_text("", encoding="UTF-8")
-    _mock_ps(
-        monkeypatch,
-        f"  300   200 /usr/bin/python3 {launcher}\n  200     1 /sbin/launchd\n",
-    )
-    assert detection_module._tree_from_ps() == (
-        ("python3", "/usr/bin/python3"),
-        ("xonsh", str(launcher)),
-        ("launchd", "/sbin/launchd"),
-    )
-
-
-def test_tree_from_ps_uses_portable_flags(monkeypatch):
-    """The ps invocation avoids BSD-only flags so System V ps (Solaris) works."""
-    captured = {}
-
-    def fake_run(args, **kwargs):
-        captured["args"] = args
-        return subprocess.CompletedProcess(args, 0, stdout="")
-
-    monkeypatch.setattr(subprocess, "run", fake_run)
-    detection_module._tree_from_ps()
-    # `args` (POSIX), not `command` (absent on Solaris/AIX); no `-ww` (rejected
-    # by the System V ps on Solaris and AIX). One `-o` per field: FreeBSD reads
-    # `-o pid=,ppid=,args=` as a single `pid` column with a `,ppid=,args=` header.
-    assert captured["args"] == ("ps", "-A", "-o", "pid=", "-o", "ppid=", "-o", "args=")
-
-
-@skip_windows
-def test_tree_from_ps_replaces_undecodable_bytes(tmp_path, monkeypatch):
-    """A byte that is no UTF-8, in the arguments of another process, is replaced.
-
-    The fake `ps` lists the current process, and a second one whose argument is
-    a Latin-1 `piña`.
-    """
-    ps = tmp_path / "ps"
-    # A Python shebang, not /bin/sh, as for write_fake_executable(). -S skips the
-    # site module and the coverage hook it loads: their start-up can outlast the
-    # timeout of the `ps` call on a busy runner.
-    ps.write_text(
-        f"#!{sys.executable} -S\n"
-        "import sys\n"
-        "sys.stdout.buffer.write(\n"
-        "    b'  300     1 /bin/zsh\\n  400     1 /usr/bin/python3 pi\\xf1a\\n'\n"
-        ")\n",
-        encoding="UTF-8",
-    )
-    ps.chmod(0o755)
-    monkeypatch.setenv("PATH", str(tmp_path), prepend=os.pathsep)
-    monkeypatch.setattr(os, "getpid", lambda: 300)
-    monkeypatch.setattr(detection_module, "_system_v_executable", lambda pid: "")
-    assert detection_module._tree_from_ps() == (("zsh", "/bin/zsh"),)
-
-
-@pytest.mark.parametrize(
-    ("argv", "expected"),
-    (
-        # qemu user-mode wrapper: the real command follows the emulator.
-        (["qemu-aarch64", "/bin/bash", "-c", "x"], ["/bin/bash", "-c", "x"]),
-        (["/usr/bin/qemu-aarch64-static", "/bin/zsh"], ["/bin/zsh"]),
-        (["qemu-arm", "/bin/sh"], ["/bin/sh"]),
-        (["rosetta", "/bin/zsh"], ["/bin/zsh"]),
-        # Not an emulator: unchanged.
-        (["/bin/bash", "-c", "x"], ["/bin/bash", "-c", "x"]),
-        (["qemubench", "/bin/sh"], ["qemubench", "/bin/sh"]),
-        # Emulator with nothing after it, or empty: unchanged.
-        (["qemu-aarch64"], ["qemu-aarch64"]),
-        ([], []),
-    ),
-)
-def test_unwrap_emulator(argv, expected):
-    assert detection_module._unwrap_emulator(argv) == expected
-
-
-@pytest.mark.parametrize(
-    ("executable", "argv", "expected"),
-    (
-        # BusyBox called by its own name runs the applet its argument names.
-        ("", ["/usr/bin/busybox", "sh", "-c", "x"], [("ash", "")]),
-        ("", ["busybox", "ash"], [("ash", "")]),
-        ("", ["busybox", "hush", "-c", "x"], [("hush", "")]),
-        # BusyBox called through a link, as its resolved executable reveals.
-        (
-            "/bin/busybox",
-            ["/bin/sh", "script.sh"],
-            [("busybox", "/bin/busybox"), ("ash", "/bin/sh")],
-        ),
-        ("/bin/busybox", ["-sh"], [("busybox", "/bin/busybox"), ("ash", "")]),
-        # Any other sh keeps its name.
-        (
-            "/usr/bin/dash",
-            ["/bin/sh", "script.sh"],
-            [("dash", "/usr/bin/dash"), ("sh", "/bin/sh")],
-        ),
-    ),
-)
-def test_pairs_from_process_busybox(executable, argv, expected):
-    """BusyBox's sh and ash applets both run its Almquist shell."""
-    assert detection_module._pairs_from_process(executable, argv) == expected
-
-
-def test_ppid_from_proc_tolerates_binary_status(monkeypatch):
-    """System V /proc/<pid>/status is a binary pstatus_t; reading must not raise."""
-    monkeypatch.setattr(
-        detection_module.Path, "read_bytes", lambda self: b"\x00\x80\xff pstatus"
-    )
-    assert detection_module._ppid_from_proc(1234) is None
-
-
-def test_ppid_from_proc_netbsd_stat(monkeypatch):
-    """NetBSD /proc/<pid>/stat is Linux-compatible: ksh detected as parent.
-
-    Regression test for the scenario in
-    https://github.com/sarugaku/shellingham/issues/99 where shellingham fails
-    on NetBSD's procfs but extra-platforms walks it correctly.
-    """
-    netbsd_stat = (
-        b"1500 (ksh) S 1 1500 1500 1280 1500 0 0 0 0 0 50 100 0 0 "
-        b"20 0 1 0 1234567 4194304 512 18446744073709551615 0 0 0 0 0 "
-        b"0 0 0 0 0 0 0 0 0 0 0 0 0"
-    )
-    monkeypatch.setattr(detection_module.Path, "read_bytes", lambda self: netbsd_stat)
-    assert detection_module._ppid_from_proc(1500) == 1
-
-
-def test_ppid_from_proc_netbsd_status_fallback(monkeypatch):
-    """When NetBSD's stat is unreadable, the BSD-style status fallback parses."""
-    netbsd_status = b"ksh 1500 1 1500 1500 -1,-1 noflags,noflags 1234567,890 - 1000"
-
-    def read_bytes(self):
-        # Mimic a NetBSD /proc with only `status` readable (stat denied).
-        if self.name == "stat":
-            raise OSError("stat unreadable")
-        return netbsd_status
-
-    monkeypatch.setattr(detection_module.Path, "read_bytes", read_bytes)
-    assert detection_module._ppid_from_proc(1500) == 1
-
-
-@skip_windows
-def test_parent_process_tree_falls_back_to_ps_when_proc_empty(
-    monkeypatch, fresh_caches
-):
-    """System V /proc (illumos, Solaris) yields nothing, so fall back to ps."""
-    monkeypatch.setattr(detection_module, "_tree_from_proc", lambda: ())
-    sentinel = (("zsh", "/usr/bin/zsh"),)
-    monkeypatch.setattr(detection_module, "_tree_from_ps", lambda: sentinel)
-    # Simulate /proc being mounted, as it is on illumos and Solaris.
-    monkeypatch.setattr(detection_module.Path, "is_dir", lambda self: True)
-    invalidate_caches()
-    assert detection_module._parent_process_tree() == sentinel
-
-
-def test_parent_process_exe_names(fresh_caches):
-    """The dispatcher returns a clean frozenset on every platform."""
-    names = detection_module._parent_process_exe_names()
-    assert isinstance(names, frozenset)
-    # Whatever is discovered must be non-empty, lowercased stems. The set itself
-    # may be empty on sandboxed builders with neither /proc, ps, nor Win32.
-    assert all(name and name == name.lower() for name in names)
-
-
-def test_walk_process_map():
-    """The Windows-style map walk climbs nearest-first and resolves paths."""
-    process_map = {
-        100: (1, "explorer.exe"),
-        200: (100, "powershell.exe"),
-        300: (200, "python.exe"),
-    }
-    paths = {
-        100: r"C:\Windows\explorer.exe",
-        200: r"C:\Program Files\PowerShell\7\pwsh.exe",
-        300: r"C:\Python\python.exe",
-    }
-    pairs = detection_module._walk_process_map(
-        process_map, 300, lambda pid: paths.get(pid, "")
-    )
-    # Names are normalized (stem, lowercase) and paired with resolved paths.
-    assert pairs == (
-        ("python", r"C:\Python\python.exe"),
-        ("powershell", r"C:\Program Files\PowerShell\7\pwsh.exe"),
-        ("explorer", r"C:\Windows\explorer.exe"),
-    )
-
-
-@skip_windows
-def test_windows_helpers_noop_off_windows():
-    """The _windows module imports cleanly and no-ops on non-Windows platforms."""
-    from extra_platforms import _windows
-
-    assert _windows.process_map() == {}
-    assert _windows.process_path(os.getpid()) == ""
-
-
-@unless_windows
-def test_tree_from_windows_smoke():
-    """On Windows the tree is populated and includes the python interpreter."""
-    pairs = detection_module._tree_from_windows()
-    assert isinstance(pairs, tuple)
-    assert "python" in {name for name, _ in pairs}
-
-
-def test_running_shell_path(monkeypatch):
-    """The nearest absolute path for a shell name wins; non-absolute is skipped."""
-    tree = (
-        ("python3", "/usr/bin/python3"),
-        ("zsh", "/bin/zsh"),  # Nearest zsh.
-        ("zsh", "/opt/zsh"),  # Farther zsh, must not win.
-        ("launchd", "/sbin/launchd"),
-    )
-    monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: tree)
-    running = detection_module._running_shell_path
-    assert running(frozenset({"zsh"})) == "/bin/zsh"
-    assert running(frozenset({"launchd"})) == "/sbin/launchd"
-    assert running(frozenset({"fish"})) is None
-
-    # A non-absolute name (a bare argv[0], a login dash) is not a path.
-    monkeypatch.setattr(
-        detection_module, "_parent_process_tree", lambda: (("zsh", "zsh"),)
-    )
-    assert running(frozenset({"zsh"})) is None
-
-
-def test_running_shell_path_matches_every_executable_name(monkeypatch):
-    """A shell is found under any of its executable names, not its ID alone."""
-    from extra_platforms import NUSHELL, POWERSHELL
-
-    tree = (
-        ("python3", "/usr/bin/python3"),
-        ("nu", "/opt/homebrew/bin/nu"),
-        ("pwsh", "/usr/local/bin/pwsh"),
-    )
-    monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: tree)
-    running = detection_module._running_shell_path
-    assert running(NUSHELL.executable_names) == "/opt/homebrew/bin/nu"
-    assert running(POWERSHELL.executable_names) == "/usr/local/bin/pwsh"
-    assert running(frozenset({"powershell"})) is None
-
-
 def unset_shell_startup_vars(monkeypatch) -> None:
     """Unset the variables shells set at startup, ``PSModulePath`` included.
 
@@ -833,11 +432,11 @@ def test_shell_detected_by_every_executable_name(
     path = f"/nonexistent/bin/{executable}"
     unset_shell_startup_vars(monkeypatch)
     if source == "SHELL":
-        monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: ())
+        monkeypatch.setattr(_process_tree, "parent_process_tree", lambda: ())
         monkeypatch.setenv("SHELL", path)
     else:
         monkeypatch.setattr(
-            detection_module, "_parent_process_tree", lambda: ((executable, path),)
+            _process_tree, "parent_process_tree", lambda: ((executable, path),)
         )
         monkeypatch.delenv("SHELL", raising=False)
     invalidate_caches()
@@ -851,8 +450,8 @@ def test_current_shell_prefers_a_running_pwsh_over_configured_shell(
     from extra_platforms import POWERSHELL, current_shell
 
     monkeypatch.setattr(
-        detection_module,
-        "_parent_process_tree",
+        _process_tree,
+        "parent_process_tree",
         lambda: (("pwsh", "/usr/local/bin/pwsh"),),
     )
     monkeypatch.setenv("SHELL", "/bin/zsh")
@@ -919,14 +518,14 @@ def test_current_shell_path(monkeypatch, fresh_caches):
     monkeypatch.setattr(detection_module, "current_shell", lambda strict=False: ZSH)
 
     # The process tree yields the running binary: prefer it over SHELL.
-    monkeypatch.setattr(detection_module, "_running_shell_path", lambda _: "/bin/zsh")
+    monkeypatch.setattr(_process_tree, "nearest_path", lambda _: "/bin/zsh")
     monkeypatch.setenv("SHELL", "/bin/sh")
     invalidate_caches()
     assert current_shell_path() == "/bin/zsh"
 
     # No running path: fall back to the configured login shell, when it names
     # the current shell. A path that does not exist here is read as text.
-    monkeypatch.setattr(detection_module, "_running_shell_path", lambda _: None)
+    monkeypatch.setattr(_process_tree, "nearest_path", lambda _: None)
     monkeypatch.setenv("SHELL", "/nonexistent/bin/zsh")
     invalidate_caches()
     assert current_shell_path() == "/nonexistent/bin/zsh"
@@ -949,7 +548,7 @@ def test_shell_info_path_ignores_another_login_shell(monkeypatch, fresh_caches):
 
     monkeypatch.setitem(detection_module._detection_registry, "is_sh", lambda: True)
     # The running sh shows as a bare argv[0], the way illumos' ps reports it.
-    monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: (("sh", ""),))
+    monkeypatch.setattr(_process_tree, "parent_process_tree", lambda: (("sh", ""),))
     monkeypatch.setenv("SHELL", "/nonexistent/bin/bash")
     invalidate_caches()
     assert SH.info()["path"] is None
@@ -972,8 +571,8 @@ def test_current_shell_prefers_running_shell_over_configured_shell(
 
     # The parent process tree shows fish actually running.
     monkeypatch.setattr(
-        detection_module,
-        "_parent_process_tree",
+        _process_tree,
+        "parent_process_tree",
         lambda: (("fish", "/opt/homebrew/bin/fish"),),
     )
     # SHELL still points at the configured login shell, zsh.
@@ -996,8 +595,8 @@ def test_nested_ancestor_shells_all_detected(monkeypatch, fresh_caches):
     from extra_platforms import BASH, current_shell, is_bash, is_fish
 
     monkeypatch.setattr(
-        detection_module,
-        "_parent_process_tree",
+        _process_tree,
+        "parent_process_tree",
         lambda: (
             ("python3", "/usr/bin/python3.11"),  # pytest.
             ("bash", "/usr/bin/bash"),  # rpmbuild %check scriptlet.
@@ -1060,7 +659,7 @@ def test_current_shell_prefers_nearest_running_shell(
     """When shells nest, the nearest one wins over the login shell above it."""
     from extra_platforms import current_shell
 
-    monkeypatch.setattr(detection_module, "_parent_process_tree", lambda: tree)
+    monkeypatch.setattr(_process_tree, "parent_process_tree", lambda: tree)
     monkeypatch.setenv("SHELL", login_shell)
     unset_shell_startup_vars(monkeypatch)
     invalidate_caches()

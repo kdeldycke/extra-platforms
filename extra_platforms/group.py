@@ -15,26 +15,29 @@
 
 from __future__ import annotations
 
+import os
+import sys
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field, replace
-from functools import cache, cached_property
+from functools import cache, cached_property, lru_cache
+from operator import attrgetter
 from types import MappingProxyType
-from typing import ClassVar, TypeVar, cast
 
-from ._docstrings import get_attribute_docstring
-from .trait import Trait, _Identifiable, _resolve_alias
+from .trait import Trait, _Identifiable
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterator
+    from typing import Any, Self, TypeVar
 
     from ._types import _TNestedReferences
 
-_T = TypeVar("_T")
+    _T = TypeVar("_T")
 
 
-_MembersMapping = MappingProxyType[str, Trait]
+_PACKAGE_DIR = os.path.dirname(__file__) + os.sep
+"""Prefix of the source files of the package, which tells its frames from a caller's."""
 
 
 def _all_group_suffix_to_type_id() -> dict[str, str]:
@@ -51,7 +54,7 @@ def _all_group_suffix_to_type_id() -> dict[str, str]:
     # Star-unpacking fails type checking here: mypy joins the `Trait` class object
     # and the `type[Trait]` items of `__subclasses__()` into a bare `object`.
     return {
-        cls.all_group.lower()[4:]: cls.type_id
+        cls.all_group.lower().removeprefix("all_"): cls.type_id
         for cls in [Trait] + Trait.__subclasses__()
     }
 
@@ -95,7 +98,7 @@ def extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
 
 
 @dataclass(frozen=True)
-class Group(_Identifiable):
+class Group(_Identifiable, unknown_symbol="UNKNOWN"):
     """A {class}`~extra_platforms.Group` names a collection of traits.
 
     Its members are {class}`~extra_platforms.Trait` instances.
@@ -109,10 +112,9 @@ class Group(_Identifiable):
     - `canonical`: A {class}`bool` indicating if the group is canonical
       (non-overlapping).
     - various {class}`set`-like operations (union, intersection, difference, etc.).
-    """
 
-    unknown_symbol: ClassVar[str] = "UNKNOWN"
-    """Groups use `UNKNOWN` instead of `UNKNOWN_GROUP`."""
+    Its unknown symbol is `UNKNOWN`, instead of the derived `UNKNOWN_GROUP`.
+    """
 
     members: Iterable[Trait] = field(repr=False, default_factory=tuple)
     """Traits in this group.
@@ -120,22 +122,8 @@ class Group(_Identifiable):
     Normalized to {class}`~types.MappingProxyType` at init, providing O(1) lookup by ID.
     """
 
-    @property
-    def _members(self) -> _MembersMapping:
-        """Typed access to members as {class}`~types.MappingProxyType`.
-
-        ```{warning}
-        The `members` field is typed as {class}`~collections.abc.Iterable`
-        to accept any iterable at construction time. After `__post_init__`,
-        it is always a {class}`~types.MappingProxyType`. This property
-        provides a {func}`~typing.cast` to that type, avoiding
-        `# type: ignore` comments throughout the class.
-        ```
-        """
-        return cast("_MembersMapping", self.members)
-
-    def __post_init__(self):
-        """Normalize members to a sorted, deduplicated mapping.
+    def __post_init__(self) -> None:
+        """Normalize members to a mapping of deduplicated traits, sorted by ID.
 
         ```{hint}
         The docstring is not built here. For a predefined group,
@@ -145,89 +133,94 @@ class Group(_Identifiable):
         """
         super().__post_init__()
 
-        # Override detection_func_id and unless_decorator_id for groups
-        # with "all_" prefix. Groups with "all_" prefix get "is_any_*"
-        # detection functions and "unless_any_*" decorators (singular
-        # form) to better convey the "any member matches" semantic.
-        # Class-type groups (those matching Trait subclasses) use the subclass's
-        # type_id.
-        if self.id.startswith("all_"):
-            suffix = self.id[4:]
-            # Map the group suffix to a singular type_id, e.g. "architectures"
-            # → "architecture", "platforms" → "platform", "traits" → "trait".
-            suffix = _all_group_suffix_to_type_id().get(suffix, suffix)
-            object.__setattr__(self, "detection_func_id", f"is_any_{suffix}")
-            object.__setattr__(self, "unless_decorator_id", f"unless_any_{suffix}")
-
-        # Override IDs for groups with "_without_" to use "_not_" instead.
-        # This produces more natural function names like is_unix_not_macos() instead of
-        # is_unix_without_macos().
-        if "_without_" in self.id:
-            func_id = self.detection_func_id.replace("_without_", "_not_")
-            skip_id = self.skip_decorator_id.replace("_without_", "_not_")
-            unless_id = self.unless_decorator_id.replace("_without_", "_not_")
-            object.__setattr__(self, "detection_func_id", func_id)
-            object.__setattr__(self, "skip_decorator_id", skip_id)
-            object.__setattr__(self, "unless_decorator_id", unless_id)
-
-        # Accept either a MappingProxyType, dict, or iterable of Traits.
-        traits: Iterable[Trait]
-        if isinstance(self.members, (MappingProxyType, dict)):
-            traits = self.members.values()
-        else:
-            traits = self.members
-
-        # Deduplicate and sort by ID, then build the immutable mapping.
-        sorted_traits = sorted(set(traits), key=lambda t: t.id)
+        # Accept a mapping of IDs to traits, or any iterable of traits.
+        traits = (
+            self.members.values() if isinstance(self.members, Mapping) else self.members
+        )
         object.__setattr__(
             self,
             "members",
-            MappingProxyType({t.id: t for t in sorted_traits}),
+            MappingProxyType({
+                trait.id: trait for trait in sorted(set(traits), key=attrgetter("id"))
+            }),
         )
 
-    def generate_docstring(self) -> str:
-        """Generate comprehensive docstring for this group instance.
+    @property
+    def _members(self) -> MappingProxyType[str, Trait]:
+        """Typed access to members as {class}`~types.MappingProxyType`.
 
-        Combines the attribute docstring from the source module with various metadata.
+        ```{warning}
+        The `members` field is typed as {class}`~collections.abc.Iterable`
+        to accept any iterable at construction time. After `__post_init__`,
+        it is always a {class}`~types.MappingProxyType`, which this property
+        tells the type checker.
+        ```
         """
-        lines = []
+        return self.members  # type: ignore[return-value]
 
-        # Fetch attribute docstring from source module.
-        source_docstring = get_attribute_docstring(
-            f"extra_platforms.{self.data_module_id}", self.symbol_id
-        )
-        if source_docstring:
-            lines.extend(source_docstring.strip().split("\n"))
-            lines.append("")
+    @cached_property
+    def _traits(self) -> frozenset[Trait]:
+        """The members, as a {class}`frozenset` the set operations work on."""
+        return frozenset(self._members.values())
 
-        # Add metadata.
-        lines.extend((
-            f"- **ID**: ``{self.id}``",
-            f"- **Name**: {self.name}",
-            f"- **Icon**: {self.icon}",
+    @cached_property
+    def _any_stem(self) -> str:
+        """The ID, or ``any_<type>`` for a group named ``all_*``.
+
+        The detection function and the unless decorator of a group named
+        ``all_*`` read "any member matches": {func}`~extra_platforms.is_any_arm`
+        and {deco}`~pytest.unless_any_arm`. A group named after every trait of a
+        type takes that type's singular ID: ``all_architectures`` gives
+        ``any_architecture``.
+        """
+        if not self.id.startswith("all_"):
+            return self.id
+        suffix = self.id.removeprefix("all_")
+        return "any_" + _all_group_suffix_to_type_id().get(suffix, suffix)
+
+    @cached_property
+    def detection_func_id(self) -> str:
+        """ID of the detection function for this group.
+
+        Named `is_<id>()`, `is_any_<type>()` for a group named `all_*`, and with
+        `_not_` in place of `_without_` for more natural names, like
+        {func}`~extra_platforms.is_unix_not_macos`.
+        """
+        return f"is_{self._any_stem}".replace("_without_", "_not_")
+
+    @cached_property
+    def skip_decorator_id(self) -> str:
+        """ID of the Pytest skip decorator for this group.
+
+        Named `@skip_<id>`, with `_not_` in place of `_without_`.
+        """
+        return f"skip_{self.id}".replace("_without_", "_not_")
+
+    @cached_property
+    def unless_decorator_id(self) -> str:
+        """ID of the Pytest unless decorator for this group.
+
+        Named `@unless_<id>`, `@unless_any_<type>` for a group named `all_*`, and
+        with `_not_` in place of `_without_`.
+        """
+        return f"unless_{self._any_stem}".replace("_without_", "_not_")
+
+    def _metadata_lines(self) -> list[str]:
+        """The metadata list closing the generated docstring of the group."""
+        lines = [
+            *super()._metadata_lines(),
             f"- **Canonical**: ``{self.canonical}`` {'⬥' if self.canonical else ''}",
-            f"- **Detection function**: {{func}}`~{self.detection_func_id}`",
-            (
-                "- **Pytest decorators**: "
-                f"{{deco}}`~pytest.{self.skip_decorator_id}` / "
-                f"{{deco}}`~pytest.{self.unless_decorator_id}`"
-            ),
-        ))
-
-        # Add list of members with links to their definitions.
-        member_links = [f"{{data}}`~{m.symbol_id}`" for m in self]
-        type_counts = Counter(type(m).__name__ for m in self)
-
-        if member_links:
-            # Format type information with links.
-            type_parts = [
+            *self._reference_lines(),
+        ]
+        if self:
+            type_counts = Counter(type(member).__name__ for member in self)
+            types = ", ".join(
                 f"{count} {{class}}`~{class_name}`"
                 for class_name, count in sorted(type_counts.items())
-            ]
-            type_info = ", ".join(type_parts)
-            lines.append(f"- **Members** ({type_info}): {', '.join(member_links)}")
-
-        return "\n".join(lines)
+            )
+            links = ", ".join(f"{{data}}`~{member.symbol_id}`" for member in self)
+            lines.append(f"- **Members** ({types}): {links}")
+        return lines
 
     @cached_property
     def member_ids(self) -> frozenset[str]:
@@ -236,7 +229,7 @@ class Group(_Identifiable):
         Computed once: the members never change after `__post_init__`, and every
         trait asks each group for it when its docstring is generated.
         """
-        return frozenset(self._members.keys())
+        return frozenset(self._members)
 
     def __hash__(self) -> int:
         """Hash based on group ID and member IDs."""
@@ -263,21 +256,24 @@ class Group(_Identifiable):
 
     def __iter__(self) -> Iterator[Trait]:
         """Iterate over the members of the group."""
-        yield from self._members.values()
+        return iter(self._members.values())
 
     def __len__(self) -> int:
-        """Return the number of members in the group."""
+        """Return the number of members in the group.
+
+        An empty group is falsy, like an empty {class}`set`.
+        """
         return len(self._members)
 
-    def __bool__(self) -> bool:
-        """Return {data}`True` if the group has members, {data}`False` otherwise."""
-        return len(self._members) > 0
-
     def __contains__(self, item: Trait | str) -> bool:
-        """Test if a {class}`~extra_platforms.Trait` or its ID is in the group."""
+        """Test if a {class}`~extra_platforms.Trait` or its ID is in the group.
+
+        A trait must equal the member of the same ID: one sharing the ID alone
+        is not in the group.
+        """
         if isinstance(item, str):
             return item in self._members
-        return item.id in self._members and self._members[item.id] == item
+        return self._members.get(item.id) == item
 
     def __getitem__(self, member_id: str) -> Trait:
         """Return the trait whose ID is `member_id`."""
@@ -288,7 +284,7 @@ class Group(_Identifiable):
 
     def items(self) -> Iterator[tuple[str, Trait]]:
         """Iterate over the traits of the group as key-value pairs."""
-        yield from self._members.items()
+        return iter(self._members.items())
 
     def isdisjoint(self, other: _TNestedReferences) -> bool:
         """Return {data}`True` if the group has no members in common with `other`.
@@ -298,7 +294,7 @@ class Group(_Identifiable):
         `other` can be an arbitrarily nested {class}`~collections.abc.Iterable` of
         {class}`~extra_platforms.Group` and {class}`~extra_platforms.Trait`.
         """
-        return set(self._members.values()).isdisjoint(extract_members(other))
+        return self._traits.isdisjoint(extract_members(other))
 
     def fullyintersects(self, other: _TNestedReferences) -> bool:
         """Return {data}`True` if the group has all members in common with `other`.
@@ -314,33 +310,29 @@ class Group(_Identifiable):
         (ID, name, icon, and members).
         ```
         """
-        return set(self._members.values()) == set(extract_members(other))
+        return self._traits == set(extract_members(other))
 
     def issubset(self, other: _TNestedReferences) -> bool:
         """Test whether every member in the group is in other."""
-        return set(self._members.values()).issubset(extract_members(other))
+        return self._traits.issubset(extract_members(other))
 
     __le__ = issubset
 
     def __lt__(self, other: _TNestedReferences) -> bool:
         """Test whether every member in the group is in other, but not all."""
-        other_members = set(extract_members(other))
-        self_members = set(self._members.values())
-        return self_members < other_members
+        return self._traits < set(extract_members(other))
 
     def issuperset(self, other: _TNestedReferences) -> bool:
         """Test whether every member in other is in the group."""
-        return set(self._members.values()).issuperset(extract_members(other))
+        return self._traits.issuperset(extract_members(other))
 
     __ge__ = issuperset
 
     def __gt__(self, other: _TNestedReferences) -> bool:
         """Test whether every member in other is in the group, but not all."""
-        other_members = set(extract_members(other))
-        self_members = set(self._members.values())
-        return self_members > other_members
+        return self._traits > set(extract_members(other))
 
-    def union(self, *others: _TNestedReferences) -> Group:
+    def union(self, *others: _TNestedReferences) -> Self:
         """Return a new {class}`~extra_platforms.Group` with members of all groups.
 
         ```{caution}
@@ -348,17 +340,13 @@ class Group(_Identifiable):
         first one. All other groups' metadata is ignored.
         ```
         """
-        return self.copy(
-            members=set(self._members.values()).union(
-                *(extract_members(other) for other in others)
-            )
-        )
+        return self.copy(members=self._traits.union(*map(extract_members, others)))
 
     # No __ior__ and friends: augmented assignments on this immutable class
     # fall back to the binary operators, which return new Group instances.
     __or__ = union
 
-    def intersection(self, *others: _TNestedReferences) -> Group:
+    def intersection(self, *others: _TNestedReferences) -> Self:
         """Return a new {class}`~extra_platforms.Group` with the shared members.
 
         A member is kept when the group and all others contain it.
@@ -369,14 +357,12 @@ class Group(_Identifiable):
         ```
         """
         return self.copy(
-            members=set(self._members.values()).intersection(
-                *(extract_members(other) for other in others)
-            )
+            members=self._traits.intersection(*map(extract_members, others))
         )
 
     __and__ = intersection
 
-    def difference(self, *others: _TNestedReferences) -> Group:
+    def difference(self, *others: _TNestedReferences) -> Self:
         """Return a new {class}`~extra_platforms.Group` without the others' members.
 
         A member is kept when the group contains it and no other does.
@@ -386,15 +372,11 @@ class Group(_Identifiable):
         first one. All other groups' metadata is ignored.
         ```
         """
-        return self.copy(
-            members=set(self._members.values()).difference(
-                *(extract_members(other) for other in others)
-            )
-        )
+        return self.copy(members=self._traits.difference(*map(extract_members, others)))
 
     __sub__ = difference
 
-    def symmetric_difference(self, other: _TNestedReferences) -> Group:
+    def symmetric_difference(self, other: _TNestedReferences) -> Self:
         """Return a new {class}`~extra_platforms.Group` with unshared members.
 
         A member is kept when either the group or other contains it, but not both.
@@ -405,9 +387,7 @@ class Group(_Identifiable):
         ```
         """
         return self.copy(
-            members=set(self._members.values()).symmetric_difference(
-                extract_members(other)
-            )
+            members=self._traits.symmetric_difference(extract_members(other))
         )
 
     __xor__ = symmetric_difference
@@ -418,54 +398,64 @@ class Group(_Identifiable):
         name: str | None = None,
         icon: str | None = None,
         members: Iterable[Trait] | None = None,
-    ) -> Group:
+    ) -> Self:
         """Return a shallow copy of the group.
 
         Fields can be overridden by passing new values as arguments.
         """
-        kwargs = {k: v for k, v in locals().items() if k != "self" and v is not None}
-        return replace(self, **kwargs)
+        changes: dict[str, Any] = {
+            "id": id,
+            "name": name,
+            "icon": icon,
+            "members": members,
+        }
+        return replace(self, **{k: v for k, v in changes.items() if v is not None})
 
-    def add(self, member: Trait | str) -> Group:
+    def add(self, member: Trait | str) -> Self:
         """Return a new {class}`~extra_platforms.Group` with the specified trait added.
 
         If the trait is already in the group, returns a copy unchanged.
 
         :param member: A {class}`~extra_platforms.Trait` object or trait ID
-            string to add.
-        :returns: A new {class}`~extra_platforms.Group` instance with the
+            string to add. A trait ID is case-insensitive, and can be an alias.
+        :return: A new {class}`~extra_platforms.Group` instance with the
             trait added.
-        :raises ValueError: If the trait ID is not recognized.
+        :raises ValueError: If the string is not the ID of a trait, like the ID
+            of a group.
         """
         if isinstance(member, str):
-            member = traits_from_ids(member)[0]
+            member = _trait_from_id(member)
+        return self.copy(members=self._traits | {member})
 
-        if member in self:
-            return self.copy()
+    def _member(self, member: Trait | str) -> Trait:
+        """Return the member that `member` designates.
 
-        return self.copy(members=set(self._members.values()) | {member})
+        :param member: A {class}`~extra_platforms.Trait` object, or a trait ID in
+            any case, or an alias.
+        :raises KeyError: If the trait is not in the group.
+        """
+        if isinstance(member, Trait):
+            member_id = member.id
+            found = member if member in self else None
+        else:
+            member_id = _resolve_alias(member.lower())
+            found = self._members.get(member_id)
+        if found is None:
+            raise KeyError(f"Trait '{member_id}' is not in the group")
+        return found
 
-    def remove(self, member: Trait | str) -> Group:
+    def remove(self, member: Trait | str) -> Self:
         """Return a new {class}`~extra_platforms.Group` without the given trait.
 
-        Raises {exc}`KeyError` if the trait is not in the group.
-
         :param member: A {class}`~extra_platforms.Trait` object or trait ID
-            string to remove.
-        :returns: A new {class}`~extra_platforms.Group` instance with the
+            string to remove. A trait ID is case-insensitive, and can be an alias.
+        :return: A new {class}`~extra_platforms.Group` instance with the
             trait removed.
         :raises KeyError: If the trait is not in the group.
         """
-        member_id = member.id if isinstance(member, Trait) else member
+        return self.copy(members=self._traits - {self._member(member)})
 
-        if member_id not in self._members:
-            raise KeyError(f"Trait '{member_id}' is not in the group")
-
-        return self.copy(
-            members=tuple(t for tid, t in self._members.items() if tid != member_id)
-        )
-
-    def discard(self, member: Trait | str) -> Group:
+    def discard(self, member: Trait | str) -> Self:
         """Return a new {class}`~extra_platforms.Group` without the trait, if present.
 
         Unlike {meth}`remove`, this does not raise an error if the trait
@@ -473,7 +463,7 @@ class Group(_Identifiable):
 
         :param member: A {class}`~extra_platforms.Trait` object or trait ID
             string to remove.
-        :returns: A new {class}`~extra_platforms.Group` instance with the
+        :return: A new {class}`~extra_platforms.Group` instance with the
             trait removed, or a copy if not present.
         """
         try:
@@ -481,13 +471,13 @@ class Group(_Identifiable):
         except KeyError:
             return self.copy()
 
-    def pop(self, member_id: str | None = None) -> tuple[Trait, Group]:
+    def pop(self, member_id: str | None = None) -> tuple[Trait, Self]:
         """Remove and return a trait from the group.
 
         :param member_id: Optional trait ID to remove. If not provided,
             removes an arbitrary trait (specifically, the first one in
             iteration order).
-        :returns: A {class}`tuple` of (removed {class}`~extra_platforms.Trait`,
+        :return: A {class}`tuple` of (removed {class}`~extra_platforms.Trait`,
             new {class}`~extra_platforms.Group`).
         :raises KeyError: If ``member_id`` is provided but not found in the
             group.
@@ -495,19 +485,13 @@ class Group(_Identifiable):
         """
         if not self._members:
             raise KeyError("pop from an empty group")
+        member = next(iter(self)) if member_id is None else self._member(member_id)
+        return member, self.copy(members=self._traits - {member})
 
-        if member_id is None:
-            # Pop arbitrary (first) member.
-            member_id = next(iter(self._members))
-
-        # Raises KeyError if the trait is not in the group.
-        new_group = self.remove(member_id)
-        return self._members[member_id], new_group
-
-    def clear(self) -> Group:
+    def clear(self) -> Self:
         """Return a new empty {class}`~extra_platforms.Group` with the same metadata.
 
-        :returns: A new {class}`~extra_platforms.Group` instance with no
+        :return: A new {class}`~extra_platforms.Group` instance with no
             members but same id, name, and icon.
         """
         return self.copy(members=())
@@ -519,13 +503,7 @@ class Group(_Identifiable):
 
 
 def _unique(items: Iterable[_T]) -> tuple[_T, ...]:
-    """Return a {class}`tuple` with duplicates removed, preserving order.
-
-    This uses {meth}`dict.fromkeys` which:
-
-    - Preserves insertion order (guaranteed since Python 3.7)
-    - Removes duplicates ({class}`dict` keys are unique)
-    """
+    """Return a {class}`tuple` with duplicates removed, preserving order."""
     return tuple(dict.fromkeys(items))
 
 
@@ -540,6 +518,61 @@ def _group_lookup() -> dict[str, Group]:
     from .group_data import ALL_GROUPS
 
     return {group.id: group for group in ALL_GROUPS}
+
+
+@cache
+def _alias_lookup() -> dict[str, str]:
+    """Map each trait alias to the canonical ID of its trait."""
+    # Avoid circular import.
+    from .group_data import ALL_TRAITS
+
+    return {alias: trait.id for trait in ALL_TRAITS for alias in trait.aliases}
+
+
+@lru_cache(maxsize=128)
+def _resolve_alias(id_: str) -> str:
+    """Resolve an alias to its canonical ID, emitting a warning if an alias is used.
+
+    Results are cached, so the warning is only emitted once per alias.
+
+    :param id_: The ID to resolve (already lowercased).
+    :return: The canonical ID if ``id_`` is an alias, otherwise ``id_`` unchanged.
+    """
+    canonical_id = _alias_lookup().get(id_)
+    if canonical_id is None:
+        return id_
+
+    import warnings
+
+    # Point the warning at the first caller outside the package: each public
+    # entry point reaches here through a call chain of its own depth.
+    frame = sys._getframe()
+    stacklevel = 1
+    while frame.f_back and frame.f_code.co_filename.startswith(_PACKAGE_DIR):
+        frame = frame.f_back
+        stacklevel += 1
+
+    warnings.warn(
+        f"'{id_}' is an alias for '{canonical_id}'. "
+        f"Use the canonical ID '{canonical_id}' instead.",
+        UserWarning,
+        stacklevel=stacklevel,
+    )
+    return canonical_id
+
+
+def _trait_from_id(trait_id: str) -> Trait:
+    """Return the trait whose ID or alias is `trait_id`, in any case.
+
+    :raises ValueError: If `trait_id` is not the ID of a trait.
+    """
+    # Avoid circular import.
+    from .group_data import ALL_TRAIT_IDS, ALL_TRAITS
+
+    resolved_id = _resolve_alias(trait_id.lower())
+    if resolved_id not in ALL_TRAIT_IDS:
+        raise ValueError(f"Unrecognized trait ID: {trait_id}")
+    return ALL_TRAITS[resolved_id]
 
 
 def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
@@ -563,21 +596,16 @@ def traits_from_ids(*trait_and_group_ids: str) -> tuple[Trait, ...]:
 
     # Normalize to lowercase and resolve aliases.
     ids = _unique(_resolve_alias(s.lower()) for s in trait_and_group_ids)
-
-    # Check for unrecognized IDs (aliases have already been resolved).
-    unrecognized_ids = set(ids) - ALL_IDS
-    if unrecognized_ids:
+    if unrecognized_ids := set(ids) - ALL_IDS:
         raise ValueError(
             "Unrecognized group or trait IDs: " + ", ".join(sorted(unrecognized_ids))
         )
-    traits = []
-    for trait_id in ids:
-        if trait_id in ALL_TRAIT_IDS:
-            traits.append(ALL_TRAITS[trait_id])
+    traits: list[Trait] = []
+    for id_ in ids:
+        if id_ in ALL_TRAIT_IDS:
+            traits.append(ALL_TRAITS[id_])
         else:
-            groups = groups_from_ids(trait_id)
-            assert len(groups) == 1
-            traits.extend(groups[0])
+            traits.extend(_group_lookup()[id_])
     return _unique(traits)
 
 
@@ -598,12 +626,11 @@ def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
     from .group_data import ALL_GROUP_IDS
 
     ids = _unique(s.lower() for s in group_ids)
-    unrecognized_ids = set(ids) - ALL_GROUP_IDS
-    if unrecognized_ids:
+    if unrecognized_ids := set(ids) - ALL_GROUP_IDS:
         raise ValueError(
             "Unrecognized group IDs: " + ", ".join(sorted(unrecognized_ids))
         )
-    return _unique(_group_lookup()[gid] for gid in ids)
+    return tuple(_group_lookup()[gid] for gid in ids)
 
 
 def reduce(
@@ -617,7 +644,8 @@ def reduce(
     input, but group as much traits as possible, to reduce the number of items.
 
     Only the groups defined in the `target_pool` are considered for the reduction.
-    If no reference pool is provided, use all known groups.
+    If no reference pool is provided, use all known groups. Empty groups cover
+    nothing, and are never picked.
 
     ```{note}
     The algorithm is a variant of the [Set Cover
@@ -631,31 +659,28 @@ def reduce(
     # Avoid circular import.
     from .group_data import ALL_GROUPS
 
-    # Collect all traits.
     uncovered = set(extract_members(items))
     if not uncovered:
         return frozenset()
 
-    # Build candidate groups: those that are subsets of the input traits.
-    if target_pool is None:
-        target_pool = ALL_GROUPS
-    candidates = [
-        g for g in target_pool if isinstance(g, Group) and g.issubset(uncovered)
-    ]
+    # Candidates are the non-empty groups whose members are all in the input,
+    # largest first, then by ID for determinism.
+    candidates = sorted(
+        (
+            group
+            for group in (ALL_GROUPS if target_pool is None else target_pool)
+            if isinstance(group, Group) and group and group._traits <= uncovered
+        ),
+        key=lambda group: (-len(group), group.id),
+    )
 
-    # Greedy selection: repeatedly pick the largest group that fits remaining traits.
-    # Sort candidates by size (descending), then by ID for determinism.
-    candidates.sort(key=lambda g: (-len(g), g.id))
-
+    # Greedy selection: keep a group only while all its members are uncovered.
     result: set[Group | Trait] = set()
     for group in candidates:
-        # Only select if the group's members are all still uncovered.
-        group_members = set(group)
-        if group_members <= uncovered:
+        if group._traits <= uncovered:
             result.add(group)
-            uncovered -= group_members
+            uncovered -= group._traits
 
     # Add any remaining uncovered traits individually.
     result.update(uncovered)
-
     return frozenset(result)

@@ -12,12 +12,12 @@ All aspects of a system are represented as *traits*.
 
 There are six types of traits:
 
-- **[Architectures](architectures.md)**: CPU architectures (e.g., x86_64, ARM64)
-- **[Platforms](platforms.md)**: Operating systems (e.g., Windows, macOS, Ubuntu)
-- **[Shells](shells.md)**: Command-line interpreters (e.g., Bash, Zsh, Fish)
-- **[Terminals](terminals.md)**: Terminal emulators (e.g., Kitty, Alacritty, iTerm2)
-- **[CI systems](ci.md)**: Continuous Integration environments (e.g., GitHub Actions, Travis CI)
-- **[Agents](agents.md)**: AI coding agent environments (e.g., Claude Code, Cursor, Cline)
+- **[Architectures](architectures.md)**: CPU architectures, like x86_64 or ARM64
+- **[Platforms](platforms.md)**: Operating systems, like Windows, macOS or Ubuntu
+- **[Shells](shells.md)**: Command-line interpreters, like Bash, Zsh or Fish
+- **[Terminals](terminals.md)**: Terminal emulators, like Kitty, Alacritty or iTerm2
+- **[CI systems](ci.md)**: Continuous Integration environments, like GitHub Actions or Travis CI
+- **[Agents](agents.md)**: AI coding agent environments, like Claude Code, Cursor or Cline
 
 ## Trait usage
 

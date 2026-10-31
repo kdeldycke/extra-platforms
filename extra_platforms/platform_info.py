@@ -156,10 +156,10 @@ def _parse_cpe_name(cpe_name: str) -> dict[str, str]:
     :return: Dictionary of os-release fields, or empty dict when the name is not
         a CPE naming an operating system.
     """
-    if cpe_name.startswith("cpe:2.3:"):
-        components = cpe_name[len("cpe:2.3:") :].split(":")
-    elif cpe_name.startswith("cpe:/"):
-        components = cpe_name[len("cpe:/") :].split(":")
+    for binding in ("cpe:2.3:", "cpe:/"):
+        if cpe_name.startswith(binding):
+            components = cpe_name.removeprefix(binding).split(":")
+            break
     else:
         return {}
 
@@ -268,7 +268,7 @@ def _hostnamectl_os_release() -> dict[str, str]:
             ("hostnamectl", "status"),
             capture_output=True,
             text=True,
-            encoding="utf-8",
+            encoding="UTF-8",
             # An unreadable pretty name must not raise where a missing one does
             # not.
             errors="replace",
@@ -334,16 +334,9 @@ def _version_parts(release: str) -> dict[str, str | None]:
     Missing components are set to `None`: a bare ``"14"`` release has no minor
     version nor build number, and an empty release string has no parts at all.
     """
-    parts = dict(
-        zip(
-            ("major", "minor", "build_number"), release.split(".", 2) if release else ()
-        )
-    )
-    return {
-        "major": parts.get("major"),
-        "minor": parts.get("minor"),
-        "build_number": parts.get("build_number"),
-    }
+    parts = release.split(".", 2) if release else []
+    major, minor, build_number = (*parts, None, None, None)[:3]
+    return {"major": major, "minor": minor, "build_number": build_number}
 
 
 @cache
@@ -353,11 +346,11 @@ def linux_info() -> dict[str, Any]:
     Returns a dictionary with the same structure as `distro.info()` for
     consistency, including:
 
-    - `id`: Distribution ID (e.g., "ubuntu", "fedora")
-    - `version`: Full version string (e.g., "22.04")
+    - `id`: Distribution ID (like `"ubuntu"` or `"fedora"`)
+    - `version`: Full version string (like `"22.04"`)
     - `version_parts`: Dictionary with `major`, `minor`, `build_number`
     - `like`: Space-separated list of related distributions
-    - `codename`: Distribution codename (e.g., "jammy")
+    - `codename`: Distribution codename (like `"jammy"`)
 
     Missing fields are set to `None`, like in {func}`macos_info` and
     {func}`windows_info`.
@@ -410,6 +403,9 @@ MACOS_CODENAMES: dict[tuple[str, str | None], str] = {
 }
 """Maps macOS `(major, minor)` version parts to release code name.
 
+A release keys on its major version alone from macOS 11 onwards, when its minor
+version is `None`. A major version is listed either way, never both.
+
 ```{seealso}
 - https://en.wikipedia.org/wiki/Template:MacOS_versions
 - https://docs.python.org/3/library/platform.html#platform.mac_ver
@@ -431,22 +427,16 @@ def get_macos_codename(major: str | None = None, minor: str | None = None) -> st
         versions only.
     :returns: The codename for the macOS version (like ``"Sonoma"``,
         ``"Ventura"``).
-    :raises ValueError: If no codename matches the given version, or if
-        multiple codenames match (which shouldn't happen with valid data).
+    :raises ValueError: If no codename matches the given version.
     """
-    matches = set()
-    for (major_key, minor_key), codename in MACOS_CODENAMES.items():
-        if minor_key is not None and minor_key != minor:
-            continue
-        if major_key == major:
-            matches.add(codename)
-    if not matches:
-        raise ValueError(f"No macOS codename match version ({major!r}, {minor!r})")
-    if len(matches) != 1:
-        raise ValueError(
-            f"Version {major}.{minor} match multiple codenames: {matches!r}"
-        )
-    return matches.pop()
+    if major is not None:
+        codename = MACOS_CODENAMES.get((major, minor)) or MACOS_CODENAMES.get((
+            major,
+            None,
+        ))
+        if codename:
+            return codename
+    raise ValueError(f"No macOS codename match version ({major!r}, {minor!r})")
 
 
 def macos_info() -> dict[str, Any]:
@@ -455,9 +445,9 @@ def macos_info() -> dict[str, Any]:
     Returns a dictionary with the same structure as `distro.info()` for
     consistency, including:
 
-    - `version`: Full version string (e.g., "14.2.1")
+    - `version`: Full version string (like `"14.2.1"`)
     - `version_parts`: Dictionary with `major`, `minor`, `build_number`
-    - `codename`: The macOS codename (e.g., "Sonoma")
+    - `codename`: The macOS codename (like `"Sonoma"`)
 
     :returns: A dictionary containing macOS version details.
     :raises ValueError: If the current macOS version cannot be mapped to a
@@ -478,10 +468,10 @@ def windows_info() -> dict[str, Any]:
     Returns a dictionary with the same structure as `distro.info()` for
     consistency, plus a `release` key. It includes:
 
-    - `release`: Product release (e.g., "11", or "2022Server" on Windows Server)
-    - `version`: Full NT version string (e.g., "10.0.26100")
+    - `release`: Product release (like `"11"`, or `"2022Server"` on Windows Server)
+    - `version`: Full NT version string (like `"10.0.26100"`)
     - `version_parts`: Dictionary with `major`, `minor`, `build_number`
-    - `codename`: A combination of release and edition (e.g., "11 Professional")
+    - `codename`: A combination of release and edition (like `"11 Professional"`)
 
     ```{note}
     Windows 11 kept the NT version of Windows 10, `10.0`, so `version_parts`

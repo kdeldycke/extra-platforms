@@ -70,33 +70,79 @@ from __future__ import annotations
 
 import os
 import platform
-import re
 import sys
 from functools import cache
 from os import environ
-from pathlib import Path, PurePosixPath, PureWindowsPath
-from typing import TypeVar
+from pathlib import Path, PureWindowsPath
 
-from .platform_info import os_release_id
+from . import _process_tree
+from .agent_data import UNKNOWN_AGENT
+from .architecture_data import UNKNOWN_ARCHITECTURE
+from .ci_data import UNKNOWN_CI
+from .group_data import (
+    ALL_AGENTS,
+    ALL_ARCHITECTURES,
+    ALL_CI,
+    ALL_GROUPS,
+    ALL_PLATFORMS,
+    ALL_SHELLS,
+    ALL_TERMINALS,
+    ALL_TRAITS,
+    LINUX,
+    MULTIPLEXERS,
+    UNKNOWN,
+)
+from .platform_data import CHROMEOS, GENERIC_LINUX, UNKNOWN_PLATFORM, WSL1, WSL2
+from .platform_info import invalidate_os_release_cache, os_release_id
+from .shell_data import (
+    ASH,
+    BASH,
+    CMD,
+    CSH,
+    DASH,
+    FISH,
+    KSH,
+    NUSHELL,
+    POWERSHELL,
+    SH,
+    TCSH,
+    UNKNOWN_SHELL,
+    XONSH,
+    ZSH,
+)
+from .terminal_data import UNKNOWN_TERMINAL
+from .trait import CI, Agent, Architecture, Platform, Shell, Terminal
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
+    from typing import TypeVar
 
-    from .trait import CI, Agent, Architecture, Platform, Shell, Terminal, Trait
+    from .group import Group
+    from .trait import Trait
 
-_TTrait = TypeVar("_TTrait", bound="Trait")
+    _TTrait = TypeVar("_TTrait", bound=Trait)
 
 
 _detection_registry: dict[str, Callable[[], bool]] = {}
 """Maps detection function IDs (like ``"is_bash"``) to their callables.
 
-Populated automatically after all ``is_*()`` functions are defined. Group
-detection functions generated in ``__init__.py`` are also registered here.
+Holds the ``is_*()`` function of every trait and group, registered once this
+module defines or generates them.
 
 Used by {attr}`Trait.current <extra_platforms.Trait.current>` to look up
 detection functions without a fragile string-based module attribute search.
 """
+
+
+_SHELLS = tuple(shell for shell in ALL_SHELLS if isinstance(shell, Shell))
+"""The shells of the registry, typed as {class}`~extra_platforms.Shell`."""
+
+
+_SHELL_BY_EXECUTABLE = {
+    name: shell for shell in _SHELLS for name in shell.executable_names
+}
+"""Maps every file name a shell's binary goes by to its shell."""
 
 
 _AGENT_PRESENCE_ENV_VARS = ("LLM", "AI_AGENT")
@@ -124,26 +170,10 @@ common to attribute to an AI agent on its own, and Crush is already covered by
 """
 
 
-_BUSYBOX_ASH_APPLETS = frozenset(("ash", "sh"))
-"""BusyBox applets running its Almquist shell.
-
-[BusyBox](https://busybox.net) is a multi-call binary: it runs the applet named by
-the name it is called by (Alpine links ``/bin/sh`` and ``/bin/ash`` to
-``/bin/busybox``), or by its first argument when called by its own name
-(``busybox sh -c ...``). Its ``sh`` applet is its ``ash``: on Alpine, both set
-``BB_ASH_VERSION``. Both names therefore give {data}`~extra_platforms.ASH`.
-"""
-
-
 _CATEGORY_ENV_SIGNALS: dict[str, tuple[str, ...]] = {
     "shell": (
         "SHELL",
-        "BASH_VERSION",
-        "FISH_VERSION",
-        "KSH_VERSION",
-        "NU_VERSION",
-        "XONSH_VERSION",
-        "ZSH_VERSION",
+        *sorted(shell.version_env_var for shell in _SHELLS if shell.version_env_var),
         "PSModulePath",
     ),
     "terminal": (
@@ -153,7 +183,7 @@ _CATEGORY_ENV_SIGNALS: dict[str, tuple[str, ...]] = {
         "COLORTERM",
         "TERMINAL_NAME",
     ),
-    "CI": ("CI",),
+    "ci": ("CI",),
     "agent": _AGENT_PRESENCE_ENV_VARS,
 }
 """Environment variables to surface in an unrecognized-trait report, per category.
@@ -162,7 +192,8 @@ Architectures and platforms are diagnosed from the ``sys.platform`` /
 ``platform.*`` / ``os_release_id()`` primitives the report already prints. Shells,
 terminals, CI systems and agents are instead identified by environment variables,
 which those primitives never expose. This maps each such category (keyed by the
-label {func}`_single_match` passes) to the variables its ``is_*()`` heuristics read.
+{attr}`~extra_platforms.Trait.type_id` of its class) to the variables its
+``is_*()`` heuristics read.
 
 The first entry is the category's primary signal, always shown (even when unset, so
 a reader sees why an unrecognized trait logged at ``INFO`` rather than ``WARNING``).
@@ -170,14 +201,13 @@ The rest are shown only when set: an unrecognized trait leaves every presence-on
 marker unset, so the value-bearing variables (a ``SHELL`` path, a ``TERM_PROGRAM``
 name) are what carry the smoking gun.
 
-.. caution::
-    Only gating and value-bearing variables belong here, never a blanket dump of
-    :data:`os.environ`: the environment routinely holds credentials and tokens.
+The ``shell`` entry reads the {attr}`~extra_platforms.Shell.version_env_var`
+of every shell from the registry.
 
-.. note::
-    The ``shell`` entry must list every
-    {attr}`~extra_platforms.Shell.version_env_var` in the registry;
-    ``test_shell_env_signals_cover_version_vars`` enforces it.
+```{caution}
+Only gating and value-bearing variables belong here, never a blanket dump of
+{data}`os.environ`: the environment routinely holds credentials and tokens.
+```
 """
 
 
@@ -228,8 +258,8 @@ def _unrecognized_message(report: bool = True, category: str | None = None) -> s
     :param report: If `True`, append a request to report the issue on GitHub.
         Set to `False` for environments where the trait is legitimately absent
         (like no terminal in CI, or no CI locally).
-    :param category: Trait category label (as passed to {func}`_single_match`) whose
-        environment-variable signals to append, or `None` for the primitives alone.
+    :param category: Type ID of the trait category whose environment-variable
+        signals to append, or `None` for the primitives alone.
     """
     msg = (
         "Environment:\n"
@@ -269,8 +299,8 @@ def _report_unrecognized(
         (architecture, platform, shell), so an unrecognized result logs a `WARNING`
         and asks users to report the issue. If `False` (terminal, CI), the trait may
         legitimately be absent, so only `INFO` is logged without a report request.
-    :param category: Trait category label whose environment-variable signals to
-        include in the message (see {data}`_CATEGORY_ENV_SIGNALS`).
+    :param category: Type ID of the trait category whose environment-variable
+        signals to include in the message (see {data}`_CATEGORY_ENV_SIGNALS`).
     """
     msg = (
         f"Unrecognized {trait_name}: "
@@ -278,9 +308,8 @@ def _report_unrecognized(
     )
     if strict:
         raise SystemError(msg)
-    # Defer logging import to keep cold module load fast: stdlib logging pulls
-    # in traceback (and in 3.14+, _colorize), which dominates import time on
-    # slow architectures like i586. See issue #494.
+    # Deferred import: stdlib logging pulls in traceback, which dominates the
+    # cold import time of the package on slow architectures.
     import logging
 
     logger = logging.getLogger(__name__)
@@ -324,15 +353,8 @@ def is_arm() -> bool:
     {func}`~extra_platforms.is_armv8l`.
     ```
     """
-    return bool(
-        platform.machine().startswith("arm")
-        and not any((
-            is_aarch64(),
-            is_armv5tel(),
-            is_armv6l(),
-            is_armv7l(),
-            is_armv8l(),
-        ))
+    return platform.machine().startswith("arm") and not (
+        is_aarch64() or is_armv5tel() or is_armv6l() or is_armv7l() or is_armv8l()
     )
 
 
@@ -502,9 +524,6 @@ def is_unknown_architecture() -> bool:
 
     See {data}`~extra_platforms.UNKNOWN_ARCHITECTURE`.
     """
-    # Lazy import to avoid circular dependencies.
-    from .architecture_data import UNKNOWN_ARCHITECTURE
-
     return current_architecture() is UNKNOWN_ARCHITECTURE
 
 
@@ -700,10 +719,6 @@ def is_generic_linux() -> bool:
     distribution stays unidentified.
     ```
     """
-    # Lazy imports to avoid circular dependencies.
-    from .group_data import LINUX
-    from .platform_data import CHROMEOS, GENERIC_LINUX
-
     return (
         sys.platform == "linux"
         and os_release_id() not in _CHROMEOS_IDS
@@ -760,11 +775,12 @@ def is_illumos() -> bool:
     (like OpenIndiana, SmartOS, OmniOS).
     ```
 
-    .. note::
-        Gates on {data}`sys.platform` before reading {func}`platform.uname` so
-        the function returns immediately on non-SunOS hosts. This matters on
-        Windows, where {func}`platform.uname` shells out via
-        ``platform._syscmd_ver()`` to populate its ``version`` field.
+    ```{note}
+    Gates on {data}`sys.platform` before reading {func}`platform.uname` so
+    the function returns immediately on non-SunOS hosts. This matters on
+    Windows, where {func}`platform.uname` shells out via
+    ``platform._syscmd_ver()`` to populate its ``version`` field.
+    ```
     """
     return sys.platform == "sunos5" and "illumos" in platform.uname().version.lower()
 
@@ -791,17 +807,18 @@ def is_linuxmint() -> bool:
 def is_macos() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.MACOS`.
 
-    .. note::
-        Uses {data}`sys.platform` rather than {func}`platform.platform`. The
-        former is a constant baked in by CPython at compile time (always
-        ``"darwin"`` on macOS), while the latter performs runtime introspection
-        and, on Windows, shells out via ``platform._syscmd_ver()`` to invoke
-        ``cmd /c ver``. Calling {func}`platform.platform` here would therefore
-        spawn a subprocess on every non-macOS host, and break test suites that
-        globally patch {func}`subprocess.run`. Since ``sys.platform == "darwin"``
-        is unambiguous for macOS (unlike Solaris vs. SunOS, which both report
-        ``"sunos5"`` and genuinely need {func}`platform.platform` to be told
-        apart), there is no reason to pay that cost here.
+    ```{note}
+    Uses {data}`sys.platform` rather than {func}`platform.platform`. The
+    former is a constant baked in by CPython at compile time (always
+    ``"darwin"`` on macOS), while the latter performs runtime introspection
+    and, on Windows, shells out via ``platform._syscmd_ver()`` to invoke
+    ``cmd /c ver``. Calling {func}`platform.platform` here would therefore
+    spawn a subprocess on every non-macOS host, and break test suites that
+    globally patch {func}`subprocess.run`. Since ``sys.platform == "darwin"``
+    is unambiguous for macOS (unlike Solaris vs. SunOS, which both report
+    ``"sunos5"`` and genuinely need {func}`platform.platform` to be told
+    apart), there is no reason to pay that cost here.
+    ```
     """
     return sys.platform == "darwin"
 
@@ -1007,13 +1024,14 @@ def is_solaris() -> bool:
     {func}`current_platform` raises. Measured on OpenIndiana Hipster 2026.04.
     ```
 
-    .. note::
-        Gates on {data}`sys.platform` being ``"sunos5"`` before invoking
-        {func}`platform.platform`, which on Windows would shell out via
-        ``platform._syscmd_ver()``. Solaris and SunOS share the same
-        {data}`sys.platform` value, so {func}`platform.platform` is still needed
-        to tell them apart, but only when we already know we're on a SunOS-based
-        host.
+    ```{note}
+    Gates on {data}`sys.platform` being ``"sunos5"`` before invoking
+    {func}`platform.platform`, which on Windows would shell out via
+    ``platform._syscmd_ver()``. Solaris and SunOS share the same
+    {data}`sys.platform` value, so {func}`platform.platform` is still needed
+    to tell them apart, but only when we already know we're on a SunOS-based
+    host.
+    ```
     """
     return (
         sys.platform == "sunos5"
@@ -1038,9 +1056,10 @@ def is_sourcemage() -> bool:
 def is_sunos() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.SUNOS`.
 
-    .. note::
-        See {func}`is_solaris` for the rationale behind the {data}`sys.platform`
-        guard.
+    ```{note}
+    See {func}`is_solaris` for the rationale behind the {data}`sys.platform`
+    guard.
+    ```
     """
     return sys.platform == "sunos5" and platform.platform(
         aliased=True, terse=True
@@ -1100,12 +1119,13 @@ def is_wsl1() -> bool:
             5.10.102.1-microsoft-standard-WSL2
     ```
 
-    .. note::
-        Gates on {data}`sys.platform` being ``"linux"`` before invoking
-        {func}`platform.release`. WSL is by definition a Linux subsystem, so on
-        any other host the answer is trivially {data}`False`. The guard also
-        avoids a ``platform._syscmd_ver()`` subprocess on Windows, where
-        {func}`platform.release` is implemented as a ``cmd /c ver`` shell-out.
+    ```{note}
+    Gates on {data}`sys.platform` being ``"linux"`` before invoking
+    {func}`platform.release`. WSL is by definition a Linux subsystem, so on
+    any other host the answer is trivially {data}`False`. The guard also
+    avoids a ``platform._syscmd_ver()`` subprocess on Windows, where
+    {func}`platform.release` is implemented as a ``cmd /c ver`` shell-out.
+    ```
     """
     return sys.platform == "linux" and "Microsoft" in platform.release()
 
@@ -1114,9 +1134,10 @@ def is_wsl1() -> bool:
 def is_wsl2() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.WSL2`.
 
-    .. note::
-        See {func}`is_wsl1` for the rationale behind the {data}`sys.platform`
-        guard.
+    ```{note}
+    See {func}`is_wsl1` for the rationale behind the {data}`sys.platform`
+    guard.
+    ```
     """
     return sys.platform == "linux" and "microsoft" in platform.release()
 
@@ -1133,34 +1154,12 @@ def is_unknown_platform() -> bool:
 
     See {data}`~extra_platforms.UNKNOWN_PLATFORM`.
     """
-    # Lazy import to avoid circular dependencies.
-    from .platform_data import UNKNOWN_PLATFORM
-
     return current_platform() is UNKNOWN_PLATFORM
 
 
 # =============================================================================
 # Shell detection heuristics
 # =============================================================================
-
-
-def _busybox_applet(name: str) -> str:
-    """Name the shell a BusyBox applet runs.
-
-    That is ``ash`` for its Almquist shell applets, the applet name otherwise.
-    """
-    return "ash" if name in _BUSYBOX_ASH_APPLETS else name
-
-
-@cache
-def _shell_executable_names() -> frozenset[str]:
-    """Every file name a shell of the registry goes by."""
-    # Lazy import to avoid circular dependencies.
-    from .group_data import ALL_SHELLS
-
-    return frozenset(
-        name for shell in ALL_SHELLS for name in getattr(shell, "executable_names", ())
-    )
 
 
 def _shell_stem(path: str | os.PathLike[str]) -> str:
@@ -1172,7 +1171,7 @@ def _shell_stem(path: str | os.PathLike[str]) -> str:
     ``pwsh.exe`` gives ``"pwsh"``. A link keeps its own name when its target goes
     by no shell's name, the way a multi-call binary picks its program from the
     name it is called by. BusyBox is one: Alpine's ``/bin/sh`` and ``/bin/ash``
-    both give ``"ash"``, see {data}`_BUSYBOX_ASH_APPLETS`.
+    both give ``"ash"``, see `extra_platforms._process_tree`.
     """
     # The file name as written, read as text: the Windows flavor accepts both
     # separators, and the path need not exist here.
@@ -1182,8 +1181,8 @@ def _shell_stem(path: str | os.PathLike[str]) -> str:
     except OSError:
         return stem
     if resolved == "busybox":
-        return _busybox_applet(stem)
-    return resolved if resolved in _shell_executable_names() else stem
+        return _process_tree.busybox_applet(stem)
+    return resolved if resolved in _SHELL_BY_EXECUTABLE else stem
 
 
 @cache
@@ -1194,10 +1193,8 @@ def _resolved_shell_id() -> str | None:
     ``/bin/sh`` symlinks to ``/bin/bash``), or ``None`` when ``SHELL`` is
     not set.
     """
-    shell_path = environ.get("SHELL", "")
-    if not shell_path:
-        return None
-    return _shell_stem(shell_path)
+    shell_path = environ.get("SHELL")
+    return _shell_stem(shell_path) if shell_path else None
 
 
 def shell_from_path(path: str | os.PathLike[str]) -> Shell:
@@ -1217,15 +1214,7 @@ def shell_from_path(path: str | os.PathLike[str]) -> Shell:
     give {data}`~extra_platforms.ASH`. An unmatched name gives
     {data}`~extra_platforms.UNKNOWN_SHELL`.
     """
-    # Lazy imports to avoid circular dependencies.
-    from .group_data import ALL_SHELLS
-    from .shell_data import UNKNOWN_SHELL
-
-    stem = _shell_stem(path)
-    for shell in ALL_SHELLS:
-        if stem in getattr(shell, "executable_names", ()):
-            return shell  # type: ignore[return-value]
-    return UNKNOWN_SHELL
+    return _SHELL_BY_EXECUTABLE.get(_shell_stem(path), UNKNOWN_SHELL)
 
 
 @cache
@@ -1240,440 +1229,22 @@ def _active_env_var_shell_ids() -> frozenset[str]:
     This identifies shells that are *actively running*, not merely configured
     as the login shell.
     """
-    # Lazy import to avoid circular dependencies.
-    from .group_data import ALL_SHELLS
-
     return frozenset(
         shell.id
-        for shell in ALL_SHELLS
-        if (env_var := getattr(shell, "version_env_var", None)) and env_var in environ
+        for shell in _SHELLS
+        if shell.version_env_var and shell.version_env_var in environ
     )
-
-
-def _shell_name(command: str) -> str:
-    """Normalize a process command into a comparable shell name.
-
-    Strips a leading ``-`` (which marks a login shell, like ``-bash``), then
-    returns the lowercased filename stem (``/usr/bin/bash`` becomes ``bash``).
-    Returns an empty string when no name can be extracted.
-    """
-    return PurePosixPath(command.lstrip("-")).stem.lower()
-
-
-def _parse_proc_ppid(record: str) -> int:
-    """Extract the parent PID from a ``/proc/<pid>`` process record.
-
-    Two on-disk layouts are recognized, told apart by the presence of the
-    parenthesized ``comm`` field:
-
-    - Linux ``stat`` (and NetBSD's Linux-compatible ``stat``):
-      ``"pid (comm) state ppid ..."``. The ``comm`` field may itself contain
-      spaces and parentheses, so the PPID is taken as the second field after
-      the last ``)``.
-    - BSD ``status`` (FreeBSD, DragonFly): ``"comm pid ppid pgid ..."``, where
-      the PPID is the third whitespace-separated field.
-
-    Raises {class}`ValueError` or {class}`IndexError` on an unparsable record.
-    """
-    marker = record.rfind(")")
-    if marker != -1:
-        return int(record[marker + 2 :].split()[1])
-    return int(record.split()[2])
-
-
-def _ppid_from_proc(pid: int) -> int | None:
-    """Read the parent PID of ``pid`` from ``/proc``.
-
-    Tries the Linux-style ``stat`` file first, then the BSD-style ``status``
-    file, so the same walk works across Linux, NetBSD, and FreeBSD. Returns
-    {data}`None` when neither file can be read or parsed.
-
-    ```{note}
-    System V ``/proc`` (illumos, Solaris, AIX) exposes ``status`` as a binary
-    ``pstatus_t`` rather than text. Bytes are decoded with ``errors="replace"``
-    so a binary record degrades to an unparsable string (and {data}`None`)
-    instead of raising {exc}`UnicodeDecodeError`. {func}`_parent_process_tree`
-    then falls back to ``ps`` on those systems.
-    ```
-    """
-    for proc_file in ("stat", "status"):
-        try:
-            record = Path(f"/proc/{pid}/{proc_file}").read_bytes()
-        except OSError:
-            continue
-        try:
-            return _parse_proc_ppid(record.decode(errors="replace"))
-        except (ValueError, IndexError):
-            return None
-    return None
-
-
-@cache
-def _interpreter_shell_specs() -> tuple[tuple[re.Pattern[str], str], ...]:
-    """Compiled ``(interpreter pattern, launcher name)`` pairs from the registry.
-
-    Built from {class}`~extra_platforms.Shell` instances that declare an
-    {attr}`~extra_platforms.Shell.interpreter`. The interpreter base name
-    becomes a version-tolerant pattern (so ``python`` matches ``python3`` and
-    ``python3.11``); the launcher name to look for is the shell's ``id``.
-    """
-    # Lazy import to avoid circular dependencies.
-    from .group_data import ALL_SHELLS
-
-    return tuple(
-        (re.compile(rf"^{re.escape(interp)}(\d+(\.\d+)?)?$"), shell.id)
-        for shell in ALL_SHELLS
-        if (interp := getattr(shell, "interpreter", None))
-    )
-
-
-def _interpreter_shell(argv: list[str]) -> tuple[str, str] | None:
-    """Detect a shell hosted by an interpreter from a process command line.
-
-    When ``argv[0]`` is a known interpreter (like ``python``) and a later
-    argument is an existing file whose name is a hosted shell's launcher (like
-    ``xonsh``), returns ``(shell_id, launcher_path)``, else {data}`None`.
-
-    The three guards (interpreter-name pattern, exact launcher basename, and an
-    {meth}`~pathlib.Path.is_file` check) keep unrelated invocations like
-    ``python -m pytest test_xonsh.py`` from matching. Mirrors the approach in
-    [shellingham](https://github.com/sarugaku/shellingham).
-    """
-    if not argv:
-        return None
-    proc_name = Path(argv[0]).name.lower()
-    for pattern, launcher in _interpreter_shell_specs():
-        if not pattern.fullmatch(proc_name):
-            continue
-        for arg in argv[1:]:
-            if Path(arg).name.lower() == launcher and Path(arg).is_file():
-                return launcher, arg
-    return None
-
-
-_EMULATOR_NAMES = re.compile(r"rosetta|qemu-[a-z0-9_]+(?:-static)?")
-"""User-mode CPU emulators that wrap the real command in their arguments."""
-
-
-def _unwrap_emulator(argv: list[str]) -> list[str]:
-    """Strip a leading user-mode emulator (``qemu-<arch>``, ``rosetta``) from argv.
-
-    Under foreign-architecture emulation (like ``docker run --platform``), a
-    process shows up as ``qemu-aarch64 /bin/bash …``; the real command is the
-    remaining arguments. Returns ``argv`` with the emulator prefix removed, or
-    ``argv`` unchanged when ``argv[0]`` is not an emulator (or nothing follows
-    it). Composes with {func}`_interpreter_shell`: an emulated ``python`` running
-    xonsh unwraps to ``python …`` first, then resolves to xonsh.
-
-    ```{seealso}
-    Mirrors the emulator handling in
-    [shellingham](https://github.com/sarugaku/shellingham).
-    ```
-    """
-    if len(argv) >= 2 and _EMULATOR_NAMES.fullmatch(_shell_name(argv[0])):
-        return argv[1:]
-    return argv
-
-
-def _pairs_from_process(executable: str, argv: list[str]) -> list[tuple[str, str]]:
-    """Derive ``(name, path)`` pairs a single process contributes.
-
-    Yields the pair of ``executable`` first, the resolved binary the process runs
-    (``""`` when the walk cannot read it). Then unwraps a user-mode emulator
-    prefix from ``argv`` (so the emulated shell is seen), and yields the
-    ``argv[0]`` shell name (with its path only when absolute, since a login dash
-    carries none) plus any interpreter-hosted shell found in the arguments (like
-    xonsh run under python). Shared by the ``/proc`` and ``ps`` walks, which
-    differ only in how they obtain ``executable`` and ``argv``.
-
-    BusyBox runs the applet named by its first argument when called by its own
-    name, and by ``argv[0]`` when called through a link, which only an
-    ``executable`` resolving to BusyBox reveals. The applet then names the shell,
-    see {data}`_BUSYBOX_ASH_APPLETS`.
-    """
-    pairs: list[tuple[str, str]] = []
-    if exe_name := _shell_name(executable):
-        pairs.append((exe_name, executable))
-    busybox = exe_name == "busybox"
-    argv = _unwrap_emulator(argv)
-    if len(argv) >= 2 and _shell_name(argv[0]) == "busybox":
-        argv, busybox = argv[1:], True
-    if argv:
-        # argv[0] recovers login shells and survives an unreadable exe; keep it
-        # as a path only when absolute (a login dash carries none).
-        if name := _shell_name(argv[0]):
-            if busybox:
-                name = _busybox_applet(name)
-            pairs.append((name, argv[0] if argv[0].startswith("/") else ""))
-        # A shell hosted by an interpreter (like xonsh run under python).
-        if hosted := _interpreter_shell(argv):
-            pairs.append(hosted)
-    return pairs
-
-
-def _tree_from_proc() -> tuple[tuple[str, str], ...]:
-    """Walk the parent process tree through ``/proc`` (Linux and BSD procfs).
-
-    Returns ordered ``(name, path)`` pairs, nearest ancestor first. For each
-    process it reads the resolved executable (``/proc/<pid>/exe``, an absolute
-    path that follows a ``/bin/sh`` -> Bash symlink) and the full ``argv``
-    (``/proc/<pid>/cmdline``). Reading both means a login shell is still
-    recognized when the ``exe`` symlink is unreadable (hardened ``/proc``
-    mounted with ``hidepid``), and vice versa. ``argv`` also lets an
-    interpreter-hosted shell (xonsh under python) or an emulated shell (under
-    qemu/rosetta) be recognized. ``path`` is empty when only a non-absolute
-    ``argv[0]`` is available.
-    """
-    pairs: list[tuple[str, str]] = []
-    pid = os.getpid()
-    visited: set[int] = set()
-    while pid > 1 and pid not in visited:
-        visited.add(pid)
-        # Resolved executable: an absolute path that follows symlinks.
-        try:
-            target = os.readlink(f"/proc/{pid}/exe")
-        except OSError:
-            target = ""
-        # Full argv from the raw, null-separated command line.
-        try:
-            raw = Path(f"/proc/{pid}/cmdline").read_bytes()
-            argv = [a for a in raw.decode(errors="replace").split("\0") if a]
-        except OSError:
-            argv = []
-        pairs.extend(_pairs_from_process(target, argv))
-        ppid = _ppid_from_proc(pid)
-        if ppid is None:
-            break
-        pid = ppid
-    return tuple(pairs)
-
-
-def _system_v_executable(pid: int) -> str:
-    """Return the executable System V procfs links for ``pid``, or ``""``.
-
-    illumos and Solaris link ``/proc/<pid>/path/a.out`` to the resolved binary a
-    process runs: on illumos, a shell started as a bare ``sh`` runs
-    ``/usr/bin/i86/ksh93``. A process of another user, or a system without that
-    link, gives an empty string.
-    """
-    try:
-        return os.readlink(f"/proc/{pid}/path/a.out")
-    except OSError:
-        return ""
-
-
-def _tree_from_ps() -> tuple[tuple[str, str], ...]:
-    """Walk the parent process tree through ``ps``.
-
-    Used on POSIX systems without a usable text ``/proc`` (macOS and BSDs
-    without procfs, plus the System V ``/proc`` of illumos, Solaris, and
-    AIX/IBM i). Parses a single ``ps`` snapshot into a ``{pid: (ppid, args)}``
-    table, then walks from the current process up to the root, returning ordered
-    ``(name, path)`` pairs (nearest first).
-
-    The full argument list is requested (rather than just the executable) so
-    that interpreter-hosted shells (like xonsh under python) can be recognized
-    from their arguments. ``path`` is taken from ``argv[0]`` when absolute; a
-    login shell (``-zsh``) or a bare name carries no path, so callers fall back
-    to ``SHELL``. Where System V procfs links each process to its executable,
-    that link adds the binary actually running, ahead of ``argv`` (see
-    {func}`_system_v_executable`).
-
-    The invocation is the portable POSIX form (``-A``, ``-o field=``, and the
-    ``args`` specifier) with no ``-ww``, so it works across macOS, the BSDs,
-    Linux, and the System V ``ps`` of illumos, Solaris, and AIX/IBM i. Those
-    System V variants lack the ``command`` specifier (only ``args``) and reject
-    ``-ww`` (AIX accepts ``-w`` only in Berkeley mode, which has no ``-o``);
-    ``args`` may be truncated there, but ``argv[0]`` stays intact. Parsing reads
-    positional columns from empty (``field=``) headers, sidestepping the
-    header-name differences (``COMMAND`` vs ``CMD``) that complicate name-based
-    parsing. Mirrors [shellingham](https://github.com/sarugaku/shellingham).
-
-    ```{caution}
-    Each field takes its own ``-o``. POSIX reads everything after a ``=`` as the
-    header text, so FreeBSD's ``ps`` takes ``-o pid=,ppid=,args=`` as the
-    ``pid`` column under a ``,ppid=,args=`` header, and prints nothing else.
-    Linux and macOS accept the combined form, which hides the difference.
-    ```
-
-    ```{important}
-    ``-A`` (select every process) is essential, not merely convenient. Without
-    it, `ps` defaults to processes sharing the caller's controlling terminal,
-    and macOS returns *nothing* when run outside a tty (as in CI or any
-    non-interactive context, unlike Linux which lists all processes regardless).
-    ``-A`` makes the snapshot tty-independent.
-    ```
-    """
-    # Deferred import: keeps subprocess off the import path of the package.
-    import subprocess
-
-    try:
-        result = subprocess.run(
-            ("ps", "-A", "-o", "pid=", "-o", "ppid=", "-o", "args="),
-            capture_output=True,
-            text=True,
-            # Any process on the host can hold bytes that are no UTF-8 in its
-            # arguments: replace them, as _tree_from_proc does.
-            encoding="UTF-8",
-            errors="replace",
-            check=True,
-            timeout=2,
-        )
-    except (OSError, subprocess.SubprocessError):
-        return ()
-
-    # str() coerces an unexpected stdout (like a globally mocked subprocess.run
-    # returning a Mock) to text, so parsing degrades to an empty result instead
-    # of raising.
-    output = str(result.stdout)
-
-    # Parse "<pid> <ppid> <args...>" rows into {pid: (ppid, args)}. The
-    # argument list is the last field and is kept whole.
-    table: dict[int, tuple[int, str]] = {}
-    for line in output.splitlines():
-        fields = line.split(maxsplit=2)
-        if len(fields) < 3:
-            continue
-        try:
-            child, parent = int(fields[0]), int(fields[1])
-        except ValueError:
-            continue
-        table[child] = (parent, fields[2])
-
-    pairs: list[tuple[str, str]] = []
-    pid = os.getpid()
-    visited: set[int] = set()
-    while pid > 1 and pid in table and pid not in visited:
-        visited.add(pid)
-        ppid, command = table[pid]
-        pairs.extend(_pairs_from_process(_system_v_executable(pid), command.split()))
-        pid = ppid
-    return tuple(pairs)
-
-
-def _walk_process_map(
-    process_map: dict[int, tuple[int, str]],
-    start_pid: int,
-    path_getter: Callable[[int], str],
-) -> tuple[tuple[str, str], ...]:
-    """Walk a ``{pid: (ppid, executable)}`` map into ordered ``(name, path)`` pairs.
-
-    Climbs from ``start_pid`` to the root, nearest ancestor first. Each
-    ``executable`` is normalized into a shell name via {func}`_shell_name`, and
-    ``path_getter`` resolves a matched pid's full executable path. This is the
-    platform-agnostic core of the Windows walk: the snapshot acquisition is the
-    only Win32-specific part.
-    """
-    pairs: list[tuple[str, str]] = []
-    pid = start_pid
-    visited: set[int] = set()
-    while pid in process_map and pid not in visited:
-        visited.add(pid)
-        ppid, executable = process_map[pid]
-        if name := _shell_name(executable):
-            pairs.append((name, path_getter(pid)))
-        pid = ppid
-    return tuple(pairs)
-
-
-def _tree_from_windows() -> tuple[tuple[str, str], ...]:
-    """Walk the parent process tree through the Win32 Tool Help API.
-
-    Used on Windows, which has neither ``/proc`` nor ``ps``. Snapshots every
-    process into a ``{pid: (ppid, executable)}`` map (see
-    {mod}`extra_platforms._windows`), then walks from the current process up to
-    the root, resolving each ancestor's full path via
-    ``QueryFullProcessImageNameW``.
-
-    Returns an empty tuple off Windows or on any Win32 failure, so detection
-    degrades to the environment-variable heuristics.
-
-    ```{caution}
-    Windows parent-PID links can be stale: a parent may exit and its PID be
-    reused. The ``visited`` set bounds the walk, but a reused PID could in
-    theory divert it. This matches the limitation in
-    [shellingham](https://github.com/sarugaku/shellingham).
-    ```
-    """
-    tree: tuple[tuple[str, str], ...] = ()
-    if sys.platform == "win32":
-        try:
-            from . import _windows
-
-            tree = _walk_process_map(
-                _windows.process_map(), os.getpid(), _windows.process_path
-            )
-        except (OSError, ImportError):
-            tree = ()
-    return tree
-
-
-@cache
-def _parent_process_tree() -> tuple[tuple[str, str], ...]:
-    """Ordered ``(name, path)`` pairs for the process tree, nearest first.
-
-    ``name`` is the normalized shell name (see {func}`_shell_name`); ``path`` is
-    the best-effort executable path, absolute when the source provides it and
-    empty otherwise. Dispatches on what the platform exposes:
-
-    - ``/proc`` when present (Linux always, BSDs that mount procfs): no
-      subprocess is spawned.
-    - ``ps`` otherwise (macOS, BSDs without procfs, and the System V ``/proc``
-      of illumos and Solaris).
-    - The Win32 Tool Help API on Windows.
-    - An empty tuple on platforms exposing none of these.
-    """
-    # Linux (and procfs BSDs) expose a text /proc; this needs no subprocess.
-    if Path("/proc").is_dir():
-        tree = _tree_from_proc()
-        if tree:
-            return tree
-        # /proc exists but yielded nothing: System V procfs (illumos, Solaris,
-        # AIX) uses a binary layout the Linux reader cannot parse. Use `ps`.
-    # macOS, procfs-less BSDs, and System V procfs systems: walk via `ps`.
-    if os.name == "posix":
-        return _tree_from_ps()
-    # Windows: snapshot via the Win32 Tool Help API. _tree_from_windows()
-    # returns an empty tuple on any other platform.
-    return _tree_from_windows()
-
-
-@cache
-def _parent_process_exe_names() -> frozenset[str]:
-    """Collect executable names from the parent process tree.
-
-    Returns a {class}`frozenset` of lowercased executable stems (like
-    ``"bash"`` or ``"python3"``), derived from {func}`_parent_process_tree`.
-    """
-    return frozenset(name for name, _ in _parent_process_tree())
-
-
-def _running_shell_path(names: frozenset[str]) -> str | None:
-    r"""Return the executable path of the nearest ancestor named in ``names``.
-
-    ``names`` is a shell's {attr}`~extra_platforms.Shell.executable_names`.
-    Walks {func}`_parent_process_tree` and returns the first (nearest) absolute
-    path whose normalized name is one of them. Non-absolute sources (a login
-    dash or a bare ``argv[0]``) are skipped so callers can fall back to
-    ``SHELL``. A path is considered absolute when it starts with ``/`` (POSIX)
-    or satisfies ``os.path.isabs`` (Windows drive paths like ``C:\...``).
-    Returns {data}`None` when no running path is found.
-    """
-    for name, path in _parent_process_tree():
-        if name in names and (path.startswith("/") or os.path.isabs(path)):
-            return path
-    return None
 
 
 def _shell_path(names: frozenset[str]) -> str | None:
     """Return the executable path of the shell going by ``names``.
 
-    Prefers the running binary from {func}`_running_shell_path`. Falls back to
-    the ``SHELL`` environment variable only when it names that same shell: a
-    login shell of another kind says nothing about where this one lives.
-    Returns {data}`None` otherwise.
+    Prefers the running binary, the nearest of the parent process tree. Falls
+    back to the ``SHELL`` environment variable only when it names that same
+    shell: a login shell of another kind says nothing about where this one
+    lives. Returns {data}`None` otherwise.
     """
-    if path := _running_shell_path(names):
+    if path := _process_tree.nearest_path(names):
         return path
     if _resolved_shell_id() in names:
         return environ["SHELL"]
@@ -1683,23 +1254,20 @@ def _shell_path(names: frozenset[str]) -> str | None:
 def _nearest_running_shell(shells: Iterable[Shell]) -> Shell | None:
     """Return the shell of ``shells`` running nearest to the current process.
 
-    Walks {func}`_parent_process_tree` from the current process up, and returns
+    Walks the parent process tree from the current process up, and returns
     the first shell one of whose {attr}`~extra_platforms.Shell.executable_names`
     names an ancestor. Returns {data}`None` when no ancestor runs any of
     ``shells``.
     """
-    for name, _ in _parent_process_tree():
+    for name, _ in _process_tree.parent_process_tree():
         for shell in shells:
             if name in shell.executable_names:
                 return shell
     return None
 
 
-def _detect_shell(
-    version_env_var: str | None = None,
-    shell_ids: str | Iterable[str] | None = None,
-) -> bool:
-    """Detect a specific shell from the environment.
+def _detect_shell(shell: Shell) -> bool:
+    """Detect ``shell`` from the environment.
 
     ```{caution}
     This function is designed primarily for POSIX/Unix systems. The `SHELL`
@@ -1710,42 +1278,23 @@ def _detect_shell(
 
     Uses a tiered detection strategy:
 
-    1. Checks for shell-specific version environment variable (most reliable).
-    2. Resolves symlinks in the ``SHELL`` environment variable path, then
-       matches the resolved executable name against ``shell_ids``. This
+    1. The {attr}`~extra_platforms.Shell.version_env_var` of the shell is set
+       (most reliable).
+    2. The ``SHELL`` environment variable, resolved through symlinks, names one
+       of the {attr}`~extra_platforms.Shell.executable_names` of the shell. This
        reports the actual shell implementation rather than the interface name:
        when ``/bin/sh`` symlinks to ``/bin/bash``, ``bash`` is detected, not
        ``sh``.
-    3. Falls back to walking the parent process tree (via `/proc` on Linux,
-       `ps` on macOS, the BSDs and illumos) to find the active shell, for
-       stripped environments without shell env vars.
-
-    :param version_env_var: Shell-specific environment variable name
-        (like ``"BASH_VERSION"``).
-    :param shell_ids: Shell executable name(s) to match. Can be a single string
-        (like ``"bash"``) or a shell's
-        {attr}`~extra_platforms.Shell.executable_names`.
-    :returns: ``True`` if the shell is detected, ``False`` otherwise.
+    3. A process of the parent tree goes by one of those names. The tree is read
+       from `/proc` on Linux, and from `ps` on macOS, the BSDs and illumos. This
+       covers stripped containers, like `ubuntu-slim`, where `SHELL` is not set.
     """
-    # Check shell-specific version environment variable.
-    if version_env_var and version_env_var in environ:
+    if shell.version_env_var and shell.version_env_var in environ:
         return True
-
-    if shell_ids is None:
-        return False
-
-    # Normalize shell_ids for consistent handling.
-    ids = (
-        frozenset((shell_ids,)) if isinstance(shell_ids, str) else frozenset(shell_ids)
+    names = shell.executable_names
+    return _resolved_shell_id() in names or not names.isdisjoint(
+        _process_tree.parent_process_names()
     )
-
-    # Check resolved SHELL environment variable against known shell IDs.
-    if _resolved_shell_id() in ids:
-        return True
-
-    # Fallback: walk the parent process tree to find the active shell. This
-    # covers stripped containers (like ubuntu-slim) where SHELL is not set.
-    return bool(ids & _parent_process_exe_names())
 
 
 @cache
@@ -1758,15 +1307,15 @@ def is_ash() -> bool:
     ```
 
     ```{note}
-    [BusyBox](https://busybox.net)'s built-in shell is an {data}`~extra_platforms.ASH`
-    derivative, which its ``sh`` and ``ash`` applets both run (see
-    `_BUSYBOX_ASH_APPLETS`). On BusyBox-based systems ({data}`~extra_platforms.ALPINE`,
-    {data}`~extra_platforms.OPENWRT`), `/bin/sh` and `/bin/ash` both link to
-    BusyBox, so either one, as `$SHELL` or running, is detected as
-    {data}`~extra_platforms.ASH`.
+    [BusyBox](https://busybox.net)'s built-in shell is an
+    {data}`~extra_platforms.ASH` derivative, which its ``sh`` and ``ash`` applets
+    both run (see `extra_platforms._process_tree`). On BusyBox-based
+    systems ({data}`~extra_platforms.ALPINE`, {data}`~extra_platforms.OPENWRT`),
+    `/bin/sh` and `/bin/ash` both link to BusyBox, so either one, as `$SHELL` or
+    running, is detected as {data}`~extra_platforms.ASH`.
     ```
     """
-    return _detect_shell(shell_ids="ash")
+    return _detect_shell(ASH)
 
 
 @cache
@@ -1788,7 +1337,7 @@ def is_bash() -> bool:
     to find it.
     ```
     """
-    return _detect_shell(version_env_var="BASH_VERSION", shell_ids="bash")
+    return _detect_shell(BASH)
 
 
 @cache
@@ -1804,8 +1353,7 @@ def is_cmd() -> bool:
     # cmd.exe in the parent process tree is the strong signal; the PROMPT/
     # PSModulePath heuristic covers the case where the tree is unavailable.
     return sys.platform == "win32" and (
-        _detect_shell(shell_ids="cmd")
-        or ("PROMPT" in environ and "PSModulePath" not in environ)
+        _detect_shell(CMD) or ("PROMPT" in environ and "PSModulePath" not in environ)
     )
 
 
@@ -1817,7 +1365,7 @@ def is_csh() -> bool:
     Detected via the `SHELL` environment variable path.
     ```
     """
-    return _detect_shell(shell_ids="csh")
+    return _detect_shell(CSH)
 
 
 @cache
@@ -1829,7 +1377,7 @@ def is_dash() -> bool:
     not set its own version variable.
     ```
     """
-    return _detect_shell(shell_ids="dash")
+    return _detect_shell(DASH)
 
 
 @cache
@@ -1841,7 +1389,7 @@ def is_fish() -> bool:
     on startup), or via the `SHELL` path as a fallback.
     ```
     """
-    return _detect_shell(version_env_var="FISH_VERSION", shell_ids="fish")
+    return _detect_shell(FISH)
 
 
 @cache
@@ -1853,12 +1401,7 @@ def is_ksh() -> bool:
     shell on startup), or via the `SHELL` path as a fallback.
     ```
     """
-    # Lazy import to avoid circular dependencies.
-    from .shell_data import KSH
-
-    return _detect_shell(
-        version_env_var=KSH.version_env_var, shell_ids=KSH.executable_names
-    )
+    return _detect_shell(KSH)
 
 
 @cache
@@ -1870,12 +1413,7 @@ def is_nushell() -> bool:
     on startup), or via the `SHELL` path as a fallback.
     ```
     """
-    # Lazy import to avoid circular dependencies.
-    from .shell_data import NUSHELL
-
-    return _detect_shell(
-        version_env_var=NUSHELL.version_env_var, shell_ids=NUSHELL.executable_names
-    )
+    return _detect_shell(NUSHELL)
 
 
 @cache
@@ -1907,14 +1445,9 @@ def is_powershell() -> bool:
     which deprioritizes PowerShell when other shells are detected.
     ```
     """
-    # PSModulePath is a presence signal, not a version variable. Check it
-    # inline instead of routing through _detect_shell(version_env_var=...).
-    if "PSModulePath" in environ:
-        return True
-    # Lazy import to avoid circular dependencies.
-    from .shell_data import POWERSHELL
-
-    return _detect_shell(shell_ids=POWERSHELL.executable_names)
+    # PSModulePath is a presence signal, not a version variable, so POWERSHELL
+    # declares no version_env_var for _detect_shell() to read.
+    return "PSModulePath" in environ or _detect_shell(POWERSHELL)
 
 
 @cache
@@ -1945,7 +1478,7 @@ def is_sh() -> bool:
     {func}`~extra_platforms.current_shell` returns the specific shell.
     ```
     """
-    return _detect_shell(shell_ids="sh")
+    return _detect_shell(SH)
 
 
 @cache
@@ -1956,7 +1489,7 @@ def is_tcsh() -> bool:
     Detected via the `SHELL` environment variable path.
     ```
     """
-    return _detect_shell(shell_ids="tcsh")
+    return _detect_shell(TCSH)
 
 
 @cache
@@ -1976,7 +1509,7 @@ def is_xonsh() -> bool:
     {attr}`~extra_platforms.Shell.interpreter`).
     ```
     """
-    return _detect_shell(version_env_var="XONSH_VERSION", shell_ids="xonsh")
+    return _detect_shell(XONSH)
 
 
 @cache
@@ -1988,15 +1521,12 @@ def is_zsh() -> bool:
     startup), or via the `SHELL` path as a fallback.
     ```
     """
-    return _detect_shell(version_env_var="ZSH_VERSION", shell_ids="zsh")
+    return _detect_shell(ZSH)
 
 
 @cache
 def is_unknown_shell() -> bool:
     """Return {data}`True` if the shell is {data}`~extra_platforms.UNKNOWN_SHELL`."""
-    # Lazy import to avoid circular dependencies.
-    from .shell_data import UNKNOWN_SHELL
-
     return current_shell() is UNKNOWN_SHELL
 
 
@@ -2119,7 +1649,7 @@ def is_xterm() -> bool:
 
     ```{note}
     We check for `XTERM_VERSION` rather than `TERM=xterm` because many
-    headless environments (e.g., GitHub Actions `ubuntu-slim` runners) set
+    headless environments, like GitHub Actions `ubuntu-slim` runners, set
     `TERM=xterm` for termcap/terminfo compatibility without actually running
     xterm.
     ```
@@ -2139,9 +1669,6 @@ def is_unknown_terminal() -> bool:
 
     See {data}`~extra_platforms.UNKNOWN_TERMINAL`.
     """
-    # Lazy import to avoid circular dependencies.
-    from .terminal_data import UNKNOWN_TERMINAL
-
     return current_terminal() is UNKNOWN_TERMINAL
 
 
@@ -2312,9 +1839,6 @@ def is_travis_ci() -> bool:
 @cache
 def is_unknown_ci() -> bool:
     """Return {data}`True` if current CI is {data}`~extra_platforms.UNKNOWN_CI`."""
-    # Lazy import to avoid circular dependencies.
-    from .ci_data import UNKNOWN_CI
-
     return current_ci() is UNKNOWN_CI
 
 
@@ -2428,18 +1952,95 @@ def is_pi() -> bool:
 @cache
 def is_unknown_agent() -> bool:
     """Return {data}`True` if the agent is {data}`~extra_platforms.UNKNOWN_AGENT`."""
-    # Lazy import to avoid circular dependencies.
-    from .agent_data import UNKNOWN_AGENT
-
     return current_agent() is UNKNOWN_AGENT
 
 
 # Populate the detection registry with all is_*() functions defined above.
-_detection_registry.update({
-    _name: _func
-    for _name in dir()
-    if _name.startswith("is_") and callable(_func := globals()[_name])
-})
+_detection_registry.update(
+    (name, func)
+    for name, func in globals().items()
+    if name.startswith("is_") and callable(func)
+)
+
+
+# =============================================================================
+# Group detection functions
+# =============================================================================
+
+
+def _group_detection_function(group: Group) -> Callable[[], bool]:
+    """Build the cached detection function of `group`.
+
+    The function reads the members of the group alone, and stops at the first one
+    matching the current environment: checking the platforms of
+    {data}`~extra_platforms.LINUX` never walks the process tree for a shell.
+    """
+
+    def detect() -> bool:
+        return any(trait.current for trait in group)
+
+    detect.__name__ = detect.__qualname__ = group.detection_func_id
+    detect.__doc__ = (
+        "Return {data}`True` if at least one member of the "
+        f"{{data}}`~extra_platforms.{group.symbol_id}` group matches the current "
+        "environment."
+    )
+    return cache(detect)
+
+
+# Generate the is_<group>() function of each group, beside the trait ones: traits
+# and groups have unique, non-overlapping IDs.
+for _group in ALL_GROUPS:
+    _func_id = _group.detection_func_id
+    assert _func_id not in _detection_registry, f"{_func_id}() is already registered."
+    globals()[_func_id] = _group_detection_function(_group)
+    _detection_registry[_func_id] = globals()[_func_id]
+del _group, _func_id
+
+# Declare the generated group detection functions, so that mypy and other static
+# type checkers can see them.
+if TYPE_CHECKING:
+
+    def is_any_agent() -> bool: ...
+    def is_any_architecture() -> bool: ...
+    def is_any_arm() -> bool: ...
+    def is_any_ci() -> bool: ...
+    def is_any_mips() -> bool: ...
+    def is_any_platform() -> bool: ...
+    def is_any_shell() -> bool: ...
+    def is_any_sparc() -> bool: ...
+    def is_any_terminal() -> bool: ...
+    def is_any_trait() -> bool: ...
+    def is_any_windows() -> bool: ...
+    def is_arch_32_bit() -> bool: ...
+    def is_arch_64_bit() -> bool: ...
+    def is_big_endian() -> bool: ...
+    def is_bourne_shells() -> bool: ...
+    def is_bsd() -> bool: ...
+    def is_bsd_not_macos() -> bool: ...
+    def is_c_shells() -> bool: ...
+    def is_gpu_terminals() -> bool: ...
+    def is_ibm_mainframe() -> bool: ...
+    def is_linux() -> bool: ...
+    def is_linux_layers() -> bool: ...
+    def is_linux_like() -> bool: ...
+    def is_little_endian() -> bool: ...
+    def is_loongarch() -> bool: ...
+    def is_multiplexers() -> bool: ...
+    def is_native_terminals() -> bool: ...
+    def is_other_posix() -> bool: ...
+    def is_other_shells() -> bool: ...
+    def is_powerpc() -> bool: ...
+    def is_riscv() -> bool: ...
+    def is_system_v() -> bool: ...
+    def is_unix() -> bool: ...
+    def is_unix_layers() -> bool: ...
+    def is_unix_not_macos() -> bool: ...
+    def is_unknown() -> bool: ...
+    def is_web_terminals() -> bool: ...
+    def is_webassembly() -> bool: ...
+    def is_windows_shells() -> bool: ...
+    def is_x86() -> bool: ...
 
 
 # =============================================================================
@@ -2459,13 +2060,16 @@ def _drop_fallbacks(matching: set[_TTrait], *fallbacks: _TTrait) -> None:
         matching.discard(fallback)
 
 
+def _matching(traits: Iterable[Trait], kind: type[_TTrait]) -> set[_TTrait]:
+    """Collect the `traits` of class `kind` matching the current environment."""
+    return {trait for trait in traits if isinstance(trait, kind) and trait.current}
+
+
 def _single_match(
     matching: set[_TTrait],
     unknown: _TTrait,
-    label: str,
     *,
     strict: bool,
-    plural: str | None = None,
     expected: bool = True,
 ) -> _TTrait:
     """Resolve a set of matching traits to a single result.
@@ -2475,12 +2079,12 @@ def _single_match(
     {exc}`RuntimeError` when multiple traits still match, as category-specific
     disambiguation is the caller's job.
 
+    Messages name the category after the {attr}`~extra_platforms.Trait.type_name`
+    of the class of ``unknown``, like ``"CI system"``.
+
     :param matching: Traits matching the current environment, already
         disambiguated by the caller.
     :param unknown: The ``UNKNOWN_*`` trait to return when nothing matched.
-    :param label: Human-readable trait type (like ``"architecture"``), used in
-        messages. The plural defaults to ``label + "s"``; pass ``plural`` for
-        irregular forms (like ``"CI systems"``).
     :param strict: If `True`, raise on an unrecognized environment instead of
         logging.
     :param expected: If `False`, the trait may legitimately be absent, and an
@@ -2489,13 +2093,16 @@ def _single_match(
     if len(matching) == 1:
         return matching.pop()
 
+    kind = type(unknown)
     if matching:
         raise RuntimeError(
-            f"Multiple {plural or label + 's'} match: {matching!r}. "
-            f"{_unrecognized_message(category=label)}"
+            f"Multiple {kind.type_name}s match: {matching!r}. "
+            f"{_unrecognized_message(category=kind.type_id)}"
         )
 
-    _report_unrecognized(label, strict=strict, expected=expected, category=label)
+    _report_unrecognized(
+        kind.type_name, strict=strict, expected=expected, category=kind.type_id
+    )
     return unknown
 
 
@@ -2516,18 +2123,9 @@ def current_architecture(strict: bool = False) -> Architecture:
     should be [reported](https://github.com/kdeldycke/extra-platforms/issues).
     ```
     """
-    # Lazy imports to avoid circular dependencies.
-    from .architecture_data import UNKNOWN_ARCHITECTURE
-    from .group_data import ALL_ARCHITECTURES
-
-    # Collect all matching architectures.
-    matching: set[Architecture] = {
-        arch  # type: ignore[misc]
-        for arch in ALL_ARCHITECTURES
-        if arch.current
-    }
-
-    return _single_match(matching, UNKNOWN_ARCHITECTURE, "architecture", strict=strict)
+    return _single_match(
+        _matching(ALL_ARCHITECTURES, Architecture), UNKNOWN_ARCHITECTURE, strict=strict
+    )
 
 
 @cache
@@ -2557,16 +2155,7 @@ def current_platform(strict: bool = False) -> Platform:
     [reported](https://github.com/kdeldycke/extra-platforms/issues).
     ```
     """
-    # Lazy imports to avoid circular dependencies.
-    from .group_data import ALL_PLATFORMS
-    from .platform_data import CHROMEOS, GENERIC_LINUX, UNKNOWN_PLATFORM, WSL1, WSL2
-
-    # Collect all matching platforms.
-    matching: set[Platform] = {
-        plat  # type: ignore[misc]
-        for plat in ALL_PLATFORMS
-        if plat.current
-    }
+    matching = _matching(ALL_PLATFORMS, Platform)
 
     # A lone GENERIC_LINUX match means the Linux distribution itself was not
     # identified, which is worth reporting. Strict mode raises only on an
@@ -2590,7 +2179,7 @@ def current_platform(strict: bool = False) -> Platform:
     # goes last, as any distribution match is more specific.
     _drop_fallbacks(matching, WSL1, WSL2, CHROMEOS, GENERIC_LINUX)
 
-    return _single_match(matching, UNKNOWN_PLATFORM, "platform", strict=strict)
+    return _single_match(matching, UNKNOWN_PLATFORM, strict=strict)
 
 
 @cache
@@ -2641,18 +2230,9 @@ def current_shell(strict: bool = False) -> Shell:
     Inspired by [UV's cross-platform shell detection](https://github.com/astral-sh/uv/blob/0.10.2/crates/uv-shell/src/lib.rs).
     ```
     """
-    # Lazy imports to avoid circular dependencies.
-    from .group_data import ALL_SHELLS
-    from .shell_data import POWERSHELL, SH, UNKNOWN_SHELL
-
     # Collect all matching shells via the full scan (env vars, SHELL=,
     # parent process tree, Windows defaults).
-    matching: set[Shell] = {
-        shell  # type: ignore[misc]
-        for shell in ALL_SHELLS
-        if shell.current
-    }
-
+    matching = _matching(ALL_SHELLS, Shell)
     if len(matching) == 1:
         return matching.pop()
 
@@ -2660,8 +2240,7 @@ def current_shell(strict: bool = False) -> Shell:
     # for the *active* shell). These env vars (like BASH_VERSION) are
     # shell-internal and typically not exported to child processes, so this
     # tier only fires when the Python process IS the shell itself.
-    active = _active_env_var_shell_ids()
-    if active:
+    if active := _active_env_var_shell_ids():
         active_matches = {s for s in matching if s.id in active}
         if len(active_matches) == 1:
             return active_matches.pop()
@@ -2673,8 +2252,7 @@ def current_shell(strict: bool = False) -> Shell:
     # the common CI conflict where SHELL=/bin/sh resolves to /bin/dash
     # (configured login shell) while bash is the actual parent process
     # running the step.
-    proc_names = _parent_process_exe_names()
-    if proc_names:
+    if proc_names := _process_tree.parent_process_names():
         proc_matches = {
             s for s in matching if not proc_names.isdisjoint(s.executable_names)
         }
@@ -2689,8 +2267,7 @@ def current_shell(strict: bool = False) -> Shell:
             matching = proc_matches
 
     # Tier 3: prefer the shell resolved from SHELL= over remaining matches.
-    resolved = _resolved_shell_id()
-    if resolved:
+    if resolved := _resolved_shell_id():
         resolved_matches = {s for s in matching if resolved in s.executable_names}
         if len(resolved_matches) == 1:
             return resolved_matches.pop()
@@ -2702,7 +2279,7 @@ def current_shell(strict: bool = False) -> Shell:
     # into child processes and falsely flags PowerShell as active.
     _drop_fallbacks(matching, SH, POWERSHELL)
 
-    return _single_match(matching, UNKNOWN_SHELL, "shell", strict=strict)
+    return _single_match(matching, UNKNOWN_SHELL, strict=strict)
 
 
 @cache
@@ -2765,16 +2342,7 @@ def current_terminal(strict: bool = False) -> Terminal:
     heuristic on the remote end.
     ```
     """
-    # Lazy imports to avoid circular dependencies.
-    from .group_data import ALL_TERMINALS, MULTIPLEXERS
-    from .terminal_data import UNKNOWN_TERMINAL
-
-    # Collect all matching terminals.
-    matching: set[Terminal] = {
-        term  # type: ignore[misc]
-        for term in ALL_TERMINALS
-        if term.current
-    }
+    matching = _matching(ALL_TERMINALS, Terminal)
 
     # If multiple terminals match, filter out multiplexers to report the
     # hosting terminal emulator (like KITTY hosting a TMUX session).
@@ -2789,7 +2357,6 @@ def current_terminal(strict: bool = False) -> Terminal:
     return _single_match(
         matching,
         UNKNOWN_TERMINAL,
-        "terminal",
         strict=strict,
         expected=(
             environ.get("TERM", "") not in _DUMB_TERMS
@@ -2818,21 +2385,9 @@ def current_ci(strict: bool = False) -> CI:
     Otherwise, it logs at `INFO` level.
     ```
     """
-    # Lazy imports to avoid circular dependencies.
-    from .ci_data import UNKNOWN_CI
-    from .group_data import ALL_CI
-
-    # Collect all matching CI systems.
-    matching: set[CI] = {ci for ci in ALL_CI if ci.current}  # type: ignore[misc]
-
     # The CI env var signals a CI system is expected to be present.
     return _single_match(
-        matching,
-        UNKNOWN_CI,
-        "CI",
-        strict=strict,
-        plural="CI systems",
-        expected="CI" in environ,
+        _matching(ALL_CI, CI), UNKNOWN_CI, strict=strict, expected="CI" in environ
     )
 
 
@@ -2856,21 +2411,9 @@ def current_agent(strict: bool = False) -> Agent:
     recognized. Otherwise, it logs at `INFO` level.
     ```
     """
-    # Lazy imports to avoid circular dependencies.
-    from .agent_data import UNKNOWN_AGENT
-    from .group_data import ALL_AGENTS
-
-    # Collect all matching agents.
-    matching: set[Agent] = {
-        agent  # type: ignore[misc]
-        for agent in ALL_AGENTS
-        if agent.current
-    }
-
     return _single_match(
-        matching,
+        _matching(ALL_AGENTS, Agent),
         UNKNOWN_AGENT,
-        "agent",
         strict=strict,
         expected=any(var in environ for var in _AGENT_PRESENCE_ENV_VARS),
     )
@@ -2909,9 +2452,6 @@ def current_traits() -> frozenset[Trait]:
     choice but to evaluate all detection heuristics.
     ```
     """
-    # Lazy imports to avoid circular dependencies.
-    from .group_data import ALL_TRAITS, UNKNOWN
-
     # Collect all matching traits. Immutability matters: this function is
     # cached, so a mutable result would let callers corrupt the cache for
     # everybody else.
@@ -2921,3 +2461,25 @@ def current_traits() -> frozenset[Trait]:
         raise SystemError(f"Unrecognized environment: {_unrecognized_message()}")
 
     return matching
+
+
+# =============================================================================
+# Cache management
+# =============================================================================
+
+
+def invalidate_caches() -> None:
+    """Invalidate every cached detection result.
+
+    Inspired by [`platform.invalidate_caches()`](https://docs.python.org/3.14/library/platform.html#platform.invalidate_caches),
+    which is also called here on Python 3.14 and newer.
+    """
+    if sys.version_info >= (3, 14):
+        platform.invalidate_caches()
+    invalidate_os_release_cache()
+    # Every cached function of the detection modules: trait and group heuristics,
+    # current_*() resolvers, and the signals they share, like the walk of the
+    # parent process tree.
+    for value in (*globals().values(), *vars(_process_tree).values()):
+        if cache_clear := getattr(value, "cache_clear", None):
+            cache_clear()

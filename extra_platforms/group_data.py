@@ -1126,7 +1126,7 @@ None of these groups are marked as {attr}`~extra_platforms.Group.canonical`.
 """
 
 
-ALL_GROUPS: frozenset[Group] = frozenset(CANONICAL_GROUPS | NON_CANONICAL_GROUPS)
+ALL_GROUPS: frozenset[Group] = CANONICAL_GROUPS | NON_CANONICAL_GROUPS
 """All predefined groups.
 
 ```{hint}
@@ -1140,7 +1140,7 @@ non-canonical groups, including the {data}`~extra_platforms.UNKNOWN` group.
 # ID collections
 # =============================================================================
 
-ALL_TRAIT_IDS: frozenset[str] = frozenset(trait.id for trait in ALL_TRAITS - UNKNOWN)
+ALL_TRAIT_IDS: frozenset[str] = (ALL_TRAITS - UNKNOWN).member_ids
 """A {class}`frozenset` of all recognized traits IDs.
 
 ```{attention}

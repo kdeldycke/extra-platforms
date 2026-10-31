@@ -37,13 +37,10 @@ except ImportError:
     )
 
 import sys
-from itertools import chain
 
-import extra_platforms
-
+from .detection import _detection_registry, is_windows
 from .group import Group
 from .group_data import ALL_GROUPS, ALL_TRAITS
-from .trait import Trait
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -51,6 +48,8 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from _pytest.mark.structures import MarkDecorator
+
+    from .trait import Trait
 
 
 def write_fake_executable(
@@ -79,19 +78,19 @@ def write_fake_executable(
     lines.append(f"sys.exit({returncode})")
     script = "\n".join(lines) + "\n"
 
-    if extra_platforms.is_windows():
+    if is_windows():
         # Windows ignores the shebang and cannot exec a bare script file, so run
         # the body from a .py sidecar through a .cmd launcher instead.
         script_file = path.with_suffix(".py")
-        script_file.write_text(script, encoding="utf-8")
+        script_file.write_text(script, encoding="UTF-8")
         launcher = path.with_suffix(".cmd")
         launcher.write_text(
             f'@echo off\n"{sys.executable}" "{script_file}"\n',
-            encoding="utf-8",
+            encoding="UTF-8",
         )
         return launcher
 
-    path.write_text(f"#!{sys.executable}\n{script}", encoding="utf-8")
+    path.write_text(f"#!{sys.executable}\n{script}", encoding="UTF-8")
     path.chmod(0o755)
     return path
 
@@ -99,19 +98,19 @@ def write_fake_executable(
 class _DeferredCondition:
     """Defer the evaluation of a condition.
 
-    This allow a callable returning a boolean to be evaluated only when the boolean
+    This allows a callable returning a boolean to be evaluated only when the boolean
     value is requested.
 
-    Pytest's marks can have a condition attached to them. Which is practical for
-    implementing our own ready-to-use `@skip` and `@unless` decorators.
+    Pytest's marks can have a condition attached to them, which implements our
+    ready-to-use `@skip` and `@unless` decorators. But Pytest evaluates a boolean
+    condition when the mark is created, which would call every detection heuristic
+    while this module generates its decorators.
 
-    The problem is: this condition is evaluated at import time. Which leads to all our
-    platform detection heuristics to be called when we generates our custom decorators
-    below.
-
-    This issue is being discussed upstream at:
-        - https://github.com/pytest-dev/pytest/issues/7395
-        - https://github.com/pytest-dev/pytest/issues/9650
+    ```{seealso}
+    The issue is discussed upstream in
+    [`pytest-dev/pytest#7395`](https://github.com/pytest-dev/pytest/issues/7395)
+    and [`pytest-dev/pytest#9650`](https://github.com/pytest-dev/pytest/issues/9650).
+    ```
     """
 
     def __init__(self, condition: Callable[[], bool], invert: bool = False) -> None:
@@ -128,51 +127,27 @@ class _DeferredCondition:
         return bool(self)
 
 
-def _make_decorator_docstring(obj: Trait | Group, is_skip: bool) -> str:
-    """Generate a docstring for a pytest decorator.
+def _decorator_docstring(obj: Trait | Group, skip: bool) -> str:
+    """Generate the docstring of a Pytest decorator.
 
-    Creates a concise docstring with links to the associated trait/group and
-    its detection function, using unambiguous language about the behavior.
+    Links the trait or group the decorator is about, and its detection function.
+    Full paths are required: this module is `extra_platforms.pytest`, so a short
+    reference like `` {data}`~AARCH64` `` would resolve against it.
 
     :param obj: The trait or group to document.
-    :param is_skip: Whether this is a skip decorator (``True``) or unless
-        decorator (``False``).
-    :returns: A docstring string.
+    :param skip: Whether this is a skip decorator, or an unless decorator.
     """
-    # Create reference links using MyST roles with full paths.
-    # Full paths are required because this module is extra_platforms.pytest, so
-    # short references like {data}`~AARCH64` would be resolved relative to
-    # extra_platforms.pytest, not extra_platforms.
-    symbol_link = f"{{data}}`~extra_platforms.{obj.symbol_id}`"
-    detection_link = f"{{func}}`~extra_platforms.{obj.detection_func_id}`"
-
-    is_group = isinstance(obj, Group)
-
-    if is_skip:
-        if is_group:
-            summary = (
-                f"Skip test if current environment matches any member of the "
-                f"{symbol_link} group (i.e., when {detection_link} returns `True`)."
-            )
-        else:
-            summary = (
-                f"Skip test if current environment is {symbol_link} "
-                f"(i.e., when {detection_link} returns `True`)."
-            )
+    symbol = f"{{data}}`~extra_platforms.{obj.symbol_id}`"
+    if isinstance(obj, Group):
+        condition = f"current environment matches any member of the {symbol} group"
     else:
-        if is_group:
-            summary = (
-                f"Run test only if current environment matches any member of the "
-                f"{symbol_link} group (i.e., when {detection_link} returns `True`). "
-                f"Skip otherwise."
-            )
-        else:
-            summary = (
-                f"Run test only if current environment is {symbol_link} "
-                f"(i.e., when {detection_link} returns `True`). Skip otherwise."
-            )
-
-    return summary
+        condition = f"current environment is {symbol}"
+    detection = (
+        f"when {{func}}`~extra_platforms.{obj.detection_func_id}` returns `True`"
+    )
+    if skip:
+        return f"Skip test if {condition} ({detection})."
+    return f"Run test only if {condition} ({detection}). Skip otherwise."
 
 
 def _generate_decorators() -> None:
@@ -181,29 +156,21 @@ def _generate_decorators() -> None:
     Decorators are registered as module-level attributes, named after each
     object's ``skip_decorator_id`` and ``unless_decorator_id``.
     """
-    for obj in chain(ALL_TRAITS, ALL_GROUPS):
-        # Sanity check to please the type checker.
-        assert isinstance(obj, (Trait, Group))
-
-        # Get the detection function for the current object.
-        func = getattr(extra_platforms, obj.detection_func_id)
-
-        # Generate both skip and unless decorators for this object.
-        for is_skip in (True, False):
-            decorator_id = obj.skip_decorator_id if is_skip else obj.unless_decorator_id
-            reason_prefix = "Skip" if is_skip else "Requires"
-            condition = _DeferredCondition(func, invert=not is_skip)
-
+    objects: tuple[Trait | Group, ...] = (*ALL_TRAITS, *ALL_GROUPS)
+    for obj in objects:
+        detect = _detection_registry[obj.detection_func_id]
+        for skip, decorator_id, reason in (
+            (True, obj.skip_decorator_id, f"Skip {obj.name}"),
+            (False, obj.unless_decorator_id, f"Requires {obj.name}"),
+        ):
             decorator = pytest.mark.skipif(
-                condition,  # type: ignore[arg-type]
+                _DeferredCondition(detect, invert=not skip),  # type: ignore[arg-type]
                 # Use the name verbatim: down-casing its first letter would
                 # mangle acronyms and brands (like CI, GitHub or iTerm2).
-                reason=f"{reason_prefix} {obj.name}",
+                reason=reason,
             )
-
             # Set a custom docstring for Sphinx autodoc.
-            decorator.__doc__ = _make_decorator_docstring(obj, is_skip=is_skip)
-
+            decorator.__doc__ = _decorator_docstring(obj, skip=skip)
             globals()[decorator_id] = decorator
 
 

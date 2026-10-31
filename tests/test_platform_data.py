@@ -212,7 +212,7 @@ def test_nerdfont_icons_documented_in_source():
     """
     source = (
         Path(__file__).parent.parent / "extra_platforms" / "platform_data.py"
-    ).read_text(encoding="utf-8")
+    ).read_text(encoding="UTF-8")
     body = ast.parse(source).body
 
     checked = []

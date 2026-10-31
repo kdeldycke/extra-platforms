@@ -84,7 +84,7 @@ def test_group_class_metadata():
     # Verify that the file starts with a proper markdown title.
     assert re.fullmatch(
         rf"# \{{octicon}}`\S+` {Group.type_name[0].upper()}{Group.type_name[1:]}s",
-        doc_file.read_text(encoding="utf-8").splitlines()[0],
+        doc_file.read_text(encoding="UTF-8").splitlines()[0],
     )
 
 

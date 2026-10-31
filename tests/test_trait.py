@@ -84,7 +84,7 @@ def test_trait_class_metadata(klass):
     # Verify that the file starts with a proper markdown title.
     assert re.fullmatch(
         rf"# \{{octicon}}`\S+` {klass.type_name[0].upper()}{klass.type_name[1:]}s",
-        doc_file.read_text(encoding="utf-8").splitlines()[0],
+        doc_file.read_text(encoding="UTF-8").splitlines()[0],
     )
 
 
@@ -185,17 +185,47 @@ def test_detection_function_missing(caplog):
         _ = trait.current
 
 
-@pytest.mark.parametrize("attribute", ("type_id", "type_name"))
-def test_subclass_rejects_empty_type_attribute(attribute):
-    """A subclass setting an empty type ID or type name fails at definition.
+@pytest.mark.parametrize("attribute", ("type_id", "type_name", "doc_page"))
+@pytest.mark.parametrize("in_body", (True, False), ids=("class_body", "keyword"))
+def test_subclass_rejects_empty_metadata(attribute, in_body):
+    """A subclass setting empty class metadata fails at definition.
 
     The subclass derives from `Group`: a failed `Trait` subclass would linger in
     `Trait.__subclasses__()`, which `_all_group_suffix_to_type_id()` reads.
     """
+    namespace, keywords = ({attribute: ""}, {}) if in_body else ({}, {attribute: ""})
     with pytest.raises(
         AssertionError, match=f"Season must define a non-empty {attribute}"
     ):
-        type("Season", (Group,), {attribute: ""})
+        type("Season", (Group,), namespace, **keywords)
+
+
+def test_subclass_rejects_unknown_metadata_keyword():
+    """A class keyword argument naming no metadata fails at definition."""
+    with pytest.raises(
+        AssertionError, match=re.escape("Season sets unknown metadata ['colour']")
+    ):
+        type("Season", (Group,), {}, colour="green")
+
+
+def test_subclass_metadata_derives_from_type_id():
+    """Metadata a subclass sets overrides the derived one, and seeds the others.
+
+    A class keyword argument wins over an attribute of the class body.
+    """
+
+    class Season(Group, type_id="season", doc_page="calendar.md"):
+        """A part of the year."""
+
+        doc_page = "almanac.md"
+        type_name = "part of the year"
+
+    assert Season.type_id == "season"
+    assert Season.type_name == "part of the year"
+    assert Season.data_module_id == "season_data"
+    assert Season.unknown_symbol == "UNKNOWN_SEASON"
+    assert Season.all_group == "ALL_SEASONS"
+    assert Season.doc_page == "calendar.md"
 
 
 @pytest.mark.parametrize(
@@ -217,32 +247,38 @@ def test_subclass_rejects_empty_type_attribute(attribute):
         ),
         pytest.param(
             Platform,
-            {"aliases": frozenset({""})},
-            "Platform alias cannot be empty",
+            {"aliases": ("",)},
+            "pear alias cannot be empty",
             id="empty_alias",
         ),
         pytest.param(
             Platform,
-            {"aliases": frozenset({"Poire"})},
-            "Alias 'Poire' must be lowercase for pear",
+            {"aliases": ("Poire",)},
+            "Alias 'Poire' of pear must be lowercase",
             id="alias_case",
         ),
         pytest.param(
             Platform,
-            {"aliases": frozenset({"pear"})},
-            "Alias 'pear' cannot be the same as ID",
+            {"aliases": ("pear",)},
+            "Alias 'pear' of pear is already its ID",
             id="alias_is_id",
+        ),
+        pytest.param(
+            Platform,
+            {"aliases": ("poire", "poire")},
+            "pear repeats an alias",
+            id="repeated_alias",
         ),
         pytest.param(
             Shell,
             {"executables": ("",)},
-            "pear executable name cannot be empty",
+            "pear executable cannot be empty",
             id="empty_executable",
         ),
         pytest.param(
             Shell,
             {"executables": ("Pear",)},
-            "Executable 'Pear' must be lowercase for pear",
+            "Executable 'Pear' of pear must be lowercase",
             id="executable_case",
         ),
         pytest.param(
@@ -250,6 +286,12 @@ def test_subclass_rejects_empty_type_attribute(attribute):
             {"executables": ("pear",)},
             "Executable 'pear' of pear is already its ID",
             id="executable_is_id",
+        ),
+        pytest.param(
+            Shell,
+            {"executables": ("poire", "poire")},
+            "pear repeats an executable",
+            id="repeated_executable",
         ),
     ),
 )
@@ -488,7 +530,7 @@ def _roster_rows(page: str) -> list[tuple[str, list[str]]]:
     """
     header, _population = _ROSTERS[page]
     doc = Path(__file__).parent.parent / "docs" / page
-    lines = doc.read_text(encoding="utf-8").splitlines()
+    lines = doc.read_text(encoding="UTF-8").splitlines()
     start = next(i for i, line in enumerate(lines) if line.startswith(header))
     rows = []
     # Step over the header and its alignment row, then read the body until the

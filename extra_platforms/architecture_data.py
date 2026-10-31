@@ -39,12 +39,12 @@ AARCH64 = Architecture(
     "ARM64 (AArch64)",
     "📱",
     "https://en.wikipedia.org/wiki/AArch64",
-    aliases=frozenset({"arm64"}),
+    aliases=("arm64",),
 )
 """
 ```{hint}
 Although `aarch64` is the canonical ID for this architecture, some
-platforms may use the alias `arm64` instead (e.g., macOS on Apple Silicon).
+platforms may use the alias `arm64` instead, like macOS on Apple Silicon.
 ```
 """
 
@@ -71,7 +71,7 @@ ARMV7L = Architecture(
     "ARMv7 (little-endian)",
     "📱",
     "https://en.wikipedia.org/wiki/ARM_Cortex-A",
-    aliases=frozenset({"armhf", "armv7"}),
+    aliases=("armhf", "armv7"),
 )
 
 ARMV8L = Architecture(
@@ -86,7 +86,7 @@ I386 = Architecture(
     "Intel 80386 (i386)",
     "𝗶",
     "https://en.wikipedia.org/wiki/Intel_80386",
-    aliases=frozenset({"i486"}),
+    aliases=("i486",),
 )
 
 I586 = Architecture(
@@ -151,7 +151,7 @@ PPC64LE = Architecture(
     "PowerPC 64-bit (little-endian)",
     "⚡",
     "https://en.wikipedia.org/wiki/Ppc64",
-    aliases=frozenset({"powerpc64le", "ppc64el"}),
+    aliases=("powerpc64le", "ppc64el"),
 )
 
 RISCV32 = Architecture(
@@ -197,11 +197,11 @@ X86_64 = Architecture(
     "x86-64 (AMD64)",
     "🖥️",
     "https://en.wikipedia.org/wiki/X86-64",
-    aliases=frozenset({"amd64"}),
+    aliases=("amd64",),
 )
 """
 ```{hint}
 Although `x86_64` is the canonical ID for this architecture, some
-platforms may use the alias `amd64` instead (e.g., Windows on x86-64).
+platforms may use the alias `amd64` instead, like Windows on x86-64.
 ```
 """

@@ -1,12 +1,9 @@
 # extra_platforms package
 
 ```{python:render}
-from itertools import chain
-
-from extra_platforms import ALL_GROUPS, ALL_TRAITS
 from extra_platforms._docs import generate_extra_platforms_automodule
 
-print(generate_extra_platforms_automodule(chain(ALL_TRAITS, ALL_GROUPS)))
+print(generate_extra_platforms_automodule())
 ```
 
 ## Submodules
@@ -45,10 +42,10 @@ print(generate_extra_platforms_automodule(chain(ALL_TRAITS, ALL_GROUPS)))
 
 ### extra_platforms.group module
 
-```{python:render}
-from extra_platforms._docs import generate_noindex_automodule
-
-print(generate_noindex_automodule("extra_platforms.group"))
+```{eval-rst}
+.. automodule:: extra_platforms.group
+   :noindex:
+   :no-members:
 ```
 
 ### extra_platforms.group_data module
@@ -101,8 +98,8 @@ print(generate_noindex_automodule("extra_platforms.group"))
 
 ### extra_platforms.trait module
 
-```{python:render}
-from extra_platforms._docs import generate_noindex_automodule
-
-print(generate_noindex_automodule("extra_platforms.trait"))
+```{eval-rst}
+.. automodule:: extra_platforms.trait
+   :noindex:
+   :no-members:
 ```

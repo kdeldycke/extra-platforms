@@ -20,6 +20,8 @@ import json
 import logging
 import sys
 import unicodedata
+from itertools import chain
+from operator import attrgetter
 
 from . import (
     Group,
@@ -37,33 +39,35 @@ from . import (
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from typing import Any
 
-# Section separator width.
+
 _SEPARATOR_WIDTH = 60
+"""Display width of the section separators."""
 
 
 _ZERO_WIDTH = frozenset((
-    0xFE0E,  # VS15 — text presentation selector.
-    0xFE0F,  # VS16 — emoji presentation selector.
-    0x200D,  # ZWJ — zero-width joiner.
+    0xFE0E,  # VS15: text presentation selector.
+    0xFE0F,  # VS16: emoji presentation selector.
+    0x200D,  # ZWJ: zero-width joiner.
 ))
+"""Code points taking no column, which the display width skips."""
 
 
 def _display_width(text: str) -> int:
     """Return the terminal display width of a string.
 
-    Zero-width characters (variation selectors, ZWJ) are skipped.  Remaining
+    Zero-width characters (variation selectors, ZWJ) are skipped. Remaining
     characters are measured via `east_asian_width`: **W** and **F** count as
-    two columns, everything else as one.  This matches the cursor-advance
-    behaviour of most terminal emulators, which follow the East Asian Width
+    two columns, everything else as one. This matches the cursor-advance
+    behavior of most terminal emulators, which follow the East Asian Width
     property rather than the emoji-presentation flag.
     """
-    width = 0
-    for ch in text:
-        if ord(ch) in _ZERO_WIDTH:
-            continue
-        width += 2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1
-    return width
+    return sum(
+        2 if unicodedata.east_asian_width(char) in ("W", "F") else 1
+        for char in text
+        if ord(char) not in _ZERO_WIDTH
+    )
 
 
 def _pad(text: str, target: int) -> str:
@@ -83,19 +87,12 @@ def _rule(header: str) -> str:
 def _column_widths(items: Iterable[Trait | Group]) -> tuple[int, int, int, int]:
     """Compute column widths for a set of traits or groups."""
     rows = list(items)
-    if not rows:
-        return (0, 0, 0, 0)
     return (
-        max(_display_width(r.icon) for r in rows),
-        max(len(r.symbol_id) for r in rows),
-        max(len(r.detection_func_id) + 2 for r in rows),
-        max(len(r.skip_decorator_id) + 1 for r in rows),
+        max((_display_width(r.icon) for r in rows), default=0),
+        max((len(r.symbol_id) for r in rows), default=0),
+        max((len(r.detection_func_id) + 2 for r in rows), default=0),
+        max((len(r.skip_decorator_id) + 1 for r in rows), default=0),
     )
-
-
-def _merge_widths(*widths: tuple[int, int, int, int]) -> tuple[int, int, int, int]:
-    """Return the element-wise maximum of multiple width tuples."""
-    return tuple(max(col) for col in zip(*widths))
 
 
 def _print_table(
@@ -122,7 +119,7 @@ def _print_table(
 def _print_trait(label: str, trait: Trait) -> None:
     """Print a detected trait with its info and group memberships.
 
-    :param label: The section label (e.g., "Architecture", "Platform").
+    :param label: The section label, like `"Architecture"`.
     :param trait: The detected trait instance.
     """
     # Section header, extended by a rule to the separator width.
@@ -159,17 +156,17 @@ def _print_trait(label: str, trait: Trait) -> None:
         print(f"{'groups':>14}: {', '.join(group_symbols)}")
 
 
-def _trait_dict(trait: Trait) -> dict:
+def _trait_dict(trait: Trait) -> dict[str, Any]:
     """Convert a detected trait to a JSON-serializable dict."""
     data = dict(trait.info())
-    data["aliases"] = sorted(trait.aliases) if trait.aliases else []
+    data["aliases"] = sorted(trait.aliases)
     data["symbol"] = trait.symbol_id
     data["detection"] = trait.detection_func_id
     data["groups"] = sorted(g.symbol_id for g in trait.groups)
     return data
 
 
-def _group_dict(group: Group) -> dict:
+def _group_dict(group: Group) -> dict[str, Any]:
     """Convert a group to a JSON-serializable dict."""
     return {
         "id": group.id,
@@ -184,7 +181,7 @@ def _group_dict(group: Group) -> dict:
 def build_parser() -> argparse.ArgumentParser:
     """Build the command-line argument parser.
 
-    Kept separate from :func:`main` so the documentation can render the
+    Kept separate from {func}`main` so the documentation can render the
     ``--help`` screen live at build time (see ``docs/cli.md``) without
     triggering detection or ``SystemExit``.
     """
@@ -213,11 +210,11 @@ def main() -> None:
     """Print detected environment traits."""
     args = build_parser().parse_args()
 
-    # Force UTF-8 output on Windows where the default console encoding
-    # (e.g. cp1252) cannot represent Unicode box-drawing characters and emoji.
+    # Force UTF-8 output on Windows where the default console encoding, like
+    # cp1252, cannot represent Unicode box-drawing characters and emoji.
     for stream in (sys.stdout, sys.stderr):
         if stream.encoding and stream.encoding.lower().replace("-", "") != "utf8":
-            stream.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
+            stream.reconfigure(encoding="UTF-8")  # type: ignore[union-attr]
 
     # Add a trailing newline to log messages so warnings are visually
     # separated from the CLI output.
@@ -240,11 +237,11 @@ def main() -> None:
 
     # Collect all detected traits and their groups.
     all_detected = current_traits()
-    sorted_traits = sorted(all_detected, key=lambda t: t.id)
-    all_groups: set[Group] = set()
-    for trait in all_detected:
-        all_groups.update(trait.groups)
-    sorted_groups = sorted(all_groups, key=lambda g: g.id)
+    sorted_traits = sorted(all_detected, key=attrgetter("id"))
+    sorted_groups = sorted(
+        frozenset().union(*(trait.groups for trait in all_detected)),
+        key=attrgetter("id"),
+    )
 
     if args.json_output:
         data = {
@@ -271,10 +268,7 @@ def main() -> None:
     _print_trait("Agent", agent)
 
     # Compute column widths across both tables for alignment.
-    widths = _merge_widths(
-        _column_widths(sorted_traits),
-        _column_widths(sorted_groups),
-    )
+    widths = _column_widths(chain(sorted_traits, sorted_groups))
 
     print(f"\n{_rule('── Detected traits ──')}")
     _print_table(sorted_traits, widths)

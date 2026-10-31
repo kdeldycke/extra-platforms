@@ -7,6 +7,16 @@
 
 - **Breaking:** Drop Python 3.10, past its end of life: `extra-platforms` now needs Python 3.11 or newer.
 - **Breaking:** Remove the deprecated aliases `EXTRA_GROUPS`, `NON_OVERLAPPING_GROUPS`, `GUIX_BUILD`, `TUMBLEWEED`, `is_guix_build()`, `is_tumbleweed()` and their `skip_*` and `unless_*` decorators. Use `NON_CANONICAL_GROUPS`, `CANONICAL_GROUPS`, `HERMETIC_BUILD` and `OPENSUSE` instead.
+- **Breaking:** `is_unknown()`, `@skip_unknown` and `@unless_unknown` now match when a trait category resolves to its unknown trait, instead of never.
+- **Breaking:** `Trait.aliases` is now a `tuple` of strings, like `Shell.executables`, instead of a `frozenset`.
+- **Breaking:** `symbol_id`, `detection_func_id`, `skip_decorator_id` and `unless_decorator_id` are now properties, absent from `dataclasses.fields()` and `dataclasses.asdict()`.
+- Accept the class metadata of a `Trait` or `Group` subclass as class keyword arguments, like `class Fruit(Trait, type_name="fruit")`.
+- Run only the detection functions of its own members in a group detection function: `is_any_windows()` no longer spawns `ps` on macOS.
+- Stop importing `typing` at runtime, which shortens the cold import of the package.
+- Accept a trait ID in any case, or an alias, in `Group.remove()`, `Group.discard()` and `Group.pop()`, like in `Group.add()`.
+- Fix `Group.add()` adding only the first member of a group whose ID it received: it now raises `ValueError`.
+- Fix `Group.remove()` removing the member that shares its ID with another trait passed to it.
+- Fix `reduce()` returning the empty groups of its `target_pool`.
 
 ## [`13.13.0` (2026-10-25)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...v13.13.0)
 

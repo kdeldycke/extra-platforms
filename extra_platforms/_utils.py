@@ -11,11 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Internal utility functions."""
+"""Internal utility functions.
+
+```{important}
+[Click Extra](https://github.com/kdeldycke/click-extra) imports
+`_recursive_update()` and `_remove_blanks()` from this module, with their
+keyword arguments: keep both names and signatures stable.
+```
+"""
 
 from __future__ import annotations
 
-from typing import Any
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from typing import Any
 
 
 def _recursive_update(
@@ -58,21 +67,15 @@ def _remove_blanks(
     """
     result = {}
     for key, value in tree.items():
-        # Skip None values if configured.
         if remove_none and value is None:
             continue
-
-        # Recursively process nested dicts.
         if isinstance(value, dict):
             cleaned = _remove_blanks(value, remove_none, remove_dicts, remove_str)
-            # Skip empty dicts if configured.
             if remove_dicts and not cleaned:
                 continue
             result[key] = cleaned
-        # Skip empty strings if configured.
         elif remove_str and isinstance(value, str) and not value:
             continue
         else:
             result[key] = value
-
     return result

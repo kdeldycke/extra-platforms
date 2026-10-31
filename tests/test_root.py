@@ -49,6 +49,7 @@ from extra_platforms import (
     WSL1,
     WSL2,
     Shell,
+    _process_tree,
     agent_data as agent_data_module,
     architecture_data as architecture_data_module,
     ci_data as ci_data_module,
@@ -85,7 +86,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 PYPROJECT_PATH = PROJECT_ROOT / "pyproject.toml"
 """The path to the ``pyproject.toml`` file."""
 
-PYPROJECT = tomllib.loads(PYPROJECT_PATH.read_text(encoding="utf-8"))
+PYPROJECT = tomllib.loads(PYPROJECT_PATH.read_text(encoding="UTF-8"))
 """The parsed content of the ``pyproject.toml`` file."""
 
 
@@ -285,7 +286,7 @@ def test_current_funcs():
         # is a legitimate detection alongside the primary shell. A packager
         # running an `osc build` chroot from a fish terminal gets fish in the
         # ancestor tree, above the bash chain rpmbuild runs the tests with.
-        ancestor_names = detection_module._parent_process_exe_names()
+        ancestor_names = _process_tree.parent_process_names()
         extra_shells = {
             shell
             for shell in ALL_SHELLS
@@ -442,15 +443,15 @@ def test_group_membership_funcs():
         assert getattr(extra_platforms, group.detection_func_id) is func
 
         assert isinstance(func(), bool)
-        assert func() == any(t in group for t in current_traits())
+        assert func() == any(trait.current for trait in group)
 
         assert group.symbol_id in func.__doc__
 
 
 def test_group_detection_type_stubs():
     """Check all is_*() group detection type stubs are defined and sorted."""
-    init_file = Path(inspect.getfile(extra_platforms))
-    tree = ast.parse(init_file.read_text(encoding="utf-8"))
+    detection_file = Path(inspect.getfile(detection_module))
+    tree = ast.parse(detection_file.read_text(encoding="UTF-8"))
 
     # Collect all function definitions in the TYPE_CHECKING block.
     stub_names: list[str] = []
@@ -482,27 +483,25 @@ def test_invalidate_caches():
     registry = detection_module._detection_registry
     for func in registry.values():
         func()
-    for trait in ALL_TRAITS:
-        assert trait.current in (True, False)
     current_traits()
 
-    # Every cached callable of the detection module, and the group detection
-    # functions generated at the package root.
+    # Every cached callable of the detection modules, the trait and group
+    # detection functions of the registry included.
     cached = {
         name: func
-        for name, func in (*vars(detection_module).items(), *registry.items())
+        for module in (detection_module, _process_tree)
+        for name, func in vars(module).items()
         if callable(func) and hasattr(func, "cache_info")
     }
+    assert registry.keys() <= cached.keys()
     assert all(
         func.cache_info().currsize  # type: ignore[attr-defined]
         for func in registry.values()
     )
-    assert all("current" in vars(trait) for trait in ALL_TRAITS)
 
     invalidate_caches()
 
     assert not [name for name, func in cached.items() if func.cache_info().currsize]
-    assert not [trait.id for trait in ALL_TRAITS if "current" in vars(trait)]
 
 
 @pytest.mark.parametrize(
@@ -544,7 +543,7 @@ def test_multiple_shells_match(monkeypatch, fresh_caches):
         monkeypatch.setitem(registry, func_name, lambda m=should_match: m)
     monkeypatch.setattr(detection_module, "_active_env_var_shell_ids", frozenset)
     monkeypatch.setattr(detection_module, "_resolved_shell_id", lambda: None)
-    monkeypatch.setattr(detection_module, "_parent_process_exe_names", frozenset)
+    monkeypatch.setattr(_process_tree, "parent_process_names", frozenset)
 
     with pytest.raises(RuntimeError, match="Multiple shells match"):
         current_shell()
@@ -575,7 +574,7 @@ def test_unrecognized_message_format():
     ("category", "gating_var"),
     (
         ("terminal", "TERM"),
-        ("CI", "CI"),
+        ("ci", "CI"),
         ("agent", "LLM"),
     ),
 )
@@ -584,17 +583,7 @@ def test_category_env_signals_gating_var(category, gating_var):
     assert _CATEGORY_ENV_SIGNALS[category][0] == gating_var
 
 
-def test_shell_env_signals_cover_version_vars():
-    """Every shell startup variable in the registry is reported on a shell miss."""
-    version_vars = {
-        env_var
-        for shell in ALL_SHELLS
-        if (env_var := getattr(shell, "version_env_var", None))
-    }
-    assert version_vars <= set(_CATEGORY_ENV_SIGNALS["shell"])
-
-
-@pytest.mark.parametrize("category", ("shell", "terminal", "CI", "agent"))
+@pytest.mark.parametrize("category", ("shell", "terminal", "ci", "agent"))
 def test_unrecognized_message_reports_set_category_vars(monkeypatch, category):
     """A set category variable, and its value, appear in that category's report."""
     primary_var = _CATEGORY_ENV_SIGNALS[category][0]
@@ -747,6 +736,33 @@ def test_docstrings_are_generated_on_first_read(flags):
         "parsed_modules": ["extra_platforms.platform_data"],
         "documented": ["ubuntu"],
     }
+
+
+def test_typing_is_not_imported():
+    """Importing the package loads no `typing`, which nothing needs at runtime.
+
+    Annotations need `typing` under `TYPE_CHECKING` only. A dataclass reads a
+    `ClassVar` field at runtime, so the class metadata of traits and groups goes
+    through class keyword arguments instead.
+
+    Runs in a fresh interpreter, and only counts the modules the package import
+    adds: a coverage hook started with the interpreter may load `typing` first.
+    """
+    script = (
+        "import sys; before = set(sys.modules); import extra_platforms; "
+        "print(' '.join(sorted(set(sys.modules) - before)))"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        capture_output=True,
+        text=True,
+        encoding="UTF-8",
+        check=True,
+    )
+    loaded = result.stdout.split()
+    # Control: the package itself loaded in that interpreter.
+    assert "extra_platforms.detection" in loaded
+    assert "typing" not in loaded
 
 
 def test_subprocess_and_shutil_are_not_imported_at_module_level():

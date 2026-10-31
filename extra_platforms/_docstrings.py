@@ -34,6 +34,7 @@ from __future__ import annotations
 import ast
 import inspect
 import sys
+from itertools import pairwise
 from pathlib import Path
 
 # Per-module cache of attribute name to docstring. Populated lazily by
@@ -47,9 +48,9 @@ def _parse_module_docstrings(module_name: str) -> dict[str, str]:
     Attribute docstrings are string literals that immediately follow an
     assignment statement at module level.
 
-    :param module_name: The full module name (e.g.,
-        'extra_platforms.platform_data').
-    :returns: A mapping of attribute names to their docstrings. Empty dict if
+    :param module_name: The full module name, like
+        `extra_platforms.platform_data`.
+    :return: A mapping of attribute names to their docstrings. Empty dict if
         the module is not loaded or its source is unavailable.
     """
     # A trait or group exists only once its data module is loaded, so there is
@@ -65,46 +66,36 @@ def _parse_module_docstrings(module_name: str) -> dict[str, str]:
         # The module has no __file__, like one a freezer loads from memory.
         return {}
     if not source_file:
-        # Source file not available (e.g., compiled module).
+        # Source file not available, like for a compiled module.
         return {}
 
     try:
-        source = Path(source_file).read_text(encoding="utf-8")
+        source = Path(source_file).read_text(encoding="UTF-8")
     except OSError:
-        # Source file doesn't exist on disk (e.g., Nuitka-compiled binary).
+        # Source file doesn't exist on disk, like in a Nuitka-compiled binary.
         return {}
 
-    tree = ast.parse(source)
-
     docstrings: dict[str, str] = {}
-    body = tree.body
 
     # Walk all top-level statements, looking for assignments followed by a
     # string literal (the attribute docstring convention).
-    for i, node in enumerate(body):
-        names: list[str] = []
-
-        if isinstance(node, ast.Assign):
-            names.extend(
-                target.id for target in node.targets if isinstance(target, ast.Name)
-            )
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            # Handle annotated assignments like: x: type = value.
-            names.append(node.target.id)
-
-        if not names:
+    for node, next_node in pairwise(ast.parse(source).body):
+        if not (
+            isinstance(next_node, ast.Expr)
+            and isinstance(next_node.value, ast.Constant)
+            and isinstance(next_node.value.value, str)
+        ):
             continue
-
-        # Check if the next statement is a string expression.
-        if i + 1 < len(body):
-            next_node = body[i + 1]
-            if (
-                isinstance(next_node, ast.Expr)
-                and isinstance(next_node.value, ast.Constant)
-                and isinstance(next_node.value.value, str)
-            ):
-                for name in names:
-                    docstrings[name] = next_node.value.value
+        targets: list[ast.expr]
+        if isinstance(node, ast.Assign):
+            targets = node.targets
+        elif isinstance(node, ast.AnnAssign):
+            targets = [node.target]
+        else:
+            continue
+        for target in targets:
+            if isinstance(target, ast.Name):
+                docstrings[target.id] = next_node.value.value
 
     return docstrings
 
@@ -118,15 +109,15 @@ def get_attribute_docstring(module_name: str, attr_name: str) -> str | None:
 
     ```{note}
     Returns `None` if source files are unavailable, which happens in
-    compiled environments (e.g., Nuitka, PyInstaller, cx_Freeze). This
+    compiled environments, like Nuitka, PyInstaller or cx_Freeze. This
     graceful degradation allows the library to function without docstrings
     in compiled binaries.
     ```
 
-    :param module_name: The full module name (e.g.,
-        'extra_platforms.platform_data').
-    :param attr_name: The attribute name to look for (e.g., 'NOBARA').
-    :returns: The attribute docstring if found, or `None` if not found, or if
+    :param module_name: The full module name, like
+        `extra_platforms.platform_data`.
+    :param attr_name: The attribute name to look for, like `NOBARA`.
+    :return: The attribute docstring if found, or `None` if not found, or if
         the module is not loaded or its source is unavailable.
     """
     if module_name not in _module_docstrings_cache:

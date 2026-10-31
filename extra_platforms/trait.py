@@ -19,18 +19,22 @@ to detect if it matches the current environment.
 
 Data associated with traits can be aggressively cached and frozen, as they're only
 computed based on environment-dependent values.
+
+```{note}
+No annotation in this module reads `typing.ClassVar`. A dataclass recognizes a
+`ClassVar` field only once `typing` is imported, and nothing else in the package
+needs `typing` at runtime. The class-level metadata lives on `_ClassMetadata`
+instead, a plain class no dataclass reads fields from.
+```
 """
 
 from __future__ import annotations
 
 import platform
-import sys
-from abc import ABC
 from dataclasses import dataclass, field
-from functools import cached_property, lru_cache
-from os import environ, sep
-from pathlib import Path
-from typing import ClassVar
+from functools import cached_property
+from operator import attrgetter
+from os import environ
 
 from ._docstrings import get_attribute_docstring
 from ._utils import _recursive_update, _remove_blanks
@@ -41,10 +45,6 @@ if TYPE_CHECKING:
     from typing import Any
 
     from .group import Group
-
-
-_PACKAGE_DIR = f"{Path(__file__).parent}{sep}"
-"""Prefix of the source files of the package, which tells its frames from a caller's."""
 
 
 class _LazyDocstring:
@@ -88,25 +88,49 @@ class _LazyDocstring:
         # Avoid circular import.
         from .group_data import ALL_GROUPS, ALL_TRAITS
 
-        if isinstance(instance, Trait):
-            predefined = instance in ALL_TRAITS
-        else:
-            predefined = instance in ALL_GROUPS
-        if not predefined:
+        registry = ALL_TRAITS if isinstance(instance, Trait) else ALL_GROUPS
+        if instance not in registry:
             return self.class_doc
 
         doc = instance.generate_docstring()
-        # Bypasses the frozen dataclass guard, like the other derived fields.
+        # Bypasses the frozen dataclass guard, like the cached properties do.
         object.__setattr__(instance, "__doc__", doc)
         return doc
 
 
+class _ClassMetadata:
+    """Class-level documentation metadata of trait and group classes.
+
+    {meth}`_Identifiable.__init_subclass__` derives each of them from the class
+    name, unless the class definition passes it as a keyword argument, like
+    `class CI(Trait, type_name="CI system")`, or sets it in the class body.
+    """
+
+    type_id = ""
+    """Machine-readable type identifier used to derive module and symbol names."""
+
+    type_name = ""
+    """Human-readable type name for documentation, like `"CI system"`."""
+
+    data_module_id = ""
+    """The module name where instances of this type are defined."""
+
+    unknown_symbol = ""
+    """The symbol name for the unknown instance of this type."""
+
+    all_group = ""
+    """The symbol name for the group containing all instances of this type."""
+
+    doc_page = ""
+    """The documentation page filename."""
+
+
 @dataclass(frozen=True)
-class _Identifiable:
+class _Identifiable(_ClassMetadata):
     """Base class for identifiable objects with common documentation fields.
 
-    Provides the common fields and initialization logic shared by both
-    {class}`~extra_platforms.Trait` and {class}`~extra_platforms.Group`
+    Provides the fields, the derived names and the initialization logic shared
+    by both {class}`~extra_platforms.Trait` and {class}`~extra_platforms.Group`
     classes:
 
     - `id`: Unique identifier
@@ -114,72 +138,12 @@ class _Identifiable:
     - `icon`: Visual representation
     - `symbol_id`: Uppercase version of ID for module-level constants
     - `detection_func_id`: Name of the `is_<id>()` detection function
-
-    Subclasses must define the class-level documentation metadata:
-
-    - `type_id`: Machine-readable type identifier (e.g., "architecture", "ci")
-    - `type_name`: Human-readable type name (e.g., "architecture", "CI system")
-
-    The following are automatically derived from `type_id` via `__init_subclass__`:
-
-    - `data_module_id`: Module name where instances are defined
-    - `unknown_symbol`: Symbol name for the unknown instance
-    - `all_group`: Symbol name for the group containing all instances
-    - `doc_page`: Documentation page filename
+    - `skip_decorator_id` and `unless_decorator_id`: Names of the Pytest
+      decorators
     """
-
-    # Class-level documentation metadata (must be overridden by subclasses).
-    type_id: ClassVar[str] = ""
-    """Machine-readable type identifier used to derive module and symbol names."""
-
-    type_name: ClassVar[str] = ""
-    """Human-readable type name for documentation."""
-
-    # Derived class-level attributes (set by __init_subclass__).
-    data_module_id: ClassVar[str] = ""
-    """The module name where instances of this type are defined."""
-
-    unknown_symbol: ClassVar[str] = ""
-    """The symbol name for the unknown instance of this type."""
-
-    all_group: ClassVar[str] = ""
-    """The symbol name for the group containing all instances of this type."""
-
-    doc_page: ClassVar[str] = ""
-    """The documentation page filename."""
 
     id: str
     """Unique ID of the object."""
-
-    symbol_id: str = field(repr=False, init=False)
-    """Symbolic identifier.
-
-    This is the variable name under which the instance can be accessed at the
-    root of the `extra_platforms` module.
-
-    Mainly useful for documentation generation.
-    """
-
-    detection_func_id: str = field(repr=False, init=False)
-    """ID of the detection function for this object.
-
-    The detection function is expected to be named `is_<id>()` and available at the root
-    of the `extra_platforms` module.
-    """
-
-    skip_decorator_id: str = field(repr=False, init=False)
-    """ID of the Pytest skip decorator for this object.
-
-    The decorator is expected to be named `@skip_<id>` and available from the
-    `extra_platforms.pytest` module.
-    """
-
-    unless_decorator_id: str = field(repr=False, init=False)
-    """ID of the Pytest unless decorator for this object.
-
-    The decorator is expected to be named `@unless_<id>` and available from the
-    `extra_platforms.pytest` module.
-    """
 
     name: str
     """User-friendly name of the object."""
@@ -187,46 +151,42 @@ class _Identifiable:
     icon: str = field(repr=False, default="❓")
     """Icon of the object."""
 
-    def __init_subclass__(cls, **kwargs: Any) -> None:
-        """Compute derived class attributes from class name when subclass is defined.
+    def __init_subclass__(cls, **metadata: str) -> None:
+        """Set the `_ClassMetadata` of a subclass when it is defined.
 
-        Only sets attributes if they haven't been explicitly defined in the subclass.
+        `type_id` defaults to the lowercased class name, `type_name` to the
+        `type_id`, and the others derive from the `type_id`. A keyword argument of
+        the class definition overrides any of them, and so does an attribute of
+        the class body, which the keyword argument wins over.
         """
-        super().__init_subclass__(**kwargs)
+        super().__init_subclass__()
 
-        # Derive type_id from class name if not explicitly set.
-        if "type_id" in cls.__dict__:
-            assert cls.type_id, f"{cls.__name__} must define a non-empty type_id."
-        else:
-            cls.type_id = cls.__name__.lower()
+        derived_attrs = [attr for attr in vars(_ClassMetadata) if attr[0] != "_"]
+        unexpected = sorted(metadata.keys() - set(derived_attrs))
+        assert not unexpected, f"{cls.__name__} sets unknown metadata {unexpected}."
+        explicit = {
+            **{attr: vars(cls)[attr] for attr in derived_attrs if attr in vars(cls)},
+            **metadata,
+        }
+        for attr, value in explicit.items():
+            assert value, f"{cls.__name__} must define a non-empty {attr}."
 
-        # Derive type_name from type_id if not explicitly set.
-        if "type_name" in cls.__dict__:
-            assert cls.type_name, f"{cls.__name__} must define a non-empty type_name."
-        else:
-            cls.type_name = cls.type_id
-
-        # Only set derived values if not explicitly defined in the subclass itself.
-        if "data_module_id" not in cls.__dict__:
-            cls.data_module_id = f"{cls.type_id}_data"
-
-        if "unknown_symbol" not in cls.__dict__:
-            cls.unknown_symbol = f"UNKNOWN_{cls.type_id.upper()}"
-
-        if "all_group" not in cls.__dict__:
-            cls.all_group = f"ALL_{cls.type_id.upper()}S"
-
-        if "doc_page" not in cls.__dict__:
-            cls.doc_page = f"{cls.type_id}s.md"
+        type_id = explicit.get("type_id", cls.__name__.lower())
+        derived = {
+            "type_id": type_id,
+            "type_name": type_id,
+            "data_module_id": f"{type_id}_data",
+            "unknown_symbol": f"UNKNOWN_{type_id.upper()}",
+            "all_group": f"ALL_{type_id.upper()}S",
+            "doc_page": f"{type_id}s.md",
+        }
+        for attr, value in derived.items():
+            setattr(cls, attr, explicit.get(attr, value))
 
     def __post_init__(self) -> None:
-        """Validate and normalize common fields.
+        """Validate the common fields, and install the lazy docstring on the class.
 
-        - Ensure the ID, name, and icon are not empty.
-        - Set the symbolic ID.
-        - Set the detection function ID.
-        - Set the Pytest decorator IDs.
-        - Install the lazy docstring on the class of the instance.
+        Ensure the ID, name, and icon are not empty.
         """
         # Serve the docstring of each instance on first read: see _LazyDocstring.
         cls = type(self)
@@ -234,22 +194,102 @@ class _Identifiable:
         if not isinstance(class_doc, _LazyDocstring):
             cls.__doc__ = _LazyDocstring(class_doc)  # type: ignore[assignment]
 
-        assert self.id, f"{self.__class__.__name__} ID cannot be empty."
+        assert self.id, f"{cls.__name__} ID cannot be empty."
+        assert self.name, f"{cls.__name__} name cannot be empty."
+        assert self.icon, f"{cls.__name__} icon cannot be empty."
 
-        object.__setattr__(self, "symbol_id", self.id.upper())
+    @cached_property
+    def symbol_id(self) -> str:
+        """Symbolic identifier.
 
-        object.__setattr__(self, "detection_func_id", f"is_{self.id}")
+        This is the variable name under which the instance can be accessed at the
+        root of the `extra_platforms` module.
 
-        object.__setattr__(self, "skip_decorator_id", f"skip_{self.id}")
-        object.__setattr__(self, "unless_decorator_id", f"unless_{self.id}")
+        Mainly useful for documentation generation.
+        """
+        return self.id.upper()
 
-        assert self.name, f"{self.__class__.__name__} name cannot be empty."
+    @cached_property
+    def detection_func_id(self) -> str:
+        """ID of the detection function for this object.
 
-        assert self.icon, f"{self.__class__.__name__} icon cannot be empty."
+        The detection function is expected to be named `is_<id>()` and available
+        at the root of the `extra_platforms` module.
+        """
+        return f"is_{self.id}"
+
+    @cached_property
+    def skip_decorator_id(self) -> str:
+        """ID of the Pytest skip decorator for this object.
+
+        The decorator is expected to be named `@skip_<id>` and available from the
+        `extra_platforms.pytest` module.
+        """
+        return f"skip_{self.id}"
+
+    @cached_property
+    def unless_decorator_id(self) -> str:
+        """ID of the Pytest unless decorator for this object.
+
+        The decorator is expected to be named `@unless_<id>` and available from the
+        `extra_platforms.pytest` module.
+        """
+        return f"unless_{self.id}"
+
+    def generate_docstring(self) -> str:
+        """Generate the docstring of this predefined object.
+
+        Combines the attribute docstring written under the object in its data
+        module with the metadata lines of the object.
+        """
+        source = get_attribute_docstring(
+            f"extra_platforms.{self.data_module_id}", self.symbol_id
+        )
+        lines = [*source.strip().splitlines(), ""] if source else []
+        lines.extend(self._metadata_lines())
+        return "\n".join(lines)
+
+    def _metadata_lines(self) -> list[str]:
+        """The metadata list closing the generated docstring, identity first.
+
+        Subclasses extend it with their own fields.
+        """
+        return [
+            f"- **ID**: ``{self.id}``",
+            f"- **Name**: {self.name}",
+            f"- **Icon**: {self.icon}",
+        ]
+
+    def _reference_lines(self) -> tuple[str, str]:
+        """The metadata lines linking the detection function and Pytest decorators."""
+        return (
+            f"- **Detection function**: {{func}}`~{self.detection_func_id}`",
+            (
+                "- **Pytest decorators**: "
+                f"{{deco}}`~pytest.{self.skip_decorator_id}` / "
+                f"{{deco}}`~pytest.{self.unless_decorator_id}`"
+            ),
+        )
+
+
+def _check_alternative_names(trait: Trait, kind: str, names: tuple[str, ...]) -> None:
+    """Assert each of `names` is a lowercase alternative to the ID of `trait`.
+
+    :param kind: What the names are, like `"alias"`, used in failure messages.
+    """
+    for name in names:
+        assert name, f"{trait.id} {kind} cannot be empty."
+        assert name == name.lower(), (
+            f"{kind.capitalize()} {name!r} of {trait.id} must be lowercase."
+        )
+        assert name != trait.id, (
+            f"{kind.capitalize()} {name!r} of {trait.id} is already its ID."
+        )
+    assert len(set(names)) == len(names), f"{trait.id} repeats an {kind}."
 
 
 @dataclass(frozen=True)
-class Trait(_Identifiable, ABC):
+class Trait(_Identifiable):
     """Base class for system traits like platforms and architectures.
 
     A trait is a distinguishing characteristic of the runtime environment that can
@@ -259,6 +299,7 @@ class Trait(_Identifiable, ABC):
     provides:
 
     - `url`: A link to official documentation or website for the trait.
+    - `aliases`: Alternative IDs resolving to the trait.
     - `current`: A boolean indicating if the current environment matches this trait.
     - `info()`: A method returning a dictionary of gathered attributes about the trait.
     - `groups`: A set of {class}`~extra_platforms.Group` objects that include
@@ -268,7 +309,7 @@ class Trait(_Identifiable, ABC):
     url: str = field(repr=False, default="")
     """URL to the trait's official website or documentation."""
 
-    aliases: frozenset[str] = field(repr=False, default_factory=frozenset)
+    aliases: tuple[str, ...] = field(repr=False, default=())
     """Alternative IDs for this trait.
 
     Aliases are alternative identifiers that resolve to the same trait. When an
@@ -281,10 +322,10 @@ class Trait(_Identifiable, ABC):
     """
 
     def __post_init__(self) -> None:
-        """Validate and normalize trait fields.
+        """Validate the trait fields.
 
         - Ensure the URL is not empty and starts with `https://`.
-        - Validate aliases are lowercase and distinct from the canonical ID.
+        - Validate aliases are lowercase, unique and distinct from the canonical ID.
 
         ```{hint}
         The docstring is not built here. For a predefined trait,
@@ -294,82 +335,48 @@ class Trait(_Identifiable, ABC):
         """
         super().__post_init__()
 
-        assert self.url, f"{self.__class__.__name__} URL cannot be empty."
+        cls_name = type(self).__name__
+        assert self.url, f"{cls_name} URL cannot be empty."
         assert self.url.startswith("https://"), (
-            f"{self.__class__.__name__} URL must start with https://."
+            f"{cls_name} URL must start with https://."
         )
+        _check_alternative_names(self, "alias", self.aliases)
 
-        # Validate aliases.
-        for alias in self.aliases:
-            assert alias, f"{self.__class__.__name__} alias cannot be empty."
-            assert alias == alias.lower(), (
-                f"Alias '{alias}' must be lowercase for {self.id}."
-            )
-            assert alias != self.id, f"Alias '{alias}' cannot be the same as ID."
-
-    def generate_docstring(self) -> str:
-        """Generate comprehensive docstring for this trait instance.
-
-        Combines the attribute docstring from the source module with various metadata.
-        """
-        lines = []
-
-        # Fetch attribute docstring from source module.
-        source_docstring = get_attribute_docstring(
-            f"extra_platforms.{self.data_module_id}", self.symbol_id
-        )
-        if source_docstring:
-            lines.extend(source_docstring.strip().split("\n"))
-            lines.append("")
-
-        # Add metadata.
-        lines.append(f"- **ID**: ``{self.id}``")
-        if self.aliases:
-            alias_list = ", ".join(f"``{a}``" for a in sorted(self.aliases))
-        else:
-            alias_list = "-"
-        lines.extend((
-            f"- **Aliases**: {alias_list}",
-            f"- **Name**: {self.name}",
-            f"- **Icon**: {self.icon}",
-            f"- **Reference**: <{self.url}>_",
-            f"- **Detection function**: {{func}}`~{self.detection_func_id}`",
-            (
-                "- **Pytest decorators**: "
-                f"{{deco}}`~pytest.{self.skip_decorator_id}` / "
-                f"{{deco}}`~pytest.{self.unless_decorator_id}`"
-            ),
-        ))
-
-        # Add list of groups this trait belongs to.
-        group_links = [
+    def _metadata_lines(self) -> list[str]:
+        """The metadata list closing the generated docstring of the trait."""
+        aliases = ", ".join(f"``{alias}``" for alias in sorted(self.aliases))
+        groups = [
             f"{{data}}`~{group.symbol_id}`" + (" ⬥" if group.canonical else "")
-            for group in sorted(self.groups, key=lambda g: g.id)
+            for group in sorted(self.groups, key=attrgetter("id"))
         ]
-        lines.append(f"- **Groups** ({len(group_links)}): {', '.join(group_links)}")
-
-        return "\n".join(lines)
+        return [
+            *super()._metadata_lines(),
+            f"- **Aliases**: {aliases or '-'}",
+            f"- **Reference**: <{self.url}>_",
+            *self._reference_lines(),
+            f"- **Groups** ({len(groups)}): {', '.join(groups)}",
+        ]
 
     @cached_property
     def groups(self) -> frozenset[Group]:
         """Returns the set of groups this trait belongs to.
 
-        Uses dynamic import to avoid circular dependency with `group_data` module.
-
-        :returns: A {class}`frozenset` of {class}`~extra_platforms.Group` objects
+        :return: A {class}`frozenset` of {class}`~extra_platforms.Group` objects
             that contain this trait as a member.
         """
-        # Avoid circular import by importing here.
+        # Avoid circular import.
         from .group_data import ALL_GROUPS
 
-        return frozenset(group for group in ALL_GROUPS if self.id in group.member_ids)
+        return frozenset(group for group in ALL_GROUPS if self in group)
 
-    @cached_property
+    @property
     def current(self) -> bool:
         """Returns whether the current environment matches this trait.
 
-        The detection function is dynamically looked up based on the trait ID, and is
-        expected to be found at the root of the `extra_platforms` module.
+        Calls the detection function named by
+        {attr}`~extra_platforms.Trait.detection_func_id`, which caches its own
+        result. That function is looked up in the registry of the `detection`
+        module, where tests replace it to simulate another environment.
 
         Raises {exc}`NotImplementedError` if a detection function cannot be found.
 
@@ -381,12 +388,13 @@ class Trait(_Identifiable, ABC):
         """
         from .detection import _detection_registry
 
-        func = _detection_registry.get(self.detection_func_id)
-        if not func:
+        try:
+            detect = _detection_registry[self.detection_func_id]
+        except KeyError:
             raise NotImplementedError(
                 f"Detection function {self.detection_func_id}() is not implemented."
-            )
-        return func()
+            ) from None
+        return detect()
 
     def info(self) -> dict[str, Any]:
         """Returns all trait attributes that can be gathered.
@@ -426,7 +434,6 @@ class Architecture(Trait):
         if self.current:
             info["machine"] = platform.machine() or None
             info["processor"] = platform.processor() or None
-
         return info
 
 
@@ -462,19 +469,15 @@ class Platform(Trait):
             "codename": None,
         }
         if self.current:
-            # Get Linux distribution info from os-release.
-            distro_info = dict(linux_info())
-            # Rename distro ID to avoid conflict with our own ID.
-            distro_info["distro_id"] = distro_info.pop("id")
-            info = _recursive_update(info, _remove_blanks(distro_info), strict=True)
-
-            # Add extra macOS infos.
+            # Any platform shipping an os-release file reports it, the BSDs too.
+            # Its ID is renamed so it does not clash with the trait's own ID.
+            os_release = dict(linux_info())
+            os_release["distro_id"] = os_release.pop("id")
+            info = _recursive_update(info, _remove_blanks(os_release), strict=True)
             if self.id == "macos":
                 info = _recursive_update(info, macos_info(), strict=True)
-            # Add extra Windows infos.
             elif self.id == "windows":
                 info = _recursive_update(info, windows_info(), strict=True)
-
         return info
 
 
@@ -522,28 +525,21 @@ class Shell(Trait):
     {func}`~extra_platforms.shell_from_path`.
     """
 
-    @property
+    def __post_init__(self) -> None:
+        """Validate the executables on top of the trait checks.
+
+        Each executable must be lowercase, unique and distinct from the ID.
+        """
+        super().__post_init__()
+        _check_alternative_names(self, "executable", self.executables)
+
+    @cached_property
     def executable_names(self) -> frozenset[str]:
         """Every file name the shell's binary goes by.
 
         That is its {attr}`~extra_platforms.Trait.id` and its {attr}`executables`.
         """
         return frozenset((self.id, *self.executables))
-
-    def __post_init__(self) -> None:
-        """Validate the executables on top of the trait checks.
-
-        Each executable must be lowercase and distinct from the ID.
-        """
-        super().__post_init__()
-        for executable in self.executables:
-            assert executable, f"{self.id} executable name cannot be empty."
-            assert executable == executable.lower(), (
-                f"Executable '{executable}' must be lowercase for {self.id}."
-            )
-            assert executable != self.id, (
-                f"Executable '{executable}' of {self.id} is already its ID."
-            )
 
     def info(self) -> dict[str, str | bool | None]:
         """Returns all shell attributes we can gather."""
@@ -569,7 +565,7 @@ class Terminal(Trait):
 
     ```{note}
     Shell and Terminal are orthogonal: any shell can run inside any terminal.
-    Unlike shells, multiple terminals can be active simultaneously (e.g.,
+    Unlike shells, multiple terminals can be active simultaneously (like
     tmux inside Kitty).
     ```
 
@@ -602,54 +598,14 @@ class Terminal(Trait):
 
 
 @dataclass(frozen=True)
-class CI(Trait):
-    """A CI/CD environment identifies a continuous integration platform."""
+class CI(Trait, type_name="CI system", all_group="ALL_CI", doc_page="ci.md"):
+    """A CI/CD environment identifies a continuous integration platform.
 
-    type_name: ClassVar[str] = "CI system"
-    """Override the default `ci` type name."""
-
-    all_group: ClassVar[str] = "ALL_CI"
-    """Override the default `ALL_CIS` name with a more natural `ALL_CI`."""
-
-    doc_page: ClassVar[str] = "ci.md"
-    """Override the default `cis.md` filename."""
+    Its metadata spells the type name out, and keeps the more natural `ALL_CI`
+    and `ci.md` instead of the derived `ALL_CIS` and `cis.md`.
+    """
 
 
 @dataclass(frozen=True)
 class Agent(Trait):
     """An agent identifies an AI coding agent environment."""
-
-
-@lru_cache(maxsize=128)
-def _resolve_alias(id_: str) -> str:
-    """Resolve an alias to its canonical ID, emitting a warning if an alias is used.
-
-    Results are cached, so the warning is only emitted once per alias.
-
-    :param id_: The ID to resolve (already lowercased).
-    :returns: The canonical ID if ``id_`` is an alias, otherwise ``id_`` unchanged.
-    """
-    # Avoid circular import.
-    from .group_data import ALL_TRAITS
-
-    for trait in ALL_TRAITS:
-        if id_ in trait.aliases:
-            import warnings
-
-            # Point the warning at the first caller outside the package: each
-            # public entry point reaches here through a call chain of its own
-            # depth.
-            frame = sys._getframe()
-            stacklevel = 1
-            while frame.f_back and frame.f_code.co_filename.startswith(_PACKAGE_DIR):
-                frame = frame.f_back
-                stacklevel += 1
-
-            warnings.warn(
-                f"'{id_}' is an alias for '{trait.id}'. "
-                f"Use the canonical ID '{trait.id}' instead.",
-                UserWarning,
-                stacklevel=stacklevel,
-            )
-            return trait.id
-    return id_

@@ -21,11 +21,12 @@ import the generators when ``click-extra refresh-directives`` refreshes the
 committed mirror regions offline, and when Sphinx regenerates them at build
 time.
 
-.. important::
-    This module is never imported by the package at runtime (``__init__`` does
-    not touch it), so ``extra_platforms`` keeps its dependency-free runtime. It
-    requires the ``docs`` dependency group (``click-extra``) and is only ever
-    imported while building or refreshing the documentation.
+```{important}
+This module is never imported by the package at runtime (``__init__`` does
+not touch it), so ``extra_platforms`` keeps its dependency-free runtime. It
+requires the ``docs`` dependency group (``click-extra``) and is only ever
+imported while building or refreshing the documentation.
+```
 """
 
 from __future__ import annotations
@@ -34,6 +35,8 @@ from operator import attrgetter
 from textwrap import dedent, indent
 
 from click_extra import TableFormat, render_table
+
+import extra_platforms
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -174,8 +177,8 @@ def _analyze_group_hierarchy(
 ) -> tuple[Group, list[Group], list]:
     """Analyze a collection of groups to identify the superset and missing traits.
 
-    :param groups: An iterable of groups including both the superset group (e.g.,
-        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups.
+    :param groups: An iterable of groups including both the superset group (like
+        `ALL_ARCHITECTURES` or `ALL_PLATFORMS`) and intermediate groups.
     :returns: A tuple of ``(superset, intermediate_groups, missing_traits)`` where:
 
         - ``superset``: The group that contains all others as subsets
@@ -196,8 +199,8 @@ def _analyze_group_hierarchy(
     if not supersets:
         raise ValueError(
             "No superset group found. The input must include a group that "
-            "contains all members of other groups (e.g., ALL_ARCHITECTURES, "
-            "ALL_PLATFORMS)."
+            "contains all members of other groups, like ALL_ARCHITECTURES or "
+            "ALL_PLATFORMS."
         )
 
     superset = supersets[0]
@@ -223,9 +226,10 @@ def _analyze_group_hierarchy(
 def generate_sankey(groups: Iterable[Group]) -> str:
     """Produce a Sankey diagram showing trait hierarchy.
 
-    .. warning::
-        Output must stay compatible with the Mermaid version bundled in
-        ``sphinxcontrib-mermaid``. See module docstring for details.
+    ```{warning}
+    Output must stay compatible with the Mermaid version bundled in
+    ``sphinxcontrib-mermaid``. See module docstring for details.
+    ```
 
     The diagram shows connections from a top-level (superset) group to intermediate
     groups to their individual members. The weights of the first layer reflect the
@@ -233,9 +237,9 @@ def generate_sankey(groups: Iterable[Group]) -> str:
     superset but not in any intermediate group) are shown as direct children of
     the superset, placed at the end of the diagram specification.
 
-    :param groups: An iterable of groups including both the superset group (e.g.,
-        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-        display (e.g., CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS).
+    :param groups: An iterable of groups including both the superset group (like
+        `ALL_ARCHITECTURES` or `ALL_PLATFORMS`) and intermediate groups to
+        display (like `CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS`).
     :raises ValueError: If no superset group is found among the inputs.
 
     Nodes carry their bare ``symbol_id`` as label, because the Mermaid Sankey
@@ -281,16 +285,17 @@ def generate_sankey(groups: Iterable[Group]) -> str:
 def generate_traits_mindmap(groups: Iterable[Group]) -> str:
     """Produce a mindmap hierarchy to show the hierarchy of groups and their traits.
 
-    .. warning::
-        Output must stay compatible with the Mermaid version bundled in
-        ``sphinxcontrib-mermaid``. See module docstring for details.
+    ```{warning}
+    Output must stay compatible with the Mermaid version bundled in
+    ``sphinxcontrib-mermaid``. See module docstring for details.
+    ```
 
     Includes missing traits (present in the superset but not in any intermediate group)
     as direct children of the superset.
 
-    :param groups: An iterable of groups including both the superset group (e.g.,
-        ALL_ARCHITECTURES, ALL_PLATFORMS) and intermediate groups to
-        display (e.g., CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS).
+    :param groups: An iterable of groups including both the superset group (like
+        `ALL_ARCHITECTURES` or `ALL_PLATFORMS`) and intermediate groups to
+        display (like `CANONICAL_GROUPS & ALL_ARCHITECTURE_GROUPS`).
     :raises ValueError: If no superset group is found among the inputs.
     """
     superset, intermediate_groups, missing_traits = _analyze_group_hierarchy(groups)
@@ -379,19 +384,20 @@ def generate_sphinx_directives(
 
     Produces a MyST ``{eval-rst}`` block with one directive line per object.
 
-    .. note::
-        Autodoc directives (``autodata``, ``autofunction``, ``autoclass``, etc.)
-        cannot be used as native MyST directives. They perform internal rST nested
-        parsing that requires an rST parser context only ``{eval-rst}`` provides.
-        See `MyST-Parser #587 <https://github.com/executablebooks/MyST-Parser/issues/587>`_,
-        `#228 <https://github.com/executablebooks/MyST-Parser/issues/228>`_,
-        and `#1119 <https://github.com/executablebooks/MyST-Parser/issues/1119>`_.
+    ```{note}
+    Autodoc directives (``autodata``, ``autofunction``, ``autoclass``, etc.)
+    cannot be used as native MyST directives. They perform internal rST nested
+    parsing that requires an rST parser context only ``{eval-rst}`` provides.
+    See [executablebooks/MyST-Parser#587](https://github.com/executablebooks/MyST-Parser/issues/587),
+    [executablebooks/MyST-Parser#228](https://github.com/executablebooks/MyST-Parser/issues/228)
+    and [executablebooks/MyST-Parser#1119](https://github.com/executablebooks/MyST-Parser/issues/1119).
+    ```
 
     :param objects: The traits or groups to generate directives for.
-    :param directive: The Sphinx directive name (e.g. ``"autodata"``,
-        ``"autofunction"``).
+    :param directive: The Sphinx directive name, like ``"autodata"`` or
+        ``"autofunction"``.
     :param attr: The attribute name on each object that provides the qualified
-        identifier (e.g. ``"symbol_id"``, ``"detection_func_id"``).
+        identifier, like ``"symbol_id"`` or ``"detection_func_id"``.
     """
     objects_list = list(objects)
     if not objects_list:
@@ -412,7 +418,7 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     Generates directives for both ``@skip_<id>`` and ``@unless_<id>`` decorators
     defined in the ``extra_platforms.pytest`` module, organized in separate sections.
 
-    Uses ``{eval-rst}`` for the same reason as :func:`generate_sphinx_directives`.
+    Uses ``{eval-rst}`` for the same reason as {func}`generate_sphinx_directives`.
     """
     sorted_objects = sorted(objects, key=attrgetter("id"))
 
@@ -439,27 +445,12 @@ def generate_pytest_decorator_autodata(objects: Iterable[Trait | Group]) -> str:
     return "\n\n".join(sections)
 
 
-def generate_noindex_automodule(module: str) -> str:
-    """Generate a no-members automodule directive for a submodule section.
-
-    All public members are documented in dedicated pages, so only the module
-    docstring is rendered on ``extra_platforms.html``. Uses ``{eval-rst}`` for the
-    same reason as :func:`generate_sphinx_directives`.
-    """
-    return dedent(f"""\
-        ```{{eval-rst}}
-        .. automodule:: {module}
-           :noindex:
-           :no-members:
-        ```""")
-
-
 def generate_group_module_automodule() -> str:
     """Generate the extra_platforms.group automodule for groups.md.
 
     Excludes Group class and utility functions that are documented separately
     in the same file. Uses ``{eval-rst}`` for the same reason as
-    :func:`generate_sphinx_directives`.
+    {func}`generate_sphinx_directives`.
     """
     # Exclude Group class (documented via autoclass) and utility functions
     # (documented in "Trait and group operations" section).
@@ -482,7 +473,7 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
 
     Excludes all Group instances and frozenset collections that are documented
     separately in the same file. Uses ``{eval-rst}`` for the same reason as
-    :func:`generate_sphinx_directives`.
+    {func}`generate_sphinx_directives`.
 
     :param groups: All predefined groups to exclude.
     """
@@ -510,60 +501,24 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
         ```""")
 
 
-def generate_extra_platforms_automodule(objects: Iterable[Trait | Group]) -> str:
-    """Generate the extra_platforms automodule directive with excluded members.
+def generate_extra_platforms_automodule() -> str:
+    """Generate the extra_platforms automodule directive, without its callables.
 
-    This excludes detection functions, utility functions, and core classes from the
-    automodule output, since they are documented in other files:
+    Every function and class exported at the root of the package is documented on
+    a dedicated page: detection functions in detection.md, group operations in
+    groups.md, {func}`~extra_platforms.shell_from_path` in shells.md, and the
+    classes in trait.md and groups.md. This automodule renders the data alone:
+    the traits, the groups and their collections.
 
-    - Detection functions in detection.md.
-    - Utility functions in detection.md, groups.md and shells.md.
-    - Core classes in trait.md and groups.md.
-
-    Uses ``{eval-rst}`` for the same reason as :func:`generate_sphinx_directives`.
-
-    :param objects: The traits and groups whose detection functions should be
-        excluded.
+    Uses ``{eval-rst}`` for the same reason as {func}`generate_sphinx_directives`.
     """
-    objects_list = list(objects)
-
-    # Exclude all detection functions so detection.md is the canonical location.
-    exclude_list = [
-        obj.detection_func_id for obj in sorted(objects_list, key=attrgetter("id"))
-    ]
-
-    # Also exclude utility functions documented in detection.md.
-    exclude_list.extend([
-        "current_agent",
-        "current_architecture",
-        "current_ci",
-        "current_platform",
-        "current_shell",
-        "current_shell_path",
-        "current_terminal",
-        "current_traits",
-        "invalidate_caches",
-    ])
-
-    # Also exclude group utility functions documented in groups.md.
-    exclude_list.extend(_GROUP_API_FUNCTIONS)
-
-    # Also exclude shell utility functions documented in shells.md.
-    exclude_list.append("shell_from_path")
-
-    # Also exclude core classes documented in trait.md and groups.md.
-    exclude_list.extend([
-        "Agent",
-        "Architecture",
-        "CI",
-        "Group",
-        "Platform",
-        "Shell",
-        "Terminal",
-        "Trait",
-    ])
-
-    exclude_members = ", ".join(sorted(exclude_list))
+    exclude_members = ", ".join(
+        sorted(
+            name
+            for name in extra_platforms.__all__
+            if callable(getattr(extra_platforms, name))
+        )
+    )
 
     return dedent(f"""\
         ```{{eval-rst}}

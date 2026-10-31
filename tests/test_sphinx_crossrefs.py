@@ -103,6 +103,7 @@ DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "_build"
 UNRENDERED_MODULES = frozenset((
     "extra_platforms/__main__.py",
     "extra_platforms/_docs.py",
+    "extra_platforms/_process_tree.py",
 ))
 
 
@@ -131,7 +132,7 @@ def read_html(built_docs: Path, filename: str) -> str:
     """
     html_path = built_docs / filename
     assert html_path.exists(), f"HTML file not found: {html_path}"
-    return html_path.read_text(encoding="utf-8")
+    return html_path.read_text(encoding="UTF-8")
 
 
 def find_links_with_text(html: str, link_text: str) -> list[str]:
@@ -607,7 +608,7 @@ def collect_all_refs() -> list[tuple[str, str, str]]:
 
     myst_pattern = r"\{(\w+)\}`~?([^`]+)`"
     for md_file in docs_dir.glob("**/*.md"):
-        content = md_file.read_text(encoding="utf-8")
+        content = md_file.read_text(encoding="UTF-8")
         for role, symbol in re.findall(myst_pattern, content):
             all_refs.append((role, symbol, str(md_file.relative_to(project_root))))
 
@@ -617,7 +618,7 @@ def collect_all_refs() -> list[tuple[str, str, str]]:
     # survive the MyST→reST conversion pass.
     rst_pattern = r":(\w+):`~?([^`]+)`"
     for py_file in code_dir.glob("**/*.py"):
-        content = py_file.read_text(encoding="utf-8")
+        content = py_file.read_text(encoding="UTF-8")
         for pattern in (myst_pattern, rst_pattern):
             for role, symbol in re.findall(pattern, content):
                 all_refs.append((role, symbol, str(py_file.relative_to(project_root))))
