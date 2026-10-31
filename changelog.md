@@ -1,9 +1,6 @@
 # Changelog
 
-## [`14.0.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.0...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`14.0.1` (2026-10-31)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.0...v14.0.1)
 
 - Fix `test_typing_is_not_imported` failing on CPython 3.13.13 and later 3.13 releases. Closes [#745](https://github.com/kdeldycke/extra-platforms/issues/745)
 
