@@ -587,9 +587,7 @@ def test_traits_from_ids(trait_id):
 
 @pytest.mark.parametrize(
     ("alias", "trait"),
-    # ALL_TRAITS iterates in ID order, so sorting each set of aliases is enough
-    # to collect the same order on every xdist worker.
-    [(alias, trait) for trait in ALL_TRAITS for alias in sorted(trait.aliases)],
+    [(alias, trait) for trait in ALL_TRAITS for alias in trait.aliases],
     ids=lambda value: value if isinstance(value, str) else value.id,
 )
 @pytest.mark.parametrize(

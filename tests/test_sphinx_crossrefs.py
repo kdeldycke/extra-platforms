@@ -163,7 +163,7 @@ def has_linked_reference(html: str, text: str, expected_href_fragment: str) -> b
     :param expected_href_fragment: The end of the expected href (like
         ``"architectures.html#extra_platforms.AARCH64"``), so an anchor that only
         starts with it, like ``#extra_platforms.ARMV6L`` for ``ARM``, does not match.
-    :returns: ``True`` if a matching link is found.
+    :return: ``True`` if a matching link is found.
     """
     hrefs = find_links_with_text(html, text)
     return any(href.endswith(expected_href_fragment) for href in hrefs)
@@ -304,7 +304,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     :param role: The Sphinx role (func, data, class, etc.).
     :param symbol: The symbol name (like ``"UBUNTU"``, ``"is_linux"``,
         ``"Platform"``).
-    :returns: The expected HTML filename (like ``"platforms.html"``).
+    :return: The expected HTML filename (like ``"platforms.html"``).
     """
     # Clean symbol name (remove module prefix if present)
     symbol_clean = symbol.rsplit(".", maxsplit=1)[-1]
@@ -412,8 +412,8 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
         # Find the trait by symbol_id and use its doc_page
         for trait in ALL_TRAITS:
             if trait.symbol_id == symbol_clean:
-                # Convert doc_page from .md to .html (e.g., "platforms.md" ->
-                # "platforms.html")
+                # Convert doc_page from .md to .html, like "platforms.md" to
+                # "platforms.html".
                 return trait.doc_page.replace(".md", ".html")
 
         # Find the group by symbol_id and use Group.doc_page
@@ -457,7 +457,7 @@ def _extract_reference_table_rows(html: str, myst: str) -> tuple[str, str, str]:
 
     Search the Reference matrix table and return the first row whose first
     column (stripped of HTML) exactly matches the provided `myst` directive
-    string (e.g. ``"{data}`~UBUNTU`"``). The returned values are the raw HTML
+    string, like ``"{data}`~UBUNTU`"``. The returned values are the raw HTML
     contents of the MyST, reST, and Rendering ``<td>`` cells for that row. If
     not found, fail the test.
     """
@@ -650,7 +650,7 @@ def test_all_crossreferences_point_to_correct_pages(
 
     # Skip certain roles that don't create cross-references to our code.
     # The ``attr`` role is skipped because attribute anchors include the class
-    # name (e.g. ``extra_platforms.Group.canonical``) and the general anchor
+    # name, like ``extra_platforms.Group.canonical``, and the general anchor
     # construction logic does not handle that.
     if role in ("doc", "ref", "octicon", "mod", "attr"):
         pytest.skip(f"Skipping non-code role: {role}")
@@ -759,7 +759,7 @@ def test_all_crossreferences_point_to_correct_pages(
         expected_anchor = f"extra_platforms.{symbol_clean}"
 
     # Symbols documented via automodule carry module-qualified anchors
-    # (e.g. ``extra_platforms.group_data.ALL_GROUPS`` instead of
+    # (like ``extra_platforms.group_data.ALL_GROUPS`` instead of
     # ``extra_platforms.ALL_GROUPS``), so accept either form. Derived from the
     # source file rather than listed per module, so a module joining the
     # documentation needs no entry here.
@@ -789,7 +789,7 @@ def extract_docstring_from_html(html: str, symbol_id: str) -> str:
     :param html: The HTML content to search.
     :param symbol_id: The symbol ID (like ``"extra_platforms.ALL_GROUPS"``
         or ``"extra_platforms.group_data.ALL_GROUPS"``).
-    :returns: The docstring text (stripped of HTML tags), or empty string if
+    :return: The docstring text (stripped of HTML tags), or empty string if
         not found.
     """
     # Find the anchor for this symbol.
@@ -882,7 +882,7 @@ def test_no_links_to_generic_api_page(built_docs, page):
     """Test that specialized doc pages never link to the generic extra_platforms.html.
 
     All cross-references from hand-written documentation pages should resolve to
-    other specialized pages (e.g. ``architectures.html``, ``groups.html``,
+    other specialized pages (like ``architectures.html``, ``groups.html`` or
     ``detection.html``), never to the catch-all ``extra_platforms.html`` produced
     by ``automodule``.
     """
@@ -893,7 +893,7 @@ def test_no_links_to_generic_api_page(built_docs, page):
     leaks = [
         href
         for href in re.findall(pattern, html)
-        # Submodule references (e.g. :mod:`detection`) can only resolve to
+        # Submodule references, like :mod:`detection`, can only resolve to
         # extra_platforms.html because that is where automodule registers them.
         if "#module-" not in href
     ]
@@ -914,7 +914,7 @@ def test_no_links_to_generic_api_page(built_docs, page):
 def test_generic_api_page_no_stolen_targets(built_docs):
     """The extra_platforms.html page steals no target from a specialized page.
 
-    The ``extra_platforms.rst`` file uses ``:noindex:`` and ``:no-members:``
+    The ``docs/extra_platforms.md`` page uses ``:noindex:`` and ``:no-members:``
     on all submodule ``automodule`` directives to prevent members documented
     in specialized pages from appearing on the generic page. This test checks
     both anchors (``id=``) and rendered member signatures (``sig-name``) to
@@ -927,14 +927,14 @@ def test_generic_api_page_no_stolen_targets(built_docs):
 
     stolen = []
     for anchor in all_anchors:
-        # Skip module anchors (e.g. module-extra_platforms.detection).
+        # Skip module anchors, like module-extra_platforms.detection.
         if anchor.startswith("module-"):
             continue
 
         # Determine the symbol and role from the anchor.
         symbol = anchor.removeprefix("extra_platforms.")
 
-        # For submodule-qualified anchors (e.g. extra_platforms.group_data.X),
+        # For submodule-qualified anchors, like extra_platforms.group_data.X,
         # use the leaf name for the page lookup.
         symbol_clean = symbol.split(".")[-1]
 

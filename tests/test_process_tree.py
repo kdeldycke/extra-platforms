@@ -177,7 +177,7 @@ def test_interpreter_shell_specs_includes_xonsh():
 def test_interpreter_shell(tmp_path):
     """An interpreter running a launcher file named after a shell is detected."""
     launcher = tmp_path / "xonsh"
-    launcher.write_text("#!/usr/bin/python\n")
+    launcher.write_text("#!/usr/bin/python\n", encoding="UTF-8")
     launcher_str = str(launcher)
 
     # A python interpreter running the xonsh launcher file.
@@ -197,7 +197,7 @@ def test_interpreter_shell(tmp_path):
     assert _process_tree._interpreter_shell(["/bin/zsh", launcher_str]) is None
     # A file whose basename is not exactly the launcher (xonsh.py) is ignored.
     script = tmp_path / "xonsh.py"
-    script.write_text("")
+    script.write_text("", encoding="UTF-8")
     assert _process_tree._interpreter_shell(["/usr/bin/python3", str(script)]) is None
     # Empty argv.
     assert _process_tree._interpreter_shell([]) is None

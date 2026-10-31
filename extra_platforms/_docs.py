@@ -179,7 +179,7 @@ def _analyze_group_hierarchy(
 
     :param groups: An iterable of groups including both the superset group (like
         `ALL_ARCHITECTURES` or `ALL_PLATFORMS`) and intermediate groups.
-    :returns: A tuple of ``(superset, intermediate_groups, missing_traits)`` where:
+    :return: A tuple of ``(superset, intermediate_groups, missing_traits)`` where:
 
         - ``superset``: The group that contains all others as subsets
         - ``intermediate_groups``: All groups except the superset
@@ -356,7 +356,7 @@ def generate_all_detection_function_table(objects: Iterable[Trait | Group]) -> s
 
     :param objects: The traits and groups whose detection functions should be
         included.
-    :returns: A Markdown table with all detection functions.
+    :return: A Markdown table with all detection functions.
     """
     headers = ["Detection function", "Icon", "Associated symbol"]
     alignments = ["left", "center", "left"]
@@ -477,8 +477,6 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
 
     :param groups: All predefined groups to exclude.
     """
-    from extra_platforms import group_data
-
     # Exclude all Group instances (documented in "Predefined groups" section).
     # Group IDs are lowercase but Python symbols are uppercase.
     exclude_list = [g.id.upper() for g in groups]
@@ -488,7 +486,7 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
     # collections are excluded automatically.
     exclude_list.extend(
         name
-        for name, value in vars(group_data).items()
+        for name, value in vars(extra_platforms.group_data).items()
         if name.isupper() and isinstance(value, frozenset)
     )
 

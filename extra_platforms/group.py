@@ -103,8 +103,8 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
 
     Its members are {class}`~extra_platforms.Trait` instances.
 
-    Additionally of the common fields inherited from `_Identifiable`,
-    each group provides:
+    In addition to the common fields inherited from `_Identifiable`, each group
+    provides:
 
     - `members`: An iterable of {class}`~extra_platforms.Trait`
       instances that belong to this group.
@@ -462,7 +462,7 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
         is not found.
 
         :param member: A {class}`~extra_platforms.Trait` object or trait ID
-            string to remove.
+            string to remove. A trait ID is case-insensitive, and can be an alias.
         :return: A new {class}`~extra_platforms.Group` instance with the
             trait removed, or a copy if not present.
         """
@@ -474,9 +474,9 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
     def pop(self, member_id: str | None = None) -> tuple[Trait, Self]:
         """Remove and return a trait from the group.
 
-        :param member_id: Optional trait ID to remove. If not provided,
-            removes an arbitrary trait (specifically, the first one in
-            iteration order).
+        :param member_id: Optional trait ID to remove, case-insensitive, or an
+            alias. If not provided, removes an arbitrary trait (specifically, the
+            first one in iteration order).
         :return: A {class}`tuple` of (removed {class}`~extra_platforms.Trait`,
             new {class}`~extra_platforms.Group`).
         :raises KeyError: If ``member_id`` is provided but not found in the

@@ -32,17 +32,26 @@ from extra_platforms import (
     ALL_PLATFORMS,
     ALL_SHELLS,
     ALL_TRAITS,
+    BASH,
+    FISH,
     ILLUMOS,
+    POWERSHELL,
+    SH,
+    ZSH,
     Group,
     Shell,
     Trait,
     _process_tree,
     current_platform,
+    current_shell,
+    current_shell_path,
     detection as detection_module,
     invalidate_caches,
     is_aarch64,
     is_arm,
     is_armv7l,
+    is_bash,
+    is_fish,
     is_github_ci,
     is_gitlab_ci,
     is_illumos,
@@ -51,6 +60,7 @@ from extra_platforms import (
     is_solaris,
     is_windows,
     is_x86_64,
+    shell_from_path,
 )
 from extra_platforms.pytest import skip_windows
 
@@ -447,8 +457,6 @@ def test_current_shell_prefers_a_running_pwsh_over_configured_shell(
     monkeypatch, fresh_caches
 ):
     """A ``pwsh`` parent process names PowerShell, whose ID is not its binary name."""
-    from extra_platforms import POWERSHELL, current_shell
-
     monkeypatch.setattr(
         _process_tree,
         "parent_process_tree",
@@ -472,16 +480,12 @@ def test_current_shell_prefers_a_running_pwsh_over_configured_shell(
 )
 def test_shell_from_path(path, expected_id):
     """A shell path resolves to its catalog entry by name, or to the unknown shell."""
-    from extra_platforms import shell_from_path
-
     assert shell_from_path(path).id == expected_id
 
 
 @skip_windows
 def test_shell_from_path_resolves_symlinks(tmp_path):
     """``sh`` linking to ``bash`` names bash: the implementation, not the interface."""
-    from extra_platforms import BASH, shell_from_path
-
     # Link to a file under tmp_path, never the host's /bin/bash: a hermetic build
     # sandbox may have no such file, and a missing target resolves to "sh".
     target = tmp_path / "bash"
@@ -504,8 +508,6 @@ def test_shell_from_path_resolves_symlinks(tmp_path):
 )
 def test_shell_from_path_resolves_multicall_binary(tmp_path, target, link, expected_id):
     """A link to a multi-call binary names the program the link name picks."""
-    from extra_platforms import shell_from_path
-
     (tmp_path / target).touch()
     (tmp_path / link).symlink_to(tmp_path / target)
     assert shell_from_path(tmp_path / link).id == expected_id
@@ -513,8 +515,6 @@ def test_shell_from_path_resolves_multicall_binary(tmp_path, target, link, expec
 
 def test_current_shell_path(monkeypatch, fresh_caches):
     """current_shell_path() prefers the running binary, then falls back to SHELL."""
-    from extra_platforms import ZSH, current_shell_path
-
     monkeypatch.setattr(detection_module, "current_shell", lambda strict=False: ZSH)
 
     # The process tree yields the running binary: prefer it over SHELL.
@@ -544,8 +544,6 @@ def test_current_shell_path(monkeypatch, fresh_caches):
 
 def test_shell_info_path_ignores_another_login_shell(monkeypatch, fresh_caches):
     """``Shell.info()`` reports no path rather than the path of another shell."""
-    from extra_platforms import SH
-
     monkeypatch.setitem(detection_module._detection_registry, "is_sh", lambda: True)
     # The running sh shows as a bare argv[0], the way illumos' ps reports it.
     monkeypatch.setattr(_process_tree, "parent_process_tree", lambda: (("sh", ""),))
@@ -567,8 +565,6 @@ def test_current_shell_prefers_running_shell_over_configured_shell(
     login fish (``-fish``) while ``$SHELL`` is still zsh (no ``chsh``): the
     running shell (fish) must win, not the configured login shell (zsh).
     """
-    from extra_platforms import FISH, current_shell
-
     # The parent process tree shows fish actually running.
     monkeypatch.setattr(
         _process_tree,
@@ -592,8 +588,6 @@ def test_nested_ancestor_shells_all_detected(monkeypatch, fresh_caches):
     the build. Both shells are detected, and the primary shell stays the
     nearest running one.
     """
-    from extra_platforms import BASH, current_shell, is_bash, is_fish
-
     monkeypatch.setattr(
         _process_tree,
         "parent_process_tree",
@@ -657,8 +651,6 @@ def test_current_shell_prefers_nearest_running_shell(
     monkeypatch, tree, login_shell, expected_id, fresh_caches
 ):
     """When shells nest, the nearest one wins over the login shell above it."""
-    from extra_platforms import current_shell
-
     monkeypatch.setattr(_process_tree, "parent_process_tree", lambda: tree)
     monkeypatch.setenv("SHELL", login_shell)
     unset_shell_startup_vars(monkeypatch)

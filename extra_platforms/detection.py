@@ -2303,7 +2303,7 @@ def current_shell_path() -> str | None:
     On some BSDs, ``ps`` reports only the bare ``argv[0]`` rather than a full
     path. The non-absolute name is discarded, so this falls back to ``SHELL``
     there. illumos and Solaris get the path from procfs instead (see
-    `_system_v_executable`).
+    `extra_platforms._process_tree`).
     ```
 
     ```{seealso}

@@ -425,17 +425,14 @@ def get_macos_codename(major: str | None = None, minor: str | None = None) -> st
     :param minor: The minor version number (like ``"0"``, ``"15"``). For
         macOS 11+, this can be ``None`` as codenames are tied to major
         versions only.
-    :returns: The codename for the macOS version (like ``"Sonoma"``,
+    :return: The codename for the macOS version (like ``"Sonoma"``,
         ``"Ventura"``).
     :raises ValueError: If no codename matches the given version.
     """
     if major is not None:
-        codename = MACOS_CODENAMES.get((major, minor)) or MACOS_CODENAMES.get((
-            major,
-            None,
-        ))
-        if codename:
-            return codename
+        for version in ((major, minor), (major, None)):
+            if codename := MACOS_CODENAMES.get(version):
+                return codename
     raise ValueError(f"No macOS codename match version ({major!r}, {minor!r})")
 
 
@@ -449,7 +446,7 @@ def macos_info() -> dict[str, Any]:
     - `version_parts`: Dictionary with `major`, `minor`, `build_number`
     - `codename`: The macOS codename (like `"Sonoma"`)
 
-    :returns: A dictionary containing macOS version details.
+    :return: A dictionary containing macOS version details.
     :raises ValueError: If the current macOS version cannot be mapped to a
         codename.
     """
@@ -480,7 +477,7 @@ def windows_info() -> dict[str, Any]:
     release from that build number.
     ```
 
-    :returns: A dictionary containing Windows version details.
+    :return: A dictionary containing Windows version details.
 
     ```{todo}
     Get even more details for Windows version. See inspirations from:

@@ -73,11 +73,12 @@ click_extra_fail_on_warnings = ["myst.xref_missing"]
 
 mermaid_d3_zoom = True
 
-# Enable the `{python:run}` execution directive used by docs/cli.md to render
-# the CLI `--help` screen live at build time. Disabled by default upstream since
-# click-extra `v7.15.0` because these directives execute arbitrary Python at
-# build time; without the flag every directive reference logs an "Unknown
-# directive" warning and the live block renders empty.
+# Enable the `{python:render}` and `{python:run}` execution directives. They
+# render the trait and group tables, the diagrams and the CLI `--help` screen
+# live at build time. Disabled by default upstream since click-extra `v7.15.0`
+# because these directives execute arbitrary Python at build time; without the
+# flag every directive reference logs an "Unknown directive" warning and the
+# live block renders empty.
 click_extra_enable_exec_directives = True
 
 exclude_patterns = ["_build", "_linkcheck", "html", "Thumbs.db", ".DS_Store"]
@@ -96,12 +97,12 @@ suppress_warnings = [
     # Explanation: The autoclasstree extension sometimes generates empty mermaid
     # directives for certain module structures.
     "myst.directive",
-    # Example: "/Users/kde/code/extra-platforms/tests/test_sphinx_crossrefs.py:docstring
-    # of tests.test_sphinx_crossrefs.has_linked_reference:9: ERROR: Unexpected
-    # indentation. [docutils]"
-    # Explanation: Some code examples in docstrings may have indentation that triggers
-    # reStructuredText parsing warnings. These are typically in test files and don't
-    # affect the main documentation.
+    # Example: "docs/platforms.md:390: WARNING: Ignoring "mermaid" directive without
+    # content. [docutils]"
+    # Explanation: `autoclasstree` renders an empty mermaid diagram for each
+    # `*_data` module, which defines no class. The same tag also covers the
+    # reStructuredText parsing warnings of test docstrings that docs/tests.md
+    # renders.
     "docutils",
     # Example: "Domain 'click_extra.sphinx.click::click' has not implemented a
     # `resolve_any_xref` method"

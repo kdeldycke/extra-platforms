@@ -18,8 +18,8 @@ $ uv pip install 'extra-platforms[pytest]'
 
 ## Usage
 
-- `@skip_<id>` — Skips the test when running on that platform/architecture/CI system
-- `@unless_<id>` — Skips the test *unless* running on that platform/architecture/CI system
+- `@skip_<id>`: Skip the test when the current environment matches the trait or group `<id>`
+- `@unless_<id>`: Skip the test *unless* the current environment matches the trait or group `<id>`
 
 Skip a test on Windows:
 

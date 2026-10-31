@@ -23,7 +23,7 @@ It provides:
 $ uv run --group test pytest
 
 # Run all tests with coverage, the way the tests workflow does.
-$ uv run --group test coverage run --module pytest --numprocesses=auto --dist=loadgroup
+$ uv run --group test coverage run --module pytest --numprocesses=logical --dist=loadgroup
 $ uv run --group test coverage combine
 $ uv run --group test coverage report --show-missing
 
@@ -60,7 +60,7 @@ $ uv run --group docs sphinx-build -b html ./docs ./docs/_build
 All core classes are defined in `trait.py`:
 
 ```
-Trait (ABC) - Base class for all detectable traits
+Trait - Base class for all detectable traits
 ├── Architecture - CPU architectures
 ├── Platform - Operating systems
 ├── Shell - Command-line shells

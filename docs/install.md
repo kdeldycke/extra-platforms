@@ -124,6 +124,14 @@ The package [landed in Guix on 2026-06-28](https://codeberg.org/guix/guix/pulls/
 ```
 ````
 
+````{tab-item} MacPorts
+The [`py-extra-platforms` port](https://ports.macports.org/port/py-extra-platforms/) is available in MacPorts, with one port per Python version. Pick the one matching your interpreter, like `py313-extra-platforms` for Python 3.13:
+
+```{code-block} shell-session
+$ sudo port install py313-extra-platforms
+```
+````
+
 ````{tab-item} openSUSE
 The [`python-extra-platforms` package](https://software.opensuse.org/package/python-extra-platforms) is available on openSUSE Tumbleweed:
 

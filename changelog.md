@@ -11,12 +11,14 @@
 - **Breaking:** `Trait.aliases` is now a `tuple` of strings, like `Shell.executables`, instead of a `frozenset`.
 - **Breaking:** `symbol_id`, `detection_func_id`, `skip_decorator_id` and `unless_decorator_id` are now properties, absent from `dataclasses.fields()` and `dataclasses.asdict()`.
 - Accept the class metadata of a `Trait` or `Group` subclass as class keyword arguments, like `class Fruit(Trait, type_name="fruit")`.
-- Run only the detection functions of its own members in a group detection function: `is_any_windows()` no longer spawns `ps` on macOS.
-- Stop importing `typing` at runtime, which shortens the cold import of the package.
 - Accept a trait ID in any case, or an alias, in `Group.remove()`, `Group.discard()` and `Group.pop()`, like in `Group.add()`.
+- Run a group detection function on its own members only: `is_any_windows()` no longer spawns `ps` on macOS.
+- Stop importing `typing` at runtime, which shortens the cold import of the package.
+- Require `pytest` `8.4` or newer in the `pytest` extra.
 - Fix `Group.add()` adding only the first member of a group whose ID it received: it now raises `ValueError`.
-- Fix `Group.remove()` removing the member that shares its ID with another trait passed to it.
+- Fix `Group.remove()` and `Trait.groups` matching a trait that only shares its ID with a group member.
 - Fix `reduce()` returning the empty groups of its `target_pool`.
+- Document installation from MacPorts.
 
 ## [`13.13.0` (2026-10-25)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...v13.13.0)
 
