@@ -1,5 +1,10 @@
 # Changelog
 
+## [`14.0.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.0...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`14.0.0` (2026-10-31)](https://github.com/kdeldycke/extra-platforms/compare/v13.13.0...v14.0.0)
 
 - **Breaking:** Drop Python 3.10, past its end of life: `extra-platforms` now needs Python 3.11 or newer.
