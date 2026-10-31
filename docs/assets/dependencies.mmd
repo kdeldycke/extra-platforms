@@ -46,7 +46,7 @@ flowchart LR
     urllib3(["`urllib3`"])
 
     subgraph ext_pytest [--extra pytest]
-        ext_pytest_pytest{{"`pytest >=8.2.1`"}}
+        ext_pytest_pytest{{"`pytest >=8.4`"}}
     end
 
     subgraph grp_docs [--group docs]
@@ -59,11 +59,11 @@ flowchart LR
         sphinx_copybutton{{"`sphinx-copybutton >=0.5`"}}
         sphinx_design{{"`sphinx-design >=0.7`"}}
         sphinxext_opengraph{{"`sphinxext-opengraph >=0.11`"}}
-        grp_docs_pytest{{"`pytest >=8.2.1`"}}
+        grp_docs_pytest{{"`pytest >=8.4`"}}
     end
 
     subgraph grp_test [--group test]
-        pytest{{"`pytest`"}}
+        pytest{{"`pytest >=9`"}}
         requests{{"`requests >=2.34`"}}
         pytest_xdist{{"`pytest-xdist >=3.7`"}}
         coverage{{"`coverage >=7.13`"}}
