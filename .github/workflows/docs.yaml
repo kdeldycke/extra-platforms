@@ -18,6 +18,7 @@ name: 📚 Docs
       - readme.md
       - uv.lock
       - "**/*.py"
+      - AGENTS.md
   schedule:
     - cron: "43 6 15 * *"
 

@@ -295,8 +295,8 @@ test = [
   "pytest-randomly>=4",
   # pytest-xdist 3.7.0 is the first version to support Python 3.13.
   "pytest-xdist[psutil]>=3.7",
-  # requests 2.34 is the first version to ship inline type hints (PEP 561),
-  # which lets us drop the types-requests stub package from the typing group.
+  # requests 2.34 is the first version to ship inline type hints (PEP 561): mypy
+  # reads them to check the test that calls it, with no types-requests stub.
   "requests>=2.34",
 ]
 docs = [
@@ -349,11 +349,14 @@ build-backend.source-exclude = [
   "docs/html",
   "tests/.coverage",
 ]
-# Ship the test suite and the docs it reads (plus the changelog) in the sdist so
-# distribution packagers can build and test straight from the PyPI sdist instead
-# of fetching a GitHub tag tarball. source-include feeds the sdist only; the
-# wheel stays module-only. Git-ignored build output is pruned via source-exclude.
+# Ship the test suite, the docs it reads, and the files those docs include from
+# outside docs/ in the sdist, so distribution packagers can build and test
+# straight from the PyPI sdist instead of fetching a GitHub tag tarball.
+# source-include feeds the sdist only; the wheel stays module-only. Git-ignored
+# build output is pruned via source-exclude.
 build-backend.source-include = [
+  ".github/code-of-conduct.md",
+  "AGENTS.md",
   "changelog.md",
   "docs/**",
   "tests/**",
@@ -699,9 +702,9 @@ test-matrix.variations.os = [
   "macos-14",
   "windows-2022",
 ]
-# tests/test_sphinx_crossrefs.py runs sphinx-build over ./docs and asserts on
-# the result, and tests/test_trait.py checks the rosters and mindmap in
-# readme.md, so a change to either must trigger the test suite. The canonical
-# `paths:` filter tests.yaml inherits lists only source, tests and packaging
-# files.
-workflow.extra-paths = [ "docs/**", "readme.md" ]
+# tests/test_sphinx_crossrefs.py runs sphinx-build over ./docs, which includes
+# AGENTS.md, and asserts on the result, and tests/test_trait.py checks the
+# rosters and mindmap in readme.md, so a change to any of them must trigger the
+# test suite. The canonical `paths:` filter tests.yaml inherits lists only
+# source, tests and packaging files.
+workflow.extra-paths = [ "AGENTS.md", "docs/**", "readme.md" ]

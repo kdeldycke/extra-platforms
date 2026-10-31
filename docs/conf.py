@@ -100,9 +100,7 @@ suppress_warnings = [
     # Example: "docs/platforms.md:390: WARNING: Ignoring "mermaid" directive without
     # content. [docutils]"
     # Explanation: `autoclasstree` renders an empty mermaid diagram for each
-    # `*_data` module, which defines no class. The same tag also covers the
-    # reStructuredText parsing warnings of test docstrings that docs/tests.md
-    # renders.
+    # `*_data` module, which defines no class.
     "docutils",
     # Example: "Domain 'click_extra.sphinx.click::click' has not implemented a
     # `resolve_any_xref` method"

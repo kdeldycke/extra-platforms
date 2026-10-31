@@ -18,6 +18,7 @@
 - Fix `Group.add()` adding only the first member of a group whose ID it received: it now raises `ValueError`.
 - Fix `Group.remove()` and `Trait.groups` matching a trait that only shares its ID with a group member.
 - Fix `reduce()` returning the empty groups of its `target_pool`.
+- Fix the PyPI sdist missing `AGENTS.md` and `.github/code-of-conduct.md`, which the documentation includes.
 - Document installation from MacPorts.
 
 ## [`13.13.0` (2026-10-25)](https://github.com/kdeldycke/extra-platforms/compare/v13.12.0...v13.13.0)
