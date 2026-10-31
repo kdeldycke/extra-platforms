@@ -7,6 +7,9 @@
 
 ## [`14.0.1` (2026-10-31)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.0...v14.0.1)
 
+> [!NOTE]
+> `14.0.1` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/14.0.1/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v14.0.1).
+
 - Fix `test_typing_is_not_imported` failing on CPython 3.13.13 and later 3.13 releases. Closes [#745](https://github.com/kdeldycke/extra-platforms/issues/745)
 
 ## [`14.0.0` (2026-10-31)](https://github.com/kdeldycke/extra-platforms/compare/v13.13.0...v14.0.0)
