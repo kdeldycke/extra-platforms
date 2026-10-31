@@ -42,7 +42,6 @@ flowchart LR
     sphinxcontrib_jsmath(["`sphinxcontrib-jsmath`"])
     sphinxcontrib_qthelp(["`sphinxcontrib-qthelp`"])
     sphinxcontrib_serializinghtml(["`sphinxcontrib-serializinghtml`"])
-    tomli(["`tomli`"])
     urllib3(["`urllib3`"])
 
     subgraph ext_pytest [--extra pytest]
@@ -66,9 +65,9 @@ flowchart LR
         pytest{{"`pytest >=9`"}}
         requests{{"`requests >=2.34`"}}
         pytest_xdist{{"`pytest-xdist >=3.7`"}}
-        coverage{{"`coverage >=7.13`"}}
         pytest_github_actions_annotate_failures{{"`pytest-github-actions-annotate-failures >=0.3`"}}
         pytest_randomly{{"`pytest-randomly >=4`"}}
+        coverage{{"`coverage >=7.13`"}}
     end
 
     sphinx --> requests
@@ -127,7 +126,6 @@ flowchart LR
     sphinxcontrib_mermaid --> pyyaml
     sphinx_autodoc_typehints --> sphinx
     sphinx_autodoc_typehints --> typing_extensions
-    coverage --> tomli
     pytest_github_actions_annotate_failures --> pytest
     pytest_randomly --> pytest
     sphinx_copybutton --> sphinx
@@ -203,7 +201,6 @@ flowchart LR
     click sphinxcontrib_serializinghtml "https://pypi.org/project/sphinxcontrib-serializinghtml/" _blank
     click sphinxext_opengraph "https://pypi.org/project/sphinxext-opengraph/" _blank
     click tabulate "https://pypi.org/project/tabulate/" _blank
-    click tomli "https://pypi.org/project/tomli/" _blank
     click typing_extensions "https://pypi.org/project/typing-extensions/" _blank
     click urllib3 "https://pypi.org/project/urllib3/" _blank
     click wcmatch "https://pypi.org/project/wcmatch/" _blank
