@@ -7,6 +7,9 @@
 
 ## [`14.0.0` (2026-10-31)](https://github.com/kdeldycke/extra-platforms/compare/v13.13.0...v14.0.0)
 
+> [!NOTE]
+> `14.0.0` is available on [🐍 PyPI](https://pypi.org/project/extra-platforms/14.0.0/) and [🐙 GitHub](https://github.com/kdeldycke/extra-platforms/releases/tag/v14.0.0).
+
 - **Breaking:** Drop Python 3.10, past its end of life: `extra-platforms` now needs Python 3.11 or newer.
 - **Breaking:** Remove the deprecated aliases `EXTRA_GROUPS`, `NON_OVERLAPPING_GROUPS`, `GUIX_BUILD`, `TUMBLEWEED`, `is_guix_build()`, `is_tumbleweed()` and their `skip_*` and `unless_*` decorators. Use `NON_CANONICAL_GROUPS`, `CANONICAL_GROUPS`, `HERMETIC_BUILD` and `OPENSUSE` instead.
 - **Breaking:** `is_unknown()`, `@skip_unknown` and `@unless_unknown` now match when a trait category resolves to its unknown trait, instead of never.
