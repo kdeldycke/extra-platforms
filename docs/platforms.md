@@ -387,11 +387,6 @@ mindmap
 ## Predefined platforms
 
 ```{eval-rst}
-.. autoclasstree:: extra_platforms.platform_data
-   :strict:
-```
-
-```{eval-rst}
 .. automodule:: extra_platforms.platform_data
 ```
 

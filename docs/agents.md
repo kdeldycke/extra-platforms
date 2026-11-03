@@ -162,11 +162,6 @@ mindmap
 ## Predefined agents
 
 ```{eval-rst}
-.. autoclasstree:: extra_platforms.agent_data
-   :strict:
-```
-
-```{eval-rst}
 .. automodule:: extra_platforms.agent_data
    :no-index:
 ```

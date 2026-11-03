@@ -105,11 +105,6 @@ suppress_warnings = [
     # pytest.Mark type is not available during Sphinx documentation build. These are
     # cosmetic warnings that don't affect the generated documentation.
     "sphinx_autodoc_typehints.forward_reference",
-    # Example: "docs/platforms.md:390: WARNING: Ignoring "mermaid" directive without
-    # content. [docutils]"
-    # Explanation: `autoclasstree` renders an empty mermaid diagram for each
-    # `*_data` module, which defines no class.
-    "docutils",
     # Example: "Domain 'click_extra.sphinx.click::click' has not implemented a
     # `resolve_any_xref` method"
     # Explanation: Upstream limitation in the click-extra Sphinx extension.

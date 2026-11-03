@@ -216,11 +216,6 @@ mindmap
 ## Predefined terminals
 
 ```{eval-rst}
-.. autoclasstree:: extra_platforms.terminal_data
-   :strict:
-```
-
-```{eval-rst}
 .. automodule:: extra_platforms.terminal_data
    :no-index:
 ```

@@ -174,11 +174,6 @@ mindmap
 ## Predefined CI
 
 ```{eval-rst}
-.. autoclasstree:: extra_platforms.ci_data
-   :strict:
-```
-
-```{eval-rst}
 .. automodule:: extra_platforms.ci_data
    :no-index:
 ```

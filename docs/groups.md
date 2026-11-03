@@ -256,11 +256,6 @@ from extra_platforms._docs import generate_group_module_automodule
 print(generate_group_module_automodule())
 ```
 
-```{eval-rst}
-.. autoclasstree:: extra_platforms.group_data
-   :strict:
-```
-
 ```{python:render}
 from extra_platforms import ALL_GROUPS
 from extra_platforms._docs import generate_group_data_module_automodule

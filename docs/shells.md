@@ -255,11 +255,6 @@ mindmap
 ## Predefined shells
 
 ```{eval-rst}
-.. autoclasstree:: extra_platforms.shell_data
-   :strict:
-```
-
-```{eval-rst}
 .. automodule:: extra_platforms.shell_data
    :no-index:
 ```

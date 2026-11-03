@@ -466,11 +466,6 @@ mindmap
 ## Predefined architectures
 
 ```{eval-rst}
-.. autoclasstree:: extra_platforms.architecture_data
-   :strict:
-```
-
-```{eval-rst}
 .. automodule:: extra_platforms.architecture_data
    :no-index:
 ```
