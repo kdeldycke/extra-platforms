@@ -281,7 +281,6 @@ jobs:
           - macos-26         # arm64
           - macos-15         # arm64
           - macos-15-intel   # x86
-          - macos-14         # arm64
           - windows-11-arm   # arm64
           - windows-2025     # x86
           - windows-2022     # x86
