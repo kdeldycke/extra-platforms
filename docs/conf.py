@@ -6,6 +6,7 @@ from pathlib import Path
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
+    from docutils.nodes import document
     from sphinx.application import Sphinx
 
 project_path = Path(__file__).parent.parent.resolve()
@@ -241,6 +242,22 @@ def drop_unused_viewcode_modules(app: object, env: object) -> None:
             del modules[modname]
 
 
+def rehome_moved_nodes(app: Sphinx, doctree: document) -> None:
+    """Point every node of a page at the page's own document.
+
+    myst-parser parses an `{eval-rst}` block into a throwaway document that
+    shares the page's settings, then moves the parsed nodes into the page. The
+    moved nodes keep the throwaway document as theirs. Before it pickles a page,
+    Sphinx removes the build environment from a copy of the page's settings, not
+    from the settings object the throwaway document still holds. So without this
+    hook, every page holding an `{eval-rst}` block pickles the whole build
+    environment into its doctree.
+    """
+    for node in doctree.findall():
+        if node.document is not doctree:
+            node.document = doctree
+
+
 def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
     """Delete what Sphinx leaves in the output tree that is not content.
 
@@ -265,3 +282,4 @@ def setup(app: Sphinx) -> None:
     """Connect the build hooks defined above."""
     app.connect("env-updated", drop_unused_viewcode_modules)
     app.connect("build-finished", prune_build_artifacts)
+    app.connect("doctree-read", rehome_moved_nodes)
