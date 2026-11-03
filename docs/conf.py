@@ -217,6 +217,11 @@ html_css_files = ["custom.css"]
 html_copy_source = False
 html_show_sourcelink = False
 
+# Copy the commands of a shell-session block alone: `.gp` is the Pygments class
+# of the prompt, `.go` the one of the output lines. The default only skips line
+# numbers, so every `$ ` and every output line landed in the clipboard.
+copybutton_exclude = ".linenos, .gp, .go"
+
 # Footer content.
 html_last_updated_fmt = "%Y-%m-%d"
 copyright = f"{author} and contributors"
