@@ -300,9 +300,10 @@ test = [
   "requests>=2.34",
 ]
 docs = [
-  # Click Extra 9.4 adds click_extra_fail_on_warnings, which docs/conf.py sets to
-  # fail the build on a fragment link that resolves nowhere.
-  "click-extra[sphinx]>=9.4",
+  # click-extra 9.5.1 logs the click_extra.todo_unrendered warning that
+  # docs/conf.py fails the build on. An older release never logs it, so a {todo}
+  # that no page renders builds clean.
+  "click-extra[sphinx]>=9.5.1",
   # furo 2025.12.19 is the first release to accept Sphinx 9, which this group
   # requires.
   "furo>=2025.12.19",

@@ -80,8 +80,11 @@ myst_heading_anchors = 6
 myst_heading_slug_func = "docutils.nodes.make_id"
 
 # A fragment link that resolves nowhere fails the build: myst-parser only warns
-# with `myst.xref_missing`, then ships the link dead.
-click_extra_fail_on_warnings = ["myst.xref_missing"]
+# with `myst.xref_missing`, then ships the link dead. So does a docstring
+# `{todo}` that no page renders, which the todolist page cannot list. CI fails on
+# every warning through `[tool.repomatic] sphinx.fail-on-warning`, so this list
+# is what still fails a local build run without `--fail-on-warning`.
+click_extra_fail_on_warnings = ["click_extra.todo_unrendered", "myst.xref_missing"]
 
 mermaid_d3_zoom = True
 
