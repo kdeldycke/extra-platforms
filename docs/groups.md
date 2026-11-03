@@ -208,14 +208,23 @@ print(generate_sphinx_directives(ALL_GROUPS, "autodata", "symbol_id"))
 
 ```{eval-rst}
 .. autodata:: extra_platforms.group_data.ALL_AGENT_GROUPS
+   :no-value:
 .. autodata:: extra_platforms.group_data.ALL_ARCHITECTURE_GROUPS
+   :no-value:
 .. autodata:: extra_platforms.group_data.ALL_CI_GROUPS
+   :no-value:
 .. autodata:: extra_platforms.group_data.ALL_GROUPS
+   :no-value:
 .. autodata:: extra_platforms.group_data.ALL_PLATFORM_GROUPS
+   :no-value:
 .. autodata:: extra_platforms.group_data.ALL_SHELL_GROUPS
+   :no-value:
 .. autodata:: extra_platforms.group_data.ALL_TERMINAL_GROUPS
+   :no-value:
 .. autodata:: extra_platforms.group_data.CANONICAL_GROUPS
+   :no-value:
 .. autodata:: extra_platforms.group_data.NON_CANONICAL_GROUPS
+   :no-value:
 ```
 
 ## ID collections
