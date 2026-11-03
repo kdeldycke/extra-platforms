@@ -321,6 +321,8 @@ def anchor_viewcode_backlinks(app: Sphinx, env: BuildEnvironment) -> None:
         modules[modname] = (code, tags, used, best)
 
 
+# XXX Drop this hook once a Sphinx release ships
+# https://github.com/sphinx-doc/sphinx/pull/14809.
 def sort_todos(app: Sphinx, env: BuildEnvironment) -> None:
     """List the todolist entries page by page, in the order a serial build reads.
 
@@ -333,6 +335,8 @@ def sort_todos(app: Sphinx, env: BuildEnvironment) -> None:
         env.domaindata["todo"]["todos"] = dict(sorted(todos.items()))
 
 
+# XXX Drop this hook and OCTICON_TITLE_GAP once a sphinxext-opengraph release ships
+# https://github.com/sphinx-doc/sphinxext-opengraph/pull/150.
 def strip_title_icon_gap(
     app: Sphinx, pagename: str, templatename: str, context: dict, doctree: Any
 ) -> None:
