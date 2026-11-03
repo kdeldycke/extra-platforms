@@ -177,6 +177,10 @@ The table below shows which Python versions each `extra-platforms` release range
 
 <!-- matrix-end -->
 
+## Release verification
+
+The PyPI distributions carry their own [PEP 740](https://peps.python.org/pep-0740/) attestations, visible and verifiable on the [PyPI project page](https://pypi.org/project/extra-platforms/).
+
 ## Dependencies
 
 `extra-platforms` has no runtime dependency. The [dependency graph](packaging.md#dependencies) on the packaging page covers the extras and development groups.
