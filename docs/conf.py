@@ -181,9 +181,16 @@ autosectionlabel_prefix_document = True
 # Theme config.
 html_theme = "furo"
 html_title = project
-html_logo = "assets/logo-square.svg"
 html_favicon = "assets/favicon.svg"
 html_theme_options = {
+    # Sidebar logo. Furo renders this pair as .only-light/.only-dark images
+    # driven by its own theme state, so the logo follows the toggle. A single
+    # html_logo cannot: assets/logo-square.svg is light-only, and its dark
+    # wordmark nearly vanishes on the dark theme. Both files are 640x740 exports
+    # of that SVG, so the swap holds geometry. Furo resolves them against
+    # _static/, hence their html_static_path entries.
+    "light_logo": "logo-square-light.png",
+    "dark_logo": "logo-square-dark.png",
     "sidebar_hide_name": True,
     # Activates edit links.
     "source_repository": f"https://github.com/{github_user}/{project_id}",
@@ -207,7 +214,14 @@ html_theme_options = {
     ),
 }
 
-html_static_path = ["_static"]
+# Individual files are copied to the root of _static/, which is where Furo looks
+# for the light_logo/dark_logo pair. Listing docs/assets/ wholesale would drag
+# every other asset along.
+html_static_path = [
+    "_static",
+    "assets/logo-square-dark.png",
+    "assets/logo-square-light.png",
+]
 html_css_files = ["custom.css"]
 
 # Do not publish a copy of every source document under `_sources/`. Nothing links
