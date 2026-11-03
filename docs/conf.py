@@ -6,7 +6,8 @@ from pathlib import Path
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from docutils.nodes import document
+    from typing import Any
+
     from sphinx.application import Sphinx
 
 project_path = Path(__file__).parent.parent.resolve()
@@ -277,7 +278,7 @@ def drop_unused_viewcode_modules(app: object, env: object) -> None:
             del modules[modname]
 
 
-def rehome_moved_nodes(app: Sphinx, doctree: document) -> None:
+def rehome_moved_nodes(app: Sphinx, doctree: Any) -> None:
     """Point every node of a page at the page's own document.
 
     myst-parser parses an `{eval-rst}` block into a throwaway document that
