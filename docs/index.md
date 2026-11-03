@@ -9,16 +9,40 @@ hide-toc: true
 :maxdepth: 2
 :hidden:
 install
+detection
 cli
-trait
+```
+
+```{toctree}
+:caption: Hardware and operating systems
+:maxdepth: 2
+:hidden:
 architectures
 platforms
+```
+
+```{toctree}
+:caption: Runtime environments
+:maxdepth: 2
+:hidden:
 shells
 terminals
 ci
 agents
+```
+
+```{toctree}
+:caption: Traits and groups
+:maxdepth: 2
+:hidden:
+trait
 groups
-detection
+```
+
+```{toctree}
+:caption: Integrations
+:maxdepth: 2
+:hidden:
 pytest
 sphinx
 ```
@@ -27,18 +51,30 @@ sphinx
 % CSS workaround in _static/custom.css, see: https://github.com/pradyunsg/furo/discussions/921
 
 ```{toctree}
-:caption: Development
+:caption: Contributing
 :maxdepth: 2
 :hidden:
 contributing
 packaging
-API <extra_platforms>
+code-of-conduct
+```
+
+```{toctree}
+:caption: API reference
+:maxdepth: 2
+:hidden:
+extra_platforms
 tests
 genindex
 modindex
+```
+
+```{toctree}
+:caption: Project
+:maxdepth: 2
+:hidden:
 changelog
 todolist
-code-of-conduct
 license
 GitHub repository <https://github.com/kdeldycke/extra-platforms>
 Funding <https://github.com/sponsors/kdeldycke>
