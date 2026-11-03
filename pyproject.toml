@@ -689,6 +689,9 @@ lint-repo.declined.ruff.lint.extend-select.PLC0415 = """\
   """
 # Building the package with Nuitka is overkill.
 nuitka.enabled = false
+# The documentation builds with no warning. A new one then fails the build before
+# it can publish.
+sphinx.fail-on-warning = true
 # Extra-platforms needs exhaustive runner coverage because it tests platform detection.
 # Add all GitHub runners not already in repomatic's default test matrix. Python
 # versions deliberately stay on repomatic's endpoint defaults: platform detection
