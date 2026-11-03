@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import tomllib
+from collections import Counter
 from datetime import UTC, date, datetime
 from pathlib import Path
 
@@ -9,6 +10,7 @@ if TYPE_CHECKING:
     from typing import Any
 
     from sphinx.application import Sphinx
+    from sphinx.environment import BuildEnvironment
 
 project_path = Path(__file__).parent.parent.resolve()
 
@@ -278,6 +280,41 @@ def drop_unused_viewcode_modules(app: object, env: object) -> None:
             del modules[modname]
 
 
+def anchor_viewcode_backlinks(app: Sphinx, env: BuildEnvironment) -> None:
+    """Point the `[docs]` links of each viewcode page at the objects' own anchors.
+
+    `viewcode` builds every backlink of a module from one prefix: the module path of
+    the first signature that made it read that module. An instance like
+    `extra_platforms.ci_data.CIRRUS_CI` reports the `__module__` of its class, so it
+    can read `extra_platforms/trait.py` first and lend the whole module the
+    `extra_platforms.ci_data` prefix, under which no object is indexed. Which
+    signature comes first follows the read order, so the links change between two
+    parallel builds. Each module takes instead the prefix under which most of its
+    linked objects are indexed, and each link the page of that indexed object.
+    """
+    objects = env.domaindata["py"]["objects"]
+    modules = getattr(env, "_viewcode_modules", {})
+    for modname, entry in list(modules.items()):
+        if not entry:
+            continue
+        code, tags, used, _ = entry
+        parts = modname.split(".")
+        hits: Counter[str] = Counter()
+        for prefix in (".".join(parts[:depth]) for depth in range(1, len(parts) + 1)):
+            for fullname in used:
+                target = objects.get(f"{prefix}.{fullname}")
+                if target and not target.aliased:
+                    hits[prefix] += 1
+        if not hits:
+            continue
+        best = min(hits, key=lambda prefix: (-hits[prefix], prefix))
+        for fullname in used:
+            target = objects.get(f"{best}.{fullname}")
+            if target and not target.aliased:
+                used[fullname] = target.docname
+        modules[modname] = (code, tags, used, best)
+
+
 def rehome_moved_nodes(app: Sphinx, doctree: Any) -> None:
     """Point every node of a page at the page's own document.
 
@@ -319,3 +356,4 @@ def setup(app: Sphinx) -> None:
     app.connect("env-updated", drop_unused_viewcode_modules)
     app.connect("build-finished", prune_build_artifacts)
     app.connect("doctree-read", rehome_moved_nodes)
+    app.connect("env-updated", anchor_viewcode_backlinks)
