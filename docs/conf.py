@@ -30,24 +30,26 @@ maintained_years = (datetime.now(tz=UTC).date() - date(2024, 8, 19)).days // 365
 
 # Addons.
 extensions = [
+    # Core Sphinx.
     "sphinx.ext.autodoc",
-    "sphinx.ext.todo",
+    "sphinx.ext.autosectionlabel",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
     "sphinx.ext.viewcode",
-    # Adds a copy button to code blocks.
+    # UI/UX add-ons.
     "sphinx_copybutton",
     "sphinx_design",
     "sphinxext.opengraph",
+    # MyST and live rendering.
     "myst_parser",
-    "sphinx.ext.autosectionlabel",
-    "click_extra.sphinx",
-    "sphinxcontrib.mermaid",
     # Converts MyST-flavored docstrings to reST for autodoc. Must be listed
     # before sphinx_autodoc_typehints so the MyST→reST pass runs first; otherwise
     # the inline-code converter doubles the backticks inside domain-qualified roles
     # (like :py:obj:`None`) that sphinx_autodoc_typehints injects.
     "click_extra.sphinx.myst_docstrings",
     "sphinx_autodoc_typehints",
+    "click_extra.sphinx",
+    "sphinxcontrib.mermaid",
 ]
 
 # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
@@ -58,7 +60,6 @@ myst_enable_extensions = [
     "alert",
     "attrs_block",
     "attrs_inline",
-    "colon_fence",
     "deflist",
     "fieldlist",
     "replacements",
