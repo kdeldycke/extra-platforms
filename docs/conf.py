@@ -209,6 +209,13 @@ html_theme_options = {
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
 
+# Do not publish a copy of every source document under `_sources/`. Nothing links
+# to it: no page this theme renders carries a source link. Both settings are
+# named because they gate different halves of the feature, `html_copy_source`
+# the files and `html_show_sourcelink` the link.
+html_copy_source = False
+html_show_sourcelink = False
+
 # Footer content.
 html_last_updated_fmt = "%Y-%m-%d"
 copyright = f"{author} and contributors"
@@ -234,6 +241,27 @@ def drop_unused_viewcode_modules(app: object, env: object) -> None:
             del modules[modname]
 
 
+def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
+    """Delete what Sphinx leaves in the output tree that is not content.
+
+    The HTML builder writes `.buildinfo` from a finish task unconditionally, and
+    `.buildinfo.bak` when its configuration check fails, so removing them once
+    the build ends is the only way to keep them out of the published tree.
+    `_sources/` is created before `html_copy_source` is consulted, so it is
+    removed here only while empty. The next local incremental build then finds
+    no marker and re-reads every document.
+    """
+    if exception:
+        return
+    outdir = Path(app.outdir)
+    for marker in (".buildinfo", ".buildinfo.bak"):
+        (outdir / marker).unlink(missing_ok=True)
+    sources = outdir / "_sources"
+    if sources.is_dir() and not any(sources.iterdir()):
+        sources.rmdir()
+
+
 def setup(app: Sphinx) -> None:
     """Connect the build hooks defined above."""
     app.connect("env-updated", drop_unused_viewcode_modules)
+    app.connect("build-finished", prune_build_artifacts)
