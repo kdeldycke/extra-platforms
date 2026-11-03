@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import tomllib
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 project_path = Path(__file__).parent.parent.resolve()
@@ -16,6 +17,11 @@ author = ", ".join(author["name"] for author in toml_config["project"]["authors"
 
 # Title-case each word of the project ID.
 project = " ".join(word.title() for word in project_id.split("-"))
+
+# Whole years since `1.0.0` (2024-08-19), the oldest entry of the changelog, for
+# the announcement banner below. Floored, so the figure is never ahead of the
+# anniversary it claims.
+maintained_years = (datetime.now(tz=UTC).date() - date(2024, 8, 19)).days // 365
 
 # Addons.
 extensions = [
@@ -178,15 +184,21 @@ html_theme_options = {
     "source_repository": f"https://github.com/{github_user}/{project_id}",
     "source_branch": "main",
     "source_directory": "docs/",
+    # Sits atop every page, so it stays a single line and leads with the track
+    # record rather than pleading scarcity: how thin the maintenance is says
+    # nothing to a reader who has not yet decided the project is worth funding.
+    # The age is recomputed at build time, so the claim never goes stale. Each
+    # call to action opens on its emoji, which gives the eye two markers to land
+    # on in a line that is otherwise unbroken prose.
     "announcement": (
-        f"{project} works fine, but is <em>maintained by only one person</em> "
-        "😶‍🌫️.<br/>You can help if you "
+        f"{project} has been maintained for {maintained_years}+ years, and is "
+        "free to use. You can help if you "
         "<strong><a class='reference external' "
         f"href='https://github.com/sponsors/{github_user}'>"
-        "purchase business support 🤝</a></strong> or "
+        "🤝 purchase business support</a></strong> or "
         "<strong><a class='reference external' "
         f"href='https://github.com/sponsors/{github_user}'>"
-        "sponsor the project 🫶</a></strong>."
+        "🫶 sponsor the project</a></strong>."
     ),
 }
 
