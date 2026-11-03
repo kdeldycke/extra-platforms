@@ -18,6 +18,11 @@ toml_config = tomllib.loads(toml_path.read_text(encoding="UTF-8"))
 # Redistribute pyproject.toml config to Sphinx.
 project_id = toml_config["project"]["name"]
 version = release = toml_config["project"]["version"]
+
+# Canonical origin of the published site, read from the one place that declares
+# it. The trailing slash is mandatory: Sphinx joins page paths onto it verbatim
+# to build each `<link rel="canonical">`.
+docs_site_url = toml_config["project"]["urls"]["Documentation"].rstrip("/") + "/"
 author = ", ".join(author["name"] for author in toml_config["project"]["authors"])
 
 # Title-case each word of the project ID.
@@ -178,6 +183,9 @@ intersphinx_mapping = {
 # `path/to/file:heading` instead of just `heading`
 autosectionlabel_prefix_document = True
 
+# Point every page's `<link rel="canonical">` at the published site.
+html_baseurl = docs_site_url
+
 # Theme config.
 html_theme = "furo"
 html_title = project
@@ -214,11 +222,19 @@ html_theme_options = {
     ),
 }
 
+# OpenGraph social previews. sphinxext.opengraph joins ogp_image onto
+# ogp_site_url, so every page emits the same absolute URL for its social card.
+# The card is the site's own copy, served from _static/ (see below).
+ogp_site_url = docs_site_url
+ogp_image = "_static/banner-social-light.png"
+ogp_image_alt = project
+
 # Individual files are copied to the root of _static/, which is where Furo looks
-# for the light_logo/dark_logo pair. Listing docs/assets/ wholesale would drag
-# every other asset along.
+# for the light_logo/dark_logo pair, and where the og:image card above lives.
+# Listing docs/assets/ wholesale would drag every other asset along.
 html_static_path = [
     "_static",
+    "assets/banner-social-light.png",
     "assets/logo-square-dark.png",
     "assets/logo-square-light.png",
 ]
