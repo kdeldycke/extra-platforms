@@ -612,8 +612,8 @@ def is_chromeos() -> bool:
     environment targeted by [Chromebrew](https://chromebrew.github.io)), as well
     as open-source ChromiumOS builds and their derivatives like
     [FydeOS](https://fydeos.io) and openFyde, which set ``ID=chromiumos``.
-    Accepting both IDs is the practice of Google's own
-    [flashrom tester](https://github.com/flashrom/flashrom/blob/main/util/flashrom_tester/src/tests.rs).
+    Accepting both IDs was the practice of Google's own
+    [flashrom tester](https://github.com/flashrom/flashrom/blob/81e5b58a2086f6c6b084f42a93c30ce73790928f/util/flashrom_tester/src/tests.rs#L226).
 
     Also matches the [Crostini](https://chromeos.dev/en/linux) Linux development
     environment. Crostini being a Debian-based container, its ``os-release`` file
@@ -638,7 +638,7 @@ def is_clearlinux() -> bool:
 
     ```{note}
     Clear Linux OS sets ``ID=clear-linux-os`` in its ``os-release`` file. Being a
-    [stateless](https://www.clearlinux.org/clear-linux-documentation/guides/clear/stateless.html)
+    [stateless](https://github.com/clearlinux/clear-linux-documentation/blob/22d818e12b6e66a2c0be02953d72641510350562/source/guides/clear/stateless.rst)
     distribution, it ships that file at ``/usr/lib/os-release`` rather than
     ``/etc/os-release``, relying on the fallback path mandated by the
     [`os-release` specification](https://www.freedesktop.org/software/systemd/man/latest/os-release.html).
@@ -1731,7 +1731,7 @@ def is_cirrus_ci() -> bool:
 
     ```{seealso}
     Environment variables reference:
-    <https://cirrus-ci.org/guide/writing-tasks/#environment-variables>.
+    <https://github.com/cirruslabs/cirrus-ci-docs/blob/4ca6123b9832eb5f0ead8a27ef5a5806ed2f2157/docs/guide/writing-tasks.md#environment-variables>.
     ```
     """
     return "CIRRUS_CI" in environ

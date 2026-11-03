@@ -79,7 +79,7 @@ CENTOS = Platform("centos", "CentOS", "💠", "https://centos.org")
 
 CHROMEOS = Platform("chromeos", "ChromeOS", "🧿", "https://chromeos.google")
 
-CLEARLINUX = Platform("clearlinux", "Clear Linux OS", "✳️", "https://clearlinux.org")
+CLEARLINUX = Platform("clearlinux", "Clear Linux OS", "✳️", "https://github.com/clearlinux")
 
 CLOUDLINUX = Platform("cloudlinux", "CloudLinux OS", "꩜", "https://cloudlinux.com")
 

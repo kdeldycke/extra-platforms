@@ -121,6 +121,7 @@ linkcheck_ignore = [
     r"https://claude\.ai/code",
     r"https://www\.freedesktop\.org/software/systemd/man/",
     r"https://www\.slackware\.com",
+    r"https://software\.opensuse\.org/",
     r"https://zenodo\.org/",
     # Sites intermittently unreachable from CI runners.
     r"https://([^/]+\.)?gnu\.org",

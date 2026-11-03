@@ -106,7 +106,7 @@ Build new groups from scratch or by combining existing ones:
 ```
 
 ```{hint}
-You can check my other Meta Package Manager project for a real life example, where I use {class}`~Group` to [manage families of target platforms](https://github.com/kdeldycke/meta-package-manager/blob/main/meta_package_manager/inventory.py) for software packaging.
+You can check my other Meta Package Manager project for a real life example, where I use {class}`~Group` to [manage families of target platforms](https://github.com/kdeldycke/meta-package-manager/blob/main/meta_package_manager/platforms.py) for software packaging.
 ```
 
 ### Reducing traits to groups
