@@ -315,6 +315,18 @@ def anchor_viewcode_backlinks(app: Sphinx, env: BuildEnvironment) -> None:
         modules[modname] = (code, tags, used, best)
 
 
+def sort_todos(app: Sphinx, env: BuildEnvironment) -> None:
+    """List the todolist entries page by page, in the order a serial build reads.
+
+    `sphinx.ext.todo` keeps its entries in a mapping keyed on the page, and the
+    todolist renders them in that mapping's order. A parallel read fills it in the
+    order its workers merge, so the list reorders between two builds.
+    """
+    todos = env.domaindata["todo"].get("todos")
+    if todos:
+        env.domaindata["todo"]["todos"] = dict(sorted(todos.items()))
+
+
 def rehome_moved_nodes(app: Sphinx, doctree: Any) -> None:
     """Point every node of a page at the page's own document.
 
@@ -357,3 +369,4 @@ def setup(app: Sphinx) -> None:
     app.connect("build-finished", prune_build_artifacts)
     app.connect("doctree-read", rehome_moved_nodes)
     app.connect("env-updated", anchor_viewcode_backlinks)
+    app.connect("env-updated", sort_todos)
