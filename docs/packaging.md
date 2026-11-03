@@ -16,7 +16,7 @@ This is a graph of the Python package's dependencies. The package itself has no 
 
 ## Test suite
 
-Since `extra-platforms` > `13.3.1`, the PyPI sdist ships `tests/` and `docs/`, so the suite runs straight from the sdist. Earlier releases shipped no tests; those builds must start from [a Git tag tarball](https://github.com/kdeldycke/extra-platforms/tags) instead.
+Since `extra-platforms` > `13.3.1`, the PyPI sdist ships `tests/` and `docs/`, so the suite runs straight from the sdist. One cell of the CI test matrix runs it that way: from the unpacked sdist, outside any git checkout, on the newest dependency releases. Earlier releases shipped no tests; those builds must start from [a Git tag tarball](https://github.com/kdeldycke/extra-platforms/tags) instead.
 
 A plain `pytest` run is friendly to a hermetic build sandbox:
 

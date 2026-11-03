@@ -126,11 +126,14 @@ jobs:
         && fromJSON(needs.metadata.outputs.metadata).test_matrix
         || fromJSON(needs.metadata.outputs.metadata).test_matrix_pr }}
     # `python-label` is set by repomatic show-metadata only where the plain version
-    # would hide why a cell is continue-on-error (a prerelease reads `3.15-dev`);
-    # every other cell falls back to the version itself.
+    # would hide why a cell is continue-on-error (a prerelease reads `3.16-dev`);
+    # every other cell falls back to the version itself. A cell carrying a `source`
+    # key appends it, which tells that cell from the twin sharing its runner and
+    # Python.
     name: >-
       ${{ matrix.state == 'stable' && '✅' || '⁉️' }} ${{ matrix.os }} /
-      py${{ matrix.python-label || matrix.python-version }}
+      py${{ matrix.python-label || matrix.python-version }}${{
+      matrix.source && format(' / {0}', matrix.source) || '' }}
     runs-on: ${{ matrix.os }}
     # We keep going when a job flagged as not stable fails.
     continue-on-error: ${{ matrix.state == 'unstable' }}
@@ -166,11 +169,34 @@ jobs:
         run: echo "PYTHONIOENCODING=utf8" >> "$GITHUB_ENV"
       - name: Install project
         # Install all extras, so we can check any incompatibility.
+        if: matrix.source != 'sdist'
         run: >
           uv --no-progress sync --frozen --all-extras --group test
           ${{ env.WITH_DOCS_GROUP == 'true' && '--group docs' || '' }}
+      - name: Unpack the source distribution
+        # A cell carrying `source = "sdist"` tests the project the way a distribution builds it: from the sdist,
+        # outside any git checkout, against the newest dependency releases the cooldown admits instead of the lockfile.
+        # See https://repomatic.net/test-matrix#test-the-source-distribution-like-a-distribution
+        if: matrix.source == 'sdist'
+        shell: bash
+        run: |
+          uv --no-progress build --sdist --out-dir "${RUNNER_TEMP}/dist"
+          mkdir "${RUNNER_TEMP}/sdist"
+          tar --extract --file "${RUNNER_TEMP}"/dist/*.tar.gz --directory "${RUNNER_TEMP}/sdist" --strip-components 1
+      - name: Install the source distribution
+        # `--upgrade` resolves past a `uv.lock` the sdist may ship, so every dependency installs at its newest release.
+        # The docs group lets tests/test_sphinx_crossrefs.py build the documentation the sdist ships.
+        if: matrix.source == 'sdist'
+        working-directory: ${{ runner.temp }}/sdist
+        shell: bash
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        run: >
+          uv --no-progress sync --upgrade --python "${PYTHON_VERSION}" --all-extras --group test
+          ${{ env.WITH_DOCS_GROUP == 'true' && '--group docs' || '' }}
 
       - name: Unittests
+        if: matrix.source != 'sdist'
         env:
           # Used by github_runner_os() in tests/conftest.py to extract the GitHub runner image ID.
           EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
@@ -184,11 +210,18 @@ jobs:
         run: >
           uv --no-progress run --frozen -- coverage run --module pytest
           --numprocesses=logical --dist=loadgroup
+      - name: Unittests from the source distribution
+        # A plain `pytest`, as a distribution runs it: no xdist flags, and no
+        # coverage, which keeps this cell out of the coverage floor.
+        if: matrix.source == 'sdist'
+        working-directory: ${{ runner.temp }}/sdist
+        run: uv --no-progress run --frozen -- pytest
       - name: Coverage report
         # Merge the data files of the xdist workers, then check them against
         # `[tool.coverage] report.fail_under`, which every cell must clear on its
         # own. No --fail-under flag is passed here: it would outrank the config
         # and shadow the knob.
+        if: matrix.source != 'sdist'
         run: >
           uv --no-progress run --frozen -- coverage combine --quiet
           && uv --no-progress run --frozen -- coverage report --show-missing
@@ -196,7 +229,7 @@ jobs:
         # Warns when the floor sits more than two points under the coverage total,
         # so the ratchet gets raised instead of drifting. `!cancelled()` reads the
         # data after a failed test too: its total stays sound.
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.source != 'sdist' }}
         run: >
           uv --no-progress run --frozen -- coverage json --quiet -o "${{ runner.temp }}/coverage.json"
           && uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==8.1.0' lint-coverage
@@ -207,21 +240,23 @@ jobs:
       # second uvx-resolved copy: uv.lock is the only place it is hash-verified.
       # The outer `uv run` provides the environment once, avoiding per-case uv
       # lock contention between parallel workers. Cells without the docs group
-      # have no click-extra, so these steps skip there.
+      # have no click-extra, so these steps skip there. An sdist cell skips them
+      # too: they drive the checkout's environment, which that cell never
+      # installs.
       #
       # `!cancelled()` keeps these running after a failed pytest step: the two
       # check different things, and letting a unit-test failure skip the CLI
       # suite hides CLI drift until the next green run. Wrapped in `${{ }}`
       # because a bare leading `!` is a YAML tag.
       - name: CLI test suite via console script
-        if: ${{ !cancelled() && env.WITH_DOCS_GROUP == 'true' }}
+        if: ${{ !cancelled() && env.WITH_DOCS_GROUP == 'true' && matrix.source != 'sdist' }}
         run: >
           uv --no-progress run --frozen --
           click-extra test-suite --command "extra-platforms"
           --suite-file tests/cli-test-suite.toml
           --jobs max
       - name: CLI test suite via python -m
-        if: ${{ !cancelled() && env.WITH_DOCS_GROUP == 'true' }}
+        if: ${{ !cancelled() && env.WITH_DOCS_GROUP == 'true' && matrix.source != 'sdist' }}
         run: >
           uv --no-progress run --frozen --
           click-extra test-suite --command "python -m extra_platforms"

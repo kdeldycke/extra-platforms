@@ -692,6 +692,13 @@ nuitka.enabled = false
 # The documentation builds with no warning. A new one then fails the build before
 # it can publish.
 sphinx.fail-on-warning = true
+# One cell runs the suite from the unpacked sdist, outside any git checkout, on the
+# newest dependency releases past the cooldown: the way a distribution builds the
+# package (see docs/packaging.md). It sits on the newest stable Python of the
+# fastest runner.
+test-matrix.full-include = [
+  { os = "ubuntu-26.04-arm", python-version = "3.15", source = "sdist" },
+]
 # Extra-platforms needs exhaustive runner coverage because it tests platform detection.
 # Add all GitHub runners not already in repomatic's default test matrix. Python
 # versions deliberately stay on repomatic's endpoint defaults: platform detection
