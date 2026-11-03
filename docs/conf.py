@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import tomllib
 from collections import Counter
 from datetime import UTC, date, datetime
@@ -11,6 +12,9 @@ if TYPE_CHECKING:
 
     from sphinx.application import Sphinx
     from sphinx.environment import BuildEnvironment
+
+OCTICON_TITLE_GAP = re.compile(r"^(\s*<svg\b.*?</svg>)\s+", re.DOTALL)
+"""The space a heading octicon leaves between its SVG and the page title."""
 
 project_path = Path(__file__).parent.parent.resolve()
 
@@ -327,6 +331,21 @@ def sort_todos(app: Sphinx, env: BuildEnvironment) -> None:
         env.domaindata["todo"]["todos"] = dict(sorted(todos.items()))
 
 
+def strip_title_icon_gap(
+    app: Sphinx, pagename: str, templatename: str, context: dict, doctree: Any
+) -> None:
+    """Drop the space a heading octicon leaves at the start of the page title.
+
+    sphinxext-opengraph sets `og:title` to the text of the title, unstripped, so a
+    `` # {octicon}`download` Installation `` heading yields `" Installation"`.
+    Furo's `<title>` strips the markup and the space on its own. Connected ahead of
+    sphinxext-opengraph, which reads the title from the same page context.
+    """
+    title = context.get("title")
+    if title:
+        context["title"] = OCTICON_TITLE_GAP.sub(r"\1", title)
+
+
 def rehome_moved_nodes(app: Sphinx, doctree: Any) -> None:
     """Point every node of a page at the page's own document.
 
@@ -370,3 +389,5 @@ def setup(app: Sphinx) -> None:
     app.connect("doctree-read", rehome_moved_nodes)
     app.connect("env-updated", anchor_viewcode_backlinks)
     app.connect("env-updated", sort_todos)
+    # Ahead of the default priority of sphinxext-opengraph.
+    app.connect("html-page-context", strip_title_icon_gap, priority=400)
