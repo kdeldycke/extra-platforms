@@ -265,6 +265,8 @@ copyright = f"{author} and contributors"
 html_show_sphinx = False
 
 
+# XXX Drop this hook and anchor_viewcode_backlinks once a Sphinx release ships the
+# fix of https://github.com/sphinx-doc/sphinx/issues/14675.
 def drop_unused_viewcode_modules(app: object, env: object) -> None:
     """Forget each module `sphinx.ext.viewcode` read but no document links.
 
