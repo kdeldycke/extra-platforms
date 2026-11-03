@@ -207,6 +207,9 @@ print(generate_sphinx_directives(ALL_GROUPS, "autodata", "symbol_id"))
 ## Group collections
 
 ```{eval-rst}
+.. The values stay hidden: Group orders by subset, which cannot sort a set of
+   groups, so autodoc would print their members in a new order on every build.
+
 .. autodata:: extra_platforms.group_data.ALL_AGENT_GROUPS
    :no-value:
 .. autodata:: extra_platforms.group_data.ALL_ARCHITECTURE_GROUPS
