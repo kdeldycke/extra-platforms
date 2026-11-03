@@ -4,6 +4,10 @@ import tomllib
 from datetime import UTC, date, datetime
 from pathlib import Path
 
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from sphinx.application import Sphinx
+
 project_path = Path(__file__).parent.parent.resolve()
 
 # Fetch general information about the project from pyproject.toml.
@@ -209,3 +213,27 @@ html_css_files = ["custom.css"]
 html_last_updated_fmt = "%Y-%m-%d"
 copyright = f"{author} and contributors"
 html_show_sphinx = False
+
+
+def drop_unused_viewcode_modules(app: object, env: object) -> None:
+    """Forget each module `sphinx.ext.viewcode` read but no document links.
+
+    `viewcode` reads the source of every module a documented object may come
+    from, and keeps an entry for that module even when none of its objects gets
+    a `[source]` link. A serial read drops such an entry when it purges the next
+    document. A parallel read merges the entries of its workers after every
+    purge has run, so each unused module becomes a published page that nothing
+    links to (sphinx-doc/sphinx#14675). Dropping the entries with no recorded
+    use gives both reads the same output.
+    """
+    modules = getattr(env, "_viewcode_modules", {})
+    for modname, entry in list(modules.items()):
+        # A module viewcode could not read is `False`. A read one is a tuple of
+        # its code, its tags, the objects documented from it, and its refname.
+        if entry and not entry[2]:
+            del modules[modname]
+
+
+def setup(app: Sphinx) -> None:
+    """Connect the build hooks defined above."""
+    app.connect("env-updated", drop_unused_viewcode_modules)
