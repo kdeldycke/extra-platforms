@@ -1,4 +1,4 @@
-# {octicon}`book` Sphinx
+# {octicon}`browser` Sphinx
 
 ## Cross-referencing symbols
 

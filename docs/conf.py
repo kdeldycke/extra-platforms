@@ -120,10 +120,6 @@ suppress_warnings = [
     # pytest.Mark type is not available during Sphinx documentation build. These are
     # cosmetic warnings that don't affect the generated documentation.
     "sphinx_autodoc_typehints.forward_reference",
-    # Example: "Domain 'click_extra.sphinx.click::click' has not implemented a
-    # `resolve_any_xref` method"
-    # Explanation: Upstream limitation in the click-extra Sphinx extension.
-    "myst.domains",
     # Example: "Document headings start at H2, not H1"
     # Explanation: readme.md starts at H2 because GitHub supplies the H1 from
     # the repository name. The heading structure is intentional.
