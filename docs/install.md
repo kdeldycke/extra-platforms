@@ -160,7 +160,13 @@ For the [Pytest decorators](pytest.md), install the `pytest` extra: `uv pip inst
 
 ## Python compatibility
 
-The table below shows which Python versions each `extra-platforms` release range supports, derived from each git tag's `pyproject.toml`. It refreshes automatically through [click-extra's `{matrix}` directive](https://kdeldycke.github.io/click-extra/python-directives.html#matrix-directives), which repomatic's `update-docs` job reruns to keep it in sync with new releases.
+Each cell holds one of three states:
+
+- ✅: the release declares support for that Python.
+- ❌: the `requires-python` of the release rules that Python out.
+- `–`: the release neither claimed nor forbade that Python, usually because that Python was not out yet when the release declared its requirements.
+
+See [three states, two sources](https://kdeldycke.github.io/click-extra/python-directives.html#three-states-two-sources).
 
 <!-- matrix python -->
 
