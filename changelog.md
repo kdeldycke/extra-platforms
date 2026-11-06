@@ -1,9 +1,6 @@
 # Changelog
 
-## [`14.0.2.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.1...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`14.0.2` (2026-11-06)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.1...v14.0.2)
 
 - Point the `CIRRUS_CI` and `CLEARLINUX` URLs to GitHub, since both projects shut down.
 - Test the PyPI sdist in CI, outside a git checkout, on the newest dependency releases.
