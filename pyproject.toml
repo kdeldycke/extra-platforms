@@ -300,10 +300,10 @@ test = [
   "requests>=2.34",
 ]
 docs = [
-  # click-extra 9.5.1 logs the click_extra.todo_unrendered warning that
-  # docs/conf.py fails the build on. An older release never logs it, so a {todo}
-  # that no page renders builds clean.
-  "click-extra[sphinx]>=9.5.1",
+  # click-extra 10.2 stacks the install methods of docs/install.md in vertical
+  # tabs and refreshes its envelope region: an older release lays the tabs out
+  # horizontally and never refreshes the region.
+  "click-extra[sphinx]>=10.2",
   # furo 2025.12.19 is the first release to accept Sphinx 9, which this group
   # requires.
   "furo>=2025.12.19",
@@ -339,6 +339,10 @@ dependency-groups.docs = { requires-python = ">= 3.12" }
 # Relative dates are fine here because the Renovate lock-maintenance job
 # (sync-uv-lock) reverts uv.lock when the only diff is timestamp noise.
 exclude-newer = "1 week"
+# click-extra is published by this repository's own maintainer: the cooldown
+# guards against a compromised upstream, which does not apply here, and it
+# otherwise holds each release back a week from the projects that consume it.
+exclude-newer-package = { click-extra = "0 day" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 build-backend.source-exclude = [
