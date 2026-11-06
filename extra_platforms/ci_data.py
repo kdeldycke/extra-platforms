@@ -30,7 +30,9 @@ BUILDKITE = CI("buildkite", "Buildkite", "🪁", "https://buildkite.com")
 
 CIRCLE_CI = CI("circle_ci", "Circle CI", "⪾", "https://circleci.com")
 
-CIRRUS_CI = CI("cirrus_ci", "Cirrus CI", "≋", "https://github.com/cirruslabs/cirrus-ci-docs")
+CIRRUS_CI = CI(
+    "cirrus_ci", "Cirrus CI", "≋", "https://github.com/cirruslabs/cirrus-ci-docs"
+)
 
 CODEBUILD = CI("codebuild", "CodeBuild", "ᚙ", "https://aws.amazon.com/codebuild/")
 
