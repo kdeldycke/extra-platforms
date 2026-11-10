@@ -250,6 +250,8 @@ UNKNOWN_PLATFORM = Platform(
 
 VOID = Platform("void", "Void Linux", "∅", "https://voidlinux.org/")
 
+WEBOS = Platform("webos", "webOS", "🌴", "https://webostv.developer.lge.com")
+
 WINDOWS = Platform("windows", "Windows", "🪟", "https://windows.com")
 
 WSL1 = Platform(

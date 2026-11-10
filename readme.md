@@ -190,10 +190,11 @@ mappingproxy({
     'ubuntu': Platform(id='ubuntu', name='Ubuntu'),
     'ultramarine': Platform(id='ultramarine', name='Ultramarine'),
     'void': Platform(id='void', name='Void Linux'),
+    'webos': Platform(id='webos', name='webOS'),
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'artix', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'crux', 'nutyx', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux', 'solus'})
+frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'webos', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'artix', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'crux', 'nutyx', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux', 'solus'})
 >>> print("\n".join([p.name for p in LINUX]))
 AlmaLinux
 Alpine Linux
@@ -245,6 +246,7 @@ Tuxedo OS
 Ubuntu
 Ultramarine
 Void Linux
+webOS
 XenServer
 ```
 
@@ -398,6 +400,7 @@ mindmap
             (🎯 UBUNTU)
             (🌊 ULTRAMARINE)
             (∅ VOID)
+            (🌴 WEBOS)
             (Ⓧ XENSERVER)
         )Ⓑ BSD(
             (🪰 DRAGONFLY_BSD)

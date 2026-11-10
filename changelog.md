@@ -5,6 +5,7 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- Add webOS platform detection: `WEBOS` / `is_webos()` (via `ID=starfish` in the `os-release` file of LG TVs).
 - Point the `CIRRUS_CI` and `CLEARLINUX` URLs to GitHub, since both projects shut down.
 - Test the PyPI sdist in CI, outside a git checkout, on the newest dependency releases.
 

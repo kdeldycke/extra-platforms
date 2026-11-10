@@ -360,6 +360,7 @@ if TYPE_CHECKING:
     skip_wasm64: MarkDecorator
     skip_web_terminals: MarkDecorator
     skip_webassembly: MarkDecorator
+    skip_webos: MarkDecorator
     skip_wezterm: MarkDecorator
     skip_windows: MarkDecorator
     skip_windows_shells: MarkDecorator
@@ -552,6 +553,7 @@ if TYPE_CHECKING:
     unless_wasm64: MarkDecorator
     unless_web_terminals: MarkDecorator
     unless_webassembly: MarkDecorator
+    unless_webos: MarkDecorator
     unless_wezterm: MarkDecorator
     unless_windows: MarkDecorator
     unless_windows_shells: MarkDecorator

@@ -58,6 +58,7 @@ from extra_platforms import (
     is_opensuse,
     is_oracle,
     is_solaris,
+    is_webos,
     is_windows,
     is_x86_64,
     shell_from_path,
@@ -199,6 +200,12 @@ def test_oracle_raw_id_detection(monkeypatch, fresh_caches):
     """Oracle Linux is detected from its raw ``ol`` os-release ID."""
     monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: "ol")
     assert is_oracle()
+
+
+def test_webos_raw_id_detection(monkeypatch, fresh_caches):
+    """webOS TV is detected from its raw ``starfish`` os-release ID."""
+    monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: "starfish")
+    assert is_webos()
 
 
 @pytest.mark.parametrize("machine", ("x86_64", "AMD64", "amd64", "i86pc"))

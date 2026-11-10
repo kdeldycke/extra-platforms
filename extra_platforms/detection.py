@@ -1091,6 +1091,28 @@ def is_void() -> bool:
 
 
 @cache
+def is_webos() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.WEBOS`.
+
+    ```{note}
+    webOS TV, the edition LG ships on its TVs, sets ``ID=starfish`` in its
+    ``os-release`` file: ``starfish`` is the name of LG's TV build. The platform
+    keeps the more explicit ``webos`` ID. Captured on an LG OLED77B46LA TV, running
+    webOS TV ``10.3.2`` (firmware ``33.31.75``).
+    ```
+
+    ```{todo}
+    Also match the ID of webOS Open Source Edition, once an ``os-release`` file
+    captured on it confirms that ID. LG manages both editions, so they share this
+    platform. Its Yocto layer sets ``DISTRO = "webos"`` in
+    [`meta-webos/conf/distro/webos.conf`](https://github.com/webosose/meta-webosose/blob/d7ed46c33c54e6e28a8f379fb321d9ce2944ffd1/meta-webos/conf/distro/webos.conf#L3),
+    which suggests ``ID=webos``.
+    ```
+    """
+    return os_release_id() == "starfish"
+
+
+@cache
 def is_windows() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.WINDOWS`."""
     return sys.platform.startswith("win32")

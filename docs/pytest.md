@@ -280,6 +280,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_wasm64`               | {deco}`~pytest.unless_wasm64`               |  🌐  | {data}`~WASM64`               |
 | {deco}`~pytest.skip_web_terminals`        | {deco}`~pytest.unless_web_terminals`        |  ⬢   | {data}`~WEB_TERMINALS`        |
 | {deco}`~pytest.skip_webassembly`          | {deco}`~pytest.unless_webassembly`          |  🌐  | {data}`~WEBASSEMBLY`          |
+| {deco}`~pytest.skip_webos`                | {deco}`~pytest.unless_webos`                |  🌴  | {data}`~WEBOS`                |
 | {deco}`~pytest.skip_wezterm`              | {deco}`~pytest.unless_wezterm`              |  🔡  | {data}`~WEZTERM`              |
 | {deco}`~pytest.skip_windows`              | {deco}`~pytest.unless_windows`              |  🪟  | {data}`~WINDOWS`              |
 | {deco}`~pytest.skip_windows_shells`       | {deco}`~pytest.unless_windows_shells`       |  ⌨️  | {data}`~WINDOWS_SHELLS`       |

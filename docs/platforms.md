@@ -133,6 +133,7 @@ print(generate_trait_table(ALL_PLATFORMS))
 |  🎯  | {data}`~UBUNTU`        | Ubuntu                         | {func}`~is_ubuntu`        |
 |  🌊  | {data}`~ULTRAMARINE`   | Ultramarine                    | {func}`~is_ultramarine`   |
 |  ∅   | {data}`~VOID`          | Void Linux                     | {func}`~is_void`          |
+|  🌴  | {data}`~WEBOS`         | webOS                          | {func}`~is_webos`         |
 |  🪟  | {data}`~WINDOWS`       | Windows                        | {func}`~is_windows`       |
 |  ⊞   | {data}`~WSL1`          | Windows Subsystem for Linux v1 | {func}`~is_wsl1`          |
 |  ⊞   | {data}`~WSL2`          | Windows Subsystem for Linux v2 | {func}`~is_wsl2`          |
@@ -208,7 +209,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,51
+ALL_PLATFORMS,LINUX,52
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -265,6 +266,7 @@ LINUX,TUXEDO,1
 LINUX,UBUNTU,1
 LINUX,ULTRAMARINE,1
 LINUX,VOID,1
+LINUX,WEBOS,1
 LINUX,XENSERVER,1
 BSD,DRAGONFLY_BSD,1
 BSD,FREEBSD,1
@@ -369,6 +371,7 @@ mindmap
             (🎯 UBUNTU)
             (🌊 ULTRAMARINE)
             (∅ VOID)
+            (🌴 WEBOS)
             (Ⓧ XENSERVER)
         )Ⓑ BSD(
             (🪰 DRAGONFLY_BSD)

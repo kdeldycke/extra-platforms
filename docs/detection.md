@@ -203,6 +203,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_wasm64`               |  🌐  | {data}`~WASM64`               |
 | {func}`~is_web_terminals`        |  ⬢   | {data}`~WEB_TERMINALS`        |
 | {func}`~is_webassembly`          |  🌐  | {data}`~WEBASSEMBLY`          |
+| {func}`~is_webos`                |  🌴  | {data}`~WEBOS`                |
 | {func}`~is_wezterm`              |  🔡  | {data}`~WEZTERM`              |
 | {func}`~is_windows`              |  🪟  | {data}`~WINDOWS`              |
 | {func}`~is_windows_shells`       |  ⌨️  | {data}`~WINDOWS_SHELLS`       |

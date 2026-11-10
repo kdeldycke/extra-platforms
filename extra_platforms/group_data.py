@@ -140,6 +140,7 @@ from .platform_data import (
     ULTRAMARINE,
     UNKNOWN_PLATFORM,
     VOID,
+    WEBOS,
     WINDOWS,
     WSL1,
     WSL2,
@@ -473,6 +474,7 @@ ALL_PLATFORMS = Group(
         UBUNTU,
         ULTRAMARINE,
         VOID,
+        WEBOS,
         WINDOWS,
         WSL1,
         WSL2,
@@ -604,6 +606,7 @@ LINUX = Group(
         UBUNTU,
         ULTRAMARINE,
         VOID,
+        WEBOS,
         XENSERVER,
     ),
 )

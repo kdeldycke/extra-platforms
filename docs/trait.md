@@ -283,6 +283,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |  🔵  | {data}`~VSCODE_TERMINAL`      | VS Code Terminal               | {func}`~is_vscode_terminal`      | Terminal     |
 |  🌐  | {data}`~WASM32`               | WebAssembly (32-bit)           | {func}`~is_wasm32`               | Architecture |
 |  🌐  | {data}`~WASM64`               | WebAssembly (64-bit)           | {func}`~is_wasm64`               | Architecture |
+|  🌴  | {data}`~WEBOS`                | webOS                          | {func}`~is_webos`                | Platform     |
 |  🔡  | {data}`~WEZTERM`              | WezTerm                        | {func}`~is_wezterm`              | Terminal     |
 |  🪟  | {data}`~WINDOWS`              | Windows                        | {func}`~is_windows`              | Platform     |
 |  ⊡   | {data}`~WINDOWS_TERMINAL`     | Windows Terminal               | {func}`~is_windows_terminal`     | Terminal     |

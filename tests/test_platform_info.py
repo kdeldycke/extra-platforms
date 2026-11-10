@@ -153,6 +153,22 @@ def fresh_hostnamectl_caches():
             id="typical_fedora",
         ),
         pytest.param(
+            # Captured on an LG OLED77B46LA TV, running webOS TV `10.3.2`.
+            "ID=starfish\n"
+            'NAME="webOS TV"\n'
+            'VERSION="10.3.2"\n'
+            "VERSION_ID=10.3.2\n"
+            'PRETTY_NAME="webOS TV 10.3.2"\n',
+            {
+                "id": "starfish",
+                "name": "webOS TV",
+                "version": "10.3.2",
+                "version_id": "10.3.2",
+                "pretty_name": "webOS TV 10.3.2",
+            },
+            id="typical_webos_tv",
+        ),
+        pytest.param(
             'ID="centos"\nNAME="CentOS Stream"\n',
             {"id": "centos", "name": "CentOS Stream"},
             id="quoted_values",
