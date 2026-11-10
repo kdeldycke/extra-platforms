@@ -87,9 +87,9 @@ pytestmark = [
         not all(map(importable, DOCS_BUILD_MODULES)),
         reason="needs the docs dependency group to build the docs",
     ),
-    # Sphinx crashes with a FileNotFoundError on searchindex.js.tmp when
-    # concurrent builds share the same output directory (sphinx-doc/sphinx#13702).
-    # Force all tests in this module onto a single xdist worker.
+    # Keep the tests of this module on one xdist worker, which then reads a single
+    # build. With pytest 9.2.0 and pytest-xdist 3.8.0 the grouping has no effect
+    # (pytest-dev/pytest-xdist#1407), so built_docs also serializes the build.
     pytest.mark.xdist_group("sphinx"),
 ]
 
@@ -108,18 +108,28 @@ UNRENDERED_MODULES = frozenset((
 
 
 @pytest.fixture(scope="module")
-def built_docs() -> Path:
+def built_docs(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Ensure the documentation is built and return the path to the HTML directory.
 
-    This fixture builds the documentation if it doesn't exist or is outdated.
+    Builds the documentation when no build exists yet. Each xdist worker takes an
+    exclusive lock first, so one builds while the others wait for its result:
+    Sphinx crashes with a `FileNotFoundError` on `searchindex.js.tmp` when
+    concurrent builds share one output directory
+    ([sphinx-doc/sphinx#13702](https://github.com/sphinx-doc/sphinx/issues/13702)).
     """
-    if not DOCS_HTML_DIR.exists():
-        # Build the documentation with the interpreter the module gate checked.
-        subprocess.run(
-            [sys.executable, "-m", "sphinx", "-b", "html", "./docs", "./docs/_build"],
-            check=True,
-            cwd=Path(__file__).parent.parent,
-        )
+    # POSIX only, like the Linux runs of this module.
+    fcntl = pytest.importorskip("fcntl")
+    # The parent of a worker's base directory is shared by all the workers.
+    lock_path = tmp_path_factory.getbasetemp().parent / "sphinx-build.lock"
+    with lock_path.open("w", encoding="UTF-8") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if not DOCS_HTML_DIR.exists():
+            # Build the documentation with the interpreter the module gate checked.
+            subprocess.run(
+                [sys.executable, "-m", "sphinx", "-b", "html", "./docs", DOCS_HTML_DIR],
+                check=True,
+                cwd=Path(__file__).parent.parent,
+            )
     return DOCS_HTML_DIR
 
 
