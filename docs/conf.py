@@ -263,7 +263,7 @@ html_show_sphinx = False
 
 # XXX Drop this hook once a Sphinx release ships a fix for
 # https://github.com/sphinx-doc/sphinx/issues/14675.
-def drop_unused_viewcode_modules(app: object, env: object) -> None:
+def drop_unused_viewcode_modules(app: Sphinx, env: BuildEnvironment) -> None:
     """Forget each module `sphinx.ext.viewcode` read but no document links.
 
     `viewcode` reads the source of every module a documented object may come
@@ -389,9 +389,9 @@ def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
 def setup(app: Sphinx) -> None:
     """Connect the build hooks defined above."""
     app.connect("env-updated", drop_unused_viewcode_modules)
-    app.connect("build-finished", prune_build_artifacts)
-    app.connect("doctree-read", rehome_moved_nodes)
     app.connect("env-updated", anchor_viewcode_backlinks)
     app.connect("env-updated", sort_todos)
     # Ahead of the default priority of sphinxext-opengraph.
     app.connect("html-page-context", strip_title_icon_gap, priority=400)
+    app.connect("doctree-read", rehome_moved_nodes)
+    app.connect("build-finished", prune_build_artifacts)

@@ -49,7 +49,7 @@ Architecture detection follows the Python interpreter. It reads {func}`platform.
 
 Some systems report a machine family instead of the instruction set. Solaris and illumos answer `i86pc` on 64-bit x86, which resolves to {data}`~X86_64`. On SPARC they answer `sun4u` or `sun4v`, which both resolve to {data}`~SPARC64`.
 
-Because the value reflects the interpreter's point of view, a process running under a translation layer like Rosetta 2 or qemu user-mode emulation reports the emulated architecture, not the CPU underneath.
+Under a translation layer like Rosetta 2 or qemu user-mode emulation, {func}`platform.machine` itself reports the emulated architecture, not the CPU underneath. {func}`~current_architecture` and {func}`~machine_architecture` then both return the emulated architecture.
 
 Unlike [shells](shells.md), architectures are mutually exclusive: at most one detection function returns `True` at any time. {func}`~is_arm` preserves that property while acting as a fallback: it only matches ARM machines not covered by the more precise {data}`~ARMV5TEL`, {data}`~ARMV6L`, {data}`~ARMV7L`, {data}`~ARMV8L` and {data}`~AARCH64` variants. {func}`~current_architecture` treats several simultaneous matches as a bug and raises `RuntimeError`.
 

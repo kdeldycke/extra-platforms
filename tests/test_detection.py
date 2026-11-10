@@ -17,6 +17,7 @@ from __future__ import annotations
 import ast
 import functools
 import inspect
+import logging
 import re
 import sys
 import sysconfig
@@ -43,6 +44,7 @@ from extra_platforms import (
     ILLUMOS,
     POWERSHELL,
     SH,
+    UNKNOWN_ARCHITECTURE,
     X86_64,
     ZSH,
     Group,
@@ -205,16 +207,17 @@ def test_opensuse_channel_folding(monkeypatch, distro_id, fresh_caches):
     assert is_opensuse()
 
 
-def test_oracle_raw_id_detection(monkeypatch, fresh_caches):
-    """Oracle Linux is detected from its raw ``ol`` os-release ID."""
-    monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: "ol")
-    assert is_oracle()
-
-
-def test_webos_raw_id_detection(monkeypatch, fresh_caches):
-    """webOS TV is detected from its raw ``starfish`` os-release ID."""
-    monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: "starfish")
-    assert is_webos()
+@pytest.mark.parametrize(
+    ("distro_id", "detection_func"),
+    (
+        pytest.param("ol", is_oracle, id="oracle"),
+        pytest.param("starfish", is_webos, id="webos"),
+    ),
+)
+def test_raw_id_detection(fresh_caches, monkeypatch, distro_id, detection_func):
+    """A platform matches the raw os-release ID of its system, not its own ID."""
+    monkeypatch.setattr("extra_platforms.detection.os_release_id", lambda: distro_id)
+    assert detection_func()
 
 
 @pytest.mark.parametrize("machine", ("x86_64", "AMD64", "amd64", "i86pc"))
@@ -242,7 +245,7 @@ def test_x86_64_machine_aliases(fresh_caches, monkeypatch, machine):
         pytest.param("linux", "armv7l", 32, None, ARMV7L, ARMV7L, id="linux-armv7l"),
         pytest.param("darwin", "arm64", 64, None, AARCH64, AARCH64, id="macos-arm64"),
         # Windows reports the native CPU, whatever the build of the interpreter.
-        pytest.param("win32", "AMD64", 32, "win32", I686, X86_64, id="windows-x86"),
+        pytest.param("win32", "AMD64", 32, "win32", I686, X86_64, id="win-x86"),
         pytest.param("win32", "AMD64", 64, "win-amd64", X86_64, X86_64, id="win-x64"),
         pytest.param(
             "win32", "ARM64", 64, "win-amd64", X86_64, AARCH64, id="win-x64-on-arm64"
@@ -269,6 +272,20 @@ def test_architecture_width_follows_interpreter():
     assert (current_architecture() in ARCH_64_BIT) is is_64_bit
     if is_64_bit:
         assert machine_architecture() in ARCH_64_BIT
+
+
+def test_unrecognized_machine_warns_once(fresh_caches, monkeypatch, caplog):
+    """An unrecognized machine logs one warning, though both functions resolve it.
+
+    The CLI calls `current_architecture()`, then `machine_architecture()`, which
+    falls back to the former on such a machine.
+    """
+    monkeypatch.setattr(detection_module, "_interpreter_machine", lambda: "m68k")
+    monkeypatch.setattr(detection_module.platform, "machine", lambda: "m68k")
+    caplog.set_level(logging.WARNING)
+    assert current_architecture() is UNKNOWN_ARCHITECTURE
+    assert machine_architecture() is UNKNOWN_ARCHITECTURE
+    assert caplog.text.count("Unrecognized architecture") == 1
 
 
 PLATFORM_HOST_SIGNALS = frozenset((

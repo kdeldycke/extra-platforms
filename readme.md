@@ -23,9 +23,13 @@ Quickly inspect your current environment without installing anything, thanks to 
 
 ```shell-session
 $ uvx extra-platforms
-extra-platforms 13.13.0
+extra-platforms 14.0.1
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]───────────
+            id: aarch64
+          (...)
+
+── Machine architecture ── 📱 ARM64 (AArch64) ──[AARCH64]───
             id: aarch64
           (...)
 
@@ -66,7 +70,7 @@ $ uvx --with extra-platforms python
 ```pycon
 >>> import extra_platforms
 >>> extra_platforms.__version__
-'13.13.0'
+'14.0.1'
 ```
 
 ## Examples

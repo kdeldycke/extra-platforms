@@ -2258,7 +2258,9 @@ def machine_architecture(strict: bool = False) -> Architecture:
         return AARCH64
     if machine in _X86_64_MACHINES:
         return X86_64
-    return current_architecture(strict=strict)
+    # A call without arguments shares the cache entry of a plain
+    # current_architecture() call, so an unrecognized machine logs one warning.
+    return current_architecture(strict=True) if strict else current_architecture()
 
 
 @cache

@@ -244,7 +244,7 @@ print(generate_sphinx_directives(ALL_GROUPS, "autofunction", "detection_func_id"
 
 ## Current trait functions
 
-{func}`~extra_platforms.current_traits` returns **all detectable traits** (multiple per type are possible). The individual `current_*()` functions return the **single primary trait** per type, after disambiguation:
+{func}`~extra_platforms.current_traits` returns **all detectable traits** (multiple per type are possible). The individual `current_*()` functions return the **single primary trait** per type, after disambiguation. {func}`~extra_platforms.machine_architecture` returns the architecture of the machine, which can differ from {func}`~extra_platforms.current_architecture`: see [Interpreter and machine](architectures.md#interpreter-and-machine).
 
 ```{eval-rst}
 .. autofunction:: extra_platforms.current_traits

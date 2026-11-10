@@ -25,13 +25,13 @@ Pytest optional.
 ```
 
 ```{todo}
-In `14.1.0`, stop [Click Extra](https://github.com/kdeldycke/click-extra) from
-importing private names of this package: `_utils._remove_blanks()`,
-`_utils._recursive_update()` and `_types._TNestedReferences`. Click Extra requires
-`extra-platforms>=13.4` with no upper bound, so a release that drops these names
-breaks every published Click Extra. Publish the type alias under a public name,
-and let Click Extra vendor the two dict helpers. Keep the private names, with a
-`DeprecationWarning`, until a major release removes them.
+In `14.1.0`, publish `_types._TNestedReferences` under a public name, for
+[Click Extra](https://github.com/kdeldycke/click-extra) to import in place of
+the private one. Click Extra `10.0.0` imports neither `_utils._remove_blanks()`
+nor `_utils._recursive_update()`. Its older releases import one or both, with
+no upper bound on `extra-platforms`, so a release that drops these names breaks
+them. Keep the private names, with a `DeprecationWarning`, until a major release
+removes them.
 ```
 """
 

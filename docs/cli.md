@@ -57,7 +57,7 @@ The default output prints each detected trait with its metadata, followed by sum
 
 ```{code-block} shell-session
 $ extra-platforms
-extra-platforms 13.13.0
+extra-platforms 14.0.1
 
 ── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]───────────
             id: aarch64
@@ -72,10 +72,16 @@ extra-platforms 13.13.0
         pytest: @skip_aarch64, @unless_aarch64
         groups: ALL_ARCHITECTURES, ALL_ARM, ALL_TRAITS, ARCH_64_BIT, LITTLE_ENDIAN
 
+── Machine architecture ── 📱 ARM64 (AArch64) ──[AARCH64]───
+            id: aarch64
+          (...)
+
 ── Platform ── 🍎 macOS ──[MACOS]───────────────────────────
             id: macos
           (...)
 ```
+
+The `Machine architecture` section reports {func}`~machine_architecture`, the architecture of the machine. It differs from the `Architecture` section only when the interpreter runs as another machine, like a 32-bit Python on a 64-bit ARM or x86 kernel: see [Interpreter and machine](architectures.md#interpreter-and-machine).
 
 ## JSON output
 
@@ -87,7 +93,7 @@ $ extra-platforms --json
 
 ```{code-block} json
 {
-  "version": "13.13.0",
+  "version": "14.0.1",
   "architecture": {
     "id": "aarch64",
     "name": "ARM64 (AArch64)",
@@ -101,6 +107,7 @@ $ extra-platforms --json
     "detection": "is_aarch64",
     "groups": ["ALL_ARCHITECTURES", "ALL_ARM", "ALL_TRAITS", "ARCH_64_BIT", "LITTLE_ENDIAN"]
   },
+  "machine_architecture": { "..." : "..." },
   "platform": { "..." : "..." },
   "shell": { "..." : "..." },
   "terminal": { "..." : "..." },

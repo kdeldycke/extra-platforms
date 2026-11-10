@@ -73,6 +73,15 @@ CLOUDLINUX_OS_RELEASE = {
 }
 """The os-release fields rebuilt from `HOSTNAMECTL_CLOUDLINUX`."""
 
+WEBOS_TV_OS_RELEASE = (
+    "ID=starfish\n"
+    'NAME="webOS TV"\n'
+    'VERSION="10.3.2"\n'
+    "VERSION_ID=10.3.2\n"
+    'PRETTY_NAME="webOS TV 10.3.2"\n'
+)
+"""The os-release file of an LG OLED77B46LA TV, running webOS TV `10.3.2`."""
+
 
 @pytest.fixture
 def fresh_os_release_caches():
@@ -155,12 +164,7 @@ def fresh_hostnamectl_caches():
             id="typical_fedora",
         ),
         pytest.param(
-            # Captured on an LG OLED77B46LA TV, running webOS TV `10.3.2`.
-            "ID=starfish\n"
-            'NAME="webOS TV"\n'
-            'VERSION="10.3.2"\n'
-            "VERSION_ID=10.3.2\n"
-            'PRETTY_NAME="webOS TV 10.3.2"\n',
+            WEBOS_TV_OS_RELEASE,
             {
                 "id": "starfish",
                 "name": "webOS TV",
@@ -623,13 +627,7 @@ def test_macos_codenames_key_each_major_one_way():
 
 
 WEBOS_TV_FILES = {
-    "/etc/os-release": (
-        "ID=starfish\n"
-        'NAME="webOS TV"\n'
-        'VERSION="10.3.2"\n'
-        "VERSION_ID=10.3.2\n"
-        'PRETTY_NAME="webOS TV 10.3.2"\n'
-    ),
+    "/etc/os-release": WEBOS_TV_OS_RELEASE,
     "/etc/starfish-release": "Rockhopper release 10.3.2-33 (ponytail-papikonda)\n",
 }
 """Release files of an LG OLED77B46LA TV, running webOS TV `10.3.2`."""

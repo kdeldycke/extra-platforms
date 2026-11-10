@@ -73,28 +73,28 @@ Group - Collection of Traits with set-like operations (group.py)
 
 ### Module layout
 
-| Module                 | Purpose                                                                                |
-| ---------------------- | -------------------------------------------------------------------------------------- |
-| `__init__.py`          | Public API re-exports                                                                  |
-| `trait.py`             | Base classes: `Trait`, `Architecture`, `Platform`, `Shell`, `Terminal`, `CI`, `Agent`  |
-| `detection.py`         | All `is_<id>()` detection functions, `current_*()` resolvers and `invalidate_caches()` |
-| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`                    |
-| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                                   |
-| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                                |
-| `platform_info.py`     | Version, codename and CPE metadata behind `Platform.info()`                            |
-| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                                          |
-| `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                                |
-| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                                        |
-| `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                               |
-| `group_data.py`        | All `Group` instances and ID collections                                               |
-| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                                   |
-| `__main__.py`          | `extra-platforms` console script and `python -m extra_platforms` entry point           |
-| `_docs.py`             | Documentation-build-only table and diagram generators; needs the `docs` group          |
-| `_docstrings.py`       | Attribute-docstring extraction that fills each trait and group `__doc__`               |
-| `_process_tree.py`     | Walk of the parent process tree (`/proc`, `ps`, Win32) behind shell detection          |
-| `_types.py`            | Type aliases                                                                           |
-| `_utils.py`            | Internal utilities                                                                     |
-| `_windows.py`          | Win32 parent-process-tree helpers, imported lazily and only on Windows                 |
+| Module                 | Purpose                                                                                                          |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `__init__.py`          | Public API re-exports                                                                                            |
+| `trait.py`             | Base classes: `Trait`, `Architecture`, `Platform`, `Shell`, `Terminal`, `CI`, `Agent`                            |
+| `detection.py`         | All `is_<id>()` detection functions, `current_*()` resolvers, `machine_architecture()` and `invalidate_caches()` |
+| `group.py`             | `Group` class, `reduce()`, `traits_from_ids()`, `groups_from_ids()`                                              |
+| `architecture_data.py` | All `Architecture` instances (X86_64, AARCH64, etc.)                                                             |
+| `platform_data.py`     | All `Platform` instances (MACOS, UBUNTU, WINDOWS, etc.)                                                          |
+| `platform_info.py`     | Version, codename and CPE metadata behind `Platform.info()`                                                      |
+| `shell_data.py`        | All `Shell` instances (BASH, ZSH, FISH, etc.)                                                                    |
+| `terminal_data.py`     | All `Terminal` instances (KITTY, ALACRITTY, TMUX, etc.)                                                          |
+| `ci_data.py`           | All `CI` instances (GITHUB_CI, GITLAB_CI, etc.)                                                                  |
+| `agent_data.py`        | All `Agent` instances (CLAUDE_CODE, CLINE, CURSOR, etc.)                                                         |
+| `group_data.py`        | All `Group` instances and ID collections                                                                         |
+| `pytest.py`            | Generates `@skip_<id>` and `@unless_<id>` decorators                                                             |
+| `__main__.py`          | `extra-platforms` console script and `python -m extra_platforms` entry point                                     |
+| `_docs.py`             | Documentation-build-only table and diagram generators; needs the `docs` group                                    |
+| `_docstrings.py`       | Attribute-docstring extraction that fills each trait and group `__doc__`                                         |
+| `_process_tree.py`     | Walk of the parent process tree (`/proc`, `ps`, Win32) behind shell detection                                    |
+| `_types.py`            | Type aliases                                                                                                     |
+| `_utils.py`            | Internal utilities                                                                                               |
+| `_windows.py`          | Win32 parent-process-tree helpers, imported lazily and only on Windows                                           |
 
 ### Detection pattern
 
