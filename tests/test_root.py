@@ -18,9 +18,11 @@ import ast
 import inspect
 import json
 import os
+import re
 import subprocess
 import sys
 import tomllib
+from importlib import import_module
 from pathlib import Path
 from textwrap import dedent
 
@@ -50,6 +52,7 @@ from extra_platforms import (
     WSL2,
     Shell,
     _process_tree,
+    _types as types_module,
     agent_data as agent_data_module,
     architecture_data as architecture_data_module,
     ci_data as ci_data_module,
@@ -75,6 +78,7 @@ from extra_platforms import (
     terminal_data as terminal_data_module,
     trait as trait_module,
 )
+from extra_platforms._deprecated import DEPRECATED_ALIASES, REMOVAL_VERSION
 from extra_platforms.detection import _CATEGORY_ENV_SIGNALS, _unrecognized_message
 from extra_platforms.pytest import skip_hermetic_build
 
@@ -218,6 +222,7 @@ def test_module_root_declarations():
     shell_data_members = fetch_module_implements(shell_data_module)
     terminal_data_members = fetch_module_implements(terminal_data_module)
     trait_members = fetch_module_implements(trait_module)
+    types_members = fetch_module_implements(types_module)
     # Update root members with auto-generated group detection function names.
     root_members.update(g.detection_func_id for g in ALL_GROUPS)
 
@@ -251,6 +256,7 @@ def test_module_root_declarations():
     assert shell_data_members <= all_members_set
     assert terminal_data_members <= all_members_set
     assert trait_members <= all_members_set
+    assert types_members <= all_members_set
 
     expected_members = (
         detection_members
@@ -264,6 +270,7 @@ def test_module_root_declarations():
         | shell_data_members
         | terminal_data_members
         | trait_members
+        | types_members
     )
     assert expected_members == all_members_set
 
@@ -810,3 +817,40 @@ def test_subprocess_and_shutil_are_not_imported_at_module_level():
         "subprocess or shutil imported at module level in "
         + ", ".join(sorted(offenders))
     )
+
+
+# Registry-derived: every alias in DEPRECATED_ALIASES gets a case, so a new entry
+# cannot slip in without test coverage.
+@pytest.mark.parametrize(
+    ("module_id", "deprecated_id", "replacement_id"),
+    [
+        (module_id, deprecated_id, replacement_id)
+        for module_id, aliases in sorted(DEPRECATED_ALIASES.items())
+        for deprecated_id, replacement_id in sorted(aliases.items())
+    ],
+)
+def test_deprecated_aliases(module_id, deprecated_id, replacement_id):
+    """A deprecated alias resolves to its replacement, with a warning at the caller.
+
+    The alias stays out of the advertised API, unlike its replacement.
+    """
+    module = import_module(module_id)
+    with pytest.deprecated_call(
+        match=f"{re.escape(deprecated_id)} is deprecated and will be removed in "
+        f"extra-platforms {re.escape(REMOVAL_VERSION)}, "
+        f"use {re.escape(replacement_id)} instead."
+    ) as record:
+        assert getattr(module, deprecated_id) is getattr(module, replacement_id)
+    assert record[0].filename == __file__
+
+    advertised = getattr(module, "__all__", ())
+    assert deprecated_id not in advertised
+    if advertised:
+        assert replacement_id in advertised
+
+
+@pytest.mark.parametrize("module_id", sorted(DEPRECATED_ALIASES))
+def test_unknown_attribute(module_id):
+    """An unknown attribute still raises a standard AttributeError."""
+    with pytest.raises(AttributeError, match="has no attribute 'DOES_NOT_EXIST'"):
+        _ = import_module(module_id).DOES_NOT_EXIST

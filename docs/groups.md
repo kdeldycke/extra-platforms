@@ -241,6 +241,12 @@ print(generate_sphinx_directives(ALL_GROUPS, "autodata", "symbol_id"))
 ## Trait and group operations
 
 ```{eval-rst}
+.. py:data:: NestedReferences
+
+   Type for arbitrary nested references to traits and groups. A reference is a
+   trait, a group, a trait or group ID, or ``None``. Any iterable can nest
+   references, to any depth.
+
 .. autofunction:: extra_platforms.extract_members
 .. autofunction:: extra_platforms.traits_from_ids
 .. autofunction:: extra_platforms.groups_from_ids

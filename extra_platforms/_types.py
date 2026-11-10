@@ -22,7 +22,7 @@ These types are designed to be imported as follows:
 
     TYPE_CHECKING = False
     if TYPE_CHECKING:
-        from ._types import _TRef, _TNestedReferences, ...
+        from ._types import _TRef, NestedReferences, ...
 
 [Mypy is able to pick them up correctly](https://mypy.readthedocs.io/en/stable/common_issues.html#python-version-and-system-platform-checks)
 because `TYPE_CHECKING` is always evaluated to `False` at runtime, and to
@@ -30,9 +30,9 @@ because `TYPE_CHECKING` is always evaluated to `False` at runtime, and to
 ```
 
 ```{important}
-[Click Extra](https://github.com/kdeldycke/click-extra) imports
-`_TNestedReferences` from this module to type its test-suite fields: keep the
-name stable.
+[Click Extra](https://github.com/kdeldycke/click-extra) `10.0.0` to `10.2.0`
+import `_TNestedReferences` from this module to type their test-suite fields.
+Keep that name as an alias of `NestedReferences` until `16.0.0`.
 ```
 """
 
@@ -52,5 +52,16 @@ _TRef = Trait | Group | str | None
 - `None` to represent an empty set of traits
 """
 
-_TNestedReferences = _TRef | Iterable[_TRef | Iterable["_TNestedReferences"]]
-"""Type for arbitrary nested references to traits and groups."""
+NestedReferences = _TRef | Iterable[_TRef | Iterable["NestedReferences"]]
+"""Type for arbitrary nested references to traits and groups.
+
+A reference is a trait, a group, a trait or group ID, or `None`. Any iterable can
+nest references, to any depth.
+"""
+
+_TNestedReferences = NestedReferences
+"""Deprecated alias of `NestedReferences`, removed in `16.0.0`.
+
+A `DeprecationWarning` cannot reach the code that imports it under
+`TYPE_CHECKING`, which never runs.
+"""

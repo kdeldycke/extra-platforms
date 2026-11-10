@@ -33,6 +33,7 @@ from __future__ import annotations
 
 from operator import attrgetter
 from textwrap import dedent, indent
+from types import UnionType
 
 from click_extra import TableFormat, render_table
 
@@ -502,11 +503,12 @@ def generate_group_data_module_automodule(groups: Iterable[Group]) -> str:
 def generate_extra_platforms_automodule() -> str:
     """Generate the extra_platforms automodule directive, without its callables.
 
-    Every function and class exported at the root of the package is documented on
-    a dedicated page: detection functions in detection.md, group operations in
-    groups.md, {func}`~extra_platforms.shell_from_path` in shells.md, and the
-    classes in trait.md and groups.md. This automodule renders the data alone:
-    the traits, the groups and their collections.
+    Every function, class and type alias exported at the root of the package is
+    documented on a dedicated page: detection functions in detection.md, group
+    operations and their `NestedReferences` type in groups.md,
+    {func}`~extra_platforms.shell_from_path` in shells.md, and the classes in
+    trait.md and groups.md. This automodule renders the data alone: the traits,
+    the groups and their collections.
 
     Uses ``{eval-rst}`` for the same reason as {func}`generate_sphinx_directives`.
     """
@@ -515,6 +517,7 @@ def generate_extra_platforms_automodule() -> str:
             name
             for name in extra_platforms.__all__
             if callable(getattr(extra_platforms, name))
+            or isinstance(getattr(extra_platforms, name), UnionType)
         )
     )
 

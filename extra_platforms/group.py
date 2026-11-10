@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
     from typing import Any, Self, TypeVar
 
-    from ._types import _TNestedReferences
+    from ._types import NestedReferences
 
     _T = TypeVar("_T")
 
@@ -72,7 +72,7 @@ def _flatten(items: Iterable) -> Iterator:
             yield item
 
 
-def extract_members(*other: _TNestedReferences) -> Iterator[Trait]:
+def extract_members(*other: NestedReferences) -> Iterator[Trait]:
     """Returns all traits found in `other`.
 
     `other` can be an arbitrarily nested {class}`~collections.abc.Iterable` of
@@ -286,7 +286,7 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
         """Iterate over the traits of the group as key-value pairs."""
         return iter(self._members.items())
 
-    def isdisjoint(self, other: _TNestedReferences) -> bool:
+    def isdisjoint(self, other: NestedReferences) -> bool:
         """Return {data}`True` if the group has no members in common with `other`.
 
         Groups are disjoint if and only if their intersection is an empty {class}`set`.
@@ -296,7 +296,7 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
         """
         return self._traits.isdisjoint(extract_members(other))
 
-    def fullyintersects(self, other: _TNestedReferences) -> bool:
+    def fullyintersects(self, other: NestedReferences) -> bool:
         """Return {data}`True` if the group has all members in common with `other`.
 
         This is the member-level equality test: the equivalent of ``==``
@@ -312,27 +312,27 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
         """
         return self._traits == set(extract_members(other))
 
-    def issubset(self, other: _TNestedReferences) -> bool:
+    def issubset(self, other: NestedReferences) -> bool:
         """Test whether every member in the group is in other."""
         return self._traits.issubset(extract_members(other))
 
     __le__ = issubset
 
-    def __lt__(self, other: _TNestedReferences) -> bool:
+    def __lt__(self, other: NestedReferences) -> bool:
         """Test whether every member in the group is in other, but not all."""
         return self._traits < set(extract_members(other))
 
-    def issuperset(self, other: _TNestedReferences) -> bool:
+    def issuperset(self, other: NestedReferences) -> bool:
         """Test whether every member in other is in the group."""
         return self._traits.issuperset(extract_members(other))
 
     __ge__ = issuperset
 
-    def __gt__(self, other: _TNestedReferences) -> bool:
+    def __gt__(self, other: NestedReferences) -> bool:
         """Test whether every member in other is in the group, but not all."""
         return self._traits > set(extract_members(other))
 
-    def union(self, *others: _TNestedReferences) -> Self:
+    def union(self, *others: NestedReferences) -> Self:
         """Return a new {class}`~extra_platforms.Group` with members of all groups.
 
         ```{caution}
@@ -346,7 +346,7 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
     # fall back to the binary operators, which return new Group instances.
     __or__ = union
 
-    def intersection(self, *others: _TNestedReferences) -> Self:
+    def intersection(self, *others: NestedReferences) -> Self:
         """Return a new {class}`~extra_platforms.Group` with the shared members.
 
         A member is kept when the group and all others contain it.
@@ -362,7 +362,7 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
 
     __and__ = intersection
 
-    def difference(self, *others: _TNestedReferences) -> Self:
+    def difference(self, *others: NestedReferences) -> Self:
         """Return a new {class}`~extra_platforms.Group` without the others' members.
 
         A member is kept when the group contains it and no other does.
@@ -376,7 +376,7 @@ class Group(_Identifiable, unknown_symbol="UNKNOWN"):
 
     __sub__ = difference
 
-    def symmetric_difference(self, other: _TNestedReferences) -> Self:
+    def symmetric_difference(self, other: NestedReferences) -> Self:
         """Return a new {class}`~extra_platforms.Group` with unshared members.
 
         A member is kept when either the group or other contains it, but not both.
@@ -634,7 +634,7 @@ def groups_from_ids(*group_ids: str) -> tuple[Group, ...]:
 
 
 def reduce(
-    items: _TNestedReferences,
+    items: NestedReferences,
     target_pool: Iterable[Group | Trait] | None = None,
 ) -> frozenset[Group | Trait]:
     """Reduce a collection of traits to a minimal set.

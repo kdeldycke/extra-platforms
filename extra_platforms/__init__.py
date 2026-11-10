@@ -25,18 +25,14 @@ Pytest optional.
 ```
 
 ```{todo}
-In `14.1.0`, publish `_types._TNestedReferences` under a public name, for
-[Click Extra](https://github.com/kdeldycke/click-extra) to import in place of
-the private one. Click Extra `10.0.0` imports neither `_utils._remove_blanks()`
-nor `_utils._recursive_update()`. Its older releases import one or both, with
-no upper bound on `extra-platforms`, so a release that drops these names breaks
-them. Keep the private names, with a `DeprecationWarning`, until a major release
-removes them.
+In `16.0.0`, remove the deprecated aliases that `extra_platforms/_deprecated.py`
+registers, the `_types._TNestedReferences` alias, and their tests.
 ```
 """
 
 from __future__ import annotations
 
+from ._types import NestedReferences
 from .agent_data import (
     CLAUDE_CODE,
     CLINE,
@@ -692,6 +688,7 @@ __all__ = (
     "Agent",
     "Architecture",
     "Group",
+    "NestedReferences",
     "Platform",
     "Shell",
     "Terminal",

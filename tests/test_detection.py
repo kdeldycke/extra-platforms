@@ -264,6 +264,9 @@ def test_interpreter_and_machine_architectures(
         monkeypatch.setattr(sysconfig, "get_platform", lambda: build)
     assert current_architecture() is interpreter
     assert machine_architecture() is native
+    # Both architectures describe the host, so both report its machine.
+    assert interpreter.info()["machine"] == machine
+    assert native.info()["machine"] == machine
 
 
 def test_architecture_width_follows_interpreter():

@@ -37,7 +37,7 @@ from operator import attrgetter
 from os import environ
 
 from ._docstrings import get_attribute_docstring
-from ._utils import _recursive_update, _remove_blanks
+from ._utils import recursive_update, remove_blanks
 from .platform_info import linux_info, macos_info, webos_info, windows_info
 
 TYPE_CHECKING = False
@@ -425,13 +425,21 @@ class Architecture(Trait):
     """
 
     def info(self) -> dict[str, str | bool | None]:
-        """Returns all architecture attributes we can gather."""
+        """Returns all architecture attributes we can gather.
+
+        The `machine` and `processor` fields describe the host. They are filled
+        for the architecture of the interpreter, and for the one
+        {func}`~extra_platforms.machine_architecture` returns when it differs.
+        """
+        # Avoid circular import.
+        from .detection import machine_architecture
+
         info: dict[str, str | bool | None] = {
             **super().info(),
             "machine": None,
             "processor": None,
         }
-        if self.current:
+        if self.current or self is machine_architecture():
             info["machine"] = platform.machine() or None
             info["processor"] = platform.processor() or None
         return info
@@ -473,13 +481,13 @@ class Platform(Trait):
             # Its ID is renamed so it does not clash with the trait's own ID.
             os_release = dict(linux_info())
             os_release["distro_id"] = os_release.pop("id")
-            info = _recursive_update(info, _remove_blanks(os_release), strict=True)
+            info = recursive_update(info, remove_blanks(os_release), strict=True)
             if self.id == "macos":
-                info = _recursive_update(info, macos_info(), strict=True)
+                info = recursive_update(info, macos_info(), strict=True)
             elif self.id == "webos":
-                info = _recursive_update(info, webos_info(), strict=True)
+                info = recursive_update(info, webos_info(), strict=True)
             elif self.id == "windows":
-                info = _recursive_update(info, windows_info(), strict=True)
+                info = recursive_update(info, windows_info(), strict=True)
         return info
 
 

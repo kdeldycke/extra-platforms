@@ -102,6 +102,7 @@ DOCS_HTML_DIR = Path(__file__).parent.parent / "docs" / "_build"
 # entry to re-arm anchor checks the day its module joins the documentation.
 UNRENDERED_MODULES = frozenset((
     "extra_platforms/__main__.py",
+    "extra_platforms/_deprecated.py",
     "extra_platforms/_docs.py",
     "extra_platforms/_process_tree.py",
 ))
@@ -345,6 +346,11 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     # examples.
     if role == "func" and symbol_clean == "shell_from_path":
         return "shells.html"
+
+    # The type of nested trait and group references goes to groups.html, next to
+    # the operations that accept it.
+    if symbol_clean == "NestedReferences":
+        return "groups.html"
 
     # Trait and group operations functions go to groups.html
     if role == "func" and symbol_clean in (

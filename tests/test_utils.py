@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import pytest
 
-from extra_platforms._utils import _recursive_update, _remove_blanks
+from extra_platforms._utils import recursive_update, remove_blanks
 
 
 @pytest.mark.parametrize(
@@ -56,7 +56,7 @@ from extra_platforms._utils import _recursive_update, _remove_blanks
 )
 def test_recursive_update(a, b, expected):
     """The second dict updates the first one in place, at every depth."""
-    result = _recursive_update(a, b)
+    result = recursive_update(a, b)
     assert result is a
     assert result == expected
 
@@ -72,7 +72,7 @@ def test_recursive_update_strict_rejects_unknown_key(b, key):
     """In strict mode, a key the first dict lacks raises, at any depth."""
     a = {"apple": "red", "citrus": {"lemon": "green"}}
     with pytest.raises(ValueError, match=f"Parameter '{key}' found in second dict"):
-        _recursive_update(a, b, strict=True)
+        recursive_update(a, b, strict=True)
 
 
 @pytest.mark.parametrize(
@@ -148,4 +148,4 @@ def test_recursive_update_strict_rejects_unknown_key(b, key):
 )
 def test_remove_blanks(tree, options, expected):
     """Blank values go at every depth, unless the option for their kind is off."""
-    assert _remove_blanks(tree, **options) == expected
+    assert remove_blanks(tree, **options) == expected

@@ -14,9 +14,11 @@
 """Internal utility functions.
 
 ```{important}
-[Click Extra](https://github.com/kdeldycke/click-extra) imports
-`_recursive_update()` and `_remove_blanks()` from this module, with their
-keyword arguments: keep both names and signatures stable.
+[Click Extra](https://github.com/kdeldycke/click-extra) `9.5.1` and older
+import `_recursive_update()` or `_remove_blanks()` from this module, with their
+keyword arguments. Both names resolve to `recursive_update()` and
+`remove_blanks()` with a `DeprecationWarning`, through the `__getattr__`
+hook of this module: keep their signatures stable until `16.0.0`.
 ```
 """
 
@@ -27,7 +29,7 @@ if TYPE_CHECKING:
     from typing import Any
 
 
-def _recursive_update(
+def recursive_update(
     a: dict[str, Any], b: dict[str, Any], strict: bool = False
 ) -> dict[str, Any]:
     """Like standard {meth}`dict.update`, but recursive so sub-dict gets updated.
@@ -37,7 +39,7 @@ def _recursive_update(
     """
     for k, v in b.items():
         if isinstance(v, dict) and isinstance(a.get(k), dict):
-            a[k] = _recursive_update(a[k], v, strict=strict)
+            a[k] = recursive_update(a[k], v, strict=strict)
         # Ignore elements unregistered in the template structure.
         elif k in a:
             a[k] = v
@@ -46,7 +48,7 @@ def _recursive_update(
     return a
 
 
-def _remove_blanks(
+def remove_blanks(
     tree: dict,
     remove_none: bool = True,
     remove_dicts: bool = True,
@@ -70,7 +72,7 @@ def _remove_blanks(
         if remove_none and value is None:
             continue
         if isinstance(value, dict):
-            cleaned = _remove_blanks(value, remove_none, remove_dicts, remove_str)
+            cleaned = remove_blanks(value, remove_none, remove_dicts, remove_str)
             if remove_dicts and not cleaned:
                 continue
             result[key] = cleaned
@@ -79,3 +81,15 @@ def _remove_blanks(
         else:
             result[key] = value
     return result
+
+
+def __getattr__(name: str) -> Any:
+    """Resolve the deprecated private names, emitting a {exc}`DeprecationWarning`.
+
+    Implements the [PEP 562](https://peps.python.org/pep-0562/) module
+    ``__getattr__`` hook: it only fires for attributes not found in the module,
+    so current symbols are served without overhead. See ``_deprecated.py``.
+    """
+    from ._deprecated import resolve_deprecated
+
+    return resolve_deprecated(__name__, name)

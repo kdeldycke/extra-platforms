@@ -5,9 +5,11 @@
 > [!WARNING]
 > This version is **not released yet** and is under active development.
 
+- **Breaking:** Detect the architecture of the interpreter: a 32-bit Python on a 64-bit ARM or x86 kernel is now `ARMV8L` or `I686`, and an x64 Python on Windows for ARM is `X86_64`. Use `machine_architecture()` for the architecture of the machine.
+- **Deprecated:** `_types._TNestedReferences`, replaced by `NestedReferences`, and the `_utils._remove_blanks()` and `_utils._recursive_update()` helpers, which now warn. `16.0.0` removes all three.
 - Add webOS platform detection: `WEBOS` and `is_webos()` match the `ID=starfish` of LG TVs, and `Platform.info()` reports their codename from `/etc/starfish-release`.
 - Add `machine_architecture()`, which returns the architecture of the machine, and report it in the `extra-platforms` CLI and its `--json` output.
-- Detect the architecture of the interpreter: a 32-bit Python on a 64-bit ARM or x86 kernel is now `ARMV8L` or `I686`, and an x64 Python on Windows for ARM is `X86_64`. Use `machine_architecture()` for the architecture of the machine.
+- Add the `NestedReferences` type alias, for the nested trait and group references that `Group` methods and `reduce()` accept.
 - Point the `CIRRUS_CI` and `CLEARLINUX` URLs to GitHub.
 - Document the PEP 740 attestations of the PyPI distributions on the install page.
 - Test the sdist in one CI cell, outside a git checkout, on the newest dependency releases.
