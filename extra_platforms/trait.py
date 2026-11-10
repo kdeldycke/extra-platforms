@@ -38,7 +38,7 @@ from os import environ
 
 from ._docstrings import get_attribute_docstring
 from ._utils import _recursive_update, _remove_blanks
-from .platform_info import linux_info, macos_info, windows_info
+from .platform_info import linux_info, macos_info, webos_info, windows_info
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -476,6 +476,8 @@ class Platform(Trait):
             info = _recursive_update(info, _remove_blanks(os_release), strict=True)
             if self.id == "macos":
                 info = _recursive_update(info, macos_info(), strict=True)
+            elif self.id == "webos":
+                info = _recursive_update(info, webos_info(), strict=True)
             elif self.id == "windows":
                 info = _recursive_update(info, windows_info(), strict=True)
         return info

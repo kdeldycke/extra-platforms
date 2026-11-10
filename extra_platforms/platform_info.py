@@ -14,7 +14,8 @@
 """Platform-specific information gathering.
 
 This module provides utilities to fetch detailed version and codename information
-for all platforms: Linux distributions (via `/etc/os-release`), macOS and Windows.
+for all platforms: Linux distributions (via `/etc/os-release`), webOS TV (via
+`/etc/starfish-release` too), macOS and Windows.
 
 Linux reads `/etc/os-release`, then `/usr/lib/os-release`. When neither file is
 readable, `_hostnamectl_os_release()` asks `systemd-hostnamed` for the same
@@ -457,6 +458,31 @@ def macos_info() -> dict[str, Any]:
         "version_parts": version_parts,
         "codename": get_macos_codename(version_parts["major"], version_parts["minor"]),
     }
+
+
+def webos_info() -> dict[str, Any]:
+    """Fetch the webOS TV details that its `os-release` file lacks.
+
+    webOS TV declares its version in `os-release`, but not its codename. It keeps
+    that one in `/etc/starfish-release`, which names the core OS, its release and
+    the codename, like ``Rockhopper release 10.3.2-33 (ponytail-papikonda)`` on
+    webOS TV ``10.3.2``. It includes:
+
+    - `codename`: The release codename (like `"ponytail-papikonda"`)
+
+    A field the file does not give is left out, so the value {func}`linux_info`
+    gathered stays.
+
+    :return: A dictionary containing webOS TV details.
+    """
+    try:
+        # An invalid byte only spoils the codename holding it.
+        with open("/etc/starfish-release", encoding="UTF-8", errors="replace") as f:
+            first_line = f.readline()
+    except OSError:
+        return {}
+    codename = _codename_from_version(first_line.strip())
+    return {"codename": codename} if codename else {}
 
 
 def windows_info() -> dict[str, Any]:

@@ -6,6 +6,7 @@
 > This version is **not released yet** and is under active development.
 
 - Add webOS platform detection: `WEBOS` / `is_webos()` (via `ID=starfish` in the `os-release` file of LG TVs).
+- Report the codename of webOS TV in `Platform.info()`, from its `/etc/starfish-release` file.
 - Add `machine_architecture()`, which returns the architecture of the machine, beside the interpreter's from `current_architecture()`.
 - Point the `CIRRUS_CI` and `CLEARLINUX` URLs to GitHub, since both projects shut down.
 - Test the PyPI sdist in CI, outside a git checkout, on the newest dependency releases.

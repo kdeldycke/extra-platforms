@@ -336,6 +336,7 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
         "linux_info",
         "macos_info",
         "os_release_id",
+        "webos_info",
         "windows_info",
     ):
         return "platforms.html"

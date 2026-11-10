@@ -26,6 +26,7 @@ import pytest
 from extra_platforms import (
     MACOS,
     UBUNTU,
+    WEBOS,
     WINDOWS,
     detection as detection_module,
     invalidate_caches,
@@ -42,6 +43,7 @@ from extra_platforms.platform_info import (
     linux_info,
     macos_info,
     os_release_id,
+    webos_info,
     windows_info,
 )
 
@@ -618,6 +620,60 @@ def test_macos_codenames_key_each_major_one_way():
     by_major_alone = {major for major, minor in MACOS_CODENAMES if minor is None}
     with_minor = {major for major, minor in MACOS_CODENAMES if minor is not None}
     assert not by_major_alone & with_minor
+
+
+WEBOS_TV_FILES = {
+    "/etc/os-release": (
+        "ID=starfish\n"
+        'NAME="webOS TV"\n'
+        'VERSION="10.3.2"\n'
+        "VERSION_ID=10.3.2\n"
+        'PRETTY_NAME="webOS TV 10.3.2"\n'
+    ),
+    "/etc/starfish-release": "Rockhopper release 10.3.2-33 (ponytail-papikonda)\n",
+}
+"""Release files of an LG OLED77B46LA TV, running webOS TV `10.3.2`."""
+
+
+def _serve_files(monkeypatch, files: dict[str, str]) -> None:
+    """Make `platform_info` read `files`, and find no other file."""
+
+    def fake_open(path, **kwargs):
+        if path not in files:
+            raise FileNotFoundError(path)
+        return io.StringIO(files[path])
+
+    monkeypatch.setattr(os.path, "isfile", lambda path: path in files)
+    monkeypatch.setattr("extra_platforms.platform_info.open", fake_open, raising=False)
+
+
+@pytest.mark.parametrize(
+    ("files", "expected"),
+    (
+        pytest.param(WEBOS_TV_FILES, {"codename": "ponytail-papikonda"}, id="webos_tv"),
+        pytest.param(
+            {"/etc/starfish-release": "Rockhopper release 10.3.2-33\n"},
+            {},
+            id="no_codename",
+        ),
+        pytest.param({}, {}, id="no_release_file"),
+    ),
+)
+def test_webos_info(monkeypatch, files, expected):
+    """The codename comes from the parenthesis ending `/etc/starfish-release`."""
+    _serve_files(monkeypatch, files)
+    assert webos_info() == expected
+
+
+def test_webos_platform_info_codename(monkeypatch, fresh_caches):
+    """``Platform.info()`` adds the codename of webOS TV to its os-release fields."""
+    _serve_files(monkeypatch, WEBOS_TV_FILES)
+    monkeypatch.setitem(detection_module._detection_registry, "is_webos", lambda: True)
+    invalidate_caches()
+    info = WEBOS.info()
+    assert info["distro_id"] == "starfish"
+    assert info["version"] == "10.3.2"
+    assert info["codename"] == "ponytail-papikonda"
 
 
 @pytest.fixture

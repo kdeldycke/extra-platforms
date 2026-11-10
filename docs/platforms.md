@@ -409,7 +409,7 @@ print(
 ```{py:currentmodule} extra_platforms
 ```
 
-The `platform_info` module gathers the version and codename details behind {meth}`~Platform.info`. On Linux, it reads `/etc/os-release`. If it cannot read that file, it reads `/usr/lib/os-release`, and if it cannot read either file, it asks `systemd-hostnamed`. On macOS and Windows, it uses their own {mod}`platform` primitives.
+The `platform_info` module gathers the version and codename details behind {meth}`~Platform.info`. On Linux, it reads `/etc/os-release`. If it cannot read that file, it reads `/usr/lib/os-release`, and if it cannot read either file, it asks `systemd-hostnamed`. On LG's webOS TVs, it also reads the codename from `/etc/starfish-release`, because their `os-release` file has none. On macOS and Windows, it uses their own {mod}`platform` primitives.
 
 ```{eval-rst}
 .. automodule:: extra_platforms.platform_info
