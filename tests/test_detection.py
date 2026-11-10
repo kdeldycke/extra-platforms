@@ -174,16 +174,16 @@ def test_detection_heuristics_sorting():
         assert not any(name.startswith("is_unknown_") for name in specific)
 
 
-def test_is_arm_depends_on_arm_variants(monkeypatch, fresh_caches):
+def test_is_arm_depends_on_arm_variants(fresh_caches, monkeypatch):
     """Test that is_arm() is a fallback excluded by specific ARM variants."""
     # A machine claimed by a specific variant is not generic ARM.
-    monkeypatch.setattr("platform.machine", lambda: "armv7l")
+    monkeypatch.setattr(detection_module, "_interpreter_machine", lambda: "armv7l")
     assert is_armv7l()
     assert not is_arm()
 
     # An ARM machine unclaimed by any specific variant is generic ARM.
     invalidate_caches()
-    monkeypatch.setattr("platform.machine", lambda: "armv4tl")
+    monkeypatch.setattr(detection_module, "_interpreter_machine", lambda: "armv4tl")
     assert not is_armv7l()
     assert is_arm()
 
@@ -218,7 +218,7 @@ def test_webos_raw_id_detection(monkeypatch, fresh_caches):
 
 
 @pytest.mark.parametrize("machine", ("x86_64", "AMD64", "amd64", "i86pc"))
-def test_x86_64_machine_aliases(monkeypatch, machine, fresh_caches):
+def test_x86_64_machine_aliases(fresh_caches, monkeypatch, machine):
     """Every string reported for 64-bit x86 resolves to X86_64.
 
     Solaris and illumos answer ``i86pc``, which names the machine family and not
@@ -226,8 +226,10 @@ def test_x86_64_machine_aliases(monkeypatch, machine, fresh_caches):
     :func:`~extra_platforms.is_sparc64` already accepts. Captured on
     OpenIndiana Hipster 2026.04.
     """
+    monkeypatch.setattr(detection_module, "_interpreter_machine", lambda: machine)
     monkeypatch.setattr(detection_module.platform, "machine", lambda: machine)
     assert is_x86_64()
+    assert machine_architecture() is X86_64
 
 
 @pytest.mark.parametrize(

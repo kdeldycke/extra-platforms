@@ -313,8 +313,8 @@ def get_expected_page_for_symbol(role: str, symbol: str) -> str:
     if role == "func" and (symbol_clean.startswith(("is_", "current_"))):
         return "detection.html"
 
-    # Cache management functions go to detection.html
-    if role == "func" and symbol_clean == "invalidate_caches":
+    # Cache management and the machine architecture go to detection.html
+    if role == "func" and symbol_clean in ("invalidate_caches", "machine_architecture"):
         return "detection.html"
 
     # Platform information helpers are documented in platforms.html, next to
@@ -722,6 +722,7 @@ def test_all_crossreferences_point_to_correct_pages(
             "shlex.",
             "subprocess.",
             "sys.",
+            "sysconfig.",
             "types.",
             "typing.",
         ))
