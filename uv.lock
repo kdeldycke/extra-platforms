@@ -425,7 +425,7 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "14.1.0.dev0"
+version = "15.0.0.dev0"
 source = { editable = "." }
 
 [package.optional-dependencies]
