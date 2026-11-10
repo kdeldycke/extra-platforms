@@ -294,6 +294,7 @@ from .detection import (
     is_xterm,
     is_zellij,
     is_zsh,
+    machine_architecture,
     shell_from_path,
 )
 from .group import (
@@ -899,6 +900,7 @@ __all__ = (
     "is_xterm",
     "is_zellij",
     "is_zsh",
+    "machine_architecture",
     "reduce",
     "shell_from_path",
     "traits_from_ids",

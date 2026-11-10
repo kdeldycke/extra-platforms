@@ -34,6 +34,7 @@ from . import (
     current_shell,
     current_terminal,
     current_traits,
+    machine_architecture,
 )
 
 TYPE_CHECKING = False
@@ -225,6 +226,7 @@ def main() -> None:
 
     # Run all detection first so any warnings are emitted before our output.
     arch = current_architecture()
+    machine = machine_architecture()
     plat = current_platform()
     shell = current_shell()
     terminal = current_terminal()
@@ -247,6 +249,7 @@ def main() -> None:
         data = {
             "version": __version__,
             "architecture": _trait_dict(arch),
+            "machine_architecture": _trait_dict(machine),
             "platform": _trait_dict(plat),
             "shell": _trait_dict(shell),
             "terminal": _trait_dict(terminal),
@@ -261,6 +264,7 @@ def main() -> None:
     print(f"extra-platforms {__version__}")
 
     _print_trait("Architecture", arch)
+    _print_trait("Machine architecture", machine)
     _print_trait("Platform", plat)
     _print_trait("Shell", shell)
     _print_trait("Terminal", terminal)

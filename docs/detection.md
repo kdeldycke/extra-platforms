@@ -249,6 +249,7 @@ print(generate_sphinx_directives(ALL_GROUPS, "autofunction", "detection_func_id"
 ```{eval-rst}
 .. autofunction:: extra_platforms.current_traits
 .. autofunction:: extra_platforms.current_architecture
+.. autofunction:: extra_platforms.machine_architecture
 .. autofunction:: extra_platforms.current_platform
 .. autofunction:: extra_platforms.current_shell
 .. autofunction:: extra_platforms.current_shell_path

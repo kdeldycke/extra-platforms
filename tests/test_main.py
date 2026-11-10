@@ -30,6 +30,7 @@ from extra_platforms import (
     current_platform,
     current_shell,
     current_terminal,
+    machine_architecture,
 )
 from extra_platforms.__main__ import (
     _SEPARATOR_WIDTH,
@@ -41,6 +42,7 @@ from extra_platforms.__main__ import (
 
 CURRENT_FUNCS = {
     "architecture": current_architecture,
+    "machine_architecture": machine_architecture,
     "platform": current_platform,
     "shell": current_shell,
     "terminal": current_terminal,
@@ -77,6 +79,7 @@ def test_main_text_report(monkeypatch, capsys):
     sections = [line[3:].split(" ──")[0] for line in lines if line.startswith("── ")]
     assert sections == [
         "Architecture",
+        "Machine architecture",
         "Platform",
         "Shell",
         "Terminal",

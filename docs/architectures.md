@@ -45,13 +45,36 @@ Architecture(id='x86_64', name='x86-64 (AMD64)')
 
 ## Exactly one architecture matches
 
-Architecture detection reads {func}`platform.machine`: the machine name the operating system reports to the Python interpreter. Detection functions normalize the spelling differences between systems, so `aarch64` (Linux), `arm64` (macOS) and `ARM64` (Windows) all resolve to {data}`~AARCH64`, and the `AMD64` reported by Windows resolves to {data}`~X86_64`.
+Architecture detection follows the Python interpreter. It reads {func}`platform.machine`, the machine name the operating system reports to the interpreter, and corrects it where the interpreter runs as another machine: see [Interpreter and machine](#interpreter-and-machine). Detection functions normalize the spelling differences between systems, so `aarch64` (Linux), `arm64` (macOS) and `ARM64` (Windows) all resolve to {data}`~AARCH64`, and the `AMD64` reported by Windows resolves to {data}`~X86_64`.
 
 Some systems report a machine family instead of the instruction set. Solaris and illumos answer `i86pc` on 64-bit x86, which resolves to {data}`~X86_64`. On SPARC they answer `sun4u` or `sun4v`, which both resolve to {data}`~SPARC64`.
 
 Because the value reflects the interpreter's point of view, a process running under a translation layer like Rosetta 2 or qemu user-mode emulation reports the emulated architecture, not the CPU underneath.
 
 Unlike [shells](shells.md), architectures are mutually exclusive: at most one detection function returns `True` at any time. {func}`~is_arm` preserves that property while acting as a fallback: it only matches ARM machines not covered by the more precise {data}`~ARMV5TEL`, {data}`~ARMV6L`, {data}`~ARMV7L`, {data}`~ARMV8L` and {data}`~AARCH64` variants. {func}`~current_architecture` treats several simultaneous matches as a bug and raises `RuntimeError`.
+
+## Interpreter and machine
+
+{func}`~current_architecture` returns the architecture the Python interpreter runs as, and every detection function, group and `pytest` decorator follows it. {func}`~machine_architecture` returns the architecture of the machine, as the operating system reports it. The two differ only for an interpreter that is narrower than its 64-bit ARM or x86 machine, or emulated by it:
+
+| Interpreter                      | {func}`platform.machine` | {func}`~current_architecture` | {func}`~machine_architecture` |
+| :------------------------------- | :----------------------- | :---------------------------- | :---------------------------- |
+| 32-bit Python, 64-bit ARM kernel | `aarch64`                | {data}`~ARMV8L`               | {data}`~AARCH64`              |
+| 32-bit Python, 64-bit x86 kernel | `x86_64`                 | {data}`~I686`                 | {data}`~X86_64`               |
+| 32-bit Python, 64-bit Windows    | `AMD64`                  | {data}`~I686`                 | {data}`~X86_64`               |
+| x64 Python, Windows for ARM      | `ARM64`                  | {data}`~X86_64`               | {data}`~AARCH64`              |
+
+A 32-bit interpreter on a 64-bit kernel gets the name that the kernel itself gives a 32-bit process under the `linux32` personality: `armv8l` or `i686`. On Windows, {func}`platform.machine` reads the CPU, so the platform the interpreter was built for, from {func}`sysconfig.get_platform`, names the machine of the interpreter.
+
+LG's webOS TVs run a 32-bit userland on a 64-bit kernel:
+
+```pycon
+>>> from extra_platforms import current_architecture, machine_architecture
+>>> current_architecture()
+Architecture(id='armv8l', name='ARMv8 (32-bit, little-endian)')
+>>> machine_architecture()
+Architecture(id='aarch64', name='ARM64 (AArch64)')
+```
 
 ## Recognized architectures
 

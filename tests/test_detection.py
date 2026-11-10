@@ -19,6 +19,7 @@ import functools
 import inspect
 import re
 import sys
+import sysconfig
 from itertools import chain, pairwise
 from operator import attrgetter
 from pathlib import Path
@@ -28,20 +29,27 @@ import pytest
 
 import extra_platforms
 from extra_platforms import (
+    AARCH64,
     ALL_GROUPS,
     ALL_PLATFORMS,
     ALL_SHELLS,
     ALL_TRAITS,
+    ARCH_64_BIT,
+    ARMV7L,
+    ARMV8L,
     BASH,
     FISH,
+    I686,
     ILLUMOS,
     POWERSHELL,
     SH,
+    X86_64,
     ZSH,
     Group,
     Shell,
     Trait,
     _process_tree,
+    current_architecture,
     current_platform,
     current_shell,
     current_shell_path,
@@ -61,6 +69,7 @@ from extra_platforms import (
     is_webos,
     is_windows,
     is_x86_64,
+    machine_architecture,
     shell_from_path,
 )
 from extra_platforms.pytest import skip_windows
@@ -219,6 +228,45 @@ def test_x86_64_machine_aliases(monkeypatch, machine, fresh_caches):
     """
     monkeypatch.setattr(detection_module.platform, "machine", lambda: machine)
     assert is_x86_64()
+
+
+@pytest.mark.parametrize(
+    ("sys_platform", "machine", "bits", "build", "interpreter", "native"),
+    (
+        # Measured on an LG webOS TV: a 32-bit userland on a 64-bit kernel.
+        pytest.param("linux", "aarch64", 32, None, ARMV8L, AARCH64, id="linux-arm32"),
+        pytest.param("linux", "aarch64", 64, None, AARCH64, AARCH64, id="linux-arm64"),
+        pytest.param("linux", "x86_64", 32, None, I686, X86_64, id="linux-x86"),
+        pytest.param("linux", "armv7l", 32, None, ARMV7L, ARMV7L, id="linux-armv7l"),
+        pytest.param("darwin", "arm64", 64, None, AARCH64, AARCH64, id="macos-arm64"),
+        # Windows reports the native CPU, whatever the build of the interpreter.
+        pytest.param("win32", "AMD64", 32, "win32", I686, X86_64, id="windows-x86"),
+        pytest.param("win32", "AMD64", 64, "win-amd64", X86_64, X86_64, id="win-x64"),
+        pytest.param(
+            "win32", "ARM64", 64, "win-amd64", X86_64, AARCH64, id="win-x64-on-arm64"
+        ),
+        pytest.param("win32", "ARM64", 64, "win-arm64", AARCH64, AARCH64, id="win-arm"),
+    ),
+)
+def test_interpreter_and_machine_architectures(
+    monkeypatch, fresh_caches, sys_platform, machine, bits, build, interpreter, native
+):
+    """The interpreter and the machine each get their own architecture."""
+    monkeypatch.setattr(detection_module.sys, "platform", sys_platform)
+    monkeypatch.setattr(detection_module.sys, "maxsize", 2 ** (bits - 1) - 1)
+    monkeypatch.setattr(detection_module.platform, "machine", lambda: machine)
+    if build:
+        monkeypatch.setattr(sysconfig, "get_platform", lambda: build)
+    assert current_architecture() is interpreter
+    assert machine_architecture() is native
+
+
+def test_architecture_width_follows_interpreter():
+    """The architecture has the width of the interpreter, the machine at least that."""
+    is_64_bit = sys.maxsize > 2**32
+    assert (current_architecture() in ARCH_64_BIT) is is_64_bit
+    if is_64_bit:
+        assert machine_architecture() in ARCH_64_BIT
 
 
 PLATFORM_HOST_SIGNALS = frozenset((

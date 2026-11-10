@@ -6,8 +6,10 @@
 > This version is **not released yet** and is under active development.
 
 - Add webOS platform detection: `WEBOS` / `is_webos()` (via `ID=starfish` in the `os-release` file of LG TVs).
+- Add `machine_architecture()`, which returns the architecture of the machine, beside the interpreter's from `current_architecture()`.
 - Point the `CIRRUS_CI` and `CLEARLINUX` URLs to GitHub, since both projects shut down.
 - Test the PyPI sdist in CI, outside a git checkout, on the newest dependency releases.
+- Detect the architecture of the interpreter: a 32-bit Python on a 64-bit kernel is now `ARMV8L` or `I686`, and an x64 Python on Windows for ARM is `X86_64`. Use `machine_architecture()` for the architecture of the machine.
 
 ## [`14.0.1` (2026-10-31)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.0...v14.0.1)
 

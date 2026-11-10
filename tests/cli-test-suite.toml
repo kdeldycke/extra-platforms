@@ -24,6 +24,7 @@ stdout_contains = [
 exit_code = 0
 stdout_contains = [
   "── Architecture ──",
+  "── Machine architecture ──",
   "── Platform ──",
   "── Shell ──",
   "── Terminal ──",
@@ -33,13 +34,15 @@ stdout_contains = [
   "── Detected groups ──",
 ]
 
-# JSON output exposes all six trait categories plus version and groups.
+# JSON output exposes all six trait categories, the machine architecture, the
+# version and the groups.
 [[cases]]
 cli_parameters = "--json"
 exit_code = 0
 stdout_contains = [
   '"version":',
   '"architecture":',
+  '"machine_architecture":',
   '"platform":',
   '"shell":',
   '"terminal":',

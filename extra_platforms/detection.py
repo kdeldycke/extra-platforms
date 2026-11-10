@@ -77,7 +77,7 @@ from pathlib import Path, PureWindowsPath
 
 from . import _process_tree
 from .agent_data import UNKNOWN_AGENT
-from .architecture_data import UNKNOWN_ARCHITECTURE
+from .architecture_data import AARCH64, UNKNOWN_ARCHITECTURE, X86_64
 from .ci_data import UNKNOWN_CI
 from .group_data import (
     ALL_AGENTS,
@@ -143,6 +143,13 @@ _SHELL_BY_EXECUTABLE = {
     name: shell for shell in _SHELLS for name in shell.executable_names
 }
 """Maps every file name a shell's binary goes by to its shell."""
+
+
+_AARCH64_MACHINES = frozenset(("aarch64", "arm64"))
+"""Lowercased {func}`platform.machine` values of {data}`~extra_platforms.AARCH64`.
+
+Linux reports ``aarch64``, macOS ``arm64`` and Windows ``ARM64``.
+"""
 
 
 _AGENT_PRESENCE_ENV_VARS = ("LLM", "AI_AGENT")
@@ -227,6 +234,27 @@ _DUMB_TERMS = frozenset(("", "dumb", "su", "unknown"))
 ``unknown`` as its aliases (``dumb|su|unknown`` in ``/usr/share/misc/termcap``).
 Non-interactive SSH sessions set them: ``TERM=dumb`` on NixOS, ``TERM=su`` on
 FreeBSD. {func}`current_terminal` does not expect a terminal emulator there.
+"""
+
+
+_WINDOWS_INTERPRETER_MACHINES = {
+    "win-amd64": "x86_64",
+    "win-arm64": "aarch64",
+    "win32": "i686",
+}
+"""Machine a Windows interpreter runs as, keyed by {func}`sysconfig.get_platform`.
+
+On Windows, CPython derives that platform from the build of the interpreter
+([`Modules/_sysconfig.c`](https://github.com/python/cpython/blob/e8c0584877e0b0a82ee8e0707336d8df4d68ccb4/Modules/_sysconfig.c#L95-L108)),
+while {func}`platform.machine` reads the native CPU
+([`_get_machine_win32()`](https://github.com/python/cpython/blob/e8c0584877e0b0a82ee8e0707336d8df4d68ccb4/Lib/platform.py#L799-L824)).
+"""
+
+
+_X86_64_MACHINES = frozenset(("amd64", "i86pc", "x86_64"))
+"""Lowercased {func}`platform.machine` values of {data}`~extra_platforms.X86_64`.
+
+Windows reports ``AMD64``, the BSDs ``amd64``, Solaris and illumos ``i86pc``.
 """
 
 
@@ -325,6 +353,42 @@ def _report_unrecognized(
 
 
 @cache
+def _interpreter_machine() -> str:
+    """Return the machine the Python interpreter runs as, in `platform.machine` terms.
+
+    The architecture detection functions read this value, not
+    {func}`platform.machine`, which names the machine of the operating system. The
+    two differ for an interpreter narrower than the system, or emulated by it:
+
+    - On Windows, {data}`_WINDOWS_INTERPRETER_MACHINES` maps the platform the
+      interpreter was built for to its machine.
+    - Elsewhere, a 32-bit interpreter on a 64-bit ARM or x86 kernel runs as
+      ``armv8l`` or ``i686``. Under the ``linux32`` personality, the kernel reports
+      these names to a 32-bit process itself, and
+      [`packaging`](https://github.com/pypa/packaging/blob/843887fd431f8b3c10f1b39e1d4066ba3516147c/src/packaging/tags.py#L878-L890)
+      tags the wheels of such an interpreter the same way.
+
+    An interpreter is 32-bit when {data}`sys.maxsize` fits in 32 bits, the test
+    that [Python's documentation](https://docs.python.org/3/library/platform.html#platform.architecture)
+    recommends.
+    """
+    if sys.platform == "win32":
+        # Deferred import: only Windows needs sysconfig.
+        import sysconfig
+
+        machine = _WINDOWS_INTERPRETER_MACHINES.get(sysconfig.get_platform())
+        if machine:
+            return machine
+    machine = platform.machine()
+    if sys.maxsize <= 2**32:
+        if machine.lower() in _AARCH64_MACHINES:
+            return "armv8l"
+        if machine.lower() in _X86_64_MACHINES:
+            return "i686"
+    return machine
+
+
+@cache
 def is_aarch64() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.AARCH64`.
 
@@ -336,7 +400,7 @@ def is_aarch64() -> bool:
     - Windows: `ARM64`
     ```
     """
-    return platform.machine().lower() in ("aarch64", "arm64")
+    return _interpreter_machine().lower() in _AARCH64_MACHINES
 
 
 @cache
@@ -353,7 +417,7 @@ def is_arm() -> bool:
     {func}`~extra_platforms.is_armv8l`.
     ```
     """
-    return platform.machine().startswith("arm") and not (
+    return _interpreter_machine().startswith("arm") and not (
         is_aarch64() or is_armv5tel() or is_armv6l() or is_armv7l() or is_armv8l()
     )
 
@@ -361,121 +425,121 @@ def is_arm() -> bool:
 @cache
 def is_armv5tel() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.ARMV5TEL`."""
-    return platform.machine() == "armv5tel"
+    return _interpreter_machine() == "armv5tel"
 
 
 @cache
 def is_armv6l() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.ARMV6L`."""
-    return platform.machine() == "armv6l"
+    return _interpreter_machine() == "armv6l"
 
 
 @cache
 def is_armv7l() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.ARMV7L`."""
-    return platform.machine() == "armv7l"
+    return _interpreter_machine() == "armv7l"
 
 
 @cache
 def is_armv8l() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.ARMV8L`."""
-    return platform.machine() == "armv8l"
+    return _interpreter_machine() == "armv8l"
 
 
 @cache
 def is_i386() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.I386`."""
-    return platform.machine() in ("i386", "i486")
+    return _interpreter_machine() in ("i386", "i486")
 
 
 @cache
 def is_i586() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.I586`."""
-    return platform.machine() == "i586"
+    return _interpreter_machine() == "i586"
 
 
 @cache
 def is_i686() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.I686`."""
-    return platform.machine() == "i686"
+    return _interpreter_machine() == "i686"
 
 
 @cache
 def is_loongarch64() -> bool:
     """Return {data}`True` on {data}`~extra_platforms.LOONGARCH64`."""
-    return platform.machine() == "loongarch64"
+    return _interpreter_machine() == "loongarch64"
 
 
 @cache
 def is_mips() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.MIPS`."""
-    return platform.machine() == "mips"
+    return _interpreter_machine() == "mips"
 
 
 @cache
 def is_mips64() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.MIPS64`."""
-    return platform.machine() == "mips64"
+    return _interpreter_machine() == "mips64"
 
 
 @cache
 def is_mips64el() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.MIPS64EL`."""
-    return platform.machine() == "mips64el"
+    return _interpreter_machine() == "mips64el"
 
 
 @cache
 def is_mipsel() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.MIPSEL`."""
-    return platform.machine() == "mipsel"
+    return _interpreter_machine() == "mipsel"
 
 
 @cache
 def is_ppc() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.PPC`."""
-    return platform.machine() in ("ppc", "powerpc")
+    return _interpreter_machine() in ("ppc", "powerpc")
 
 
 @cache
 def is_ppc64() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.PPC64`."""
-    return platform.machine() == "ppc64"
+    return _interpreter_machine() == "ppc64"
 
 
 @cache
 def is_ppc64le() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.PPC64LE`."""
-    return platform.machine() == "ppc64le"
+    return _interpreter_machine() == "ppc64le"
 
 
 @cache
 def is_riscv32() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.RISCV32`."""
-    return platform.machine() == "riscv32"
+    return _interpreter_machine() == "riscv32"
 
 
 @cache
 def is_riscv64() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.RISCV64`."""
-    return platform.machine() == "riscv64"
+    return _interpreter_machine() == "riscv64"
 
 
 @cache
 def is_s390x() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.S390X`."""
-    return platform.machine() == "s390x"
+    return _interpreter_machine() == "s390x"
 
 
 @cache
 def is_sparc() -> bool:
     """Return {data}`True` if current architecture is {data}`~extra_platforms.SPARC`."""
-    return platform.machine() == "sparc"
+    return _interpreter_machine() == "sparc"
 
 
 @cache
 def is_sparc64() -> bool:
     """Return {data}`True` if the architecture is {data}`~extra_platforms.SPARC64`."""
-    return platform.machine() in ("sparc64", "sun4u", "sun4v")
+    return _interpreter_machine() in ("sparc64", "sun4u", "sun4v")
 
 
 @cache
@@ -515,7 +579,7 @@ def is_x86_64() -> bool:
     any more. Measured on OpenIndiana Hipster 2026.04.
     ```
     """
-    return platform.machine().lower() in ("x86_64", "amd64", "i86pc")
+    return _interpreter_machine().lower() in _X86_64_MACHINES
 
 
 @cache
@@ -2130,7 +2194,13 @@ def _single_match(
 
 @cache
 def current_architecture(strict: bool = False) -> Architecture:
-    """Return the {class}`~extra_platforms.Architecture` of the environment.
+    """Return the {class}`~extra_platforms.Architecture` the Python interpreter runs as.
+
+    This is the architecture the detection functions, the groups and the `pytest`
+    decorators all follow. A 32-bit Python on a 64-bit ARM kernel is
+    {data}`~extra_platforms.ARMV8L`, and in
+    {data}`~extra_platforms.ARCH_32_BIT`. The architecture of the machine itself
+    comes from {func}`machine_architecture`.
 
     Returns {data}`~extra_platforms.UNKNOWN_ARCHITECTURE` if not running inside a
     recognized architecture. To raise an error instead, set `strict` to `True`.
@@ -2144,10 +2214,51 @@ def current_architecture(strict: bool = False) -> Architecture:
     logs a `WARNING` and likely indicates a missing detection heuristic that
     should be [reported](https://github.com/kdeldycke/extra-platforms/issues).
     ```
+
+    ```{todo}
+    Also rename the machine of a 32-bit interpreter on a 64-bit PowerPC, SPARC,
+    MIPS or RISC-V kernel, once a measured host gives the name its kernel reports
+    to a 32-bit process. Only ARM and x86 get a name for now.
+    ```
     """
     return _single_match(
         _matching(ALL_ARCHITECTURES, Architecture), UNKNOWN_ARCHITECTURE, strict=strict
     )
+
+
+@cache
+def machine_architecture(strict: bool = False) -> Architecture:
+    """Return the {class}`~extra_platforms.Architecture` of the machine.
+
+    This is the architecture the operating system reports, from
+    {func}`platform.machine`. It differs from {func}`current_architecture` only on
+    a 64-bit ARM or x86 machine, for an interpreter that is narrower or emulated:
+
+    - a 32-bit Python on a 64-bit Linux kernel, like the one of LG's webOS TVs,
+    - a 32-bit Python on 64-bit Windows,
+    - an x64 Python emulated on Windows for ARM.
+
+    Everywhere else, it returns {func}`current_architecture`, with the same
+    `strict` behavior.
+
+    ```{caution}
+    The machine architecture is what the kernel runs, not what the system can
+    load. A 64-bit kernel with a 32-bit userland, like the one of LG's webOS TVs,
+    runs a static 64-bit binary, but lacks the loader and libraries that a
+    dynamically linked one needs.
+    ```
+
+    ```{todo}
+    Read the CPU under Rosetta 2 on macOS, where `platform.machine` reports the
+    translated architecture, once a measured host shows how.
+    ```
+    """
+    machine = platform.machine().lower()
+    if machine in _AARCH64_MACHINES:
+        return AARCH64
+    if machine in _X86_64_MACHINES:
+        return X86_64
+    return current_architecture(strict=strict)
 
 
 @cache
