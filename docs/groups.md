@@ -241,6 +241,9 @@ print(generate_sphinx_directives(ALL_GROUPS, "autodata", "symbol_id"))
 ## Trait and group operations
 
 ```{eval-rst}
+.. Autodoc reads the docstring of types.UnionType off a re-exported union alias,
+   so this entry carries its own text.
+
 .. py:data:: NestedReferences
 
    Type for arbitrary nested references to traits and groups. A reference is a
