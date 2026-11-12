@@ -1,9 +1,6 @@
 # Changelog
 
-## [`15.0.0.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.1...main)
-
-> [!WARNING]
-> This version is **not released yet** and is under active development.
+## [`15.0.0` (2026-11-12)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.1...v15.0.0)
 
 - **Breaking:** Detect the architecture of the interpreter: a 32-bit Python on a 64-bit ARM or x86 kernel is now `ARMV8L` or `I686`, and an x64 Python on Windows for ARM is `X86_64`. Use `machine_architecture()` for the architecture of the machine.
 - **Deprecated:** `_types._TNestedReferences`, replaced by `NestedReferences`, and the `_utils._remove_blanks()` and `_utils._recursive_update()` helpers, which now warn. `16.0.0` removes all three.
