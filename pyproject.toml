@@ -322,9 +322,9 @@ docs = [
   # sphinx-copybutton 0.5 inlines its icon as an SVG, which furo colors to match
   # the theme.
   "sphinx-copybutton>=0.5",
-  # sphinx-design 0.7 is the first release to accept Sphinx 9, which this group
-  # requires.
-  "sphinx-design>=0.7",
+  # sphinx-design 0.8.0 added the `:orientation: vertical` option of `tab-set`,
+  # which the install page sets: an older release fails the build on it.
+  "sphinx-design>=0.8",
   # sphinxcontrib-mermaid 1.2.3 fixed mermaid_d3_zoom configuration support,
   # which docs/conf.py enables.
   "sphinxcontrib-mermaid>=1.2.3",
@@ -343,7 +343,10 @@ exclude-newer = "1 week"
 # click-extra is published by this repository's own maintainer: the cooldown
 # guards against a compromised upstream, which does not apply here, and it
 # otherwise holds each release back a week from the projects that consume it.
-exclude-newer-package = { click-extra = "2026-11-08T00:00:00Z" }
+# XXX The `sphinx-design` entry lets the `sphinx-design>=0.8` floor of the docs
+# group resolve inside its cooldown: drop this comment once `sync-uv-lock`
+# prunes the entry.
+exclude-newer-package = { click-extra = "2026-11-08T00:00:00Z", sphinx-design = "0 days" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 build-backend.source-exclude = [
@@ -674,6 +677,10 @@ abandoned-versions = [ "1.0.1" ]
 # refreshed by `click-extra refresh-directives` (update-docs Phase 4). Disable
 # the Phase 3 update-script (its default points at the deleted file).
 docs.update-script = ""
+# XXX Drop once `lint-deps` reports that this entry exempts nothing.
+lint-deps.allow.sphinx-design = """\
+  sphinx-design 0.8.0 is on PyPI: only a docs install under a cooldown fails, until 2026-11-17.\
+  """
 # Bundled template entries the seeded tool configs leave out on purpose.
 # lint-repo prints each reason in place of a missing-entry warning.
 lint-repo.declined.pytest.addopts."--cov-report=term" = """\

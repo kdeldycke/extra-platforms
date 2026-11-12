@@ -67,7 +67,7 @@ False
 This package is [available on PyPI](https://pypi.python.org/pypi/extra-platforms) and in several OS distributions, so you can install the latest stable release with your favorite package manager:
 
 `````{tab-set}
-:class: tabs-vertical
+:orientation: vertical
 ````{tab-item} uv
 Easiest way is to [install `uv`](https://docs.astral.sh/uv/getting-started/installation/), then add it to your project:
 
