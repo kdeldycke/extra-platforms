@@ -1,5 +1,10 @@
 # Changelog
 
+## [`15.0.1.dev0` (unreleased)](https://github.com/kdeldycke/extra-platforms/compare/v15.0.0...main)
+
+> [!WARNING]
+> This version is **not released yet** and is under active development.
+
 ## [`15.0.0` (2026-11-12)](https://github.com/kdeldycke/extra-platforms/compare/v14.0.1...v15.0.0)
 
 - **Breaking:** Detect the architecture of the interpreter: a 32-bit Python on a 64-bit ARM or x86 kernel is now `ARMV8L` or `I686`, and an x64 Python on Windows for ARM is `X86_64`. Use `machine_architecture()` for the architecture of the machine.
