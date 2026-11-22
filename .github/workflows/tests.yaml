@@ -200,8 +200,10 @@ jobs:
           EXTRA_PLATFORMS_TEST_MATRIX: ${{ toJson(matrix) }}
         # Coverage and parallelism live here rather than in [tool.pytest]
         # addopts so a from-source packager build can run a plain `pytest`
-        # without coverage or pytest-xdist. --dist=loadgroup honors the
-        # xdist_group markers (the sphinx tests must share one worker).
+        # without coverage or pytest-xdist. --dist=loadgroup sends the tests of an
+        # xdist_group to one worker, but pytest 9.2.0 with pytest-xdist 3.8.0
+        # ignores the marker (pytest-dev/pytest-xdist#1407), so the sphinx tests
+        # also lock their docs build.
         #
         # `coverage run` starts measuring before pytest imports the package as a
         # plugin. See `[tool.coverage]` in pyproject.toml for the rationale.

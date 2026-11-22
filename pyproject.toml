@@ -671,10 +671,6 @@ abandoned-versions = [ "1.0.1" ]
 # refreshed by `click-extra refresh-directives` (update-docs Phase 4). Disable
 # the Phase 3 update-script (its default points at the deleted file).
 docs.update-script = ""
-# XXX Drop once `lint-deps` reports that this entry exempts nothing.
-lint-deps.allow.sphinx-design = """\
-  sphinx-design 0.8.0 is on PyPI: only a docs install under a cooldown fails, until 2026-11-17.\
-  """
 # Bundled template entries the seeded tool configs leave out on purpose.
 # lint-repo prints each reason in place of a missing-entry warning.
 lint-repo.declined.pytest.addopts."--cov-report=term" = """\

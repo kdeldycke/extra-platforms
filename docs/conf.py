@@ -3,8 +3,12 @@ from __future__ import annotations
 import re
 import tomllib
 from collections import Counter
-from datetime import UTC, date, datetime
+from datetime import date
 from pathlib import Path
+
+from click_extra.sphinx.announcement import years_since
+
+from extra_platforms import is_github_ci
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -36,9 +40,8 @@ author = ", ".join(author["name"] for author in toml_config["project"]["authors"
 project = " ".join(word.title() for word in project_id.split("-"))
 
 # Whole years since `1.0.0` (2024-08-19), the oldest entry of the changelog, for
-# the announcement banner below. Floored, so the figure is never ahead of the
-# anniversary it claims.
-maintained_years = (datetime.now(tz=UTC).date() - date(2024, 8, 19)).days // 365
+# the announcement banner below.
+maintained_years = years_since(date(2024, 8, 19))
 
 # Addons.
 extensions = [
@@ -65,19 +68,14 @@ extensions = [
 ]
 
 # https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
+# Enable an extension only once the docs use its syntax.
 myst_enable_extensions = [
     # Render GitHub-style alerts (> [!NOTE], > [!WARNING], …) as admonitions.
     # readme.md, changelog.md and install.md use them, and are pulled into the
     # docs via {include}; without this they degrade to plain blockquotes.
     "alert",
-    "attrs_block",
-    "attrs_inline",
-    "deflist",
-    "fieldlist",
     "replacements",
     "smartquotes",
-    "strikethrough",
-    "tasklist",
 ]
 # XXX Allow ```mermaid``` directive to be used without curly braces
 # (```{mermaid}```), see:
@@ -97,6 +95,10 @@ myst_heading_slug_func = "docutils.nodes.make_id"
 # every warning through `[tool.repomatic] sphinx.fail-on-warning`, so this list
 # is what still fails a local build run without `--fail-on-warning`.
 click_extra_fail_on_warnings = ["click_extra.todo_unrendered", "myst.xref_missing"]
+
+# Anchor each changelog release on its version, like `#v15-0-0`, in place of a
+# positional `#idN`, which every new release moves down by one.
+click_extra_release_anchors = True
 
 mermaid_d3_zoom = True
 
@@ -140,14 +142,8 @@ linkcheck_ignore = [
 ]
 
 # GitHub renders issue comments, README tab anchors and blob line anchors with
-# JavaScript, so the linkcheck builder cannot find them in the static HTML.
-linkcheck_anchors_ignore = [
-    r"issuecomment-\d+",
-    r"readme",
-    r"L\d+",
-]
-
-# GitHub README anchors are JS-rendered and invisible to linkcheck.
+# JavaScript, so the linkcheck builder cannot find them in the static HTML: skip
+# anchor checks for the whole host.
 linkcheck_anchors_ignore_for_url = [
     r"https://github\.com/",
 ]
@@ -227,10 +223,10 @@ html_theme_options = {
 
 # OpenGraph social previews. sphinxext.opengraph joins ogp_image onto
 # ogp_site_url, so every page emits the same absolute URL for its social card.
-# The card is the site's own copy, served from _static/ (see below).
+# The card is the site's own copy, served from _static/ (see below). Its alt text
+# defaults to the site name, which is `project`.
 ogp_site_url = docs_site_url
 ogp_image = "_static/banner-social-light.png"
-ogp_image_alt = project
 
 # Individual files are copied to the root of _static/, which is where Furo looks
 # for the light_logo/dark_logo pair, and where the og:image card above lives.
@@ -259,27 +255,6 @@ copybutton_exclude = ".linenos, .gp, .go"
 html_last_updated_fmt = "%Y-%m-%d"
 copyright = f"{author} and contributors"
 html_show_sphinx = False
-
-
-# XXX Drop this hook once a Sphinx release ships a fix for
-# https://github.com/sphinx-doc/sphinx/issues/14675.
-def drop_unused_viewcode_modules(app: Sphinx, env: BuildEnvironment) -> None:
-    """Forget each module `sphinx.ext.viewcode` read but no document links.
-
-    `viewcode` reads the source of every module a documented object may come
-    from, and keeps an entry for that module even when none of its objects gets
-    a `[source]` link. A serial read drops such an entry when it purges the next
-    document. A parallel read merges the entries of its workers after every
-    purge has run, so each unused module becomes a published page that nothing
-    links to (sphinx-doc/sphinx#14675). Dropping the entries with no recorded
-    use gives both reads the same output.
-    """
-    modules = getattr(env, "_viewcode_modules", {})
-    for modname, entry in list(modules.items()):
-        # A module viewcode could not read is `False`. A read one is a tuple of
-        # its code, its tags, the objects documented from it, and its refname.
-        if entry and not entry[2]:
-            del modules[modname]
 
 
 # XXX Drop this hook once a Sphinx release ships
@@ -350,37 +325,25 @@ def strip_title_icon_gap(
         context["title"] = OCTICON_TITLE_GAP.sub(r"\1", title)
 
 
-def rehome_moved_nodes(app: Sphinx, doctree: Any) -> None:
-    """Point every node of a page at the page's own document.
-
-    myst-parser parses an `{eval-rst}` block into a throwaway document that
-    shares the page's settings, then moves the parsed nodes into the page. The
-    moved nodes keep the throwaway document as theirs. Before it pickles a page,
-    Sphinx removes the build environment from a copy of the page's settings, not
-    from the settings object the throwaway document still holds. So without this
-    hook, every page holding an `{eval-rst}` block pickles the whole build
-    environment into its doctree.
-    """
-    for node in doctree.findall():
-        if node.document is not doctree:
-            node.document = doctree
-
-
 def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
     """Delete what Sphinx leaves in the output tree that is not content.
 
     The HTML builder writes `.buildinfo` from a finish task unconditionally, and
     `.buildinfo.bak` when its configuration check fails, so removing them once
-    the build ends is the only way to keep them out of the published tree.
+    the build ends is the only way to keep them out of the published tree. They
+    go in a GitHub Actions build alone: that build starts from an empty output
+    directory, and its tree is the one that gets published. A local incremental
+    build needs `.buildinfo`: without it, Sphinx `9.2.0` compares file times only,
+    so a changed html-only setting like `html_title` leaves every page as it was.
     `_sources/` is created before `html_copy_source` is consulted, so it is
-    removed here only while empty. The next local incremental build then finds
-    no marker and re-reads every document.
+    removed here only while empty.
     """
     if exception:
         return
     outdir = Path(app.outdir)
-    for marker in (".buildinfo", ".buildinfo.bak"):
-        (outdir / marker).unlink(missing_ok=True)
+    if is_github_ci():
+        for marker in (".buildinfo", ".buildinfo.bak"):
+            (outdir / marker).unlink(missing_ok=True)
     sources = outdir / "_sources"
     if sources.is_dir() and not any(sources.iterdir()):
         sources.rmdir()
@@ -388,10 +351,8 @@ def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
 
 def setup(app: Sphinx) -> None:
     """Connect the build hooks defined above."""
-    app.connect("env-updated", drop_unused_viewcode_modules)
     app.connect("env-updated", anchor_viewcode_backlinks)
     app.connect("env-updated", sort_todos)
     # Ahead of the default priority of sphinxext-opengraph.
     app.connect("html-page-context", strip_title_icon_gap, priority=400)
-    app.connect("doctree-read", rehome_moved_nodes)
     app.connect("build-finished", prune_build_artifacts)
