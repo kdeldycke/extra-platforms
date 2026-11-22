@@ -219,6 +219,7 @@ print(generate_decorators_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {deco}`~pytest.skip_nobara`               | {deco}`~pytest.unless_nobara`               |     | {data}`~NOBARA`               |
 | {deco}`~pytest.skip_nushell`              | {deco}`~pytest.unless_nushell`              |  𝜈   | {data}`~NUSHELL`              |
 | {deco}`~pytest.skip_nutyx`                | {deco}`~pytest.unless_nutyx`                |  🃏  | {data}`~NUTYX`                |
+| {deco}`~pytest.skip_omarchy`              | {deco}`~pytest.unless_omarchy`              |  ⧈   | {data}`~OMARCHY`              |
 | {deco}`~pytest.skip_openbsd`              | {deco}`~pytest.unless_openbsd`              |  🐡  | {data}`~OPENBSD`              |
 | {deco}`~pytest.skip_opensuse`             | {deco}`~pytest.unless_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {deco}`~pytest.skip_openwrt`              | {deco}`~pytest.unless_openwrt`              |  📶  | {data}`~OPENWRT`              |

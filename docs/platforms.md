@@ -110,6 +110,7 @@ print(generate_trait_table(ALL_PLATFORMS))
 |  ❄️  | {data}`~NIXOS`         | NixOS                          | {func}`~is_nixos`         |
 |     | {data}`~NOBARA`        | Nobara                         | {func}`~is_nobara`        |
 |  🃏  | {data}`~NUTYX`         | NuTyX                          | {func}`~is_nutyx`         |
+|  ⧈   | {data}`~OMARCHY`       | Omarchy                        | {func}`~is_omarchy`       |
 |  🐡  | {data}`~OPENBSD`       | OpenBSD                        | {func}`~is_openbsd`       |
 |  🦎  | {data}`~OPENSUSE`      | openSUSE                       | {func}`~is_opensuse`      |
 |  📶  | {data}`~OPENWRT`       | OpenWrt                        | {func}`~is_openwrt`       |
@@ -209,7 +210,7 @@ config: {"sankey": {"showValues": false, "width": 800, "height": 800}}
 ---
 sankey-beta
 
-ALL_PLATFORMS,LINUX,52
+ALL_PLATFORMS,LINUX,53
 ALL_PLATFORMS,BSD,7
 ALL_PLATFORMS,SYSTEM_V,3
 ALL_PLATFORMS,UNIX_LAYERS,2
@@ -247,6 +248,7 @@ LINUX,MANJARO,1
 LINUX,NIXOS,1
 LINUX,NOBARA,1
 LINUX,NUTYX,1
+LINUX,OMARCHY,1
 LINUX,OPENSUSE,1
 LINUX,OPENWRT,1
 LINUX,ORACLE,1
@@ -352,6 +354,7 @@ mindmap
             (❄️ NIXOS)
             ( NOBARA)
             (🃏 NUTYX)
+            (⧈ OMARCHY)
             (🦎 OPENSUSE)
             (📶 OPENWRT)
             (🦴 ORACLE)

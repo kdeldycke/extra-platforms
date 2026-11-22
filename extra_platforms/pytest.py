@@ -299,6 +299,7 @@ if TYPE_CHECKING:
     skip_nobara: MarkDecorator
     skip_nushell: MarkDecorator
     skip_nutyx: MarkDecorator
+    skip_omarchy: MarkDecorator
     skip_openbsd: MarkDecorator
     skip_opensuse: MarkDecorator
     skip_openwrt: MarkDecorator
@@ -492,6 +493,7 @@ if TYPE_CHECKING:
     unless_nobara: MarkDecorator
     unless_nushell: MarkDecorator
     unless_nutyx: MarkDecorator
+    unless_omarchy: MarkDecorator
     unless_openbsd: MarkDecorator
     unless_opensuse: MarkDecorator
     unless_openwrt: MarkDecorator

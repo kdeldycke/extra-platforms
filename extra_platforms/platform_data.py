@@ -170,6 +170,8 @@ Unicode-based, the other that is NerdFont-based.
 
 NUTYX = Platform("nutyx", "NuTyX", "🃏", "https://nutyx.org")
 
+OMARCHY = Platform("omarchy", "Omarchy", "⧈", "https://omarchy.org")
+
 OPENBSD = Platform("openbsd", "OpenBSD", "🐡", "https://openbsd.org")
 
 OPENSUSE = Platform("opensuse", "openSUSE", "🦎", "https://opensuse.org")

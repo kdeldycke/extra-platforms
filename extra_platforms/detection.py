@@ -936,6 +936,12 @@ def is_nutyx() -> bool:
 
 
 @cache
+def is_omarchy() -> bool:
+    """Return {data}`True` if current platform is {data}`~extra_platforms.OMARCHY`."""
+    return os_release_id() == "omarchy"
+
+
+@cache
 def is_openbsd() -> bool:
     """Return {data}`True` if current platform is {data}`~extra_platforms.OPENBSD`."""
     return sys.platform.startswith("openbsd") or os_release_id() == "openbsd"

@@ -8,6 +8,7 @@
 - **Breaking:** Detect the architecture of the interpreter: a 32-bit Python on a 64-bit ARM or x86 kernel is now `ARMV8L` or `I686`, and an x64 Python on Windows for ARM is `X86_64`. Use `machine_architecture()` for the architecture of the machine.
 - **Deprecated:** `_types._TNestedReferences`, replaced by `NestedReferences`, and the `_utils._remove_blanks()` and `_utils._recursive_update()` helpers, which now warn. `16.0.0` removes all three.
 - Add webOS platform detection: `WEBOS` and `is_webos()` match the `ID=starfish` of LG TVs, and `Platform.info()` reports their codename from `/etc/starfish-release`.
+- Add Omarchy platform detection: `OMARCHY` and `is_omarchy()` match the `ID=omarchy` of its `os-release` file.
 - Add `machine_architecture()`, which returns the architecture of the machine, and report it in the `extra-platforms` CLI and its `--json` output.
 - Add the `NestedReferences` type alias, for the nested trait and group references that `Group` methods and `reduce()` accept.
 - Point the `CIRRUS_CI` and `CLEARLINUX` URLs to GitHub.

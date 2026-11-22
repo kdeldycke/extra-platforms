@@ -233,6 +233,7 @@ print(generate_trait_table(ALL_TRAITS, include_type=True, include_hint=False))
 |     | {data}`~NOBARA`               | Nobara                         | {func}`~is_nobara`               | Platform     |
 |  𝜈   | {data}`~NUSHELL`              | Nushell                        | {func}`~is_nushell`              | Shell        |
 |  🃏  | {data}`~NUTYX`                | NuTyX                          | {func}`~is_nutyx`                | Platform     |
+|  ⧈   | {data}`~OMARCHY`              | Omarchy                        | {func}`~is_omarchy`              | Platform     |
 |  🐡  | {data}`~OPENBSD`              | OpenBSD                        | {func}`~is_openbsd`              | Platform     |
 |  🦎  | {data}`~OPENSUSE`             | openSUSE                       | {func}`~is_opensuse`             | Platform     |
 |  📶  | {data}`~OPENWRT`              | OpenWrt                        | {func}`~is_openwrt`              | Platform     |

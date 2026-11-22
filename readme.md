@@ -175,6 +175,7 @@ mappingproxy({
     'nixos': Platform(id='nixos', name='NixOS'),
     'nobara': Platform(id='nobara', name='Nobara'),
     'nutyx': Platform(id='nutyx', name='NuTyX'),
+    'omarchy': Platform(id='omarchy', name='Omarchy'),
     'opensuse': Platform(id='opensuse', name='openSUSE'),
     'openwrt': Platform(id='openwrt', name='OpenWrt'),
     'oracle': Platform(id='oracle', name='Oracle Linux'),
@@ -198,7 +199,7 @@ mappingproxy({
     'xenserver': Platform(id='xenserver', name='XenServer'),
 })
 >>> LINUX.member_ids
-frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'webos', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'artix', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'crux', 'nutyx', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux', 'solus'})
+frozenset({'rocky', 'kvmibm', 'pidora', 'pikaos', 'sourcemage', 'sles', 'tuxedo', 'rhel', 'opensuse', 'android', 'ultramarine', 'fedora', 'ubuntu', 'nixos', 'generic_linux', 'oracle', 'buildroot', 'gentoo', 'void', 'webos', 'chromeos', 'almalinux', 'alpine', 'slackware', 'arch', 'artix', 'centos', 'amzn', 'xenserver', 'nobara', 'cachyos', 'cloudlinux', 'crux', 'nutyx', 'omarchy', 'ibm_powerkvm', 'kali', 'exherbo', 'mandriva', 'openwrt', 'raspbian', 'debian', 'endeavouros', 'altlinux', 'guix', 'slitaz', 'linuxmint', 'mageia', 'scientific', 'manjaro', 'parallels', 'clearlinux', 'solus'})
 >>> print("\n".join([p.name for p in LINUX]))
 AlmaLinux
 Alpine Linux
@@ -231,6 +232,7 @@ Manjaro Linux
 NixOS
 Nobara
 NuTyX
+Omarchy
 openSUSE
 OpenWrt
 Oracle Linux
@@ -385,6 +387,7 @@ mindmap
             (❄️ NIXOS)
             ( NOBARA)
             (🃏 NUTYX)
+            (⧈ OMARCHY)
             (🦎 OPENSUSE)
             (📶 OPENWRT)
             (🦴 ORACLE)

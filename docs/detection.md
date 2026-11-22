@@ -142,6 +142,7 @@ print(generate_all_detection_function_table(chain(ALL_TRAITS, ALL_GROUPS)))
 | {func}`~is_nobara`               |     | {data}`~NOBARA`               |
 | {func}`~is_nushell`              |  𝜈   | {data}`~NUSHELL`              |
 | {func}`~is_nutyx`                |  🃏  | {data}`~NUTYX`                |
+| {func}`~is_omarchy`              |  ⧈   | {data}`~OMARCHY`              |
 | {func}`~is_openbsd`              |  🐡  | {data}`~OPENBSD`              |
 | {func}`~is_opensuse`             |  🦎  | {data}`~OPENSUSE`             |
 | {func}`~is_openwrt`              |  📶  | {data}`~OPENWRT`              |
