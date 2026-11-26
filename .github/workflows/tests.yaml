@@ -327,7 +327,7 @@ jobs:
           uv --no-progress tool uninstall extra-platforms
       - name: Run CLI via pipx
         run: |
-          uv --no-progress tool install pipx
+          uv --no-progress tool install 'pipx==1.18.19'
           pipx run                                                                      extra-platforms
           pipx run --spec extra-platforms                                                extra-platforms
           pipx run --spec git+https://github.com/kdeldycke/extra-platforms              extra-platforms
