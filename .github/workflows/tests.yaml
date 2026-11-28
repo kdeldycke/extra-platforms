@@ -294,6 +294,11 @@ jobs:
       # job inherits `permissions: {}`, takes no secrets, and only runs the CLI
       # on a throwaway runner.
       UV_EXCLUDE_NEWER: P0D
+    defaults:
+      run:
+        # Bash on every runner, Windows included: the steps use its syntax. Bash also stops a step at the first
+        # command that fails, while a pwsh step fails only on the exit code of its last command.
+        shell: bash
     steps:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
@@ -326,8 +331,6 @@ jobs:
           extra-platforms
           uv --no-progress tool uninstall extra-platforms
       - name: Run CLI via pipx
-        # Bash on Windows too: it expands `${COOLDOWN_DAYS}`, and stops on the first command that fails.
-        shell: bash
         env:
           # pipx is a tool of this job, not its subject, so its install keeps the cooldown that the job lifts. The
           # `pipx run` calls below still fetch the release under test with no window.
@@ -339,9 +342,8 @@ jobs:
           pipx run --spec git+https://github.com/kdeldycke/extra-platforms              extra-platforms
           uv --no-progress tool uninstall pipx
       - name: Run stable CLI via uv pip
-        # Bash on every runner, so the first command that fails stops the step. A venv keeps its scripts in
-        # `Scripts/` on Windows and in `bin/` elsewhere: the step calls the script there, never one found on PATH.
-        shell: bash
+        # A venv keeps its scripts in `Scripts/` on Windows and in `bin/` elsewhere: the step calls the script there,
+        # never one found on PATH.
         run: |
           uv --no-progress venv
           if [ -d .venv/Scripts ]; then bin=.venv/Scripts; else bin=.venv/bin; fi
@@ -349,7 +351,6 @@ jobs:
           "${bin}/extra-platforms"
           uv --no-progress pip uninstall extra-platforms
       - name: Run dev CLI via uv pip
-        shell: bash
         run: |
           if [ -d .venv/Scripts ]; then bin=.venv/Scripts; else bin=.venv/bin; fi
           uv --no-progress pip install git+https://github.com/kdeldycke/extra-platforms
