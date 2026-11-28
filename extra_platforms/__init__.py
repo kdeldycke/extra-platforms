@@ -477,7 +477,7 @@ from .trait import (
     Trait,
 )
 
-__version__ = "15.0.0"
+__version__ = "15.0.1.dev0"
 
 
 __all__ = (
