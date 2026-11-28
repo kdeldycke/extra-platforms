@@ -2,9 +2,9 @@ flowchart LR
     extra_platforms[["`extra-platforms`"]]
 
     pygments(["`pygments`"])
+    docutils(["`docutils`"])
     jinja2(["`jinja2`"])
     beautifulsoup4(["`beautifulsoup4`"])
-    docutils(["`docutils`"])
     markdown_it_py(["`markdown-it-py`"])
     packaging(["`packaging`"])
     accessible_pygments(["`accessible-pygments`"])
@@ -14,6 +14,7 @@ flowchart LR
     mdit_py_plugins(["`mdit-py-plugins`"])
     pyyaml(["`pyyaml`"])
     sphinx_basic_ng(["`sphinx-basic-ng`"])
+    sphinx_last_updated_by_git(["`sphinx-last-updated-by-git`"])
     tabulate(["`tabulate`"])
     typing_extensions(["`typing-extensions`"])
     wcmatch(["`wcmatch`"])
@@ -48,13 +49,14 @@ flowchart LR
 
     subgraph grp_docs [--group docs]
         sphinx{{"`sphinx >=9.1`"}}
-        click_extra{{"`click-extra >=10.2`"}}
-        myst_parser{{"`myst-parser >=5.1`"}}
+        click_extra{{"`click-extra >=10.4`"}}
+        myst_parser{{"`myst-parser >=5.2`"}}
         furo{{"`furo >=2025.12.19`"}}
-        sphinxcontrib_mermaid{{"`sphinxcontrib-mermaid >=1.2.3`"}}
-        sphinx_autodoc_typehints{{"`sphinx-autodoc-typehints >=2`"}}
-        sphinx_copybutton{{"`sphinx-copybutton >=0.5`"}}
+        sphinx_autodoc_typehints{{"`sphinx-autodoc-typehints >=3.14`"}}
+        sphinxcontrib_mermaid{{"`sphinxcontrib-mermaid >=2.1`"}}
+        sphinx_copybutton{{"`sphinx-copybutton >=0.5.2`"}}
         sphinx_design{{"`sphinx-design >=0.8`"}}
+        sphinx_sitemap{{"`sphinx-sitemap >=2.6`"}}
         sphinxext_opengraph{{"`sphinxext-opengraph >=0.11`"}}
         grp_docs_pytest{{"`pytest >=8.4`"}}
     end
@@ -68,10 +70,10 @@ flowchart LR
         coverage{{"`coverage >=7.13`"}}
     end
 
-    sphinx --> requests
     sphinx --> pygments
-    sphinx --> jinja2
+    sphinx --> requests
     sphinx --> docutils
+    sphinx --> jinja2
     sphinx --> packaging
     sphinx --> colorama
     sphinx --> alabaster
@@ -102,8 +104,8 @@ flowchart LR
     pytest --> iniconfig
     pytest --> pluggy
     myst_parser --> sphinx
-    myst_parser --> jinja2
     myst_parser --> docutils
+    myst_parser --> jinja2
     myst_parser --> markdown_it_py
     myst_parser --> mdit_py_plugins
     myst_parser --> pyyaml
@@ -116,18 +118,21 @@ flowchart LR
     requests --> charset_normalizer
     requests --> idna
     requests --> urllib3
+    sphinx_autodoc_typehints --> sphinx
+    sphinx_autodoc_typehints --> pygments
+    sphinx_autodoc_typehints --> docutils
+    sphinx_autodoc_typehints --> typing_extensions
     pytest_xdist --> pytest
     pytest_xdist --> execnet
     pytest_xdist --> psutil
     sphinxcontrib_mermaid --> sphinx
     sphinxcontrib_mermaid --> jinja2
     sphinxcontrib_mermaid --> pyyaml
-    sphinx_autodoc_typehints --> sphinx
-    sphinx_autodoc_typehints --> typing_extensions
     pytest_github_actions_annotate_failures --> pytest
     pytest_randomly --> pytest
     sphinx_copybutton --> sphinx
     sphinx_design --> sphinx
+    sphinx_sitemap --> sphinx_last_updated_by_git
     sphinxext_opengraph --> sphinx
     jinja2 --> markupsafe
     beautifulsoup4 --> typing_extensions
@@ -137,6 +142,7 @@ flowchart LR
     cloup --> click_0
     mdit_py_plugins --> markdown_it_py
     sphinx_basic_ng --> sphinx
+    sphinx_last_updated_by_git --> sphinx
     tabulate --> wcwidth
     wcmatch --> bracex
     extra_platforms -.-> ext_pytest
@@ -188,6 +194,8 @@ flowchart LR
     click sphinx_basic_ng "https://pypi.org/project/sphinx-basic-ng/" _blank
     click sphinx_copybutton "https://pypi.org/project/sphinx-copybutton/" _blank
     click sphinx_design "https://pypi.org/project/sphinx-design/" _blank
+    click sphinx_last_updated_by_git "https://pypi.org/project/sphinx-last-updated-by-git/" _blank
+    click sphinx_sitemap "https://pypi.org/project/sphinx-sitemap/" _blank
     click sphinxcontrib_applehelp "https://pypi.org/project/sphinxcontrib-applehelp/" _blank
     click sphinxcontrib_devhelp "https://pypi.org/project/sphinxcontrib-devhelp/" _blank
     click sphinxcontrib_htmlhelp "https://pypi.org/project/sphinxcontrib-htmlhelp/" _blank
@@ -218,6 +226,7 @@ flowchart LR
     style sphinx_autodoc_typehints stroke-width:3px
     style sphinx_copybutton stroke-width:3px
     style sphinx_design stroke-width:3px
+    style sphinx_sitemap stroke-width:3px
     style sphinxcontrib_mermaid stroke-width:3px
     style sphinxext_opengraph stroke-width:3px
     style ext_pytest_pytest stroke-width:3px,stroke-dasharray:5 5
