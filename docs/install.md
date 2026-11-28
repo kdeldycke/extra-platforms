@@ -18,14 +18,25 @@ Or inspect the current environment straight from your terminal with the bundled 
 $ uvx extra-platforms
 ```
 
-## Try it
+## Try it now
 
 You can try Extra Platforms right now in your terminal, without installing any dependency or virtual env [thanks to `uvx`](https://docs.astral.sh/uv/guides/tools/):
 
 `````{tab-set}
 ````{tab-item} Latest release
 ```shell-session
-$ uvx extra-platforms
+$ uvx extra-platforms --help
+```
+
+```{python:run}
+import os
+
+# Pin the wrapping width so the rendered help is reproducible across build hosts.
+os.environ["COLUMNS"] = "80"
+
+from extra_platforms.__main__ import build_parser
+
+print(build_parser().format_help())
 ```
 ````
 
@@ -62,9 +73,9 @@ True
 False
 ```
 
-## Install methods
+## Installation methods
 
-This package is [available on PyPI](https://pypi.python.org/pypi/extra-platforms) and in several OS distributions, so you can install the latest stable release with your favorite package manager:
+This package is [available on PyPI](https://pypi.org/project/extra-platforms/) and in several OS distributions, so you can install the latest stable release with your favorite package manager:
 
 `````{tab-set}
 :orientation: vertical
@@ -117,10 +128,6 @@ Extra Platforms is [available in GNU Guix](https://packages.guix.gnu.org/package
 
 ```{code-block} shell-session
 $ guix install python-extra-platforms
-```
-
-```{tip}
-The package [landed in Guix on 2026-06-28](https://codeberg.org/guix/guix/pulls/8047). If `guix install` cannot find it yet, refresh your channels first with `guix pull`.
 ```
 ````
 

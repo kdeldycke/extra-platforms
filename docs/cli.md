@@ -53,77 +53,62 @@ print(build_parser().format_help())
 
 ## Default output
 
-The default output prints each detected trait with its metadata, followed by summary tables of all detected traits and groups:
+The default output prints each detected trait with its metadata, followed by summary tables of all detected traits and groups. This sample is the start of the live report of the machine that built this documentation:
 
 ```{code-block} shell-session
 $ extra-platforms
-extra-platforms 14.0.1
+```
 
-── Architecture ── 📱 ARM64 (AArch64) ──[AARCH64]───────────
-            id: aarch64
-       aliases: arm64
-          name: ARM64 (AArch64)
-          icon: 📱
-           url: https://en.wikipedia.org/wiki/AArch64
-       current: True
-       machine: arm64
-        symbol: AARCH64
-     detection: is_aarch64()
-        pytest: @skip_aarch64, @unless_aarch64
-        groups: ALL_ARCHITECTURES, ALL_ARM, ALL_TRAITS, ARCH_64_BIT, LITTLE_ENDIAN
+```{python:run}
+import sys
+from contextlib import redirect_stdout
+from io import StringIO
 
-── Machine architecture ── 📱 ARM64 (AArch64) ──[AARCH64]───
-            id: aarch64
-          (...)
+from extra_platforms.__main__ import main
 
-── Platform ── 🍎 macOS ──[MACOS]───────────────────────────
-            id: macos
-          (...)
+argv, sys.argv = sys.argv, ["extra-platforms"]
+try:
+    with redirect_stdout(StringIO()) as report:
+        main()
+finally:
+    sys.argv = argv
+
+# Keep the version line and the first two trait sections.
+print("\n\n".join(report.getvalue().split("\n\n")[:3]))
+print("\n(...)")
 ```
 
 The `Machine architecture` section reports {func}`~machine_architecture`, the architecture of the machine. It differs from the `Architecture` section only when the interpreter runs as another machine, like a 32-bit Python on a 64-bit ARM or x86 kernel: see [Interpreter and machine](architectures.md#interpreter-and-machine).
 
 ## JSON output
 
-The `--json` flag produces a single JSON object with all detected traits and groups:
+The `--json` flag produces a single JSON object with all detected traits and groups. This sample is the live output of the machine that built this documentation, with all trait sections but the first and all groups but the first elided:
 
 ```{code-block} shell-session
 $ extra-platforms --json
 ```
 
-```{code-block} json
-{
-  "version": "14.0.1",
-  "architecture": {
-    "id": "aarch64",
-    "name": "ARM64 (AArch64)",
-    "icon": "📱",
-    "url": "https://en.wikipedia.org/wiki/AArch64",
-    "current": true,
-    "machine": "arm64",
-    "processor": null,
-    "aliases": ["arm64"],
-    "symbol": "AARCH64",
-    "detection": "is_aarch64",
-    "groups": ["ALL_ARCHITECTURES", "ALL_ARM", "ALL_TRAITS", "ARCH_64_BIT", "LITTLE_ENDIAN"]
-  },
-  "machine_architecture": { "..." : "..." },
-  "platform": { "..." : "..." },
-  "shell": { "..." : "..." },
-  "terminal": { "..." : "..." },
-  "ci": { "..." : "..." },
-  "agent": { "..." : "..." },
-  "groups": [
-    {
-      "id": "all_arm",
-      "name": "ARM architectures",
-      "icon": "📱",
-      "symbol": "ALL_ARM",
-      "detection": "is_any_arm",
-      "canonical": true
-    }
-  ]
-}
+```{python:run}
+:language: json
+import json
+import sys
+from contextlib import redirect_stdout
+from io import StringIO
+
+from extra_platforms.__main__ import main
+
+argv, sys.argv = sys.argv, ["extra-platforms", "--json"]
+try:
+    with redirect_stdout(StringIO()) as report:
+        main()
+finally:
+    sys.argv = argv
+
+data = json.loads(report.getvalue())
+for key in ("machine_architecture", "platform", "shell", "terminal", "ci", "agent"):
+    data[key] = {"...": "..."}
+data["groups"] = data["groups"][:1]
+print(json.dumps(data, indent=2, ensure_ascii=False))
 ```
 
 Each trait section contains:

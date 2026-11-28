@@ -14,6 +14,7 @@
 - Log an unrecognized terminal at `INFO` instead of `WARNING` when a CI system is detected or the `CI` variable is set.
 - Point the `CIRRUS_CI` and `CLEARLINUX` URLs to GitHub.
 - Document the PEP 740 attestations of the PyPI distributions on the install page.
+- Publish a sitemap and a 404 page with the documentation, and render its CLI samples live at build time.
 - Test the sdist in one CI cell, outside a git checkout, on the newest dependency releases.
 - Remove the retired `macos-14` runner from the test matrix.
 
