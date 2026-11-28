@@ -330,9 +330,10 @@ docs = [
   # sphinx-sitemap 2.6.0 added `sitemap_excludes`, which docs/conf.py uses to
   # keep the search and index pages out of the sitemap.
   "sphinx-sitemap>=2.6",
-  # sphinxcontrib-mermaid 1.2.3 fixed mermaid_d3_zoom configuration support,
-  # which docs/conf.py enables.
-  "sphinxcontrib-mermaid>=1.2.3",
+  # sphinxcontrib-mermaid 2.1.0 fixes the interaction of fullscreen, d3 zoom and
+  # lazy rendering, which the click_extra.sphinx override of the autoclasstree
+  # diagrams of trait.md and groups.md relies on.
+  "sphinxcontrib-mermaid>=2.1",
   # sphinxext-opengraph 0.11 escapes HTML characters in og:description, like the
   # <id> in the summary of the pytest page.
   "sphinxext-opengraph>=0.11",

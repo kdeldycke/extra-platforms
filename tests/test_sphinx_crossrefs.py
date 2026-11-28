@@ -59,6 +59,7 @@ DOCS_BUILD_MODULES = (
     "sphinx_autodoc_typehints",
     "sphinx_copybutton",
     "sphinx_design",
+    "sphinx_sitemap",
     "sphinxcontrib.mermaid",
     "sphinxext.opengraph",
 )

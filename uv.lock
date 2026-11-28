@@ -491,7 +491,7 @@ docs = [
     { name = "sphinx-copybutton", marker = "python_full_version >= '3.12'", specifier = ">=0.5.2" },
     { name = "sphinx-design", marker = "python_full_version >= '3.12'", specifier = ">=0.8" },
     { name = "sphinx-sitemap", marker = "python_full_version >= '3.12'", specifier = ">=2.6" },
-    { name = "sphinxcontrib-mermaid", marker = "python_full_version >= '3.12'", specifier = ">=1.2.3" },
+    { name = "sphinxcontrib-mermaid", marker = "python_full_version >= '3.12'", specifier = ">=2.1" },
     { name = "sphinxext-opengraph", marker = "python_full_version >= '3.12'", specifier = ">=0.11" },
 ]
 test = [
