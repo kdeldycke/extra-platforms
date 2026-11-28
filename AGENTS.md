@@ -149,6 +149,10 @@ The `*_data.py` files (trait and group definitions) should be clean and easy to 
 
 The canonical statement of this policy lives in the `platform_data.py` module docstring.
 
+### API documentation lives on the guide pages
+
+Each guide page is the documented home of the objects it covers: `architectures.md` documents every `Architecture` instance, `detection.md` every detection function, `trait.md` the trait classes. `extra_platforms.md` holds only `:no-index:` stubs. This departs from the `sphinx-docs` agent of repomatic, which puts each module on an API page of its own. The library is self-contained, so a reader finds each object on the page that explains it. `Trait.doc_page`, `Group.doc_page` and `tests/test_sphinx_crossrefs.py` encode this layout: do not split the API out.
+
 ### Icon conventions
 
 Icons are inspired by [Starship](https://starship.rs/) and [NerdFonts](https://www.nerdfonts.com/). Each trait and group has a single-glyph icon (1–2 Python `len()` characters, accounting for variation selectors like `U+FE0F`).
