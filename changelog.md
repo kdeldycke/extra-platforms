@@ -11,6 +11,7 @@
 - Add Omarchy platform detection: `OMARCHY` and `is_omarchy()` match the `ID=omarchy` of its `os-release` file.
 - Add `machine_architecture()`, which returns the architecture of the machine, and report it in the `extra-platforms` CLI and its `--json` output.
 - Add the `NestedReferences` type alias, for the nested trait and group references that `Group` methods and `reduce()` accept.
+- Log an unrecognized terminal at `INFO` instead of `WARNING` when a CI system is detected or the `CI` variable is set.
 - Point the `CIRRUS_CI` and `CLEARLINUX` URLs to GitHub.
 - Document the PEP 740 attestations of the PyPI distributions on the install page.
 - Test the sdist in one CI cell, outside a git checkout, on the newest dependency releases.

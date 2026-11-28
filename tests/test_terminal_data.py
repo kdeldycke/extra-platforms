@@ -39,16 +39,27 @@ from extra_platforms import (
     ],
 )
 @pytest.mark.parametrize("ssh", [False, True])
+@pytest.mark.parametrize(
+    "ci_env",
+    [
+        pytest.param({}, id="no-ci"),
+        pytest.param({"CI": "true"}, id="ci-variable"),
+        # A recognized CI system that sets no `CI` variable.
+        pytest.param({"TF_BUILD": "True"}, id="azure-pipelines"),
+    ],
+)
 def test_unrecognized_terminal_log_level(
-    term, level, ssh, monkeypatch, caplog, fresh_caches
+    term, level, ssh, ci_env, monkeypatch, caplog, fresh_caches
 ):
     """Only a ``TERM`` naming a terminal type makes an unrecognized one a warning.
 
     An SSH session forwards ``TERM`` alone, from the client running the emulator.
+    A CI runner attaches no emulator, whatever ``TERM`` the shell of a job sets.
     """
-    env = {"TERM": term}
+    env = {"TERM": term, **ci_env}
     if ssh:
         env["SSH_CONNECTION"] = "192.0.2.10 50000 192.0.2.20 22"
+    if ssh or ci_env:
         level = logging.INFO
     monkeypatch.setattr(detection, "environ", env)
     invalidate_caches()

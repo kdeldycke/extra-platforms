@@ -2480,7 +2480,9 @@ def current_terminal(strict: bool = False) -> Terminal:
     present but not recognized. Otherwise, it logs at `INFO` level: `TERM` is
     unset, or declares a dumb terminal (see `_DUMB_TERMS`). An SSH session also
     logs at `INFO`: its emulator runs on the client, out of reach of any
-    heuristic on the remote end.
+    heuristic on the remote end. So does a CI job, which a recognized CI system
+    or a set `CI` variable reveals: a CI runner attaches no emulator to its
+    jobs, whatever `TERM` their shell sets.
     ```
     """
     matching = _matching(ALL_TERMINALS, Terminal)
@@ -2494,7 +2496,11 @@ def current_terminal(strict: bool = False) -> Terminal:
 
     # A TERM naming a terminal type signals a terminal emulator is expected to
     # be present. A dumb terminal declares there is none, and an SSH session
-    # forwards TERM alone from the client running the emulator.
+    # forwards TERM alone from the client running the emulator. A CI runner
+    # attaches no emulator, whatever TERM the shell of a job sets: a Git Bash
+    # step on the Windows runners of GitHub Actions has `xterm-256color`. Azure
+    # Pipelines sets no `CI` variable, hence the check for a recognized system.
+    in_ci = "CI" in environ or bool(_matching(ALL_CI, CI))
     return _single_match(
         matching,
         UNKNOWN_TERMINAL,
@@ -2502,6 +2508,7 @@ def current_terminal(strict: bool = False) -> Terminal:
         expected=(
             environ.get("TERM", "") not in _DUMB_TERMS
             and "SSH_CONNECTION" not in environ
+            and not in_ci
         ),
     )
 
