@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import tomllib
-from collections import Counter
 from datetime import date
 from pathlib import Path
 
@@ -12,7 +11,6 @@ from extra_platforms import is_github_ci
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from sphinx.application import Sphinx
-    from sphinx.environment import BuildEnvironment
 
 project_path = Path(__file__).parent.parent.resolve()
 
@@ -129,11 +127,8 @@ linkcheck_ignore = [
     # claude.ai/code requires authentication.
     r"https://claude\.ai/code",
     # These sites return 403/418 to bots but are valid.
-    r"https://doi\.org/10\.5281/zenodo\.",
-    r"https://www\.freedesktop\.org/software/systemd/man/",
     r"https://www\.slackware\.com",
     r"https://software\.opensuse\.org/",
-    r"https://zenodo\.org/",
     # Intermittently unreachable from CI.
     r"https://([^/]+\.)?gnu\.org",
     r"https://midnightbsd\.org",
@@ -267,45 +262,6 @@ copyright = f"{author} and contributors"
 html_show_sphinx = False
 
 
-# XXX Drop this hook once a Sphinx release ships
-# https://github.com/sphinx-doc/sphinx/pull/14815. click_extra.sphinx runs the
-# same hook since 10.4.0, but this second pass stays: see the todo of
-# docs/contributing.md.
-def anchor_viewcode_backlinks(app: Sphinx, env: BuildEnvironment) -> None:
-    """Point the `[docs]` links of each viewcode page at the objects' own anchors.
-
-    `viewcode` builds every backlink of a module from one prefix: the module path of
-    the first signature that made it read that module. An instance like
-    `extra_platforms.ci_data.CIRRUS_CI` reports the `__module__` of its class, so it
-    can read `extra_platforms/trait.py` first and lend the whole module the
-    `extra_platforms.ci_data` prefix, under which no object is indexed. Which
-    signature comes first follows the read order, so the links change between two
-    parallel builds. Each module takes instead the prefix under which most of its
-    linked objects are indexed, and each link the page of that indexed object.
-    """
-    objects = env.domaindata["py"]["objects"]
-    modules = getattr(env, "_viewcode_modules", {})
-    for modname, entry in list(modules.items()):
-        if not entry:
-            continue
-        code, tags, used, _ = entry
-        parts = modname.split(".")
-        hits: Counter[str] = Counter()
-        for prefix in (".".join(parts[:depth]) for depth in range(1, len(parts) + 1)):
-            for fullname in used:
-                target = objects.get(f"{prefix}.{fullname}")
-                if target and not target.aliased:
-                    hits[prefix] += 1
-        if not hits:
-            continue
-        best = min(hits, key=lambda prefix: (-hits[prefix], prefix))
-        for fullname in used:
-            target = objects.get(f"{best}.{fullname}")
-            if target and not target.aliased:
-                used[fullname] = target.docname
-        modules[modname] = (code, tags, used, best)
-
-
 def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
     """Delete what Sphinx leaves in the output tree that is not content.
 
@@ -331,6 +287,5 @@ def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
 
 
 def setup(app: Sphinx) -> None:
-    """Connect the build hooks defined above."""
-    app.connect("env-updated", anchor_viewcode_backlinks)
+    """Connect the build hook defined above."""
     app.connect("build-finished", prune_build_artifacts)

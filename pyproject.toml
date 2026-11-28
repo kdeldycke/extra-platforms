@@ -302,9 +302,10 @@ test = [
   "requests>=2.34",
 ]
 docs = [
-  # click-extra 10.4 registers the todolist-order and og:title build hooks that
-  # docs/conf.py no longer carries: an older release reorders the todolist of a
-  # parallel build and leaves a space at the start of each og:title.
+  # click-extra 10.4 registers the viewcode, todolist and og:title build hooks
+  # that docs/conf.py no longer carries: an older release leaves the [docs] links
+  # of the viewcode pages and the todolist order to the read order of a parallel
+  # build, and a space at the start of each og:title.
   "click-extra[sphinx]>=10.4",
   # furo 2025.12.19 is the first release to accept Sphinx 9, which this group
   # requires.
