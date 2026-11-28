@@ -1,4 +1,4 @@
-# tests package
+# `tests` package
 
 ```{eval-rst}
 .. automodule:: tests
@@ -40,6 +40,15 @@
 
 ```{eval-rst}
 .. automodule:: tests.test_detection
+   :members:
+   :show-inheritance:
+   :undoc-members:
+```
+
+### tests.test_docs_anchors module
+
+```{eval-rst}
+.. automodule:: tests.test_docs_anchors
    :members:
    :show-inheritance:
    :undoc-members:
