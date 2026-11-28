@@ -302,30 +302,34 @@ test = [
   "requests>=2.34",
 ]
 docs = [
-  # click-extra 10.2 stacks the install methods of docs/install.md in vertical
-  # tabs and refreshes its envelope region: an older release lays the tabs out
-  # horizontally and never refreshes the region.
-  "click-extra[sphinx]>=10.2",
+  # click-extra 10.4 registers the todolist-order and og:title build hooks that
+  # docs/conf.py no longer carries: an older release reorders the todolist of a
+  # parallel build and leaves a space at the start of each og:title.
+  "click-extra[sphinx]>=10.4",
   # furo 2025.12.19 is the first release to accept Sphinx 9, which this group
   # requires.
   "furo>=2025.12.19",
-  # myst-parser 5.1 adds the "alert" extension that renders GitHub-style
-  # callouts (> [!NOTE], …) as admonitions. See docs/conf.py.
-  "myst-parser>=5.1",
+  # myst-parser 5.2 added the "docutils" heading slug preset that docs/conf.py
+  # sets: 5.1 reads it as an import path and fails the build.
+  "myst-parser>=5.2",
   # Autodoc imports extra_platforms.pytest to document its decorators, which needs
   # the pytest of the pytest extra.
   "pytest>=8.4",
   # We hard code links with a format that Sphinx only supports from 9.1 onwards.
   "sphinx>=9.1",
-  # sphinx-autodoc-typehints 2.0 adds the always_use_bars_union option that
-  # docs/conf.py sets.
-  "sphinx-autodoc-typehints>=2",
-  # sphinx-copybutton 0.5 inlines its icon as an SVG, which furo colors to match
-  # the theme.
-  "sphinx-copybutton>=0.5",
+  # sphinx-autodoc-typehints 3.14 resolves the `Mark` forward reference of the
+  # generated pytest decorators: 3.4 logs a forward_reference warning for each.
+  "sphinx-autodoc-typehints>=3.14",
+  # sphinx-copybutton 0.5.1 excludes the `.gp` prompt class by default, so the
+  # prompt pattern of docs/conf.py finds no prompt and a copy keeps the output
+  # lines. 0.5.2 dropped that default.
+  "sphinx-copybutton>=0.5.2",
   # sphinx-design 0.8.0 added the `:orientation: vertical` option of `tab-set`,
   # which the install page sets: an older release fails the build on it.
   "sphinx-design>=0.8",
+  # sphinx-sitemap 2.6.0 added `sitemap_excludes`, which docs/conf.py uses to
+  # keep the search and index pages out of the sitemap.
+  "sphinx-sitemap>=2.6",
   # sphinxcontrib-mermaid 1.2.3 fixed mermaid_d3_zoom configuration support,
   # which docs/conf.py enables.
   "sphinxcontrib-mermaid>=1.2.3",
@@ -341,6 +345,10 @@ dependency-groups.docs = { requires-python = ">= 3.12" }
 # Relative dates are fine here because the Renovate lock-maintenance job
 # (sync-uv-lock) reverts uv.lock when the only diff is timestamp noise.
 exclude-newer = "1 week"
+# click-extra is published by this repository's own maintainer: the cooldown
+# guards against a compromised upstream, which does not apply here, and it
+# otherwise holds each release back a week from the docs that need it.
+exclude-newer-package = { click-extra = "0 days" }
 # Package is at root level, not in "./src/".
 build-backend.module-root = ""
 build-backend.source-exclude = [

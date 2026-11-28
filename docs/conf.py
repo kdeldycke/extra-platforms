@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 import tomllib
 from collections import Counter
 from datetime import date
@@ -12,13 +11,8 @@ from extra_platforms import is_github_ci
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Any
-
     from sphinx.application import Sphinx
     from sphinx.environment import BuildEnvironment
-
-OCTICON_TITLE_GAP = re.compile(r"^(\s*<svg\b.*?</svg>)\s+", re.DOTALL)
-"""The space a heading octicon leaves between its SVG and the page title."""
 
 project_path = Path(__file__).parent.parent.resolve()
 
@@ -32,12 +26,17 @@ version = release = toml_config["project"]["version"]
 
 # Canonical origin of the published site, read from the one place that declares
 # it. The trailing slash is mandatory: Sphinx joins page paths onto it verbatim
-# to build each `<link rel="canonical">`.
+# to build each `<link rel="canonical">`, and sphinx-sitemap concatenates it with
+# every page link.
 docs_site_url = toml_config["project"]["urls"]["Documentation"].rstrip("/") + "/"
 author = ", ".join(author["name"] for author in toml_config["project"]["authors"])
 
 # Title-case each word of the project ID.
 project = " ".join(word.title() for word in project_id.split("-"))
+
+# GitHub account owning the project. Factored out so a rename touches one line
+# instead of every URL built from it below (repository, sponsors).
+github_user = "kdeldycke"
 
 # Whole years since `1.0.0` (2024-08-19), the oldest entry of the changelog, for
 # the announcement banner below.
@@ -54,6 +53,9 @@ extensions = [
     # UI/UX add-ons.
     "sphinx_copybutton",
     "sphinx_design",
+    # Emits sitemap.xml from html_baseurl, so crawlers find the API reference as
+    # well as the guide pages.
+    "sphinx_sitemap",
     "sphinxext.opengraph",
     # MyST and live rendering.
     "myst_parser",
@@ -84,10 +86,11 @@ myst_fence_as_directive = ["mermaid"]
 
 # Register every heading as a resolvable cross-reference target so in-page
 # `[text](#anchor)` links resolve at build time. The slug function is pinned
-# to docutils' `make_id` so MyST anchors match the section IDs docutils
-# already emits, keeping existing anchor URLs stable.
+# to myst-parser's `docutils` preset, which returns the IDs of docutils'
+# `make_id`, so MyST anchors match the section IDs docutils already emits,
+# keeping existing anchor URLs stable.
 myst_heading_anchors = 6
-myst_heading_slug_func = "docutils.nodes.make_id"
+myst_heading_slug_func = "docutils"
 
 # A fragment link that resolves nowhere fails the build: myst-parser only warns
 # with `myst.xref_missing`, then ships the link dead. So does a docstring
@@ -116,12 +119,6 @@ nitpicky = True
 
 # Suppress specific warnings that are unavoidable or cosmetic.
 suppress_warnings = [
-    # Example: "WARNING: Cannot resolve forward reference in type annotations of
-    # "extra_platforms.pytest.skip_aarch64": name 'Mark' is not defined"
-    # Explanation: Pytest decorators are dynamically generated at import time, and the
-    # pytest.Mark type is not available during Sphinx documentation build. These are
-    # cosmetic warnings that don't affect the generated documentation.
-    "sphinx_autodoc_typehints.forward_reference",
     # Example: "Document headings start at H2, not H1"
     # Explanation: readme.md starts at H2 because GitHub supplies the H1 from
     # the repository name. The heading structure is intentional.
@@ -129,14 +126,15 @@ suppress_warnings = [
 ]
 
 linkcheck_ignore = [
+    # claude.ai/code requires authentication.
+    r"https://claude\.ai/code",
     # These sites return 403/418 to bots but are valid.
     r"https://doi\.org/10\.5281/zenodo\.",
-    r"https://claude\.ai/code",
     r"https://www\.freedesktop\.org/software/systemd/man/",
     r"https://www\.slackware\.com",
     r"https://software\.opensuse\.org/",
     r"https://zenodo\.org/",
-    # Sites intermittently unreachable from CI runners.
+    # Intermittently unreachable from CI.
     r"https://([^/]+\.)?gnu\.org",
     r"https://midnightbsd\.org",
 ]
@@ -172,8 +170,6 @@ autodoc_default_options = {
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-github_user = "kdeldycke"
-
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
 }
@@ -184,6 +180,12 @@ autosectionlabel_prefix_document = True
 
 # Point every page's `<link rel="canonical">` at the published site.
 html_baseurl = docs_site_url
+# sphinx-sitemap defaults to a `{lang}{version}{link}` layout meant for sites
+# publishing several translations or versions side by side. This one publishes a
+# single tree, so anything but the bare link yields sitemap entries that 404.
+sitemap_url_scheme = "{link}"
+# The generated navigation pages hold no content a crawler should index.
+sitemap_excludes = ["genindex.html", "py-modindex.html", "search.html"]
 
 # Theme config.
 html_theme = "furo"
@@ -239,6 +241,11 @@ html_static_path = [
 ]
 html_css_files = ["custom.css"]
 
+# Copied verbatim to the root of the build, where GitHub Pages looks for the page
+# it serves for a path the site does not publish. `html_static_path` would bury it
+# under `_static/`.
+html_extra_path = ["404.html"]
+
 # Do not publish a copy of every source document under `_sources/`. Nothing links
 # to it: no page this theme renders carries a source link. Both settings are
 # named because they gate different halves of the feature, `html_copy_source`
@@ -246,10 +253,13 @@ html_css_files = ["custom.css"]
 html_copy_source = False
 html_show_sourcelink = False
 
-# Copy the commands of a shell-session block alone: `.gp` is the Pygments class
-# of the prompt, `.go` the one of the output lines. The default only skips line
-# numbers, so every `$ ` and every output line landed in the clipboard.
-copybutton_exclude = ".linenos, .gp, .go"
+# Copy only the commands of a session block, without their prompt: `$ ` for a
+# shell, `>>> ` and `... ` for Python. A block holding no prompt is copied whole.
+# Matching Pygments classes instead (`.gp`, `.go`) misses the output of a
+# `{click:run}` block: its ANSI lexer draws colored lines as `-Ansi-*` spans and
+# plain ones as bare text, so no output line carries `.go`.
+copybutton_prompt_text = r"\$ |>>> |\.\.\. "
+copybutton_prompt_is_regexp = True
 
 # Footer content.
 html_last_updated_fmt = "%Y-%m-%d"
@@ -258,7 +268,9 @@ html_show_sphinx = False
 
 
 # XXX Drop this hook once a Sphinx release ships
-# https://github.com/sphinx-doc/sphinx/pull/14815.
+# https://github.com/sphinx-doc/sphinx/pull/14815. click_extra.sphinx runs the
+# same hook since 10.4.0, but this second pass stays: see the todo of
+# docs/contributing.md.
 def anchor_viewcode_backlinks(app: Sphinx, env: BuildEnvironment) -> None:
     """Point the `[docs]` links of each viewcode page at the objects' own anchors.
 
@@ -294,37 +306,6 @@ def anchor_viewcode_backlinks(app: Sphinx, env: BuildEnvironment) -> None:
         modules[modname] = (code, tags, used, best)
 
 
-# XXX Drop this hook once a Sphinx release ships
-# https://github.com/sphinx-doc/sphinx/pull/14809.
-def sort_todos(app: Sphinx, env: BuildEnvironment) -> None:
-    """List the todolist entries page by page, in the order a serial build reads.
-
-    `sphinx.ext.todo` keeps its entries in a mapping keyed on the page, and the
-    todolist renders them in that mapping's order. A parallel read fills it in the
-    order its workers merge, so the list reorders between two builds.
-    """
-    todos = env.domaindata["todo"].get("todos")
-    if todos:
-        env.domaindata["todo"]["todos"] = dict(sorted(todos.items()))
-
-
-# XXX Drop this hook and OCTICON_TITLE_GAP once a sphinxext-opengraph release ships
-# https://github.com/sphinx-doc/sphinxext-opengraph/pull/150.
-def strip_title_icon_gap(
-    app: Sphinx, pagename: str, templatename: str, context: dict, doctree: Any
-) -> None:
-    """Drop the space a heading octicon leaves at the start of the page title.
-
-    sphinxext-opengraph sets `og:title` to the text of the title, unstripped, so a
-    `` # {octicon}`download` Installation `` heading yields `" Installation"`.
-    Furo's `<title>` strips the markup and the space on its own. Connected ahead of
-    sphinxext-opengraph, which reads the title from the same page context.
-    """
-    title = context.get("title")
-    if title:
-        context["title"] = OCTICON_TITLE_GAP.sub(r"\1", title)
-
-
 def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
     """Delete what Sphinx leaves in the output tree that is not content.
 
@@ -352,7 +333,4 @@ def prune_build_artifacts(app: Sphinx, exception: Exception | None) -> None:
 def setup(app: Sphinx) -> None:
     """Connect the build hooks defined above."""
     app.connect("env-updated", anchor_viewcode_backlinks)
-    app.connect("env-updated", sort_todos)
-    # Ahead of the default priority of sphinxext-opengraph.
-    app.connect("html-page-context", strip_title_icon_gap, priority=400)
     app.connect("build-finished", prune_build_artifacts)

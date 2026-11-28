@@ -1,4 +1,4 @@
-# extra_platforms package
+# `extra_platforms` package
 
 ```{python:render}
 from extra_platforms._docs import generate_extra_platforms_automodule
@@ -12,7 +12,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.agent_data
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -20,7 +20,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.architecture_data
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -28,7 +28,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.ci_data
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -36,7 +36,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.detection
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -44,7 +44,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.group
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -52,7 +52,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.group_data
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -60,7 +60,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.platform_data
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -68,7 +68,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.platform_info
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -76,7 +76,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.shell_data
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -84,7 +84,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.terminal_data
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -92,7 +92,7 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.pytest
-   :noindex:
+   :no-index:
    :no-members:
 ```
 
@@ -100,6 +100,6 @@ print(generate_extra_platforms_automodule())
 
 ```{eval-rst}
 .. automodule:: extra_platforms.trait
-   :noindex:
+   :no-index:
    :no-members:
 ```

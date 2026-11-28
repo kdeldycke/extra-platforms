@@ -932,11 +932,11 @@ def test_no_links_to_generic_api_page(built_docs, page):
 def test_generic_api_page_no_stolen_targets(built_docs):
     """The extra_platforms.html page steals no target from a specialized page.
 
-    The ``docs/extra_platforms.md`` page uses ``:noindex:`` and ``:no-members:``
+    The ``docs/extra_platforms.md`` page uses ``:no-index:`` and ``:no-members:``
     on all submodule ``automodule`` directives to prevent members documented
     in specialized pages from appearing on the generic page. This test checks
     both anchors (``id=``) and rendered member signatures (``sig-name``) to
-    catch leaks even when ``:noindex:`` suppresses the anchor.
+    catch leaks even when ``:no-index:`` suppresses the anchor.
     """
     html = read_html(built_docs, "extra_platforms.html")
 
@@ -974,7 +974,7 @@ def test_generic_api_page_no_stolen_targets(built_docs):
     )
 
     # Check 2: No rendered member signatures from submodule automodules.
-    # With :noindex:, Sphinx omits the id= attribute but still renders
+    # With :no-index:, Sphinx omits the id= attribute but still renders
     # visible content. Detect leaked members by their sig-name spans.
     sig_pattern = (
         r'<span class="sig-prename descclassname">'
