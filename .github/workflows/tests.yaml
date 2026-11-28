@@ -107,12 +107,12 @@ jobs:
         # workflow-wide cooldown above: the self-pin always names a release minutes
         # old, so the window it enforces on everything else would make it
         # unresolvable. Spelled exactly as repomatic's release freeze writes it
-        # (repomatic.prepare_release.SELF_PIN_COOLDOWN_EXEMPTION), so
+        # (`repomatic.release.self_pin.cooldown_exemption()`), so
         # `sync-workflow-pins` recognizes and moves it with the pin.
         run: >
           uvx --no-progress --exclude-newer-package repomatic=P0D 'repomatic==8.3.0' show-metadata
           --output-format github-json --output "$GITHUB_OUTPUT"
-          test_matrix test_matrix_pr
+          test_matrix test_matrix_pr latest_stable_python npm_min_release_age_days
 
   tests:
     needs:
@@ -141,6 +141,11 @@ jobs:
     # tracks how much it has to install.
     timeout-minutes: 30
     env:
+      # Workaround for https://github.com/pallets/click/issues/2121: Windows GitHub Actions runners
+      # redirect command output to files, which sets the encoding to the system default (cp1252).
+      # Python CLI frameworks like Click then raise UnicodeEncodeError on non-ASCII output. The Linux
+      # and macOS runners already default to UTF-8, so the variable changes nothing there.
+      PYTHONIOENCODING: utf8
       # The docs group needs Python >= 3.12 (`dependency-groups.docs` in pyproject.toml). Requested on an older cell,
       # it makes uv replace the cell's interpreter with a newer one, so the cell would test the wrong Python. Those
       # cells run without it, the way distribution builds do.
@@ -158,13 +163,6 @@ jobs:
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
         run: uv --no-progress venv --python "${PYTHON_VERSION}"
-      - name: Force UTF-8 encoding on Windows
-        # Workaround for https://github.com/pallets/click/issues/2121: Windows GitHub Actions runners
-        # redirect command output to files, which sets the encoding to the system default (cp1252).
-        # Python CLI frameworks like Click then raise UnicodeEncodeError on non-ASCII output.
-        if: runner.os == 'Windows'
-        shell: bash
-        run: echo "PYTHONIOENCODING=utf8" >> "$GITHUB_ENV"
       - name: Install project
         # Install all extras, so we can check any incompatibility.
         if: matrix.source != 'sdist'
@@ -299,8 +297,10 @@ jobs:
     steps:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          # windows-2025 runners have only Python 3.9 installed.
-          python-version: ${{ matrix.os == 'windows-2025' && '3.11' || ''}}
+          # The newest stable Python, on every runner. On a runner whose default Python is below `requires-python`,
+          # like the 3.10 of ubuntu-22.04, uv picks an older release that still supports it, so the job would check
+          # that release instead of the new one.
+          python-version: ${{ fromJSON(needs.metadata.outputs.metadata).latest_stable_python }}
           version: "0.13.6"
       - name: Run stable CLI
         run: |
@@ -326,13 +326,32 @@ jobs:
           extra-platforms
           uv --no-progress tool uninstall extra-platforms
       - name: Run CLI via pipx
+        # Bash on Windows too: it expands `${COOLDOWN_DAYS}`, and stops on the first command that fails.
+        shell: bash
+        env:
+          # pipx is a tool of this job, not its subject, so its install keeps the cooldown that the job lifts. The
+          # `pipx run` calls below still fetch the release under test with no window.
+          COOLDOWN_DAYS: ${{ fromJSON(needs.metadata.outputs.metadata).npm_min_release_age_days }}
         run: |
-          uv --no-progress tool install 'pipx==1.18.19'
+          uv --no-progress tool install --exclude-newer "P${COOLDOWN_DAYS}D" 'pipx==1.18.19'
           pipx run                                                                      extra-platforms
           pipx run --spec extra-platforms                                                extra-platforms
           pipx run --spec git+https://github.com/kdeldycke/extra-platforms              extra-platforms
           uv --no-progress tool uninstall pipx
-      - name: Run CLI via pip
+      - name: Run stable CLI via uv pip
+        # Bash on every runner, so the first command that fails stops the step. A venv keeps its scripts in
+        # `Scripts/` on Windows and in `bin/` elsewhere: the step calls the script there, never one found on PATH.
+        shell: bash
         run: |
-          pip install extra-platforms
-          extra-platforms
+          uv --no-progress venv
+          if [ -d .venv/Scripts ]; then bin=.venv/Scripts; else bin=.venv/bin; fi
+          uv --no-progress pip install extra-platforms
+          "${bin}/extra-platforms"
+          uv --no-progress pip uninstall extra-platforms
+      - name: Run dev CLI via uv pip
+        shell: bash
+        run: |
+          if [ -d .venv/Scripts ]; then bin=.venv/Scripts; else bin=.venv/bin; fi
+          uv --no-progress pip install git+https://github.com/kdeldycke/extra-platforms
+          "${bin}/extra-platforms"
+          uv --no-progress pip uninstall extra-platforms

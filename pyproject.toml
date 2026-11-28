@@ -466,12 +466,6 @@ default.extend-ignore-identifiers-re = [
   # 371 │     - `PASE`
   #     ╰╴       ━━━━
   "PASE",
-  # error: `Sur` should be `Sure`
-  #    ╭▸ ./extra_platforms/platform_info.py
-  #    │
-  #    │     ("11", None): "Big Sur",
-  #    ╰╴                       ━━━
-  "Sur",
 ]
 # Check hidden files and directories too, which typos skips by default: the
 # `.github/` workflows and the `.claude/` agents and skills live there.
